@@ -1,4 +1,11 @@
 import { create } from 'zustand/react';
+import { supabase } from '../lib/supabase';
+import { getClassResources } from '../lib/classResources';
+
+function makePortraitUrl(name, race, cls) {
+  const seed = encodeURIComponent(`${name || ''} ${race || ''} ${cls || ''}`.trim());
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=transparent`;
+}
 
 const useStore = create((set, get) => ({
   // === Auth ===
@@ -125,17 +132,29 @@ const useStore = create((set, get) => ({
     characters: [],
     loaded: false,
     currentSceneIndex: 0,
+    notes: { dm: '', shared: '' },
+    savedEncounters: [],
   },
   loadCampaign: (data) =>
     set({
       campaign: {
         title: data.title || 'Untitled Campaign',
         scenes: data.scenes || [],
-        characters: data.characters || [],
+        characters: (data.characters || []).map(c => ({ resourcesUsed: {}, ...c })),
         loaded: true,
         currentSceneIndex: 0,
+        notes: { dm: '', shared: '' },
+        savedEncounters: [],
       },
     }),
+  loadCampaignSettings: (settings) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        notes: settings?.notes || { dm: '', shared: '' },
+        savedEncounters: settings?.savedEncounters || [],
+      },
+    })),
   unloadCampaign: () =>
     set({
       campaign: {
@@ -144,6 +163,8 @@ const useStore = create((set, get) => ({
         characters: [],
         loaded: false,
         currentSceneIndex: 0,
+        notes: { dm: '', shared: '' },
+        savedEncounters: [],
       },
     }),
   addCharacter: (char) =>
@@ -155,12 +176,17 @@ const useStore = create((set, get) => ({
           {
             id: crypto.randomUUID(),
             name: char.name || 'New Character',
+            race: char.race || '',
+            class: char.class || '',
+            level: Number(char.level) || 1,
             stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
             skills: char.skills || [],
             weapons: char.weapons || [],
             maxHp: Number(char.maxHp) || 10,
             currentHp: Number(char.maxHp) || 10,
+            ac: Number(char.ac) || 10,
             spellSlots: char.spellSlots || null,
+            resourcesUsed: char.resourcesUsed || {},
           },
         ],
       },
@@ -218,6 +244,7 @@ const useStore = create((set, get) => ({
           stats: group.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
           attacks: group.attacks || [],
           conditions: [],
+          concentration: null,
           position: null,
           deathSaves: { successes: 0, failures: 0, stable: false },
         });
@@ -242,8 +269,10 @@ const useStore = create((set, get) => ({
             : { name: w.name || w, bonus: w.attackBonus || '+0', damage: w.damage || '1d6' }
         ),
         conditions: [],
+        concentration: null,
         position: null,
         deathSaves: { successes: 0, failures: 0, stable: false },
+        portrait: makePortraitUrl(char.name, char.race, char.class),
       });
     });
 
@@ -324,30 +353,51 @@ const useStore = create((set, get) => ({
     }),
 
   applyEncounterDamage: (targetId, amount) =>
-    set((state) => ({
-      encounter: {
-        ...state.encounter,
-        combatants: state.encounter.combatants.map((c) => {
-          if (c.id !== targetId) return c;
-          const newHp = Math.max(0, c.currentHp - amount);
-          // Massive damage (damage >= maxHp while at 0) = instant death
-          const instaDeath = c.currentHp === 0 && amount >= c.maxHp;
-          if (instaDeath) {
-            return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 3, stable: false } };
-          }
-          // Dropping to 0 while dying adds a failure
-          if (newHp === 0 && c.currentHp > 0 && c.type === 'player') {
-            return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 0, stable: false } };
-          }
-          // Hit while already dying adds a failure (PHB rule)
-          if (c.currentHp === 0 && c.type === 'player' && !c.deathSaves?.stable) {
-            const fails = Math.min(3, (c.deathSaves?.failures || 0) + 1);
-            return { ...c, deathSaves: { ...c.deathSaves, failures: fails } };
-          }
-          return { ...c, currentHp: newHp };
-        }),
-      },
-    })),
+    set((state) => {
+      const target = state.encounter.combatants.find(c => c.id === targetId);
+      const extraLog = [];
+
+      // Concentration Con save (PHB: DC = max(10, half damage taken))
+      if (target && target.concentration && target.currentHp > 0 && amount > 0) {
+        const dc = Math.max(10, Math.floor(amount / 2));
+        const roll = Math.floor(Math.random() * 20) + 1;
+        const conMod = Math.floor(((target.stats?.con || 10) - 10) / 2);
+        const total = roll + conMod;
+        const pass = total >= dc;
+        extraLog.push(
+          `🎯 ${target.name} concentration (${target.concentration}) DC ${dc}: ` +
+          `d20(${roll})${conMod >= 0 ? '+' : ''}${conMod}=${total} — ${pass ? '✓ Maintained' : '✗ BROKEN'}`
+        );
+      }
+
+      const newCombatants = state.encounter.combatants.map((c) => {
+        if (c.id !== targetId) return c;
+        const newHp = Math.max(0, c.currentHp - amount);
+        // Massive damage (damage >= maxHp while at 0) = instant death
+        if (c.currentHp === 0 && amount >= c.maxHp) {
+          return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 3, stable: false } };
+        }
+        // Dropping to 0: enter dying state
+        if (newHp === 0 && c.currentHp > 0 && c.type === 'player') {
+          return { ...c, currentHp: 0, concentration: null, deathSaves: { successes: 0, failures: 0, stable: false } };
+        }
+        // Hit while already dying: add failure
+        if (c.currentHp === 0 && c.type === 'player' && !c.deathSaves?.stable) {
+          return { ...c, deathSaves: { ...c.deathSaves, failures: Math.min(3, (c.deathSaves?.failures || 0) + 1) } };
+        }
+        return { ...c, currentHp: newHp };
+      });
+
+      return {
+        encounter: {
+          ...state.encounter,
+          combatants: newCombatants,
+          log: extraLog.length
+            ? [...extraLog, ...state.encounter.log].slice(0, 30)
+            : state.encounter.log,
+        },
+      };
+    }),
 
   applyEncounterHeal: (targetId, amount) =>
     set((state) => ({
@@ -469,6 +519,192 @@ const useStore = create((set, get) => ({
         log: [],
       },
     }),
+
+  setConcentration: (id, spell) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map((c) =>
+          c.id === id ? { ...c, concentration: spell || null } : c
+        ),
+        log: [`🎯 ${state.encounter.combatants.find(x => x.id === id)?.name} concentrates on ${spell}.`, ...state.encounter.log].slice(0, 30),
+      },
+    })),
+
+  clearConcentration: (id) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map((c) =>
+          c.id === id ? { ...c, concentration: null } : c
+        ),
+        log: [`🎯 ${state.encounter.combatants.find(x => x.id === id)?.name} dropped concentration.`, ...state.encounter.log].slice(0, 30),
+      },
+    })),
+
+  // Received from Supabase Realtime — non-DM clients sync encounter state
+  syncEncounterDown: (encounterData) =>
+    set({ encounter: encounterData }),
+
+  // === Class Resources ===
+  spendResource: (charId, resourceName) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          if (c.id !== charId) return c;
+          const defs = getClassResources(c.class, c.level, c.stats);
+          const def = defs.find(r => r.name === resourceName);
+          if (!def) return c;
+          const used = c.resourcesUsed?.[resourceName] ?? 0;
+          if (used >= def.max) return c;
+          return { ...c, resourcesUsed: { ...c.resourcesUsed, [resourceName]: used + 1 } };
+        }),
+      },
+    })),
+
+  gainResource: (charId, resourceName, amount = 1) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          if (c.id !== charId) return c;
+          const used = Math.max(0, (c.resourcesUsed?.[resourceName] ?? 0) - amount);
+          return { ...c, resourcesUsed: { ...c.resourcesUsed, [resourceName]: used } };
+        }),
+      },
+    })),
+
+  shortRest: () => {
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          const defs = getClassResources(c.class, c.level, c.stats);
+          const restored = { ...c.resourcesUsed };
+          defs.filter(r => r.resetOn === 'short').forEach(r => { restored[r.name] = 0; });
+          return { ...c, resourcesUsed: restored };
+        }),
+      },
+      encounter: {
+        ...get().encounter,
+        log: ['🌙 Short rest taken — short-rest resources restored.', ...get().encounter.log].slice(0, 30),
+      },
+    }));
+    get().saveCampaignToSupabase();
+  },
+
+  longRest: () => {
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          // Reset spell slot used counts to 0
+          const spellSlots = c.spellSlots
+            ? Object.fromEntries(
+                Object.entries(c.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])
+              )
+            : c.spellSlots;
+          return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots };
+        }),
+      },
+      encounter: {
+        ...get().encounter,
+        log: ['☀️ Long rest taken — all resources and HP restored.', ...get().encounter.log].slice(0, 30),
+      },
+    }));
+    get().saveCampaignToSupabase();
+    get().saveSettingsToSupabase();
+  },
+
+  castSpell: (charId, slotLevel) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          if (c.id !== charId) return c;
+          const slots = { ...(c.spellSlots || {}) };
+          const lvl = slots[slotLevel];
+          if (!lvl || lvl.used >= lvl.total) return c;
+          slots[slotLevel] = { ...lvl, used: lvl.used + 1 };
+          return { ...c, spellSlots: slots };
+        }),
+      },
+    })),
+
+  recoverSpellSlot: (charId, slotLevel) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          if (c.id !== charId) return c;
+          const slots = { ...(c.spellSlots || {}) };
+          const lvl = slots[slotLevel];
+          if (!lvl || lvl.used <= 0) return c;
+          slots[slotLevel] = { ...lvl, used: lvl.used - 1 };
+          return { ...c, spellSlots: slots };
+        }),
+      },
+    })),
+
+  // === Notes ===
+  setNote: (type, value) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        notes: { ...state.campaign.notes, [type]: value },
+      },
+    })),
+
+  // === Saved Encounters ===
+  saveEncounterGroup: (name, enemies) =>
+    set((state) => {
+      const entry = { id: crypto.randomUUID(), name, enemies, savedAt: Date.now() };
+      const savedEncounters = [entry, ...state.campaign.savedEncounters].slice(0, 20);
+      get().saveSettingsToSupabase({ ...state.campaign, savedEncounters });
+      return { campaign: { ...state.campaign, savedEncounters } };
+    }),
+  deleteEncounterGroup: (id) =>
+    set((state) => {
+      const savedEncounters = state.campaign.savedEncounters.filter(e => e.id !== id);
+      get().saveSettingsToSupabase({ ...state.campaign, savedEncounters });
+      return { campaign: { ...state.campaign, savedEncounters } };
+    }),
+
+  // === XP ===
+  awardXp: (amount) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map(c => ({
+          ...c,
+          xp: (c.xp || 0) + Math.floor(amount / Math.max(1, state.campaign.characters.length)),
+        })),
+      },
+    })),
+
+  saveSettingsToSupabase: async (campaignState) => {
+    const { activeCampaign } = get();
+    if (!activeCampaign?.id) return;
+    const c = campaignState || get().campaign;
+    await supabase
+      .from('campaigns')
+      .update({ settings: { notes: c.notes, savedEncounters: c.savedEncounters } })
+      .eq('id', activeCampaign.id);
+  },
+
+  saveCampaignToSupabase: async () => {
+    const { activeCampaign, campaign } = get();
+    if (!activeCampaign?.id) return;
+    const merged = {
+      ...(activeCampaign.campaign_data || {}),
+      characters: campaign.characters,
+    };
+    await supabase
+      .from('campaigns')
+      .update({ campaign_data: merged })
+      .eq('id', activeCampaign.id);
+  },
 
   // === Dice ===
   dice: {
