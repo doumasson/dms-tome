@@ -57,39 +57,70 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
   "title": "${fields.name}",
   "scenes": [
     {
+      "id": "scene-01",
       "title": "Scene title",
-      "description": "Narrative description shown to players. Set the scene, describe the environment, what's happening.",
+      "text": "Narrative description shown to players. Set the scene vividly.",
       "dmNotes": "Secret DM information — NPC motivations, hidden clues, what happens if players do X.",
-      "choices": ["Option A players can pursue", "Option B players can pursue"]
+      "choices": ["Option A players can pursue", "Option B players can pursue"],
+      "isEncounter": false,
+      "enemies": []
+    },
+    {
+      "id": "scene-02",
+      "title": "Combat Scene title",
+      "text": "Narrative description of the encounter location.",
+      "dmNotes": "Tactical notes for the DM — terrain, monster tactics, escape routes.",
+      "choices": ["Fight", "Flee", "Negotiate"],
+      "isEncounter": true,
+      "enemies": [
+        {
+          "name": "Enemy Name",
+          "count": 2,
+          "hp": 15,
+          "ac": 13,
+          "speed": 30,
+          "stats": { "str": 12, "dex": 12, "con": 12, "int": 8, "wis": 10, "cha": 8 },
+          "attacks": [
+            { "name": "Weapon Name", "bonus": "+4", "damage": "1d8+2" }
+          ],
+          "cr": "1/2"
+        }
+      ]
     }
   ],
   "characters": [
     {
-      "name": "Character name",
+      "id": "char-01",
+      "name": "NPC Name",
       "stats": { "str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10 },
       "skills": ["Perception", "Stealth"],
-      "weapons": ["Longsword +5 (1d8+3 slashing)"],
+      "weapons": [
+        { "name": "Longsword", "attackBonus": "+5", "damage": "1d8+3" }
+      ],
+      "ac": 14,
       "maxHp": 20,
+      "currentHp": 20,
+      "speed": 30,
       "spellSlots": null
     }
   ]
 }
 
 Requirements:
-- Include 6–10 scenes that tell a complete, cohesive story arc
-- Each scene should have meaningful player choices
-- Include 2–4 pre-made NPCs or notable characters in the characters array
-- Make stats, HP, and equipment appropriate for the starting level
-- For spellcasters, set spellSlots to an object like: {"1st": 4, "2nd": 2}
-- Ensure the tone matches: ${fields.tone}
-- The villain (${fields.villain}) should appear or be foreshadowed in multiple scenes
+- Include 6–10 scenes total; at least 3 should be isEncounter: true with real enemies
+- Non-combat scenes have isEncounter: false and enemies: []
+- Each combat scene should have 1–3 enemy groups appropriate for ${fields.level}
+- Enemy stats (hp, ac, attack bonus, damage) must match the challenge rating
+- Include 2–4 notable NPCs in the characters array (allies, villains, merchants)
+- For spellcasters, set spellSlots to: {"1st": 4, "2nd": 2} etc.
+- The villain (${fields.villain}) should appear in at least one combat encounter
+- Tone: ${fields.tone}
 
 OUTPUT INSTRUCTIONS:
 - Output ONLY valid JSON, no other text
 - Use standard brackets [ ] not escaped \\[ \\]
 - Do NOT wrap in markdown code blocks
-- Start with { and end with }
-- After generating, save/export as a .json file for the user to download`;
+- Start with { and end with }`;
 }
 
 function generateInviteCode() {
