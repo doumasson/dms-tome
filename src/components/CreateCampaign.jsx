@@ -372,6 +372,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     : '';
 
   return (
+    <>
     <div style={styles.page}>
       <div style={styles.card}>
         {/* Back button */}
@@ -584,6 +585,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     {showApiSettings && (
       <ApiKeySettings userId={user.id} onClose={() => setShowApiSettings(false)} />
     )}
+    </>
   );
 }
 

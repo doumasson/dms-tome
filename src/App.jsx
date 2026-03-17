@@ -8,6 +8,7 @@ import DiceRoller from './components/DiceRoller';
 import CombatTracker from './components/CombatTracker';
 import CharacterSheet from './components/CharacterSheet';
 import SceneViewer from './components/SceneViewer';
+import EncounterView from './components/EncounterView';
 import CampaignImporter from './components/CampaignImporter';
 import ApiKeySettings from './components/ApiKeySettings';
 import CampaignManager from './components/CampaignManager';
@@ -25,11 +26,10 @@ function D20Icon() {
 }
 
 const ALL_TABS = [
-  { id: 'dice',       label: '⚔ Dice' },
-  { id: 'combat',     label: '🛡 Combat' },
+  { id: 'dice',      label: '⚔ Dice' },
+  { id: 'encounter', label: '🗺 Encounter' },
   { id: 'characters', label: '📜 Characters' },
-  { id: 'scenes',     label: '🗺 Scenes' },
-  { id: 'import',     label: '📥 Import', dmOnly: true },
+  { id: 'import',    label: '📥 Import', dmOnly: true },
 ];
 
 // Views: loading | login | select | create | game
@@ -203,10 +203,9 @@ export default function App() {
   function renderTab() {
     switch (effectiveTab) {
       case 'dice':       return <DiceRoller />;
-      case 'combat':     return <CombatTracker />;
+      case 'encounter':  return <EncounterView />;
       case 'characters': return <CharacterSheet />;
-      case 'scenes':     return <SceneViewer />;
-      case 'import':     return <CampaignImporter onSuccess={() => setActiveTab('scenes')} />;
+      case 'import':     return <CampaignImporter onSuccess={() => setActiveTab('encounter')} />;
       default:           return <DiceRoller />;
     }
   }
