@@ -7,8 +7,14 @@ const useStore = create((set, get) => ({
 
   // === Active Campaign (Supabase record) ===
   activeCampaign: null,
-  setActiveCampaign: (campaign) => set({ activeCampaign: campaign }),
-  clearActiveCampaign: () => set({ activeCampaign: null }),
+  isDM: false,
+  setActiveCampaign: (campaign) => {
+    const user = get().user;
+    const isDM = !!(campaign && user && campaign.dm_user_id === user.id);
+    set({ activeCampaign: campaign, isDM, dmMode: isDM });
+  },
+  clearActiveCampaign: () => set({ activeCampaign: null, isDM: false, dmMode: false }),
+  setIsDM: (value) => set({ isDM: value, dmMode: value }),
 
   // === DM Mode ===
   dmMode: false,

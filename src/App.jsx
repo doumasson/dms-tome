@@ -10,6 +10,7 @@ import CharacterSheet from './components/CharacterSheet';
 import SceneViewer from './components/SceneViewer';
 import CampaignImporter from './components/CampaignImporter';
 import ApiKeySettings from './components/ApiKeySettings';
+import CampaignManager from './components/CampaignManager';
 
 function D20Icon() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dice');
   const [draftCampaign, setDraftCampaign] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showManager, setShowManager] = useState(false);
   const pendingInviteRef = useRef(null);
 
   const user = useStore(s => s.user);
@@ -48,6 +50,7 @@ export default function App() {
   const campaign = useStore(s => s.campaign);
   const dmMode = useStore(s => s.dmMode);
   const toggleDmMode = useStore(s => s.toggleDmMode);
+  const isDM = useStore(s => s.isDM);
 
   useEffect(() => {
     // Pick up invite code from URL or localStorage
@@ -193,7 +196,6 @@ export default function App() {
   }
 
   // ── Main Game UI ─────────────────────────────────────────────────────────────
-  const isDM = activeCampaign?.dm_user_id === user?.id;
   const tabs = ALL_TABS.filter(t => !t.dmOnly || (dmMode && isDM));
   const visibleTabIds = tabs.map(t => t.id);
   const effectiveTab = visibleTabIds.includes(activeTab) ? activeTab : 'dice';
@@ -231,6 +233,9 @@ export default function App() {
           {isDM && (
             <>
               {dmMode && <span style={styles.dmBadge}>DM Mode</span>}
+              <button onClick={() => setShowManager(true)} style={styles.manageBtn} title="Manage Campaign">
+                👥
+              </button>
               <button
                 onClick={toggleDmMode}
                 style={{
@@ -281,6 +286,10 @@ export default function App() {
       <main style={styles.main}>
         {renderTab()}
       </main>
+
+      {showManager && (
+        <CampaignManager onClose={() => setShowManager(false)} />
+      )}
 
       {/* Footer */}
       <footer style={styles.footer}>
@@ -378,6 +387,17 @@ const styles = {
     cursor: 'pointer',
     fontSize: '0.78rem',
     fontFamily: "'Cinzel', Georgia, serif",
+    minHeight: 36,
+  },
+  manageBtn: {
+    background: 'transparent',
+    border: '1px solid var(--border-light)',
+    color: 'var(--text-muted)',
+    borderRadius: 6,
+    padding: '6px 10px',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    lineHeight: 1,
     minHeight: 36,
   },
   dmBadge: {
