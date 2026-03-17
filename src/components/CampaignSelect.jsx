@@ -20,11 +20,22 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
     setLoading(true);
     const { data, error } = await supabase
       .from('campaign_members')
-      .select('role, campaigns(id, name, dm_user_id, invite_code, updated_at, users!campaigns_dm_user_id_fkey(name, avatar_url))')
+      .select('role, campaigns(id, name, dm_user_id, invite_code, campaign_data, updated_at, profiles!dm_user_id(name, avatar_url))')
       .eq('user_id', user.id);
 
     if (!error && data) {
-      setCampaigns(data.map(m => ({ ...m.campaigns, userRole: m.role })).filter(Boolean));
+      setCampaigns(
+        data
+          .map(m => ({ ...m.campaigns, userRole: m.role }))
+          .filter(Boolean)
+          // sort: drafts last, then by updated_at desc
+          .sort((a, b) => {
+            const aDraft = !!a.campaign_data?.__draft;
+            const bDraft = !!b.campaign_data?.__draft;
+            if (aDraft !== bDraft) return aDraft ? 1 : -1;
+            return new Date(b.updated_at) - new Date(a.updated_at);
+          })
+      );
     }
     setLoading(false);
   }
@@ -134,36 +145,49 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
           </div>
         ) : (
           <div style={styles.campaignList}>
-            {campaigns.map(campaign => (
-              <button
-                key={campaign.id}
-                onClick={() => onSelectCampaign(campaign)}
-                style={styles.campaignCard}
-              >
-                <div style={styles.cardLeft}>
-                  <div style={styles.campaignName}>{campaign.name}</div>
-                  <div style={styles.campaignMeta}>
-                    {campaign.userRole === 'dm' ? (
-                      <span style={styles.dmTag}>DM</span>
-                    ) : (
-                      <span style={styles.playerTag}>Player</span>
-                    )}
-                    {campaign.users && (
-                      <span style={styles.dmName}>DM: {campaign.users.name}</span>
-                    )}
+            {campaigns.map(campaign => {
+              const isDraft = !!campaign.campaign_data?.__draft;
+              const draftStep = campaign.campaign_data?.__step || 1;
+              return (
+                <button
+                  key={campaign.id}
+                  onClick={() => onSelectCampaign(campaign)}
+                  style={{
+                    ...styles.campaignCard,
+                    ...(isDraft ? styles.campaignCardDraft : {}),
+                  }}
+                >
+                  <div style={styles.cardLeft}>
+                    <div style={styles.campaignName}>
+                      {campaign.name}
+                      {isDraft && <span style={styles.draftBadge}>DRAFT</span>}
+                    </div>
+                    <div style={styles.campaignMeta}>
+                      {campaign.userRole === 'dm' ? (
+                        <span style={styles.dmTag}>DM</span>
+                      ) : (
+                        <span style={styles.playerTag}>Player</span>
+                      )}
+                      {campaign.profiles && (
+                        <span style={styles.dmName}>DM: {campaign.profiles.name}</span>
+                      )}
+                      {isDraft && (
+                        <span style={styles.draftHint}>Step {draftStep} of 5 — tap to continue</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div style={styles.cardRight}>
-                  {campaign.updated_at && (
-                    <span style={styles.lastPlayed}>Last played {formatDate(campaign.updated_at)}</span>
-                  )}
-                  {campaign.userRole === 'dm' && campaign.invite_code && (
-                    <span style={styles.inviteCode}>Code: {campaign.invite_code}</span>
-                  )}
-                  <span style={styles.enterArrow}>→</span>
-                </div>
-              </button>
-            ))}
+                  <div style={styles.cardRight}>
+                    {!isDraft && campaign.updated_at && (
+                      <span style={styles.lastPlayed}>Last played {formatDate(campaign.updated_at)}</span>
+                    )}
+                    {!isDraft && campaign.userRole === 'dm' && campaign.invite_code && (
+                      <span style={styles.inviteCode}>Code: {campaign.invite_code}</span>
+                    )}
+                    <span style={styles.enterArrow}>{isDraft ? '✏' : '→'}</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         )}
 
@@ -395,6 +419,28 @@ const styles = {
     fontSize: '1.1rem',
     fontWeight: 700,
     marginTop: 4,
+  },
+  campaignCardDraft: {
+    borderStyle: 'dashed',
+    opacity: 0.8,
+  },
+  draftBadge: {
+    marginLeft: 10,
+    background: 'rgba(139, 0, 0, 0.15)',
+    border: '1px dashed rgba(139,0,0,0.5)',
+    color: '#c0392b',
+    fontSize: '0.65rem',
+    fontWeight: 700,
+    padding: '2px 7px',
+    borderRadius: 4,
+    fontFamily: "'Cinzel', Georgia, serif",
+    letterSpacing: '0.1em',
+    verticalAlign: 'middle',
+  },
+  draftHint: {
+    color: 'var(--text-muted)',
+    fontSize: '0.78rem',
+    fontStyle: 'italic',
   },
   createBtn: {
     background: 'linear-gradient(135deg, #f0c868, #d4af37, #a8841f)',

@@ -34,6 +34,7 @@ const ALL_TABS = [
 export default function App() {
   const [appView, setAppView] = useState('loading');
   const [activeTab, setActiveTab] = useState('dice');
+  const [draftCampaign, setDraftCampaign] = useState(null);
   const pendingInviteRef = useRef(null);
 
   const user = useStore(s => s.user);
@@ -91,8 +92,8 @@ export default function App() {
       avatar_url: authUser.user_metadata?.avatar_url || null,
     };
 
-    // Sync user to our public.users table
-    await supabase.from('users').upsert(userData, { onConflict: 'id' });
+    // Sync user to profiles table
+    await supabase.from('profiles').upsert(userData, { onConflict: 'id' });
 
     setUser(userData);
     setAppView('select');
@@ -108,6 +109,12 @@ export default function App() {
   }
 
   function handleSelectCampaign(campaignRecord) {
+    // If this is a draft campaign, resume the wizard instead
+    if (campaignRecord?.campaign_data?.__draft) {
+      setDraftCampaign(campaignRecord);
+      setAppView('create');
+      return;
+    }
     setActiveCampaign(campaignRecord);
     if (campaignRecord.campaign_data && Object.keys(campaignRecord.campaign_data).length > 0) {
       loadCampaign(campaignRecord.campaign_data);
@@ -153,8 +160,15 @@ export default function App() {
     return (
       <CreateCampaign
         user={user}
-        onDone={handleSelectCampaign}
-        onBack={() => setAppView('select')}
+        draftCampaign={draftCampaign}
+        onDone={(campaign) => {
+          setDraftCampaign(null);
+          handleSelectCampaign(campaign);
+        }}
+        onBack={() => {
+          setDraftCampaign(null);
+          setAppView('select');
+        }}
       />
     );
   }

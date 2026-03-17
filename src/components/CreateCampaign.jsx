@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
 const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
@@ -6,6 +6,8 @@ const SETTINGS = ['High Fantasy', 'Forgotten Realms', 'Dark Gothic', 'Steampunk'
 const LENGTHS = ['One-shot (~4 hours)', 'Short campaign (3–5 sessions)', 'Full campaign (10+ sessions)'];
 const LEVELS = ['1–4 (Tier 1)', '5–10 (Tier 2)', '11–16 (Tier 3)', '17–20 (Tier 4)'];
 const VILLAINS = ['Ancient Dragon', 'Lich', 'Demon Lord', 'Corrupt Noble', 'Cosmic Horror', 'Cult Leader', 'Rival Adventurer'];
+
+const DRAFT_KEY = 'dm-tome-wizard-draft';
 
 function generatePrompt(fields) {
   return `You are a D&D 5e campaign designer. Create a complete campaign outline with the following specifications:
@@ -61,15 +63,11 @@ function generateInviteCode() {
 
 function cleanJsonText(text) {
   let cleaned = text.trim();
-  // Remove markdown code fences
   cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
-  // Remove any text before the first {
   const firstBrace = cleaned.indexOf('{');
   if (firstBrace > 0) cleaned = cleaned.slice(firstBrace);
-  // Remove any text after the last }
   const lastBrace = cleaned.lastIndexOf('}');
   if (lastBrace !== -1 && lastBrace < cleaned.length - 1) cleaned = cleaned.slice(0, lastBrace + 1);
-  // Replace escaped brackets \[ and \] with plain brackets
   cleaned = cleaned.replace(/\\\[/g, '[').replace(/\\\]/g, ']');
   return cleaned;
 }
@@ -90,26 +88,129 @@ function validateCampaignJson(text) {
   }
 }
 
-export default function CreateCampaign({ user, onDone, onBack }) {
-  const [step, setStep] = useState(1); // 1=name, 2=settings, 3=details, 4=prompt, 5=json, 6=done
-  const [fields, setFields] = useState({
-    name: '',
-    tone: TONES[0],
-    setting: SETTINGS[0],
-    length: LENGTHS[0],
-    players: '4',
-    level: LEVELS[0],
-    villain: VILLAINS[0],
-    themes: '',
-  });
+const DEFAULT_FIELDS = {
+  name: '',
+  tone: TONES[0],
+  setting: SETTINGS[0],
+  length: LENGTHS[0],
+  players: '4',
+  level: LEVELS[0],
+  villain: VILLAINS[0],
+  themes: '',
+};
+
+export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) {
+  const [step, setStep] = useState(1);
+  const [fields, setFields] = useState(DEFAULT_FIELDS);
+  const [campaignId, setCampaignId] = useState(null);
   const [jsonText, setJsonText] = useState('');
   const [jsonError, setJsonError] = useState('');
   const [creating, setCreating] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [createdCampaign, setCreatedCampaign] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  function set(key, val) {
+  // Restore draft on mount — DB draft prop takes priority over localStorage
+  useEffect(() => {
+    if (draftCampaign?.campaign_data?.__draft) {
+      const { fields: savedFields, __step } = draftCampaign.campaign_data;
+      if (savedFields) setFields(f => ({ ...f, ...savedFields }));
+      if (__step > 1) setStep(__step);
+      setCampaignId(draftCampaign.id);
+    } else {
+      try {
+        const saved = localStorage.getItem(DRAFT_KEY);
+        if (saved) {
+          const draft = JSON.parse(saved);
+          if (draft.userId === user.id && draft.fields) {
+            setFields(f => ({ ...f, ...draft.fields }));
+            if (draft.step > 1) setStep(draft.step);
+            if (draft.campaignId) setCampaignId(draft.campaignId);
+          }
+        }
+      } catch {}
+    }
+  }, []);
+
+  function setField(key, val) {
     setFields(f => ({ ...f, [key]: val }));
+  }
+
+  function saveDraftLocally(currentStep, currentFields, currentCampaignId) {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+      userId: user.id,
+      campaignId: currentCampaignId,
+      step: currentStep,
+      fields: currentFields,
+    }));
+  }
+
+  function saveDraftToDb(currentStep, currentFields, id) {
+    if (!id) return;
+    // Fire-and-forget — don't block the UI
+    supabase
+      .from('campaigns')
+      .update({ campaign_data: { __draft: true, __step: currentStep, fields: currentFields } })
+      .eq('id', id)
+      .then(() => {});
+  }
+
+  // Step 1 "Next" — create the campaign record in DB right away
+  async function handleStep1Next() {
+    if (!fields.name.trim()) return;
+    setSaving(true);
+
+    let id = campaignId;
+
+    if (!id) {
+      const inviteCode = generateInviteCode();
+      const { data: campaign, error } = await supabase
+        .from('campaigns')
+        .insert({
+          name: fields.name.trim(),
+          dm_user_id: user.id,
+          invite_code: inviteCode,
+          campaign_data: { __draft: true, __step: 1, fields },
+        })
+        .select()
+        .single();
+
+      if (!error && campaign) {
+        id = campaign.id;
+        setCampaignId(id);
+        // Add user as DM member immediately
+        await supabase.from('campaign_members').insert({
+          campaign_id: id,
+          user_id: user.id,
+          role: 'dm',
+        });
+      }
+      // If insert failed, continue anyway — we'll try again at the end
+    } else {
+      // Update the name in case it changed
+      supabase
+        .from('campaigns')
+        .update({ name: fields.name.trim(), campaign_data: { __draft: true, __step: 1, fields } })
+        .eq('id', id)
+        .then(() => {});
+    }
+
+    setSaving(false);
+    setStep(2);
+    saveDraftLocally(2, fields, id);
+  }
+
+  // Steps 2–4: advance step and async-save progress
+  function handleStepNext(nextStep) {
+    setStep(nextStep);
+    saveDraftLocally(nextStep, fields, campaignId);
+    saveDraftToDb(nextStep, fields, campaignId);
+  }
+
+  function handleCopyPrompt() {
+    navigator.clipboard.writeText(generatePrompt(fields));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   async function handleCreate() {
@@ -122,42 +223,58 @@ export default function CreateCampaign({ user, onDone, onBack }) {
     setCreating(true);
     setJsonError('');
 
-    const inviteCode = generateInviteCode();
-    const campaignPayload = {
-      name: validation.data.title || fields.name,
-      dm_user_id: user.id,
-      invite_code: inviteCode,
-      campaign_data: validation.data,
-    };
+    let campaign;
 
-    const { data: campaign, error: createError } = await supabase
-      .from('campaigns')
-      .insert(campaignPayload)
-      .select()
-      .single();
+    if (campaignId) {
+      // Update the existing draft record with final campaign data
+      const { data, error } = await supabase
+        .from('campaigns')
+        .update({
+          name: validation.data.title || fields.name,
+          campaign_data: validation.data,
+        })
+        .eq('id', campaignId)
+        .select()
+        .single();
 
-    if (createError) {
-      setJsonError('Failed to create campaign: ' + createError.message);
-      setCreating(false);
-      return;
+      if (error) {
+        setJsonError('Failed to save campaign: ' + error.message);
+        setCreating(false);
+        return;
+      }
+      campaign = data;
+    } else {
+      // Fallback: no draft record exists yet, create from scratch
+      const inviteCode = generateInviteCode();
+      const { data, error } = await supabase
+        .from('campaigns')
+        .insert({
+          name: validation.data.title || fields.name,
+          dm_user_id: user.id,
+          invite_code: inviteCode,
+          campaign_data: validation.data,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        setJsonError('Failed to create campaign: ' + error.message);
+        setCreating(false);
+        return;
+      }
+      campaign = data;
+
+      await supabase.from('campaign_members').insert({
+        campaign_id: campaign.id,
+        user_id: user.id,
+        role: 'dm',
+      });
     }
 
-    // Add DM as campaign member
-    await supabase.from('campaign_members').insert({
-      campaign_id: campaign.id,
-      user_id: user.id,
-      role: 'dm',
-    });
-
+    localStorage.removeItem(DRAFT_KEY);
     setCreatedCampaign(campaign);
     setCreating(false);
     setStep(6);
-  }
-
-  function handleCopyPrompt() {
-    navigator.clipboard.writeText(generatePrompt(fields));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   }
 
   const inviteLink = createdCampaign
@@ -188,16 +305,18 @@ export default function CreateCampaign({ user, onDone, onBack }) {
             <input
               autoFocus
               value={fields.name}
-              onChange={e => set('name', e.target.value)}
+              onChange={e => setField('name', e.target.value)}
               placeholder="e.g. The Curse of Strahd's Shadow"
               style={styles.input}
-              onKeyDown={e => e.key === 'Enter' && fields.name.trim() && setStep(2)}
+              onKeyDown={e => e.key === 'Enter' && fields.name.trim() && handleStep1Next()}
             />
             <button
-              disabled={!fields.name.trim()}
-              onClick={() => setStep(2)}
+              disabled={!fields.name.trim() || saving}
+              onClick={handleStep1Next}
               style={styles.nextBtn}
-            >Next →</button>
+            >
+              {saving ? 'Saving...' : 'Next →'}
+            </button>
           </div>
         )}
 
@@ -208,7 +327,7 @@ export default function CreateCampaign({ user, onDone, onBack }) {
             <label style={styles.label}>Campaign Tone</label>
             <div style={styles.optionGrid}>
               {TONES.map(t => (
-                <button key={t} onClick={() => set('tone', t)}
+                <button key={t} onClick={() => setField('tone', t)}
                   style={{ ...styles.optionBtn, ...(fields.tone === t ? styles.optionBtnActive : {}) }}>
                   {t}
                 </button>
@@ -217,13 +336,13 @@ export default function CreateCampaign({ user, onDone, onBack }) {
             <label style={{ ...styles.label, marginTop: 20 }}>Setting</label>
             <div style={styles.optionGrid}>
               {SETTINGS.map(s => (
-                <button key={s} onClick={() => set('setting', s)}
+                <button key={s} onClick={() => setField('setting', s)}
                   style={{ ...styles.optionBtn, ...(fields.setting === s ? styles.optionBtnActive : {}) }}>
                   {s}
                 </button>
               ))}
             </div>
-            <button onClick={() => setStep(3)} style={styles.nextBtn}>Next →</button>
+            <button onClick={() => handleStepNext(3)} style={styles.nextBtn}>Next →</button>
           </div>
         )}
 
@@ -234,13 +353,13 @@ export default function CreateCampaign({ user, onDone, onBack }) {
             <div style={styles.row}>
               <div style={styles.col}>
                 <label style={styles.label}>Campaign Length</label>
-                <select value={fields.length} onChange={e => set('length', e.target.value)} style={styles.select}>
+                <select value={fields.length} onChange={e => setField('length', e.target.value)} style={styles.select}>
                   {LENGTHS.map(l => <option key={l}>{l}</option>)}
                 </select>
               </div>
               <div style={styles.col}>
                 <label style={styles.label}>Number of Players</label>
-                <select value={fields.players} onChange={e => set('players', e.target.value)} style={styles.select}>
+                <select value={fields.players} onChange={e => setField('players', e.target.value)} style={styles.select}>
                   {['2','3','4','5','6'].map(n => <option key={n}>{n}</option>)}
                 </select>
               </div>
@@ -248,13 +367,13 @@ export default function CreateCampaign({ user, onDone, onBack }) {
             <div style={styles.row}>
               <div style={styles.col}>
                 <label style={styles.label}>Starting Level</label>
-                <select value={fields.level} onChange={e => set('level', e.target.value)} style={styles.select}>
+                <select value={fields.level} onChange={e => setField('level', e.target.value)} style={styles.select}>
                   {LEVELS.map(l => <option key={l}>{l}</option>)}
                 </select>
               </div>
               <div style={styles.col}>
                 <label style={styles.label}>Main Villain</label>
-                <select value={fields.villain} onChange={e => set('villain', e.target.value)} style={styles.select}>
+                <select value={fields.villain} onChange={e => setField('villain', e.target.value)} style={styles.select}>
                   {VILLAINS.map(v => <option key={v}>{v}</option>)}
                 </select>
               </div>
@@ -262,12 +381,12 @@ export default function CreateCampaign({ user, onDone, onBack }) {
             <label style={styles.label}>Key Themes &amp; Notes (optional)</label>
             <textarea
               value={fields.themes}
-              onChange={e => set('themes', e.target.value)}
+              onChange={e => setField('themes', e.target.value)}
               placeholder="e.g. Themes of redemption, a cursed artifact, rival adventuring party..."
               style={styles.textarea}
               rows={3}
             />
-            <button onClick={() => setStep(4)} style={styles.nextBtn}>Generate Prompt →</button>
+            <button onClick={() => handleStepNext(4)} style={styles.nextBtn}>Generate Prompt →</button>
           </div>
         )}
 
@@ -282,7 +401,7 @@ export default function CreateCampaign({ user, onDone, onBack }) {
             <button onClick={handleCopyPrompt} style={styles.copyBtn}>
               {copied ? '✓ Copied!' : 'Copy Prompt'}
             </button>
-            <button onClick={() => setStep(5)} style={styles.nextBtn}>I've Got My JSON →</button>
+            <button onClick={() => handleStepNext(5)} style={styles.nextBtn}>I've Got My JSON →</button>
           </div>
         )}
 
