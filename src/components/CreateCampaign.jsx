@@ -126,22 +126,31 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
             setFields(f => ({ ...f, ...draft.fields }));
             if (draft.step > 1) setStep(draft.step);
             if (draft.campaignId) setCampaignId(draft.campaignId);
+            if (draft.jsonText) setJsonText(draft.jsonText);
           }
         }
       } catch {}
     }
   }, []);
 
+  // Persist jsonText to localStorage as user types on step 5
+  useEffect(() => {
+    if (step === 5 && jsonText) {
+      saveDraftLocally(step, fields, campaignId, jsonText);
+    }
+  }, [jsonText]);
+
   function setField(key, val) {
     setFields(f => ({ ...f, [key]: val }));
   }
 
-  function saveDraftLocally(currentStep, currentFields, currentCampaignId) {
+  function saveDraftLocally(currentStep, currentFields, currentCampaignId, currentJsonText = '') {
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
       userId: user.id,
       campaignId: currentCampaignId,
       step: currentStep,
       fields: currentFields,
+      jsonText: currentJsonText,
     }));
   }
 
@@ -203,7 +212,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   // Steps 2–4: advance step and async-save progress
   function handleStepNext(nextStep) {
     setStep(nextStep);
-    saveDraftLocally(nextStep, fields, campaignId);
+    saveDraftLocally(nextStep, fields, campaignId, jsonText);
     saveDraftToDb(nextStep, fields, campaignId);
   }
 

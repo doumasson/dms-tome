@@ -96,7 +96,9 @@ export default function App() {
     await supabase.from('profiles').upsert(userData, { onConflict: 'id' });
 
     setUser(userData);
-    setAppView('select');
+    // Only navigate to 'select' from loading/login — don't stomp over 'create' or 'game'
+    // (onAuthStateChange fires on tab-back token refreshes too)
+    setAppView(prev => (prev === 'loading' || prev === 'login') ? 'select' : prev);
   }
 
   async function handleSignOut() {
