@@ -132,17 +132,29 @@ const useStore = create((set, get) => ({
     characters: [],
     loaded: false,
     currentSceneIndex: 0,
+    notes: { dm: '', shared: '' },
+    savedEncounters: [],
   },
   loadCampaign: (data) =>
     set({
       campaign: {
         title: data.title || 'Untitled Campaign',
         scenes: data.scenes || [],
-        characters: data.characters || [],
+        characters: (data.characters || []).map(c => ({ resourcesUsed: {}, ...c })),
         loaded: true,
         currentSceneIndex: 0,
+        notes: { dm: '', shared: '' },
+        savedEncounters: [],
       },
     }),
+  loadCampaignSettings: (settings) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        notes: settings?.notes || { dm: '', shared: '' },
+        savedEncounters: settings?.savedEncounters || [],
+      },
+    })),
   unloadCampaign: () =>
     set({
       campaign: {
@@ -151,6 +163,8 @@ const useStore = create((set, get) => ({
         characters: [],
         loaded: false,
         currentSceneIndex: 0,
+        notes: { dm: '', shared: '' },
+        savedEncounters: [],
       },
     }),
   addCharacter: (char) =>
@@ -600,6 +614,7 @@ const useStore = create((set, get) => ({
       },
     }));
     get().saveCampaignToSupabase();
+    get().saveSettingsToSupabase();
   },
 
   castSpell: (charId, slotLevel) =>
@@ -631,6 +646,52 @@ const useStore = create((set, get) => ({
         }),
       },
     })),
+
+  // === Notes ===
+  setNote: (type, value) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        notes: { ...state.campaign.notes, [type]: value },
+      },
+    })),
+
+  // === Saved Encounters ===
+  saveEncounterGroup: (name, enemies) =>
+    set((state) => {
+      const entry = { id: crypto.randomUUID(), name, enemies, savedAt: Date.now() };
+      const savedEncounters = [entry, ...state.campaign.savedEncounters].slice(0, 20);
+      get().saveSettingsToSupabase({ ...state.campaign, savedEncounters });
+      return { campaign: { ...state.campaign, savedEncounters } };
+    }),
+  deleteEncounterGroup: (id) =>
+    set((state) => {
+      const savedEncounters = state.campaign.savedEncounters.filter(e => e.id !== id);
+      get().saveSettingsToSupabase({ ...state.campaign, savedEncounters });
+      return { campaign: { ...state.campaign, savedEncounters } };
+    }),
+
+  // === XP ===
+  awardXp: (amount) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map(c => ({
+          ...c,
+          xp: (c.xp || 0) + Math.floor(amount / Math.max(1, state.campaign.characters.length)),
+        })),
+      },
+    })),
+
+  saveSettingsToSupabase: async (campaignState) => {
+    const { activeCampaign } = get();
+    if (!activeCampaign?.id) return;
+    const c = campaignState || get().campaign;
+    await supabase
+      .from('campaigns')
+      .update({ settings: { notes: c.notes, savedEncounters: c.savedEncounters } })
+      .eq('id', activeCampaign.id);
+  },
 
   saveCampaignToSupabase: async () => {
     const { activeCampaign, campaign } = get();

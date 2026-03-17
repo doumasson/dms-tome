@@ -140,6 +140,52 @@ function PartyRow({ combatant, character, isActive, onSelect }) {
   );
 }
 
+function EnemyRow({ combatant: c, isActive, onSelect }) {
+  const [hovered, setHovered] = useState(false);
+  const [popPos, setPopPos] = useState({ top: 0 });
+  const rowRef = useRef();
+  const hideTimer = useRef();
+
+  function handleMouseEnter() {
+    clearTimeout(hideTimer.current);
+    if (rowRef.current) {
+      const rect = rowRef.current.getBoundingClientRect();
+      setPopPos({ top: rect.top });
+    }
+    setHovered(true);
+  }
+  function handleMouseLeave() {
+    hideTimer.current = setTimeout(() => setHovered(false), 120);
+  }
+
+  return (
+    <div
+      ref={rowRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={onSelect}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 6, padding: '4px 6px',
+        borderRadius: 4, marginBottom: 2, cursor: 'pointer',
+        opacity: c.currentHp <= 0 ? 0.4 : 1,
+        background: isActive ? 'rgba(212,175,55,0.08)' : hovered ? 'rgba(255,255,255,0.04)' : 'transparent',
+        position: 'relative',
+      }}
+    >
+      <div style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: c.currentHp <= 0 ? '#555' : '#e74c3c' }} />
+      <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {c.name}
+      </span>
+      <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', flexShrink: 0 }}>
+        {c.currentHp <= 0 ? '✕' : `${c.currentHp}hp`}
+      </span>
+      {hovered && (
+        <CharPopover character={null} combatant={c} pos={popPos} onMouseEnter={() => clearTimeout(hideTimer.current)} onMouseLeave={handleMouseLeave} />
+      )}
+    </div>
+  );
+}
+
 function CharPopover({ character, combatant, pos, onMouseEnter, onMouseLeave }) {
   return (
     <div
@@ -202,22 +248,7 @@ export default function PartyPanel({ combatants, characters, activeCombatantId, 
             ENEMIES
           </div>
           {enemies.map(c => (
-            <div key={c.id} style={{
-              display: 'flex', alignItems: 'center', gap: 6, padding: '4px 6px',
-              borderRadius: 4, marginBottom: 2,
-              opacity: c.currentHp <= 0 ? 0.4 : 1,
-            }}>
-              <div style={{
-                width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
-                background: c.currentHp <= 0 ? '#555' : '#e74c3c',
-              }} />
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {c.name}
-              </span>
-              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', flexShrink: 0 }}>
-                {c.currentHp <= 0 ? '✕' : `${c.currentHp}hp`}
-              </span>
-            </div>
+            <EnemyRow key={c.id} combatant={c} isActive={c.id === activeCombatantId} onSelect={() => onSelectCombatant(c.id)} />
           ))}
           {deadEnemies > 0 && (
             <div style={{ fontSize: '0.65rem', color: '#e74c3c', padding: '2px 6px' }}>

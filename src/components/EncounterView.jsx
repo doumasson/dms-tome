@@ -7,6 +7,8 @@ import {
 import LootGenerator from './LootGenerator';
 import PartyPanel from './PartyPanel';
 import CharDetailPanel from './CharDetailPanel';
+import { crToXp } from '../lib/xpTable';
+import { CONDITION_INFO } from '../lib/conditionDescriptions';
 
 const MAP_W = 10;
 const MAP_H = 8;
@@ -566,7 +568,8 @@ function ConditionPicker({ combatantId, conditions, onAdd, onRemove }) {
   return (
     <div style={{ position: 'relative', display: 'inline-block' }} ref={ref}>
       {conditions.map(c => (
-        <span key={c} onClick={() => onRemove(combatantId, c)} title="Click to remove"
+        <span key={c} onClick={() => onRemove(combatantId, c)}
+          title={CONDITION_INFO[c] ? `${c}: ${CONDITION_INFO[c]}\n(Click to remove)` : 'Click to remove'}
           style={{ fontSize: '0.65rem', background: 'rgba(231,76,60,0.2)', border: '1px solid #e74c3c', color: '#e74c3c', borderRadius: 3, padding: '1px 5px', marginRight: 2, cursor: 'pointer' }}>
           {c}
         </span>
@@ -881,11 +884,16 @@ function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter
     onLog(entry);
   }
 
+  const awardXp = useStore(s => s.awardXp);
+  const [xpAwarded, setXpAwarded] = useState(false);
+
   const enemies = combatants.filter(c => c.type === 'enemy');
   const allEnemiesDead = enemies.length > 0 && enemies.every(c => c.currentHp <= 0);
   const partyDead = combatants.filter(c => c.type === 'player').every(c => c.currentHp <= 0);
-  // Average CR of defeated enemies (for loot default) — use 1 if unknown
-  const avgCr = 1;
+  const totalXp = enemies.filter(c => c.currentHp <= 0).reduce((sum, c) => sum + crToXp(c.cr), 0);
+  const avgCr = enemies.length > 0
+    ? (enemies.map(c => parseFloat(c.cr) || 0).reduce((a, b) => a + b, 0) / enemies.length).toFixed(1)
+    : 1;
 
   const activeChar = characters?.find(c => c.id === activeCombatant?.id || c.name === activeCombatant?.name) || null;
 
@@ -1058,10 +1066,21 @@ function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter
             </div>
           )}
           {(allEnemiesDead || partyDead) && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               <span style={{ fontSize: '0.8rem', color: allEnemiesDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
                 {allEnemiesDead ? '🏆 Victory!' : '💀 Party defeated!'}
               </span>
+              {allEnemiesDead && totalXp > 0 && (
+                <span style={{ fontSize: '0.72rem', color: '#f1c40f' }}>
+                  {totalXp.toLocaleString()} XP
+                </span>
+              )}
+              {allEnemiesDead && dmMode && totalXp > 0 && !xpAwarded && (
+                <button onClick={() => { awardXp(totalXp); setXpAwarded(true); }} style={{ ...btn.small, color: '#f1c40f', borderColor: 'rgba(241,196,15,0.4)', fontSize: '0.72rem' }}>
+                  ✦ Award XP
+                </button>
+              )}
+              {xpAwarded && <span style={{ fontSize: '0.68rem', color: '#2ecc71' }}>XP awarded!</span>}
               {allEnemiesDead && dmMode && (
                 <button onClick={() => setShowLoot(l => !l)} style={{ ...btn.small, color: '#d4af37', borderColor: 'var(--border-gold)', fontSize: '0.72rem' }}>
                   🎁 Loot
@@ -1463,7 +1482,13 @@ function MonsterNameInput({ value, onChangeName, onSelectMonster }) {
 const BLANK_ROW = () => ({ name: '', count: 1, hp: 10, ac: 12, speed: 30, stats: null, attacks: [], _fromSrd: false });
 
 function CustomCombatSetup({ partyMembers, onStart, onCancel }) {
+  const savedEncounters    = useStore(s => s.campaign.savedEncounters);
+  const saveEncounterGroup = useStore(s => s.saveEncounterGroup);
+  const deleteEncounterGroup = useStore(s => s.deleteEncounterGroup);
+
   const [rows, setRows] = useState([BLANK_ROW()]);
+  const [saveName, setSaveName] = useState('');
+  const [showSave, setShowSave] = useState(false);
 
   function addRow() { setRows(r => [...r, BLANK_ROW()]); }
   function removeRow(i) { setRows(r => r.filter((_, j) => j !== i)); }
@@ -1476,8 +1501,8 @@ function CustomCombatSetup({ partyMembers, onStart, onCancel }) {
     setRows(r => r.map((row, j) => j === i ? { ...row, ...monster, count: row.count } : row));
   }
 
-  function start() {
-    const enemies = rows
+  function buildEnemies() {
+    return rows
       .filter(r => r.name.trim())
       .map(r => ({
         name: r.name.trim(),
@@ -1487,12 +1512,30 @@ function CustomCombatSetup({ partyMembers, onStart, onCancel }) {
         speed: Number(r.speed) || 30,
         stats: r.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
         attacks: r.attacks || [],
+        cr: r.cr,
       }));
+  }
+
+  function start() {
+    const enemies = buildEnemies();
     if (enemies.length === 0) return;
     onStart(enemies);
   }
 
+  function handleSave() {
+    const enemies = buildEnemies();
+    if (!saveName.trim() || enemies.length === 0) return;
+    saveEncounterGroup(saveName.trim(), enemies);
+    setSaveName('');
+    setShowSave(false);
+  }
+
+  function loadGroup(group) {
+    setRows(group.enemies.map(e => ({ ...e, _fromSrd: false })));
+  }
+
   const numStyle = { width: '100%', background: '#0f0a04', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 4, padding: '5px 7px', fontSize: '0.82rem' };
+  const hasRows = rows.some(r => r.name.trim());
 
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', padding: '0 16px' }}>
@@ -1500,6 +1543,23 @@ function CustomCombatSetup({ partyMembers, onStart, onCancel }) {
         <h3 style={{ margin: 0, fontFamily: "'Cinzel', Georgia, serif", fontSize: '1.1rem', color: 'var(--gold)' }}>Add Enemies</h3>
         <button onClick={addRow} style={btn.small}>+ Row</button>
       </div>
+
+      {/* Saved encounter groups */}
+      {savedEncounters.length > 0 && (
+        <div style={{ marginBottom: 12, background: '#0f0a04', border: '1px solid #2a1a0a', borderRadius: 6, padding: '8px 10px' }}>
+          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', letterSpacing: '0.06em', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>SAVED GROUPS</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+            {savedEncounters.map(g => (
+              <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <button onClick={() => loadGroup(g)} style={{ ...btn.small, fontSize: '0.72rem', padding: '3px 8px' }}>
+                  📂 {g.name}
+                </button>
+                <button onClick={() => deleteEncounterGroup(g.id)} style={{ background: 'transparent', border: 'none', color: '#e74c3c', cursor: 'pointer', fontSize: '0.7rem', padding: '2px 4px' }} title="Delete">✕</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 10 }}>
         Type any name, or search the SRD — selecting a monster fills stats & attacks automatically.
@@ -1545,10 +1605,29 @@ function CustomCombatSetup({ partyMembers, onStart, onCancel }) {
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 10 }}>
-        <button onClick={start} disabled={rows.every(r => !r.name.trim())} style={{ ...btn.gold, opacity: rows.every(r => !r.name.trim()) ? 0.4 : 1 }}>
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+        <button onClick={start} disabled={!hasRows} style={{ ...btn.gold, opacity: hasRows ? 1 : 0.4 }}>
           ⚔ Begin →
         </button>
+        {hasRows && !showSave && (
+          <button onClick={() => setShowSave(true)} style={{ ...btn.ghost, fontSize: '0.78rem' }}>
+            💾 Save Group
+          </button>
+        )}
+        {showSave && (
+          <>
+            <input
+              autoFocus
+              value={saveName}
+              onChange={e => setSaveName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') setShowSave(false); }}
+              placeholder="Group name…"
+              style={{ background: '#0f0a04', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 4, padding: '5px 8px', fontSize: '0.82rem', width: 140 }}
+            />
+            <button onClick={handleSave} style={{ ...btn.small }}>Save</button>
+            <button onClick={() => setShowSave(false)} style={{ ...btn.ghost, fontSize: '0.78rem' }}>✕</button>
+          </>
+        )}
         <button onClick={onCancel} style={btn.ghost}>Cancel</button>
       </div>
     </div>
