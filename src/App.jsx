@@ -1,10 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { supabase } from './lib/supabase';
 import useStore from './store/useStore';
+import LoginPage from './components/LoginPage';
+import CampaignSelect from './components/CampaignSelect';
+import CreateCampaign from './components/CreateCampaign';
 import DiceRoller from './components/DiceRoller';
 import CombatTracker from './components/CombatTracker';
 import CharacterSheet from './components/CharacterSheet';
 import SceneViewer from './components/SceneViewer';
 import CampaignImporter from './components/CampaignImporter';
+
+function D20Icon() {
+  return (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style={{ flexShrink: 0, filter: 'drop-shadow(0 0 6px rgba(212,175,55,0.35))' }} aria-hidden="true">
+      <polygon points="18,2 34,13 28,31 8,31 2,13" stroke="#d4af37" strokeWidth="1.8" fill="rgba(212,175,55,0.07)" />
+      <polygon points="18,7 30,27 6,27" stroke="#d4af37" strokeWidth="1.2" fill="rgba(212,175,55,0.04)" opacity="0.7" />
+      <text x="18" y="22" textAnchor="middle" fontSize="9" fontFamily="'Cinzel', Georgia, serif"
+        fontWeight="700" fill="#d4af37" letterSpacing="0.5">20</text>
+    </svg>
+  );
+}
 
 const ALL_TABS = [
   { id: 'dice',       label: '⚔ Dice' },
@@ -14,17 +30,139 @@ const ALL_TABS = [
   { id: 'import',     label: '📥 Import', dmOnly: true },
 ];
 
+// Views: loading | login | select | create | game
 export default function App() {
+  const [appView, setAppView] = useState('loading');
   const [activeTab, setActiveTab] = useState('dice');
-  const dmMode = useStore((s) => s.dmMode);
-  const toggleDmMode = useStore((s) => s.toggleDmMode);
-  const campaign = useStore((s) => s.campaign);
+  const pendingInviteRef = useRef(null);
 
-  // Import tab only visible in DM mode
-  const tabs = ALL_TABS.filter((t) => !t.dmOnly || dmMode);
+  const user = useStore(s => s.user);
+  const setUser = useStore(s => s.setUser);
+  const activeCampaign = useStore(s => s.activeCampaign);
+  const setActiveCampaign = useStore(s => s.setActiveCampaign);
+  const clearActiveCampaign = useStore(s => s.clearActiveCampaign);
+  const loadCampaign = useStore(s => s.loadCampaign);
+  const campaign = useStore(s => s.campaign);
+  const dmMode = useStore(s => s.dmMode);
+  const toggleDmMode = useStore(s => s.toggleDmMode);
 
-  // If current tab becomes hidden, redirect to dice
-  const visibleTabIds = tabs.map((t) => t.id);
+  useEffect(() => {
+    // Pick up invite code from URL or localStorage
+    const params = new URLSearchParams(window.location.search);
+    const urlInvite = params.get('invite');
+    if (urlInvite) {
+      pendingInviteRef.current = urlInvite;
+      localStorage.setItem('pendingInvite', urlInvite);
+      // Clean URL without reload
+      window.history.replaceState({}, '', window.location.pathname);
+    } else {
+      pendingInviteRef.current = localStorage.getItem('pendingInvite');
+    }
+
+    // Check existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        handleSession(session);
+      } else {
+        setAppView('login');
+      }
+    });
+
+    // Listen for auth state changes (OAuth redirect callback fires here)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        handleSession(session);
+      } else {
+        setUser(null);
+        clearActiveCampaign();
+        setAppView('login');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleSession(session) {
+    const authUser = session.user;
+    const userData = {
+      id: authUser.id,
+      email: authUser.email,
+      name: authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || 'Adventurer',
+      avatar_url: authUser.user_metadata?.avatar_url || null,
+    };
+
+    // Sync user to our public.users table
+    await supabase.from('users').upsert(userData, { onConflict: 'id' });
+
+    setUser(userData);
+    setAppView('select');
+  }
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    setUser(null);
+    clearActiveCampaign();
+    localStorage.removeItem('pendingInvite');
+    pendingInviteRef.current = null;
+    setAppView('login');
+  }
+
+  function handleSelectCampaign(campaignRecord) {
+    setActiveCampaign(campaignRecord);
+    if (campaignRecord.campaign_data && Object.keys(campaignRecord.campaign_data).length > 0) {
+      loadCampaign(campaignRecord.campaign_data);
+    }
+    setAppView('game');
+  }
+
+  function handleLeaveCampaign() {
+    clearActiveCampaign();
+    setAppView('select');
+  }
+
+  // ── Loading ──────────────────────────────────────────────────────────────────
+  if (appView === 'loading') {
+    return (
+      <div style={styles.loadingScreen}>
+        <D20Icon />
+        <span style={styles.loadingText}>Loading...</span>
+      </div>
+    );
+  }
+
+  // ── Login ────────────────────────────────────────────────────────────────────
+  if (appView === 'login') {
+    return <LoginPage inviteCode={pendingInviteRef.current} />;
+  }
+
+  // ── Campaign Select ──────────────────────────────────────────────────────────
+  if (appView === 'select') {
+    return (
+      <CampaignSelect
+        user={user}
+        pendingInvite={pendingInviteRef.current}
+        onSelectCampaign={handleSelectCampaign}
+        onCreateCampaign={() => setAppView('create')}
+        onSignOut={handleSignOut}
+      />
+    );
+  }
+
+  // ── Create Campaign ──────────────────────────────────────────────────────────
+  if (appView === 'create') {
+    return (
+      <CreateCampaign
+        user={user}
+        onDone={handleSelectCampaign}
+        onBack={() => setAppView('select')}
+      />
+    );
+  }
+
+  // ── Main Game UI ─────────────────────────────────────────────────────────────
+  const isDM = activeCampaign?.dm_user_id === user?.id;
+  const tabs = ALL_TABS.filter(t => !t.dmOnly || (dmMode && isDM));
+  const visibleTabIds = tabs.map(t => t.id);
   const effectiveTab = visibleTabIds.includes(activeTab) ? activeTab : 'dice';
 
   function renderTab() {
@@ -33,7 +171,7 @@ export default function App() {
       case 'combat':     return <CombatTracker />;
       case 'characters': return <CharacterSheet />;
       case 'scenes':     return <SceneViewer />;
-      case 'import':     return <CampaignImporter />;
+      case 'import':     return <CampaignImporter onSuccess={() => setActiveTab('scenes')} />;
       default:           return <DiceRoller />;
     }
   }
@@ -43,39 +181,48 @@ export default function App() {
       {/* Top Bar */}
       <header style={styles.header}>
         <div style={styles.headerLeft}>
+          <D20Icon />
           <h1 style={styles.appTitle}>DM's Tome</h1>
-          {campaign.loaded && (
-            <span style={styles.campaignBadge}>{campaign.title}</span>
+          {activeCampaign && (
+            <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
           )}
         </div>
         <div style={styles.headerRight}>
-          {dmMode && (
-            <span style={styles.dmBadge}>DM Mode</span>
+          {/* User avatar + leave */}
+          {user?.avatar_url && (
+            <img src={user.avatar_url} alt="" style={styles.headerAvatar} referrerPolicy="no-referrer" />
           )}
-          <button
-            onClick={toggleDmMode}
-            style={{
-              ...styles.dmToggle,
-              background: dmMode
-                ? 'linear-gradient(135deg, #f0c868, #d4af37, #a8841f)'
-                : 'linear-gradient(160deg, #3a2412, #2e1e0e)',
-              color: dmMode ? '#1a0e00' : 'var(--text-secondary)',
-              border: dmMode ? 'none' : '1px solid var(--border-light)',
-              boxShadow: dmMode ? '0 0 14px rgba(212,175,55,0.3)' : 'none',
-            }}
-          >
-            {dmMode ? '👁 DM Mode ON' : '🔒 DM Mode OFF'}
+          <button onClick={handleLeaveCampaign} style={styles.leaveBtn} title="Back to campaign list">
+            ⬅ Campaigns
           </button>
+          {isDM && (
+            <>
+              {dmMode && <span style={styles.dmBadge}>DM Mode</span>}
+              <button
+                onClick={toggleDmMode}
+                style={{
+                  ...styles.dmToggle,
+                  background: dmMode
+                    ? 'linear-gradient(135deg, #f0c868, #d4af37, #a8841f)'
+                    : 'linear-gradient(160deg, #3a2412, #2e1e0e)',
+                  color: dmMode ? '#1a0e00' : 'var(--text-secondary)',
+                  border: dmMode ? 'none' : '1px solid var(--border-light)',
+                  boxShadow: dmMode ? '0 0 14px rgba(212,175,55,0.3)' : 'none',
+                }}
+              >
+                {dmMode ? '👁 DM Mode ON' : '🔒 DM Mode OFF'}
+              </button>
+            </>
+          )}
         </div>
       </header>
 
-      {/* Decorative border */}
       <div style={styles.headerRule} />
 
       {/* Tab Navigation */}
       <nav style={styles.nav}>
         <div style={styles.tabList}>
-          {tabs.map((tab) => {
+          {tabs.map(tab => {
             const isActive = tab.id === effectiveTab;
             return (
               <button
@@ -112,6 +259,21 @@ export default function App() {
 }
 
 const styles = {
+  loadingScreen: {
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--bg-primary)',
+    gap: 16,
+  },
+  loadingText: {
+    color: 'var(--text-muted)',
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '0.9rem',
+    letterSpacing: '0.1em',
+  },
   app: {
     minHeight: '100vh',
     display: 'flex',
@@ -120,7 +282,6 @@ const styles = {
   },
   header: {
     background: 'linear-gradient(180deg, #211408 0%, #180f08 100%)',
-    borderBottom: 'none',
     padding: '14px 28px',
     display: 'flex',
     alignItems: 'center',
@@ -168,6 +329,24 @@ const styles = {
     alignItems: 'center',
     gap: 12,
   },
+  headerAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: '50%',
+    border: '2px solid var(--border-gold)',
+    objectFit: 'cover',
+  },
+  leaveBtn: {
+    background: 'transparent',
+    border: '1px solid var(--border-light)',
+    color: 'var(--text-muted)',
+    borderRadius: 6,
+    padding: '6px 14px',
+    cursor: 'pointer',
+    fontSize: '0.78rem',
+    fontFamily: "'Cinzel', Georgia, serif",
+    minHeight: 36,
+  },
   dmBadge: {
     background: 'rgba(212, 175, 55, 0.15)',
     border: '1px solid var(--border-gold)',
@@ -206,7 +385,6 @@ const styles = {
     overflowX: 'auto',
     maxWidth: 900,
     margin: '0 auto',
-    paddingBottom: 0,
   },
   tabUnderline: {
     height: 2,

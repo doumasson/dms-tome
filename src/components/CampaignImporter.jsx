@@ -94,7 +94,7 @@ function validateCampaign(data) {
   return errors;
 }
 
-export default function CampaignImporter() {
+export default function CampaignImporter({ onSuccess }) {
   const loadCampaign = useStore((s) => s.loadCampaign);
   const unloadCampaign = useStore((s) => s.unloadCampaign);
   const campaign = useStore((s) => s.campaign);
@@ -139,6 +139,18 @@ export default function CampaignImporter() {
     if (!validData) return;
     loadCampaign(validData);
     setStatus('loaded');
+    onSuccess?.();
+  }
+
+  function handleLoadSample() {
+    let parsed;
+    try { parsed = JSON.parse(EXAMPLE_JSON); } catch { return; }
+    loadCampaign(parsed);
+    setJsonText(EXAMPLE_JSON);
+    setStatus('loaded');
+    setValidData(parsed);
+    setErrors([]);
+    onSuccess?.();
   }
 
   function handleUnload() {
@@ -187,12 +199,17 @@ export default function CampaignImporter() {
       <div className="card" style={styles.importCard}>
         <div style={styles.inputHeader}>
           <h3 style={styles.inputLabel}>Paste Campaign JSON</h3>
-          <button
-            className="btn-dark btn-sm"
-            onClick={() => setShowExample((v) => !v)}
-          >
-            {showExample ? 'Hide Example' : 'Show Example'}
-          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="btn-gold btn-sm" onClick={handleLoadSample}>
+              Load Sample Campaign
+            </button>
+            <button
+              className="btn-dark btn-sm"
+              onClick={() => setShowExample((v) => !v)}
+            >
+              {showExample ? 'Hide Example' : 'Show Format'}
+            </button>
+          </div>
         </div>
 
         {showExample && (

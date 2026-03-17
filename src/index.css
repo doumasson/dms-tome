@@ -316,6 +316,39 @@ textarea {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes activeTurnGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.2), 0 4px 20px rgba(0,0,0,0.6);
+    border-color: var(--gold);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(212,175,55,0.8), 0 0 28px rgba(212,175,55,0.35), 0 4px 20px rgba(0,0,0,0.6);
+    border-color: var(--gold-light);
+  }
+}
+
 .fade-in {
   animation: fadeIn 0.2s ease forwards;
+}
+
+.combat-active {
+  animation: activeTurnGlow 1.8s ease-in-out infinite;
+  background: linear-gradient(160deg, #2a1b09, #1e1308, #1a1005) !important;
+}
+
+/* === Mobile Responsive === */
+@media (max-width: 600px) {
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.2rem; }
+
+  button {
+    min-height: 48px;
+    font-size: 0.9rem;
+  }
+
+  .btn-sm {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
 }

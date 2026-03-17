@@ -1,6 +1,15 @@
 import { create } from 'zustand/react';
 
 const useStore = create((set, get) => ({
+  // === Auth ===
+  user: null,
+  setUser: (user) => set({ user }),
+
+  // === Active Campaign (Supabase record) ===
+  activeCampaign: null,
+  setActiveCampaign: (campaign) => set({ activeCampaign: campaign }),
+  clearActiveCampaign: () => set({ activeCampaign: null }),
+
   // === DM Mode ===
   dmMode: false,
   toggleDmMode: () => set((state) => ({ dmMode: !state.dmMode })),
@@ -19,6 +28,9 @@ const useStore = create((set, get) => ({
         initiative: Number(combatant.initiative) || 0,
         maxHp: Number(combatant.maxHp) || 10,
         currentHp: Number(combatant.maxHp) || 10,
+        ac: combatant.ac !== '' && combatant.ac !== undefined ? Number(combatant.ac) : null,
+        attackBonus: combatant.attackBonus?.trim() || null,
+        damage: combatant.damage?.trim() || null,
       };
       const newList = [...state.combat.combatants, newCombatant].sort(
         (a, b) => b.initiative - a.initiative
@@ -128,6 +140,41 @@ const useStore = create((set, get) => ({
         currentSceneIndex: 0,
       },
     }),
+  addCharacter: (char) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: [
+          ...state.campaign.characters,
+          {
+            id: crypto.randomUUID(),
+            name: char.name || 'New Character',
+            stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+            skills: char.skills || [],
+            weapons: char.weapons || [],
+            maxHp: Number(char.maxHp) || 10,
+            currentHp: Number(char.maxHp) || 10,
+            spellSlots: char.spellSlots || null,
+          },
+        ],
+      },
+    })),
+  updateCharacter: (id, updates) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) =>
+          c.id === id ? { ...c, ...updates } : c
+        ),
+      },
+    })),
+  deleteCharacter: (id) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.filter((c) => c.id !== id),
+      },
+    })),
   setCurrentScene: (index) =>
     set((state) => ({
       campaign: {
