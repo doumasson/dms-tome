@@ -50,22 +50,43 @@ Requirements:
 - Make stats, HP, and equipment appropriate for the starting level
 - For spellcasters, set spellSlots to an object like: {"1st": 4, "2nd": 2}
 - Ensure the tone matches: ${fields.tone}
-- The villain (${fields.villain}) should appear or be foreshadowed in multiple scenes`;
+- The villain (${fields.villain}) should appear or be foreshadowed in multiple scenes
+
+CRITICAL: Output ONLY valid JSON. No markdown code blocks. No explanation before or after. Start with { and end with }. No \\[ or \\] escaping - use standard JSON array brackets [ ].`;
 }
 
 function generateInviteCode() {
   return Math.random().toString(36).substring(2, 10).toUpperCase();
 }
 
+function cleanJsonText(text) {
+  let cleaned = text.trim();
+  // Remove markdown code fences
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+  // Remove any text before the first {
+  const firstBrace = cleaned.indexOf('{');
+  if (firstBrace > 0) cleaned = cleaned.slice(firstBrace);
+  // Remove any text after the last }
+  const lastBrace = cleaned.lastIndexOf('}');
+  if (lastBrace !== -1 && lastBrace < cleaned.length - 1) cleaned = cleaned.slice(0, lastBrace + 1);
+  // Replace escaped brackets \[ and \] with plain brackets
+  cleaned = cleaned.replace(/\\\[/g, '[').replace(/\\\]/g, ']');
+  return cleaned;
+}
+
 function validateCampaignJson(text) {
+  const cleaned = cleanJsonText(text);
   try {
-    const data = JSON.parse(text);
+    const data = JSON.parse(cleaned);
     if (!data.title) throw new Error('Missing "title" field');
     if (!Array.isArray(data.scenes)) throw new Error('Missing "scenes" array');
     if (data.scenes.length === 0) throw new Error('"scenes" array is empty');
     return { ok: true, data };
   } catch (e) {
-    return { ok: false, error: e.message };
+    const hint = e instanceof SyntaxError
+      ? 'The AI included extra text or formatting. Copy only the JSON — it must start with { and end with }.'
+      : e.message;
+    return { ok: false, error: hint };
   }
 }
 

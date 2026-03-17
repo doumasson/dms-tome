@@ -105,6 +105,17 @@ export default function CampaignImporter({ onSuccess }) {
   const [status, setStatus] = useState('idle'); // 'idle' | 'valid' | 'invalid' | 'loaded'
   const [showExample, setShowExample] = useState(false);
 
+  function cleanJsonText(text) {
+    let cleaned = text.trim();
+    cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+    const firstBrace = cleaned.indexOf('{');
+    if (firstBrace > 0) cleaned = cleaned.slice(firstBrace);
+    const lastBrace = cleaned.lastIndexOf('}');
+    if (lastBrace !== -1 && lastBrace < cleaned.length - 1) cleaned = cleaned.slice(0, lastBrace + 1);
+    cleaned = cleaned.replace(/\\\[/g, '[').replace(/\\\]/g, ']');
+    return cleaned;
+  }
+
   function handleValidate() {
     setValidData(null);
     setStatus('idle');
@@ -117,9 +128,13 @@ export default function CampaignImporter({ onSuccess }) {
 
     let parsed;
     try {
-      parsed = JSON.parse(jsonText);
+      parsed = JSON.parse(cleanJsonText(jsonText));
     } catch (e) {
-      setErrors([`JSON parse error: ${e.message}`]);
+      setErrors([
+        'Could not parse JSON. The AI may have included extra text or markdown formatting.',
+        'Make sure you copy only the JSON — it must start with { and end with }.',
+        `Parse error: ${e.message}`,
+      ]);
       setStatus('invalid');
       return;
     }
