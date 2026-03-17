@@ -70,14 +70,16 @@ export default function App() {
     });
 
     // Listen for auth state changes (OAuth redirect callback fires here)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        handleSession(session);
-      } else {
+    // TOKEN_REFRESHED fires on tab-focus — ignore it to avoid resetting app state
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
         setUser(null);
         clearActiveCampaign();
         setAppView('login');
+      } else if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        if (session) handleSession(session);
       }
+      // TOKEN_REFRESHED: token silently refreshed on tab-focus, nothing to do
     });
 
     return () => subscription.unsubscribe();
@@ -85,6 +87,11 @@ export default function App() {
 
   async function handleSession(session) {
     const authUser = session.user;
+
+    // If the same user is already logged in, don't re-process (avoids re-renders on tab focus)
+    const currentUser = useStore.getState().user;
+    if (currentUser?.id === authUser.id) return;
+
     const userData = {
       id: authUser.id,
       email: authUser.email,
@@ -96,8 +103,6 @@ export default function App() {
     await supabase.from('profiles').upsert(userData, { onConflict: 'id' });
 
     setUser(userData);
-    // Only navigate to 'select' from loading/login — don't stomp over 'create' or 'game'
-    // (onAuthStateChange fires on tab-back token refreshes too)
     setAppView(prev => (prev === 'loading' || prev === 'login') ? 'select' : prev);
   }
 
