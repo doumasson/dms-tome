@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from './lib/supabase';
 import useStore from './store/useStore';
 import LoginPage from './components/LoginPage';
@@ -8,7 +8,11 @@ import DiceRoller from './components/DiceRoller';
 import CombatTracker from './components/CombatTracker';
 import CharacterSheet from './components/CharacterSheet';
 import SceneViewer from './components/SceneViewer';
+import EncounterView from './components/EncounterView';
 import CampaignImporter from './components/CampaignImporter';
+import ApiKeySettings from './components/ApiKeySettings';
+import CampaignManager from './components/CampaignManager';
+import NotesTab from './components/NotesTab';
 
 function D20Icon() {
   return (
@@ -23,11 +27,11 @@ function D20Icon() {
 }
 
 const ALL_TABS = [
-  { id: 'dice',       label: '⚔ Dice' },
-  { id: 'combat',     label: '🛡 Combat' },
+  { id: 'dice',      label: '⚔ Dice' },
+  { id: 'encounter', label: '🗺 Encounter' },
   { id: 'characters', label: '📜 Characters' },
-  { id: 'scenes',     label: '🗺 Scenes' },
-  { id: 'import',     label: '📥 Import', dmOnly: true },
+  { id: 'notes',     label: '📝 Notes' },
+  { id: 'import',    label: '📥 Import', dmOnly: true },
 ];
 
 // Views: loading | login | select | create | game
@@ -35,7 +39,12 @@ export default function App() {
   const [appView, setAppView] = useState('loading');
   const [activeTab, setActiveTab] = useState('dice');
   const [draftCampaign, setDraftCampaign] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showManager, setShowManager] = useState(false);
+  const [liveConnected, setLiveConnected] = useState(false);
   const pendingInviteRef = useRef(null);
+  const channelRef = useRef(null);
+  const broadcastDebounce = useRef(null);
 
   const user = useStore(s => s.user);
   const setUser = useStore(s => s.setUser);
@@ -43,9 +52,13 @@ export default function App() {
   const setActiveCampaign = useStore(s => s.setActiveCampaign);
   const clearActiveCampaign = useStore(s => s.clearActiveCampaign);
   const loadCampaign = useStore(s => s.loadCampaign);
+  const loadCampaignSettings = useStore(s => s.loadCampaignSettings);
   const campaign = useStore(s => s.campaign);
   const dmMode = useStore(s => s.dmMode);
   const toggleDmMode = useStore(s => s.toggleDmMode);
+  const isDM = useStore(s => s.isDM);
+  const encounter = useStore(s => s.encounter);
+  const syncEncounterDown = useStore(s => s.syncEncounterDown);
 
   useEffect(() => {
     // Pick up invite code from URL or localStorage
@@ -84,6 +97,48 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // ── Realtime Sync ─────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (appView !== 'game' || !activeCampaign?.id) return;
+
+    const ch = supabase.channel(`encounter:${activeCampaign.id}`, {
+      config: { broadcast: { ack: false } },
+    });
+
+    ch.on('broadcast', { event: 'encounter-sync' }, ({ payload }) => {
+      // Only non-DMs apply incoming state
+      if (!isDM || !dmMode) {
+        syncEncounterDown(payload);
+      }
+    });
+
+    ch.subscribe(status => {
+      setLiveConnected(status === 'SUBSCRIBED');
+    });
+
+    channelRef.current = ch;
+
+    return () => {
+      ch.unsubscribe();
+      channelRef.current = null;
+      setLiveConnected(false);
+    };
+  }, [appView, activeCampaign?.id]);
+
+  // DM broadcasts encounter state changes (debounced 400ms)
+  useEffect(() => {
+    if (!isDM || !dmMode || !channelRef.current || !liveConnected) return;
+    clearTimeout(broadcastDebounce.current);
+    broadcastDebounce.current = setTimeout(() => {
+      channelRef.current?.send({
+        type: 'broadcast',
+        event: 'encounter-sync',
+        payload: encounter,
+      });
+    }, 400);
+    return () => clearTimeout(broadcastDebounce.current);
+  }, [encounter, isDM, dmMode, liveConnected]);
 
   async function handleSession(session) {
     const authUser = session.user;
@@ -126,6 +181,9 @@ export default function App() {
     if (campaignRecord.campaign_data && Object.keys(campaignRecord.campaign_data).length > 0) {
       loadCampaign(campaignRecord.campaign_data);
     }
+    if (campaignRecord.settings) {
+      loadCampaignSettings(campaignRecord.settings);
+    }
     setAppView('game');
   }
 
@@ -152,17 +210,23 @@ export default function App() {
   // ── Campaign Select ──────────────────────────────────────────────────────────
   if (appView === 'select') {
     return (
-      <CampaignSelect
-        user={user}
-        pendingInvite={pendingInviteRef.current}
-        onSelectCampaign={handleSelectCampaign}
-        onCreateCampaign={() => {
-          setDraftCampaign(null);
-          localStorage.removeItem('dm-tome-wizard-draft');
-          setAppView('create');
-        }}
-        onSignOut={handleSignOut}
-      />
+      <>
+        <CampaignSelect
+          user={user}
+          pendingInvite={pendingInviteRef.current}
+          onSelectCampaign={handleSelectCampaign}
+          onCreateCampaign={() => {
+            setDraftCampaign(null);
+            localStorage.removeItem('dm-tome-wizard-draft');
+            setAppView('create');
+          }}
+          onSignOut={handleSignOut}
+          onOpenSettings={() => setShowSettings(true)}
+        />
+        {showSettings && (
+          <ApiKeySettings userId={user?.id} onClose={() => setShowSettings(false)} />
+        )}
+      </>
     );
   }
 
@@ -185,7 +249,6 @@ export default function App() {
   }
 
   // ── Main Game UI ─────────────────────────────────────────────────────────────
-  const isDM = activeCampaign?.dm_user_id === user?.id;
   const tabs = ALL_TABS.filter(t => !t.dmOnly || (dmMode && isDM));
   const visibleTabIds = tabs.map(t => t.id);
   const effectiveTab = visibleTabIds.includes(activeTab) ? activeTab : 'dice';
@@ -193,10 +256,10 @@ export default function App() {
   function renderTab() {
     switch (effectiveTab) {
       case 'dice':       return <DiceRoller />;
-      case 'combat':     return <CombatTracker />;
+      case 'encounter':  return <EncounterView />;
       case 'characters': return <CharacterSheet />;
-      case 'scenes':     return <SceneViewer />;
-      case 'import':     return <CampaignImporter onSuccess={() => setActiveTab('scenes')} />;
+      case 'notes':      return <NotesTab />;
+      case 'import':     return <CampaignImporter onSuccess={() => setActiveTab('encounter')} />;
       default:           return <DiceRoller />;
     }
   }
@@ -211,6 +274,12 @@ export default function App() {
           {activeCampaign && (
             <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
           )}
+          {appView === 'game' && (
+            <span style={{ fontSize: '0.68rem', color: liveConnected ? '#2ecc71' : '#888', letterSpacing: '0.04em' }}
+              title={liveConnected ? 'Realtime connected' : 'Connecting...'}>
+              {liveConnected ? '● Live' : '○ …'}
+            </span>
+          )}
         </div>
         <div style={styles.headerRight}>
           {/* User avatar + leave */}
@@ -223,6 +292,9 @@ export default function App() {
           {isDM && (
             <>
               {dmMode && <span style={styles.dmBadge}>DM Mode</span>}
+              <button onClick={() => setShowManager(true)} style={styles.manageBtn} title="Manage Campaign">
+                👥
+              </button>
               <button
                 onClick={toggleDmMode}
                 style={{
@@ -273,6 +345,10 @@ export default function App() {
       <main style={styles.main}>
         {renderTab()}
       </main>
+
+      {showManager && (
+        <CampaignManager onClose={() => setShowManager(false)} />
+      )}
 
       {/* Footer */}
       <footer style={styles.footer}>
@@ -370,6 +446,17 @@ const styles = {
     cursor: 'pointer',
     fontSize: '0.78rem',
     fontFamily: "'Cinzel', Georgia, serif",
+    minHeight: 36,
+  },
+  manageBtn: {
+    background: 'transparent',
+    border: '1px solid var(--border-light)',
+    color: 'var(--text-muted)',
+    borderRadius: 6,
+    padding: '6px 10px',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    lineHeight: 1,
     minHeight: 36,
   },
   dmBadge: {

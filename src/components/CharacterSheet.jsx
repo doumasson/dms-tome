@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import useStore from '../store/useStore';
+import { getPortraitUrl } from '../lib/dice';
+import { buildSpellSlotMap, isCaster } from '../lib/spellSlots';
 
 const STAT_NAMES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 const STAT_LABELS = { str: 'STR', dex: 'DEX', con: 'CON', int: 'INT', wis: 'WIS', cha: 'CHA' };
@@ -41,6 +43,24 @@ function CharacterCard({ character }) {
   const [addingSpellLevel, setAddingSpellLevel] = useState(false);
   const [newSpellLevel, setNewSpellLevel] = useState('1');
   const [newSpellTotal, setNewSpellTotal] = useState('');
+  const [editingIdentity, setEditingIdentity] = useState(false);
+  const [raceDraft, setRaceDraft] = useState(character.race || '');
+  const [classDraft, setClassDraft] = useState(character.class || '');
+  const [levelDraft, setLevelDraft] = useState(String(character.level || 1));
+
+  const portraitUrl = getPortraitUrl(character.name, character.race, character.class);
+
+  function saveIdentity() {
+    const level = Math.max(1, Math.min(20, parseInt(levelDraft) || 1));
+    updateCharacter(character.id, { race: raceDraft.trim(), class: classDraft.trim(), level });
+    setEditingIdentity(false);
+  }
+
+  function autoFillSpellSlots() {
+    const level = character.level || 1;
+    const slotMap = buildSpellSlotMap(character.class, level, character.spellSlots || {});
+    if (slotMap) updateCharacter(character.id, { spellSlots: slotMap });
+  }
 
   function saveStat(statKey, value) {
     const num = parseInt(value, 10);
@@ -155,27 +175,79 @@ function CharacterCard({ character }) {
     <div className="card" style={styles.charCard}>
       {/* Header */}
       <div style={styles.charHeader}>
-        {dmMode && editingName ? (
-          <input
-            autoFocus
-            value={nameDraft}
-            onChange={(e) => setNameDraft(e.target.value)}
-            onBlur={saveName}
-            onKeyDown={(e) => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false); }}
-            style={{ ...styles.nameInput, fontSize: '1.1rem' }}
-          />
-        ) : dmMode ? (
-          <button
-            style={styles.charNameBtn}
-            onClick={() => { setEditingName(true); setNameDraft(character.name); }}
-            title="Click to edit name"
-          >
-            {character.name}
-            <span style={styles.editHint}>✎</span>
-          </button>
-        ) : (
-          <span style={styles.charNameStatic}>{character.name}</span>
-        )}
+        {/* Portrait */}
+        <img
+          src={portraitUrl}
+          alt=""
+          style={styles.portrait}
+          onError={e => { e.currentTarget.style.display = 'none'; }}
+        />
+
+        {/* Name + identity */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {dmMode && editingName ? (
+            <input
+              autoFocus
+              value={nameDraft}
+              onChange={(e) => setNameDraft(e.target.value)}
+              onBlur={saveName}
+              onKeyDown={(e) => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false); }}
+              style={{ ...styles.nameInput, fontSize: '1.1rem' }}
+            />
+          ) : dmMode ? (
+            <button
+              style={styles.charNameBtn}
+              onClick={() => { setEditingName(true); setNameDraft(character.name); }}
+              title="Click to edit name"
+            >
+              {character.name}
+              <span style={styles.editHint}>✎</span>
+            </button>
+          ) : (
+            <span style={styles.charNameStatic}>{character.name}</span>
+          )}
+
+          {/* Race / Class / Level row */}
+          {editingIdentity ? (
+            <div style={{ display: 'flex', gap: 6, marginTop: 4, alignItems: 'center', flexWrap: 'wrap' }}>
+              <input
+                autoFocus
+                value={raceDraft}
+                onChange={e => setRaceDraft(e.target.value)}
+                placeholder="Race"
+                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 80 }}
+              />
+              <input
+                value={classDraft}
+                onChange={e => setClassDraft(e.target.value)}
+                placeholder="Class"
+                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 80 }}
+              />
+              <input
+                type="number"
+                value={levelDraft}
+                onChange={e => setLevelDraft(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') saveIdentity(); if (e.key === 'Escape') setEditingIdentity(false); }}
+                placeholder="Lv"
+                min={1} max={20}
+                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 46 }}
+              />
+              <button onClick={saveIdentity} style={styles.editHintBtn}>✓</button>
+            </div>
+          ) : (
+            <div
+              onClick={dmMode ? () => { setRaceDraft(character.race || ''); setClassDraft(character.class || ''); setLevelDraft(String(character.level || 1)); setEditingIdentity(true); } : undefined}
+              title={dmMode ? 'Click to edit race, class & level' : undefined}
+              style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2, cursor: dmMode ? 'pointer' : 'default', display: 'flex', alignItems: 'center', gap: 4 }}
+            >
+              {character.race || character.class
+                ? <span>{[character.race, character.class && `${character.class} Lv ${character.level || 1}`].filter(Boolean).join(' · ')}</span>
+                : dmMode ? <span style={{ fontStyle: 'italic' }}>+ Add race, class & level</span>
+                : null}
+              {dmMode && (character.race || character.class) && <span style={styles.editHint}>✎</span>}
+            </div>
+          )}
+        </div>
 
         <div style={styles.headerRight}>
           {/* HP editors — DM can click to edit, players see static numbers */}
@@ -400,12 +472,23 @@ function CharacterCard({ character }) {
             <div style={styles.spellHeader}>
               <h4 style={styles.sectionTitle}>Spell Slots</h4>
               {dmMode && (
-                <button
-                  className="btn-dark btn-sm"
-                  onClick={() => setAddingSpellLevel((a) => !a)}
-                >
-                  {addingSpellLevel ? 'Cancel' : '+ Add Level'}
-                </button>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {isCaster(character.class) && (
+                    <button
+                      className="btn-dark btn-sm"
+                      onClick={autoFillSpellSlots}
+                      title={`Auto-fill ${character.class} Lv ${character.level || 1} spell slots`}
+                    >
+                      ✦ Auto-fill
+                    </button>
+                  )}
+                  <button
+                    className="btn-dark btn-sm"
+                    onClick={() => setAddingSpellLevel((a) => !a)}
+                  >
+                    {addingSpellLevel ? 'Cancel' : '+ Add Level'}
+                  </button>
+                </div>
               )}
             </div>
 
@@ -505,6 +588,9 @@ export default function CharacterSheet() {
 
   const [newCharName, setNewCharName] = useState('');
   const [showNewForm, setShowNewForm] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [importDraft, setImportDraft] = useState('');
+  const [importError, setImportError] = useState('');
 
   function handleNewCharacter(e) {
     e.preventDefault();
@@ -512,6 +598,50 @@ export default function CharacterSheet() {
     addCharacter({ name });
     setNewCharName('');
     setShowNewForm(false);
+  }
+
+  function handleImport() {
+    setImportError('');
+    let data;
+    try {
+      data = JSON.parse(importDraft.trim());
+    } catch {
+      setImportError('Invalid JSON. Check for syntax errors.');
+      return;
+    }
+    // Accept single object or array
+    const chars = Array.isArray(data) ? data : [data];
+    if (chars.length === 0) { setImportError('No characters found.'); return; }
+    chars.forEach(c => {
+      addCharacter({
+        name: c.name || 'Imported Character',
+        race: c.race || '',
+        class: c.class || c.className || '',
+        level: parseInt(c.level) || 1,
+        maxHp: parseInt(c.maxHp || c.hp?.max || c.hp) || 10,
+        currentHp: parseInt(c.currentHp || c.hp?.current || c.maxHp || c.hp) || 10,
+        ac: parseInt(c.ac || c.armorClass) || 10,
+        stats: {
+          str: c.stats?.str ?? c.str ?? 10,
+          dex: c.stats?.dex ?? c.dex ?? 10,
+          con: c.stats?.con ?? c.con ?? 10,
+          int: c.stats?.int ?? c.int ?? 10,
+          wis: c.stats?.wis ?? c.wis ?? 10,
+          cha: c.stats?.cha ?? c.cha ?? 10,
+        },
+        skills: Array.isArray(c.skills) ? c.skills : [],
+        attacks: Array.isArray(c.attacks) ? c.attacks : [],
+        abilities: Array.isArray(c.abilities) ? c.abilities : [],
+        spells: Array.isArray(c.spells) ? c.spells : [],
+        spellSlots: c.spellSlots || {},
+        portrait: c.portrait || '',
+        background: c.background || '',
+        alignment: c.alignment || '',
+        xp: parseInt(c.xp) || 0,
+      });
+    });
+    setImportDraft('');
+    setShowImport(false);
   }
 
   return (
@@ -523,15 +653,46 @@ export default function CharacterSheet() {
             <span style={styles.campaignTitle}>{campaign.title}</span>
           )}
           {dmMode && (
-            <button
-              className="btn-gold btn-sm"
-              onClick={() => setShowNewForm((s) => !s)}
-            >
-              {showNewForm ? 'Cancel' : '+ New Character'}
-            </button>
+            <>
+              <button
+                className="btn-gold btn-sm"
+                onClick={() => { setShowImport(s => !s); setShowNewForm(false); setImportError(''); }}
+              >
+                {showImport ? 'Cancel' : '📥 Import JSON'}
+              </button>
+              <button
+                className="btn-gold btn-sm"
+                onClick={() => { setShowNewForm((s) => !s); setShowImport(false); }}
+              >
+                {showNewForm ? 'Cancel' : '+ New Character'}
+              </button>
+            </>
           )}
         </div>
       </div>
+
+      {/* Import JSON Form */}
+      {showImport && (
+        <div className="card fade-in" style={styles.newCharForm}>
+          <h3 style={styles.subheading}>Import Character JSON</h3>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 8 }}>
+            Paste a character object or array of characters. Accepts fields: name, race, class, level, maxHp, currentHp, ac, stats (str/dex/con/int/wis/cha), skills, attacks, abilities, spells, spellSlots.
+          </p>
+          <textarea
+            autoFocus
+            value={importDraft}
+            onChange={e => { setImportDraft(e.target.value); setImportError(''); }}
+            placeholder={'{\n  "name": "Aragorn",\n  "race": "Human",\n  "class": "Ranger",\n  "level": 5,\n  "maxHp": 45,\n  "ac": 16,\n  "stats": { "str": 16, "dex": 14, "con": 14, "int": 12, "wis": 14, "cha": 12 }\n}'}
+            rows={10}
+            style={{ width: '100%', background: '#0f0a04', border: '1px solid #2a1a0a', color: 'var(--text-primary)', borderRadius: 6, padding: '8px 10px', fontSize: '0.8rem', fontFamily: 'monospace', resize: 'vertical', boxSizing: 'border-box' }}
+          />
+          {importError && <p style={{ color: '#e74c3c', fontSize: '0.8rem', margin: '4px 0' }}>{importError}</p>}
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+            <button className="btn-gold" onClick={handleImport}>Import</button>
+            <button className="btn-sm" onClick={() => { setShowImport(false); setImportError(''); }} style={{ background: 'transparent', border: '1px solid #3a2a1a', color: 'var(--text-muted)', borderRadius: 6, padding: '6px 14px', cursor: 'pointer' }}>Cancel</button>
+          </div>
+        </div>
+      )}
 
       {/* New Character Form */}
       {showNewForm && (
@@ -665,10 +826,28 @@ const styles = {
     fontFamily: "'Cinzel', 'Georgia', serif",
     letterSpacing: '0.04em',
   },
+  portrait: {
+    width: 64,
+    height: 64,
+    borderRadius: '50%',
+    border: '2px solid var(--border-gold)',
+    background: 'rgba(212,175,55,0.06)',
+    flexShrink: 0,
+    objectFit: 'cover',
+  },
   editHint: {
     fontSize: '0.75rem',
     color: 'var(--parchment-dim)',
     opacity: 0.6,
+  },
+  editHintBtn: {
+    background: 'transparent',
+    border: '1px solid var(--border-gold)',
+    color: 'var(--gold)',
+    borderRadius: 4,
+    padding: '2px 8px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
   },
   editNote: {
     fontSize: '0.65rem',

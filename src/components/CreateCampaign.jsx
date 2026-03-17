@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { getClaudeApiKey, generateCampaignJSON } from '../lib/claudeApi';
+import ApiKeySettings from './ApiKeySettings';
 
 const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
 const SETTINGS = ['High Fantasy', 'Forgotten Realms', 'Dark Gothic', 'Steampunk', 'Ancient World', 'Urban Fantasy', 'Sci-Fi'];
@@ -55,39 +57,70 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
   "title": "${fields.name}",
   "scenes": [
     {
+      "id": "scene-01",
       "title": "Scene title",
-      "description": "Narrative description shown to players. Set the scene, describe the environment, what's happening.",
+      "text": "Narrative description shown to players. Set the scene vividly.",
       "dmNotes": "Secret DM information — NPC motivations, hidden clues, what happens if players do X.",
-      "choices": ["Option A players can pursue", "Option B players can pursue"]
+      "choices": ["Option A players can pursue", "Option B players can pursue"],
+      "isEncounter": false,
+      "enemies": []
+    },
+    {
+      "id": "scene-02",
+      "title": "Combat Scene title",
+      "text": "Narrative description of the encounter location.",
+      "dmNotes": "Tactical notes for the DM — terrain, monster tactics, escape routes.",
+      "choices": ["Fight", "Flee", "Negotiate"],
+      "isEncounter": true,
+      "enemies": [
+        {
+          "name": "Enemy Name",
+          "count": 2,
+          "hp": 15,
+          "ac": 13,
+          "speed": 30,
+          "stats": { "str": 12, "dex": 12, "con": 12, "int": 8, "wis": 10, "cha": 8 },
+          "attacks": [
+            { "name": "Weapon Name", "bonus": "+4", "damage": "1d8+2" }
+          ],
+          "cr": "1/2"
+        }
+      ]
     }
   ],
   "characters": [
     {
-      "name": "Character name",
+      "id": "char-01",
+      "name": "NPC Name",
       "stats": { "str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10 },
       "skills": ["Perception", "Stealth"],
-      "weapons": ["Longsword +5 (1d8+3 slashing)"],
+      "weapons": [
+        { "name": "Longsword", "attackBonus": "+5", "damage": "1d8+3" }
+      ],
+      "ac": 14,
       "maxHp": 20,
+      "currentHp": 20,
+      "speed": 30,
       "spellSlots": null
     }
   ]
 }
 
 Requirements:
-- Include 6–10 scenes that tell a complete, cohesive story arc
-- Each scene should have meaningful player choices
-- Include 2–4 pre-made NPCs or notable characters in the characters array
-- Make stats, HP, and equipment appropriate for the starting level
-- For spellcasters, set spellSlots to an object like: {"1st": 4, "2nd": 2}
-- Ensure the tone matches: ${fields.tone}
-- The villain (${fields.villain}) should appear or be foreshadowed in multiple scenes
+- Include 6–10 scenes total; at least 3 should be isEncounter: true with real enemies
+- Non-combat scenes have isEncounter: false and enemies: []
+- Each combat scene should have 1–3 enemy groups appropriate for ${fields.level}
+- Enemy stats (hp, ac, attack bonus, damage) must match the challenge rating
+- Include 2–4 notable NPCs in the characters array (allies, villains, merchants)
+- For spellcasters, set spellSlots to: {"1st": 4, "2nd": 2} etc.
+- The villain (${fields.villain}) should appear in at least one combat encounter
+- Tone: ${fields.tone}
 
 OUTPUT INSTRUCTIONS:
 - Output ONLY valid JSON, no other text
 - Use standard brackets [ ] not escaped \\[ \\]
 - Do NOT wrap in markdown code blocks
-- Start with { and end with }
-- After generating, save/export as a .json file for the user to download`;
+- Start with { and end with }`;
 }
 
 function generateInviteCode() {
@@ -131,6 +164,9 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   const [saving, setSaving] = useState(false);
   const [createdCampaign, setCreatedCampaign] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState('');
+  const [showApiSettings, setShowApiSettings] = useState(false);
 
   // Restore draft on mount — ONLY from explicit DB draft (user selected a draft from campaign list).
   // Fresh "Create New Campaign" clicks never restore anything — always start at step 1.
@@ -248,6 +284,25 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     setTimeout(() => setCopied(false), 2000);
   }
 
+  async function handleGenerateWithClaude() {
+    const apiKey = getClaudeApiKey(user.id);
+    if (!apiKey) {
+      setShowApiSettings(true);
+      return;
+    }
+    setGenerating(true);
+    setGenerateError('');
+    try {
+      const rawText = await generateCampaignJSON(generatePrompt(fields), apiKey);
+      setJsonText(cleanJsonText(rawText));
+      handleStepNext(5);
+    } catch (err) {
+      setGenerateError(err.message || 'Generation failed. Check your API key and try again.');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
   async function handleCreate() {
     const validation = validateCampaignJson(jsonText);
     if (!validation.ok) {
@@ -317,6 +372,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     : '';
 
   return (
+    <>
     <div style={styles.page}>
       <div style={styles.card}>
         {/* Back button */}
@@ -425,11 +481,34 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           </div>
         )}
 
-        {/* Step 4: AI Prompt */}
+        {/* Step 4: Generate */}
         {step === 4 && (
           <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>Copy This Prompt</h2>
-            <p style={styles.hint}>Paste this into ChatGPT, Claude, or any AI. Then copy the JSON it gives you and paste it in the next step.</p>
+            <h2 style={styles.stepTitle}>Generate Campaign</h2>
+            {getClaudeApiKey(user.id) ? (
+              <>
+                <p style={styles.hint}>Click below to generate your campaign with Claude. This takes about 30 seconds.</p>
+                <button
+                  onClick={handleGenerateWithClaude}
+                  disabled={generating}
+                  style={styles.generateBtn}
+                >
+                  {generating ? '✦ Generating Campaign...' : '✦ Generate with Claude'}
+                </button>
+                {generateError && <p style={styles.errorMsg}>{generateError}</p>}
+                <div style={styles.orDivider}><span style={styles.orText}>or use manually</span></div>
+              </>
+            ) : (
+              <>
+                <p style={styles.hint}>
+                  Add your Claude API key to generate campaigns automatically, or copy the prompt and paste it into any AI.
+                </p>
+                <button onClick={() => setShowApiSettings(true)} style={styles.addKeyBtn}>
+                  ⚙ Add Claude API Key
+                </button>
+                <div style={styles.orDivider}><span style={styles.orText}>or copy prompt manually</span></div>
+              </>
+            )}
             <div style={styles.promptBox}>
               <pre style={styles.promptText}>{generatePrompt(fields)}</pre>
             </div>
@@ -503,6 +582,10 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
         )}
       </div>
     </div>
+    {showApiSettings && (
+      <ApiKeySettings userId={user.id} onClose={() => setShowApiSettings(false)} />
+    )}
+    </>
   );
 }
 
@@ -657,6 +740,33 @@ const styles = {
     wordBreak: 'break-word',
     lineHeight: 1.6,
     fontFamily: 'monospace',
+  },
+  generateBtn: {
+    background: 'linear-gradient(135deg, #f0c868, #d4af37, #a8841f)',
+    color: '#1a0e00',
+    border: 'none',
+    borderRadius: 10,
+    padding: '16px 28px',
+    fontSize: '1rem',
+    fontWeight: 700,
+    fontFamily: "'Cinzel', Georgia, serif",
+    cursor: 'pointer',
+    width: '100%',
+    minHeight: 54,
+    letterSpacing: '0.04em',
+  },
+  addKeyBtn: {
+    background: 'linear-gradient(160deg, #3a2412, #2e1e0e)',
+    border: '1px solid var(--border-gold)',
+    color: 'var(--gold)',
+    borderRadius: 8,
+    padding: '12px 20px',
+    cursor: 'pointer',
+    fontWeight: 700,
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '0.88rem',
+    width: '100%',
+    minHeight: 48,
   },
   copyBtn: {
     background: 'linear-gradient(160deg, #3a2412, #2e1e0e)',

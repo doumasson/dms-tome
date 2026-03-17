@@ -1,0 +1,16 @@
+export const CONDITION_INFO = {
+  Blinded:       "Can't see. Attacks against you have advantage; your attacks have disadvantage.",
+  Charmed:       "Can't attack the charmer. Charmer has advantage on social checks against you.",
+  Deafened:      "Can't hear. Auto-fail hearing checks.",
+  Frightened:    "Disadvantage on attacks & checks while source is visible. Can't move closer to source.",
+  Grappled:      "Speed becomes 0. Ends when grappler is incapacitated or you're moved beyond reach.",
+  Incapacitated: "Can't take actions or reactions.",
+  Invisible:     "Can't be seen. Your attacks have advantage; attacks against you have disadvantage.",
+  Paralyzed:     "Incapacitated. Auto-fail STR/DEX saves. Attacks have advantage. Hits within 5 ft are crits.",
+  Petrified:     "Transformed to stone. Incapacitated. Resistance to all damage. Immune to poison & disease.",
+  Poisoned:      "Disadvantage on attack rolls and ability checks.",
+  Prone:         "Disadvantage on attacks. Attacks within 5 ft have advantage; ranged attacks have disadvantage.",
+  Restrained:    "Speed 0. Attacks against you have advantage; yours have disadvantage. Disadvantage on DEX saves.",
+  Stunned:       "Incapacitated. Auto-fail STR/DEX saves. Attacks against you have advantage.",
+  Unconscious:   "Incapacitated and prone. Auto-fail STR/DEX saves. Hits within 5 ft are critical hits.",
+};

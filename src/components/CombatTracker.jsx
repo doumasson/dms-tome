@@ -4,6 +4,7 @@ import EncounterGenerator from './EncounterGenerator';
 
 export default function CombatTracker() {
   const dmMode = useStore((s) => s.dmMode);
+  const isDM = useStore((s) => s.isDM);
   const combat = useStore((s) => s.combat);
   const addCombatant = useStore((s) => s.addCombatant);
   const removeCombatant = useStore((s) => s.removeCombatant);
@@ -83,13 +84,15 @@ export default function CombatTracker() {
       <div style={styles.header}>
         <h2 style={{ margin: 0 }}>Combat Tracker</h2>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button
-            className="btn-dark btn-sm"
-            onClick={() => setShowGenerator(true)}
-            style={{ borderColor: 'var(--border-gold)', color: 'var(--gold)' }}
-          >
-            Generate Encounter
-          </button>
+          {isDM && (
+            <button
+              className="btn-dark btn-sm"
+              onClick={() => setShowGenerator(true)}
+              style={{ borderColor: 'var(--border-gold)', color: 'var(--gold)' }}
+            >
+              Generate Encounter
+            </button>
+          )}
         <div style={styles.roundBadge}>
           <span style={styles.roundLabel}>ROUND</span>
           <span style={styles.roundNum}>{round}</span>
@@ -97,8 +100,8 @@ export default function CombatTracker() {
         </div>
       </div>
 
-      {/* Add Combatant Form */}
-      <div className="card" style={styles.formCard}>
+      {/* Add Combatant Form — DM only */}
+      {isDM && <div className="card" style={styles.formCard}>
         <h3 style={styles.subheading}>Add Combatant</h3>
         <form onSubmit={handleAdd} style={styles.form}>
           <div style={styles.formRow4}>
@@ -178,10 +181,10 @@ export default function CombatTracker() {
             + Add Combatant
           </button>
         </form>
-      </div>
+      </div>}
 
-      {/* Turn Controls */}
-      {combatants.length > 0 && (
+      {/* Turn Controls — DM only */}
+      {isDM && combatants.length > 0 && (
         <div style={styles.turnControls}>
           <button className="btn-dark" onClick={prevTurn}>← Prev</button>
           <button className="btn-gold" onClick={nextTurn}>Next Turn →</button>
@@ -263,18 +266,20 @@ export default function CombatTracker() {
                     </div>
                   )}
 
-                  {/* Remove button */}
-                  <button
-                    className="btn-danger btn-sm"
-                    onClick={() => {
-                      if (activeAdj?.id === c.id) { setActiveAdj(null); setAdjValue(''); }
-                      removeCombatant(c.id);
-                    }}
-                    style={styles.removeBtn}
-                    title="Remove combatant"
-                  >
-                    ✕
-                  </button>
+                  {/* Remove button — DM only */}
+                  {isDM && (
+                    <button
+                      className="btn-danger btn-sm"
+                      onClick={() => {
+                        if (activeAdj?.id === c.id) { setActiveAdj(null); setAdjValue(''); }
+                        removeCombatant(c.id);
+                      }}
+                      style={styles.removeBtn}
+                      title="Remove combatant"
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
 
                 {/* DM-only attack info */}
