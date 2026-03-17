@@ -1,87 +1,100 @@
-# Party Panel + Resource Tracking
+# UI Redesign — Foundry-style Game Layout + DALL-E Scene Images
 
 ## Goal
-- Left panel in EncounterView: compact party health/condition/resource view
-- Bottom-left sub-panel: active combatant details (DM) / own character details (player)
-- Auto-defined class resource pools (Ki, Rages, Action Surge, etc.)
-- Short/Long rest buttons (DM-only) that restore appropriate resources
-- Resources persist via campaigns.campaign_data in Supabase
+Replace the clunky tab-based UI with a sleek game layout:
+- Left sidebar: party characters with HP bars, conditions, quick stats
+- Center/main area: scene view (DALL-E image + text) OR battle grid during combat
+- Bottom: AI Narrator panel (already built)
+- Minimal top bar: campaign name + DM toggle only
+- DALL-E 3 generates a mood image for each scene automatically
 
 ---
 
-## Architecture
+## Layout Target
 
-### Layout change (EncounterView)
 ```
-[ PartyPanel 200px ] [ Map + Log + Sidebar (existing) ]
-[ CharDetailPanel  ] [                                 ]
+┌─ header: campaign name + DM toggle ─────────────────┐
+├──────────┬──────────────────────────────────────────┤
+│ PARTY    │  [DALL-E scene image - 40% height]       │
+│ sidebar  ├──────────────────────────────────────────┤
+│ 260px    │  Scene title                             │
+│          │  Scene narrative text...                 │
+│ [Thorin] │                                          │
+│ ❤ 45/60  │  [DM: ◀ Prev] [Next ▶] [⚔ Combat]      │
+│ ──────── │                                          │
+│ [Lyra]   │  during combat: battle grid fills        │
+│ ❤ 32/40  │  this entire area                        │
+│          │                                          │
+│ [DM only]│                                          │
+│ + dice   │                                          │
+├──────────┴──────────────────────────────────────────┤
+│ 🎭 AI Narrator                             [Send]   │
+└─────────────────────────────────────────────────────┘
 ```
-Left column:
-- Top: scrollable party list (HP bar, conditions, resource pips)
-- Bottom: collapsible character detail (stats, resources, abilities)
-
-### New file: src/lib/classResources.js
-Per-class resource definitions: name, icon, max(level, stats), resetOn: 'short'|'long'
-Classes covered: Barbarian, Monk, Fighter, Paladin, Cleric, Druid, Sorcerer, Warlock, Bard
-(Ranger/Rogue/Wizard have no simple pool resources)
-
-### Store changes (useStore.js)
-- `addCharacter` and `startEncounter` → init `resourcesUsed: {}` on characters
-- New action: `spendResource(charId, resourceName)` → increment used count
-- New action: `gainResource(charId, resourceName, amount)` → decrement used count (min 0)
-- New action: `shortRest()` → restore all 'short' resources for all characters + log
-- New action: `longRest()` → restore ALL resources + set currentHp = maxHp for all + log
-- New action: `saveCampaignToSupabase()` → writes campaign.characters to campaigns.campaign_data (called after rest)
-
-### New component: PartyPanel
-Props: { combatants, characters, dmMode, onSelectCombatant }
-- Compact row per player combatant: portrait circle, name, HP bar, conditions, resource pips
-- Enemies shown as a collapsed count "X enemies" with aggregate dead/alive
-- Click row → selects token on map
-
-### New component: CharDetailPanel
-Props: { combatant, character, isDM }
-- Header: portrait, name, race/class, HP, AC, speed
-- Stats row: STR/DEX/CON/INT/WIS/CHA with modifiers
-- Resources section: ResourceTracker per resource pool
-- Actions/attacks list (collapsible)
-- Shown below PartyPanel in left column
-
-### ResourceTracker (inline sub-component within CharDetailPanel)
-Per resource: name, icon, pip row (filled/empty circles × max), spend/recover buttons
-Special case for Lay on Hands: numeric pool (not pips), ± buttons
 
 ---
 
-## Tasks
+## Files to Create
+- `src/lib/dalleApi.js` — DALL-E 3 image generation + OpenAI key storage
+- `src/components/GameLayout.jsx` — new main game view (sidebar + content area)
+- `src/components/PartySidebar.jsx` — party panel with HP bars, conditions, dice
+- `src/components/ScenePanel.jsx` — scene view with DALL-E image + narrative
 
-- [ ] 1. Create src/lib/classResources.js with getClassResources(cls, level, stats)
-- [ ] 2. Update useStore.js: resourcesUsed on characters, spendResource, gainResource, shortRest, longRest, saveCampaignToSupabase
-- [ ] 3. Create PartyPanel component
-- [ ] 4. Create CharDetailPanel + ResourceTracker component
-- [ ] 5. Update EncounterView: add left column with PartyPanel + CharDetailPanel, short/long rest buttons
-- [ ] 6. Test build, commit, push
+## Files to Modify
+- `src/App.jsx` — replace tab-based game view with GameLayout
+- `src/components/ApiKeySettings.jsx` — add OpenAI key field for DALL-E
+- `src/store/useStore.js` — add sceneImages cache { sceneKey: imageUrl }
 
 ---
 
-## Resource Definitions Reference
+## Implementation Steps
 
-| Class      | Resource           | Max                        | Resets  |
-|------------|--------------------|----------------------------|---------|
-| Barbarian  | Rages              | 2→3→4→5→6/∞ by level     | Long    |
-| Monk       | Ki Points          | = level                    | Short   |
-| Fighter    | Action Surge       | 1 (2 at L17)               | Short   |
-| Fighter    | Second Wind        | 1                          | Short   |
-| Fighter    | Indomitable (L9+)  | 1→2→3 by level            | Long    |
-| Paladin    | Channel Divinity   | 1→2→3 by level            | Short   |
-| Paladin    | Lay on Hands       | level × 5 (HP pool)        | Long    |
-| Cleric     | Channel Divinity   | 1→2→3 by level            | Short   |
-| Druid      | Wild Shape         | 2                          | Short   |
-| Warlock    | Pact Magic Slots   | 1→2→3→4 by level          | Short   |
-| Sorcerer   | Sorcery Points     | = level                    | Long    |
-| Bard       | Bardic Inspiration | = CHA mod (min 1)          | Long (Short at L5+) |
+### Step 1: dalleApi.js + OpenAI key storage
+- [ ] `getOpenAiKey(userId)` / `setOpenAiKey(userId, key)` in localStorage
+- [ ] `generateSceneImage(title, text, key)` → calls DALL-E 3, returns URL
+- [ ] Prompt: dramatic dark fantasy art style
+
+### Step 2: sceneImages cache in store
+- [ ] `sceneImages: {}` state in Zustand
+- [ ] `setSceneImage(key, url)` action
+
+### Step 3: ScenePanel.jsx
+- [ ] Scene image (DALL-E, cached) at top — generates on first view
+- [ ] Loading skeleton while generating
+- [ ] Scene title + narrative text
+- [ ] DM controls: ◀ Prev / Next ▶ / ⚔ Start Combat
+- [ ] Graceful no-image fallback
+
+### Step 4: PartySidebar.jsx
+- [ ] Character cards: portrait, name, class, HP bar (color coded)
+- [ ] Click to expand: AC, conditions, spell slots
+- [ ] Conditions as colored badges
+- [ ] DM-only section: Dice, Loot, Notes access
+- [ ] Collapsible on mobile
+
+### Step 5: GameLayout.jsx
+- [ ] Sidebar (260px) + main area (flex 1)
+- [ ] Main shows ScenePanel or EncounterView (when combat active)
+- [ ] NarratorPanel at bottom
+- [ ] Mobile: hamburger to reveal sidebar
+
+### Step 6: Update App.jsx
+- [ ] Replace tabs + renderTab() with GameLayout
+- [ ] Simplify header
+
+### Step 7: Update ApiKeySettings.jsx
+- [ ] Add OpenAI key field
+
+---
+
+## Design Rules
+- Match existing dark fantasy theme
+- Sidebar: dark with gold right border
+- HP bars: animated, red/yellow/green based on %
+- Scene image: 35% of main height, object-fit cover
+- Sharp edges on structural panels (fantasy feel)
 
 ---
 
 ## Review
-(fill in after implementation)
+_(filled after implementation)_
