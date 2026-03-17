@@ -1,4 +1,6 @@
 import { create } from 'zustand/react';
+import { supabase } from '../lib/supabase';
+import { getClassResources } from '../lib/classResources';
 
 function makePortraitUrl(name, race, cls) {
   const seed = encodeURIComponent(`${name || ''} ${race || ''} ${cls || ''}`.trim());
@@ -162,6 +164,7 @@ const useStore = create((set, get) => ({
             name: char.name || 'New Character',
             race: char.race || '',
             class: char.class || '',
+            level: Number(char.level) || 1,
             stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
             skills: char.skills || [],
             weapons: char.weapons || [],
@@ -169,6 +172,7 @@ const useStore = create((set, get) => ({
             currentHp: Number(char.maxHp) || 10,
             ac: Number(char.ac) || 10,
             spellSlots: char.spellSlots || null,
+            resourcesUsed: char.resourcesUsed || {},
           },
         ],
       },
@@ -527,6 +531,85 @@ const useStore = create((set, get) => ({
   // Received from Supabase Realtime — non-DM clients sync encounter state
   syncEncounterDown: (encounterData) =>
     set({ encounter: encounterData }),
+
+  // === Class Resources ===
+  spendResource: (charId, resourceName) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          if (c.id !== charId) return c;
+          const defs = getClassResources(c.class, c.level, c.stats);
+          const def = defs.find(r => r.name === resourceName);
+          if (!def) return c;
+          const used = c.resourcesUsed?.[resourceName] ?? 0;
+          if (used >= def.max) return c;
+          return { ...c, resourcesUsed: { ...c.resourcesUsed, [resourceName]: used + 1 } };
+        }),
+      },
+    })),
+
+  gainResource: (charId, resourceName, amount = 1) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          if (c.id !== charId) return c;
+          const used = Math.max(0, (c.resourcesUsed?.[resourceName] ?? 0) - amount);
+          return { ...c, resourcesUsed: { ...c.resourcesUsed, [resourceName]: used } };
+        }),
+      },
+    })),
+
+  shortRest: () => {
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          const defs = getClassResources(c.class, c.level, c.stats);
+          const restored = { ...c.resourcesUsed };
+          defs.filter(r => r.resetOn === 'short').forEach(r => { restored[r.name] = 0; });
+          return { ...c, resourcesUsed: restored };
+        }),
+      },
+      encounter: {
+        ...get().encounter,
+        log: ['🌙 Short rest taken — short-rest resources restored.', ...get().encounter.log].slice(0, 30),
+      },
+    }));
+    get().saveCampaignToSupabase();
+  },
+
+  longRest: () => {
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => ({
+          ...c,
+          currentHp: c.maxHp,
+          resourcesUsed: {},
+        })),
+      },
+      encounter: {
+        ...get().encounter,
+        log: ['☀️ Long rest taken — all resources and HP restored.', ...get().encounter.log].slice(0, 30),
+      },
+    }));
+    get().saveCampaignToSupabase();
+  },
+
+  saveCampaignToSupabase: async () => {
+    const { activeCampaign, campaign } = get();
+    if (!activeCampaign?.id) return;
+    const merged = {
+      ...(activeCampaign.campaign_data || {}),
+      characters: campaign.characters,
+    };
+    await supabase
+      .from('campaigns')
+      .update({ campaign_data: merged })
+      .eq('id', activeCampaign.id);
+  },
 
   // === Dice ===
   dice: {

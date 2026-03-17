@@ -5,6 +5,8 @@ import {
   getAbilityModifier, formatModifier, CONDITIONS, SAVE_NAMES, getTokenColor,
 } from '../lib/dice';
 import LootGenerator from './LootGenerator';
+import PartyPanel from './PartyPanel';
+import CharDetailPanel from './CharDetailPanel';
 
 const MAP_W = 10;
 const MAP_H = 8;
@@ -809,7 +811,7 @@ function InitiativePhase({ combatants, onSetInitiative, onBeginCombat, onCancel 
 
 // ─── Combat Phase ─────────────────────────────────────────────────────────────
 
-function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, onHeal, onLog, onAddCondition, onRemoveCondition, onMoveToken, onRollDeathSave, onStabilize, onSetConcentration, onClearConcentration }) {
+function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter, onDamage, onHeal, onLog, onAddCondition, onRemoveCondition, onMoveToken, onRollDeathSave, onStabilize, onSetConcentration, onClearConcentration, onShortRest, onLongRest }) {
   const { combatants, currentTurn, round, log } = encounter;
   const [selectedToken, setSelectedToken] = useState(null);
   const [panel, setPanel] = useState(null); // null | 'attack' | 'aoe' | 'save' | 'concentrate'
@@ -866,9 +868,49 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
   // Average CR of defeated enemies (for loot default) — use 1 if unknown
   const avgCr = 1;
 
+  const activeChar = characters?.find(c => c.id === activeCombatant?.id || c.name === activeCombatant?.name) || null;
+
   return (
-    <div style={{ display: 'flex', gap: 12, padding: '0 8px', flexWrap: 'wrap' }}>
-      {/* Left: Map */}
+    <div style={{ display: 'flex', gap: 0, padding: '0 8px', alignItems: 'flex-start' }}>
+
+      {/* Party Column */}
+      <div style={{ width: 192, flexShrink: 0, marginRight: 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: '10px 8px', maxHeight: 'calc(100vh - 180px)', overflowY: 'auto' }}>
+          <PartyPanel
+            combatants={combatants}
+            characters={characters || []}
+            activeCombatantId={activeCombatant?.id}
+            onSelectCombatant={handleTokenClick}
+          />
+        </div>
+
+        {/* Active combatant / own character detail */}
+        {(activeChar || activeCombatant) && (
+          <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: '10px 10px', overflowY: 'auto', maxHeight: 420 }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.08em', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 8 }}>
+              {activeCombatant?.type === 'enemy' ? 'ACTIVE ENEMY' : 'ACTIVE COMBATANT'}
+            </div>
+            <CharDetailPanel character={activeChar} combatant={activeCombatant} compact />
+          </div>
+        )}
+
+        {/* Rest buttons */}
+        {dmMode && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+            <button onClick={onShortRest} style={{ ...btn.ghost, fontSize: '0.72rem', padding: '5px 8px' }}>
+              🌙 Short Rest
+            </button>
+            <button onClick={onLongRest} style={{ ...btn.ghost, fontSize: '0.72rem', padding: '5px 8px', color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)' }}>
+              ☀️ Long Rest
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Right: Map + Sidebar */}
+      <div style={{ flex: '1 1 auto', minWidth: 0, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+
+      {/* Center: Map */}
       <div style={{ flex: '1 1 auto', minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8, flexWrap: 'wrap' }}>
           <div style={{ fontSize: '0.85rem', color: 'var(--gold)', fontWeight: 700, fontFamily: "'Cinzel', Georgia, serif" }}>
@@ -1060,6 +1102,7 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
             ✕ End Combat
           </button>
         )}
+      </div>
       </div>
     </div>
   );
@@ -1404,6 +1447,8 @@ export default function EncounterView() {
   const stabilizeCombatant = useStore(s => s.stabilizeCombatant);
   const setConcentration = useStore(s => s.setConcentration);
   const clearConcentration = useStore(s => s.clearConcentration);
+  const shortRest = useStore(s => s.shortRest);
+  const longRest = useStore(s => s.longRest);
 
   function handleStartEncounter(enemies) {
     setCustomSetup(false);
@@ -1453,6 +1498,9 @@ export default function EncounterView() {
           onStabilize={stabilizeCombatant}
           onSetConcentration={setConcentration}
           onClearConcentration={clearConcentration}
+          characters={campaign.characters}
+          onShortRest={shortRest}
+          onLongRest={longRest}
         />
       </div>
     );
