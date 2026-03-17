@@ -13,6 +13,7 @@ import CampaignImporter from './components/CampaignImporter';
 import ApiKeySettings from './components/ApiKeySettings';
 import CampaignManager from './components/CampaignManager';
 import NotesTab from './components/NotesTab';
+import NarratorPanel from './components/NarratorPanel';
 
 function D20Icon() {
   return (
@@ -349,6 +350,9 @@ export default function App() {
       {showManager && (
         <CampaignManager onClose={() => setShowManager(false)} />
       )}
+
+      {/* AI Narrator — sticky bottom panel */}
+      <NarratorPanel />
 
       {/* Footer */}
       <footer style={styles.footer}>
