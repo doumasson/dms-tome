@@ -1,5 +1,10 @@
 import { create } from 'zustand/react';
 
+function makePortraitUrl(name, race, cls) {
+  const seed = encodeURIComponent(`${name || ''} ${race || ''} ${cls || ''}`.trim());
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=transparent`;
+}
+
 const useStore = create((set, get) => ({
   // === Auth ===
   user: null,
@@ -155,11 +160,14 @@ const useStore = create((set, get) => ({
           {
             id: crypto.randomUUID(),
             name: char.name || 'New Character',
+            race: char.race || '',
+            class: char.class || '',
             stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
             skills: char.skills || [],
             weapons: char.weapons || [],
             maxHp: Number(char.maxHp) || 10,
             currentHp: Number(char.maxHp) || 10,
+            ac: Number(char.ac) || 10,
             spellSlots: char.spellSlots || null,
           },
         ],
@@ -244,6 +252,7 @@ const useStore = create((set, get) => ({
         conditions: [],
         position: null,
         deathSaves: { successes: 0, failures: 0, stable: false },
+        portrait: makePortraitUrl(char.name, char.race, char.class),
       });
     });
 

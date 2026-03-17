@@ -59,6 +59,12 @@ export const CONDITIONS = [
   'Prone', 'Restrained', 'Stunned', 'Unconscious',
 ];
 
+// DiceBear portrait URL — adventurer style, seeded by name+race+class
+export function getPortraitUrl(name, race, charClass) {
+  const seed = encodeURIComponent(`${name || 'adventurer'} ${race || ''} ${charClass || ''}`.trim());
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=transparent`;
+}
+
 // Token colors per combatant type
 export function getTokenColor(type, index) {
   if (type === 'enemy') {

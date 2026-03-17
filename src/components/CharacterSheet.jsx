@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import useStore from '../store/useStore';
+import { getPortraitUrl } from '../lib/dice';
 
 const STAT_NAMES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 const STAT_LABELS = { str: 'STR', dex: 'DEX', con: 'CON', int: 'INT', wis: 'WIS', cha: 'CHA' };
@@ -41,6 +42,16 @@ function CharacterCard({ character }) {
   const [addingSpellLevel, setAddingSpellLevel] = useState(false);
   const [newSpellLevel, setNewSpellLevel] = useState('1');
   const [newSpellTotal, setNewSpellTotal] = useState('');
+  const [editingIdentity, setEditingIdentity] = useState(false);
+  const [raceDraft, setRaceDraft] = useState(character.race || '');
+  const [classDraft, setClassDraft] = useState(character.class || '');
+
+  const portraitUrl = getPortraitUrl(character.name, character.race, character.class);
+
+  function saveIdentity() {
+    updateCharacter(character.id, { race: raceDraft.trim(), class: classDraft.trim() });
+    setEditingIdentity(false);
+  }
 
   function saveStat(statKey, value) {
     const num = parseInt(value, 10);
@@ -155,27 +166,71 @@ function CharacterCard({ character }) {
     <div className="card" style={styles.charCard}>
       {/* Header */}
       <div style={styles.charHeader}>
-        {dmMode && editingName ? (
-          <input
-            autoFocus
-            value={nameDraft}
-            onChange={(e) => setNameDraft(e.target.value)}
-            onBlur={saveName}
-            onKeyDown={(e) => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false); }}
-            style={{ ...styles.nameInput, fontSize: '1.1rem' }}
-          />
-        ) : dmMode ? (
-          <button
-            style={styles.charNameBtn}
-            onClick={() => { setEditingName(true); setNameDraft(character.name); }}
-            title="Click to edit name"
-          >
-            {character.name}
-            <span style={styles.editHint}>✎</span>
-          </button>
-        ) : (
-          <span style={styles.charNameStatic}>{character.name}</span>
-        )}
+        {/* Portrait */}
+        <img
+          src={portraitUrl}
+          alt=""
+          style={styles.portrait}
+          onError={e => { e.currentTarget.style.display = 'none'; }}
+        />
+
+        {/* Name + identity */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {dmMode && editingName ? (
+            <input
+              autoFocus
+              value={nameDraft}
+              onChange={(e) => setNameDraft(e.target.value)}
+              onBlur={saveName}
+              onKeyDown={(e) => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false); }}
+              style={{ ...styles.nameInput, fontSize: '1.1rem' }}
+            />
+          ) : dmMode ? (
+            <button
+              style={styles.charNameBtn}
+              onClick={() => { setEditingName(true); setNameDraft(character.name); }}
+              title="Click to edit name"
+            >
+              {character.name}
+              <span style={styles.editHint}>✎</span>
+            </button>
+          ) : (
+            <span style={styles.charNameStatic}>{character.name}</span>
+          )}
+
+          {/* Race / Class row */}
+          {editingIdentity ? (
+            <div style={{ display: 'flex', gap: 6, marginTop: 4, alignItems: 'center' }}>
+              <input
+                autoFocus
+                value={raceDraft}
+                onChange={e => setRaceDraft(e.target.value)}
+                placeholder="Race"
+                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 90 }}
+              />
+              <input
+                value={classDraft}
+                onChange={e => setClassDraft(e.target.value)}
+                placeholder="Class"
+                onKeyDown={e => { if (e.key === 'Enter') saveIdentity(); if (e.key === 'Escape') setEditingIdentity(false); }}
+                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 90 }}
+              />
+              <button onClick={saveIdentity} style={styles.editHintBtn}>✓</button>
+            </div>
+          ) : (
+            <div
+              onClick={dmMode ? () => { setRaceDraft(character.race || ''); setClassDraft(character.class || ''); setEditingIdentity(true); } : undefined}
+              title={dmMode ? 'Click to edit race & class' : undefined}
+              style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2, cursor: dmMode ? 'pointer' : 'default', display: 'flex', alignItems: 'center', gap: 4 }}
+            >
+              {character.race || character.class
+                ? <span>{[character.race, character.class].filter(Boolean).join(' · ')}</span>
+                : dmMode ? <span style={{ fontStyle: 'italic' }}>+ Add race & class</span>
+                : null}
+              {dmMode && (character.race || character.class) && <span style={styles.editHint}>✎</span>}
+            </div>
+          )}
+        </div>
 
         <div style={styles.headerRight}>
           {/* HP editors — DM can click to edit, players see static numbers */}
@@ -665,10 +720,28 @@ const styles = {
     fontFamily: "'Cinzel', 'Georgia', serif",
     letterSpacing: '0.04em',
   },
+  portrait: {
+    width: 64,
+    height: 64,
+    borderRadius: '50%',
+    border: '2px solid var(--border-gold)',
+    background: 'rgba(212,175,55,0.06)',
+    flexShrink: 0,
+    objectFit: 'cover',
+  },
   editHint: {
     fontSize: '0.75rem',
     color: 'var(--parchment-dim)',
     opacity: 0.6,
+  },
+  editHintBtn: {
+    background: 'transparent',
+    border: '1px solid var(--border-gold)',
+    color: 'var(--gold)',
+    borderRadius: 4,
+    padding: '2px 8px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
   },
   editNote: {
     fontSize: '0.65rem',

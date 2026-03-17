@@ -40,7 +40,11 @@ function Token({ combatant, colorIndex, isSelected, isActive, onClick }) {
   const pct = combatant.maxHp > 0 ? combatant.currentHp / combatant.maxHp : 0;
   const ring = pct > 0.5 ? '#2ecc71' : pct > 0.25 ? '#f39c12' : '#e74c3c';
   const dead = combatant.currentHp <= 0;
+  const dying = dead && combatant.type === 'player' && !(combatant.deathSaves?.failures >= 3);
   const initials = combatant.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const hasPortrait = !!combatant.portrait;
+  const borderColor = isSelected ? '#fff' : isActive ? '#f1c40f' : ring;
+  const size = CELL_PX - 6;
 
   return (
     <div
@@ -48,20 +52,40 @@ function Token({ combatant, colorIndex, isSelected, isActive, onClick }) {
       title={`${combatant.name} • HP ${combatant.currentHp}/${combatant.maxHp} • AC ${combatant.ac}`}
       style={{
         position: 'absolute', top: 3, left: 3,
-        width: CELL_PX - 6, height: CELL_PX - 6,
+        width: size, height: size,
         borderRadius: '50%',
-        background: dead ? '#2a1a0a' : color,
-        border: `3px solid ${isSelected ? '#fff' : isActive ? '#f1c40f' : ring}`,
+        border: `3px solid ${borderColor}`,
+        background: dead && !hasPortrait ? '#2a1a0a' : !hasPortrait ? color : 'transparent',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         fontSize: 11, fontWeight: 700, color: dead ? '#555' : '#fff',
-        cursor: 'pointer',
+        cursor: 'pointer', overflow: 'hidden',
         boxShadow: isSelected ? '0 0 10px rgba(255,255,255,0.5)' : isActive ? '0 0 10px rgba(241,196,15,0.6)' : '0 2px 6px rgba(0,0,0,0.6)',
         userSelect: 'none', zIndex: 2,
         transition: 'border-color 0.2s, box-shadow 0.2s',
+        opacity: dead && !dying ? 0.45 : 1,
       }}
     >
-      {initials}
-      {dead && <span style={{ fontSize: 9, lineHeight: 1 }}>☠</span>}
+      {hasPortrait ? (
+        <img
+          src={combatant.portrait}
+          alt={combatant.name}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', filter: dead ? 'grayscale(1) brightness(0.5)' : 'none' }}
+          onError={e => { e.currentTarget.style.display = 'none'; }}
+        />
+      ) : (
+        <>
+          {initials}
+          {dead && <span style={{ fontSize: 9, lineHeight: 1 }}>☠</span>}
+        </>
+      )}
+      {/* Overlay skull for dead portrait tokens */}
+      {dead && hasPortrait && (
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>☠</div>
+      )}
+      {/* Dying pulse ring */}
+      {dying && (
+        <div style={{ position: 'absolute', inset: -3, borderRadius: '50%', border: '2px solid #f39c12', animation: 'goldPulse 1.5s infinite', pointerEvents: 'none' }} />
+      )}
     </div>
   );
 }
