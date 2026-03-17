@@ -226,6 +226,7 @@ const useStore = create((set, get) => ({
           stats: group.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
           attacks: group.attacks || [],
           conditions: [],
+          concentration: null,
           position: null,
           deathSaves: { successes: 0, failures: 0, stable: false },
         });
@@ -250,6 +251,7 @@ const useStore = create((set, get) => ({
             : { name: w.name || w, bonus: w.attackBonus || '+0', damage: w.damage || '1d6' }
         ),
         conditions: [],
+        concentration: null,
         position: null,
         deathSaves: { successes: 0, failures: 0, stable: false },
         portrait: makePortraitUrl(char.name, char.race, char.class),
@@ -333,30 +335,51 @@ const useStore = create((set, get) => ({
     }),
 
   applyEncounterDamage: (targetId, amount) =>
-    set((state) => ({
-      encounter: {
-        ...state.encounter,
-        combatants: state.encounter.combatants.map((c) => {
-          if (c.id !== targetId) return c;
-          const newHp = Math.max(0, c.currentHp - amount);
-          // Massive damage (damage >= maxHp while at 0) = instant death
-          const instaDeath = c.currentHp === 0 && amount >= c.maxHp;
-          if (instaDeath) {
-            return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 3, stable: false } };
-          }
-          // Dropping to 0 while dying adds a failure
-          if (newHp === 0 && c.currentHp > 0 && c.type === 'player') {
-            return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 0, stable: false } };
-          }
-          // Hit while already dying adds a failure (PHB rule)
-          if (c.currentHp === 0 && c.type === 'player' && !c.deathSaves?.stable) {
-            const fails = Math.min(3, (c.deathSaves?.failures || 0) + 1);
-            return { ...c, deathSaves: { ...c.deathSaves, failures: fails } };
-          }
-          return { ...c, currentHp: newHp };
-        }),
-      },
-    })),
+    set((state) => {
+      const target = state.encounter.combatants.find(c => c.id === targetId);
+      const extraLog = [];
+
+      // Concentration Con save (PHB: DC = max(10, half damage taken))
+      if (target && target.concentration && target.currentHp > 0 && amount > 0) {
+        const dc = Math.max(10, Math.floor(amount / 2));
+        const roll = Math.floor(Math.random() * 20) + 1;
+        const conMod = Math.floor(((target.stats?.con || 10) - 10) / 2);
+        const total = roll + conMod;
+        const pass = total >= dc;
+        extraLog.push(
+          `🎯 ${target.name} concentration (${target.concentration}) DC ${dc}: ` +
+          `d20(${roll})${conMod >= 0 ? '+' : ''}${conMod}=${total} — ${pass ? '✓ Maintained' : '✗ BROKEN'}`
+        );
+      }
+
+      const newCombatants = state.encounter.combatants.map((c) => {
+        if (c.id !== targetId) return c;
+        const newHp = Math.max(0, c.currentHp - amount);
+        // Massive damage (damage >= maxHp while at 0) = instant death
+        if (c.currentHp === 0 && amount >= c.maxHp) {
+          return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 3, stable: false } };
+        }
+        // Dropping to 0: enter dying state
+        if (newHp === 0 && c.currentHp > 0 && c.type === 'player') {
+          return { ...c, currentHp: 0, concentration: null, deathSaves: { successes: 0, failures: 0, stable: false } };
+        }
+        // Hit while already dying: add failure
+        if (c.currentHp === 0 && c.type === 'player' && !c.deathSaves?.stable) {
+          return { ...c, deathSaves: { ...c.deathSaves, failures: Math.min(3, (c.deathSaves?.failures || 0) + 1) } };
+        }
+        return { ...c, currentHp: newHp };
+      });
+
+      return {
+        encounter: {
+          ...state.encounter,
+          combatants: newCombatants,
+          log: extraLog.length
+            ? [...extraLog, ...state.encounter.log].slice(0, 30)
+            : state.encounter.log,
+        },
+      };
+    }),
 
   applyEncounterHeal: (targetId, amount) =>
     set((state) => ({
@@ -478,6 +501,32 @@ const useStore = create((set, get) => ({
         log: [],
       },
     }),
+
+  setConcentration: (id, spell) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map((c) =>
+          c.id === id ? { ...c, concentration: spell || null } : c
+        ),
+        log: [`🎯 ${state.encounter.combatants.find(x => x.id === id)?.name} concentrates on ${spell}.`, ...state.encounter.log].slice(0, 30),
+      },
+    })),
+
+  clearConcentration: (id) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map((c) =>
+          c.id === id ? { ...c, concentration: null } : c
+        ),
+        log: [`🎯 ${state.encounter.combatants.find(x => x.id === id)?.name} dropped concentration.`, ...state.encounter.log].slice(0, 30),
+      },
+    })),
+
+  // Received from Supabase Realtime — non-DM clients sync encounter state
+  syncEncounterDown: (encounterData) =>
+    set({ encounter: encounterData }),
 
   // === Dice ===
   dice: {
