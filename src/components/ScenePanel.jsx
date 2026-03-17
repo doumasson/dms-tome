@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import useStore from '../store/useStore';
-import { generateSceneImage, getOpenAiKey } from '../lib/dalleApi';
+import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib/dalleApi';
 
 export default function ScenePanel() {
   const user           = useStore(s => s.user);
@@ -22,18 +22,24 @@ export default function ScenePanel() {
   const imageKey = `${activeCampaign?.id}:${idx}`;
   const imageUrl = sceneImages[imageKey];
 
-  // Auto-generate DALL-E image when scene changes and no image cached yet
+  // Auto-generate scene image when scene changes and nothing cached yet
   useEffect(() => {
     if (!scene || imageUrl || imgLoading) return;
-    const key = getOpenAiKey(user?.id);
-    if (!key) return;
-
-    setImgLoading(true);
     setImgError(false);
-    generateSceneImage(scene.title, scene.text, key)
-      .then(url => setSceneImage(imageKey, url))
-      .catch(() => setImgError(true))
-      .finally(() => setImgLoading(false));
+
+    const openAiKey = getOpenAiKey(user?.id);
+    if (openAiKey) {
+      // Paid: DALL-E 3 high quality
+      setImgLoading(true);
+      generateSceneImage(scene.title, scene.text, openAiKey)
+        .then(url => setSceneImage(imageKey, url))
+        .catch(() => setImgError(true))
+        .finally(() => setImgLoading(false));
+    } else {
+      // Free: Pollinations.ai — URL resolves in browser, no async needed
+      const url = generateSceneImageFree(scene.title, scene.text);
+      setSceneImage(imageKey, url);
+    }
   }, [idx, activeCampaign?.id]);
 
   function handleStartCombat() {
@@ -85,9 +91,6 @@ export default function ScenePanel() {
           <div style={styles.imagePlaceholder}>
             <span style={styles.placeholderGlyph}>⚔</span>
             {imgError && <span style={styles.imgErrorNote}>Image unavailable</span>}
-            {!imgError && !getOpenAiKey(user?.id) && (
-              <span style={styles.imgErrorNote}>Add OpenAI key in Settings for scene art</span>
-            )}
           </div>
         )}
         {/* Scene index badge */}
