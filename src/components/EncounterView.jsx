@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useSyncExternalStore } from 'react';
 import useStore from '../store/useStore';
 import {
   rollDie, rollDamage, rollInitiative, parseAttackBonus,
@@ -10,7 +10,20 @@ import CharDetailPanel from './CharDetailPanel';
 
 const MAP_W = 10;
 const MAP_H = 8;
-const CELL_PX = 52;
+const CELL_PX = 52; // desktop default
+
+function useWindowWidth() {
+  return useSyncExternalStore(
+    cb => { window.addEventListener('resize', cb); return () => window.removeEventListener('resize', cb); },
+    () => window.innerWidth,
+  );
+}
+
+function getCellPx(width) {
+  if (width < 480)  return 32;
+  if (width < 768)  return 40;
+  return CELL_PX;
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -38,7 +51,7 @@ function buildTypeIndex(combatants) {
 
 // ─── Token ────────────────────────────────────────────────────────────────────
 
-function Token({ combatant, colorIndex, isSelected, isActive, onClick }) {
+function Token({ combatant, colorIndex, isSelected, isActive, onClick, cellPx = CELL_PX }) {
   const color = getTokenColor(combatant.type, colorIndex);
   const pct = combatant.maxHp > 0 ? combatant.currentHp / combatant.maxHp : 0;
   const ring = pct > 0.5 ? '#2ecc71' : pct > 0.25 ? '#f39c12' : '#e74c3c';
@@ -47,7 +60,7 @@ function Token({ combatant, colorIndex, isSelected, isActive, onClick }) {
   const initials = combatant.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
   const hasPortrait = !!combatant.portrait;
   const borderColor = isSelected ? '#fff' : isActive ? '#f1c40f' : ring;
-  const size = CELL_PX - 6;
+  const size = cellPx - 6;
 
   return (
     <div
@@ -95,7 +108,7 @@ function Token({ combatant, colorIndex, isSelected, isActive, onClick }) {
 
 // ─── Battle Map ───────────────────────────────────────────────────────────────
 
-function BattleMap({ combatants, selectedToken, activeCombatantId, onCellClick, onTokenClick }) {
+function BattleMap({ combatants, selectedToken, activeCombatantId, onCellClick, onTokenClick, cellPx = CELL_PX }) {
   const posMap = {};
   const typeIdx = buildTypeIndex(combatants);
 
@@ -106,8 +119,8 @@ function BattleMap({ combatants, selectedToken, activeCombatantId, onCellClick, 
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: `repeat(${MAP_W}, ${CELL_PX}px)`,
-      gridTemplateRows: `repeat(${MAP_H}, ${CELL_PX}px)`,
+      gridTemplateColumns: `repeat(${MAP_W}, ${cellPx}px)`,
+      gridTemplateRows: `repeat(${MAP_H}, ${cellPx}px)`,
       border: '2px solid #3a2a14',
       borderRadius: 4,
       overflow: 'hidden',
@@ -144,6 +157,7 @@ function BattleMap({ combatants, selectedToken, activeCombatantId, onCellClick, 
                 isSelected={isSelected}
                 isActive={isActive}
                 onClick={(e) => { e.stopPropagation(); onTokenClick(c.id); }}
+                cellPx={cellPx}
               />
             )}
             {isActive && c && (
@@ -816,7 +830,12 @@ function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter
   const [selectedToken, setSelectedToken] = useState(null);
   const [panel, setPanel] = useState(null); // null | 'attack' | 'aoe' | 'save' | 'concentrate'
   const [showLoot, setShowLoot] = useState(false);
+  const [mobileTab, setMobileTab] = useState('battle'); // 'party' | 'battle' | 'actions'
   const logRef = useRef();
+  const winWidth = useWindowWidth();
+  const isMobile = winWidth < 640;
+  const isTablet = winWidth >= 640 && winWidth < 900;
+  const cellPx = getCellPx(winWidth);
 
   const activeCombatant = combatants[currentTurn] || null;
 
@@ -870,11 +889,123 @@ function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter
 
   const activeChar = characters?.find(c => c.id === activeCombatant?.id || c.name === activeCombatant?.name) || null;
 
+  // ── Mobile: tab bar + single-panel view ──────────────────────────────────
+  if (isMobile) {
+    const partyContent = (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '8px 0' }}>
+        <PartyPanel combatants={combatants} characters={characters || []} activeCombatantId={activeCombatant?.id} onSelectCombatant={handleTokenClick} />
+        {(activeChar || activeCombatant) && <CharDetailPanel character={activeChar} combatant={activeCombatant} compact />}
+        {dmMode && (
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button onClick={onShortRest} style={{ ...btn.ghost, flex: 1, fontSize: '0.72rem' }}>🌙 Short Rest</button>
+            <button onClick={onLongRest}  style={{ ...btn.ghost, flex: 1, fontSize: '0.72rem', color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)' }}>☀️ Long Rest</button>
+          </div>
+        )}
+      </div>
+    );
+
+    const battleContent = (
+      <div style={{ padding: '8px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.82rem', color: 'var(--gold)', fontWeight: 700, fontFamily: "'Cinzel', Georgia, serif" }}>Round {round}</span>
+          {activeCombatant && <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Turn: <strong>{activeCombatant.name}</strong></span>}
+          {(allEnemiesDead || partyDead) && (
+            <span style={{ fontSize: '0.78rem', color: allEnemiesDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
+              {allEnemiesDead ? '🏆 Victory!' : '💀 Defeated!'}
+            </span>
+          )}
+        </div>
+        <div style={{ overflowX: 'auto' }}>
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} />
+        </div>
+        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 3 }}>Tap token · tap cell to move</div>
+        <div ref={logRef} style={{ background: '#0f0a04', border: '1px solid #2a1a0a', borderRadius: 6, padding: '6px 8px', maxHeight: 100, overflowY: 'auto', fontFamily: 'monospace', fontSize: '0.7rem', marginTop: 8 }}>
+          {log.map((entry, i) => <div key={i} style={{ color: i === 0 ? 'var(--text-secondary)' : 'var(--text-muted)', padding: '1px 0' }}>{entry}</div>)}
+        </div>
+        {showLoot && <div style={{ marginTop: 8 }}><LootGenerator defaultCr={avgCr} onClose={() => setShowLoot(false)} /></div>}
+      </div>
+    );
+
+    const actionsContent = (
+      <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {/* Action panel */}
+        {panel === null && activeCombatant && (() => {
+          const isDying = activeCombatant.currentHp <= 0 && activeCombatant.type === 'player';
+          return (
+            <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 10 }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>
+                {isDying ? `⚠ ${activeCombatant.name} DYING` : `ACTIONS — ${activeCombatant.name}`}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {isDying ? (
+                  <>
+                    <button onClick={() => onRollDeathSave(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}>🎲 Death Save</button>
+                    <button onClick={() => onStabilize(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>✚ Stabilize</button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => setPanel('attack')} style={{ ...btn.action, background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.4)', color: '#e74c3c' }}>⚔ Attack</button>
+                    <button onClick={() => setPanel('aoe')} style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: '1px solid rgba(155,89,182,0.4)', color: '#9b59b6' }}>💥 AoE</button>
+                    <button onClick={() => setPanel('concentrate')} style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6' }}>🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}</button>
+                    <button onClick={() => setPanel('save')} style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}>🎲 Save</button>
+                  </>
+                )}
+                <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>➜ Next Turn</button>
+              </div>
+            </div>
+          );
+        })()}
+        {panel === 'attack'     && activeCombatant && <AttackPanel attacker={activeCombatant} combatants={combatants} onResolve={handleAttackResolve} onCancel={() => setPanel(null)} />}
+        {panel === 'aoe'        && <AoEPanel combatants={combatants} onApply={handleAoEApply} onCancel={() => setPanel(null)} />}
+        {panel === 'save'       && <SavingThrowPanel combatants={combatants} onLog={handleLogOnly} onCancel={() => setPanel(null)} />}
+        {panel === 'concentrate' && activeCombatant && <ConcentratePanel combatant={activeCombatant} onSet={spell => { onSetConcentration(activeCombatant.id, spell); setPanel(null); }} onClear={() => { onClearConcentration(activeCombatant.id); setPanel(null); }} onCancel={() => setPanel(null)} />}
+        {/* Turn order */}
+        <div>
+          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginBottom: 5, fontFamily: "'Cinzel', Georgia, serif" }}>TURN ORDER</div>
+          <div style={{ maxHeight: 260, overflowY: 'auto' }}>
+            {combatants.map((c, i) => (
+              <CombatantRow key={c.id} combatant={c} isActive={i === currentTurn} isSelected={c.id === selectedToken} colorIndex={buildTypeIndex(combatants)[c.type]?.[c.id] || 0} dmMode={dmMode} onSelectToken={handleTokenClick} onHpChange={handleHpChange} onAddCondition={onAddCondition} onRemoveCondition={onRemoveCondition} onRollDeathSave={onRollDeathSave} onStabilize={onStabilize} />
+            ))}
+          </div>
+        </div>
+        {dmMode && <button onClick={onEndEncounter} style={{ ...btn.ghost, fontSize: '0.78rem', color: '#c0392b', borderColor: 'rgba(192,57,43,0.4)' }}>✕ End Combat</button>}
+      </div>
+    );
+
+    const MOBILE_TABS = [
+      { id: 'party',   label: '👥 Party' },
+      { id: 'battle',  label: '🗺 Battle' },
+      { id: 'actions', label: '⚔ Actions' },
+    ];
+
+    return (
+      <div style={{ padding: '0 8px' }}>
+        {/* Tab bar */}
+        <div style={{ display: 'flex', borderBottom: '1px solid #2a1a0a', marginBottom: 4 }}>
+          {MOBILE_TABS.map(t => (
+            <button key={t.id} onClick={() => setMobileTab(t.id)} style={{
+              flex: 1, padding: '9px 4px', background: 'transparent', border: 'none',
+              borderBottom: mobileTab === t.id ? '2px solid var(--gold)' : '2px solid transparent',
+              color: mobileTab === t.id ? 'var(--gold)' : 'var(--text-muted)',
+              fontSize: '0.78rem', fontFamily: "'Cinzel', Georgia, serif", cursor: 'pointer', fontWeight: mobileTab === t.id ? 700 : 400,
+            }}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {mobileTab === 'party'   && partyContent}
+        {mobileTab === 'battle'  && battleContent}
+        {mobileTab === 'actions' && actionsContent}
+      </div>
+    );
+  }
+
+  // ── Desktop / Tablet layout ───────────────────────────────────────────────
   return (
     <div style={{ display: 'flex', gap: 0, padding: '0 8px', alignItems: 'flex-start' }}>
 
-      {/* Party Column */}
-      <div style={{ width: 192, flexShrink: 0, marginRight: 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {/* Party Column — hidden on tablet to give map more room */}
+      <div style={{ width: isTablet ? 0 : 192, overflow: isTablet ? 'hidden' : 'visible', flexShrink: 0, marginRight: isTablet ? 0 : 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: '10px 8px', maxHeight: 'calc(100vh - 180px)', overflowY: 'auto' }}>
           <PartyPanel
             combatants={combatants}
@@ -947,6 +1078,7 @@ function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter
             activeCombatantId={activeCombatant?.id}
             onCellClick={handleCellClick}
             onTokenClick={handleTokenClick}
+            cellPx={cellPx}
           />
         </div>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4 }}>

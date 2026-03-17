@@ -2,6 +2,7 @@ import { useState } from 'react';
 import useStore from '../store/useStore';
 import { getClassResources } from '../lib/classResources';
 import { getAbilityModifier, formatModifier } from '../lib/dice';
+import { isCaster, SLOT_COLORS } from '../lib/spellSlots';
 
 const STAT_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 const STAT_LABELS = { str: 'STR', dex: 'DEX', con: 'CON', int: 'INT', wis: 'WIS', cha: 'CHA' };
@@ -71,6 +72,53 @@ function ResourceTracker({ char }) {
                     background: i < available ? '#9b59b6' : '#2a1a0a',
                     boxShadow: i < available ? '0 0 4px rgba(155,89,182,0.5)' : 'none',
                     transition: 'background 0.15s',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Spell Slot Tracker ───────────────────────────────────────────────────────
+
+function SpellSlotTracker({ char }) {
+  const castSpell       = useStore(s => s.castSpell);
+  const recoverSpellSlot = useStore(s => s.recoverSpellSlot);
+
+  const slots = char.spellSlots;
+  if (!slots || Object.keys(slots).length === 0) return null;
+
+  const levels = Object.keys(slots).map(Number).sort((a, b) => a - b);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      {levels.map(lvl => {
+        const { total, used } = slots[lvl];
+        const available = total - used;
+        const color = SLOT_COLORS[lvl - 1] || '#aaa';
+        const ordinals = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th'];
+        return (
+          <div key={lvl}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 600, color }}>{ordinals[lvl - 1]} Level</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{available}/{total}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+              {Array.from({ length: total }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => i < available ? castSpell(char.id, lvl) : recoverSpellSlot(char.id, lvl)}
+                  title={i < available ? `Cast ${ordinals[lvl-1]}-level spell` : 'Recover slot'}
+                  style={{
+                    width: 20, height: 20, borderRadius: 4, cursor: 'pointer',
+                    border: `2px solid ${color}`,
+                    background: i < available ? color : 'transparent',
+                    opacity: i < available ? 0.9 : 0.35,
+                    padding: 0, transition: 'all 0.15s',
                   }}
                 />
               ))}
@@ -157,6 +205,14 @@ export default function CharDetailPanel({ character, combatant, compact = false 
           {getClassResources(char.class, char.level, char.stats).length === 0 && (
             <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>No tracked resources for {char.class}</div>
           )}
+        </div>
+      )}
+
+      {/* Spell Slots */}
+      {char.spellSlots && Object.keys(char.spellSlots).length > 0 && (
+        <div style={{ marginBottom: 10 }}>
+          <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.08em', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 6 }}>SPELL SLOTS</div>
+          <SpellSlotTracker char={char} />
         </div>
       )}
 

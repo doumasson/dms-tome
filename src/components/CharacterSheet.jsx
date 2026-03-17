@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import useStore from '../store/useStore';
 import { getPortraitUrl } from '../lib/dice';
+import { buildSpellSlotMap, isCaster } from '../lib/spellSlots';
 
 const STAT_NAMES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 const STAT_LABELS = { str: 'STR', dex: 'DEX', con: 'CON', int: 'INT', wis: 'WIS', cha: 'CHA' };
@@ -45,12 +46,20 @@ function CharacterCard({ character }) {
   const [editingIdentity, setEditingIdentity] = useState(false);
   const [raceDraft, setRaceDraft] = useState(character.race || '');
   const [classDraft, setClassDraft] = useState(character.class || '');
+  const [levelDraft, setLevelDraft] = useState(String(character.level || 1));
 
   const portraitUrl = getPortraitUrl(character.name, character.race, character.class);
 
   function saveIdentity() {
-    updateCharacter(character.id, { race: raceDraft.trim(), class: classDraft.trim() });
+    const level = Math.max(1, Math.min(20, parseInt(levelDraft) || 1));
+    updateCharacter(character.id, { race: raceDraft.trim(), class: classDraft.trim(), level });
     setEditingIdentity(false);
+  }
+
+  function autoFillSpellSlots() {
+    const level = character.level || 1;
+    const slotMap = buildSpellSlotMap(character.class, level, character.spellSlots || {});
+    if (slotMap) updateCharacter(character.id, { spellSlots: slotMap });
   }
 
   function saveStat(statKey, value) {
@@ -198,34 +207,42 @@ function CharacterCard({ character }) {
             <span style={styles.charNameStatic}>{character.name}</span>
           )}
 
-          {/* Race / Class row */}
+          {/* Race / Class / Level row */}
           {editingIdentity ? (
-            <div style={{ display: 'flex', gap: 6, marginTop: 4, alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 6, marginTop: 4, alignItems: 'center', flexWrap: 'wrap' }}>
               <input
                 autoFocus
                 value={raceDraft}
                 onChange={e => setRaceDraft(e.target.value)}
                 placeholder="Race"
-                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 90 }}
+                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 80 }}
               />
               <input
                 value={classDraft}
                 onChange={e => setClassDraft(e.target.value)}
                 placeholder="Class"
+                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 80 }}
+              />
+              <input
+                type="number"
+                value={levelDraft}
+                onChange={e => setLevelDraft(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') saveIdentity(); if (e.key === 'Escape') setEditingIdentity(false); }}
-                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 90 }}
+                placeholder="Lv"
+                min={1} max={20}
+                style={{ ...styles.nameInput, fontSize: '0.78rem', width: 46 }}
               />
               <button onClick={saveIdentity} style={styles.editHintBtn}>✓</button>
             </div>
           ) : (
             <div
-              onClick={dmMode ? () => { setRaceDraft(character.race || ''); setClassDraft(character.class || ''); setEditingIdentity(true); } : undefined}
-              title={dmMode ? 'Click to edit race & class' : undefined}
+              onClick={dmMode ? () => { setRaceDraft(character.race || ''); setClassDraft(character.class || ''); setLevelDraft(String(character.level || 1)); setEditingIdentity(true); } : undefined}
+              title={dmMode ? 'Click to edit race, class & level' : undefined}
               style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2, cursor: dmMode ? 'pointer' : 'default', display: 'flex', alignItems: 'center', gap: 4 }}
             >
               {character.race || character.class
-                ? <span>{[character.race, character.class].filter(Boolean).join(' · ')}</span>
-                : dmMode ? <span style={{ fontStyle: 'italic' }}>+ Add race & class</span>
+                ? <span>{[character.race, character.class && `${character.class} Lv ${character.level || 1}`].filter(Boolean).join(' · ')}</span>
+                : dmMode ? <span style={{ fontStyle: 'italic' }}>+ Add race, class & level</span>
                 : null}
               {dmMode && (character.race || character.class) && <span style={styles.editHint}>✎</span>}
             </div>
@@ -455,12 +472,23 @@ function CharacterCard({ character }) {
             <div style={styles.spellHeader}>
               <h4 style={styles.sectionTitle}>Spell Slots</h4>
               {dmMode && (
-                <button
-                  className="btn-dark btn-sm"
-                  onClick={() => setAddingSpellLevel((a) => !a)}
-                >
-                  {addingSpellLevel ? 'Cancel' : '+ Add Level'}
-                </button>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {isCaster(character.class) && (
+                    <button
+                      className="btn-dark btn-sm"
+                      onClick={autoFillSpellSlots}
+                      title={`Auto-fill ${character.class} Lv ${character.level || 1} spell slots`}
+                    >
+                      ✦ Auto-fill
+                    </button>
+                  )}
+                  <button
+                    className="btn-dark btn-sm"
+                    onClick={() => setAddingSpellLevel((a) => !a)}
+                  >
+                    {addingSpellLevel ? 'Cancel' : '+ Add Level'}
+                  </button>
+                </div>
               )}
             </div>
 

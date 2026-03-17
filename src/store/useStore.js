@@ -584,11 +584,15 @@ const useStore = create((set, get) => ({
     set((state) => ({
       campaign: {
         ...state.campaign,
-        characters: state.campaign.characters.map((c) => ({
-          ...c,
-          currentHp: c.maxHp,
-          resourcesUsed: {},
-        })),
+        characters: state.campaign.characters.map((c) => {
+          // Reset spell slot used counts to 0
+          const spellSlots = c.spellSlots
+            ? Object.fromEntries(
+                Object.entries(c.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])
+              )
+            : c.spellSlots;
+          return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots };
+        }),
       },
       encounter: {
         ...get().encounter,
@@ -597,6 +601,36 @@ const useStore = create((set, get) => ({
     }));
     get().saveCampaignToSupabase();
   },
+
+  castSpell: (charId, slotLevel) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          if (c.id !== charId) return c;
+          const slots = { ...(c.spellSlots || {}) };
+          const lvl = slots[slotLevel];
+          if (!lvl || lvl.used >= lvl.total) return c;
+          slots[slotLevel] = { ...lvl, used: lvl.used + 1 };
+          return { ...c, spellSlots: slots };
+        }),
+      },
+    })),
+
+  recoverSpellSlot: (charId, slotLevel) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map((c) => {
+          if (c.id !== charId) return c;
+          const slots = { ...(c.spellSlots || {}) };
+          const lvl = slots[slotLevel];
+          if (!lvl || lvl.used <= 0) return c;
+          slots[slotLevel] = { ...lvl, used: lvl.used - 1 };
+          return { ...c, spellSlots: slots };
+        }),
+      },
+    })),
 
   saveCampaignToSupabase: async () => {
     const { activeCampaign, campaign } = get();
