@@ -135,20 +135,34 @@ function BattleMap({ combatants, selectedToken, activeCombatantId, onCellClick, 
 
 // ─── Attack Panel ─────────────────────────────────────────────────────────────
 
+const ADV_MODES = ['normal', 'advantage', 'disadvantage'];
+const ADV_LABELS = { normal: 'Normal', advantage: 'Advantage', disadvantage: 'Disadvantage' };
+const ADV_COLORS = { normal: 'var(--text-muted)', advantage: '#2ecc71', disadvantage: '#e74c3c' };
+
+function rollWithAdvantage(mode) {
+  const a = rollDie(20);
+  const b = rollDie(20);
+  if (mode === 'advantage') return { d20: Math.max(a, b), alt: Math.min(a, b) };
+  if (mode === 'disadvantage') return { d20: Math.min(a, b), alt: Math.max(a, b) };
+  return { d20: a, alt: null };
+}
+
 function AttackPanel({ attacker, combatants, onResolve, onCancel }) {
   const hasWeapons = attacker.attacks && attacker.attacks.length > 0;
   const [weapon, setWeapon] = useState(hasWeapons && attacker.attacks.length === 1 ? attacker.attacks[0] : null);
+  const [advMode, setAdvMode] = useState('normal');
   const [result, setResult] = useState(null);
 
   const targets = combatants.filter(c => c.id !== attacker.id && c.currentHp > 0);
 
   function doAttack(target) {
-    const w = weapon || { name: 'Unarmed Strike', bonus: '+0', damage: '1+0' };
+    const w = weapon || { name: 'Unarmed Strike', bonus: '+0', damage: '1' };
     const bonus = parseAttackBonus(w.bonus);
-    const d20 = rollDie(20);
+    const { d20, alt } = rollWithAdvantage(advMode);
     const total = d20 + bonus;
     const isCrit = d20 === 20;
-    const hit = isCrit || total >= (target.ac || 10);
+    const isFumble = d20 === 1 && advMode !== 'advantage';
+    const hit = !isFumble && (isCrit || total >= (target.ac || 10));
     let damage = 0;
     let dmgDisplay = '';
     if (hit) {
@@ -156,11 +170,12 @@ function AttackPanel({ attacker, combatants, onResolve, onCancel }) {
       damage = isCrit ? rolled.total * 2 : rolled.total;
       dmgDisplay = isCrit ? `CRIT ×2 = ${damage}` : rolled.display;
     }
+    const advSuffix = advMode !== 'normal' ? ` (${advMode}, dropped ${alt})` : '';
     const entry = hit
-      ? `${attacker.name} → ${target.name}: HIT! d20(${d20})${bonus >= 0 ? '+' : ''}${bonus}=${total} vs AC ${target.ac}. Dmg: ${damage} (${w.name})`
-      : `${attacker.name} → ${target.name}: MISS. d20(${d20})${bonus >= 0 ? '+' : ''}${bonus}=${total} vs AC ${target.ac} (${w.name})`;
+      ? `${attacker.name} → ${target.name}: HIT! d20(${d20})${bonus >= 0 ? '+' : ''}${bonus}=${total} vs AC ${target.ac}${advSuffix}. Dmg: ${damage} (${w.name})`
+      : `${attacker.name} → ${target.name}: MISS. d20(${d20})${bonus >= 0 ? '+' : ''}${bonus}=${total} vs AC ${target.ac}${advSuffix} (${w.name})`;
     onResolve(hit ? target.id : null, damage, entry);
-    setResult({ hit, isCrit, d20, bonus, total, ac: target.ac, damage, dmgDisplay, targetName: target.name });
+    setResult({ hit, isCrit, isFumble, d20, alt, bonus, total, ac: target.ac, damage, dmgDisplay, targetName: target.name });
   }
 
   function autoAttack() {
@@ -172,12 +187,14 @@ function AttackPanel({ attacker, combatants, onResolve, onCancel }) {
     return (
       <div style={apStyle.panel}>
         {result.isCrit && <div style={{ color: '#f1c40f', fontWeight: 700, textAlign: 'center' }}>⚡ CRITICAL HIT!</div>}
+        {result.isFumble && <div style={{ color: '#e74c3c', fontWeight: 700, textAlign: 'center' }}>💀 CRITICAL MISS!</div>}
         <div style={{ color: result.hit ? '#2ecc71' : '#e74c3c', fontWeight: 700, textAlign: 'center', fontSize: '1rem' }}>
           {result.hit ? '✔ HIT' : '✘ MISS'}
         </div>
         <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.7, textAlign: 'center' }}>
           {attacker.name} → {result.targetName}<br />
-          d20({result.d20}) {result.bonus >= 0 ? '+' : ''}{result.bonus} = <strong>{result.total}</strong> vs AC {result.ac}
+          d20(<strong>{result.d20}</strong>){result.alt !== null && <span style={{ color: 'var(--text-muted)' }}> / {result.alt}</span>}
+          {' '}{result.bonus >= 0 ? '+' : ''}{result.bonus} = <strong>{result.total}</strong> vs AC {result.ac}
           {result.hit && <><br />Damage: <strong>{result.damage}</strong> ({result.dmgDisplay})</>}
         </div>
         <button onClick={onCancel} style={apStyle.btn}>Done</button>
@@ -205,6 +222,19 @@ function AttackPanel({ attacker, combatants, onResolve, onCancel }) {
 
   return (
     <div style={apStyle.panel}>
+      {/* Adv / Dis toggle */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
+        {ADV_MODES.map(m => (
+          <button key={m} onClick={() => setAdvMode(m)} style={{
+            flex: 1, padding: '4px 6px', borderRadius: 4, fontSize: '0.7rem', cursor: 'pointer', fontWeight: advMode === m ? 700 : 400,
+            background: advMode === m ? 'rgba(255,255,255,0.1)' : 'transparent',
+            border: `1px solid ${advMode === m ? ADV_COLORS[m] : 'var(--border-light)'}`,
+            color: ADV_COLORS[m],
+          }}>
+            {ADV_LABELS[m]}
+          </button>
+        ))}
+      </div>
       <div style={apStyle.label}>
         {weapon.name} — pick target
         <button onClick={autoAttack} style={apStyle.auto}>🎲 Auto</button>
@@ -349,12 +379,66 @@ function ConditionPicker({ combatantId, conditions, onAdd, onRemove }) {
   );
 }
 
+// ─── Death Save Tracker ───────────────────────────────────────────────────────
+
+function DeathSaveTracker({ combatant, isActiveTurn, onRollSave, onStabilize }) {
+  const { successes, failures, stable } = combatant.deathSaves || { successes: 0, failures: 0, stable: false };
+  const isDead = failures >= 3;
+
+  return (
+    <div style={{ marginTop: 6, padding: '6px 8px', background: '#0f0804', border: `1px solid ${isDead ? '#922b21' : stable ? '#1e8449' : 'rgba(231,76,60,0.4)'}`, borderRadius: 5 }}>
+      <div style={{ fontSize: '0.7rem', color: isDead ? '#e74c3c' : stable ? '#2ecc71' : '#f39c12', fontWeight: 700, marginBottom: 4, letterSpacing: '0.06em' }}>
+        {isDead ? '💀 DEAD' : stable ? '💤 STABLE' : '⚠ DYING'}
+      </div>
+      {!isDead && !stable && (
+        <>
+          <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
+            <div>
+              <div style={{ fontSize: '0.65rem', color: '#2ecc71', marginBottom: 2 }}>Successes</div>
+              <div style={{ display: 'flex', gap: 3 }}>
+                {[0, 1, 2].map(i => (
+                  <div key={i} style={{ width: 12, height: 12, borderRadius: '50%', background: i < successes ? '#2ecc71' : '#1a1006', border: '1px solid #2ecc71' }} />
+                ))}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '0.65rem', color: '#e74c3c', marginBottom: 2 }}>Failures</div>
+              <div style={{ display: 'flex', gap: 3 }}>
+                {[0, 1, 2].map(i => (
+                  <div key={i} style={{ width: 12, height: 12, borderRadius: '50%', background: i < failures ? '#e74c3c' : '#1a1006', border: '1px solid #e74c3c' }} />
+                ))}
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 5 }}>
+            <button
+              onClick={(e) => { e.stopPropagation(); onRollSave(combatant.id); }}
+              disabled={!isActiveTurn}
+              title={isActiveTurn ? 'Roll death saving throw' : 'Only on this combatant\'s turn'}
+              style={{ ...miniBtn, color: isActiveTurn ? '#f39c12' : 'var(--text-muted)', opacity: isActiveTurn ? 1 : 0.5, fontSize: '0.7rem' }}
+            >
+              🎲 Roll Save
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onStabilize(combatant.id); }}
+              style={{ ...miniBtn, color: '#2ecc71', fontSize: '0.7rem' }}
+            >
+              ✚ Stabilize
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── Combatant Row (sidebar) ──────────────────────────────────────────────────
 
-function CombatantRow({ combatant, isActive, isSelected, colorIndex, dmMode, onSelectToken, onHpChange, onAddCondition, onRemoveCondition }) {
+function CombatantRow({ combatant, isActive, isSelected, colorIndex, dmMode, onSelectToken, onHpChange, onAddCondition, onRemoveCondition, onRollDeathSave, onStabilize }) {
   const [editing, setEditing] = useState(false);
   const [hpInput, setHpInput] = useState('');
-  const dead = combatant.currentHp <= 0;
+  const dying = combatant.currentHp <= 0 && combatant.type === 'player' && !(combatant.deathSaves?.failures >= 3);
+  const dead = combatant.currentHp <= 0 && (combatant.type === 'enemy' || combatant.deathSaves?.failures >= 3);
 
   function commitHp() {
     const val = parseInt(hpInput);
@@ -380,9 +464,9 @@ function CombatantRow({ combatant, isActive, isSelected, colorIndex, dmMode, onS
     >
       {/* Name row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-        <div style={{ width: 10, height: 10, borderRadius: '50%', background: dead ? '#444' : tokenColor, flexShrink: 0 }} />
-        <span style={{ fontWeight: isActive ? 700 : 500, fontSize: '0.85rem', color: isActive ? 'var(--gold)' : 'var(--text-primary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {isActive && '▶ '}{combatant.name}{dead && ' ☠'}
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: (dead || dying) ? (dying ? '#f39c12' : '#444') : tokenColor, flexShrink: 0 }} />
+        <span style={{ fontWeight: isActive ? 700 : 500, fontSize: '0.85rem', color: isActive ? 'var(--gold)' : dying ? '#f39c12' : 'var(--text-primary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {isActive && '▶ '}{combatant.name}{dead && ' ☠'}{dying && ' ⚠'}
         </span>
         <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', flexShrink: 0 }}>
           AC {combatant.ac}
@@ -407,15 +491,27 @@ function CombatantRow({ combatant, isActive, isSelected, colorIndex, dmMode, onS
           <span
             onClick={(e) => { e.stopPropagation(); setHpInput(String(combatant.currentHp)); setEditing(true); }}
             title="Click to set HP"
-            style={{ fontSize: '0.75rem', color: dead ? '#e74c3c' : 'var(--text-secondary)', flexShrink: 0, cursor: 'text', minWidth: 48, textAlign: 'right' }}
+            style={{ fontSize: '0.75rem', color: (dead || dying) ? '#e74c3c' : 'var(--text-secondary)', flexShrink: 0, cursor: 'text', minWidth: 48, textAlign: 'right' }}
           >
             {combatant.currentHp}/{combatant.maxHp}
           </span>
         )}
-        {/* Quick ±5 hp */}
-        <button onClick={(e) => { e.stopPropagation(); onHpChange(combatant.id, -5); }} style={miniBtn}>-5</button>
+        {/* Quick ±5 hp — hide damage button while dying (hitting 0 hp players via UI applies PHB hit rule) */}
+        {!dying && <button onClick={(e) => { e.stopPropagation(); onHpChange(combatant.id, -5); }} style={miniBtn}>-5</button>}
         <button onClick={(e) => { e.stopPropagation(); onHpChange(combatant.id, 5); }} style={{ ...miniBtn, color: '#2ecc71' }}>+5</button>
       </div>
+
+      {/* Death saves (player at 0 HP) */}
+      {dying && (
+        <div onClick={e => e.stopPropagation()}>
+          <DeathSaveTracker
+            combatant={combatant}
+            isActiveTurn={isActive}
+            onRollSave={onRollDeathSave}
+            onStabilize={onStabilize}
+          />
+        </div>
+      )}
 
       {/* Conditions */}
       {dmMode && (
@@ -505,11 +601,10 @@ function InitiativePhase({ combatants, onSetInitiative, onBeginCombat, onCancel 
 
 // ─── Combat Phase ─────────────────────────────────────────────────────────────
 
-function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, onHeal, onLog, onAddCondition, onRemoveCondition, onMoveToken }) {
+function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, onHeal, onLog, onAddCondition, onRemoveCondition, onMoveToken, onRollDeathSave, onStabilize }) {
   const { combatants, currentTurn, round, log } = encounter;
   const [selectedToken, setSelectedToken] = useState(null);
-  const [panel, setPanel] = useState(null); // null | 'attack' | 'save' | 'hpEdit'
-  const [hpEditId, setHpEditId] = useState(null);
+  const [panel, setPanel] = useState(null); // null | 'attack' | 'save'
   const logRef = useRef();
 
   const activeCombatant = combatants[currentTurn] || null;
@@ -607,30 +702,52 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
       {/* Right: Sidebar */}
       <div style={{ width: 260, flexShrink: 0 }}>
         {/* Action buttons */}
-        {panel === null && activeCombatant && (
-          <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 10, marginBottom: 10 }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>
-              ACTIONS — {activeCombatant.name}
+        {panel === null && activeCombatant && (() => {
+          const isDying = activeCombatant.currentHp <= 0 && activeCombatant.type === 'player' && !(activeCombatant.deathSaves?.failures >= 3);
+          return (
+            <div style={{ background: '#1a1006', border: `1px solid ${isDying ? 'rgba(243,156,18,0.5)' : '#2a1a0a'}`, borderRadius: 8, padding: 10, marginBottom: 10 }}>
+              <div style={{ fontSize: '0.75rem', color: isDying ? '#f39c12' : 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>
+                {isDying ? `⚠ ${activeCombatant.name} is DYING` : `ACTIONS — ${activeCombatant.name}`}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {isDying ? (
+                  <>
+                    <button
+                      onClick={() => onRollDeathSave(activeCombatant.id)}
+                      style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}
+                    >
+                      🎲 Roll Death Save
+                    </button>
+                    <button
+                      onClick={() => onStabilize(activeCombatant.id)}
+                      style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}
+                    >
+                      ✚ Stabilize (Medicine)
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setPanel('attack')}
+                      style={{ ...btn.action, background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.4)', color: '#e74c3c' }}
+                    >
+                      ⚔ Attack
+                    </button>
+                    <button
+                      onClick={() => setPanel('save')}
+                      style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}
+                    >
+                      🎲 Saving Throw
+                    </button>
+                  </>
+                )}
+                <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
+                  ➜ Next Turn
+                </button>
+              </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <button
-                onClick={() => setPanel('attack')}
-                style={{ ...btn.action, background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.4)', color: '#e74c3c' }}
-              >
-                ⚔ Attack
-              </button>
-              <button
-                onClick={() => setPanel('save')}
-                style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}
-              >
-                🎲 Saving Throw
-              </button>
-              <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
-                ➜ Next Turn
-              </button>
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {panel === 'attack' && activeCombatant && (
           <AttackPanel
@@ -666,6 +783,8 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
               onHpChange={handleHpChange}
               onAddCondition={onAddCondition}
               onRemoveCondition={onRemoveCondition}
+              onRollDeathSave={onRollDeathSave}
+              onStabilize={onStabilize}
             />
           ))}
         </div>
@@ -878,6 +997,8 @@ export default function EncounterView() {
   const removeEncounterCondition = useStore(s => s.removeEncounterCondition);
   const moveToken = useStore(s => s.moveToken);
   const endEncounter = useStore(s => s.endEncounter);
+  const rollDeathSave = useStore(s => s.rollDeathSave);
+  const stabilizeCombatant = useStore(s => s.stabilizeCombatant);
 
   function handleStartEncounter(enemies) {
     setCustomSetup(false);
@@ -923,6 +1044,8 @@ export default function EncounterView() {
           onAddCondition={addEncounterCondition}
           onRemoveCondition={removeEncounterCondition}
           onMoveToken={moveToken}
+          onRollDeathSave={rollDeathSave}
+          onStabilize={stabilizeCombatant}
         />
       </div>
     );

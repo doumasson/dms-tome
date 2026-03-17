@@ -219,6 +219,7 @@ const useStore = create((set, get) => ({
           attacks: group.attacks || [],
           conditions: [],
           position: null,
+          deathSaves: { successes: 0, failures: 0, stable: false },
         });
       }
     });
@@ -242,6 +243,7 @@ const useStore = create((set, get) => ({
         ),
         conditions: [],
         position: null,
+        deathSaves: { successes: 0, failures: 0, stable: false },
       });
     });
 
@@ -325,9 +327,25 @@ const useStore = create((set, get) => ({
     set((state) => ({
       encounter: {
         ...state.encounter,
-        combatants: state.encounter.combatants.map((c) =>
-          c.id === targetId ? { ...c, currentHp: Math.max(0, c.currentHp - amount) } : c
-        ),
+        combatants: state.encounter.combatants.map((c) => {
+          if (c.id !== targetId) return c;
+          const newHp = Math.max(0, c.currentHp - amount);
+          // Massive damage (damage >= maxHp while at 0) = instant death
+          const instaDeath = c.currentHp === 0 && amount >= c.maxHp;
+          if (instaDeath) {
+            return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 3, stable: false } };
+          }
+          // Dropping to 0 while dying adds a failure
+          if (newHp === 0 && c.currentHp > 0 && c.type === 'player') {
+            return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 0, stable: false } };
+          }
+          // Hit while already dying adds a failure (PHB rule)
+          if (c.currentHp === 0 && c.type === 'player' && !c.deathSaves?.stable) {
+            const fails = Math.min(3, (c.deathSaves?.failures || 0) + 1);
+            return { ...c, deathSaves: { ...c.deathSaves, failures: fails } };
+          }
+          return { ...c, currentHp: newHp };
+        }),
       },
     })),
 
@@ -335,9 +353,67 @@ const useStore = create((set, get) => ({
     set((state) => ({
       encounter: {
         ...state.encounter,
+        combatants: state.encounter.combatants.map((c) => {
+          if (c.id !== targetId) return c;
+          const newHp = Math.min(c.maxHp, c.currentHp + amount);
+          // Healing resets death saves
+          return { ...c, currentHp: newHp, deathSaves: { successes: 0, failures: 0, stable: false } };
+        }),
+      },
+    })),
+
+  // Roll a death saving throw for a dying player (d20, no modifiers per RAW)
+  rollDeathSave: (id) =>
+    set((state) => {
+      const c = state.encounter.combatants.find(x => x.id === id);
+      if (!c || c.currentHp > 0 || c.deathSaves?.stable) return state;
+      const roll = Math.floor(Math.random() * 20) + 1;
+      let { successes, failures } = c.deathSaves;
+      let newHp = 0;
+      let stable = false;
+      let logMsg = '';
+      if (roll === 20) {
+        // Natural 20: regain 1 HP
+        newHp = 1;
+        successes = 0; failures = 0; stable = false;
+        logMsg = `${c.name} rolled a natural 20 on death save — revived with 1 HP!`;
+      } else if (roll === 1) {
+        // Natural 1: two failures
+        failures = Math.min(3, failures + 2);
+        logMsg = `${c.name} rolled a 1 on death save — 2 failures! (${failures}/3)`;
+      } else if (roll >= 10) {
+        successes = Math.min(3, successes + 1);
+        if (successes >= 3) { stable = true; logMsg = `${c.name} stabilizes! (3 successes)`; }
+        else logMsg = `${c.name} death save: ${roll} — success (${successes}/3)`;
+      } else {
+        failures = Math.min(3, failures + 1);
+        logMsg = `${c.name} death save: ${roll} — failure (${failures}/3)`;
+      }
+      const isDead = failures >= 3;
+      return {
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(x =>
+            x.id === id
+              ? { ...x, currentHp: newHp, deathSaves: { successes, failures, stable } }
+              : x
+          ),
+          log: [logMsg, ...state.encounter.log].slice(0, 30),
+        },
+      };
+    }),
+
+  stabilizeCombatant: (id) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
         combatants: state.encounter.combatants.map((c) =>
-          c.id === targetId ? { ...c, currentHp: Math.min(c.maxHp, c.currentHp + amount) } : c
+          c.id === id ? { ...c, deathSaves: { ...c.deathSaves, stable: true } } : c
         ),
+        log: [
+          `${state.encounter.combatants.find(x => x.id === id)?.name} was stabilized.`,
+          ...state.encounter.log,
+        ].slice(0, 30),
       },
     })),
 
