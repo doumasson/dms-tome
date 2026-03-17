@@ -336,6 +336,34 @@ textarea {
   background: linear-gradient(160deg, #2a1b09, #1e1308, #1a1005) !important;
 }
 
+/* === Shimmer animation for DALL-E skeleton === */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* === Game layout mobile sidebar === */
+@media (max-width: 768px) {
+  .game-sidebar-wrapper {
+    position: absolute !important;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 10;
+  }
+  .game-sidebar-wrapper.open {
+    transform: translateX(0) !important;
+  }
+  .game-hamburger {
+    display: flex !important;
+  }
+  .game-backdrop {
+    display: block !important;
+  }
+}
+
 /* === Mobile Responsive === */
 @media (max-width: 600px) {
   h1 { font-size: 1.4rem; }

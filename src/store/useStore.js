@@ -720,6 +720,32 @@ const useStore = create((set, get) => ({
     set({
       dice: { rollHistory: [] },
     }),
+
+  // === Scene Images (DALL-E cache) ===
+  sceneImages: {}, // { [campaignId:sceneIndex]: imageUrl }
+  setSceneImage: (key, url) =>
+    set((state) => ({ sceneImages: { ...state.sceneImages, [key]: url } })),
+  clearSceneImages: () => set({ sceneImages: {} }),
+
+  // === Narrator (AI DM) ===
+  narrator: {
+    history: [], // { id, role: 'player'|'dm', speaker, text, rollRequest, timestamp }
+    open: false,
+  },
+  addNarratorMessage: (msg) =>
+    set((state) => ({
+      narrator: {
+        ...state.narrator,
+        history: [
+          ...state.narrator.history,
+          { id: crypto.randomUUID(), timestamp: Date.now(), ...msg },
+        ].slice(-50),
+      },
+    })),
+  setNarratorOpen: (open) =>
+    set((state) => ({ narrator: { ...state.narrator, open } })),
+  clearNarratorHistory: () =>
+    set((state) => ({ narrator: { ...state.narrator, history: [] } })),
 }));
 
 export default useStore;
