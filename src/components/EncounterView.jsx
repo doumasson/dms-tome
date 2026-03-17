@@ -335,6 +335,144 @@ function SavingThrowPanel({ combatants, onLog, onCancel }) {
   );
 }
 
+// ─── AoE Damage Panel ────────────────────────────────────────────────────────
+
+const DAMAGE_TYPES = ['Fire', 'Cold', 'Lightning', 'Thunder', 'Acid', 'Poison', 'Radiant', 'Necrotic', 'Force', 'Psychic', 'Bludgeoning', 'Piercing', 'Slashing'];
+
+function AoEPanel({ combatants, onApply, onCancel }) {
+  const alive = combatants.filter(c => c.currentHp > 0);
+  const [expr, setExpr] = useState('8d6');
+  const [dmgType, setDmgType] = useState('Fire');
+  const [rolled, setRolled] = useState(null);
+  // targetModes: { [id]: 'full' | 'half' | 'none' }
+  const [targetModes, setTargetModes] = useState(() =>
+    Object.fromEntries(alive.map(c => [c.id, 'full']))
+  );
+
+  const half = rolled ? Math.floor(rolled.total / 2) : 0;
+
+  function doRoll() {
+    const result = rollDamage(expr);
+    setRolled(result);
+    // Reset modes to full for all alive targets on each roll
+    setTargetModes(Object.fromEntries(alive.map(c => [c.id, 'full'])));
+  }
+
+  function setMode(id, mode) {
+    setTargetModes(m => ({ ...m, [id]: mode }));
+  }
+
+  function setAllMode(mode, filter) {
+    setTargetModes(m => {
+      const next = { ...m };
+      alive.forEach(c => { if (!filter || filter(c)) next[c.id] = mode; });
+      return next;
+    });
+  }
+
+  function apply() {
+    const applications = alive
+      .filter(c => targetModes[c.id] !== 'none')
+      .map(c => ({ id: c.id, amount: targetModes[c.id] === 'half' ? half : rolled.total }));
+    onApply(applications, rolled.total, dmgType);
+  }
+
+  // ── Pre-roll ──
+  if (!rolled) {
+    return (
+      <div style={apStyle.panel}>
+        <div style={apStyle.label}>💥 AoE Damage</div>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
+          <input
+            value={expr}
+            onChange={e => setExpr(e.target.value)}
+            placeholder="e.g. 8d6"
+            style={{ flex: 1, background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 4, padding: '5px 8px', fontSize: '0.88rem' }}
+          />
+          <button onClick={doRoll} style={apStyle.btn}>Roll</button>
+        </div>
+        <select
+          value={dmgType}
+          onChange={e => setDmgType(e.target.value)}
+          style={{ width: '100%', background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-secondary)', borderRadius: 4, padding: '4px 6px', fontSize: '0.8rem', marginBottom: 8 }}
+        >
+          {DAMAGE_TYPES.map(t => <option key={t}>{t}</option>)}
+        </select>
+        <button onClick={onCancel} style={apStyle.cancel}>Cancel</button>
+      </div>
+    );
+  }
+
+  // ── Post-roll: assign per-target ──
+  return (
+    <div style={apStyle.panel}>
+      {/* Result header */}
+      <div style={{ textAlign: 'center', marginBottom: 8, padding: '6px 0', borderBottom: '1px solid #2a1a0a' }}>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{expr} · {dmgType}</div>
+        <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#e74c3c', lineHeight: 1.1 }}>{rolled.total}</div>
+        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{rolled.display} · ½ = {half}</div>
+      </div>
+
+      {/* Quick-select row */}
+      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 6 }}>
+        {[
+          { label: 'All Full',    action: () => setAllMode('full') },
+          { label: 'All Half',    action: () => setAllMode('half') },
+          { label: 'All None',    action: () => setAllMode('none') },
+          { label: 'Enemies Full', action: () => setAllMode('full', c => c.type === 'enemy') },
+          { label: 'Party Half',   action: () => setAllMode('half', c => c.type === 'player') },
+        ].map(({ label, action }) => (
+          <button key={label} onClick={action} style={{
+            padding: '2px 7px', borderRadius: 3, fontSize: '0.65rem', cursor: 'pointer',
+            background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-light)', color: 'var(--text-muted)',
+          }}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* Per-target mode */}
+      <div style={{ maxHeight: 190, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 3, marginBottom: 8 }}>
+        {alive.map(c => {
+          const mode = targetModes[c.id] || 'none';
+          return (
+            <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ flex: 1, fontSize: '0.78rem', color: mode === 'none' ? 'var(--text-muted)' : 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {c.name}
+              </span>
+              {[
+                { m: 'full', label: rolled.total, color: '#e74c3c' },
+                { m: 'half', label: half,         color: '#e67e22' },
+                { m: 'none', label: '—',           color: 'var(--text-muted)' },
+              ].map(({ m, label, color }) => (
+                <button
+                  key={m}
+                  onClick={() => setMode(c.id, m)}
+                  style={{
+                    padding: '2px 6px', borderRadius: 3, fontSize: '0.72rem', cursor: 'pointer', minWidth: 28, textAlign: 'center',
+                    background: mode === m ? `${color}22` : 'transparent',
+                    border: `1px solid ${mode === m ? color : 'var(--border-light)'}`,
+                    color: mode === m ? color : 'var(--text-muted)',
+                    fontWeight: mode === m ? 700 : 400,
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ display: 'flex', gap: 5 }}>
+        <button onClick={apply} style={apStyle.btn}>Apply</button>
+        <button onClick={() => setRolled(null)} style={apStyle.cancel}>Re-roll</button>
+        <button onClick={onCancel} style={apStyle.cancel}>Cancel</button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Condition Picker ─────────────────────────────────────────────────────────
 
 function ConditionPicker({ combatantId, conditions, onAdd, onRemove }) {
@@ -635,6 +773,18 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
     onLog(logEntry);
   }
 
+  function handleAoEApply(applications, total, dmgType) {
+    applications.forEach(({ id, amount }) => onDamage(id, amount));
+    const summary = applications
+      .map(({ id, amount }) => {
+        const c = combatants.find(x => x.id === id);
+        return `${c?.name ?? id} (${amount})`;
+      })
+      .join(', ');
+    onLog(`💥 ${dmgType} ${total} dmg → ${summary}`);
+    setPanel(null);
+  }
+
   function handleLogOnly(entry) {
     onLog(entry);
   }
@@ -734,6 +884,12 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
                       ⚔ Attack
                     </button>
                     <button
+                      onClick={() => setPanel('aoe')}
+                      style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: '1px solid rgba(155,89,182,0.4)', color: '#9b59b6' }}
+                    >
+                      💥 AoE Damage
+                    </button>
+                    <button
                       onClick={() => setPanel('save')}
                       style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}
                     >
@@ -754,6 +910,14 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
             attacker={activeCombatant}
             combatants={combatants}
             onResolve={handleAttackResolve}
+            onCancel={() => setPanel(null)}
+          />
+        )}
+
+        {panel === 'aoe' && (
+          <AoEPanel
+            combatants={combatants}
+            onApply={handleAoEApply}
             onCancel={() => setPanel(null)}
           />
         )}
