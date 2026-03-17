@@ -12,6 +12,7 @@ import EncounterView from './components/EncounterView';
 import CampaignImporter from './components/CampaignImporter';
 import ApiKeySettings from './components/ApiKeySettings';
 import CampaignManager from './components/CampaignManager';
+import NotesTab from './components/NotesTab';
 
 function D20Icon() {
   return (
@@ -29,6 +30,7 @@ const ALL_TABS = [
   { id: 'dice',      label: '⚔ Dice' },
   { id: 'encounter', label: '🗺 Encounter' },
   { id: 'characters', label: '📜 Characters' },
+  { id: 'notes',     label: '📝 Notes' },
   { id: 'import',    label: '📥 Import', dmOnly: true },
 ];
 
@@ -50,6 +52,7 @@ export default function App() {
   const setActiveCampaign = useStore(s => s.setActiveCampaign);
   const clearActiveCampaign = useStore(s => s.clearActiveCampaign);
   const loadCampaign = useStore(s => s.loadCampaign);
+  const loadCampaignSettings = useStore(s => s.loadCampaignSettings);
   const campaign = useStore(s => s.campaign);
   const dmMode = useStore(s => s.dmMode);
   const toggleDmMode = useStore(s => s.toggleDmMode);
@@ -178,6 +181,9 @@ export default function App() {
     if (campaignRecord.campaign_data && Object.keys(campaignRecord.campaign_data).length > 0) {
       loadCampaign(campaignRecord.campaign_data);
     }
+    if (campaignRecord.settings) {
+      loadCampaignSettings(campaignRecord.settings);
+    }
     setAppView('game');
   }
 
@@ -252,6 +258,7 @@ export default function App() {
       case 'dice':       return <DiceRoller />;
       case 'encounter':  return <EncounterView />;
       case 'characters': return <CharacterSheet />;
+      case 'notes':      return <NotesTab />;
       case 'import':     return <CampaignImporter onSuccess={() => setActiveTab('encounter')} />;
       default:           return <DiceRoller />;
     }

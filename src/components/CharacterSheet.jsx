@@ -588,6 +588,9 @@ export default function CharacterSheet() {
 
   const [newCharName, setNewCharName] = useState('');
   const [showNewForm, setShowNewForm] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [importDraft, setImportDraft] = useState('');
+  const [importError, setImportError] = useState('');
 
   function handleNewCharacter(e) {
     e.preventDefault();
@@ -595,6 +598,50 @@ export default function CharacterSheet() {
     addCharacter({ name });
     setNewCharName('');
     setShowNewForm(false);
+  }
+
+  function handleImport() {
+    setImportError('');
+    let data;
+    try {
+      data = JSON.parse(importDraft.trim());
+    } catch {
+      setImportError('Invalid JSON. Check for syntax errors.');
+      return;
+    }
+    // Accept single object or array
+    const chars = Array.isArray(data) ? data : [data];
+    if (chars.length === 0) { setImportError('No characters found.'); return; }
+    chars.forEach(c => {
+      addCharacter({
+        name: c.name || 'Imported Character',
+        race: c.race || '',
+        class: c.class || c.className || '',
+        level: parseInt(c.level) || 1,
+        maxHp: parseInt(c.maxHp || c.hp?.max || c.hp) || 10,
+        currentHp: parseInt(c.currentHp || c.hp?.current || c.maxHp || c.hp) || 10,
+        ac: parseInt(c.ac || c.armorClass) || 10,
+        stats: {
+          str: c.stats?.str ?? c.str ?? 10,
+          dex: c.stats?.dex ?? c.dex ?? 10,
+          con: c.stats?.con ?? c.con ?? 10,
+          int: c.stats?.int ?? c.int ?? 10,
+          wis: c.stats?.wis ?? c.wis ?? 10,
+          cha: c.stats?.cha ?? c.cha ?? 10,
+        },
+        skills: Array.isArray(c.skills) ? c.skills : [],
+        attacks: Array.isArray(c.attacks) ? c.attacks : [],
+        abilities: Array.isArray(c.abilities) ? c.abilities : [],
+        spells: Array.isArray(c.spells) ? c.spells : [],
+        spellSlots: c.spellSlots || {},
+        portrait: c.portrait || '',
+        background: c.background || '',
+        alignment: c.alignment || '',
+        xp: parseInt(c.xp) || 0,
+      });
+    });
+    setImportDraft('');
+    setShowImport(false);
   }
 
   return (
@@ -606,15 +653,46 @@ export default function CharacterSheet() {
             <span style={styles.campaignTitle}>{campaign.title}</span>
           )}
           {dmMode && (
-            <button
-              className="btn-gold btn-sm"
-              onClick={() => setShowNewForm((s) => !s)}
-            >
-              {showNewForm ? 'Cancel' : '+ New Character'}
-            </button>
+            <>
+              <button
+                className="btn-gold btn-sm"
+                onClick={() => { setShowImport(s => !s); setShowNewForm(false); setImportError(''); }}
+              >
+                {showImport ? 'Cancel' : '📥 Import JSON'}
+              </button>
+              <button
+                className="btn-gold btn-sm"
+                onClick={() => { setShowNewForm((s) => !s); setShowImport(false); }}
+              >
+                {showNewForm ? 'Cancel' : '+ New Character'}
+              </button>
+            </>
           )}
         </div>
       </div>
+
+      {/* Import JSON Form */}
+      {showImport && (
+        <div className="card fade-in" style={styles.newCharForm}>
+          <h3 style={styles.subheading}>Import Character JSON</h3>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 8 }}>
+            Paste a character object or array of characters. Accepts fields: name, race, class, level, maxHp, currentHp, ac, stats (str/dex/con/int/wis/cha), skills, attacks, abilities, spells, spellSlots.
+          </p>
+          <textarea
+            autoFocus
+            value={importDraft}
+            onChange={e => { setImportDraft(e.target.value); setImportError(''); }}
+            placeholder={'{\n  "name": "Aragorn",\n  "race": "Human",\n  "class": "Ranger",\n  "level": 5,\n  "maxHp": 45,\n  "ac": 16,\n  "stats": { "str": 16, "dex": 14, "con": 14, "int": 12, "wis": 14, "cha": 12 }\n}'}
+            rows={10}
+            style={{ width: '100%', background: '#0f0a04', border: '1px solid #2a1a0a', color: 'var(--text-primary)', borderRadius: 6, padding: '8px 10px', fontSize: '0.8rem', fontFamily: 'monospace', resize: 'vertical', boxSizing: 'border-box' }}
+          />
+          {importError && <p style={{ color: '#e74c3c', fontSize: '0.8rem', margin: '4px 0' }}>{importError}</p>}
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+            <button className="btn-gold" onClick={handleImport}>Import</button>
+            <button className="btn-sm" onClick={() => { setShowImport(false); setImportError(''); }} style={{ background: 'transparent', border: '1px solid #3a2a1a', color: 'var(--text-muted)', borderRadius: 6, padding: '6px 14px', cursor: 'pointer' }}>Cancel</button>
+          </div>
+        </div>
+      )}
 
       {/* New Character Form */}
       {showNewForm && (
