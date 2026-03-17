@@ -473,6 +473,10 @@ const useStore = create((set, get) => ({
         ...state.encounter,
         log: [entry, ...state.encounter.log].slice(0, 30),
       },
+      sessionLog: [
+        { id: crypto.randomUUID(), timestamp: Date.now(), type: 'combat', icon: '⚔', title: entry, detail: null },
+        ...state.sessionLog,
+      ].slice(0, 120),
     })),
 
   addEncounterCondition: (id, condition) =>
@@ -706,16 +710,49 @@ const useStore = create((set, get) => ({
       .eq('id', activeCampaign.id);
   },
 
+  // === Session Log (unified activity feed) ===
+  sessionLog: [], // { id, type, icon, title, detail, timestamp }
+  addSessionEntry: (entry) =>
+    set((state) => ({
+      sessionLog: [
+        { id: crypto.randomUUID(), timestamp: Date.now(), ...entry },
+        ...state.sessionLog,
+      ].slice(0, 120),
+    })),
+  clearSessionLog: () => set({ sessionLog: [] }),
+
   // === Dice ===
   dice: {
     rollHistory: [],
   },
   addRoll: (rollEntry) =>
-    set((state) => ({
-      dice: {
-        rollHistory: [rollEntry, ...state.dice.rollHistory].slice(0, 10),
-      },
-    })),
+    set((state) => {
+      const mod = rollEntry.modifier !== 0 ? ` ${rollEntry.modifier > 0 ? '+' : ''}${rollEntry.modifier}` : '';
+      const label = `${rollEntry.count}d${rollEntry.die}${mod}`;
+      const detail = rollEntry.advantageRolls
+        ? `[${rollEntry.advantageRolls.join(', ')}] (${rollEntry.advantage})`
+        : rollEntry.rolls.length > 1
+          ? `[${rollEntry.rolls.join(', ')}]`
+          : null;
+      const isNat = rollEntry.die === 20 && rollEntry.rolls[0] === 20;
+      const isFail = rollEntry.die === 20 && rollEntry.rolls[0] === 1;
+      return {
+        dice: {
+          rollHistory: [rollEntry, ...state.dice.rollHistory].slice(0, 10),
+        },
+        sessionLog: [
+          {
+            id: crypto.randomUUID(),
+            timestamp: Date.now(),
+            type: 'roll',
+            icon: isNat ? '⭐' : isFail ? '💀' : '🎲',
+            title: `${label} = ${rollEntry.total}${isNat ? ' — NAT 20!' : isFail ? ' — NAT 1!' : ''}`,
+            detail,
+          },
+          ...state.sessionLog,
+        ].slice(0, 120),
+      };
+    }),
   clearHistory: () =>
     set({
       dice: { rollHistory: [] },
@@ -733,15 +770,35 @@ const useStore = create((set, get) => ({
     open: false,
   },
   addNarratorMessage: (msg) =>
-    set((state) => ({
-      narrator: {
-        ...state.narrator,
-        history: [
-          ...state.narrator.history,
-          { id: crypto.randomUUID(), timestamp: Date.now(), ...msg },
-        ].slice(-50),
-      },
-    })),
+    set((state) => {
+      const logEntry = msg.role === 'player'
+        ? {
+            id: crypto.randomUUID(), timestamp: Date.now(),
+            type: 'narrator', icon: '🗣',
+            title: msg.speaker || 'Player',
+            detail: msg.text?.slice(0, 100),
+          }
+        : msg.rollRequest
+          ? {
+              id: crypto.randomUUID(), timestamp: Date.now(),
+              type: 'roll-request', icon: '🎲',
+              title: `Roll ${msg.rollRequest.skill} — DC ${msg.rollRequest.dc}`,
+              detail: msg.rollRequest.character ? `For ${msg.rollRequest.character}` : null,
+            }
+          : null;
+      return {
+        narrator: {
+          ...state.narrator,
+          history: [
+            ...state.narrator.history,
+            { id: crypto.randomUUID(), timestamp: Date.now(), ...msg },
+          ].slice(-50),
+        },
+        sessionLog: logEntry
+          ? [logEntry, ...state.sessionLog].slice(0, 120)
+          : state.sessionLog,
+      };
+    }),
   setNarratorOpen: (open) =>
     set((state) => ({ narrator: { ...state.narrator, open } })),
   clearNarratorHistory: () =>

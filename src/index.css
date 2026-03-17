@@ -364,6 +364,10 @@ textarea {
   }
 }
 
+@media (max-width: 900px) {
+  .activity-log-panel { display: none !important; }
+}
+
 /* === Mobile Responsive === */
 @media (max-width: 600px) {
   h1 { font-size: 1.4rem; }

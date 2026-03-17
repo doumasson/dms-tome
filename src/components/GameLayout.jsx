@@ -8,6 +8,7 @@ import DiceRoller from './DiceRoller';
 import LootGenerator from './LootGenerator';
 import NotesTab from './NotesTab';
 import CampaignImporter from './CampaignImporter';
+import ActivityLog from './ActivityLog';
 
 export default function GameLayout({ liveConnected, onLeave, onManage, onSettings }) {
   const encounter = useStore(s => s.encounter);
@@ -64,6 +65,9 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
         {/* Narrator always at bottom */}
         <NarratorPanel />
       </div>
+
+      {/* Right activity log */}
+      <ActivityLog />
 
       {/* Tool overlay modals */}
       {toolPanel && (
