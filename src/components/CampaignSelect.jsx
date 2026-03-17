@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
-export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, onCreateCampaign, onSignOut }) {
+export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, onCreateCampaign, onSignOut, onOpenSettings }) {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [joinCode, setJoinCode] = useState('');
@@ -108,6 +108,7 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
             <img src={user.avatar_url} alt="" style={styles.avatar} referrerPolicy="no-referrer" />
           )}
           <span style={styles.userName}>{user.name}</span>
+          <button onClick={onOpenSettings} style={styles.settingsBtn} title="API Key Settings">⚙</button>
           <button onClick={onSignOut} style={styles.signOutBtn}>Sign Out</button>
         </div>
       </header>
@@ -241,6 +242,16 @@ const styles = {
     color: 'var(--text-secondary)',
     fontSize: '0.9rem',
     fontWeight: 600,
+  },
+  settingsBtn: {
+    background: 'transparent',
+    border: '1px solid var(--border-light)',
+    color: 'var(--text-muted)',
+    borderRadius: 6,
+    padding: '6px 10px',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    lineHeight: 1,
   },
   signOutBtn: {
     background: 'transparent',

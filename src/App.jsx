@@ -9,6 +9,7 @@ import CombatTracker from './components/CombatTracker';
 import CharacterSheet from './components/CharacterSheet';
 import SceneViewer from './components/SceneViewer';
 import CampaignImporter from './components/CampaignImporter';
+import ApiKeySettings from './components/ApiKeySettings';
 
 function D20Icon() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
   const [appView, setAppView] = useState('loading');
   const [activeTab, setActiveTab] = useState('dice');
   const [draftCampaign, setDraftCampaign] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
   const pendingInviteRef = useRef(null);
 
   const user = useStore(s => s.user);
@@ -152,17 +154,23 @@ export default function App() {
   // ── Campaign Select ──────────────────────────────────────────────────────────
   if (appView === 'select') {
     return (
-      <CampaignSelect
-        user={user}
-        pendingInvite={pendingInviteRef.current}
-        onSelectCampaign={handleSelectCampaign}
-        onCreateCampaign={() => {
-          setDraftCampaign(null);
-          localStorage.removeItem('dm-tome-wizard-draft');
-          setAppView('create');
-        }}
-        onSignOut={handleSignOut}
-      />
+      <>
+        <CampaignSelect
+          user={user}
+          pendingInvite={pendingInviteRef.current}
+          onSelectCampaign={handleSelectCampaign}
+          onCreateCampaign={() => {
+            setDraftCampaign(null);
+            localStorage.removeItem('dm-tome-wizard-draft');
+            setAppView('create');
+          }}
+          onSignOut={handleSignOut}
+          onOpenSettings={() => setShowSettings(true)}
+        />
+        {showSettings && (
+          <ApiKeySettings userId={user?.id} onClose={() => setShowSettings(false)} />
+        )}
+      </>
     );
   }
 

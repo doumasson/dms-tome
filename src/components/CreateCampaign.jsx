@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { getClaudeApiKey, generateCampaignJSON } from '../lib/claudeApi';
+import ApiKeySettings from './ApiKeySettings';
 
 const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
 const SETTINGS = ['High Fantasy', 'Forgotten Realms', 'Dark Gothic', 'Steampunk', 'Ancient World', 'Urban Fantasy', 'Sci-Fi'];
@@ -131,6 +133,9 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   const [saving, setSaving] = useState(false);
   const [createdCampaign, setCreatedCampaign] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState('');
+  const [showApiSettings, setShowApiSettings] = useState(false);
 
   // Restore draft on mount — ONLY from explicit DB draft (user selected a draft from campaign list).
   // Fresh "Create New Campaign" clicks never restore anything — always start at step 1.
@@ -246,6 +251,25 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     navigator.clipboard.writeText(generatePrompt(fields));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function handleGenerateWithClaude() {
+    const apiKey = getClaudeApiKey(user.id);
+    if (!apiKey) {
+      setShowApiSettings(true);
+      return;
+    }
+    setGenerating(true);
+    setGenerateError('');
+    try {
+      const rawText = await generateCampaignJSON(generatePrompt(fields), apiKey);
+      setJsonText(cleanJsonText(rawText));
+      handleStepNext(5);
+    } catch (err) {
+      setGenerateError(err.message || 'Generation failed. Check your API key and try again.');
+    } finally {
+      setGenerating(false);
+    }
   }
 
   async function handleCreate() {
@@ -425,11 +449,34 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           </div>
         )}
 
-        {/* Step 4: AI Prompt */}
+        {/* Step 4: Generate */}
         {step === 4 && (
           <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>Copy This Prompt</h2>
-            <p style={styles.hint}>Paste this into ChatGPT, Claude, or any AI. Then copy the JSON it gives you and paste it in the next step.</p>
+            <h2 style={styles.stepTitle}>Generate Campaign</h2>
+            {getClaudeApiKey(user.id) ? (
+              <>
+                <p style={styles.hint}>Click below to generate your campaign with Claude. This takes about 30 seconds.</p>
+                <button
+                  onClick={handleGenerateWithClaude}
+                  disabled={generating}
+                  style={styles.generateBtn}
+                >
+                  {generating ? '✦ Generating Campaign...' : '✦ Generate with Claude'}
+                </button>
+                {generateError && <p style={styles.errorMsg}>{generateError}</p>}
+                <div style={styles.orDivider}><span style={styles.orText}>or use manually</span></div>
+              </>
+            ) : (
+              <>
+                <p style={styles.hint}>
+                  Add your Claude API key to generate campaigns automatically, or copy the prompt and paste it into any AI.
+                </p>
+                <button onClick={() => setShowApiSettings(true)} style={styles.addKeyBtn}>
+                  ⚙ Add Claude API Key
+                </button>
+                <div style={styles.orDivider}><span style={styles.orText}>or copy prompt manually</span></div>
+              </>
+            )}
             <div style={styles.promptBox}>
               <pre style={styles.promptText}>{generatePrompt(fields)}</pre>
             </div>
@@ -503,6 +550,9 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
         )}
       </div>
     </div>
+    {showApiSettings && (
+      <ApiKeySettings userId={user.id} onClose={() => setShowApiSettings(false)} />
+    )}
   );
 }
 
@@ -657,6 +707,33 @@ const styles = {
     wordBreak: 'break-word',
     lineHeight: 1.6,
     fontFamily: 'monospace',
+  },
+  generateBtn: {
+    background: 'linear-gradient(135deg, #f0c868, #d4af37, #a8841f)',
+    color: '#1a0e00',
+    border: 'none',
+    borderRadius: 10,
+    padding: '16px 28px',
+    fontSize: '1rem',
+    fontWeight: 700,
+    fontFamily: "'Cinzel', Georgia, serif",
+    cursor: 'pointer',
+    width: '100%',
+    minHeight: 54,
+    letterSpacing: '0.04em',
+  },
+  addKeyBtn: {
+    background: 'linear-gradient(160deg, #3a2412, #2e1e0e)',
+    border: '1px solid var(--border-gold)',
+    color: 'var(--gold)',
+    borderRadius: 8,
+    padding: '12px 20px',
+    cursor: 'pointer',
+    fontWeight: 700,
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '0.88rem',
+    width: '100%',
+    minHeight: 48,
   },
   copyBtn: {
     background: 'linear-gradient(160deg, #3a2412, #2e1e0e)',
