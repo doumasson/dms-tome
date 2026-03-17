@@ -721,6 +721,12 @@ const useStore = create((set, get) => ({
       dice: { rollHistory: [] },
     }),
 
+  // === Scene Images (DALL-E cache) ===
+  sceneImages: {}, // { [campaignId:sceneIndex]: imageUrl }
+  setSceneImage: (key, url) =>
+    set((state) => ({ sceneImages: { ...state.sceneImages, [key]: url } })),
+  clearSceneImages: () => set({ sceneImages: {} }),
+
   // === Narrator (AI DM) ===
   narrator: {
     history: [], // { id, role: 'player'|'dm', speaker, text, rollRequest, timestamp }

@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { getClaudeApiKey, setClaudeApiKey } from '../lib/claudeApi';
+import { getOpenAiKey, setOpenAiKey } from '../lib/dalleApi';
 
 export default function ApiKeySettings({ userId, onClose }) {
-  const [key, setKey] = useState(getClaudeApiKey(userId));
+  const [claudeKey, setClaudeKey] = useState(getClaudeApiKey(userId));
+  const [openAiKey, setOpenAiKeyState] = useState(getOpenAiKey(userId));
   const [saved, setSaved] = useState(false);
 
   function handleSave() {
-    setClaudeApiKey(userId, key.trim());
+    setClaudeApiKey(userId, claudeKey.trim());
+    setOpenAiKey(userId, openAiKey.trim());
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
@@ -14,48 +17,53 @@ export default function ApiKeySettings({ userId, onClose }) {
     }, 800);
   }
 
-  function handleClear() {
-    setClaudeApiKey(userId, '');
-    setKey('');
-  }
-
-  const hasExistingKey = !!getClaudeApiKey(userId);
-
   return (
     <div style={styles.overlay} onClick={e => e.target === e.currentTarget && onClose()}>
       <div style={styles.modal}>
         <button onClick={onClose} style={styles.closeBtn} aria-label="Close">✕</button>
-        <h2 style={styles.title}>Claude API Key</h2>
+        <h2 style={styles.title}>API Keys</h2>
         <p style={styles.hint}>
-          Your key is stored locally on this device only — never sent to any server other than Anthropic.
-          Get yours at <span style={styles.link}>console.anthropic.com</span>
+          Keys are stored locally on this device only — never sent to any server except the respective API.
         </p>
-        <label style={styles.label}>API Key</label>
+
+        {/* Claude Key */}
+        <label style={styles.label}>Claude API Key <span style={styles.labelHint}>(AI Narrator • console.anthropic.com)</span></label>
         <input
           type="password"
-          value={key}
-          onChange={e => setKey(e.target.value)}
+          value={claudeKey}
+          onChange={e => setClaudeKey(e.target.value)}
           placeholder="sk-ant-..."
           style={styles.input}
           autoComplete="off"
           spellCheck={false}
         />
-        {hasExistingKey && (
-          <p style={styles.savedNote}>✓ Key saved on this device</p>
-        )}
+        {getClaudeApiKey(userId) && <p style={styles.savedNote}>✓ Claude key saved</p>}
+
+        <div style={{ height: 18 }} />
+
+        {/* OpenAI Key */}
+        <label style={styles.label}>OpenAI API Key <span style={styles.labelHint}>(Scene images • platform.openai.com)</span></label>
+        <input
+          type="password"
+          value={openAiKey}
+          onChange={e => setOpenAiKeyState(e.target.value)}
+          placeholder="sk-..."
+          style={styles.input}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        {getOpenAiKey(userId) && <p style={styles.savedNote}>✓ OpenAI key saved</p>}
+        <p style={styles.costNote}>~$0.08 per scene image (DALL-E 3, 1792×1024)</p>
+
         <div style={styles.btnRow}>
           <button
             onClick={handleSave}
-            disabled={!key.trim() || saved}
+            disabled={saved}
             style={styles.saveBtn}
           >
-            {saved ? '✓ Saved!' : 'Save Key'}
+            {saved ? '✓ Saved!' : 'Save Keys'}
           </button>
-          {hasExistingKey && (
-            <button onClick={handleClear} style={styles.clearBtn}>
-              Remove Key
-            </button>
-          )}
+          <button onClick={onClose} style={styles.clearBtn}>Cancel</button>
         </div>
       </div>
     </div>
@@ -109,6 +117,19 @@ const styles = {
     fontSize: '0.82rem',
     lineHeight: 1.6,
     margin: '0 0 20px',
+  },
+  labelHint: {
+    color: 'var(--text-muted)',
+    fontSize: '0.72rem',
+    fontFamily: 'monospace',
+    fontWeight: 400,
+    letterSpacing: 0,
+  },
+  costNote: {
+    color: 'var(--text-muted)',
+    fontSize: '0.72rem',
+    margin: '4px 0 0',
+    fontStyle: 'italic',
   },
   link: {
     color: 'var(--parchment)',
