@@ -4,6 +4,7 @@ import {
   rollDie, rollDamage, rollInitiative, parseAttackBonus,
   getAbilityModifier, formatModifier, CONDITIONS, SAVE_NAMES, getTokenColor,
 } from '../lib/dice';
+import LootGenerator from './LootGenerator';
 
 const MAP_W = 10;
 const MAP_H = 8;
@@ -497,6 +498,42 @@ function AoEPanel({ combatants, onApply, onCancel }) {
   );
 }
 
+// ─── Concentrate Panel ────────────────────────────────────────────────────────
+
+function ConcentratePanel({ combatant, onSet, onClear, onCancel }) {
+  const [spell, setSpell] = useState(combatant.concentration || '');
+
+  return (
+    <div style={apStyle.panel}>
+      <div style={apStyle.label}>🎯 Concentration</div>
+      {combatant.concentration && (
+        <div style={{ fontSize: '0.8rem', color: '#9b59b6', marginBottom: 6 }}>
+          Currently: <strong>{combatant.concentration}</strong>
+        </div>
+      )}
+      <input
+        autoFocus
+        placeholder="Spell name (e.g. Hold Person)"
+        value={spell}
+        onChange={e => setSpell(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter' && spell.trim()) onSet(spell.trim()); }}
+        style={{ width: '100%', background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 4, padding: '5px 8px', fontSize: '0.85rem', boxSizing: 'border-box', marginBottom: 8 }}
+      />
+      <div style={{ display: 'flex', gap: 6 }}>
+        <button onClick={() => spell.trim() && onSet(spell.trim())} disabled={!spell.trim()} style={{ ...apStyle.btn, opacity: spell.trim() ? 1 : 0.4 }}>
+          Set
+        </button>
+        {combatant.concentration && (
+          <button onClick={onClear} style={{ ...apStyle.cancel, color: '#e74c3c', borderColor: 'rgba(231,76,60,0.4)' }}>
+            Drop
+          </button>
+        )}
+        <button onClick={onCancel} style={apStyle.cancel}>Cancel</button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Condition Picker ─────────────────────────────────────────────────────────
 
 function ConditionPicker({ combatantId, conditions, onAdd, onRemove }) {
@@ -663,6 +700,15 @@ function CombatantRow({ combatant, isActive, isSelected, colorIndex, dmMode, onS
         <button onClick={(e) => { e.stopPropagation(); onHpChange(combatant.id, 5); }} style={{ ...miniBtn, color: '#2ecc71' }}>+5</button>
       </div>
 
+      {/* Concentration badge */}
+      {combatant.concentration && !dying && !dead && (
+        <div style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }} onClick={e => e.stopPropagation()}>
+          <span style={{ fontSize: '0.65rem', background: 'rgba(155,89,182,0.2)', border: '1px solid rgba(155,89,182,0.5)', color: '#9b59b6', borderRadius: 3, padding: '1px 6px' }}>
+            🎯 {combatant.concentration}
+          </span>
+        </div>
+      )}
+
       {/* Death saves (player at 0 HP) */}
       {dying && (
         <div onClick={e => e.stopPropagation()}>
@@ -763,10 +809,11 @@ function InitiativePhase({ combatants, onSetInitiative, onBeginCombat, onCancel 
 
 // ─── Combat Phase ─────────────────────────────────────────────────────────────
 
-function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, onHeal, onLog, onAddCondition, onRemoveCondition, onMoveToken, onRollDeathSave, onStabilize }) {
+function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, onHeal, onLog, onAddCondition, onRemoveCondition, onMoveToken, onRollDeathSave, onStabilize, onSetConcentration, onClearConcentration }) {
   const { combatants, currentTurn, round, log } = encounter;
   const [selectedToken, setSelectedToken] = useState(null);
-  const [panel, setPanel] = useState(null); // null | 'attack' | 'save'
+  const [panel, setPanel] = useState(null); // null | 'attack' | 'aoe' | 'save' | 'concentrate'
+  const [showLoot, setShowLoot] = useState(false);
   const logRef = useRef();
 
   const activeCombatant = combatants[currentTurn] || null;
@@ -813,8 +860,11 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
     onLog(entry);
   }
 
-  const allDead = combatants.every(c => c.type === 'enemy' ? c.currentHp <= 0 : false);
-  const partyDead = combatants.every(c => c.type === 'player' ? c.currentHp <= 0 : false);
+  const enemies = combatants.filter(c => c.type === 'enemy');
+  const allEnemiesDead = enemies.length > 0 && enemies.every(c => c.currentHp <= 0);
+  const partyDead = combatants.filter(c => c.type === 'player').every(c => c.currentHp <= 0);
+  // Average CR of defeated enemies (for loot default) — use 1 if unknown
+  const avgCr = 1;
 
   return (
     <div style={{ display: 'flex', gap: 12, padding: '0 8px', flexWrap: 'wrap' }}>
@@ -834,9 +884,16 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
               Token selected — click a cell to move
             </div>
           )}
-          {(allDead || partyDead) && (
-            <div style={{ fontSize: '0.8rem', color: allDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
-              {allDead ? '🏆 Victory!' : '💀 Party defeated!'}
+          {(allEnemiesDead || partyDead) && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: '0.8rem', color: allEnemiesDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
+                {allEnemiesDead ? '🏆 Victory!' : '💀 Party defeated!'}
+              </span>
+              {allEnemiesDead && dmMode && (
+                <button onClick={() => setShowLoot(l => !l)} style={{ ...btn.small, color: '#d4af37', borderColor: 'var(--border-gold)', fontSize: '0.72rem' }}>
+                  🎁 Loot
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -871,6 +928,12 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
             ))}
           </div>
         </div>
+
+        {showLoot && (
+          <div style={{ marginTop: 10 }}>
+            <LootGenerator defaultCr={avgCr} onClose={() => setShowLoot(false)} />
+          </div>
+        )}
       </div>
 
       {/* Right: Sidebar */}
@@ -914,6 +977,12 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
                       💥 AoE Damage
                     </button>
                     <button
+                      onClick={() => setPanel('concentrate')}
+                      style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6' }}
+                    >
+                      🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}
+                    </button>
+                    <button
                       onClick={() => setPanel('save')}
                       style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}
                     >
@@ -950,6 +1019,15 @@ function CombatPhase({ encounter, dmMode, onNextTurn, onEndEncounter, onDamage, 
           <SavingThrowPanel
             combatants={combatants}
             onLog={handleLogOnly}
+            onCancel={() => setPanel(null)}
+          />
+        )}
+
+        {panel === 'concentrate' && activeCombatant && (
+          <ConcentratePanel
+            combatant={activeCombatant}
+            onSet={spell => { onSetConcentration(activeCombatant.id, spell); setPanel(null); }}
+            onClear={() => { onClearConcentration(activeCombatant.id); setPanel(null); }}
             onCancel={() => setPanel(null)}
           />
         )}
@@ -1324,6 +1402,8 @@ export default function EncounterView() {
   const endEncounter = useStore(s => s.endEncounter);
   const rollDeathSave = useStore(s => s.rollDeathSave);
   const stabilizeCombatant = useStore(s => s.stabilizeCombatant);
+  const setConcentration = useStore(s => s.setConcentration);
+  const clearConcentration = useStore(s => s.clearConcentration);
 
   function handleStartEncounter(enemies) {
     setCustomSetup(false);
@@ -1371,6 +1451,8 @@ export default function EncounterView() {
           onMoveToken={moveToken}
           onRollDeathSave={rollDeathSave}
           onStabilize={stabilizeCombatant}
+          onSetConcentration={setConcentration}
+          onClearConcentration={clearConcentration}
         />
       </div>
     );

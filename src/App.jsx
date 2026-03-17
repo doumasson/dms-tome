@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from './lib/supabase';
 import useStore from './store/useStore';
 import LoginPage from './components/LoginPage';
@@ -39,7 +39,10 @@ export default function App() {
   const [draftCampaign, setDraftCampaign] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showManager, setShowManager] = useState(false);
+  const [liveConnected, setLiveConnected] = useState(false);
   const pendingInviteRef = useRef(null);
+  const channelRef = useRef(null);
+  const broadcastDebounce = useRef(null);
 
   const user = useStore(s => s.user);
   const setUser = useStore(s => s.setUser);
@@ -51,6 +54,8 @@ export default function App() {
   const dmMode = useStore(s => s.dmMode);
   const toggleDmMode = useStore(s => s.toggleDmMode);
   const isDM = useStore(s => s.isDM);
+  const encounter = useStore(s => s.encounter);
+  const syncEncounterDown = useStore(s => s.syncEncounterDown);
 
   useEffect(() => {
     // Pick up invite code from URL or localStorage
@@ -89,6 +94,48 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // ── Realtime Sync ─────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (appView !== 'game' || !activeCampaign?.id) return;
+
+    const ch = supabase.channel(`encounter:${activeCampaign.id}`, {
+      config: { broadcast: { ack: false } },
+    });
+
+    ch.on('broadcast', { event: 'encounter-sync' }, ({ payload }) => {
+      // Only non-DMs apply incoming state
+      if (!isDM || !dmMode) {
+        syncEncounterDown(payload);
+      }
+    });
+
+    ch.subscribe(status => {
+      setLiveConnected(status === 'SUBSCRIBED');
+    });
+
+    channelRef.current = ch;
+
+    return () => {
+      ch.unsubscribe();
+      channelRef.current = null;
+      setLiveConnected(false);
+    };
+  }, [appView, activeCampaign?.id]);
+
+  // DM broadcasts encounter state changes (debounced 400ms)
+  useEffect(() => {
+    if (!isDM || !dmMode || !channelRef.current || !liveConnected) return;
+    clearTimeout(broadcastDebounce.current);
+    broadcastDebounce.current = setTimeout(() => {
+      channelRef.current?.send({
+        type: 'broadcast',
+        event: 'encounter-sync',
+        payload: encounter,
+      });
+    }, 400);
+    return () => clearTimeout(broadcastDebounce.current);
+  }, [encounter, isDM, dmMode, liveConnected]);
 
   async function handleSession(session) {
     const authUser = session.user;
@@ -219,6 +266,12 @@ export default function App() {
           <h1 style={styles.appTitle}>DM's Tome</h1>
           {activeCampaign && (
             <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
+          )}
+          {appView === 'game' && (
+            <span style={{ fontSize: '0.68rem', color: liveConnected ? '#2ecc71' : '#888', letterSpacing: '0.04em' }}
+              title={liveConnected ? 'Realtime connected' : 'Connecting...'}>
+              {liveConnected ? '● Live' : '○ …'}
+            </span>
           )}
         </div>
         <div style={styles.headerRight}>
