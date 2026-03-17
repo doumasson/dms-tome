@@ -9,6 +9,34 @@ const VILLAINS = ['Ancient Dragon', 'Lich', 'Demon Lord', 'Corrupt Noble', 'Cosm
 
 const DRAFT_KEY = 'dm-tome-wizard-draft';
 
+// Clean up AI-generated JSON before parsing
+function cleanJsonText(str) {
+  let cleaned = str;
+
+  // Remove markdown code blocks
+  cleaned = cleaned.replace(/```json/gi, '');
+  cleaned = cleaned.replace(/```/g, '');
+
+  // Replace escaped brackets using split/join (more reliable than regex)
+  cleaned = cleaned.split('\\[').join('[');
+  cleaned = cleaned.split('\\]').join(']');
+  cleaned = cleaned.split('\\{').join('{');
+  cleaned = cleaned.split('\\}').join('}');
+
+  cleaned = cleaned.trim();
+
+  // Extract JSON object boundaries
+  const firstBrace = cleaned.indexOf('{');
+  if (firstBrace > 0) cleaned = cleaned.slice(firstBrace);
+  const lastBrace = cleaned.lastIndexOf('}');
+  if (lastBrace !== -1 && lastBrace < cleaned.length - 1) cleaned = cleaned.slice(0, lastBrace + 1);
+
+  console.log('Before cleanup:', str.substring(0, 200));
+  console.log('After cleanup:', cleaned.substring(0, 200));
+
+  return cleaned;
+}
+
 function generatePrompt(fields) {
   return `You are a D&D 5e campaign designer. Create a complete campaign outline with the following specifications:
 
@@ -54,22 +82,16 @@ Requirements:
 - Ensure the tone matches: ${fields.tone}
 - The villain (${fields.villain}) should appear or be foreshadowed in multiple scenes
 
-CRITICAL: Output ONLY valid JSON. No markdown code blocks. No explanation before or after. Start with { and end with }. No \\[ or \\] escaping - use standard JSON array brackets [ ].`;
+OUTPUT INSTRUCTIONS:
+- Output ONLY valid JSON, no other text
+- Use standard brackets [ ] not escaped \\[ \\]
+- Do NOT wrap in markdown code blocks
+- Start with { and end with }
+- After generating, save/export as a .json file for the user to download`;
 }
 
 function generateInviteCode() {
   return Math.random().toString(36).substring(2, 10).toUpperCase();
-}
-
-function cleanJsonText(text) {
-  let cleaned = text.trim();
-  cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
-  const firstBrace = cleaned.indexOf('{');
-  if (firstBrace > 0) cleaned = cleaned.slice(firstBrace);
-  const lastBrace = cleaned.lastIndexOf('}');
-  if (lastBrace !== -1 && lastBrace < cleaned.length - 1) cleaned = cleaned.slice(0, lastBrace + 1);
-  cleaned = cleaned.replace(/\\\[/g, '[').replace(/\\\]/g, ']');
-  return cleaned;
 }
 
 function validateCampaignJson(text) {
@@ -110,35 +132,17 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   const [createdCampaign, setCreatedCampaign] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  // Restore draft on mount — DB draft prop takes priority over localStorage
+  // Restore draft on mount — ONLY from explicit DB draft (user selected a draft from campaign list).
+  // Fresh "Create New Campaign" clicks never restore anything — always start at step 1.
   useEffect(() => {
     if (draftCampaign?.campaign_data?.__draft) {
       const { fields: savedFields, __step } = draftCampaign.campaign_data;
       if (savedFields) setFields(f => ({ ...f, ...savedFields }));
       if (__step > 1) setStep(__step);
       setCampaignId(draftCampaign.id);
-    } else {
-      try {
-        const saved = localStorage.getItem(DRAFT_KEY);
-        if (saved) {
-          const draft = JSON.parse(saved);
-          if (draft.userId === user.id && draft.fields) {
-            setFields(f => ({ ...f, ...draft.fields }));
-            if (draft.step > 1) setStep(draft.step);
-            if (draft.campaignId) setCampaignId(draft.campaignId);
-            if (draft.jsonText) setJsonText(draft.jsonText);
-          }
-        }
-      } catch {}
     }
+    // Never read from localStorage on mount — avoids stale step/JSON pre-fill on fresh creates.
   }, []);
-
-  // Persist jsonText to localStorage as user types on step 5
-  useEffect(() => {
-    if (step === 5 && jsonText) {
-      saveDraftLocally(step, fields, campaignId, jsonText);
-    }
-  }, [jsonText]);
 
   function setField(key, val) {
     setFields(f => ({ ...f, [key]: val }));
@@ -214,6 +218,28 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     setStep(nextStep);
     saveDraftLocally(nextStep, fields, campaignId, jsonText);
     saveDraftToDb(nextStep, fields, campaignId);
+  }
+
+  function handleStartOver() {
+    localStorage.removeItem(DRAFT_KEY);
+    setFields(DEFAULT_FIELDS);
+    setStep(1);
+    setJsonText('');
+    setJsonError('');
+    // Keep campaignId so we reuse the existing DB draft record instead of orphaning it
+  }
+
+  function handleFileUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setJsonText(cleanJsonText(ev.target.result || ''));
+      setJsonError('');
+    };
+    reader.readAsText(file);
+    // Reset the input so the same file can be re-uploaded if needed
+    e.target.value = '';
   }
 
   function handleCopyPrompt() {
@@ -414,11 +440,25 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           </div>
         )}
 
-        {/* Step 5: Paste JSON */}
+        {/* Step 5: Import JSON */}
         {step === 5 && (
           <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>Paste Your Campaign JSON</h2>
-            <p style={styles.hint}>Paste the JSON from your AI here. It will be validated and saved to your campaign.</p>
+            <h2 style={styles.stepTitle}>Import Campaign JSON</h2>
+            <p style={styles.hint}>Upload the .json file your AI generated, or paste the JSON text below.</p>
+
+            {/* File upload */}
+            <label style={styles.uploadLabel}>
+              <input
+                type="file"
+                accept=".json,application/json"
+                onChange={handleFileUpload}
+                style={{ display: 'none' }}
+              />
+              <span style={styles.uploadBtn}>📁 Upload JSON File</span>
+            </label>
+
+            <div style={styles.orDivider}><span style={styles.orText}>or paste below</span></div>
+
             <textarea
               value={jsonText}
               onChange={e => { setJsonText(e.target.value); setJsonError(''); }}
@@ -433,6 +473,9 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               style={styles.createBtn}
             >
               {creating ? 'Creating Campaign...' : 'Create Campaign'}
+            </button>
+            <button onClick={handleStartOver} style={styles.startOverBtn}>
+              ↺ Start Over
             </button>
           </div>
         )}
@@ -699,5 +742,50 @@ const styles = {
     fontSize: '0.85rem',
     margin: 0,
     textAlign: 'center',
+  },
+  uploadLabel: {
+    cursor: 'pointer',
+    display: 'block',
+  },
+  uploadBtn: {
+    display: 'block',
+    background: 'var(--bg-card)',
+    border: '2px dashed var(--border-gold)',
+    color: 'var(--gold)',
+    borderRadius: 8,
+    padding: '14px 20px',
+    textAlign: 'center',
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '0.9rem',
+    fontWeight: 600,
+    letterSpacing: '0.03em',
+    cursor: 'pointer',
+    transition: 'background 0.15s',
+  },
+  orDivider: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    margin: '4px 0',
+  },
+  orText: {
+    color: 'var(--text-muted)',
+    fontSize: '0.78rem',
+    fontFamily: "'Cinzel', Georgia, serif",
+    letterSpacing: '0.06em',
+    margin: '0 auto',
+  },
+  startOverBtn: {
+    background: 'transparent',
+    border: 'none',
+    color: 'var(--text-muted)',
+    cursor: 'pointer',
+    fontSize: '0.82rem',
+    fontFamily: "'Cinzel', Georgia, serif",
+    padding: '4px 0',
+    textAlign: 'center',
+    letterSpacing: '0.04em',
+    textDecoration: 'underline',
+    marginTop: 4,
   },
 };

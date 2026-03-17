@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import useStore from '../store/useStore';
 
 const EXAMPLE_JSON = `{
@@ -104,16 +104,22 @@ export default function CampaignImporter({ onSuccess }) {
   const [validData, setValidData] = useState(null);
   const [status, setStatus] = useState('idle'); // 'idle' | 'valid' | 'invalid' | 'loaded'
   const [showExample, setShowExample] = useState(false);
+  const fileInputRef = useRef(null);
 
   function cleanJsonText(text) {
     let cleaned = text.trim();
+    // Strip markdown code fences (```json ... ``` or ``` ... ```)
     cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+    // Strip any remaining inline backtick fences
+    cleaned = cleaned.replace(/`{1,3}/g, '');
+    // Unescape escaped brackets from some AI outputs
+    cleaned = cleaned.replace(/\\\[/g, '[').replace(/\\\]/g, ']');
+    // Trim to the outermost { ... }
     const firstBrace = cleaned.indexOf('{');
     if (firstBrace > 0) cleaned = cleaned.slice(firstBrace);
     const lastBrace = cleaned.lastIndexOf('}');
     if (lastBrace !== -1 && lastBrace < cleaned.length - 1) cleaned = cleaned.slice(0, lastBrace + 1);
-    cleaned = cleaned.replace(/\\\[/g, '[').replace(/\\\]/g, ']');
-    return cleaned;
+    return cleaned.trim();
   }
 
   function handleValidate() {
@@ -121,7 +127,7 @@ export default function CampaignImporter({ onSuccess }) {
     setStatus('idle');
 
     if (!jsonText.trim()) {
-      setErrors(['Please paste JSON campaign data above.']);
+      setErrors(['Upload a .json file or paste JSON campaign data above.']);
       setStatus('invalid');
       return;
     }
@@ -132,7 +138,7 @@ export default function CampaignImporter({ onSuccess }) {
     } catch (e) {
       setErrors([
         'Could not parse JSON. The AI may have included extra text or markdown formatting.',
-        'Make sure you copy only the JSON — it must start with { and end with }.',
+        'Tip: use the "Upload JSON File" button if your AI offered a file download — it skips copy/paste issues entirely.',
         `Parse error: ${e.message}`,
       ]);
       setStatus('invalid');
@@ -184,6 +190,51 @@ export default function CampaignImporter({ onSuccess }) {
     setShowExample(false);
   }
 
+  function handleFileUpload(e) {
+    const file = e.target.files?.[0];
+    if (!fileInputRef.current) return;
+    fileInputRef.current.value = '';
+    if (!file) return;
+
+    if (!file.name.endsWith('.json')) {
+      setErrors(['Please select a .json file.']);
+      setStatus('invalid');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const text = evt.target.result;
+      setJsonText(text);
+      setErrors([]);
+      setValidData(null);
+      setStatus('idle');
+
+      // Auto-validate after file load
+      let parsed;
+      try {
+        parsed = JSON.parse(cleanJsonText(text));
+      } catch (err) {
+        setErrors([
+          'Could not parse the JSON file.',
+          `Parse error: ${err.message}`,
+        ]);
+        setStatus('invalid');
+        return;
+      }
+      const validationErrors = validateCampaign(parsed);
+      if (validationErrors.length > 0) {
+        setErrors(validationErrors);
+        setStatus('invalid');
+      } else {
+        setErrors([]);
+        setValidData(parsed);
+        setStatus('valid');
+      }
+    };
+    reader.readAsText(file);
+  }
+
   return (
     <div style={styles.container}>
       <h2>Campaign Importer</h2>
@@ -213,16 +264,16 @@ export default function CampaignImporter({ onSuccess }) {
       {/* JSON input */}
       <div className="card" style={styles.importCard}>
         <div style={styles.inputHeader}>
-          <h3 style={styles.inputLabel}>Paste Campaign JSON</h3>
+          <h3 style={styles.inputLabel}>Import Campaign</h3>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn-gold btn-sm" onClick={handleLoadSample}>
-              Load Sample Campaign
+              Load Sample
             </button>
             <button
               className="btn-dark btn-sm"
               onClick={() => setShowExample((v) => !v)}
             >
-              {showExample ? 'Hide Example' : 'Show Format'}
+              {showExample ? 'Hide Format' : 'Show Format'}
             </button>
           </div>
         </div>
@@ -239,6 +290,30 @@ export default function CampaignImporter({ onSuccess }) {
           </div>
         )}
 
+        {/* Primary: File Upload */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={handleFileUpload}
+          style={{ display: 'none' }}
+        />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          style={styles.uploadBtn}
+        >
+          <span style={styles.uploadIcon}>📂</span>
+          Upload JSON File
+        </button>
+
+        {/* Divider */}
+        <div style={styles.orDivider}>
+          <div style={styles.orLine} />
+          <span style={styles.orText}>or paste below</span>
+          <div style={styles.orLine} />
+        </div>
+
+        {/* Secondary: Paste */}
         <textarea
           value={jsonText}
           onChange={(e) => {
@@ -468,8 +543,47 @@ const styles = {
     margin: 0,
     opacity: 0.85,
   },
+  uploadBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    background: 'linear-gradient(135deg, #f0c868, #d4af37, #a8841f)',
+    color: '#1a0e00',
+    border: 'none',
+    borderRadius: 10,
+    padding: '18px 28px',
+    fontSize: '1rem',
+    fontWeight: 700,
+    fontFamily: "'Cinzel', Georgia, serif",
+    cursor: 'pointer',
+    width: '100%',
+    minHeight: 58,
+    letterSpacing: '0.04em',
+  },
+  uploadIcon: {
+    fontSize: '1.3rem',
+  },
+  orDivider: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    margin: '4px 0',
+  },
+  orLine: {
+    flex: 1,
+    height: 1,
+    background: 'var(--border-color)',
+  },
+  orText: {
+    color: 'var(--text-muted)',
+    fontSize: '0.78rem',
+    fontFamily: "'Cinzel', Georgia, serif",
+    letterSpacing: '0.06em',
+    whiteSpace: 'nowrap',
+  },
   textarea: {
-    minHeight: 200,
+    minHeight: 160,
     fontFamily: 'monospace',
     fontSize: '0.85rem',
     lineHeight: 1.6,

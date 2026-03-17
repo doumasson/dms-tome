@@ -156,7 +156,11 @@ export default function App() {
         user={user}
         pendingInvite={pendingInviteRef.current}
         onSelectCampaign={handleSelectCampaign}
-        onCreateCampaign={() => setAppView('create')}
+        onCreateCampaign={() => {
+          setDraftCampaign(null);
+          localStorage.removeItem('dm-tome-wizard-draft');
+          setAppView('create');
+        }}
         onSignOut={handleSignOut}
       />
     );
