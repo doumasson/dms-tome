@@ -8,6 +8,7 @@ import CreateCampaign from './components/CreateCampaign';
 import CharacterCreate from './components/CharacterCreate';
 import CharacterSelect from './components/CharacterSelect';
 import CharacterProfile from './components/CharacterProfile';
+import CampaignEndModal from './components/CampaignEndModal';
 import ApiKeySettings from './components/ApiKeySettings';
 import CampaignManager from './components/CampaignManager';
 import GameLayout from './components/GameLayout';
@@ -54,6 +55,9 @@ export default function App() {
   const setMyCharacter   = useStore(s => s.setMyCharacter);
   const setPartyMembers  = useStore(s => s.setPartyMembers);
   const saveSessionState = useStore(s => s.saveSessionStateToSupabase);
+  const appendScenes     = useStore(s => s.appendScenes);
+  const campaignComplete = useStore(s => s.campaignComplete);
+  const setCampaignComplete = useStore(s => s.setCampaignComplete);
 
   const sessionPersistDebounce = useRef(null);
   const encounterHeartbeat = useRef(null);
@@ -109,6 +113,15 @@ export default function App() {
     // Scene change sync (DM → players)
     ch.on('broadcast', { event: 'scene-sync' }, ({ payload }) => {
       if (!isDM || !dmMode) setCurrentScene(payload.sceneIndex);
+    });
+
+    // DM appended AI-generated continuation scenes → all players
+    ch.on('broadcast', { event: 'append-scenes' }, ({ payload }) => {
+      if (!isDM || !dmMode) {
+        useStore.getState().appendScenes(payload.scenes || []);
+        useStore.getState().setCurrentScene(payload.nextSceneIndex);
+        useStore.getState().setCampaignComplete(false);
+      }
     });
 
     // AI-triggered combat start (DM → players via NarratorPanel)
@@ -564,6 +577,11 @@ export default function App() {
 
       {showManager && <CampaignManager onClose={() => setShowManager(false)} />}
       {showSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowSettings(false)} />}
+      {campaignComplete && (
+        <CampaignEndModal
+          onWrapUp={() => { setCampaignComplete(false); handleLeaveCampaign(); }}
+        />
+      )}
     </div>
   );
 }

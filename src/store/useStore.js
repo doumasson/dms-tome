@@ -291,6 +291,19 @@ const useStore = create((set, get) => ({
       },
     })),
 
+  // Append AI-generated continuation scenes to the campaign
+  appendScenes: (newScenes) =>
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        scenes: [...(state.campaign.scenes || []), ...newScenes],
+      },
+    })),
+
+  // Campaign completion state — shown when last scene concludes
+  campaignComplete: false,
+  setCampaignComplete: (val) => set({ campaignComplete: val }),
+
   // === Encounter (unified scene + combat) ===
   encounter: {
     phase: 'idle',       // 'idle' | 'initiative' | 'combat'

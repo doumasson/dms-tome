@@ -12,6 +12,7 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
   const [joinError, setJoinError] = useState('');
   const [joinSuccess, setJoinSuccess] = useState('');
   const [demoLoading, setDemoLoading] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(null); // campaign id that was just copied
   const preGenerateSceneImages = useStore((s) => s.preGenerateSceneImages);
 
   useEffect(() => {
@@ -264,7 +265,19 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
                       <span style={styles.lastPlayed}>Last played {formatDate(campaign.updated_at)}</span>
                     )}
                     {!isDraft && campaign.userRole === 'dm' && campaign.invite_code && (
-                      <span style={styles.inviteCode}>Code: {campaign.invite_code}</span>
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          const link = `${window.location.origin}${window.location.pathname}?invite=${campaign.invite_code}`;
+                          navigator.clipboard.writeText(link).catch(() => navigator.clipboard.writeText(campaign.invite_code));
+                          setCopiedCode(campaign.id);
+                          setTimeout(() => setCopiedCode(null), 2000);
+                        }}
+                        style={styles.inviteCopyBtn}
+                        title="Copy invite link"
+                      >
+                        {copiedCode === campaign.id ? '✓ Copied!' : `📋 ${campaign.invite_code}`}
+                      </button>
                     )}
                     <span style={styles.enterArrow}>{isDraft ? '✏' : '→'}</span>
                   </div>

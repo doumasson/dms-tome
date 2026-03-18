@@ -89,6 +89,61 @@ Rules for special fields:
 - enemies: ONLY populate when startCombat is true. Use the enemies listed in the scene, or invent appropriate opponents that fit the narrative. Each enemy: {"name":"Goblin","hp":7,"ac":15,"speed":30,"stats":{"str":8,"dex":14,"con":10,"int":10,"wis":8,"cha":8},"attacks":[{"name":"Scimitar","bonus":"+4","damage":"1d6+2"}],"count":1}`;
 }
 
+// Generate 2-3 continuation scenes when a campaign concludes and players want to keep playing
+export async function generateContinuationScenes(campaignData, partyMembers, lastScene, apiKey) {
+  const title = campaignData?.title || 'the campaign';
+  const theme = campaignData?.theme || '';
+  const partyLines = (partyMembers || [])
+    .map(c => `${c.name}, Level ${c.level || 1} ${c.class || 'Adventurer'}`)
+    .join(', ');
+
+  const prompt = `You are extending a D&D 5e campaign called "${title}"${theme ? ` (${theme})` : ''}.
+The party has completed the planned story and wants to keep adventuring.
+
+Last scene: "${lastScene?.title || 'The Final Scene'}"
+${lastScene?.text || ''}
+
+Party: ${partyLines || 'a group of adventurers'}
+
+Generate exactly 3 new scenes that continue this story naturally. Return ONLY a raw JSON array — no markdown, no code fences:
+[
+  {"title":"...","text":"...","dmNotes":"...","fogOfWar":false,"isEncounter":false,"enemies":[],"npcs":[{"name":"...","x":0.3,"y":0.4,"personality":"..."}]},
+  {"title":"...","text":"...","dmNotes":"...","fogOfWar":true,"isEncounter":true,"enemies":[{"name":"...","hp":20,"ac":13,"speed":30,"stats":{"str":12,"dex":12,"con":12,"int":10,"wis":10,"cha":10},"attacks":[{"name":"Attack","bonus":"+3","damage":"1d8+1"}]}],"npcs":[]},
+  {"title":"...","text":"...","dmNotes":"...","fogOfWar":false,"isEncounter":false,"enemies":[],"npcs":[]}
+]
+
+Rules:
+- Scene 1: a new location the party discovers or travels to, with 1-2 NPCs
+- Scene 2: an encounter with enemies fitting the campaign's tone
+- Scene 3: an open-ended scene that sets up further adventure (not a conclusion)
+- Each scene text: 3-4 vivid sentences of DM narration, present tense
+- Keep the same tone and world as the original campaign`;
+
+  const response = await fetch(CLAUDE_API_URL, {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: NARRATOR_MODEL,
+      max_tokens: 2048,
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+
+  if (!response.ok) throw new Error(`API error ${response.status}`);
+  const data = await response.json();
+  let text = data.content[0].text.trim()
+    .replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+  const start = text.indexOf('[');
+  const end   = text.lastIndexOf(']');
+  if (start !== -1 && end > start) text = text.slice(start, end + 1);
+  return JSON.parse(text);
+}
+
 export async function callNarrator({ messages, systemPrompt, apiKey }) {
   const response = await fetch(CLAUDE_API_URL, {
     method: 'POST',
