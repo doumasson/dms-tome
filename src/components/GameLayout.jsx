@@ -35,6 +35,9 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
 
   const campaign = useStore(s => s.campaign);
 
+  // Must be declared before useEffects that depend on it (avoid TDZ in production bundle)
+  const inCombat = encounter.phase !== 'idle';
+
   // ── Ambient audio: switch between scene/combat soundscapes ───────────────
   useEffect(() => {
     const scene = campaign?.scenes?.[campaign?.currentSceneIndex];
@@ -61,8 +64,6 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
       setShowLevelUp(true);
     }
   }, [myCharacter?.xp]);
-
-  const inCombat = encounter.phase !== 'idle';
 
   // Turn announcement: fires when the active combatant changes
   const [turnAnnounceTrigger, setTurnAnnounceTrigger] = useState(0);
