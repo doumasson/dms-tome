@@ -18,6 +18,17 @@ For non-trivial changes: pause and ask "is there a more elegant way?" If a fix f
 ### 6. Autonomous Bug Fixing
 When given a bug report: just fix it. Don't ask for hand-holding. Point at logs, errors, failing tests — then resolve them. Zero context switching required from the user. Fix failing CI tests without being told how.
 
+### 7. File Size Limit
+**Keep component files under ~400 lines.** When a file exceeds this:
+- Extract pure UI sub-components into `src/components/<domain>/` folders
+- Extract shared constants/helpers into `src/lib/` modules
+- Keep the parent file as a thin orchestrator (imports + glue logic only)
+- Shared styles → `combatStyles.js` pattern; shared data → `src/lib/` modules
+- Run `wc -l` before committing to confirm no file exceeds the limit
+
+### 8. Always Signal Completion
+**End every response with `--- Response complete ---`** so the user can clearly see when output has finished. This is mandatory regardless of response length.
+
 ## Task Management
 1. **Plan First**: Write plan to `tasks/todo.md` with checkable items
 2. **Verify Plan**: Check in before starting implementation
