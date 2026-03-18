@@ -298,6 +298,7 @@ const useStore = create((set, get) => ({
     currentTurn: 0,
     round: 1,
     log: [],
+    activeEffects: [],   // Persistent spell area overlays: [{ id, spellName, casterId, concentration, areaType, ...geometry }]
   },
 
   startEncounter: (enemies, partyMembers, autoRollInitiative = false) => {
@@ -705,6 +706,7 @@ const useStore = create((set, get) => ({
         currentTurn: 0,
         round: 1,
         log: [],
+        activeEffects: [],
       },
     });
     // Persist idle state immediately so refresh doesn't restore old combat
@@ -906,9 +908,29 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
         combatants: state.encounter.combatants.map((c) =>
           c.id === id ? { ...c, concentration: null } : c
         ),
+        // Remove any concentration-linked area effects from this caster
+        activeEffects: (state.encounter.activeEffects || []).filter(e =>
+          !(e.concentration && e.casterId === id)
+        ),
         log: [`🎯 ${state.encounter.combatants.find(x => x.id === id)?.name} dropped concentration.`, ...state.encounter.log].slice(0, 30),
       },
     })),
+
+  // Apply a spell area effect to the map (state only — no broadcast).
+  // Called by non-DM clients receiving an add-effect broadcast.
+  applyEncounterEffect: (effect) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        activeEffects: [...(state.encounter.activeEffects || []), effect],
+      },
+    })),
+
+  // Add a spell area effect and broadcast to all clients (DM only).
+  addEncounterEffect: (effect) => {
+    get().applyEncounterEffect(effect);
+    broadcastEncounterAction({ type: 'add-effect', effect, userId: get().user?.id });
+  },
 
   // Received from Supabase Realtime — non-DM clients sync encounter state
   syncEncounterDown: (encounterData) =>
@@ -1385,6 +1407,10 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
       return { sceneImages: next };
     }),
   clearSceneImages: () => set({ sceneImages: {} }),
+
+  npcPortraits: {}, // { [campaignId:sceneIndex:npcName]: portraitUrl }
+  setNpcPortrait: (key, url) =>
+    set((state) => ({ npcPortraits: { ...state.npcPortraits, [key]: url } })),
 
   // Pre-populate scene image URLs at import time so they're ready immediately.
   // Uses deterministic Pollinations URLs (stable — same scene title → same image).

@@ -254,24 +254,26 @@ All D&D 5e SRD content (classes, races, spells, monsters, equipment, conditions)
 - **Campaign in-app generator** — "✨ Generate with AI" tab in Campaign Setup; title + tone + scene count → Claude Haiku generates and auto-loads full campaign JSON
 - **Portable characters** — CharacterCreate dual-saves to `characters` table; CharacterSelect lets players bring a character from a previous campaign when joining a new one. **Requires Supabase migration** `supabase/migrations/001_character_portability.sql` to be run once.
 - **Free-form DM prompting** — Players type any creative action in narrator chat during combat; DM AI processes it (floor system prevents simultaneous speech)
+- **Scene transitions** — 800ms crossfade between old and new scene images (two layered img elements); SceneTitleCard stays on top
+- **NPC tokens** — Scenes define `npcs:[{name,x,y,personality}]`; named NPC tokens render on scene map with auto-generated Pollinations.ai portraits; proximity triggers DM prompt with NPC personality context; campaign AI generator includes NPCs in non-encounter scenes
+- **Saving throw broadcast** — After DM rolls saves, result narrated to all players via broadcastNarratorMessage
+- **Spell effect persistence** — Concentration area spells (sphere/cone/line) leave persistent SVG overlays on battle map until concentration breaks; broadcast to all clients via `add-effect` encounter action; SpellEffectLayer.jsx renders them
+- **Character Profile Page** — "⚔ Characters" button in game header; shows all owned characters (myCharacters) in a card grid with class/race/level/HP/ability scores; accessible at `appView='character-profile'`
 
 ## In Progress / What's Next
 Priority order:
 
-### 1. Scene Transitions (MEDIUM)
-When combat ends or the DM advances the story, the scene should smoothly transition. Currently scene changes are instant. A crossfade + "Scene: [Title]" overlay would add immersion.
+### 1. Nano Banana / Deevid Integration (PENDING API)
+User's brother has accounts. nanobananaimg.com (image gen) could replace Pollinations for scene images. deevid.ai (video gen) could power cinematic scene transition videos. Need API details.
 
-### 2. NPC Defined in Campaign JSON (MEDIUM)
-The proximity system defaults to one generic "Explore" zone. Campaigns should define `npcs: [{ name, x, y, personality, portrait }]` per scene so distinct NPCs appear as tokens with individual interaction zones.
+### 2. DM Manual Effect Clear (SMALL)
+DM should be able to manually dismiss a persisted spell effect (e.g., when concentration ends by DM fiat or when duration expires). Add a "clear effect" button in combat DM panel.
 
-### 3. Saving Throw Broadcast (MEDIUM)
-SavingThrowPanel rolls saves locally (DM tool). Results aren't broadcast to other players — they have to read the combat log. Should broadcast a narrator message with the result.
+### 3. Character Profile "Play" Button (SMALL)
+CharacterProfile page shows owned characters. Add a "Play in [Campaign]" button to import a character into the current campaign directly from the profile screen.
 
-### 4. Spell Effect Persistence (LOWER)
-Spell effects (Hold Person, Web, etc.) should persist on the battle map as visual overlays until concentration is broken or duration ends. Currently nothing renders after the targeting confirm.
-
-### 5. Character Profile Page (LOWER)
-A dedicated profile view showing all of a player's owned characters across campaigns, with quick stats and a "Play this character" button to import into any open campaign.
+### 4. NPC Voice/Personality Injection (MEDIUM)
+When a player interacts with an NPC, the DM system prompt currently receives the NPC's personality as a single line. Expand to include the NPC's role, secrets, and quest hooks from campaign JSON so DM responses are more specific to that NPC.
 
 ## Design Rules
 - Dark fantasy theme, gold accents (`#d4af37`), deep brown/black backgrounds

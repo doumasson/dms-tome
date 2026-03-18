@@ -60,7 +60,7 @@ function tokensInLine(ox, oy, angleDeg, lengthFt, widthFt, combatants) {
 
 // ─── SVG Overlay Components ───────────────────────────────────────────────────
 
-function ConeOverlay({ casterX, casterY, angleDeg, lengthFt, halfWidthDeg, cellPx, mapW, mapH }) {
+export function ConeOverlay({ casterX, casterY, angleDeg, lengthFt, halfWidthDeg, cellPx, mapW, mapH }) {
   const lengthPx = (lengthFt / 5) * cellPx;
   const cx = (casterX + 0.5) * cellPx;
   const cy = (casterY + 0.5) * cellPx;
@@ -84,7 +84,7 @@ function ConeOverlay({ casterX, casterY, angleDeg, lengthFt, halfWidthDeg, cellP
   );
 }
 
-function SphereOverlay({ cx, cy, radiusFt, cellPx, mapW, mapH }) {
+export function SphereOverlay({ cx, cy, radiusFt, cellPx, mapW, mapH }) {
   const r = (radiusFt / 5) * cellPx;
   const px = (cx + 0.5) * cellPx;
   const py = (cy + 0.5) * cellPx;
@@ -96,7 +96,7 @@ function SphereOverlay({ cx, cy, radiusFt, cellPx, mapW, mapH }) {
   );
 }
 
-function LineOverlay({ ox, oy, angleDeg, lengthFt, widthFt, cellPx, mapW, mapH }) {
+export function LineOverlay({ ox, oy, angleDeg, lengthFt, widthFt, cellPx, mapW, mapH }) {
   const lengthPx = (lengthFt / 5) * cellPx;
   const widthPx = Math.max((widthFt / 5) * cellPx, 6);
   const cx = (ox + 0.5) * cellPx;
@@ -202,23 +202,32 @@ export default function SpellTargeting({ spell, caster, combatants, mapW = 10, m
   // Cell click handler
   function handleCellClick(x, y) {
     if (areaType === 'single') {
-      // Find if a token is at this cell
       const token = combatants.find(c => c.position?.x === x && c.position?.y === y && c.id !== caster?.id && c.currentHp > 0);
       if (token) {
-        onConfirm([token], spell);
+        onConfirm([token], spell, { areaType: 'single' });
       }
     } else if (areaType === 'sphere') {
       setTargetCell({ x, y });
     } else if (areaType === 'cone' || areaType === 'line') {
-      // Clicking confirms current aim
       const hits = combatants.filter(c => hitTokens.includes(c.id));
-      onConfirm(hits, spell);
+      const targeting = areaType === 'cone'
+        ? { areaType, casterX: casterPos.x, casterY: casterPos.y, angleDeg: angle, lengthFt: areaSize, halfWidthDeg: halfCone }
+        : { areaType, ox: casterPos.x, oy: casterPos.y, angleDeg: angle, lengthFt: areaSize, widthFt: lineWidth };
+      onConfirm(hits, spell, targeting);
     }
   }
 
   function handleConfirm() {
     const hits = combatants.filter(c => hitTokens.includes(c.id));
-    onConfirm(hits, spell);
+    let targeting;
+    if (areaType === 'sphere' && targetCell) {
+      targeting = { areaType, centerX: targetCell.x, centerY: targetCell.y, radiusFt: areaSize };
+    } else if (areaType === 'cone') {
+      targeting = { areaType, casterX: casterPos.x, casterY: casterPos.y, angleDeg: angle, lengthFt: areaSize, halfWidthDeg: halfCone };
+    } else if (areaType === 'line') {
+      targeting = { areaType, ox: casterPos.x, oy: casterPos.y, angleDeg: angle, lengthFt: areaSize, widthFt: lineWidth };
+    }
+    onConfirm(hits, spell, targeting);
   }
 
   const needsClick = areaType === 'sphere';

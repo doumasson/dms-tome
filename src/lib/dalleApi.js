@@ -57,6 +57,25 @@ export async function generateSceneImageFree(title, signal) {
   return null; // all attempts exhausted
 }
 
+// Generate a small NPC portrait via Pollinations.ai (free, ~256x256)
+export async function generateNpcPortrait(npcName, personality) {
+  let seed = 5381;
+  for (const c of (npcName || '')) seed = ((seed << 5) + seed + c.charCodeAt(0)) | 0;
+  seed = Math.abs(seed) % 99999;
+  const desc = (personality || '').slice(0, 80);
+  const prompt = `fantasy D&D character portrait, ${npcName}, ${desc}, face closeup, dark fantasy digital painting, dramatic lighting, no background text`;
+  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=256&height=256&nologo=true&seed=${seed}&model=turbo`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.startsWith('image/')) return null;
+    const blob = await res.blob();
+    if (blob.size < 3000) return null;
+    return URL.createObjectURL(blob);
+  } catch { return null; }
+}
+
 export function getOpenAiKey(userId) {
   return localStorage.getItem(`openai-api-key-${userId}`) || '';
 }
