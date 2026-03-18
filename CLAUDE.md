@@ -263,6 +263,8 @@ All D&D 5e SRD content (classes, races, spells, monsters, equipment, conditions)
 - **DM Manual Effect Clear** — ACTIVE EFFECTS panel in DM combat sidebar; each effect has ✕ dismiss button; `removeEncounterEffect` broadcasts `remove-effect` to all clients; `applyRemoveEffect` handles receive
 - **NPC voice/personality injection** — NPC names + personalities injected into `buildSystemPrompt`; DM AI voices NPCs in first person; proximity trigger parses NPC name → sets `activeNpcRef.current` → assigns deterministic OpenAI voice
 - **OpenAI TTS** — `tts-1` model with narrator voice `onyx`; NPCs get deterministic voices from `[echo, fable, alloy, nova, shimmer]` via `getNpcVoice(name)` hash; `npcVoice` stored on DM message for broadcast receivers; fallback chain: OpenAI TTS (if key) → Pollinations TTS (free, no key, same voice quality, 15s rate limit enforced client-side to preserve NPC voice quality) → Web Speech API
+- **Campaign End + Keep Playing** — When AI advances past last scene, `campaignComplete` flag triggers `CampaignEndModal`; "Keep Playing" calls `generateContinuationScenes` (Claude Haiku) to generate 3 new scenes, appends to campaign.scenes, saves to Supabase, broadcasts `append-scenes` to all clients, advances to first new scene; "Wrap Up" returns to campaign select
+- **Invite link copy button** — DM campaign card shows `📋 CODE` button; click copies full `?invite=CODE` URL to clipboard with 2s "✓ Copied!" confirmation
 
 ## In Progress / What's Next
 Priority order:

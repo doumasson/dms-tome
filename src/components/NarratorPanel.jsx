@@ -369,6 +369,9 @@ export default function NarratorPanel() {
           store.setCurrentScene(nextIdx);
           broadcastSceneChange(nextIdx);
           exchangeCountRef.current = 0; // reset for next scene
+        } else {
+          // Last scene concluded — surface the end-of-campaign modal
+          store.setCampaignComplete(true);
         }
       }
 

@@ -205,6 +205,18 @@ export const styles = {
     fontFamily: 'monospace',
     letterSpacing: '0.05em',
   },
+  inviteCopyBtn: {
+    background: 'rgba(212,175,55,0.08)',
+    border: '1px solid rgba(212,175,55,0.25)',
+    borderRadius: 5,
+    color: 'rgba(212,175,55,0.7)',
+    fontSize: '0.72rem',
+    fontFamily: 'monospace',
+    letterSpacing: '0.05em',
+    padding: '3px 8px',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+  },
   enterArrow: {
     color: 'var(--gold)',
     fontSize: '1.1rem',

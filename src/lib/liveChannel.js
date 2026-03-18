@@ -50,3 +50,8 @@ export function broadcastFogToggle(sceneKey, enabled) {
 export function broadcastNarratorMessage(msg) {
   _channel?.send({ type: 'broadcast', event: 'narrator-message', payload: msg });
 }
+
+// DM appended AI-generated continuation scenes → all players
+export function broadcastAppendScenes(scenes, nextSceneIndex) {
+  _channel?.send({ type: 'broadcast', event: 'append-scenes', payload: { scenes, nextSceneIndex } });
+}
