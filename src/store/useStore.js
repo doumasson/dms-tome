@@ -729,7 +729,7 @@ const useStore = create((set, get) => ({
         }
       }
 
-      // Apply attack damage
+      // Apply attack damage — broadcast immediately so all clients update HP without waiting for sync
       if (result.targetId && typeof result.damage === 'number' && result.damage > 0) {
         get().applyEncounterDamage(result.targetId, result.damage);
         const target = encounter.combatants.find(c => c.id === result.targetId);
@@ -737,12 +737,26 @@ const useStore = create((set, get) => ({
           `⚔ ${active.name} attacks ${target?.name || '?'}: ` +
           `${result.hit ? `HIT for ${result.damage} ${result.damageType || ''} damage` : 'MISS'}`
         );
+        broadcastEncounterAction({
+          type: 'damage',
+          targetId: result.targetId,
+          amount: result.damage,
+          userId: get().user?.id || 'system',
+        });
       }
 
-      // Apply conditions
+      // Apply conditions — broadcast so all clients apply them
       if (result.appliedConditions?.length) {
         result.appliedConditions.forEach(cond => {
-          if (result.targetId) get().addEncounterCondition(result.targetId, cond);
+          if (result.targetId) {
+            get().addEncounterCondition(result.targetId, cond);
+            broadcastEncounterAction({
+              type: 'add-condition',
+              id: result.targetId,
+              condition: cond,
+              userId: get().user?.id || 'system',
+            });
+          }
         });
       }
 
