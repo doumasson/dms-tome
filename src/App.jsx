@@ -143,6 +143,19 @@ export default function App() {
       if (payload.apiKey) useStore.getState().setSessionApiKey(payload.apiKey);
     });
 
+    // Fog of war sync
+    ch.on('broadcast', { event: 'fog-reveal' }, ({ payload }) => {
+      if (payload.sceneKey && payload.cells) {
+        useStore.getState().revealFogCells(payload.sceneKey, payload.cells);
+      }
+    });
+
+    ch.on('broadcast', { event: 'fog-toggle' }, ({ payload }) => {
+      if (payload.sceneKey !== undefined) {
+        useStore.getState().setFogEnabled(payload.sceneKey, payload.enabled);
+      }
+    });
+
     // Dice roll broadcast (any player → all others)
     ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
       // Only add entries from OTHER users — we already logged our own roll

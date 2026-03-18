@@ -1,6 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import useStore from '../store/useStore';
 import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib/dalleApi';
+import { broadcastFogReveal, broadcastFogToggle } from '../lib/liveChannel';
+
+// Fog grid dimensions (cols × rows)
+const FOG_COLS = 12;
+const FOG_ROWS = 9;
+const FOG_REVEAL_RADIUS = 2; // cells — ~10ft radius
+
+function cellsInRadius(cx, cy, radius) {
+  const cells = [];
+  for (let x = cx - radius; x <= cx + radius; x++) {
+    for (let y = cy - radius; y <= cy + radius; y++) {
+      if (x >= 0 && x < FOG_COLS && y >= 0 && y < FOG_ROWS) {
+        const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+        if (dist <= radius) cells.push(`${x},${y}`);
+      }
+    }
+  }
+  return cells;
+}
 
 export default function ScenePanel() {
   const user           = useStore(s => s.user);
@@ -13,6 +32,11 @@ export default function ScenePanel() {
   const sceneImages     = useStore(s => s.sceneImages);
   const setSceneImage   = useStore(s => s.setSceneImage);
   const partyMembers    = useStore(s => s.partyMembers);
+  const fogEnabled      = useStore(s => s.fogEnabled);
+  const fogRevealed     = useStore(s => s.fogRevealed);
+  const initFogForScene = useStore(s => s.initFogForScene);
+  const revealFogCells  = useStore(s => s.revealFogCells);
+  const toggleFog       = useStore(s => s.toggleFog);
 
   const [imgLoading, setImgLoading] = useState(false);
   const [imgError, setImgError]     = useState(false);
@@ -30,6 +54,31 @@ export default function ScenePanel() {
   const scene    = scenes[idx] || null;
   const imageKey = `${activeCampaign?.id}:${idx}`;
   const imageUrl = sceneImages[imageKey];
+
+  // Fog state for current scene
+  const sceneKey = `${activeCampaign?.id ?? 'local'}:${idx}`;
+  const isFogOn  = fogEnabled[sceneKey] ?? false;
+  const revealed = fogRevealed[sceneKey] || {};
+
+  // Init fog when scene changes; reveal around default token positions
+  useEffect(() => {
+    if (!campaign.loaded) return;
+    const defaultFog = scene?.fogOfWar === true;
+    initFogForScene(sceneKey, defaultFog);
+
+    // If fog is on and no cells revealed yet, reveal starting positions for all tokens
+    if (defaultFog && partyMembers.length > 0) {
+      const allCells = new Set();
+      partyMembers.forEach((member, i) => {
+        const memberId = member.id || member.name;
+        const pos = tokenPositions[memberId] || getDefaultTokenPos(i, partyMembers.length);
+        const cx = Math.floor((pos.x / 100) * FOG_COLS);
+        const cy = Math.floor((pos.y / 100) * FOG_ROWS);
+        cellsInRadius(cx, cy, FOG_REVEAL_RADIUS).forEach(c => allCells.add(c));
+      });
+      if (allCells.size > 0) revealFogCells(sceneKey, [...allCells]);
+    }
+  }, [sceneKey]);
 
   // Cancel in-flight image fetch and reset state when scene changes
   useEffect(() => {
@@ -101,7 +150,22 @@ export default function ScenePanel() {
     setTokenPositions(prev => ({ ...prev, [dragging.memberId]: { x, y } }));
   }
 
-  function stopDrag() { setDragging(null); }
+  function stopDrag() {
+    if (dragging && isFogOn) {
+      // Reveal fog cells around the final token position
+      const memberId = dragging.memberId;
+      const pos = tokenPositions[memberId];
+      if (pos) {
+        // Convert % position to grid cell
+        const cx = Math.floor((pos.x / 100) * FOG_COLS);
+        const cy = Math.floor((pos.y / 100) * FOG_ROWS);
+        const cells = cellsInRadius(cx, cy, FOG_REVEAL_RADIUS);
+        revealFogCells(sceneKey, cells);
+        broadcastFogReveal(sceneKey, cells);
+      }
+    }
+    setDragging(null);
+  }
 
   function handleStartCombat() {
     if (!scene?.enemies?.length) return;
@@ -206,6 +270,51 @@ export default function ScenePanel() {
                 ⚔ Combat
               </button>
             )}
+
+            <button
+              onClick={() => {
+                toggleFog(sceneKey);
+                broadcastFogToggle(sceneKey, !isFogOn);
+              }}
+              style={{
+                ...styles.navBtn,
+                background: isFogOn ? 'rgba(20,12,5,0.85)' : 'rgba(60,40,10,0.85)',
+                borderColor: isFogOn ? 'rgba(212,175,55,0.6)' : 'rgba(212,175,55,0.2)',
+                color: isFogOn ? '#d4af37' : 'rgba(212,175,55,0.4)',
+              }}
+              title={isFogOn ? 'Fog of War: ON (click to disable)' : 'Fog of War: OFF (click to enable)'}
+            >
+              {isFogOn ? '🌫 Fog ON' : '☀ Fog OFF'}
+            </button>
+          </div>
+        )}
+
+        {/* Fog of War overlay */}
+        {isFogOn && (
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 5,
+            display: 'grid',
+            gridTemplateColumns: `repeat(${FOG_COLS}, 1fr)`,
+            gridTemplateRows: `repeat(${FOG_ROWS}, 1fr)`,
+            pointerEvents: 'none',
+          }}>
+            {Array.from({ length: FOG_COLS * FOG_ROWS }).map((_, i) => {
+              const x = i % FOG_COLS;
+              const y = Math.floor(i / FOG_COLS);
+              const key = `${x},${y}`;
+              const isRevealed = !!revealed[key];
+              return (
+                <div
+                  key={key}
+                  style={{
+                    background: isRevealed ? 'transparent' : 'rgba(5,3,1,0.88)',
+                    transition: 'background 0.6s ease',
+                    // Slight blur on the boundary cells for soft fog edge
+                    backdropFilter: isRevealed ? 'none' : 'blur(1px)',
+                  }}
+                />
+              );
+            })}
           </div>
         )}
 

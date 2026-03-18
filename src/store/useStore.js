@@ -1024,6 +1024,40 @@ const useStore = create((set, get) => ({
     }),
   clearSceneImages: () => set({ sceneImages: {} }),
 
+  // === Fog of War ===
+  fogEnabled: {},   // { [sceneKey]: boolean }
+  fogRevealed: {},  // { [sceneKey]: { [cellKey]: true } } — cellKey = "x,y"
+
+  initFogForScene: (sceneKey, defaultEnabled) =>
+    set((state) => ({
+      fogEnabled: {
+        ...state.fogEnabled,
+        [sceneKey]: state.fogEnabled[sceneKey] ?? defaultEnabled,
+      },
+      fogRevealed: {
+        ...state.fogRevealed,
+        [sceneKey]: state.fogRevealed[sceneKey] || {},
+      },
+    })),
+
+  revealFogCells: (sceneKey, cells) =>
+    set((state) => {
+      const prev = state.fogRevealed[sceneKey] || {};
+      const next = { ...prev };
+      cells.forEach(k => { next[k] = true; });
+      return { fogRevealed: { ...state.fogRevealed, [sceneKey]: next } };
+    }),
+
+  toggleFog: (sceneKey) =>
+    set((state) => ({
+      fogEnabled: { ...state.fogEnabled, [sceneKey]: !state.fogEnabled[sceneKey] },
+    })),
+
+  setFogEnabled: (sceneKey, val) =>
+    set((state) => ({
+      fogEnabled: { ...state.fogEnabled, [sceneKey]: val },
+    })),
+
   // === Narrator (AI DM) ===
   narrator: {
     history: [], // { id, role: 'player'|'dm', speaker, text, rollRequest, timestamp }

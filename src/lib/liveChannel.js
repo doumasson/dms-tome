@@ -30,3 +30,13 @@ export function broadcastEncounterAction(action) {
 export function broadcastApiKeySync(apiKey) {
   _channel?.send({ type: 'broadcast', event: 'api-key-sync', payload: { apiKey } });
 }
+
+// Fog of war: reveal cells (sceneKey + array of "x,y" cell keys)
+export function broadcastFogReveal(sceneKey, cells) {
+  _channel?.send({ type: 'broadcast', event: 'fog-reveal', payload: { sceneKey, cells } });
+}
+
+// Fog toggle (DM enables/disables fog for a scene)
+export function broadcastFogToggle(sceneKey, enabled) {
+  _channel?.send({ type: 'broadcast', event: 'fog-toggle', payload: { sceneKey, enabled } });
+}
