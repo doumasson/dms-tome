@@ -238,60 +238,36 @@ All D&D 5e SRD content (classes, races, spells, monsters, equipment, conditions)
 - **Class-aware action menus** — all 12 classes have per-class action/bonus action panels (ActionPanel.jsx); spell slots displayed
 - **Rest system** — Short/Long rest modal with majority-vote flow (RestModal.jsx); host can force
 - **Full character builder** — Race, Class, Background, Abilities (standard array/point buy/roll), Identity; SRD data throughout
-- **Spell selection at creation** — Spellcasting classes (Wizard/Sorcerer/Warlock/Bard/Cleric/Druid/Paladin/Ranger) pick cantrips + spells per SRD limits in StepSpells.jsx
+- **Spell selection at creation** — Spellcasting classes pick cantrips + spells per SRD limits in StepSpells.jsx
 - **Inventory system** — Characters have `inventory[]`, `equippedItems{}`, `gold`; new characters start with a healing potion
 - **Character sheet modal** — Two-pane modal: left = HP bar, combat stats, ability scores, 9 equipment slots (drag-and-drop from inventory), Features/Spells/Skills tabs; right = inventory with equip/use/drop. Click portrait in party sidebar to open. Read-only for other players. Own sheet also via 🎒 backpack button.
-- **Post-combat loot screen** — Auto-triggers when all enemies die. Shows XP split by party size (crToXp), CR-based gold with variance, 1–2 random consumable item drops (each claimable individually). Applies to character via store actions.
-- **Rules Assistant** — Floating `?` button; players ask D&D 5e rules questions; Claude Haiku answers with SRD keyword context (spells, items) auto-injected from local data
-- **Level-up wizard** — XP threshold triggers LevelUpModal; HP, proficiency bonus, features recalculate; spell slots updated
+- **Post-combat loot screen** — Auto-triggers when all enemies die. Shows XP split by party size, CR-based gold with variance, 1–2 random consumable item drops (each claimable individually).
+- **Rules Assistant** — Floating `?` button; players ask D&D 5e rules questions; Claude Haiku answers with SRD keyword context auto-injected from local data
+- **Level-up wizard** — XP threshold triggers LevelUpModal; HP, proficiency bonus, features recalculate; spell slots updated; casters pick new spells via two-step flow (SpellPickPanel)
+- **Enemy turns** — `triggerEnemyTurn` (AI + local fallback) auto-fires when an enemy's initiative comes up; applies damage/movement, narrates 1–2 sentences, advances turn. Broadcasts explicit `damage` and `add-condition` events for immediate sync to all clients.
+- **Interactive spell targeting** — SpellTargeting.jsx: cone/line/sphere/single-target SVG overlays on the battle map; tokens inside area highlighted before confirm
+- **NPC proximity interaction** — ScenePanel detects when a player token nears an NPC/point of interest; InteractionZone pulsing prompt appears; click fires DM trigger
+- **Token sync** — `broadcastSceneTokenMove` on drag-end; all clients apply position update immediately via `scene-token-move` channel event
+- **Conditions enforcement** — `getConditionModifiers` applies adv/disadv/auto-crit in AttackPanel; Paralyzed/Stunned/Incapacitated auto-fail STR/DEX saves in SavingThrowPanel
+- **Fog of war** — Per-scene fog with shared party vision; `fogEnabled`/`fogRevealed` in store; host can toggle; reveals as party explores; broadcast via `fog-reveal`/`fog-toggle` events
 
 ## In Progress / What's Next
 Priority order:
 
-### 1. Enemy Turns (CRITICAL — game doesn't work without this)
-When it's an enemy's turn, the Dungeon Master automatically:
-- Decides action (attack nearest player, move toward target)
-- Rolls attack + damage using enemy's attack definitions
-- Applies HP changes to the target combatant
-- Narrates what happened in chat (1–2 sentences)
-- Calls Next Turn
-No human input required. Host client (`dmMode`) drives this. Must broadcast all state changes so non-host players stay in sync.
-
-### 2. Interactive Spell Targeting (HIGH)
-Replace "Cast Spell" button with real spatial targeting on the scene image.
-- Single-target: click an enemy token
-- Sphere (Fireball): click a point, radius renders, confirm
-- Cone (Burning Hands): rotatable cone SVG from caster, click to confirm
-- Line (Lightning Bolt): aim line, click to fire
-- Tokens inside area highlighted before confirm; hit tokens roll saves via chat button
-
-### 3. NPC Proximity Interaction (HIGH — north star feature)
-When a player token is dragged near an NPC or point of interest on the scene:
-- A contextual prompt appears organically ("You approach the hooded figure…")
-- Player types/speaks → Dungeon Master responds in-character as that NPC
-- No mode switch, no UI change — the world just talks back
-Requires NPCs to be defined in scene data with position and personality.
-
-### 4. Token Sync (MEDIUM — multiplayer correctness)
-Token position changes aren't currently broadcast. When Player A drags their token, Player B doesn't see it move.
-- Broadcast `token-move` events via Supabase Realtime on drag-end
-- All clients apply position update immediately
-
-### 5. Level-Up Spell Selection for Casters (MEDIUM)
-When a spellcasting class levels up, LevelUpModal should include a spell pick step (same StepSpells component used at creation) so Wizards/Sorcerers/etc. gain new spells on level-up, not just HP.
-
-### 6. Conditions Mechanical Enforcement (MEDIUM)
-Conditions are tracked visually but don't affect rolls yet.
-- Prone: disadvantage on attacks, half movement to stand
-- Paralyzed: auto-fail STR/DEX saves, attacks against have advantage, crits on melee
-- Poisoned: disadvantage on attack rolls and ability checks
-- Etc. — enforce each per SRD at the point of roll resolution
-
-### 7. Fog of War (MEDIUM)
-Per-scene fog of war with shared party vision. Reveal squares as the party explores. On by default for dungeons (`fogOfWar: true` in scene JSON), off for towns.
-
-### 8. Portable Characters (LOWER)
+### 1. Portable Characters (MEDIUM)
 Character ownership model: characters live on the player's profile, not the campaign. Import/export between campaigns with level-reset transfer rules (identity transfers, progression resets).
+
+### 2. Level-Up Cantrip Selection (MEDIUM)
+Wizards/Sorcerers/Bards/etc. gain a cantrip at levels 4 and 10. SpellPickPanel currently skips cantrips during level-up — add a cantrip gain step at the appropriate levels.
+
+### 3. Concentration Break on Damage (MEDIUM)
+When a concentrating caster takes damage, they must make a CON save (DC = max(10, damage/2)). Currently concentration is tracked but the save is never triggered on incoming damage.
+
+### 4. Short Rest Hit Dice UI (LOWER)
+Short rest modal shows the vote flow but doesn't let players actually spend hit dice to roll HP recovery. The HP just restores fully. Needs a per-character hit dice spend step.
+
+### 5. Campaign Creation Polish (LOWER)
+The JSON-import flow works but is clunky (copy prompt → paste to Claude → paste back). Could be streamlined with an in-app generation step using the host's API key.
 
 ## Design Rules
 - Dark fantasy theme, gold accents (`#d4af37`), deep brown/black backgrounds
