@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getRace, applyRacialBonuses } from '../../data/races';
 import { STANDARD_ARRAY, STAT_KEYS, STAT_LABELS, STAT_FULL, statMod } from '../../lib/charBuilder';
 import { s } from './charCreateStyles';
@@ -27,9 +27,20 @@ export default function StepAbilities({ race, baseStats, setBaseStats, method, s
   const [assignTarget, setAssignTarget] = useState(null);
 
   // Rolled mode
-  const [rollSets, setRollSets] = useState(null); // null = not rolled yet
-  const [assignments, setAssignments] = useState({}); // { str: setIndex, dex: setIndex, ... }
-  const [pickTarget, setPickTarget] = useState(null); // which stat is waiting for a score
+  const [rollSets, setRollSets] = useState(null);
+  const [assignments, setAssignments] = useState({});
+  const [pickTarget, setPickTarget] = useState(null);
+
+  // Auto-roll on mount when in rolled mode
+  useEffect(() => {
+    if (method === 'rolled' && !rollSets) {
+      const sets = rollAllSets();
+      setRollSets(sets);
+      setAssignments({});
+      setPickTarget(null);
+      setBaseStats({ str: 8, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+    }
+  }, []); // eslint-disable-line
 
   function handleRoll() {
     const sets = rollAllSets();
