@@ -219,7 +219,7 @@ export default function ScenePanel() {
           <div style={styles.imageSkeleton}>
             <div style={styles.skeletonShimmer} />
             <span style={styles.skeletonLabel}>✦ Painting the scene…</span>
-            <span style={styles.skeletonHint}>generating free AI art — up to 30s</span>
+            <span style={styles.skeletonHint}>generating scene — up to 30s</span>
           </div>
         )}
 
@@ -253,9 +253,6 @@ export default function ScenePanel() {
         {/* Bottom gradient + scene title */}
         <div style={styles.titleOverlay}>
           <h2 style={styles.sceneTitle}>{scene.title}</h2>
-          {isDM && dmMode && scene.dmNotes && (
-            <p style={styles.dmNotesText}>📌 {scene.dmNotes}</p>
-          )}
         </div>
 
         {/* Scene badge */}

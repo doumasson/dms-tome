@@ -413,9 +413,9 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
                 onClick={() => setField('isAiDm', true)}
                 style={{ ...styles.dmTypeBtn, ...(fields.isAiDm === true ? styles.dmTypeBtnActive : {}) }}
               >
-                <span style={styles.dmTypeIcon}>🤖</span>
-                <span style={styles.dmTypeName}>AI DM</span>
-                <span style={styles.dmTypeDesc}>AI narrates the story. Everyone — including you — creates a character and plays.</span>
+                <span style={styles.dmTypeIcon}>🎭</span>
+                <span style={styles.dmTypeName}>Dungeon Master</span>
+                <span style={styles.dmTypeDesc}>The Dungeon Master narrates the story. Everyone — including you — creates a character and plays.</span>
               </button>
             </div>
 

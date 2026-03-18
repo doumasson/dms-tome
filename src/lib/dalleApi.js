@@ -1,5 +1,18 @@
 const DALLE_URL = 'https://api.openai.com/v1/images/generations';
 
+// Deterministic Pollinations URL for a scene title — same title always gives same image
+export function buildPollinationsUrl(title) {
+  const safeTitle = (title || 'fantasy scene').slice(0, 60).replace(/[^\w\s,'-]/g, '').trim();
+  // djb2-style hash for deterministic seed
+  let seed = 5381;
+  for (let i = 0; i < safeTitle.length; i++) {
+    seed = ((seed << 5) + seed + safeTitle.charCodeAt(i)) | 0;
+  }
+  seed = Math.abs(seed) % 99999;
+  const prompt = `dark fantasy RPG, ${safeTitle}, atmospheric, cinematic, digital art`;
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&seed=${seed}&model=turbo`;
+}
+
 // Free image generation via Pollinations.ai — no API key required
 // Uses fetch() with retry so we control the timeout (browser <img> gives up too early)
 // Returns a blob: URL so the image displays instantly once downloaded

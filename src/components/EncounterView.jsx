@@ -54,55 +54,21 @@ function IdlePhase({ campaign, dmMode, encounter, onStartEncounter, onStartCusto
         </button>
       </div>
 
-      {scene && (
-        <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 18, marginBottom: 12 }}>
-          <h2 style={{ margin: '0 0 10px', fontFamily: "'Cinzel', Georgia, serif", fontSize: '1.2rem', color: 'var(--gold)' }}>
-            {scene.title || `Scene ${currentSceneIndex + 1}`}
-          </h2>
-
-          {scene.description && (
-            <p style={{ margin: '0 0 10px', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-              {scene.description}
-            </p>
-          )}
-
-          {dmMode && scene.dm_notes && (
-            <div style={{ border: '1px dashed rgba(192,57,43,0.5)', borderRadius: 6, padding: '10px 14px', marginTop: 10 }}>
-              <div style={{ fontSize: '0.72rem', color: '#e74c3c', fontWeight: 700, marginBottom: 4, letterSpacing: '0.08em' }}>DM NOTES</div>
-              <p style={{ margin: 0, fontSize: '0.83rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{scene.dm_notes}</p>
-            </div>
-          )}
-
-          {hasEncounter && (
-            <div style={{ marginTop: 14, borderTop: '1px solid #2a1a0a', paddingTop: 12 }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>
-                ENCOUNTER — {enemies.length} enemy group{enemies.length !== 1 ? 's' : ''}
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
-                {enemies.map((e, i) => (
-                  <span key={i} style={{ fontSize: '0.78rem', background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.3)', color: '#e74c3c', borderRadius: 4, padding: '3px 10px' }}>
-                    {e.count > 1 ? `${e.count}× ` : ''}{e.name}
-                  </span>
-                ))}
-              </div>
-              {dmMode && (
-                <button onClick={() => onStartEncounter(enemies)} style={btn.gold}>
-                  ⚔ Start Encounter
-                </button>
-              )}
-            </div>
-          )}
-
-          {scene.choices?.length > 0 && (
-            <div style={{ marginTop: 14 }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>CHOICES</div>
-              {scene.choices.map((choice, i) => (
-                <div key={i} style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '4px 0', borderBottom: i < scene.choices.length - 1 ? '1px solid #1a1006' : 'none' }}>
-                  {typeof choice === 'string' ? choice : choice.text || choice.description}
-                </div>
-              ))}
-            </div>
-          )}
+      {scene && hasEncounter && dmMode && (
+        <div style={{ background: '#1a1006', border: '1px solid rgba(192,57,43,0.3)', borderRadius: 8, padding: 14, marginBottom: 12 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 8, fontFamily: "'Cinzel', Georgia, serif" }}>
+            ENCOUNTER — {enemies.length} enemy group{enemies.length !== 1 ? 's' : ''}
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+            {enemies.map((e, i) => (
+              <span key={i} style={{ fontSize: '0.78rem', background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.3)', color: '#e74c3c', borderRadius: 4, padding: '3px 10px' }}>
+                {e.count > 1 ? `${e.count}× ` : ''}{e.name}
+              </span>
+            ))}
+          </div>
+          <button onClick={() => onStartEncounter(enemies)} style={btn.gold}>
+            ⚔ Start Encounter
+          </button>
         </div>
       )}
 

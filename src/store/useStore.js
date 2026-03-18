@@ -153,13 +153,24 @@ const useStore = create((set, get) => ({
       },
     }),
   loadCampaignSettings: (settings) =>
-    set((state) => ({
-      campaign: {
-        ...state.campaign,
-        notes: settings?.notes || { dm: '', shared: '' },
-        savedEncounters: settings?.savedEncounters || [],
-      },
-    })),
+    set((state) => {
+      // Restore pre-generated scene image URLs if available
+      const sceneImageUpdates = {};
+      const campaignId = state.activeCampaign?.id;
+      if (settings?.sceneImageUrls && campaignId) {
+        Object.entries(settings.sceneImageUrls).forEach(([idx, url]) => {
+          sceneImageUpdates[`${campaignId}:${idx}`] = url;
+        });
+      }
+      return {
+        campaign: {
+          ...state.campaign,
+          notes: settings?.notes || { dm: '', shared: '' },
+          savedEncounters: settings?.savedEncounters || [],
+        },
+        sceneImages: { ...state.sceneImages, ...sceneImageUpdates },
+      };
+    }),
   unloadCampaign: () =>
     set({
       campaign: {
@@ -1026,6 +1037,30 @@ const useStore = create((set, get) => ({
       return { sceneImages: next };
     }),
   clearSceneImages: () => set({ sceneImages: {} }),
+
+  // Pre-populate scene image URLs at import time so they're ready immediately.
+  // Uses deterministic Pollinations URLs (stable — same scene title → same image).
+  // Saves to Supabase campaign settings for persistence across refreshes.
+  preGenerateSceneImages: async (campaignId, scenes) => {
+    const { buildPollinationsUrl } = await import('../lib/dalleApi');
+    const urlMap = {};
+    (scenes || []).forEach((scene, idx) => {
+      const key = `${campaignId || 'local'}:${idx}`;
+      const url = buildPollinationsUrl(scene.title);
+      get().setSceneImage(key, url);
+      urlMap[String(idx)] = url;
+    });
+    // Persist to Supabase so URLs survive page refresh
+    const activeCampaign = get().activeCampaign;
+    if (activeCampaign?.id) {
+      try {
+        const { data: cur } = await supabase.from('campaigns').select('settings').eq('id', activeCampaign.id).single();
+        await supabase.from('campaigns').update({
+          settings: { ...(cur?.settings || {}), sceneImageUrls: urlMap },
+        }).eq('id', activeCampaign.id);
+      } catch { /* non-critical */ }
+    }
+  },
 
   // === Fog of War ===
   fogEnabled: {},   // { [sceneKey]: boolean }

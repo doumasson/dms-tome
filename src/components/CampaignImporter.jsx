@@ -98,6 +98,8 @@ export default function CampaignImporter({ onSuccess }) {
   const loadCampaign = useStore((s) => s.loadCampaign);
   const unloadCampaign = useStore((s) => s.unloadCampaign);
   const campaign = useStore((s) => s.campaign);
+  const activeCampaign = useStore((s) => s.activeCampaign);
+  const preGenerateSceneImages = useStore((s) => s.preGenerateSceneImages);
 
   const [jsonText, setJsonText] = useState('');
   const [errors, setErrors] = useState([]);
@@ -137,8 +139,8 @@ export default function CampaignImporter({ onSuccess }) {
       parsed = JSON.parse(cleanJsonText(jsonText));
     } catch (e) {
       setErrors([
-        'Could not parse JSON. The AI may have included extra text or markdown formatting.',
-        'Tip: use the "Upload JSON File" button if your AI offered a file download — it skips copy/paste issues entirely.',
+        'Could not parse JSON — the text may include extra formatting or markdown.',
+        'Tip: use the "Upload JSON File" button if you have a file download — it skips copy/paste issues entirely.',
         `Parse error: ${e.message}`,
       ]);
       setStatus('invalid');
@@ -160,6 +162,8 @@ export default function CampaignImporter({ onSuccess }) {
     if (!validData) return;
     loadCampaign(validData);
     setStatus('loaded');
+    // Kick off background image pre-generation for all scenes
+    preGenerateSceneImages(activeCampaign?.id || 'local', validData.scenes || []);
     onSuccess?.();
   }
 
@@ -167,6 +171,7 @@ export default function CampaignImporter({ onSuccess }) {
     let parsed;
     try { parsed = JSON.parse(EXAMPLE_JSON); } catch { return; }
     loadCampaign(parsed);
+    preGenerateSceneImages(activeCampaign?.id || 'local', parsed.scenes || []);
     setJsonText(EXAMPLE_JSON);
     setStatus('loaded');
     setValidData(parsed);
