@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useStore from '../store/useStore';
-import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib/dalleApi';
+import { generateSceneImage, generateSceneImageFree, getOpenAiKey, generateNpcPortrait } from '../lib/dalleApi';
 import { broadcastFogReveal, broadcastFogToggle, broadcastSceneTokenMove } from '../lib/liveChannel';
 import SceneTitleCard from './SceneTitleCard';
 import InteractionZone from './InteractionZone';
@@ -36,6 +36,8 @@ export default function ScenePanel() {
   const startEncounter  = useStore(s => s.startEncounter);
   const sceneImages     = useStore(s => s.sceneImages);
   const setSceneImage   = useStore(s => s.setSceneImage);
+  const npcPortraits    = useStore(s => s.npcPortraits);
+  const setNpcPortrait  = useStore(s => s.setNpcPortrait);
   const partyMembers    = useStore(s => s.partyMembers);
   const fogEnabled           = useStore(s => s.fogEnabled);
   const fogRevealed          = useStore(s => s.fogRevealed);
@@ -118,6 +120,18 @@ export default function ScenePanel() {
       }
     }
     prevSceneKeyRef.current = imageKey;
+  }, [imageKey]);
+
+  // Generate NPC portraits when scene loads (lazy, Pollinations free)
+  useEffect(() => {
+    if (!scene?.npcs?.length || !activeCampaign?.id) return;
+    scene.npcs.forEach(npc => {
+      const key = `${activeCampaign.id}:${idx}:${npc.name}`;
+      if (npcPortraits[key]) return;
+      generateNpcPortrait(npc.name, npc.personality).then(url => {
+        if (url) setNpcPortrait(key, url);
+      });
+    });
   }, [imageKey]);
 
   // Generate scene image
@@ -418,7 +432,11 @@ export default function ScenePanel() {
 
         {/* NPC tokens — stationary, defined in scene.npcs[] */}
         {imgReady && scene?.npcs?.map(npc => (
-          <NpcToken key={npc.name} npc={npc} />
+          <NpcToken
+            key={npc.name}
+            npc={npc}
+            portrait={npcPortraits[`${activeCampaign?.id}:${idx}:${npc.name}`]}
+          />
         ))}
 
         {/* Draggable player tokens */}

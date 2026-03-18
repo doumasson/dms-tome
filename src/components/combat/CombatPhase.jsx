@@ -9,6 +9,7 @@ import CharDetailPanel from '../CharDetailPanel';
 import ActionPanel from '../ActionPanel';
 import LootGenerator from '../LootGenerator';
 import SpellTargeting from '../SpellTargeting';
+import SpellEffectLayer from '../SpellEffectLayer';
 import BattleMap, { buildTypeIndex } from './BattleMap';
 import TurnAnnouncement from '../TurnAnnouncement';
 import CombatantRow from './CombatantRow';
@@ -44,7 +45,8 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const cellPx = getCellPx(winWidth);
 
   const activeCombatant = combatants[currentTurn] || null;
-  const { runEnemyTurn, sessionApiKey, narrateCombatAction, addNarratorMessage } = useStore();
+  const { runEnemyTurn, sessionApiKey, narrateCombatAction, addNarratorMessage, addEncounterEffect } = useStore();
+  const activeEffects = useStore(s => s.encounter.activeEffects || []);
 
   // Use the campaign scene image as the battle map background
   const sceneImages    = useStore(s => s.sceneImages);
@@ -216,7 +218,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     setPanel('spell_target');
   }
 
-  function handleSpellConfirm(hitCombatants, spellDef) {
+  function handleSpellConfirm(hitCombatants, spellDef, targeting) {
     const def = spellDef || activeSpell;
     if (!def) { setPanel(null); return; }
 
@@ -243,6 +245,17 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
         onLog(`✨ ${activeCombatant?.name} casts ${def.name} → ${rolled.total} ${def.damageType} dmg [${rolled.display}] → ${names}`);
       }
       if (def.concentration) onSetConcentration(activeCombatant.id, def.name);
+    }
+
+    // Record persistent area effect overlay (concentration spells with area)
+    if (def.concentration && targeting && targeting.areaType !== 'single') {
+      addEncounterEffect({
+        id: crypto.randomUUID(),
+        spellName: def.name,
+        casterId: activeCombatant.id,
+        concentration: true,
+        ...targeting,
+      });
     }
 
     // Narrate the spell (fire-and-forget)
@@ -385,7 +398,10 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           )}
         </div>
         <div style={{ overflowX: 'auto', position: 'relative' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
+            <SpellEffectLayer effects={activeEffects} cellPx={cellPx} mapW={MAP_W} mapH={MAP_H} />
+          </div>
           <TurnAnnouncement
             name={activeCombatant?.name}
             isMyTurn={isMyTurn}
@@ -547,7 +563,10 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
         </div>
 
         <div style={{ overflowX: 'auto', position: 'relative' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
+            <SpellEffectLayer effects={activeEffects} cellPx={cellPx} mapW={MAP_W} mapH={MAP_H} />
+          </div>
           <TurnAnnouncement
             name={activeCombatant?.name}
             isMyTurn={isMyTurn}

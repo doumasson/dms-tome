@@ -7,6 +7,7 @@ import CampaignSelect from './components/CampaignSelect';
 import CreateCampaign from './components/CreateCampaign';
 import CharacterCreate from './components/CharacterCreate';
 import CharacterSelect from './components/CharacterSelect';
+import CharacterProfile from './components/CharacterProfile';
 import ApiKeySettings from './components/ApiKeySettings';
 import CampaignManager from './components/CampaignManager';
 import GameLayout from './components/GameLayout';
@@ -141,6 +142,7 @@ export default function App() {
         case 'long-rest':           store.longRest(); break;
         case 'set-concentration':   store.setConcentration(payload.id, payload.spell); break;
         case 'clear-concentration': store.clearConcentration(payload.id); break;
+        case 'add-effect':          store.applyEncounterEffect(payload.effect); break;
       }
     });
 
@@ -520,6 +522,11 @@ export default function App() {
     );
   }
 
+  // ── Character Profile ─────────────────────────────────────────────────────────
+  if (appView === 'character-profile') {
+    return <CharacterProfile onClose={() => setAppView('game')} />;
+  }
+
   // ── Main Game UI ─────────────────────────────────────────────────────────────
   return (
     <div style={styles.app}>
@@ -531,9 +538,18 @@ export default function App() {
             <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
           )}
         </div>
-        {user?.avatar_url && (
-          <img src={user.avatar_url} alt="" style={styles.headerAvatar} referrerPolicy="no-referrer" />
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button
+            onClick={() => setAppView('character-profile')}
+            title="My Characters"
+            style={styles.headerCharBtn}
+          >
+            ⚔ Characters
+          </button>
+          {user?.avatar_url && (
+            <img src={user.avatar_url} alt="" style={styles.headerAvatar} referrerPolicy="no-referrer" />
+          )}
+        </div>
       </header>
 
       <div style={styles.headerRule} />
@@ -612,6 +628,18 @@ const styles = {
     borderRadius: 20,
     fontStyle: 'italic',
     letterSpacing: '0.02em',
+  },
+  headerCharBtn: {
+    background: 'transparent',
+    border: '1px solid rgba(212,175,55,0.3)',
+    color: 'rgba(212,175,55,0.7)',
+    borderRadius: 6,
+    padding: '4px 10px',
+    fontSize: '0.72rem',
+    cursor: 'pointer',
+    fontFamily: "'Cinzel', Georgia, serif",
+    letterSpacing: '0.04em',
+    flexShrink: 0,
   },
   headerAvatar: {
     width: 30,

@@ -21,7 +21,10 @@ Return ONLY valid JSON matching this exact schema (no markdown, no explanation):
       "dmNotes": "Private DM context and secrets.",
       "fogOfWar": true,
       "isEncounter": false,
-      "enemies": []
+      "enemies": [],
+      "npcs": [
+        { "name": "NPC Name", "x": 0.3, "y": 0.4, "personality": "1-2 sentence character description and motivation." }
+      ]
     }
   ],
   "characters": []
@@ -32,6 +35,7 @@ Rules:
 - Each scene id must be unique (scene1, scene2, etc.)
 - isEncounter: true for combat scenes; include 2-4 enemies with name, hp, ac, speed, stats (str/dex/con/int/wis/cha), attacks ([{name, bonus, damage}]), startPosition {x,y}
 - fogOfWar: true for dungeons/indoors, false for towns/outdoors
+- npcs: include 1-3 named NPCs on non-encounter scenes (tavern keeper, merchant, guard captain, quest giver, etc.) with x/y as 0.0-1.0 fractions of scene width/height, and a vivid 1-2 sentence personality. Encounter scenes can omit npcs or use empty array.
 - characters array should be empty (players create their own)
 - text must be evocative, atmospheric, and advance the story
 - dmNotes must include encounter triggers, hidden info, and DM guidance
