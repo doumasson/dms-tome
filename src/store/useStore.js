@@ -82,7 +82,9 @@ const useStore = create((set, get) => ({
   setActiveCampaign: (campaign) => {
     const user = get().user;
     const isDM = !!(campaign && user && campaign.dm_user_id === user.id);
-    set({ activeCampaign: campaign, isDM, dmMode: isDM });
+    // Host starts with dmMode OFF — AI DM runs automatically via isDM;
+    // dmMode is only for manual host override tools
+    set({ activeCampaign: campaign, isDM, dmMode: false });
   },
   clearActiveCampaign: () => set({ activeCampaign: null, isDM: false, dmMode: false, myCharacter: null, partyMembers: [] }),
   setIsDM: (value) => set({ isDM: value, dmMode: value }),

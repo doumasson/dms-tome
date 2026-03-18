@@ -55,7 +55,7 @@ const CONDITION_COLORS = {
   Exhausted: '#ff9800',
 };
 
-export default function PartySidebar({ onTool, onManage, onLeave, onSettings, onRest, onOpenSheet, liveConnected }) {
+export default function PartySidebar({ onTool, onManage, onLeave, onSettings, onRest, onOpenSheet, onRemakeCharacter, liveConnected }) {
   const encounter    = useStore(s => s.encounter);
   const isDM         = useStore(s => s.isDM);
   const dmMode       = useStore(s => s.dmMode);
@@ -218,6 +218,11 @@ export default function PartySidebar({ onTool, onManage, onLeave, onSettings, on
         <button style={styles.toolBtn} onClick={onSettings}>
           ⚙ Settings
         </button>
+        {onRemakeCharacter && (
+          <button style={{ ...styles.toolBtn, color: 'rgba(212,175,55,0.7)' }} onClick={onRemakeCharacter}>
+            ✦ New Character
+          </button>
+        )}
         {/* Rest buttons — available to all players */}
         {onRest && (
           <>
@@ -248,7 +253,7 @@ export default function PartySidebar({ onTool, onManage, onLeave, onSettings, on
               boxShadow: dmMode ? '0 0 12px rgba(212,175,55,0.25)' : 'none',
             }}
           >
-            {dmMode ? '👁 DM ON' : '🔒 DM OFF'}
+            {dmMode ? '👑 Host Controls' : '🔒 Host Off'}
           </button>
         )}
         <button style={styles.leaveBtn} onClick={onLeave}>
