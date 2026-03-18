@@ -14,6 +14,9 @@ import CampaignImporter from './CampaignImporter';
 import ActivityLog from './ActivityLog';
 import RestModal from './RestModal';
 import LevelUpModal, { levelFromXp, xpForLevel } from './LevelUpModal';
+import LootScreen from './LootScreen';
+import CharacterSheetModal from './characterSheet/CharacterSheetModal';
+import RulesAssistant from './RulesAssistant';
 
 export default function GameLayout({ liveConnected, onLeave, onManage, onSettings }) {
   const encounter = useStore(s => s.encounter);
@@ -22,10 +25,13 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
   const partyMembers = useStore(s => s.partyMembers);
   const myCharacter = useStore(s => s.myCharacter);
   const applyLevelUp = useStore(s => s.applyLevelUp);
+  const pendingLoot = useStore(s => s.pendingLoot);
+  const setPendingLoot = useStore(s => s.setPendingLoot);
   const [toolPanel, setToolPanel] = useState(null); // null | 'dice' | 'loot' | 'notes' | 'import'
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile only
   const [restProposal, setRestProposal] = useState(null); // { type: 'short'|'long', proposedBy }
   const [showLevelUp, setShowLevelUp] = useState(false);
+  const [sheetChar, setSheetChar] = useState(null); // character to show in CharacterSheetModal
 
   const campaign = useStore(s => s.campaign);
 
@@ -114,6 +120,7 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
           onLeave={onLeave}
           onSettings={onSettings}
           onRest={proposeRest}
+          onOpenSheet={setSheetChar}
           liveConnected={liveConnected}
         />
       </div>
@@ -185,6 +192,37 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
           onCancel={() => setShowLevelUp(false)}
         />
       )}
+
+      {/* Post-combat loot screen */}
+      {pendingLoot && (
+        <LootScreen
+          enemies={pendingLoot.enemies}
+          partySize={pendingLoot.partySize}
+          onDone={() => setPendingLoot(null)}
+        />
+      )}
+
+      {/* Character sheet modal (click portrait in party sidebar) */}
+      {sheetChar && (
+        <CharacterSheetModal
+          character={sheetChar}
+          onClose={() => setSheetChar(null)}
+        />
+      )}
+
+      {/* Backpack button — own inventory shortcut */}
+      {myCharacter && (
+        <button
+          style={styles.backpackBtn}
+          onClick={() => setSheetChar(myCharacter)}
+          title="Open your character sheet & inventory"
+        >
+          🎒
+        </button>
+      )}
+
+      {/* Rules Assistant — floating */}
+      <RulesAssistant />
     </div>
   );
 }
@@ -262,6 +300,15 @@ const styles = {
     inset: 0,
     background: 'rgba(0,0,0,0.6)',
     zIndex: 9,
+  },
+  backpackBtn: {
+    position: 'fixed', bottom: 128, right: 18, zIndex: 500,
+    width: 40, height: 40, borderRadius: '50%',
+    background: 'linear-gradient(135deg, #2a1a08, #1a0e04)',
+    border: '1px solid rgba(212,175,55,0.45)',
+    fontSize: '1.2rem', cursor: 'pointer',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.6)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
   toolOverlay: {
     position: 'fixed',

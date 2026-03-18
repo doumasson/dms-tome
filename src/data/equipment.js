@@ -649,3 +649,60 @@ export const SIMPLE_WEAPONS = WEAPONS.filter(w => w.category.startsWith("simple"
 export const MARTIAL_WEAPONS = WEAPONS.filter(w => w.category.startsWith("martial"));
 export const MELEE_WEAPONS = WEAPONS.filter(w => w.category.endsWith("melee"));
 export const RANGED_WEAPONS = WEAPONS.filter(w => w.category.endsWith("ranged") || (w.range && !w.category.endsWith("melee")));
+
+// ─── CONSUMABLES ──────────────────────────────────────────────────────────────
+
+export const CONSUMABLES = [
+  { id: 'healing-potion',         name: 'Healing Potion',         type: 'consumable', icon: '🧪', effect: { type: 'heal', dice: '2d4',  bonus: 2  }, actionType: 'action',       description: 'Regain 2d4+2 hit points.',          cost: '50 gp',   weight: 0.5 },
+  { id: 'greater-healing-potion', name: 'Greater Healing Potion', type: 'consumable', icon: '🧪', effect: { type: 'heal', dice: '4d4',  bonus: 4  }, actionType: 'action',       description: 'Regain 4d4+4 hit points.',          cost: '100 gp',  weight: 0.5 },
+  { id: 'superior-healing-potion',name: 'Superior Healing Potion',type: 'consumable', icon: '🧪', effect: { type: 'heal', dice: '8d4',  bonus: 8  }, actionType: 'action',       description: 'Regain 8d4+8 hit points.',          cost: '500 gp',  weight: 0.5 },
+  { id: 'antitoxin',              name: 'Antitoxin',              type: 'consumable', icon: '⚗️',  effect: { type: 'advantage', stat: 'CON', duration: '1 hour', against: 'poison' }, actionType: 'action', description: 'Advantage on CON saves vs poison for 1 hour.', cost: '50 gp', weight: 0.5 },
+  { id: 'potion-of-speed',        name: 'Potion of Speed',        type: 'consumable', icon: '💨', effect: { type: 'condition', condition: 'Hasted', duration: '1 min' }, actionType: 'bonus',  description: 'Gain the Haste effect for 1 minute.',    cost: '400 gp',  weight: 0.5 },
+  { id: 'potion-of-resistance',   name: 'Potion of Resistance',   type: 'consumable', icon: '🛡', effect: { type: 'resistance', duration: '1 hour' },                  actionType: 'bonus',  description: 'Resistance to one damage type for 1 hour.', cost: '300 gp', weight: 0.5 },
+  { id: 'torch',                  name: 'Torch',                  type: 'consumable', icon: '🔦', effect: { type: 'light', radius: 20, duration: '1 hour' },            actionType: 'free',   description: 'Bright light 20ft, dim 20ft beyond, 1 hour.', cost: '1 cp', weight: 1 },
+  { id: 'rations',                name: 'Rations (1 day)',        type: 'consumable', icon: '🍖', effect: { type: 'sustenance' },                                       actionType: 'free',   description: 'Food and water for one day.',           cost: '5 sp',    weight: 2 },
+  { id: 'rope',                   name: "Hempen Rope (50 ft)",    type: 'gear',       icon: '🧵', effect: null,                                                         actionType: null,     description: '50 feet of hemp rope. 2 hit points.',   cost: '1 gp',    weight: 10 },
+  { id: 'thieves-tools',          name: "Thieves' Tools",         type: 'gear',       icon: '🔑', effect: { type: 'tool', skill: 'DEX', use: 'Pick locks or disarm traps' }, actionType: 'action', description: 'Proficiency lets you add PB to DEX checks.', cost: '25 gp', weight: 1 },
+];
+
+// ─── SLOT HELPERS ─────────────────────────────────────────────────────────────
+
+/** Derive equipment slot from item data. */
+export function getSlotType(item) {
+  if (!item) return null;
+  if (item.type === 'consumable' || item.type === 'gear') return 'consumable';
+  if (item.armorType === 'shield') return 'offHand';
+  if (item.properties?.includes('two-handed')) return 'twoHanded';
+  if (item.baseAC !== undefined) return 'chest';
+  if (item.damage !== undefined || item.category?.includes('weapon')) return 'mainHand';
+  return 'misc';
+}
+
+/** Recalculate AC from equipped items and stats. */
+export function computeAcFromEquipped(equippedItems, stats) {
+  const dexMod = Math.floor(((stats?.dex || 10) - 10) / 2);
+  const chest   = equippedItems?.chest;
+  const offHand = equippedItems?.offHand;
+  const hasShield = offHand?.armorType === 'shield';
+  if (!chest) return 10 + dexMod + (hasShield ? 2 : 0);
+  let ac = chest.baseAC ?? 10;
+  if (chest.addDex !== false) {
+    ac += chest.maxDex != null ? Math.min(dexMod, chest.maxDex) : dexMod;
+  }
+  if (hasShield) ac += 2;
+  return ac;
+}
+
+/** Look up any item by name across all tables. */
+export function getItem(name) {
+  return WEAPONS.find(w => w.name === name)
+    || ARMOR.find(a => a.name === name)
+    || CONSUMABLES.find(c => c.name === name)
+    || null;
+}
+
+/** Default starting inventory for a new character. */
+export function getStartingInventory() {
+  const potion = CONSUMABLES.find(c => c.id === 'healing-potion');
+  return [{ ...potion, instanceId: crypto.randomUUID(), quantity: 1 }];
+}
