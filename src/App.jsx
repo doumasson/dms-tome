@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from './lib/supabase';
+import { setLiveChannel } from './lib/liveChannel';
 import useStore from './store/useStore';
 import LoginPage from './components/LoginPage';
 import CampaignSelect from './components/CampaignSelect';
 import CreateCampaign from './components/CreateCampaign';
+import CharacterCreate from './components/CharacterCreate';
 import ApiKeySettings from './components/ApiKeySettings';
 import CampaignManager from './components/CampaignManager';
 import GameLayout from './components/GameLayout';
@@ -20,7 +22,7 @@ function D20Icon() {
   );
 }
 
-// Views: loading | login | select | create | game
+// Views: loading | login | select | create | character-create | game
 export default function App() {
   const [appView, setAppView] = useState('loading');
   const [draftCampaign, setDraftCampaign] = useState(null);
@@ -31,18 +33,20 @@ export default function App() {
   const channelRef = useRef(null);
   const broadcastDebounce = useRef(null);
 
-  const user = useStore(s => s.user);
-  const setUser = useStore(s => s.setUser);
-  const activeCampaign = useStore(s => s.activeCampaign);
-  const setActiveCampaign = useStore(s => s.setActiveCampaign);
+  const user            = useStore(s => s.user);
+  const setUser         = useStore(s => s.setUser);
+  const activeCampaign  = useStore(s => s.activeCampaign);
+  const setActiveCampaign   = useStore(s => s.setActiveCampaign);
   const clearActiveCampaign = useStore(s => s.clearActiveCampaign);
-  const loadCampaign = useStore(s => s.loadCampaign);
+  const loadCampaign        = useStore(s => s.loadCampaign);
   const loadCampaignSettings = useStore(s => s.loadCampaignSettings);
-  const campaign = useStore(s => s.campaign);
-  const isDM = useStore(s => s.isDM);
-  const dmMode = useStore(s => s.dmMode);
-  const encounter = useStore(s => s.encounter);
+  const campaign        = useStore(s => s.campaign);
+  const isDM            = useStore(s => s.isDM);
+  const dmMode          = useStore(s => s.dmMode);
+  const encounter       = useStore(s => s.encounter);
   const syncEncounterDown = useStore(s => s.syncEncounterDown);
+  const addSessionEntry = useStore(s => s.addSessionEntry);
+  const setMyCharacter  = useStore(s => s.setMyCharacter);
 
   useEffect(() => {
     // Pick up invite code from URL or localStorage
@@ -51,23 +55,16 @@ export default function App() {
     if (urlInvite) {
       pendingInviteRef.current = urlInvite;
       localStorage.setItem('pendingInvite', urlInvite);
-      // Clean URL without reload
       window.history.replaceState({}, '', window.location.pathname);
     } else {
       pendingInviteRef.current = localStorage.getItem('pendingInvite');
     }
 
-    // Check existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        handleSession(session);
-      } else {
-        setAppView('login');
-      }
+      if (session) handleSession(session);
+      else setAppView('login');
     });
 
-    // Listen for auth state changes (OAuth redirect callback fires here)
-    // TOKEN_REFRESHED fires on tab-focus — ignore it to avoid resetting app state
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         setUser(null);
@@ -76,7 +73,6 @@ export default function App() {
       } else if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
         if (session) handleSession(session);
       }
-      // TOKEN_REFRESHED: token silently refreshed on tab-focus, nothing to do
     });
 
     return () => subscription.unsubscribe();
@@ -90,21 +86,38 @@ export default function App() {
       config: { broadcast: { ack: false } },
     });
 
+    // Encounter state sync (DM → players)
     ch.on('broadcast', { event: 'encounter-sync' }, ({ payload }) => {
-      // Only non-DMs apply incoming state
-      if (!isDM || !dmMode) {
-        syncEncounterDown(payload);
+      if (!isDM || !dmMode) syncEncounterDown(payload);
+    });
+
+    // Dice roll broadcast (any player → all others)
+    ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
+      // Only add entries from OTHER users — we already logged our own roll
+      if (payload.userId !== user?.id) {
+        const mod = payload.modifier !== 0
+          ? ` ${payload.modifier > 0 ? '+' : ''}${payload.modifier}`
+          : '';
+        const label = `${payload.count}d${payload.die}${mod}`;
+        const isNat  = payload.die === 20 && payload.rolls?.[0] === 20;
+        const isFail = payload.die === 20 && payload.rolls?.[0] === 1;
+        addSessionEntry({
+          type: 'roll',
+          icon: isNat ? '⭐' : isFail ? '💀' : '🎲',
+          title: `${payload.rolledBy ? `${payload.rolledBy}: ` : ''}${label} = ${payload.total}${isNat ? ' — NAT 20!' : isFail ? ' — NAT 1!' : ''}`,
+          detail: null,
+        });
       }
     });
 
-    ch.subscribe(status => {
-      setLiveConnected(status === 'SUBSCRIBED');
-    });
+    ch.subscribe(status => setLiveConnected(status === 'SUBSCRIBED'));
 
+    setLiveChannel(ch);
     channelRef.current = ch;
 
     return () => {
       ch.unsubscribe();
+      setLiveChannel(null);
       channelRef.current = null;
       setLiveConnected(false);
     };
@@ -126,8 +139,6 @@ export default function App() {
 
   async function handleSession(session) {
     const authUser = session.user;
-
-    // If the same user is already logged in, don't re-process (avoids re-renders on tab focus)
     const currentUser = useStore.getState().user;
     if (currentUser?.id === authUser.id) return;
 
@@ -138,9 +149,7 @@ export default function App() {
       avatar_url: authUser.user_metadata?.avatar_url || null,
     };
 
-    // Sync user to profiles table
     await supabase.from('profiles').upsert(userData, { onConflict: 'id' });
-
     setUser(userData);
     setAppView(prev => (prev === 'loading' || prev === 'login') ? 'select' : prev);
   }
@@ -154,13 +163,14 @@ export default function App() {
     setAppView('login');
   }
 
-  function handleSelectCampaign(campaignRecord) {
-    // If this is a draft campaign, resume the wizard instead
+  async function handleSelectCampaign(campaignRecord) {
+    // Draft campaigns resume the wizard
     if (campaignRecord?.campaign_data?.__draft) {
       setDraftCampaign(campaignRecord);
       setAppView('create');
       return;
     }
+
     setActiveCampaign(campaignRecord);
     if (campaignRecord.campaign_data && Object.keys(campaignRecord.campaign_data).length > 0) {
       loadCampaign(campaignRecord.campaign_data);
@@ -168,7 +178,31 @@ export default function App() {
     if (campaignRecord.settings) {
       loadCampaignSettings(campaignRecord.settings);
     }
-    setAppView('game');
+
+    // ── Character requirement check ──────────────────────────────────────────
+    const isAiDm  = campaignRecord.settings?.isAiDm ?? false;
+    const userIsDM = campaignRecord.dm_user_id === user?.id;
+
+    // Human DM doesn't need their own character
+    if (!isAiDm && userIsDM) {
+      setAppView('game');
+      return;
+    }
+
+    // Everyone else must have a character
+    const { data: memberData } = await supabase
+      .from('campaign_members')
+      .select('character_data')
+      .eq('campaign_id', campaignRecord.id)
+      .eq('user_id', user?.id)
+      .maybeSingle();
+
+    if (memberData?.character_data?.name) {
+      setMyCharacter(memberData.character_data);
+      setAppView('game');
+    } else {
+      setAppView('character-create');
+    }
   }
 
   function handleLeaveCampaign() {
@@ -232,10 +266,38 @@ export default function App() {
     );
   }
 
+  // ── Character Creation ───────────────────────────────────────────────────────
+  if (appView === 'character-create') {
+    return (
+      <div style={styles.app}>
+        <header style={styles.header}>
+          <div style={styles.headerLeft}>
+            <D20Icon />
+            <h1 style={styles.appTitle}>DM's Tome</h1>
+            {activeCampaign && (
+              <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
+            )}
+          </div>
+          {user?.avatar_url && (
+            <img src={user.avatar_url} alt="" style={styles.headerAvatar} referrerPolicy="no-referrer" />
+          )}
+        </header>
+        <div style={styles.headerRule} />
+        <CharacterCreate
+          user={user}
+          campaignId={activeCampaign?.id}
+          onDone={(char) => {
+            setMyCharacter(char);
+            setAppView('game');
+          }}
+        />
+      </div>
+    );
+  }
+
   // ── Main Game UI ─────────────────────────────────────────────────────────────
   return (
     <div style={styles.app}>
-      {/* Slim top bar */}
       <header style={styles.header}>
         <div style={styles.headerLeft}>
           <D20Icon />
@@ -251,7 +313,6 @@ export default function App() {
 
       <div style={styles.headerRule} />
 
-      {/* Game Layout — sidebar + scene/combat + narrator */}
       <GameLayout
         liveConnected={liveConnected}
         onLeave={handleLeaveCampaign}

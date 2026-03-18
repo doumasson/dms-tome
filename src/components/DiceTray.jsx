@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import useStore from '../store/useStore';
+import { broadcastDiceRoll } from '../lib/liveChannel';
 
 const DICE = [4, 6, 8, 10, 12, 20, 100];
 
@@ -86,6 +87,8 @@ export default function DiceTray({ open, onClose }) {
   const addRoll    = useStore(s => s.addRoll);
   const characters = useStore(s => s.campaign.characters);
   const user       = useStore(s => s.user);
+  const isDM       = useStore(s => s.isDM);
+  const myCharacter = useStore(s => s.myCharacter);
 
   const [die, setDie]         = useState(20);
   const [count, setCount]     = useState(1);
@@ -94,12 +97,18 @@ export default function DiceTray({ open, onClose }) {
   const [rolledBy, setRolledBy] = useState('');
   const [animation, setAnimation] = useState(null); // { result, die, rolledBy }
 
-  // Default rolledBy to first character name or user name
+  // Determine the default "rolling as" identity:
+  // - Non-DMs are always locked to their own character
+  // - DMs default to their first party member or 'DM'
   useEffect(() => {
-    if (!rolledBy) {
-      setRolledBy(characters[0]?.name || user?.name || 'DM');
+    if (!isDM && myCharacter?.name) {
+      setRolledBy(myCharacter.name);
+    } else if (isDM) {
+      setRolledBy(characters[0]?.name || 'DM');
+    } else {
+      setRolledBy(user?.name || 'DM');
     }
-  }, [characters, user]);
+  }, [isDM, myCharacter, characters, user]);
 
   if (!open && !animation) return null;
 
@@ -129,9 +138,11 @@ export default function DiceTray({ open, onClose }) {
       total,
       timestamp: new Date().toLocaleTimeString(),
       rolledBy,
+      userId: user?.id, // used to prevent double-counting broadcasts
     };
 
     addRoll(entry);
+    broadcastDiceRoll(entry); // send to all other players in real-time
     setAnimation({ result: total, die, rolledBy });
     onClose(); // close the tray; animation still shows
   }
@@ -240,17 +251,25 @@ export default function DiceTray({ open, onClose }) {
               {/* Rolling as */}
               <div style={tray.rollingAsRow}>
                 <span style={tray.controlLabel}>Rolling as</span>
-                <div style={tray.charChips}>
-                  {charOptions.map(name => (
-                    <button
-                      key={name}
-                      style={{ ...tray.charChip, ...(rolledBy === name ? tray.charChipActive : {}) }}
-                      onClick={() => setRolledBy(name)}
-                    >
-                      {name}
-                    </button>
-                  ))}
-                </div>
+                {isDM ? (
+                  // DMs can pick any character
+                  <div style={tray.charChips}>
+                    {charOptions.map(name => (
+                      <button
+                        key={name}
+                        style={{ ...tray.charChip, ...(rolledBy === name ? tray.charChipActive : {}) }}
+                        onClick={() => setRolledBy(name)}
+                      >
+                        {name}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  // Players are locked to their own character
+                  <div style={{ ...tray.charChip, ...tray.charChipActive, cursor: 'default', opacity: 0.85 }}>
+                    {rolledBy}
+                  </div>
+                )}
               </div>
 
               {/* Roll button */}
