@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useStore from '../store/useStore';
 import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib/dalleApi';
+import { speak, stopSpeaking, isSpeaking } from '../lib/tts';
 
 export default function ScenePanel() {
   const user           = useStore(s => s.user);
@@ -13,9 +14,12 @@ export default function ScenePanel() {
   const sceneImages     = useStore(s => s.sceneImages);
   const setSceneImage   = useStore(s => s.setSceneImage);
 
+  const partyMembers = useStore(s => s.partyMembers);
+
   const [imgLoading, setImgLoading] = useState(false);
   const [imgError, setImgError]     = useState(false);
   const [imgReady, setImgReady]     = useState(false); // true once browser finishes fetching
+  const [narrating, setNarrating]   = useState(false);
 
   const scenes = campaign.scenes || [];
   const idx    = campaign.currentSceneIndex || 0;
@@ -52,7 +56,19 @@ export default function ScenePanel() {
 
   function handleStartCombat() {
     if (!scene?.enemies?.length) return;
-    startEncounter(scene.enemies, campaign.characters);
+    // Use real player characters (partyMembers) not NPC characters from JSON
+    startEncounter(scene.enemies, partyMembers.length > 0 ? partyMembers : []);
+  }
+
+  function handleNarrate() {
+    if (narrating) {
+      stopSpeaking();
+      setNarrating(false);
+      return;
+    }
+    const text = [scene.title, scene.text].filter(Boolean).join('. ');
+    setNarrating(true);
+    speak(text, () => setNarrating(false));
   }
 
   if (!campaign.loaded) {
@@ -125,19 +141,10 @@ export default function ScenePanel() {
           </div>
         )}
 
-        {/* Player choices */}
-        {scene.choices?.length > 0 && (
-          <div style={styles.choices}>
-            <span style={styles.choicesLabel}>Choices</span>
-            <ul style={styles.choiceList}>
-              {scene.choices.map((c, i) => (
-                <li key={i} style={styles.choiceItem}>
-                  <span style={styles.choiceBullet}>▸</span> {c}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* Narrate button — reads scene aloud with DM voice */}
+        <button onClick={handleNarrate} style={{ ...styles.narrateBtn, ...(narrating ? styles.narrateBtnActive : {}) }}>
+          {narrating ? '■ Stop' : '▶ Narrate Scene'}
+        </button>
 
         {/* DM Navigation Controls */}
         {isDM && dmMode && (
@@ -292,39 +299,24 @@ const styles = {
     lineHeight: 1.6,
     margin: 0,
   },
-  choices: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
-  },
-  choicesLabel: {
-    color: 'var(--parchment-dim)',
+  narrateBtn: {
+    alignSelf: 'flex-start',
+    background: 'rgba(212,175,55,0.08)',
+    border: '1px solid rgba(212,175,55,0.25)',
+    borderRadius: 8,
+    color: 'rgba(212,175,55,0.8)',
     fontFamily: "'Cinzel', Georgia, serif",
-    fontSize: '0.7rem',
     fontWeight: 700,
-    letterSpacing: '0.1em',
-    textTransform: 'uppercase',
+    fontSize: '0.78rem',
+    letterSpacing: '0.06em',
+    padding: '8px 18px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
   },
-  choiceList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 6,
-  },
-  choiceItem: {
-    color: 'var(--text-secondary)',
-    fontSize: '0.9rem',
-    display: 'flex',
-    gap: 8,
-    alignItems: 'flex-start',
-    lineHeight: 1.5,
-  },
-  choiceBullet: {
-    color: 'var(--gold-dark)',
-    flexShrink: 0,
-    marginTop: 1,
+  narrateBtnActive: {
+    background: 'rgba(212,175,55,0.15)',
+    border: '1px solid rgba(212,175,55,0.5)',
+    color: '#d4af37',
   },
   dmControls: {
     display: 'flex',

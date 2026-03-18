@@ -60,12 +60,19 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
   }
 
   const data = await response.json();
-  const text = data.content[0].text.trim();
+  const raw = data.content[0].text.trim();
+
+  // Claude sometimes wraps its JSON in ```json ... ``` despite the instruction — strip it
+  const text = raw
+    .replace(/^```json\s*/i, '')
+    .replace(/^```\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
 
   try {
     return JSON.parse(text);
   } catch {
-    // Fallback: treat full response as narrative if JSON parse fails
+    // If still not valid JSON, treat the whole thing as narrative prose
     return { narrative: text, rollRequest: null, stateHint: null };
   }
 }

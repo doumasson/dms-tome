@@ -46,7 +46,8 @@ export default function App() {
   const encounter       = useStore(s => s.encounter);
   const syncEncounterDown = useStore(s => s.syncEncounterDown);
   const addSessionEntry = useStore(s => s.addSessionEntry);
-  const setMyCharacter  = useStore(s => s.setMyCharacter);
+  const setMyCharacter   = useStore(s => s.setMyCharacter);
+  const setPartyMembers  = useStore(s => s.setPartyMembers);
 
   useEffect(() => {
     // Pick up invite code from URL or localStorage
@@ -151,6 +152,22 @@ export default function App() {
 
     await supabase.from('profiles').upsert(userData, { onConflict: 'id' });
     setUser(userData);
+
+    // Restore last campaign on page refresh
+    const savedId = sessionStorage.getItem('activeCampaignId');
+    if (savedId) {
+      const { data: member } = await supabase
+        .from('campaign_members')
+        .select('campaigns(*)')
+        .eq('campaign_id', savedId)
+        .eq('user_id', userData.id)
+        .maybeSingle();
+      if (member?.campaigns) {
+        await handleSelectCampaign(member.campaigns);
+        return;
+      }
+    }
+
     setAppView(prev => (prev === 'loading' || prev === 'login') ? 'select' : prev);
   }
 
@@ -179,6 +196,20 @@ export default function App() {
       loadCampaignSettings(campaignRecord.settings);
     }
 
+    // Save campaign ID so refresh restores to game view
+    sessionStorage.setItem('activeCampaignId', campaignRecord.id);
+
+    // ── Load real player characters (partyMembers) ────────────────────────────
+    const { data: allMembers } = await supabase
+      .from('campaign_members')
+      .select('user_id, role, character_data')
+      .eq('campaign_id', campaignRecord.id);
+
+    const realPlayers = (allMembers || [])
+      .filter(m => m.character_data?.name)
+      .map(m => ({ ...m.character_data }));
+    setPartyMembers(realPlayers);
+
     // ── Character requirement check ──────────────────────────────────────────
     const isAiDm  = campaignRecord.settings?.isAiDm ?? false;
     const userIsDM = campaignRecord.dm_user_id === user?.id;
@@ -206,6 +237,7 @@ export default function App() {
   }
 
   function handleLeaveCampaign() {
+    sessionStorage.removeItem('activeCampaignId');
     clearActiveCampaign();
     setAppView('select');
   }

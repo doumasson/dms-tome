@@ -1679,6 +1679,15 @@ export default function EncounterView() {
   }
 
   if (encounter.phase === 'initiative') {
+    if (!dmMode) {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 12, color: 'var(--text-muted)', padding: 40 }}>
+          <div style={{ fontSize: '3rem' }}>⚔</div>
+          <div style={{ fontFamily: "'Cinzel', Georgia, serif", fontSize: '1.1rem', color: 'var(--parchment)' }}>Combat is beginning…</div>
+          <div style={{ fontSize: '0.85rem' }}>The DM is rolling initiative.</div>
+        </div>
+      );
+    }
     return (
       <div style={{ padding: '16px 0' }}>
         <InitiativePhase
