@@ -515,7 +515,7 @@ export default function App() {
         <CharacterCreate
           user={user}
           campaignId={activeCampaign?.id}
-          onCancel={() => setAppView('game')}
+          onCancel={() => setAppView(myCharacter ? 'game' : 'character-select')}
           onDone={async (char) => {
             setMyCharacter(char);
             // Refresh partyMembers so the new character shows immediately in the sidebar
@@ -539,7 +539,7 @@ export default function App() {
 
   // ── Character Profile ─────────────────────────────────────────────────────────
   if (appView === 'character-profile') {
-    return <CharacterProfile onClose={() => setAppView('game')} campaignId={activeCampaign?.id} />;
+    return <CharacterProfile onClose={() => setAppView('game')} campaignId={activeCampaign?.id} onCreateNew={() => setAppView('character-create')} />;
   }
 
   // ── Main Game UI ─────────────────────────────────────────────────────────────

@@ -61,6 +61,7 @@ export default function PartySidebar({ onTool, onManage, onLeave, onSettings, on
   const dmMode       = useStore(s => s.dmMode);
   const toggleDmMode = useStore(s => s.toggleDmMode);
   const partyMembers = useStore(s => s.partyMembers);
+  const myCharacter  = useStore(s => s.myCharacter);
   const [expandedId, setExpandedId] = useState(null);
 
   // Show real players from campaign_members, not NPC characters from JSON
@@ -190,6 +191,11 @@ export default function PartySidebar({ onTool, onManage, onLeave, onSettings, on
 
       {/* Tool Buttons */}
       <div style={styles.toolSection}>
+        {myCharacter && onOpenSheet && (
+          <button style={{ ...styles.toolBtn, color: '#d4af37' }} onClick={() => onOpenSheet(myCharacter)}>
+            🎒 Inventory
+          </button>
+        )}
         <button style={styles.toolBtn} onClick={() => onTool('dice')}>
           🎲 Dice
         </button>

@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { CLASSES } from '../data/classes';
 import { getRace, applyRacialBonuses } from '../data/races';
 import {
-  STEPS, calcHp, calcAc, buildAttacks, buildSpellSlots, buildFeatures,
+  calcHp, calcAc, buildAttacks, buildSpellSlots, buildFeatures,
   avatarUrl, profBonus, getStarterSpells,
 } from '../lib/charBuilder';
 import { getStartingInventory } from '../data/equipment';
@@ -14,13 +14,25 @@ import StepBackground from './characterCreate/StepBackground';
 import StepAbilities  from './characterCreate/StepAbilities';
 import StepIdentity   from './characterCreate/StepIdentity';
 import StepSpells     from './characterCreate/StepSpells';
+import StepGear       from './characterCreate/StepGear';
 import SummaryPanel   from './characterCreate/SummaryPanel';
 
 const SPELLCASTING_CLASSES = new Set(['Wizard','Sorcerer','Warlock','Bard','Cleric','Druid','Paladin','Ranger']);
 
+const STEP_TITLES = {
+  Race:       'Choose Your Race',
+  Class:      'Choose Your Class',
+  Background: 'Choose Your Background',
+  Spells:     'Select Your Spells',
+  Abilities:  'Set Your Abilities',
+  Identity:   'Name Your Character',
+  Gear:       'Starting Equipment',
+};
+
+const BASE_STEPS = ['Race', 'Class', 'Background', 'Abilities', 'Identity', 'Gear'];
+
 export default function CharacterCreate({ user, campaignId, onDone, onCancel }) {
-  const [step, setSte] = useState(0);
-  const setStep = setSte;
+  const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error,  setError]  = useState('');
 
@@ -29,13 +41,14 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
   const [cls,         setCls]         = useState('');
   const [background,  setBackground]  = useState('');
   const [skills,      setSkills]      = useState([]);
-  const [method,      setMethod]      = useState('standard');
-  const [baseStats,   setBaseStats]   = useState({ str: 15, dex: 14, con: 13, int: 12, wis: 10, cha: 8 });
+  const [method,      setMethod]      = useState('rolled');
+  const [baseStats,   setBaseStats]   = useState({ str: 8, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
   const [name,        setName]        = useState('');
   const [alignment,   setAlignment]   = useState('');
   const [appearance,  setAppearance]  = useState('');
   const [backstory,   setBackstory]   = useState('');
   const [selectedSpells, setSelectedSpells] = useState([]);
+  const [gearChoices, setGearChoices] = useState({ method: 'equipment', selections: {}, gold: 0 });
 
   const isSpellcaster = cls && SPELLCASTING_CLASSES.has(cls);
 
@@ -46,23 +59,21 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     [baseStats, race, flexChoices, raceData],
   );
 
-  // Dynamic steps: insert 'Spells' between Background and Abilities for spellcasters
   const dynamicSteps = useMemo(() => {
-    const base = [...STEPS]; // ['Race','Class','Background','Abilities','Identity']
-    if (isSpellcaster) {
-      base.splice(3, 0, 'Spells'); // insert before Abilities
-    }
+    const base = [...BASE_STEPS];
+    if (isSpellcaster) base.splice(3, 0, 'Spells');
     return base;
   }, [isSpellcaster]);
 
   function canAdvance() {
     const label = dynamicSteps[step];
-    if (label === 'Race') return !!race;
-    if (label === 'Class') return !!cls;
+    if (label === 'Race')       return !!race;
+    if (label === 'Class')      return !!cls;
     if (label === 'Background') return !!background;
-    if (label === 'Spells') return true; // optional selections
-    if (label === 'Abilities') return true;
-    if (label === 'Identity') return !!name.trim();
+    if (label === 'Spells')     return true;
+    if (label === 'Abilities')  return true;
+    if (label === 'Identity')   return !!name.trim();
+    if (label === 'Gear')       return true;
     return false;
   }
 
@@ -78,6 +89,10 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     const features = buildFeatures(cls, 1);
     const pb       = profBonus(1);
 
+    // Build starting inventory from gear step
+    const starterItems = getStartingInventory();
+    const gearItems = buildGearInventory(gearChoices, clsData);
+
     const character = {
       id: crypto.randomUUID(),
       name: name.trim(),
@@ -89,9 +104,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       backstory,
       level: 1,
       xp: 0,
-      hp,
-      maxHp: hp,
-      currentHp: hp,
+      hp, maxHp: hp, currentHp: hp,
       ac,
       speed: raceData?.speed || 30,
       stats: finalStats,
@@ -101,9 +114,9 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       spellSlots,
       spells: selectedSpells.length > 0 ? selectedSpells : getStarterSpells(cls),
       equipment: clsData?.startingEquipment || [],
-      inventory: getStartingInventory(),
+      inventory: [...starterItems, ...gearItems],
       equippedItems: {},
-      gold: 0,
+      gold: gearChoices.method === 'gold' ? gearChoices.gold : 0,
       proficiencyBonus: pb,
       portrait: avatarUrl(name.trim(), race, cls),
       userId: user.id,
@@ -116,13 +129,8 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       .eq('campaign_id', campaignId)
       .eq('user_id', user.id);
 
-    if (dbErr) {
-      setSaving(false);
-      setError('Failed to save character. Please try again.');
-      return;
-    }
+    if (dbErr) { setSaving(false); setError('Failed to save. Please try again.'); return; }
 
-    // Also save to player-owned `characters` table for portability (fire-and-forget)
     try {
       await supabase.from('characters').upsert({
         owner_user_id: user.id,
@@ -136,7 +144,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
         character_data: character,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'owner_user_id,name' });
-    } catch { /* table may not exist yet — non-critical */ }
+    } catch { /* non-critical */ }
 
     setSaving(false);
     onDone(character);
@@ -149,47 +157,65 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     Spells:     <StepSpells     key="spells"    cls={cls}               selectedSpells={selectedSpells} setSelectedSpells={setSelectedSpells} />,
     Abilities:  <StepAbilities  key="abilities" race={race}             baseStats={baseStats} setBaseStats={setBaseStats} method={method} setMethod={setMethod} flexChoices={flexChoices} setFlexChoices={setFlexChoices} />,
     Identity:   <StepIdentity   key="identity"  name={name}             setName={setName} alignment={alignment} setAlignment={setAlignment} appearance={appearance} setAppearance={setAppearance} backstory={backstory} setBackstory={setBackstory} race={race} cls={cls} />,
+    Gear:       <StepGear       key="gear"      cls={cls}               background={background} gearChoices={gearChoices} setGearChoices={setGearChoices} />,
   };
+
+  const totalSteps = dynamicSteps.length;
+  const currentLabel = dynamicSteps[step];
+  const isLast = step === totalSteps - 1;
 
   return (
     <div style={s.page}>
       <div style={s.card}>
-        {/* Top section — header + step nav + summary (not scrollable) */}
+
+        {/* Fixed top section */}
         <div style={s.cardTop}>
-          <div style={s.header}>
-            <div style={{ width: 80 }} /> {/* spacer to center title */}
-            <div style={s.headerCenter}>
-              <div style={s.headerGlyph}>⚔</div>
-              <h1 style={s.title}>Create Your Character</h1>
-            </div>
+          <div style={s.topBar}>
+            <span style={s.stepCounter}>Step {step + 1} of {totalSteps}</span>
             {onCancel && (
               <button style={s.cancelBtn} onClick={onCancel}>✕ Cancel</button>
             )}
           </div>
 
-          <div style={s.stepNav}>
-            {dynamicSteps.map((label, i) => (
-              <button
-                key={label}
-                style={{ ...s.stepTab, ...(i === step ? s.stepTabActive : {}), ...(i < step ? s.stepTabDone : {}) }}
+          <div style={s.titleRow}>
+            <span style={s.headerGlyph}>⚔</span>
+            <h1 style={s.title}>Create Your Character</h1>
+          </div>
+
+          <div style={s.dotsRow}>
+            {dynamicSteps.map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  ...s.dot,
+                  ...(i === step ? s.dotActive : {}),
+                  ...(i < step ? s.dotDone : {}),
+                  cursor: i < step ? 'pointer' : 'default',
+                }}
                 onClick={() => i < step && setStep(i)}
-                disabled={i > step}
-              >
-                {i < step ? '✓ ' : ''}{label}
-              </button>
+                title={i < step ? `Back to ${dynamicSteps[i]}` : undefined}
+              />
             ))}
           </div>
 
+          <div style={s.stepHeading}>{STEP_TITLES[currentLabel]}</div>
+          <div style={s.divider} />
+
           {(race || cls) && (
-            <SummaryPanel name={name} race={race} cls={cls} background={background} finalStats={finalStats} skills={skills} />
+            <SummaryPanel
+              name={name}
+              race={race}
+              cls={cls}
+              background={background}
+              finalStats={finalStats}
+              skills={skills}
+            />
           )}
         </div>
 
         {/* Scrollable step content */}
         <div style={s.scrollArea}>
-          <div style={s.stepContent}>
-            {stepMap[dynamicSteps[step]]}
-          </div>
+          <div>{stepMap[currentLabel]}</div>
           {error && <p style={s.errorMsg}>{error}</p>}
         </div>
 
@@ -199,13 +225,13 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
             <button style={s.backBtn} onClick={() => setStep(step - 1)}>← Back</button>
           )}
           <div style={{ flex: 1 }} />
-          {step < dynamicSteps.length - 1 ? (
+          {!isLast ? (
             <button
               style={{ ...s.nextBtn, ...(!canAdvance() ? s.nextBtnDisabled : {}) }}
               onClick={() => canAdvance() && setStep(step + 1)}
               disabled={!canAdvance()}
             >
-              Next: {dynamicSteps[step + 1]} →
+              Next: {STEP_TITLES[dynamicSteps[step + 1]]} →
             </button>
           ) : (
             <button
@@ -213,11 +239,47 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
               onClick={handleConfirm}
               disabled={!canAdvance() || saving}
             >
-              {saving ? 'Saving…' : `Enter the Campaign as ${name.trim() || '…'}`}
+              {saving ? 'Saving…' : `Enter as ${name.trim() || '…'}`}
             </button>
           )}
         </div>
+
       </div>
     </div>
   );
+}
+
+// Convert gear choices to inventory items
+function buildGearInventory(gearChoices, clsData) {
+  if (!clsData) return [];
+  if (gearChoices.method === 'gold') return [];
+
+  const items = [];
+  const equipLines = clsData.startingEquipment || [];
+
+  equipLines.forEach((line, idx) => {
+    const abMatch = line.match(/^\(a\)\s*(.+?)\s+or\s+\(b\)\s*(.+)$/i);
+    if (abMatch) {
+      const choice = gearChoices.selections?.[idx];
+      const chosen = choice === 'b' ? abMatch[2] : abMatch[1];
+      items.push(...parseItemString(chosen));
+    } else {
+      items.push(...parseItemString(line));
+    }
+  });
+
+  return items;
+}
+
+function parseItemString(str) {
+  const clean = str.replace(/^(a |an |the )/i, '').trim();
+  const parts = clean.split(/,\s*and\s*|\s+and\s+|,\s+/)
+    .map(p => p.trim())
+    .filter(p => p.length > 2);
+  return parts.map(p => ({
+    name: p.charAt(0).toUpperCase() + p.slice(1),
+    type: 'equipment',
+    quantity: 1,
+    description: 'Starting equipment',
+  }));
 }
