@@ -18,7 +18,7 @@ import SummaryPanel   from './characterCreate/SummaryPanel';
 
 const SPELLCASTING_CLASSES = new Set(['Wizard','Sorcerer','Warlock','Bard','Cleric','Druid','Paladin','Ranger']);
 
-export default function CharacterCreate({ user, campaignId, onDone }) {
+export default function CharacterCreate({ user, campaignId, onDone, onCancel }) {
   const [step, setSte] = useState(0);
   const setStep = setSte;
   const [saving, setSaving] = useState(false);
@@ -154,34 +154,46 @@ export default function CharacterCreate({ user, campaignId, onDone }) {
   return (
     <div style={s.page}>
       <div style={s.card}>
-        <div style={s.header}>
-          <div style={s.headerGlyph}>⚔</div>
-          <h1 style={s.title}>Create Your Character</h1>
+        {/* Top section — header + step nav + summary (not scrollable) */}
+        <div style={s.cardTop}>
+          <div style={s.header}>
+            <div style={{ width: 80 }} /> {/* spacer to center title */}
+            <div style={s.headerCenter}>
+              <div style={s.headerGlyph}>⚔</div>
+              <h1 style={s.title}>Create Your Character</h1>
+            </div>
+            {onCancel && (
+              <button style={s.cancelBtn} onClick={onCancel}>✕ Cancel</button>
+            )}
+          </div>
+
+          <div style={s.stepNav}>
+            {dynamicSteps.map((label, i) => (
+              <button
+                key={label}
+                style={{ ...s.stepTab, ...(i === step ? s.stepTabActive : {}), ...(i < step ? s.stepTabDone : {}) }}
+                onClick={() => i < step && setStep(i)}
+                disabled={i > step}
+              >
+                {i < step ? '✓ ' : ''}{label}
+              </button>
+            ))}
+          </div>
+
+          {(race || cls) && (
+            <SummaryPanel name={name} race={race} cls={cls} background={background} finalStats={finalStats} skills={skills} />
+          )}
         </div>
 
-        <div style={s.stepNav}>
-          {dynamicSteps.map((label, i) => (
-            <button
-              key={label}
-              style={{ ...s.stepTab, ...(i === step ? s.stepTabActive : {}), ...(i < step ? s.stepTabDone : {}) }}
-              onClick={() => i < step && setStep(i)}
-              disabled={i > step}
-            >
-              {i < step ? '✓ ' : ''}{label}
-            </button>
-          ))}
+        {/* Scrollable step content */}
+        <div style={s.scrollArea}>
+          <div style={s.stepContent}>
+            {stepMap[dynamicSteps[step]]}
+          </div>
+          {error && <p style={s.errorMsg}>{error}</p>}
         </div>
 
-        {(race || cls) && (
-          <SummaryPanel name={name} race={race} cls={cls} background={background} finalStats={finalStats} skills={skills} />
-        )}
-
-        <div style={s.stepContent}>
-          {stepMap[dynamicSteps[step]]}
-        </div>
-
-        {error && <p style={s.errorMsg}>{error}</p>}
-
+        {/* Always-visible nav footer */}
         <div style={s.navRow}>
           {step > 0 && (
             <button style={s.backBtn} onClick={() => setStep(step - 1)}>← Back</button>

@@ -265,6 +265,8 @@ All D&D 5e SRD content (classes, races, spells, monsters, equipment, conditions)
 - **OpenAI TTS** — `tts-1` model with narrator voice `onyx`; NPCs get deterministic voices from `[echo, fable, alloy, nova, shimmer]` via `getNpcVoice(name)` hash; `npcVoice` stored on DM message for broadcast receivers; fallback chain: OpenAI TTS (if key) → Pollinations TTS (free, no key, same voice quality, 15s rate limit enforced client-side to preserve NPC voice quality) → Web Speech API
 - **Campaign End + Keep Playing** — When AI advances past last scene, `campaignComplete` flag triggers `CampaignEndModal`; "Keep Playing" calls `generateContinuationScenes` (Claude Haiku) to generate 3 new scenes, appends to campaign.scenes, saves to Supabase, broadcasts `append-scenes` to all clients, advances to first new scene; "Wrap Up" returns to campaign select
 - **Invite link copy button** — DM campaign card shows `📋 CODE` button; click copies full `?invite=CODE` URL to clipboard with 2s "✓ Copied!" confirmation
+- **Character creator overhaul** — Fixed-height 100vh layout so nav buttons always visible (no scrolling off-screen); added ✕ Cancel button back to game; 4d6 Drop Lowest mode now rolls 7 sets, shows all 4 dice per set (dropped die struck through in red), auto-marks lowest set as DROPPED, remaining 6 scores assigned interactively by clicking stat → clicking score; green ring on assigned stats, re-roll button resets all
+- **Demo campaign moved** — "Whispers in the Dark" demo card removed from CampaignSelect; added to CreateCampaign step 1 as a "Quick Start" card above the form with a divider; each instance is still unique per account (unique invite code + user's own dm_user_id)
 
 ## In Progress / What's Next
 Priority order:

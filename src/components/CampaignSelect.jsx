@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { DEMO_CAMPAIGN } from '../data/demoCampaign';
-import useStore from '../store/useStore';
 import { styles } from './campaignSelect/campaignSelectStyles';
 
 export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, onCreateCampaign, onSignOut, onOpenSettings }) {
@@ -11,9 +9,7 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
   const [joining, setJoining] = useState(false);
   const [joinError, setJoinError] = useState('');
   const [joinSuccess, setJoinSuccess] = useState('');
-  const [demoLoading, setDemoLoading] = useState(false);
   const [copiedCode, setCopiedCode] = useState(null); // campaign id that was just copied
-  const preGenerateSceneImages = useStore((s) => s.preGenerateSceneImages);
 
   useEffect(() => {
     fetchCampaigns();
@@ -97,39 +93,6 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
     await fetchCampaigns();
   }
 
-  async function handleTryDemo() {
-    setDemoLoading(true);
-    const inviteCode = Math.random().toString(36).substring(2, 10).toUpperCase();
-    const { data: campaign, error } = await supabase
-      .from('campaigns')
-      .insert({
-        name: DEMO_CAMPAIGN.title,
-        dm_user_id: user.id,
-        invite_code: inviteCode,
-        campaign_data: DEMO_CAMPAIGN,
-        settings: { isAiDm: true },
-      })
-      .select()
-      .single();
-
-    if (error || !campaign) {
-      setDemoLoading(false);
-      return;
-    }
-
-    await supabase.from('campaign_members').insert({
-      campaign_id: campaign.id,
-      user_id: user.id,
-      role: 'dm',
-    });
-
-    // Pre-generate scene images in the background
-    preGenerateSceneImages(campaign.id, DEMO_CAMPAIGN.scenes || []);
-
-    setDemoLoading(false);
-    onSelectCampaign({ ...campaign, userRole: 'dm' });
-  }
-
   function formatDate(iso) {
     if (!iso) return '';
     return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -174,21 +137,6 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
         </div>
         {joinError && <p style={styles.errorMsg}>{joinError}</p>}
         {joinSuccess && <p style={styles.successMsg}>✓ {joinSuccess}</p>}
-
-        {/* Demo campaign card — always visible */}
-        <button onClick={handleTryDemo} disabled={demoLoading} style={styles.demoCard}>
-          <div style={styles.demoLeft}>
-            <div style={styles.demoIcon}>🗡</div>
-            <div>
-              <div style={styles.demoTitle}>Whispers in the Dark</div>
-              <div style={styles.demoSubtitle}>A ready-to-play 4-hour one-shot · No setup required · 3–5 players</div>
-            </div>
-          </div>
-          <div style={styles.demoRight}>
-            <span style={styles.demoBadge}>DEMO</span>
-            <span style={styles.demoArrow}>{demoLoading ? '...' : '→'}</span>
-          </div>
-        </button>
 
         {/* Campaign list */}
         {loading ? (
