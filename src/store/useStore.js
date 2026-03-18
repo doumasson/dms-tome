@@ -1191,12 +1191,18 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     set({ myCharacter: updated });
     if (activeCampaign?.id && user?.id) {
       try {
-        await supabase
+        const { error, count } = await supabase
           .from('campaign_members')
-          .update({ character_data: updated })
+          .update({ character_data: updated }, { count: 'exact' })
           .eq('campaign_id', activeCampaign.id)
           .eq('user_id', user.id);
-      } catch { /* non-critical */ }
+        if (error) console.error('[updateMyCharacter] save error:', error.message, error);
+        else if (count === 0) console.warn('[updateMyCharacter] 0 rows updated — campaign_id:', activeCampaign.id, 'user_id:', user.id);
+      } catch (err) {
+        console.error('[updateMyCharacter] exception:', err);
+      }
+    } else {
+      console.warn('[updateMyCharacter] skipped — activeCampaign:', activeCampaign?.id, 'user:', user?.id);
     }
   },
 
