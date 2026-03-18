@@ -35,80 +35,154 @@ When given a bug report: just fix it. Don't ask for hand-holding. Point at logs,
 
 # DM's Tome
 
-## What Is This
-A multiplayer D&D 5e campaign management app. Users sign in with Google, create or join campaigns, and play together. DMs generate campaigns using AI prompts, then import the JSON to run sessions.
+## The Vision
+
+**DM's Tome is a real D&D 5e roleplaying game where the Dungeon Master is AI.**
+
+You and your friends sit down to play D&D — you've got your characters, your group chat, your vibe. The one thing missing is a human DM. DM's Tome fills that seat with AI. The AI narrates the story, voices NPCs, runs enemy combat, calls for skill checks, adjudicates rules, and advances the plot. The game still feels like sitting around a table with your boys — the banter, the chaos, the "wait what do I even do" moments — but the DM role is fully automated.
+
+This is not a campaign manager or a helper tool. This is a game. Players open a browser and play D&D together right now, with no extra setup and no human DM required.
+
+## Product Feel
+
+Think **Icewind Dale / Baldur's Gate meets a live D&D session.**
+
+- Top ~55% of the screen: the scene. An AI-generated image of where the party is, with draggable player tokens and enemy tokens. In combat this becomes the battle grid.
+- Bottom ~45%: the narrator chat. The scene description auto-posts when a scene loads. Players type or speak their actions. The AI DM responds, drives the story, triggers combat, calls for rolls.
+- No menus in the way. No "click here to open the DM panel." It's all on screen, all the time.
+
+## Core Design Principles
+
+1. **The AI DM runs everything.** Story narration, NPC dialogue, enemy turns, saving throw adjudication, loot drops, scene transitions — all AI. Players never need to touch a DM panel. A "DM mode" exists only for a human to optionally oversee or override.
+
+2. **Real D&D 5e rules, no shortcuts.** Classes, races, ability scores, AC, saving throws, spell slots, conditions, concentration, move speed, action economy — all enforced. Do not invent simplified mechanics. If something is in the 5e SRD, implement it correctly.
+
+3. **Action economy is sacred.** Each turn: 1 action, 1 bonus action (if applicable), movement up to speed. Dash doubles movement as an action. You cannot cast two leveled spells in one turn. You cannot attack unlimited times. The UI must physically prevent illegal actions mid-turn.
+
+4. **Spells and abilities are interactive, not buttons.** Targeting is spatial:
+   - Cone spells (Burning Hands, Thunderwave): a cone shape renders on the scene, player rotates it with the mouse, clicks to confirm. Tokens inside the cone are hit.
+   - Line spells (Lightning Bolt): a line extends from the caster, player aims it, clicks to fire.
+   - Sphere/circle (Fireball): player clicks a point on the map, sphere radius renders, confirms.
+   - Single target: player clicks an enemy token.
+   - Affected tokens are auto-highlighted before confirmation so the player knows what they're about to hit.
+
+5. **Players roll for themselves. AI rolls for enemies/NPCs.** When a roll is required, the player's chat shows a "Roll [skill/save] DC [X]" button they click to auto-roll (d20 + modifier). The AI DM calls for NPC/enemy rolls, computes them, and narrates results — players never touch enemy math.
+
+6. **Multiplayer is the default mode.** Everyone joins the same campaign via invite code. All state — token positions, combat turns, HP, conditions, narrator chat — syncs in real time via Supabase Realtime. The game works with 1–6 players. No human DM required at all.
+
+7. **Immersion first.** The scene image is always full-bleed (no white space). Tokens are on the image. The narrator chat looks like a game interface, not a chatbot. Sound (TTS narration) is on by default. Dark fantasy aesthetic throughout.
+
+## How It Works
+
+### Session Flow (no human DM needed)
+1. One player creates a campaign (fills out settings, gets a JSON prompt, pastes it to Claude to generate the campaign, imports the JSON).
+2. They share an invite code with friends.
+3. Everyone signs in, joins, picks a character.
+4. The first scene image loads. The AI narrator auto-posts the scene description and begins narrating.
+5. Players interact via the chat. The AI drives everything from here — NPCs, encounters, story beats.
+6. When combat triggers, the battle grid activates, initiative is rolled, turns proceed under full 5e rules.
+7. The story advances through scenes until the campaign ends.
+
+### Campaign Setup (for a human who wants to prep)
+- Create campaign → fill tone/theme/character slots → copy the generated prompt → paste into Claude AI to generate JSON → import JSON.
+- The human just sets the stage. Once the session starts, AI runs it.
 
 ## Tech Stack
-- React + Vite
-- Zustand (state management)
-- Supabase (auth + database)
-- Vercel (hosting)
+- React + Vite (frontend)
+- Zustand (client state)
+- Supabase (auth, PostgreSQL, Realtime broadcast)
+- Vercel (hosting, auto-deploy on push)
+- Anthropic Claude API (AI DM narrator — `claude-haiku-4-5-20251001` for speed)
+- Pollinations.ai (free scene image generation — no API key needed)
+- Web Speech API (TTS narration + push-to-talk input)
 
-## Database Tables (in Supabase)
-- profiles (id, email, name, avatar_url, created_at)
-- campaigns (id, name, dm_user_id, invite_code, campaign_data, settings, created_at, updated_at)
-- campaign_members (id, campaign_id, user_id, role [dm/player], character_data, joined_at)
+## Database Tables (Supabase)
+- `profiles` (id, email, name, avatar_url, created_at)
+- `campaigns` (id, name, dm_user_id, invite_code, campaign_data, settings, created_at, updated_at)
+- `campaign_members` (id, campaign_id, user_id, role [dm/player], character_data, joined_at)
 
-## User Flows
+## Campaign JSON Schema (what the AI generates)
+```json
+{
+  "title": "Campaign Name",
+  "scenes": [
+    {
+      "title": "Scene Title",
+      "text": "Narrative description shown to players.",
+      "dmNotes": "Private DM context.",
+      "isEncounter": true,
+      "enemies": [
+        { "name": "Goblin", "hp": 7, "ac": 15, "speed": 30,
+          "stats": { "str":8,"dex":14,"con":10,"int":10,"wis":8,"cha":8 },
+          "attacks": [{ "name": "Scimitar", "bonus": "+4", "damage": "1d6+2" }] }
+      ]
+    }
+  ]
+}
+```
 
-### DM Flow:
-1. Sign in with Google
-2. Click "Create New Campaign"
-3. Step 1: Campaign name and basic settings
-4. Step 2: Tone, themes, length
-5. Step 3: Character info
-6. Step 4: Generate prompt (copy to AI)
-7. Step 5: Upload JSON file or paste JSON
-8. Enter campaign as DM
-9. Share invite code with players
+## Built & Working
+- Google sign-in, campaign creation wizard, JSON import
+- Scene viewer (full-height AI image, draggable tokens, overlay controls)
+- AI narrator chat (always-inline, auto-narrates scenes, broadcasts to all players)
+- Combat tracker (initiative order, HP, conditions, death saves, concentration)
+- Realtime multiplayer sync via Supabase broadcast (combat state, narrator messages, scene changes)
+- Turn gating — only the active player can take actions; DM can always override
+- Character sheets, dice roller, loot generator, notes
+- Free scene image gen (Pollinations.ai, fetch+retry, blob URL)
+- API key sharing — DM's Claude key shared to all players via Supabase settings
 
-### Player Flow:
-1. Get invite code from DM
-2. Sign in with Google
-3. Enter invite code
-4. Create/upload character
-5. Join campaign
+## In Progress / What's Next
+Priority order:
 
-## Campaign JSON Import
-- Primary: Upload .json file
-- Secondary: Paste JSON text
-- Must clean AI output:
-  - Replace \[ with [
-  - Replace \] with ]
-  - Remove markdown code blocks
-  - Trim whitespace
+### 1. D&D Action Economy (HIGH)
+Every combatant gets per-turn: 1 action, 1 bonus action (if class has one), movement up to speed.
+- Track `actionsUsed`, `bonusActionsUsed`, `movementUsed` on each combatant per turn
+- Dash = action, grants extra movement equal to speed
+- UI disables action buttons once action is spent; re-enables on Next Turn
+- Disengage, Dodge, Help, Hide as valid action choices
 
-## Features Built
-- Google sign-in
-- Campaign select screen
-- Campaign creation wizard
-- Prompt generator
-- JSON import with validation
-- Dice roller
-- Combat tracker
-- Character sheets
-- Scene viewer
-- DM mode toggle
+### 2. Interactive Spell Targeting (HIGH)
+Replace the "AoE button" with real spatial targeting on the scene image.
+- Cone, line, sphere, single-target modes
+- SVG/canvas overlay renders the shape as player aims
+- Tokens inside the area are highlighted
+- On confirm: hit tokens roll saves (via chat button), AI processes enemy saves silently
 
-## Features Needed
-- Encounter generator with SRD monsters
-- Loot generator
-- Character editing locked to DM mode only
-- Invite code sharing
-- Real-time multiplayer sync
-- Better mobile responsiveness
+### 3. AI Enemy Turns (HIGH — core to no-DM play)
+When it's an enemy's turn, AI automatically:
+- Decides action (attack nearest player, cast spell, move)
+- Rolls attack/damage
+- Applies results (HP changes, conditions)
+- Narrates what happened in chat
+- Calls Next Turn
+No human input required for enemy turns.
+
+### 4. Class-Aware Action Menus (MEDIUM)
+Replace generic Attack/Spell buttons with class-specific panels:
+- Wizard/Sorcerer: spell slots, known spells, spell school tags
+- Fighter: Action Surge, Second Wind, fighting style bonuses
+- Rogue: Sneak Attack condition check, Cunning Action bonus actions
+- Cleric: Channel Divinity, spell slots, domain features
+- Ranger, Paladin, Barbarian, Bard, Druid, Monk, Warlock — each correct
+
+### 5. Conditions System (MEDIUM)
+Properly implement: Blinded, Charmed, Frightened, Grappled, Incapacitated, Invisible, Paralyzed, Petrified, Poisoned, Prone, Restrained, Stunned, Unconscious.
+Each has mechanical effects that must be enforced in combat (e.g., Prone = disadvantage on attack rolls, half movement to stand).
+
+### 6. Token Sync (MEDIUM)
+Broadcast token position changes via Supabase Realtime so all players see tokens move.
 
 ## Design Rules
-- Dark fantasy theme with gold accents
-- DM-only info has dashed red border
-- Big click targets (used at gaming table)
-- Mobile responsive
+- Dark fantasy theme, gold accents (`#d4af37`), deep brown/black backgrounds
+- No white space visible — scene image bleeds edge to edge in the top half
+- Big click targets — this is used at a table on a TV or tablet
+- DM-only info: dashed red border, `rgba(200,80,80,0.8)` label
+- Spell/ability effects: render on the scene image, not in a sidebar
+- Never break immersion with generic "button UI" for things that should feel like gameplay
 
 ## Git Workflow
-After changes run: git add . && git commit -m "Description" && git push
-Vercel auto-deploys in 30 seconds.
-
-## Future Phases
-- Phase 1 (NOW): Local DM tool with campaign import
-- Phase 2: Multiplayer online (players connect remotely)
-- Phase 3: VR tabletop
+```
+git add . && git commit -m "Description" && git push
+```
+Vercel auto-deploys in ~30 seconds.
