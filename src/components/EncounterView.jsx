@@ -8,6 +8,7 @@ import LootGenerator from './LootGenerator';
 import PartyPanel from './PartyPanel';
 import CharDetailPanel from './CharDetailPanel';
 import ActionPanel from './ActionPanel';
+import SpellTargeting from './SpellTargeting';
 import { crToXp } from '../lib/xpTable';
 import { CONDITION_INFO } from '../lib/conditionDescriptions';
 import { broadcastPlayerMove, broadcastEncounterAction } from '../lib/liveChannel';
@@ -15,6 +16,64 @@ import { broadcastPlayerMove, broadcastEncounterAction } from '../lib/liveChanne
 const MAP_W = 10;
 const MAP_H = 8;
 const CELL_PX = 52; // desktop default
+
+// ─── Combat Spell Catalog ─────────────────────────────────────────────────────
+// areaType: 'single' | 'cone' | 'sphere' | 'line'
+// save: ability key for saving throw (dex/con/wis/cha/int/str), undefined = attack roll
+// healing: true = adds HP instead of dealing damage
+const COMBAT_SPELLS = {
+  // Cantrips (level 0)
+  'Fire Bolt':        { level: 0, areaType: 'single', damage: '1d10', damageType: 'fire', range: 120 },
+  'Eldritch Blast':   { level: 0, areaType: 'single', damage: '1d10', damageType: 'force', range: 120 },
+  'Sacred Flame':     { level: 0, areaType: 'single', damage: '1d8',  damageType: 'radiant', save: 'dex', range: 60 },
+  'Toll the Dead':    { level: 0, areaType: 'single', damage: '1d12', damageType: 'necrotic', save: 'wis', range: 60 },
+  'Chill Touch':      { level: 0, areaType: 'single', damage: '1d8',  damageType: 'necrotic', range: 120 },
+  'Ray of Frost':     { level: 0, areaType: 'single', damage: '1d8',  damageType: 'cold', range: 60 },
+  'Poison Spray':     { level: 0, areaType: 'single', damage: '1d12', damageType: 'poison', save: 'con', range: 10 },
+  'Shillelagh':       { level: 0, areaType: 'single', damage: '1d8',  damageType: 'bludgeoning', range: 'touch' },
+  'Vicious Mockery':  { level: 0, areaType: 'single', damage: '1d4',  damageType: 'psychic', save: 'wis', range: 60 },
+  // Level 1
+  'Magic Missile':    { level: 1, areaType: 'single', damage: '3d4+3', damageType: 'force', noSave: true, range: 120 },
+  'Burning Hands':    { level: 1, areaType: 'cone',   areaSize: 15, damage: '3d6',  damageType: 'fire', save: 'dex' },
+  'Thunderwave':      { level: 1, areaType: 'sphere', areaSize: 15, damage: '2d8',  damageType: 'thunder', save: 'con', selfCentered: true },
+  'Witch Bolt':       { level: 1, areaType: 'single', damage: '1d12', damageType: 'lightning', range: 30 },
+  'Chromatic Orb':    { level: 1, areaType: 'single', damage: '3d8',  damageType: 'fire', range: 90 },
+  'Ice Knife':        { level: 1, areaType: 'sphere', areaSize: 5,  damage: '2d6',  damageType: 'cold', save: 'dex' },
+  'Cure Wounds':      { level: 1, areaType: 'single', damage: '1d8+3', damageType: 'healing', healing: true, range: 'touch' },
+  'Healing Word':     { level: 1, areaType: 'single', damage: '1d4+3', damageType: 'healing', healing: true, range: 60 },
+  'Hunter\'s Mark':   { level: 1, areaType: 'single', damage: '',    damageType: 'buff', concentration: true, range: 90 },
+  'Hex':              { level: 1, areaType: 'single', damage: '1d6',  damageType: 'necrotic', concentration: true, range: 90 },
+  // Level 2
+  'Shatter':          { level: 2, areaType: 'sphere', areaSize: 10, damage: '3d8',  damageType: 'thunder', save: 'con' },
+  'Scorching Ray':    { level: 2, areaType: 'single', damage: '6d6',  damageType: 'fire', range: 120 },
+  'Spiritual Weapon': { level: 2, areaType: 'single', damage: '1d8+3', damageType: 'force', range: 60 },
+  'Hold Person':      { level: 2, areaType: 'single', damage: '',    damageType: 'control', save: 'wis', concentration: true, range: 60 },
+  'Phantasmal Force': { level: 2, areaType: 'single', damage: '1d6',  damageType: 'psychic', save: 'int', concentration: true },
+  'Blindness/Deafness':{ level:2, areaType: 'single', damage: '',    damageType: 'control', save: 'con', range: 30 },
+  // Level 3
+  'Fireball':         { level: 3, areaType: 'sphere', areaSize: 20, damage: '8d6',  damageType: 'fire', save: 'dex', range: 150 },
+  'Lightning Bolt':   { level: 3, areaType: 'line',   areaSize: 100, widthFt: 5, damage: '8d6', damageType: 'lightning', save: 'dex' },
+  'Call Lightning':   { level: 3, areaType: 'sphere', areaSize: 5,  damage: '3d10', damageType: 'lightning', save: 'dex', concentration: true },
+  'Spirit Guardians': { level: 3, areaType: 'sphere', areaSize: 15, damage: '3d8',  damageType: 'radiant', save: 'wis', concentration: true, selfCentered: true },
+  'Hypnotic Pattern': { level: 3, areaType: 'sphere', areaSize: 30, damage: '',     damageType: 'control', save: 'wis', concentration: true },
+  'Mass Healing Word':{ level: 3, areaType: 'sphere', areaSize: 60, damage: '1d4+3', damageType: 'healing', healing: true },
+  // Level 4
+  'Wall of Fire':     { level: 4, areaType: 'line',   areaSize: 60, widthFt: 5, damage: '5d8', damageType: 'fire', save: 'dex', concentration: true },
+  'Banishment':       { level: 4, areaType: 'single', damage: '',    damageType: 'control', save: 'cha', concentration: true, range: 60 },
+  'Blight':           { level: 4, areaType: 'single', damage: '8d8',  damageType: 'necrotic', save: 'con', range: 30 },
+  // Level 5
+  'Cone of Cold':     { level: 5, areaType: 'cone',   areaSize: 60, damage: '8d8',  damageType: 'cold', save: 'con' },
+  'Flame Strike':     { level: 5, areaType: 'sphere', areaSize: 10, damage: '4d6+4d6', damageType: 'fire/radiant', save: 'dex' },
+  'Hold Monster':     { level: 5, areaType: 'single', damage: '',    damageType: 'control', save: 'wis', concentration: true, range: 90 },
+  'Chain Lightning':  { level: 5, areaType: 'single', damage: '10d8', damageType: 'lightning', save: 'dex', range: 150 },
+  // Level 6+
+  'Disintegrate':     { level: 6, areaType: 'single', damage: '10d6+40', damageType: 'force', save: 'dex', range: 60 },
+  'Harm':             { level: 6, areaType: 'single', damage: '14d6', damageType: 'necrotic', save: 'con', range: 60 },
+  'Heal':             { level: 6, areaType: 'single', damage: '70',   damageType: 'healing', healing: true, range: 60 },
+  'Sunbeam':          { level: 6, areaType: 'line',   areaSize: 60, widthFt: 5, damage: '6d8', damageType: 'radiant', save: 'con', concentration: true },
+  'Finger of Death':  { level: 7, areaType: 'single', damage: '7d8+30', damageType: 'necrotic', save: 'con', range: 60 },
+  'Meteor Swarm':     { level: 9, areaType: 'sphere', areaSize: 40, damage: '20d6+20d6', damageType: 'fire/bludgeoning', save: 'dex' },
+};
 
 function useWindowWidth() {
   return useSyncExternalStore(
@@ -773,6 +832,68 @@ function CombatantRow({ combatant, isActive, isSelected, colorIndex, dmMode, onS
   );
 }
 
+// ─── Spell Select Panel ───────────────────────────────────────────────────────
+
+function SpellSelectPanel({ combatant, onPick, onCancel }) {
+  const spells = combatant.spells || [];
+  const [filter, setFilter] = useState('');
+
+  // Build available spell list: character's known spells first, then all catalog spells
+  const knownNames = spells.filter(s => COMBAT_SPELLS[s]);
+  const catalogNames = Object.keys(COMBAT_SPELLS).filter(s => !knownNames.includes(s));
+  const allSpells = [...knownNames, ...catalogNames];
+
+  const filtered = filter
+    ? allSpells.filter(s => s.toLowerCase().includes(filter.toLowerCase()))
+    : allSpells;
+
+  const LEVEL_COLORS = ['#aaa', '#5b8fff', '#3498db', '#e67e22', '#e74c3c', '#9b59b6', '#1abc9c', '#e91e63', '#ff9800', '#f1c40f'];
+  const AREA_ICONS = { single: '🎯', cone: '▲', sphere: '💥', line: '—' };
+
+  return (
+    <div style={apStyle.panel}>
+      <div style={apStyle.label}>✨ Cast a Spell</div>
+      <input
+        autoFocus
+        value={filter}
+        onChange={e => setFilter(e.target.value)}
+        placeholder="Search spells…"
+        style={{ width: '100%', background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 4, padding: '5px 8px', fontSize: '0.82rem', marginBottom: 6, boxSizing: 'border-box' }}
+      />
+      <div style={{ maxHeight: 280, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {filtered.length === 0 && <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', padding: '8px 0' }}>No spells found.</div>}
+        {filtered.map(name => {
+          const def = COMBAT_SPELLS[name];
+          const isKnown = knownNames.includes(name);
+          const lvlColor = LEVEL_COLORS[Math.min(def.level, 9)];
+          return (
+            <button
+              key={name}
+              onClick={() => onPick(name)}
+              style={{
+                background: isKnown ? 'rgba(212,175,55,0.06)' : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${isKnown ? 'rgba(212,175,55,0.25)' : 'rgba(255,255,255,0.07)'}`,
+                borderRadius: 4, padding: '5px 8px', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', gap: 6, textAlign: 'left',
+              }}
+            >
+              <span style={{ fontSize: '0.9em', minWidth: 16 }}>{AREA_ICONS[def.areaType] || '✨'}</span>
+              <span style={{ flex: 1, fontSize: '0.8rem', color: isKnown ? '#d4af37' : 'var(--text-secondary)', fontWeight: isKnown ? 700 : 400 }}>{name}</span>
+              {def.damage && (
+                <span style={{ fontSize: '0.65rem', color: '#e74c3c', minWidth: 40, textAlign: 'right' }}>{def.damage}</span>
+              )}
+              <span style={{ fontSize: '0.6rem', color: lvlColor, minWidth: 20, textAlign: 'right', fontWeight: 700 }}>
+                {def.level === 0 ? 'C' : def.level}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <button onClick={onCancel} style={{ ...apStyle.cancel, marginTop: 6 }}>Cancel</button>
+    </div>
+  );
+}
+
 // ─── Initiative Phase ─────────────────────────────────────────────────────────
 
 function InitiativePhase({ combatants, onSetInitiative, onBeginCombat, onCancel }) {
@@ -850,8 +971,9 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
   const currentUser = useStore(s => s.user);
   const { combatants, currentTurn, round, log } = encounter;
   const [selectedToken, setSelectedToken] = useState(null);
-  const [panel, setPanel] = useState(null); // null | 'attack' | 'aoe' | 'save' | 'concentrate'
+  const [panel, setPanel] = useState(null); // null | 'attack' | 'aoe' | 'save' | 'concentrate' | 'spell_select' | 'spell_target'
   const [showLoot, setShowLoot] = useState(false);
+  const [activeSpell, setActiveSpell] = useState(null); // the spellDef being targeted
   const [mobileTab, setMobileTab] = useState('battle'); // 'party' | 'battle' | 'actions'
   const logRef = useRef();
   const winWidth = useWindowWidth();
@@ -964,6 +1086,74 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
     onLog(entry);
   }
 
+  // ── Spell flow ────────────────────────────────────────────────────────────
+  function handleSpellOpen(combatant, action) {
+    // If the action directly names a spell (cantrip), look it up immediately
+    const directName = action?.spellName || (action?.type === 'cantrip' ? action.label : null);
+    if (directName && COMBAT_SPELLS[directName]) {
+      const def = COMBAT_SPELLS[directName];
+      if (def.areaType === 'single') {
+        setActiveSpell({ ...def, name: directName });
+        setPanel('spell_target');
+      } else {
+        setActiveSpell({ ...def, name: directName });
+        setPanel('spell_target');
+      }
+    } else {
+      setPanel('spell_select');
+    }
+  }
+
+  function handleSpellPicked(spellName) {
+    const def = COMBAT_SPELLS[spellName] || { name: spellName, areaType: 'single', damage: '', damageType: 'unknown' };
+    setActiveSpell({ ...def, name: spellName });
+    setPanel('spell_target');
+  }
+
+  function handleSpellConfirm(hitCombatants, spellDef) {
+    const def = spellDef || activeSpell;
+    if (!def) { setPanel(null); return; }
+
+    const isHealing = def.healing;
+    const hasDamage = def.damage && def.damage !== '';
+
+    if (!hasDamage) {
+      // Utility / control spell — just log it
+      const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
+      onLog(`✨ ${activeCombatant?.name} casts ${def.name} → ${names}${def.save ? ` (${def.save.toUpperCase()} save)` : ''}`);
+      if (def.concentration) {
+        onSetConcentration(activeCombatant.id, def.name);
+      }
+    } else {
+      const rolled = rollDamage(def.damage);
+      const half = Math.floor(rolled.total / 2);
+
+      if (isHealing) {
+        hitCombatants.forEach(c => onHeal(c.id, rolled.total));
+        const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
+        onLog(`💚 ${activeCombatant?.name} casts ${def.name} → heals ${names} for ${rolled.total} HP`);
+      } else if (def.save) {
+        // Save-based: full on fail, half on success — apply full damage, note saves needed
+        hitCombatants.forEach(c => onDamage(c.id, rolled.total));
+        const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
+        const saveLabel = def.save.toUpperCase();
+        onLog(`🔥 ${activeCombatant?.name} casts ${def.name} (${def.damageType} DC${def.save ? ' ??' : ''}) → ${rolled.total} dmg [${rolled.display}] · ${names} — roll ${saveLabel} saves (½ on success)`);
+      } else {
+        // Attack roll or auto-hit
+        hitCombatants.forEach(c => onDamage(c.id, rolled.total));
+        const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
+        onLog(`✨ ${activeCombatant?.name} casts ${def.name} → ${rolled.total} ${def.damageType} dmg [${rolled.display}] → ${names}`);
+      }
+
+      if (def.concentration) {
+        onSetConcentration(activeCombatant.id, def.name);
+      }
+    }
+
+    setPanel(null);
+    setActiveSpell(null);
+  }
+
   const awardXp = useStore(s => s.awardXp);
   const [xpAwarded, setXpAwarded] = useState(false);
 
@@ -1050,6 +1240,7 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
                 ) : (
                   <>
                     <button onClick={() => setPanel('attack')} style={{ ...btn.action, background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.4)', color: '#e74c3c' }}>⚔ Attack</button>
+                    <button onClick={() => setPanel('spell_select')} style={{ ...btn.action, background: 'rgba(91,143,255,0.15)', border: '1px solid rgba(91,143,255,0.4)', color: '#5b8fff' }}>✨ Cast Spell</button>
                     {dmMode && <button onClick={() => setPanel('aoe')} style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: '1px solid rgba(155,89,182,0.4)', color: '#9b59b6' }}>💥 AoE</button>}
                     {(dmMode || activeCombatant.spells?.length > 0) && <button onClick={() => setPanel('concentrate')} style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6' }}>🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}</button>}
                     {dmMode && <button onClick={() => setPanel('save')} style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}>🎲 Save</button>}
@@ -1064,6 +1255,22 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
         {panel === 'aoe'        && <AoEPanel combatants={combatants} onApply={handleAoEApply} onCancel={() => setPanel(null)} />}
         {panel === 'save'       && <SavingThrowPanel combatants={combatants} onLog={handleLogOnly} onCancel={() => setPanel(null)} />}
         {panel === 'concentrate' && activeCombatant && <ConcentratePanel combatant={activeCombatant} dmMode={dmMode} onSet={spell => { onSetConcentration(activeCombatant.id, spell); setPanel(null); }} onClear={() => { onClearConcentration(activeCombatant.id); setPanel(null); }} onCancel={() => setPanel(null)} />}
+        {panel === 'spell_select' && activeCombatant && <SpellSelectPanel combatant={activeCombatant} onPick={handleSpellPicked} onCancel={() => setPanel(null)} />}
+        {panel === 'spell_target' && activeCombatant && activeSpell && (
+          <div style={apStyle.panel}>
+            <div style={apStyle.label}>✨ {activeSpell.name}</div>
+            <SpellTargeting
+              spell={activeSpell}
+              caster={activeCombatant}
+              combatants={combatants}
+              mapW={MAP_W}
+              mapH={MAP_H}
+              cellPx={Math.min(cellPx, 36)}
+              onConfirm={handleSpellConfirm}
+              onCancel={() => { setPanel(null); setActiveSpell(null); }}
+            />
+          </div>
+        )}
         {/* Turn order */}
         <div>
           <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginBottom: 5, fontFamily: "'Cinzel', Georgia, serif" }}>TURN ORDER</div>
@@ -1299,7 +1506,7 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
                   <ActionPanel
                     combatant={activeCombatant}
                     onAttack={() => setPanel('attack')}
-                    onSpell={(c, action) => setPanel('concentrate')}
+                    onSpell={(c, action) => handleSpellOpen(c, action)}
                     onSpecial={(c, action) => {}}
                     style={{ marginBottom: 8 }}
                   />
@@ -1364,6 +1571,45 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
             onClear={() => { onClearConcentration(activeCombatant.id); setPanel(null); }}
             onCancel={() => setPanel(null)}
           />
+        )}
+
+        {panel === 'spell_select' && activeCombatant && (
+          <SpellSelectPanel
+            combatant={activeCombatant}
+            onPick={handleSpellPicked}
+            onCancel={() => setPanel(null)}
+          />
+        )}
+
+        {panel === 'spell_target' && activeCombatant && activeSpell && (
+          <div style={apStyle.panel}>
+            <div style={{ ...apStyle.label, marginBottom: 6 }}>
+              ✨ {activeSpell.name}
+              <span style={{ marginLeft: 6, fontSize: '0.65rem', color: '#5b8fff' }}>
+                {activeSpell.areaType === 'single' ? 'Single Target' :
+                 activeSpell.areaType === 'cone' ? `Cone ${activeSpell.areaSize}ft` :
+                 activeSpell.areaType === 'sphere' ? `Sphere ${activeSpell.areaSize}ft` :
+                 `Line ${activeSpell.areaSize}ft`}
+              </span>
+            </div>
+            {activeSpell.damage && (
+              <div style={{ fontSize: '0.7rem', color: '#d4af37', marginBottom: 8 }}>
+                {activeSpell.damage} {activeSpell.damageType}
+                {activeSpell.save && ` · ${activeSpell.save.toUpperCase()} save`}
+                {activeSpell.healing && ' (healing)'}
+              </div>
+            )}
+            <SpellTargeting
+              spell={activeSpell}
+              caster={activeCombatant}
+              combatants={combatants}
+              mapW={MAP_W}
+              mapH={MAP_H}
+              cellPx={cellPx}
+              onConfirm={handleSpellConfirm}
+              onCancel={() => { setPanel(null); setActiveSpell(null); }}
+            />
+          </div>
         )}
 
         {/* Turn order */}

@@ -882,7 +882,7 @@ const useStore = create((set, get) => ({
       return { campaign: { ...state.campaign, savedEncounters } };
     }),
 
-  // === XP ===
+  // === XP & Level Up ===
   awardXp: (amount) =>
     set((state) => ({
       campaign: {
@@ -893,6 +893,28 @@ const useStore = create((set, get) => ({
         })),
       },
     })),
+
+  // Apply confirmed level-up to myCharacter + campaign characters
+  applyLevelUp: (updates) => {
+    set((state) => {
+      const myChar = state.myCharacter;
+      const updatedChar = myChar ? { ...myChar, ...updates } : myChar;
+      const updatedCampaignChars = state.campaign.characters.map(c =>
+        (c.id === myChar?.id || c.name === myChar?.name)
+          ? { ...c, ...updates }
+          : c
+      );
+      return {
+        myCharacter: updatedChar,
+        campaign: { ...state.campaign, characters: updatedCampaignChars },
+      };
+    });
+    get().saveCampaignToSupabase();
+  },
+
+  // Notify that a character is ready to level up (sets a flag watched by GameLayout)
+  pendingLevelUp: false,
+  setPendingLevelUp: (val) => set({ pendingLevelUp: val }),
 
   saveSettingsToSupabase: async (campaignState) => {
     const { activeCampaign } = get();

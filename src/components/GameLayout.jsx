@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useStore from '../store/useStore';
 import PartySidebar from './PartySidebar';
 import ScenePanel from './ScenePanel';
@@ -10,6 +10,7 @@ import NotesTab from './NotesTab';
 import CampaignImporter from './CampaignImporter';
 import ActivityLog from './ActivityLog';
 import RestModal from './RestModal';
+import LevelUpModal, { levelFromXp, xpForLevel } from './LevelUpModal';
 
 export default function GameLayout({ liveConnected, onLeave, onManage, onSettings }) {
   const encounter = useStore(s => s.encounter);
@@ -17,9 +18,22 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
   const isDM = useStore(s => s.isDM);
   const partyMembers = useStore(s => s.partyMembers);
   const myCharacter = useStore(s => s.myCharacter);
+  const applyLevelUp = useStore(s => s.applyLevelUp);
   const [toolPanel, setToolPanel] = useState(null); // null | 'dice' | 'loot' | 'notes' | 'import'
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile only
   const [restProposal, setRestProposal] = useState(null); // { type: 'short'|'long', proposedBy }
+  const [showLevelUp, setShowLevelUp] = useState(false);
+
+  // Watch for XP crossing a level threshold
+  useEffect(() => {
+    if (!myCharacter) return;
+    const xp = myCharacter.xp || 0;
+    const currentLevel = myCharacter.level || 1;
+    const earnedLevel = levelFromXp(xp);
+    if (earnedLevel > currentLevel && currentLevel < 20) {
+      setShowLevelUp(true);
+    }
+  }, [myCharacter?.xp]);
 
   const inCombat = encounter.phase !== 'idle';
 
@@ -108,6 +122,18 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
           isHost={isDM}
           onResolve={() => setRestProposal(null)}
           onCancel={() => setRestProposal(null)}
+        />
+      )}
+
+      {/* Level Up modal */}
+      {showLevelUp && myCharacter && (
+        <LevelUpModal
+          character={myCharacter}
+          onConfirm={(updates) => {
+            applyLevelUp(updates);
+            setShowLevelUp(false);
+          }}
+          onCancel={() => setShowLevelUp(false)}
         />
       )}
     </div>
