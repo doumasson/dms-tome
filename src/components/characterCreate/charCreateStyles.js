@@ -1,26 +1,55 @@
 // Shared styles for the character creation wizard.
 export const s = {
   page: {
-    minHeight: '100vh',
+    height: '100vh',
     background: 'var(--bg-primary)',
     display: 'flex',
-    alignItems: 'flex-start',
     justifyContent: 'center',
-    padding: '40px 20px 60px',
+    overflow: 'hidden',
   },
   card: {
     width: '100%',
     maxWidth: 860,
     display: 'flex',
     flexDirection: 'column',
-    gap: 24,
+    height: '100vh',
+  },
+  cardTop: {
+    flexShrink: 0,
+    padding: '20px 28px 0',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 14,
+  },
+  scrollArea: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '16px 28px',
   },
   header: {
-    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  headerCenter: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
+    flex: 1,
+  },
+  cancelBtn: {
+    background: 'transparent',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: 6,
+    color: 'rgba(200,180,140,0.45)',
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '0.72rem',
+    padding: '6px 12px',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
   },
   headerGlyph: {
     fontSize: '2.5rem',
@@ -142,7 +171,7 @@ export const s = {
     fontWeight: 600,
   },
   stepContent: {
-    minHeight: 300,
+    minHeight: 200,
   },
   stepLayout: {
     display: 'grid',
@@ -508,8 +537,10 @@ export const s = {
     display: 'flex',
     gap: 12,
     alignItems: 'center',
-    paddingTop: 8,
+    flexShrink: 0,
+    padding: '12px 28px',
     borderTop: '1px solid rgba(212,175,55,0.1)',
+    background: 'var(--bg-primary)',
   },
   backBtn: {
     background: 'transparent',

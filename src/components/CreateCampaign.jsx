@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { getClaudeApiKey, generateCampaignJSON } from '../lib/claudeApi';
+import { DEMO_CAMPAIGN } from '../data/demoCampaign';
+import useStore from '../store/useStore';
 import ApiKeySettings from './ApiKeySettings';
 
 const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
@@ -156,6 +158,8 @@ const DEFAULT_FIELDS = {
 };
 
 export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) {
+  const preGenerateSceneImages = useStore(s => s.preGenerateSceneImages);
+  const [demoLoading, setDemoLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [fields, setFields] = useState(DEFAULT_FIELDS);
   const [campaignId, setCampaignId] = useState(null);
@@ -265,6 +269,34 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     setJsonText('');
     setJsonError('');
     // Keep campaignId so we reuse the existing DB draft record instead of orphaning it
+  }
+
+  async function handleTryDemo() {
+    setDemoLoading(true);
+    const inviteCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+    const { data: campaign, error } = await supabase
+      .from('campaigns')
+      .insert({
+        name: DEMO_CAMPAIGN.title,
+        dm_user_id: user.id,
+        invite_code: inviteCode,
+        campaign_data: DEMO_CAMPAIGN,
+        settings: { isAiDm: true },
+      })
+      .select()
+      .single();
+
+    if (error || !campaign) { setDemoLoading(false); return; }
+
+    await supabase.from('campaign_members').insert({
+      campaign_id: campaign.id,
+      user_id: user.id,
+      role: 'dm',
+    });
+
+    preGenerateSceneImages(campaign.id, DEMO_CAMPAIGN.scenes || []);
+    setDemoLoading(false);
+    onDone({ ...campaign, userRole: 'dm' });
   }
 
   function handleFileUpload(e) {
@@ -397,6 +429,29 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
         {step === 1 && (
           <div style={styles.stepContent}>
             <h2 style={styles.stepTitle}>New Campaign</h2>
+
+            {/* Quick-start demo card */}
+            <button
+              onClick={handleTryDemo}
+              disabled={demoLoading}
+              style={styles.demoCard}
+            >
+              <div style={styles.demoLeft}>
+                <span style={styles.demoIcon}>🗡</span>
+                <div>
+                  <div style={styles.demoTitle}>Whispers in the Dark</div>
+                  <div style={styles.demoSubtitle}>Ready-to-play 4-hour one-shot · No setup · 3–5 players · AI Dungeon Master</div>
+                </div>
+              </div>
+              <div style={styles.demoRight}>
+                <span style={styles.demoBadge}>DEMO</span>
+                <span style={styles.demoArrow}>{demoLoading ? '...' : '→'}</span>
+              </div>
+            </button>
+
+            <div style={styles.orDivider}>
+              <span style={styles.orLine} /><span style={styles.orText}>or create your own</span><span style={styles.orLine} />
+            </div>
 
             {/* DM type choice */}
             <p style={styles.dmTypeHeading}>Who runs the game?</p>
@@ -971,5 +1026,86 @@ const styles = {
     letterSpacing: '0.04em',
     textDecoration: 'underline',
     marginTop: 4,
+  },
+  demoCard: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+    width: '100%',
+    marginBottom: 0,
+    padding: '14px 18px',
+    background: 'linear-gradient(135deg, rgba(60,30,0,0.9) 0%, rgba(40,20,0,0.9) 100%)',
+    border: '1px solid rgba(212,175,55,0.4)',
+    borderRadius: 10,
+    cursor: 'pointer',
+    textAlign: 'left',
+    boxShadow: '0 0 20px rgba(212,175,55,0.1)',
+    transition: 'border-color 0.15s',
+  },
+  demoLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    minWidth: 0,
+  },
+  demoIcon: {
+    fontSize: '1.5rem',
+    flexShrink: 0,
+    filter: 'drop-shadow(0 0 6px rgba(212,175,55,0.5))',
+  },
+  demoTitle: {
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '0.95rem',
+    fontWeight: 700,
+    color: '#d4af37',
+    letterSpacing: '0.04em',
+    marginBottom: 2,
+  },
+  demoSubtitle: {
+    fontSize: '0.72rem',
+    color: 'rgba(200,180,140,0.6)',
+    lineHeight: 1.4,
+  },
+  demoRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    flexShrink: 0,
+  },
+  demoBadge: {
+    background: 'rgba(212,175,55,0.15)',
+    border: '1px solid rgba(212,175,55,0.4)',
+    color: '#d4af37',
+    fontSize: '0.6rem',
+    fontWeight: 700,
+    padding: '2px 7px',
+    borderRadius: 4,
+    fontFamily: "'Cinzel', Georgia, serif",
+    letterSpacing: '0.1em',
+  },
+  demoArrow: {
+    color: '#d4af37',
+    fontSize: '1.1rem',
+    fontWeight: 700,
+  },
+  orDivider: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    margin: '16px 0 12px',
+  },
+  orLine: {
+    flex: 1,
+    height: 1,
+    background: 'rgba(212,175,55,0.12)',
+  },
+  orText: {
+    fontSize: '0.68rem',
+    color: 'rgba(200,180,140,0.35)',
+    fontFamily: "'Cinzel', Georgia, serif",
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   },
 };

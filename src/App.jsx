@@ -515,6 +515,7 @@ export default function App() {
         <CharacterCreate
           user={user}
           campaignId={activeCampaign?.id}
+          onCancel={() => setAppView('game')}
           onDone={async (char) => {
             setMyCharacter(char);
             // Refresh partyMembers so the new character shows immediately in the sidebar
