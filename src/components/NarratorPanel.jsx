@@ -29,9 +29,20 @@ export default function NarratorPanel() {
   const narrator         = useStore(s => s.narrator);
   const sessionApiKey    = useStore(s => s.sessionApiKey);
   const setSessionApiKey = useStore(s => s.setSessionApiKey);
-  const addNarratorMessage   = useStore(s => s.addNarratorMessage);
-  const clearNarratorHistory = useStore(s => s.clearNarratorHistory);
-  const setCurrentScene      = useStore(s => s.setCurrentScene);
+  const addNarratorMessage    = useStore(s => s.addNarratorMessage);
+  const clearNarratorHistory  = useStore(s => s.clearNarratorHistory);
+  const setCurrentScene       = useStore(s => s.setCurrentScene);
+  const pendingDmTrigger      = useStore(s => s.pendingDmTrigger);
+  const clearPendingDmTrigger = useStore(s => s.clearPendingDmTrigger);
+  const campaign          = useStore(s => s.campaign);
+  const encounter         = useStore(s => s.encounter);
+
+  const inCombat = encounter.phase !== 'idle';
+  const currentSceneName = campaign?.scenes?.[campaign?.currentSceneIndex]?.title ?? null;
+  const activeEnemyName = inCombat
+    ? encounter.combatants?.[encounter.currentTurn]?.name
+    : null;
+  const isEnemyTurn = inCombat && encounter.combatants?.[encounter.currentTurn]?.type === 'enemy';
 
   const [input, setInput]           = useState('');
   const [loading, setLoading]       = useState(false);
@@ -246,10 +257,22 @@ export default function NarratorPanel() {
     }));
   }
 
+  // ── Consume proximity interaction triggers from the scene map ────────────
+  useEffect(() => {
+    if (!pendingDmTrigger) return;
+    const text = pendingDmTrigger;
+    clearPendingDmTrigger();
+    // Small delay so any in-progress state settles first
+    const t = setTimeout(() => handleSend(text, true), 150);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingDmTrigger]);
+
   // ── Main send ─────────────────────────────────────────────────────────────
-  async function handleSend(overrideText) {
+  // worldTrigger=true bypasses the floor system (used for scene proximity interactions)
+  async function handleSend(overrideText, worldTrigger = false) {
     const text = (overrideText ?? input).trim();
-    if (!text || loading || !canSpeak) return;
+    if (!text || loading || (!worldTrigger && !canSpeak)) return;
 
     // Key priority: local key → session broadcast key → Supabase fetch
     let apiKey = getClaudeApiKey(user?.id) || sessionApiKey;
@@ -378,15 +401,27 @@ export default function NarratorPanel() {
     <div style={styles.panel}>
       {/* Header */}
       <div style={styles.header}>
-        <span style={styles.headerIcon}>{loading ? '⏳' : '🎭'}</span>
-        <span style={styles.headerTitle}>Dungeon Master</span>
+        <span style={styles.headerIcon}>{loading ? '⏳' : isEnemyTurn ? '⚔' : '🎭'}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={styles.headerTitle}>
+            Dungeon Master
+            {isEnemyTurn && !loading && (
+              <span style={{ fontSize: '0.65rem', color: '#e74c3c', marginLeft: 8, fontFamily: 'inherit', letterSpacing: 0, animation: 'goldPulse 2s infinite' }}>
+                {activeEnemyName}'s turn
+              </span>
+            )}
+          </div>
+          {currentSceneName && (
+            <div style={styles.headerScene}>📍 {currentSceneName}</div>
+          )}
+        </div>
         {heyDmMode && (
           <span style={styles.heyDmPill}>
             <span style={styles.heyDmDot} />
             Hey DM
           </span>
         )}
-        {loading && <span style={styles.thinkingLabel}>thinking…</span>}
+        {loading && <span style={styles.thinkingLabel}>narrating…</span>}
         {floorHolder && !loading && (
           <span style={{ ...styles.thinkingLabel, color: iHoldFloor ? '#2ecc71' : '#e67e22' }}>
             {floorLabel()}
@@ -406,9 +441,14 @@ export default function NarratorPanel() {
         )}
         {narrator.history.map((msg, i) => (
           <div key={msg.id || i} style={msg.role === 'dm' ? styles.dmBubble : styles.playerBubble}>
-            <span style={msg.role === 'dm' ? styles.dmLabel : styles.playerLabel}>
-              {msg.role === 'dm' ? '🎲 Dungeon Master' : `⚔ ${msg.speaker}`}
-            </span>
+            {msg.role === 'dm' ? (
+              // Only show DM label when preceded by a player message (avoids repetition)
+              (i === 0 || narrator.history[i - 1]?.role !== 'dm') && (
+                <span style={styles.dmLabel}>The Dungeon Master</span>
+              )
+            ) : (
+              <span style={styles.playerLabel}>⚔ {msg.speaker}</span>
+            )}
             <p style={styles.bubbleText}>{msg.text}</p>
             {msg.rollRequest && (
               <button
@@ -416,20 +456,25 @@ export default function NarratorPanel() {
                 onClick={() => handleRollRequest(msg.rollRequest)}
               >
                 <span style={styles.rollBtnIcon}>🎲</span>
-                <span style={styles.rollBtnText}>
-                  <strong>{msg.rollRequest.character || 'Player'}</strong>
-                  {' — Roll '}<strong>{msg.rollRequest.skill}</strong>
-                  {' vs DC '}<strong>{msg.rollRequest.dc}</strong>
-                </span>
-                <span style={styles.rollBtnCta}>Roll Now →</span>
+                <div style={styles.rollBtnText}>
+                  <div style={{ fontSize: '0.75rem', color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 2 }}>
+                    {msg.rollRequest.skill} Check — DC {msg.rollRequest.dc}
+                  </div>
+                  <div style={{ fontSize: '0.82rem', color: '#e8dcc8' }}>
+                    {msg.rollRequest.character || 'Your character'} must roll
+                  </div>
+                </div>
+                <div style={styles.rollBtnCta}>
+                  <div style={{ fontSize: '1.4rem' }}>🎲</div>
+                  <div style={{ fontSize: '0.7rem' }}>Roll</div>
+                </div>
               </button>
             )}
           </div>
         ))}
         {loading && (
           <div style={styles.dmBubble}>
-            <span style={styles.dmLabel}>🎲 Dungeon Master</span>
-            <p style={{ ...styles.bubbleText, opacity: 0.45 }}>• • •</p>
+            <p style={{ ...styles.bubbleText, opacity: 0.4, fontStyle: 'italic' }}>The Dungeon Master stirs…</p>
           </div>
         )}
       </div>
@@ -522,13 +567,20 @@ const styles = {
   },
   header: {
     display: 'flex', alignItems: 'center', gap: 10,
-    padding: '0 16px', height: 42, flexShrink: 0,
-    borderBottom: '1px solid rgba(212,175,55,0.1)',
+    padding: '0 14px', minHeight: 42, flexShrink: 0,
+    borderBottom: '1px solid rgba(212,175,55,0.12)',
+    paddingTop: 5, paddingBottom: 5,
   },
   headerIcon: { fontSize: '1rem', flexShrink: 0 },
   headerTitle: {
     fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700,
-    fontSize: '0.88rem', color: '#d4af37', letterSpacing: '0.06em', flex: 1,
+    fontSize: '0.82rem', color: '#d4af37', letterSpacing: '0.06em',
+    lineHeight: 1.2,
+  },
+  headerScene: {
+    fontSize: '0.6rem', color: 'rgba(200,180,140,0.45)',
+    letterSpacing: '0.04em', marginTop: 1,
+    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
   },
   heyDmPill: {
     display: 'flex', alignItems: 'center', gap: 5,
@@ -548,42 +600,48 @@ const styles = {
     display: 'flex', flexDirection: 'column', gap: 10,
   },
   emptyHint: {
-    color: 'rgba(200,180,140,0.4)', fontSize: '0.82rem',
-    fontStyle: 'italic', textAlign: 'center', margin: 'auto 0', lineHeight: 1.6,
+    color: 'rgba(200,180,140,0.35)', fontSize: '0.82rem',
+    fontStyle: 'italic', textAlign: 'center', margin: 'auto 0', lineHeight: 1.7,
   },
+  // DM messages: narrative text block with left accent, no chat bubble
   dmBubble: {
-    background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.18)',
-    borderRadius: '4px 12px 12px 12px', padding: '10px 14px',
-    maxWidth: '85%', alignSelf: 'flex-start',
+    borderLeft: '3px solid rgba(212,175,55,0.35)',
+    background: 'rgba(212,175,55,0.03)',
+    padding: '8px 14px',
+    alignSelf: 'stretch',
   },
+  // Player messages: compact right-aligned bubble
   playerBubble: {
-    background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: '12px 4px 12px 12px', padding: '8px 14px',
-    maxWidth: '75%', alignSelf: 'flex-end',
+    background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)',
+    borderRadius: '10px 2px 10px 10px', padding: '7px 12px',
+    maxWidth: '70%', alignSelf: 'flex-end',
   },
   dmLabel: {
-    display: 'block', color: '#d4af37', fontSize: '0.7rem',
+    display: 'block', color: 'rgba(212,175,55,0.55)', fontSize: '0.62rem',
     fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700,
-    letterSpacing: '0.05em', marginBottom: 5,
+    letterSpacing: '0.08em', marginBottom: 6, textTransform: 'uppercase',
   },
   playerLabel: {
-    display: 'block', color: 'rgba(200,180,140,0.6)', fontSize: '0.7rem',
+    display: 'block', color: 'rgba(200,180,140,0.5)', fontSize: '0.65rem',
     fontFamily: "'Cinzel', Georgia, serif", fontWeight: 600,
     letterSpacing: '0.05em', marginBottom: 4, textAlign: 'right',
   },
-  bubbleText: { margin: 0, color: '#e8dcc8', fontSize: '0.88rem', lineHeight: 1.55 },
+  bubbleText: { margin: 0, color: '#e8dcc8', fontSize: '0.9rem', lineHeight: 1.65 },
+  // Roll request: large, obvious game button
   rollBtn: {
-    display: 'flex', alignItems: 'center', gap: 10,
-    marginTop: 10, padding: '10px 14px', width: '100%',
-    background: 'linear-gradient(135deg, rgba(212,175,55,0.14), rgba(212,175,55,0.07))',
-    border: '2px solid rgba(212,175,55,0.5)', borderRadius: 8,
-    cursor: 'pointer', textAlign: 'left', animation: 'goldPulse 2s infinite',
+    display: 'flex', alignItems: 'center', gap: 14,
+    marginTop: 12, padding: '12px 16px', width: '100%',
+    background: 'linear-gradient(135deg, rgba(212,175,55,0.12), rgba(212,175,55,0.05))',
+    border: '1px solid rgba(212,175,55,0.5)', borderRadius: 6,
+    cursor: 'pointer', textAlign: 'left', animation: 'goldPulse 2.2s infinite',
   },
-  rollBtnIcon: { fontSize: '1.4rem', flexShrink: 0 },
-  rollBtnText: { flex: 1, color: '#e8dcc8', fontSize: '0.88rem', lineHeight: 1.4 },
+  rollBtnIcon: { display: 'none' }, // replaced inline
+  rollBtnText: { flex: 1, lineHeight: 1.4 },
   rollBtnCta: {
+    display: 'flex', flexDirection: 'column', alignItems: 'center',
     color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif",
-    fontWeight: 700, fontSize: '0.78rem', flexShrink: 0, letterSpacing: '0.04em',
+    fontWeight: 700, fontSize: '0.72rem', flexShrink: 0, letterSpacing: '0.04em',
+    gap: 2,
   },
   floorBanner: {
     background: 'rgba(230,126,34,0.1)', border: '1px solid rgba(230,126,34,0.3)',

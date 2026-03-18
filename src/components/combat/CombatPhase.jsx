@@ -45,6 +45,12 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const activeCombatant = combatants[currentTurn] || null;
   const { runEnemyTurn, sessionApiKey } = useStore();
 
+  // Use the campaign scene image as the battle map background
+  const sceneImages    = useStore(s => s.sceneImages);
+  const activeCampaign = useStore(s => s.activeCampaign);
+  const campaignState  = useStore(s => s.campaign);
+  const battleSceneUrl = sceneImages[`${activeCampaign?.id}:${campaignState.currentSceneIndex}`] || null;
+
   const isMyTurn = !!(activeCombatant && myCharacter && (
     activeCombatant.id === myCharacter.id || activeCombatant.name === myCharacter.name
   ));
@@ -333,7 +339,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           )}
         </div>
         <div style={{ overflowX: 'auto' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} />
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
         </div>
         <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 3 }}>
           {activeCombatant ? (
@@ -490,7 +496,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
         </div>
 
         <div style={{ overflowX: 'auto' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} />
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
         </div>
 
         <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 3 }}>
@@ -518,10 +524,35 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       <div style={{ width: isTablet ? 220 : 250, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto', maxHeight: 'calc(55vh - 20px)' }}>
         {panel === null && activeCombatant && (() => {
           if (isEnemy && activeCombatant.currentHp > 0) return (
-            <div style={{ background: '#1a1006', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 8, padding: 10 }}>
-              <div style={{ fontSize: '0.75rem', color: '#e74c3c', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 4 }}>ENEMY TURN — {activeCombatant.name}</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: 8 }}>{dmMode ? 'Deciding…' : 'Waiting for enemy…'}</div>
-              {dmMode && <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>➜ Skip (Force Next)</button>}
+            <div style={{ background: 'linear-gradient(180deg, #1e0a07, #150602)', border: '1px solid rgba(192,57,43,0.5)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
+              {/* Enemy token portrait or initial */}
+              <div style={{
+                width: 48, height: 48, borderRadius: '50%',
+                background: activeCombatant.portrait ? 'transparent' : 'rgba(192,57,43,0.2)',
+                border: '2px solid rgba(192,57,43,0.6)',
+                margin: '0 auto 10px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                overflow: 'hidden',
+                boxShadow: '0 0 20px rgba(192,57,43,0.3)',
+                animation: 'goldPulse 2s infinite',
+              }}>
+                {activeCombatant.portrait
+                  ? <img src={activeCombatant.portrait} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} alt="" />
+                  : <span style={{ fontSize: '1.2rem', color: '#e74c3c', fontWeight: 700 }}>{activeCombatant.name[0]}</span>
+                }
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'rgba(231,76,60,0.6)', fontFamily: "'Cinzel', Georgia, serif", letterSpacing: '0.12em', marginBottom: 4, textTransform: 'uppercase' }}>Enemy</div>
+              <div style={{ fontSize: '0.82rem', color: '#e74c3c', fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700, marginBottom: 10 }}>{activeCombatant.name}</div>
+              {/* HP bar */}
+              {activeCombatant.maxHp > 0 && (
+                <div style={{ width: '100%', height: 4, background: '#2a0a06', borderRadius: 2, marginBottom: 10 }}>
+                  <div style={{ width: `${Math.max(0, activeCombatant.currentHp / activeCombatant.maxHp) * 100}%`, height: '100%', background: '#e74c3c', borderRadius: 2, transition: 'width 0.4s' }} />
+                </div>
+              )}
+              <div style={{ fontSize: '0.68rem', color: 'rgba(231,76,60,0.7)', fontStyle: 'italic', marginBottom: 10, animation: 'goldPulse 1.8s infinite' }}>
+                {dmMode ? 'plotting its move…' : 'The enemy acts…'}
+              </div>
+              {dmMode && <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71', fontSize: '0.72rem' }}>➜ Skip Turn</button>}
             </div>
           );
 
