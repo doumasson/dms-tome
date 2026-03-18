@@ -1,69 +1,42 @@
-# Session Plan — 2026-03-18
+# Plan: Scene Transitions + NPC JSON + Saving Throw Broadcast + Procedural Map
 
-## Features to Build
+## Features
 
-### 1. Fix concentration auto-clear [TRIVIAL]
-- `applyEncounterDamage` logs "BROKEN" but doesn't clear concentration
-- Fix: when `pass === false`, call clearConcentration(targetId) and broadcast
+### 1. Scene Transitions
+Crossfade between old/new scene images instead of instant swap.
+- Keep prevImageUrl ref; when new image loads → fade old out, new in (~800ms)
+- Two absolutely-positioned img layers (old z:0, new z:1), SceneTitleCard stays z:2
+- Files: ScenePanel.jsx only
 
-### 2. Campaign In-App Generator [MEDIUM]
-- Add "✨ Generate with AI" button in CampaignImporter
-- Inline form: title, tone, # scenes
-- Calls Claude Haiku with structured prompt → auto-validates → auto-loads
-- No copy/paste required
+### 2. NPC Defined in Campaign JSON
+Named NPCs as stationary tokens on scene map with individual personalities.
+- Campaign JSON: scene.npcs[{ name, x, y, personality, portrait }] (x/y as 0-1 fractions)
+- Render NPC tokens (colored circle + name initial) on scene
+- Interaction zones at each NPC position; zone prompt includes NPC name + personality for DM context
+- Falls back to existing generic Explore zone if no scene.npcs
+- Files: ScenePanel.jsx + new NpcToken.jsx (~60 lines)
 
-### 3. 60-Second Player Turn Timer [MEDIUM]  
-- Add countdown timer in CombatPhase when it's a player's turn
-- Visual ring/bar with time remaining
-- Auto-end turn at 0 (with broadcast to other clients)
-- Only applies to player turns, not enemy turns
+### 3. Saving Throw Broadcast
+When DM rolls saves, all players see results as a narrator message.
+- After rolling in SavingThrowPanel, call broadcastNarratorMessage with formatted results
+- Format: "DEX Save (DC 14) — Goblin: FAIL (8), Orc: PASS (16)"
+- Add onNarrate prop to SavingThrowPanel; CombatPhase passes broadcast + chat add
+- Files: SpellPanels.jsx, CombatPhase.jsx
 
-### 4. Short Rest Hit Dice UI [MEDIUM]
-- RestModal currently calls shortRest() which only restores class resources, not HP
-- Add per-character hit dice spending step after vote resolves
-- Show hit die type (d6/d8/d10/d12) per class, remaining count
-- Roll button: d[hitDie] + CON mod → add to HP (cannot exceed maxHp)
-- Update shortRest() to accept and apply HP recovery + track hit dice used
+### 4. Procedural Map Generator (JavaScript)
+Generate dungeon/town layouts that AI DM knows about spatially.
+- BSP algorithm in src/lib/mapGenerator.js → rooms + corridors grid data
+- Text description of map fed into DM system prompt context
+- SVG room outline overlay on scene (DM toggle)
+- NPCs/enemies default to room centers if x/y not specified
+- Files: src/lib/mapGenerator.js (new), src/components/MapOverlay.jsx (new)
 
-### 5. Cantrip Gain on Level-Up [SMALL]
-- Cantrip gains per class at specific levels:
-  - Wizard: lvl 4 (+1), lvl 10 (+1) — total 5 cantrips
-  - Sorcerer: lvl 4 (+1), lvl 10 (+1) — total 6 cantrips
-  - Warlock: lvl 4 (+1), lvl 10 (+1) — total 4 cantrips
-  - Bard: lvl 4 (+1), lvl 10 (+1) — total 4 cantrips
-  - Cleric: lvl 4 (+1), lvl 10 (+1) — total 5 cantrips
-  - Druid: lvl 4 (+1), lvl 10 (+1) — total 4 cantrips
-- Add `CANTRIP_GAINS` table to SpellPickPanel
-- If current level-up grants a cantrip, add cantrip pick step in LevelUpModal
+### 5. Nano Banana Integration
+PENDING — need service URL/API docs from user's brother's account.
 
-### 6. Portable Characters + Profile [LARGE]
-Requires TWO parts:
-  
-**Part A — DB Migration (user must run in Supabase SQL Editor)**
-- migration SQL already exists at supabase/migrations/001_character_portability.sql
-- BUG in migration: campaigns.dm_user_id → fix to host_user_id
-- User runs it once in Supabase dashboard
-
-**Part B — Frontend**
-- CharacterCreate.jsx: save to `characters` table (not just campaign_members)
-- Load user's characters from `characters` table on sign-in
-- Pre-game "My Characters" screen: shows owned chars, lets user pick one or create new
-- CharacterSelect.jsx: lobby screen shown when joining a campaign without a character
-- `characters` Zustand slice: myCharacters[], loadMyCharacters(), saveCharacter()
-- Campaign join flow: pick existing character OR create new
-
-## Free-form DM Prompting — Already Built ✓
-Players can already type any creative action in the narrator chat at any time.
-During combat, just type in the chat: "I grab the chandelier chain and swing at the goblin"
-→ DM AI processes it as a narrative action and responds.
-The floor system (click to claim the floor) prevents two players from talking at once.
-No additional build needed — just confirm to user in response.
-
-## Order of Execution
-1. Concentration auto-clear (5 min)
-2. Cantrip level-up (30 min)
-3. 60-second turn timer (45 min)
-4. Short rest hit dice (60 min)
-5. Campaign in-app generator (60 min)
-6. Portable characters — Part A: fix migration SQL + give user instructions
-7. Portable characters — Part B: frontend (largest, ~2 hrs)
+## Order
+- [ ] Feature 1: Scene Transitions
+- [ ] Feature 2: NPC tokens
+- [ ] Feature 3: Saving throw broadcast
+- [ ] Feature 4: Procedural map
+- [ ] Commit + push + update CLAUDE.md

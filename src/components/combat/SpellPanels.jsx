@@ -7,7 +7,7 @@ const DAMAGE_TYPES = ['Fire', 'Cold', 'Lightning', 'Thunder', 'Acid', 'Poison', 
 
 // ─── Saving Throw Panel ───────────────────────────────────────────────────────
 
-export function SavingThrowPanel({ combatants, onLog, onCancel }) {
+export function SavingThrowPanel({ combatants, onLog, onNarrate, onCancel }) {
   const [ability, setAbility] = useState('dex');
   const [dc, setDc] = useState(14);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -37,6 +37,16 @@ export function SavingThrowPanel({ combatants, onLog, onCancel }) {
     onLog(`Save (${SAVE_NAMES[ability]} DC ${dc}): ` + res.map(r =>
       `${r.name} ${r.pass ? '✓' : '✗'}(${r.autoFail ? 'auto-fail' : r.total})`
     ).join(', '));
+
+    if (onNarrate) {
+      const passed = res.filter(r => r.pass).map(r => r.name);
+      const failed = res.filter(r => !r.pass).map(r => r.name);
+      const parts = [];
+      if (passed.length) parts.push(`Passed: ${passed.join(', ')}`);
+      if (failed.length) parts.push(`Failed: ${failed.join(', ')}`);
+      onNarrate(`[${SAVE_NAMES[ability]} Save DC ${dc}] ${parts.join(' | ')}`);
+    }
+
     setResults(res);
   }
 

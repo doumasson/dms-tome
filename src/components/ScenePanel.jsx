@@ -4,6 +4,7 @@ import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib
 import { broadcastFogReveal, broadcastFogToggle, broadcastSceneTokenMove } from '../lib/liveChannel';
 import SceneTitleCard from './SceneTitleCard';
 import InteractionZone from './InteractionZone';
+import NpcToken from './NpcToken';
 
 // Fog grid dimensions (cols × rows)
 const FOG_COLS = 12;
@@ -48,6 +49,12 @@ export default function ScenePanel() {
   const [imgError, setImgError]     = useState(false);
   const [imgReady, setImgReady]     = useState(false);
   const [imgAttempt, setImgAttempt] = useState(0);
+
+  // Crossfade state
+  const [prevImageUrl, setPrevImageUrl] = useState(null);
+  const [crossfading, setCrossfading]   = useState(false);
+  const crossfadeTimer   = useRef(null);
+  const prevSceneKeyRef  = useRef(null);
 
   // Draggable tokens — local state while dragging, synced to store on drop
   const [localPositions, setLocalPositions] = useState({});
@@ -99,6 +106,19 @@ export default function ScenePanel() {
     setImgError(false);
     setImgAttempt(0);
   }, [idx, activeCampaign?.id]);
+
+  // Capture outgoing image URL for crossfade when scene changes
+  useEffect(() => {
+    if (prevSceneKeyRef.current && prevSceneKeyRef.current !== imageKey) {
+      const outgoing = sceneImages[prevSceneKeyRef.current];
+      if (outgoing) {
+        clearTimeout(crossfadeTimer.current);
+        setPrevImageUrl(outgoing);
+        setCrossfading(false);
+      }
+    }
+    prevSceneKeyRef.current = imageKey;
+  }, [imageKey]);
 
   // Generate scene image
   useEffect(() => {
@@ -190,10 +210,19 @@ export default function ScenePanel() {
   }
 
   // ── NPC Proximity interaction zones ─────────────────────────────────────────
-  // Default: one "Explore" zone at center. Scenes can override with interactionPoints[].
-  const interactionZones = scene?.interactionPoints || (scene ? [
-    { id: 'explore', x: 50, y: 38, label: scene.title },
-  ] : []);
+  // If scene defines npcs[], use them as named interaction zones.
+  // Otherwise fall back to scene.interactionPoints[], or a single generic Explore zone.
+  const interactionZones = scene?.npcs?.length > 0
+    ? scene.npcs.map(npc => ({
+        id: `npc-${npc.name}`,
+        x: (npc.x ?? 0.5) * 100,
+        y: (npc.y ?? 0.38) * 100,
+        label: npc.name,
+        prompt: `You approach ${npc.name}. ${npc.personality || ''}`.trim(),
+      }))
+    : (scene?.interactionPoints || (scene ? [
+        { id: 'explore', x: 50, y: 38, label: scene.title },
+      ] : []));
 
   // Find zones a party member is within 20% of
   const nearbyZones = interactionZones.filter(zone =>
@@ -253,12 +282,31 @@ export default function ScenePanel() {
           </div>
         )}
 
+        {/* Previous scene image — fades out during crossfade */}
+        {prevImageUrl && (
+          <img
+            src={prevImageUrl}
+            alt="previous scene"
+            style={{ ...styles.sceneImage, ...styles.sceneImageLayer, zIndex: 1, opacity: crossfading ? 0 : 1 }}
+          />
+        )}
+
+        {/* Current scene image — fades in when ready */}
         {imageUrl && !imgError && (
           <img
             src={imageUrl}
             alt={scene.title}
-            style={{ ...styles.sceneImage, opacity: imgReady ? 1 : 0 }}
-            onLoad={() => { setImgReady(true); setImgLoading(false); }}
+            style={{ ...styles.sceneImage, ...styles.sceneImageLayer, zIndex: 2, opacity: imgReady ? 1 : 0 }}
+            onLoad={() => {
+              setImgReady(true);
+              setImgLoading(false);
+              setCrossfading(true);
+              clearTimeout(crossfadeTimer.current);
+              crossfadeTimer.current = setTimeout(() => {
+                setPrevImageUrl(null);
+                setCrossfading(false);
+              }, 900);
+            }}
             onError={() => { setImgError(true); setImgLoading(false); }}
           />
         )}
@@ -368,6 +416,11 @@ export default function ScenePanel() {
           </div>
         )}
 
+        {/* NPC tokens — stationary, defined in scene.npcs[] */}
+        {imgReady && scene?.npcs?.map(npc => (
+          <NpcToken key={npc.name} npc={npc} />
+        ))}
+
         {/* Draggable player tokens */}
         {partyMembers.map((member, i) => {
           const memberId = member.id || member.name;
@@ -418,7 +471,15 @@ const styles = {
     height: '100%',
     objectFit: 'cover',
     display: 'block',
-    transition: 'opacity 0.5s ease',
+    transition: 'opacity 0.8s ease',
+  },
+  // Applied on top of sceneImage when two layers are needed for crossfade
+  sceneImageLayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   imageSkeleton: {
     position: 'absolute',

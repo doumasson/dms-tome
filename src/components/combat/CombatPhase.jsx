@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useSyncExternalStore } from 'react';
 import useStore from '../../store/useStore';
 import { rollDamage } from '../../lib/dice';
 import { crToXp } from '../../lib/xpTable';
-import { broadcastPlayerMove } from '../../lib/liveChannel';
+import { broadcastPlayerMove, broadcastNarratorMessage } from '../../lib/liveChannel';
 import { COMBAT_SPELLS } from '../../lib/combatSpells';
 import PartyPanel from '../PartyPanel';
 import CharDetailPanel from '../CharDetailPanel';
@@ -44,7 +44,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const cellPx = getCellPx(winWidth);
 
   const activeCombatant = combatants[currentTurn] || null;
-  const { runEnemyTurn, sessionApiKey, narrateCombatAction } = useStore();
+  const { runEnemyTurn, sessionApiKey, narrateCombatAction, addNarratorMessage } = useStore();
 
   // Use the campaign scene image as the battle map background
   const sceneImages    = useStore(s => s.sceneImages);
@@ -194,6 +194,12 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
 
   function handleLogOnly(entry) { onLog(entry); }
 
+  function handleNarrate(text) {
+    const msg = { role: 'dm', speaker: 'Dungeon Master', text, id: crypto.randomUUID(), timestamp: Date.now() };
+    addNarratorMessage(msg);
+    broadcastNarratorMessage(msg);
+  }
+
   function handleSpellOpen(combatant, action) {
     const directName = action?.spellName || (action?.type === 'cantrip' ? action.label : null);
     if (directName && COMBAT_SPELLS[directName]) {
@@ -270,7 +276,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     <>
       {panel === 'attack'      && activeCombatant && <AttackPanel attacker={activeCombatant} combatants={combatants} onResolve={handleAttackResolve} onCancel={() => setPanel(null)} />}
       {panel === 'aoe'         && <AoEPanel combatants={combatants} onApply={handleAoEApply} onCancel={() => setPanel(null)} />}
-      {panel === 'save'        && <SavingThrowPanel combatants={combatants} onLog={handleLogOnly} onCancel={() => setPanel(null)} />}
+      {panel === 'save'        && <SavingThrowPanel combatants={combatants} onLog={handleLogOnly} onNarrate={handleNarrate} onCancel={() => setPanel(null)} />}
       {panel === 'concentrate' && activeCombatant && <ConcentratePanel combatant={activeCombatant} dmMode={dmMode} onSet={spell => { onSetConcentration(activeCombatant.id, spell); setPanel(null); }} onClear={() => { onClearConcentration(activeCombatant.id); setPanel(null); }} onCancel={() => setPanel(null)} />}
       {panel === 'spell_select' && activeCombatant && <SpellSelectPanel combatant={activeCombatant} onPick={handleSpellPicked} onCancel={() => setPanel(null)} />}
       {panel === 'spell_target' && activeCombatant && activeSpell && (
