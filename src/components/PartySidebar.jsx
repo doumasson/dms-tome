@@ -55,7 +55,7 @@ const CONDITION_COLORS = {
   Exhausted: '#ff9800',
 };
 
-export default function PartySidebar({ onTool, onManage, onLeave, onSettings, onRest, liveConnected }) {
+export default function PartySidebar({ onTool, onManage, onLeave, onSettings, onRest, onOpenSheet, liveConnected }) {
   const encounter    = useStore(s => s.encounter);
   const isDM         = useStore(s => s.isDM);
   const dmMode       = useStore(s => s.dmMode);
@@ -119,7 +119,13 @@ export default function PartySidebar({ onTool, onManage, onLeave, onSettings, on
               onClick={() => setExpandedId(isExpanded ? null : char.id)}
             >
               <div style={styles.charRow}>
-                <img src={avatarUrl} alt="" style={styles.charAvatar} />
+                <img
+                  src={avatarUrl}
+                  alt=""
+                  style={{ ...styles.charAvatar, cursor: onOpenSheet ? 'pointer' : 'default' }}
+                  onClick={e => { if (onOpenSheet) { e.stopPropagation(); onOpenSheet(char); } }}
+                  title={onOpenSheet ? `View ${char.name}'s character sheet` : undefined}
+                />
                 <div style={styles.charInfo}>
                   <span style={styles.charName}>{char.name}</span>
                   <span style={styles.charSubtitle}>

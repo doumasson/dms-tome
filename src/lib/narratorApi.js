@@ -1,4 +1,39 @@
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
+
+// ── Rules Assistant ──────────────────────────────────────────────────────────
+
+export async function askRulesQuestion(question, srdContext, apiKey) {
+  const system = `You are a D&D 5e rules expert. Answer the player's question accurately and concisely using the 5th Edition SRD.
+- Be direct and clear — 2 to 5 sentences max unless a table or list helps
+- Cite the relevant rule or mechanic name (e.g. "Per the Grappled condition…")
+- If the question is about a specific spell/item, use the provided SRD excerpt
+- Never invent rules — if it's not in the SRD, say so
+${srdContext ? `\n## Relevant SRD Reference\n${srdContext}` : ''}`;
+
+  const response = await fetch(CLAUDE_API_URL, {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: NARRATOR_MODEL,
+      max_tokens: 512,
+      system,
+      messages: [{ role: 'user', content: question }],
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.content[0].text.trim();
+}
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
 export function buildSystemPrompt(campaignData, partyMembers, currentScene, exchangeCount) {

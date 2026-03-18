@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
 import { triggerEnemyTurn } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
+import { computeAcFromEquipped } from '../data/equipment';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -756,12 +757,18 @@ const useStore = create((set, get) => ({
         broadcastNarratorMessage(msg);
       }
 
-      // If all enemies are now dead, trigger a victory narration after combat resolves
+      // If all enemies are now dead, trigger a victory narration and loot screen
       const afterEncounter = get().encounter;
       const allEnemiesDead = afterEncounter.combatants.every(
         c => c.type !== 'enemy' || c.currentHp <= 0
       );
       if (allEnemiesDead) {
+        // Collect dead enemies for loot calculation
+        const deadEnemies = afterEncounter.combatants.filter(c => c.type === 'enemy');
+        const partySize = afterEncounter.combatants.filter(c => c.type === 'player').length || 1;
+        if (deadEnemies.length > 0 && !get().pendingLoot) {
+          get().setPendingLoot({ enemies: deadEnemies, partySize });
+        }
         setTimeout(() => {
           get().setPendingDmTrigger(
             'The battle is over. Describe the aftermath as the party catches their breath and surveys the scene.'
@@ -1002,6 +1009,154 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
   // Notify that a character is ready to level up (sets a flag watched by GameLayout)
   pendingLevelUp: false,
   setPendingLevelUp: (val) => set({ pendingLevelUp: val }),
+
+  // Post-combat loot screen trigger
+  pendingLoot: null, // { enemies: [...], partySize: n } | null
+  setPendingLoot: (val) => set({ pendingLoot: val }),
+
+  // === Inventory / Equipment / Gold / XP ====================================
+
+  // Save myCharacter changes to store + Supabase campaign_members
+  updateMyCharacter: async (changes) => {
+    const { myCharacter, activeCampaign, user } = get();
+    if (!myCharacter) return;
+    const updated = { ...myCharacter, ...changes };
+    set({ myCharacter: updated });
+    if (activeCampaign?.id && user?.id) {
+      try {
+        await supabase
+          .from('campaign_members')
+          .update({ character_data: updated })
+          .eq('campaign_id', activeCampaign.id)
+          .eq('user_id', user.id);
+      } catch { /* non-critical */ }
+    }
+  },
+
+  // Equip an item from inventory into a named slot; old item returns to inventory
+  equipItem: (slotName, item) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    const equippedItems = { ...(myCharacter.equippedItems || {}) };
+    const inventory = [...(myCharacter.inventory || [])];
+    // Return currently equipped item to inventory
+    if (equippedItems[slotName]) {
+      inventory.push({ ...equippedItems[slotName], instanceId: crypto.randomUUID() });
+    }
+    // Remove the item being equipped from inventory
+    const idx = inventory.findIndex(i => i.instanceId === item.instanceId);
+    if (idx !== -1) inventory.splice(idx, 1);
+    equippedItems[slotName] = item;
+    // Recalc AC whenever chest/offHand changes
+    let updates = { equippedItems, inventory };
+    if (slotName === 'chest' || slotName === 'offHand') {
+      // computeAcFromEquipped imported at top
+      updates.ac = computeAcFromEquipped(equippedItems, myCharacter.stats);
+    }
+    get().updateMyCharacter(updates);
+  },
+
+  // Move equipped item back to inventory
+  unequipItem: (slotName) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    const equippedItems = { ...(myCharacter.equippedItems || {}) };
+    const item = equippedItems[slotName];
+    if (!item) return;
+    const inventory = [...(myCharacter.inventory || []), { ...item, instanceId: crypto.randomUUID() }];
+    equippedItems[slotName] = null;
+    let updates = { equippedItems, inventory };
+    if (slotName === 'chest' || slotName === 'offHand') {
+      // computeAcFromEquipped imported at top
+      updates.ac = computeAcFromEquipped(equippedItems, myCharacter.stats);
+    }
+    get().updateMyCharacter(updates);
+  },
+
+  // Add an item to myCharacter's inventory
+  addItemToInventory: (item) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    const inventory = [...(myCharacter.inventory || [])];
+    // Stack consumables by id
+    if (item.type === 'consumable' || item.id) {
+      const existing = inventory.find(i => i.id === item.id);
+      if (existing) {
+        existing.quantity = (existing.quantity || 1) + (item.quantity || 1);
+        return get().updateMyCharacter({ inventory });
+      }
+    }
+    inventory.push({ ...item, instanceId: crypto.randomUUID(), quantity: item.quantity || 1 });
+    get().updateMyCharacter({ inventory });
+  },
+
+  // Remove item from inventory by instanceId
+  removeItemFromInventory: (instanceId) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    const inventory = (myCharacter.inventory || []).filter(i => i.instanceId !== instanceId);
+    get().updateMyCharacter({ inventory });
+  },
+
+  // Use a consumable — apply effect, decrement quantity
+  useItem: (instanceId) => {
+    const { myCharacter, encounter } = get();
+    if (!myCharacter) return;
+    const inventory = [...(myCharacter.inventory || [])];
+    const itemIdx = inventory.findIndex(i => i.instanceId === instanceId);
+    if (itemIdx === -1) return;
+    const item = inventory[itemIdx];
+    const effect = item.effect;
+    let changes = {};
+
+    if (effect?.type === 'heal') {
+      // Roll the heal dice
+      const diceMatch = (effect.dice || '2d4').match(/(\d+)d(\d+)/);
+      let healed = (effect.bonus || 0);
+      if (diceMatch) {
+        const count = parseInt(diceMatch[1]);
+        const sides = parseInt(diceMatch[2]);
+        healed += Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1).reduce((a, b) => a + b, 0);
+      }
+      const newHp = Math.min((myCharacter.currentHp || 0) + healed, myCharacter.maxHp || 0);
+      changes.currentHp = newHp;
+      // Also update combatant HP if in combat
+      if (encounter.phase !== 'idle') {
+        const combatants = encounter.combatants.map(c =>
+          (c.id === myCharacter.id || c.name === myCharacter.name)
+            ? { ...c, currentHp: Math.min(c.currentHp + healed, c.maxHp) }
+            : c
+        );
+        set(state => ({ encounter: { ...state.encounter, combatants } }));
+      }
+    }
+
+    // Consume the item
+    if ((item.quantity || 1) <= 1) {
+      inventory.splice(itemIdx, 1);
+    } else {
+      inventory[itemIdx] = { ...item, quantity: item.quantity - 1 };
+    }
+    changes.inventory = inventory;
+    get().updateMyCharacter(changes);
+    return effect;
+  },
+
+  // Add XP to myCharacter
+  addXp: (amount) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    const newXp = (myCharacter.xp || 0) + amount;
+    get().updateMyCharacter({ xp: newXp });
+  },
+
+  // Add gold to myCharacter
+  addGold: (amount) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    const newGold = (myCharacter.gold || 0) + amount;
+    get().updateMyCharacter({ gold: newGold });
+  },
 
   saveSettingsToSupabase: async (campaignState) => {
     const { activeCampaign } = get();

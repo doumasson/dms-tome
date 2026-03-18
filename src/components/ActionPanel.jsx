@@ -178,6 +178,8 @@ const GENERIC_ACTIONS = {
 
 export default function ActionPanel({ combatant, onAttack, onSpell, onSpecial, style }) {
   const { useAction, useBonusAction, dashAction, encounter, sessionApiKey, addNarratorMessage, addEncounterLog } = useStore();
+  const useItem = useStore(s => s.useItem);
+  const myCharacter = useStore(s => s.myCharacter);
   const [activePanel, setActivePanel] = useState(null); // 'spell_select' | 'special_info'
   const [hoverDesc, setHoverDesc] = useState(null);
 
@@ -349,6 +351,47 @@ export default function ActionPanel({ combatant, onAttack, onSpell, onSpecial, s
           </div>
         </div>
       )}
+
+      {/* Consumable items from inventory */}
+      {(() => {
+        const isOwn = myCharacter && (myCharacter.id === combatant.id || myCharacter.name === combatant.name);
+        const items = isOwn ? (myCharacter.inventory || []).filter(i => i.type === 'consumable') : [];
+        if (!isOwn || items.length === 0) return null;
+        return (
+          <div>
+            <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: '#e09040', fontWeight: 700, marginBottom: 4 }}>
+              🎒 USE ITEM (Action)
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {items.map(item => (
+                <button
+                  key={item.instanceId}
+                  disabled={actionSpent}
+                  onClick={() => {
+                    if (actionSpent) return;
+                    useAction(combatant.id);
+                    useItem(item.instanceId);
+                    addEncounterLog(`${combatant.name} uses ${item.name}.`);
+                  }}
+                  style={{
+                    ...btnBase,
+                    background: actionSpent ? 'rgba(255,255,255,0.02)' : 'rgba(224,144,64,0.08)',
+                    borderColor: actionSpent ? 'rgba(255,255,255,0.08)' : 'rgba(224,144,64,0.3)',
+                    color: actionSpent ? '#5a4a2a' : '#e09040',
+                    opacity: actionSpent ? 0.45 : 1,
+                  }}
+                >
+                  <span style={{ fontSize: '1em', minWidth: 18 }}>{item.icon || '🧪'}</span>
+                  <span>{item.name}{(item.quantity || 1) > 1 ? ` ×${item.quantity}` : ''}</span>
+                  <span style={{ marginLeft: 'auto', fontSize: '0.65rem', color: actionSpent ? '#5a4a2a' : '#b87030', background: 'rgba(0,0,0,0.3)', padding: '1px 5px', borderRadius: 3 }}>
+                    {item.description?.slice(0, 28) || 'Use'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Hover description */}
       {hoverDesc && (
