@@ -20,13 +20,29 @@ const SCHOOL_COLORS = {
   necromancy: '#6cc45a', transmutation: '#e09040',
 };
 
+const CLASS_ICONS = {
+  Paladin: '⚔', Ranger: '🏹', Barbarian: '🪓', Fighter: '🛡',
+  Monk: '🥋', Rogue: '🗡', Bard: '🎵', Cleric: '✝',
+  Druid: '🌿', Sorcerer: '💫', Warlock: '👁', Wizard: '📖',
+};
+
 export default function StepSpells({ cls, selectedSpells, setSelectedSpells }) {
   const [search, setSearch] = useState('');
-  const [filterLevel, setFilterLevel] = useState('all');
   const [hoveredSpell, setHoveredSpell] = useState(null);
 
   const config = SPELL_CONFIG[cls];
-  if (!config) return <p style={{ color: 'rgba(200,180,140,0.5)' }}>No spell selection for {cls}.</p>;
+
+  // Classes with no spell selection at creation — show a nice info card
+  if (!config || (config.cantripCount === 0 && config.spellCount === 0)) {
+    return (
+      <div style={st.noSpellsWrap}>
+        <div style={st.noSpellsIcon}>{CLASS_ICONS[cls] || '⚔'}</div>
+        <div style={st.noSpellsTitle}>No Spell Selection Needed</div>
+        <div style={st.noSpellsBody}>{config?.note || `${cls}s don't select spells at creation.`}</div>
+        <div style={st.noSpellsHint}>Your spells will be unlocked as you level up and rest.</div>
+      </div>
+    );
+  }
 
   const classSpells = useMemo(
     () => SPELLS.filter(sp => sp.classes?.includes(cls) && sp.level <= 1),
@@ -102,21 +118,23 @@ export default function StepSpells({ cls, selectedSpells, setSelectedSpells }) {
     <div style={st.wrap}>
       <div style={st.note}>{config.note}</div>
 
-      {/* Search */}
-      <input
-        style={st.search}
-        placeholder="Filter spells…"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
+      {/* Search — only when there are spells to filter */}
+      {(cantrips.length > 4 || spells1.length > 4) && (
+        <input
+          style={st.search}
+          placeholder="Filter spells…"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      )}
 
       {/* Cantrips section */}
       {config.cantripCount > 0 && (
         <div style={st.section}>
           <div style={st.sectionHeader}>
-            <span style={st.sectionLabel}>Cantrips</span>
+            <span style={st.sectionLabel}>Cantrips — choose {config.cantripCount}</span>
             <span style={{ ...st.counter, color: cantripsDone ? '#2ecc71' : '#d4af37' }}>
-              {selectedCantrips.length} / {config.cantripCount}
+              {selectedCantrips.length} / {config.cantripCount} {cantripsDone ? '✓' : ''}
             </span>
           </div>
           <div style={st.spellGrid}>
@@ -128,13 +146,13 @@ export default function StepSpells({ cls, selectedSpells, setSelectedSpells }) {
       )}
 
       {/* Leveled spells section */}
-      {(config.spellCount > 0 || (config.spellCount === 0 && cls !== 'Paladin')) && spells1.length > 0 && (
+      {config.spellCount > 0 && spells1.length > 0 && (
         <div style={st.section}>
           <div style={st.sectionHeader}>
-            <span style={st.sectionLabel}>1st-Level Spells</span>
+            <span style={st.sectionLabel}>1st-Level Spells — choose {config.spellCount}</span>
             {config.spellCount > 0 && (
               <span style={{ ...st.counter, color: spellsDone ? '#2ecc71' : '#d4af37' }}>
-                {selectedSpells1.length} / {config.spellCount}
+                {selectedSpells1.length} / {config.spellCount} {spellsDone ? '✓' : ''}
               </span>
             )}
             {config.spellCount === 0 && (
@@ -153,6 +171,23 @@ export default function StepSpells({ cls, selectedSpells, setSelectedSpells }) {
 }
 
 const st = {
+  noSpellsWrap: {
+    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+    gap: 14, padding: '40px 20px', textAlign: 'center',
+    background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)',
+    borderRadius: 12, minHeight: 200,
+  },
+  noSpellsIcon: { fontSize: '3rem', lineHeight: 1 },
+  noSpellsTitle: {
+    fontFamily: "'Cinzel', Georgia, serif", fontSize: '1.05rem', fontWeight: 700,
+    color: '#d4af37', letterSpacing: '0.06em',
+  },
+  noSpellsBody: {
+    fontSize: '0.88rem', color: 'rgba(200,180,140,0.8)', lineHeight: 1.6, maxWidth: 400,
+  },
+  noSpellsHint: {
+    fontSize: '0.75rem', color: 'rgba(200,180,140,0.4)', fontStyle: 'italic',
+  },
   wrap: { display: 'flex', flexDirection: 'column', gap: 16 },
   note: {
     fontSize: '0.82rem', color: 'rgba(200,180,140,0.65)',

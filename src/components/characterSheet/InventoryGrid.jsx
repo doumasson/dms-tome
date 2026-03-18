@@ -1,5 +1,13 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useRef } from 'react';
+import useStore from '../../store/useStore';
 import { getSlotType } from '../../data/equipment';
+import {
+  container, weightRow, weightLabel, weightNum,
+  weightBarBg, weightBarFill,
+  itemCard, itemIconStyle, itemNameStyle, itemQty, itemBtns, tinyBtn,
+  overflowSection, overflowLabel, overflowItem,
+  tooltipWrapper, tooltip, tooltipTitle, tooltipLine,
+} from './inventoryGridStyles';
 
 // ── Item grid sizes (columns × rows) ────────────────────────────────────────
 const ITEM_SIZES = {
@@ -100,17 +108,63 @@ function packItems(items) {
   return { placed, overflow };
 }
 
+function ItemTooltip({ item }) {
+  const lines = [item.name];
+  if (item.damage)  lines.push(`Damage: ${item.damage} ${item.damageType}`);
+  if (item.baseAC)  lines.push(`AC: ${item.baseAC}${item.addDex ? ' + DEX' : ''}${item.maxDex != null ? ` (max +${item.maxDex})` : ''}`);
+  if (item.properties?.length) lines.push(`Properties: ${item.properties.join(', ')}`);
+  if (item.weight)  lines.push(`Weight: ${item.weight} lb`);
+  if (item.cost)    lines.push(`Value: ${item.cost}`);
+  if (item.description) lines.push(item.description);
+
+  return (
+    <div style={tooltip}>
+      {lines.map((l, i) => (
+        <div key={i} style={i === 0 ? tooltipTitle : tooltipLine}>{l}</div>
+      ))}
+    </div>
+  );
+}
+
 export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse }) {
+  const updateMyCharacter = useStore(s => s.updateMyCharacter);
   const inventory = character.inventory || [];
   const stats = character.stats || {};
   const strScore = stats.str || 10;
-  const carryCapacity = strScore * 15; // PHB carry capacity
+  const carryCapacity = strScore * 15;
   const totalWeight = inventory.reduce((sum, item) => sum + ((item.weight || 0) * (item.quantity || 1)), 0);
   const weightPct = Math.min(100, (totalWeight / carryCapacity) * 100);
   const encumbered = totalWeight > strScore * 5;
   const heavilyEnc = totalWeight > strScore * 10;
 
   const { placed, overflow } = useMemo(() => packItems(inventory), [inventory]);
+
+  const [hoveredId, setHoveredId] = useState(null);
+  const dragItemRef = useRef(null);
+  const [dragOverId, setDragOverId] = useState(null);
+
+  function handleDragStart(item) {
+    dragItemRef.current = item;
+  }
+  function handleDragOver(e, item) {
+    e.preventDefault();
+    setDragOverId(item.instanceId || item.name);
+  }
+  function handleDrop(e, targetItem) {
+    e.preventDefault();
+    setDragOverId(null);
+    const src = dragItemRef.current;
+    dragItemRef.current = null;
+    if (!src || (src.instanceId || src.name) === (targetItem.instanceId || targetItem.name)) return;
+    // Reorder: move src before target
+    const inv = [...inventory];
+    const srcIdx = inv.findIndex(i => (i.instanceId || i.name) === (src.instanceId || src.name));
+    const tgtIdx = inv.findIndex(i => (i.instanceId || i.name) === (targetItem.instanceId || targetItem.name));
+    if (srcIdx === -1 || tgtIdx === -1) return;
+    const [removed] = inv.splice(srcIdx, 1);
+    inv.splice(tgtIdx, 0, removed);
+    updateMyCharacter({ inventory: inv });
+  }
 
   return (
     <div style={container}>
@@ -151,9 +205,19 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           const slot = getSlotType(item);
           const canEquipItem = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
           const canUseItem = isOwn && item.type === 'consumable';
+          const itemKey = item.instanceId || item.name;
+          const isHov = hoveredId === itemKey;
+          const isDragOver = dragOverId === itemKey;
           return (
             <div
-              key={item.instanceId || item.name}
+              key={itemKey}
+              draggable={isOwn}
+              onDragStart={() => handleDragStart(item)}
+              onDragOver={e => handleDragOver(e, item)}
+              onDrop={e => handleDrop(e, item)}
+              onDragLeave={() => setDragOverId(null)}
+              onMouseEnter={() => setHoveredId(itemKey)}
+              onMouseLeave={() => setHoveredId(null)}
               style={{
                 position: 'absolute',
                 left: col * CELL_PX + 1,
@@ -161,8 +225,10 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                 width: w * CELL_PX - 2,
                 height: h * CELL_PX - 2,
                 ...itemCard,
+                ...(isDragOver ? { border: '1px solid rgba(212,175,55,0.8)', background: 'rgba(212,175,55,0.12)' } : {}),
+                cursor: isOwn ? 'grab' : 'default',
+                zIndex: isHov ? 10 : 1,
               }}
-              title={`${item.name}${item.damage ? ` — ${item.damage} ${item.damageType}` : ''}${item.baseAC ? ` — AC ${item.baseAC}` : ''}\n${item.weight ? `Weight: ${item.weight} lb` : ''}`}
             >
               <div style={itemIconStyle}>{itemIcon(item)}</div>
               {w > 1 && h > 1 && <div style={itemNameStyle}>{item.name}</div>}
@@ -179,6 +245,18 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                   <button style={{ ...tinyBtn, background: 'rgba(192,57,43,0.3)' }} onClick={() => onDrop(item)} title="Drop">✕</button>
                 </div>
               )}
+              {/* Hover tooltip */}
+              {isHov && (
+                <div style={{
+                  ...tooltipWrapper,
+                  left: col >= GRID_COLS / 2 ? 'auto' : '100%',
+                  right: col >= GRID_COLS / 2 ? '100%' : 'auto',
+                  top: row >= GRID_ROWS / 2 ? 'auto' : 0,
+                  bottom: row >= GRID_ROWS / 2 ? 0 : 'auto',
+                }}>
+                  <ItemTooltip item={item} />
+                </div>
+              )}
             </div>
           );
         })}
@@ -187,13 +265,31 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
       {/* Overflow items (didn't fit in grid) */}
       {overflow.length > 0 && (
         <div style={overflowSection}>
-          <div style={overflowLabel}>Overflow ({overflow.length})</div>
+          <div style={overflowLabel}>Overflow — {overflow.length} items don't fit</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
             {overflow.map(item => (
-              <div key={item.instanceId || item.name} style={overflowItem}>
+              <div
+                key={item.instanceId || item.name}
+                style={{ ...overflowItem, position: 'relative' }}
+                onMouseEnter={() => setHoveredId(`ov-${item.instanceId || item.name}`)}
+                onMouseLeave={() => setHoveredId(null)}
+              >
                 {itemIcon(item)} {item.name}
                 {isOwn && (
-                  <button style={{ ...tinyBtn, marginLeft: 4 }} onClick={() => onDrop(item)}>✕</button>
+                  <>
+                    {getSlotType(item) && getSlotType(item) !== 'consumable' && getSlotType(item) !== 'misc' && (
+                      <button style={{ ...tinyBtn, marginLeft: 4, background: 'rgba(212,175,55,0.3)' }} onClick={() => onEquip(item)}>E</button>
+                    )}
+                    {item.type === 'consumable' && (
+                      <button style={{ ...tinyBtn, marginLeft: 2, background: 'rgba(46,204,113,0.3)' }} onClick={() => onUse(item)}>U</button>
+                    )}
+                    <button style={{ ...tinyBtn, marginLeft: 2 }} onClick={() => onDrop(item)}>✕</button>
+                  </>
+                )}
+                {hoveredId === `ov-${item.instanceId || item.name}` && (
+                  <div style={{ ...tooltipWrapper, top: 'auto', bottom: '100%', left: 0, right: 'auto' }}>
+                    <ItemTooltip item={item} />
+                  </div>
                 )}
               </div>
             ))}
@@ -204,121 +300,4 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
   );
 }
 
-const container = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  padding: '8px 0',
-};
-
-const weightRow = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginBottom: 2,
-};
-
-const weightLabel = {
-  fontSize: '0.7rem',
-  color: 'rgba(200,180,140,0.6)',
-  fontFamily: "'Cinzel', Georgia, serif",
-};
-
-const weightNum = {
-  fontSize: '0.68rem',
-  color: 'rgba(212,175,55,0.8)',
-};
-
-const weightBarBg = {
-  height: 4,
-  background: 'rgba(255,255,255,0.08)',
-  borderRadius: 2,
-  overflow: 'hidden',
-  marginBottom: 8,
-};
-
-const weightBarFill = {
-  height: '100%',
-  borderRadius: 2,
-  transition: 'width 0.3s, background 0.3s',
-};
-
-const itemCard = {
-  background: 'linear-gradient(135deg, rgba(40,25,10,0.95), rgba(25,15,5,0.95))',
-  border: '1px solid rgba(212,175,55,0.25)',
-  borderRadius: 3,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  cursor: 'default',
-  overflow: 'hidden',
-  position: 'relative',
-  boxSizing: 'border-box',
-};
-
-const itemIconStyle = {
-  fontSize: '1.1rem',
-  lineHeight: 1,
-};
-
-const itemNameStyle = {
-  fontSize: '0.55rem',
-  color: 'rgba(200,180,140,0.8)',
-  fontFamily: "'Cinzel', Georgia, serif",
-  textAlign: 'center',
-  wordBreak: 'break-word',
-  padding: '0 2px',
-};
-
-const itemQty = {
-  position: 'absolute',
-  top: 1,
-  right: 2,
-  fontSize: '0.5rem',
-  color: '#d4af37',
-  fontWeight: 700,
-};
-
-const itemBtns = {
-  position: 'absolute',
-  bottom: 1,
-  right: 1,
-  display: 'flex',
-  gap: 1,
-};
-
-const tinyBtn = {
-  background: 'rgba(255,255,255,0.15)',
-  border: 'none',
-  borderRadius: 2,
-  color: '#fff',
-  fontSize: '0.55rem',
-  padding: '1px 3px',
-  cursor: 'pointer',
-  lineHeight: 1.2,
-};
-
-const overflowSection = {
-  borderTop: '1px solid rgba(255,255,255,0.07)',
-  paddingTop: 6,
-};
-
-const overflowLabel = {
-  fontSize: '0.65rem',
-  color: 'rgba(200,180,140,0.4)',
-  fontFamily: "'Cinzel', Georgia, serif",
-  marginBottom: 4,
-  textTransform: 'uppercase',
-};
-
-const overflowItem = {
-  fontSize: '0.72rem',
-  color: 'rgba(200,180,140,0.7)',
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 4,
-  padding: '3px 7px',
-  display: 'flex',
-  alignItems: 'center',
-};
+// styles imported from inventoryGridStyles.js

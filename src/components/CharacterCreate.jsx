@@ -92,17 +92,23 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     // Build starting inventory from gear step
     const starterItems = getStartingInventory();
     const gearItems = buildGearInventory(gearChoices, clsData);
-    const allItems = [...starterItems, ...gearItems];
+    // Ensure every item has a stable instanceId for equip tracking
+    const allItems = [...starterItems, ...gearItems].map(item =>
+      item.instanceId ? item : { ...item, instanceId: crypto.randomUUID() }
+    );
 
     // Auto-equip: first weapon → mainHand, armor → chest, shield → offHand
     const equippedItems = {};
+    const equippedInstanceIds = new Set();
     for (const item of allItems) {
       const slot = getSlotType(item);
-      if (slot === 'mainHand' && !equippedItems.mainHand) equippedItems.mainHand = item;
-      else if (slot === 'twoHanded' && !equippedItems.twoHanded && !equippedItems.mainHand) equippedItems.twoHanded = item;
-      else if (slot === 'chest' && !equippedItems.chest) equippedItems.chest = item;
-      else if (slot === 'offHand' && !equippedItems.offHand) equippedItems.offHand = item;
+      if (slot === 'mainHand' && !equippedItems.mainHand) { equippedItems.mainHand = item; equippedInstanceIds.add(item.instanceId); }
+      else if (slot === 'twoHanded' && !equippedItems.twoHanded && !equippedItems.mainHand) { equippedItems.twoHanded = item; equippedInstanceIds.add(item.instanceId); }
+      else if (slot === 'chest' && !equippedItems.chest) { equippedItems.chest = item; equippedInstanceIds.add(item.instanceId); }
+      else if (slot === 'offHand' && !equippedItems.offHand) { equippedItems.offHand = item; equippedInstanceIds.add(item.instanceId); }
     }
+    // Remove equipped items from inventory so they don't show twice
+    const unequippedItems = allItems.filter(i => !equippedInstanceIds.has(i.instanceId));
     const startingAc = Object.keys(equippedItems).length > 0
       ? computeAcFromEquipped(equippedItems, finalStats)
       : ac;
@@ -128,7 +134,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       spellSlots,
       spells: selectedSpells.length > 0 ? selectedSpells : getStarterSpells(cls),
       equipment: clsData?.startingEquipment || [],
-      inventory: allItems,
+      inventory: unequippedItems,
       equippedItems,
       gold: gearChoices.method === 'gold' ? gearChoices.gold : 0,
       proficiencyBonus: pb,
