@@ -271,11 +271,12 @@ const useStore = create((set, get) => ({
         speed: spd,
         remainingMove: Math.floor(spd / 5),
         stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
-        attacks: (char.weapons || []).map(w =>
+        attacks: (char.weapons || char.attacks || []).map(w =>
           typeof w === 'string'
             ? { name: w, bonus: '+0', damage: '1d6' }
-            : { name: w.name || w, bonus: w.attackBonus || '+0', damage: w.damage || '1d6' }
+            : { name: w.name || w, bonus: w.attackBonus || w.bonus || '+0', damage: w.damage || '1d6' }
         ),
+        spells: char.spells || [],
         conditions: [],
         concentration: null,
         position: null,
@@ -460,6 +461,40 @@ const useStore = create((set, get) => ({
         }),
       },
     })),
+
+  // Apply a pre-computed death save result (used for multiplayer sync — caller rolls d20)
+  applyDeathSaveResult: (id, roll) =>
+    set((state) => {
+      const c = state.encounter.combatants.find(x => x.id === id);
+      if (!c || c.currentHp > 0 || c.deathSaves?.stable) return state;
+      let { successes, failures } = c.deathSaves;
+      let newHp = 0, stable = false, logMsg = '';
+      if (roll === 20) {
+        newHp = 1; successes = 0; failures = 0; stable = false;
+        logMsg = `${c.name} rolled a natural 20 on death save — revived with 1 HP!`;
+      } else if (roll === 1) {
+        failures = Math.min(3, failures + 2);
+        logMsg = `${c.name} rolled a 1 on death save — 2 failures! (${failures}/3)`;
+      } else if (roll >= 10) {
+        successes = Math.min(3, successes + 1);
+        if (successes >= 3) { stable = true; logMsg = `${c.name} stabilizes! (3 successes)`; }
+        else logMsg = `${c.name} death save: ${roll} — success (${successes}/3)`;
+      } else {
+        failures = Math.min(3, failures + 1);
+        logMsg = `${c.name} death save: ${roll} — failure (${failures}/3)`;
+      }
+      return {
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(x =>
+            x.id === id
+              ? { ...x, currentHp: newHp, deathSaves: { successes, failures, stable } }
+              : x
+          ),
+          log: [logMsg, ...state.encounter.log].slice(0, 30),
+        },
+      };
+    }),
 
   // Roll a death saving throw for a dying player (d20, no modifiers per RAW)
   rollDeathSave: (id) =>
@@ -654,24 +689,29 @@ const useStore = create((set, get) => ({
   },
 
   longRest: () => {
-    set((state) => ({
-      campaign: {
-        ...state.campaign,
-        characters: state.campaign.characters.map((c) => {
-          // Reset spell slot used counts to 0
-          const spellSlots = c.spellSlots
-            ? Object.fromEntries(
-                Object.entries(c.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])
-              )
-            : c.spellSlots;
-          return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots };
-        }),
-      },
-      encounter: {
-        ...get().encounter,
-        log: ['☀️ Long rest taken — all resources and HP restored.', ...get().encounter.log].slice(0, 30),
-      },
-    }));
+    set((state) => {
+      const updatedChars = state.campaign.characters.map((c) => {
+        const spellSlots = c.spellSlots
+          ? Object.fromEntries(
+              Object.entries(c.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])
+            )
+          : c.spellSlots;
+        return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots };
+      });
+      // Also restore HP for player combatants in an active encounter
+      const updatedCombatants = state.encounter.combatants.map((c) => {
+        if (c.type !== 'player') return c;
+        return { ...c, currentHp: c.maxHp, conditions: [], deathSaves: { successes: 0, failures: 0, stable: false } };
+      });
+      return {
+        campaign: { ...state.campaign, characters: updatedChars },
+        encounter: {
+          ...state.encounter,
+          combatants: updatedCombatants,
+          log: ['☀️ Long rest taken — all HP and resources restored.', ...state.encounter.log].slice(0, 30),
+        },
+      };
+    });
     get().saveCampaignToSupabase();
     get().saveSettingsToSupabase();
   },
@@ -835,6 +875,10 @@ const useStore = create((set, get) => ({
     set({
       dice: { rollHistory: [] },
     }),
+
+  // === Session-wide API key (broadcast from DM to all players) ===
+  sessionApiKey: null,
+  setSessionApiKey: (key) => set({ sessionApiKey: key }),
 
   // === Scene Images (DALL-E cache) ===
   sceneImages: {}, // { [campaignId:sceneIndex]: imageUrl }
