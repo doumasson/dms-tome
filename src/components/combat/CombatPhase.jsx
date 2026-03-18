@@ -260,20 +260,59 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     </>
   );
 
+  // ── Compact initiative list (used in both mobile + desktop) ──────────────
+  const typeIndex = buildTypeIndex(combatants);
+  const initiativeList = (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      {combatants.map((c, i) => {
+        const isActive = i === currentTurn;
+        const hpPct = Math.max(0, Math.min(1, (c.currentHp ?? c.hp) / (c.maxHp ?? c.hp ?? 1)));
+        const hpColor = hpPct > 0.5 ? '#2ecc71' : hpPct > 0.25 ? '#f39c12' : '#e74c3c';
+        const isDead = (c.currentHp ?? c.hp) <= 0;
+        return (
+          <div
+            key={c.id}
+            onClick={() => handleTokenClick(c.id)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6, padding: '5px 8px',
+              borderRadius: 5, cursor: 'pointer',
+              background: isActive ? 'rgba(212,175,55,0.12)' : 'transparent',
+              border: `1px solid ${isActive ? 'rgba(212,175,55,0.4)' : '#2a1a0a'}`,
+              opacity: isDead ? 0.45 : 1,
+            }}
+          >
+            {/* Turn indicator */}
+            <div style={{ width: 6, height: 6, borderRadius: '50%', flexShrink: 0, background: c.type === 'enemy' ? '#c0392b' : '#1a5276' }} />
+            {/* Name */}
+            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+              <div style={{ fontSize: '0.78rem', color: isActive ? 'var(--gold)' : 'var(--text-primary)', fontWeight: isActive ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {c.name}{isDead ? ' 💀' : ''}
+              </div>
+              {c.conditions?.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 2, marginTop: 2 }}>
+                  {c.conditions.map(cond => (
+                    <span key={cond} style={{ fontSize: '0.55rem', background: 'rgba(192,57,43,0.2)', color: '#e74c3c', borderRadius: 2, padding: '1px 3px' }}>{cond}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* HP */}
+            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+              <div style={{ fontSize: '0.68rem', color: hpColor, fontWeight: 600 }}>{c.currentHp ?? c.hp}<span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>/{c.maxHp ?? c.hp}</span></div>
+              <div style={{ width: 36, height: 3, background: '#2a1a0a', borderRadius: 2, marginTop: 2 }}>
+                <div style={{ width: `${hpPct * 100}%`, height: '100%', background: hpColor, borderRadius: 2 }} />
+              </div>
+            </div>
+            {/* Initiative */}
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', flexShrink: 0, minWidth: 18, textAlign: 'right' }}>{c.initiative ?? '—'}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
   // ── Mobile layout ─────────────────────────────────────────────────────────
   if (isMobile) {
-    const partyContent = (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '8px 0' }}>
-        <PartyPanel combatants={combatants} characters={characters || []} activeCombatantId={activeCombatant?.id} onSelectCombatant={handleTokenClick} />
-        {(activeChar || activeCombatant) && <CharDetailPanel character={activeChar} combatant={activeCombatant} compact />}
-        {dmMode && (
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={onShortRest} style={{ ...btn.ghost, flex: 1, fontSize: '0.72rem' }}>🌙 Short Rest</button>
-            <button onClick={onLongRest}  style={{ ...btn.ghost, flex: 1, fontSize: '0.72rem', color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)' }}>☀️ Long Rest</button>
-          </div>
-        )}
-      </div>
-    );
 
     const battleContent = (
       <div style={{ padding: '8px 0' }}>
@@ -368,7 +407,6 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     );
 
     const MOBILE_TABS = [
-      { id: 'party',   label: '👥 Party' },
       { id: 'battle',  label: '🗺 Battle' },
       { id: 'actions', label: '⚔ Actions' },
     ];
@@ -387,235 +425,159 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
             </button>
           ))}
         </div>
-        {mobileTab === 'party'   && partyContent}
         {mobileTab === 'battle'  && battleContent}
-        {mobileTab === 'actions' && actionsContent}
+        {mobileTab === 'actions' && (
+          <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {actionsContent}
+            <div style={{ borderTop: '1px solid #2a1a0a', paddingTop: 8 }}>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginBottom: 5, fontFamily: "'Cinzel', Georgia, serif" }}>INITIATIVE</div>
+              {initiativeList}
+            </div>
+            {dmMode && <button onClick={onEndEncounter} style={{ ...btn.ghost, fontSize: '0.78rem', color: '#c0392b', borderColor: 'rgba(192,57,43,0.4)', marginTop: 4 }}>✕ End Combat</button>}
+          </div>
+        )}
       </div>
     );
   }
 
-  // ── Desktop / Tablet layout ───────────────────────────────────────────────
+  // ── Desktop / Tablet layout — fixed 3-column, no wrapping ────────────────
+  const isDying = activeCombatant && activeCombatant.currentHp <= 0 && activeCombatant.type === 'player' && !(activeCombatant.deathSaves?.failures >= 3);
+  const isMyDying = isDying && isMyTurn;
+  const isEnemy = activeCombatant?.type === 'enemy';
+
   return (
-    <div style={{ display: 'flex', gap: 0, padding: '0 8px', alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', gap: 8, padding: '0 8px', height: '100%', alignItems: 'flex-start' }}>
 
-      {/* Party Column — hidden on tablet */}
-      <div style={{ width: isTablet ? 0 : 192, overflow: isTablet ? 'hidden' : 'visible', flexShrink: 0, marginRight: isTablet ? 0 : 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: '10px 8px', maxHeight: 'calc(100vh - 180px)', overflowY: 'auto' }}>
-          <PartyPanel combatants={combatants} characters={characters || []} activeCombatantId={activeCombatant?.id} onSelectCombatant={handleTokenClick} />
+      {/* Left: Initiative tracker */}
+      <div style={{ width: isTablet ? 150 : 180, flexShrink: 0, overflowY: 'auto', maxHeight: 'calc(55vh - 20px)' }}>
+        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.08em', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 6, padding: '0 2px' }}>
+          INITIATIVE — Round {round}
         </div>
-
-        {(activeChar || activeCombatant) && (
-          <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: '10px 10px', overflowY: 'auto', maxHeight: 420 }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.08em', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 8 }}>
-              {activeCombatant?.type === 'enemy' ? 'ACTIVE ENEMY' : 'ACTIVE COMBATANT'}
-            </div>
-            <CharDetailPanel character={activeChar} combatant={activeCombatant} compact />
-          </div>
-        )}
-
+        {initiativeList}
         {dmMode && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-            <button onClick={onShortRest} style={{ ...btn.ghost, fontSize: '0.72rem', padding: '5px 8px' }}>🌙 Short Rest</button>
-            <button onClick={onLongRest} style={{ ...btn.ghost, fontSize: '0.72rem', padding: '5px 8px', color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)' }}>☀️ Long Rest</button>
+          <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <button onClick={onShortRest} style={{ ...btn.ghost, fontSize: '0.65rem', padding: '4px 6px' }}>🌙 Short Rest</button>
+            <button onClick={onLongRest} style={{ ...btn.ghost, fontSize: '0.65rem', padding: '4px 6px', color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)' }}>☀️ Long Rest</button>
           </div>
         )}
       </div>
 
-      {/* Right: Map + Sidebar */}
-      <div style={{ flex: '1 1 auto', minWidth: 0, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-start' }}>
-
-        {/* Center: Map */}
-        <div style={{ flex: '1 1 auto', minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8, flexWrap: 'wrap' }}>
-            <div style={{ fontSize: '0.85rem', color: 'var(--gold)', fontWeight: 700, fontFamily: "'Cinzel', Georgia, serif" }}>Round {round}</div>
-            {activeCombatant && (
-              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                Turn: <strong style={{ color: 'var(--text-primary)' }}>{activeCombatant.name}</strong>
-              </div>
-            )}
-            {selectedToken && (
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                Token selected — click a cell to move
-              </div>
-            )}
-            {(allEnemiesDead || partyDead) && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.8rem', color: allEnemiesDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
-                  {allEnemiesDead ? '🏆 Victory!' : '💀 Party defeated!'}
-                </span>
-                {allEnemiesDead && totalXp > 0 && (
-                  <span style={{ fontSize: '0.72rem', color: '#f1c40f' }}>{totalXp.toLocaleString()} XP</span>
-                )}
-                {allEnemiesDead && dmMode && totalXp > 0 && !xpAwarded && (
-                  <button onClick={() => { awardXp(totalXp); setXpAwarded(true); }} style={{ ...btn.small, color: '#f1c40f', borderColor: 'rgba(241,196,15,0.4)', fontSize: '0.72rem' }}>
-                    ✦ Award XP
-                  </button>
-                )}
-                {xpAwarded && <span style={{ fontSize: '0.68rem', color: '#2ecc71' }}>XP awarded!</span>}
-                {allEnemiesDead && dmMode && (
-                  <button onClick={() => setShowLoot(l => !l)} style={{ ...btn.small, color: '#d4af37', borderColor: 'var(--border-gold)', fontSize: '0.72rem' }}>
-                    🎁 Loot
-                  </button>
-                )}
-                {dmMode && (allEnemiesDead || partyDead) && (
-                  <button onClick={onEndEncounter} style={{ ...btn.small, color: '#c0392b', borderColor: 'rgba(192,57,43,0.5)', fontSize: '0.72rem' }}>
-                    ✕ End Combat
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div style={{ overflowX: 'auto' }}>
-            <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} />
-          </div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4 }}>
-            {activeCombatant && (
-              <span>
-                Move: <span style={{ color: (activeCombatant.remainingMove ?? 0) > 0 ? '#2ecc71' : '#e74c3c', fontWeight: 600 }}>
-                  {activeCombatant.remainingMove ?? Math.floor((activeCombatant.speed || 30) / 5)} cells remaining
-                </span>
-                {!dmMode && myCharacter && (activeCombatant.name === myCharacter?.name || activeCombatant.id === myCharacter?.id)
-                  ? ' · Your turn — click your token then a cell'
-                  : !dmMode ? ' · Waiting for your turn…' : ' · Click token then cell to move'}
-              </span>
-            )}
-          </div>
-
-          <div style={{ marginTop: 10 }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4, fontFamily: "'Cinzel', Georgia, serif", letterSpacing: '0.06em' }}>COMBAT LOG</div>
-            <div ref={logRef} style={{ background: '#0f0a04', border: '1px solid #2a1a0a', borderRadius: 6, padding: '8px 10px', maxHeight: 120, overflowY: 'auto', fontFamily: 'monospace', fontSize: '0.75rem' }}>
-              {log.map((entry, i) => (
-                <div key={i} style={{ color: i === 0 ? 'var(--text-secondary)' : 'var(--text-muted)', padding: '1px 0', borderBottom: i < log.length - 1 ? '1px solid #1a1006' : 'none' }}>
-                  {entry}
-                </div>
-              ))}
+      {/* Center: Battle map + combat log */}
+      <div style={{ flex: '1 1 auto', minWidth: 0 }}>
+        {/* Status bar */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6, flexWrap: 'wrap' }}>
+          {activeCombatant && (
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              Turn: <strong style={{ color: 'var(--gold)' }}>{activeCombatant.name}</strong>
             </div>
-          </div>
-
-          {showLoot && <div style={{ marginTop: 10 }}><LootGenerator defaultCr={avgCr} onClose={() => setShowLoot(false)} /></div>}
-        </div>
-
-        {/* Right Sidebar: Actions + Turn Order */}
-        <div style={{ width: 260, flexShrink: 0 }}>
-          {panel === null && activeCombatant && (() => {
-            const isDying = activeCombatant.currentHp <= 0 && activeCombatant.type === 'player' && !(activeCombatant.deathSaves?.failures >= 3);
-            const isMyDying = isDying && isMyTurn;
-            const isEnemy = activeCombatant.type === 'enemy';
-
-            if (isEnemy && activeCombatant.currentHp > 0) return (
-              <div style={{ background: '#1a1006', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 8, padding: 10, marginBottom: 10 }}>
-                <div style={{ fontSize: '0.75rem', color: '#e74c3c', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 4 }}>
-                  ENEMY TURN — {activeCombatant.name}
-                </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                  {dmMode ? 'AI is deciding action…' : 'Waiting for enemy action…'}
-                </div>
-                {dmMode && (
-                  <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71', marginTop: 8 }}>
-                    ➜ Skip (Force Next Turn)
-                  </button>
-                )}
-              </div>
-            );
-
-            if (!canAct && !isDying) return (
-              <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 10, marginBottom: 10 }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif" }}>
-                  Turn: <strong style={{ color: 'var(--gold)' }}>{activeCombatant.name}</strong> — waiting…
-                </div>
-              </div>
-            );
-
-            return (
-              <div style={{ background: '#1a1006', border: `1px solid ${isDying ? 'rgba(243,156,18,0.5)' : '#2a1a0a'}`, borderRadius: 8, padding: 10, marginBottom: 10 }}>
-                <div style={{ fontSize: '0.75rem', color: isDying ? '#f39c12' : 'var(--text-muted)', marginBottom: 8, fontFamily: "'Cinzel', Georgia, serif" }}>
-                  {isDying ? `⚠ ${activeCombatant.name} is DYING` : `ACTIONS — ${activeCombatant.name}`}
-                </div>
-
-                {isDying ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    {(isMyDying || dmMode) && (
-                      <button onClick={() => onRollDeathSave(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}>
-                        🎲 Roll Death Save
-                      </button>
-                    )}
-                    {dmMode && (
-                      <button onClick={() => onStabilize(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
-                        ✚ Stabilize (Medicine)
-                      </button>
-                    )}
-                    {canAct && (
-                      <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
-                        ➜ Next Turn
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    {incapCondition && (
-                      <div style={{ background: 'rgba(192,57,43,0.12)', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 6, padding: '6px 8px', marginBottom: 8, fontSize: '0.72rem', color: '#e74c3c' }}>
-                        ⚠ {activeCombatant.name} is <strong>{incapCondition}</strong> — cannot take actions or reactions
-                      </div>
-                    )}
-                    {!incapCondition && (
-                      <ActionPanel
-                        combatant={activeCombatant}
-                        onAttack={() => setPanel('attack')}
-                        onSpell={(c, action) => handleSpellOpen(c, action)}
-                        onSpecial={() => {}}
-                        style={{ marginBottom: 8 }}
-                      />
-                    )}
-                    {dmMode && (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 4, paddingTop: 8, borderTop: '1px solid #2a1a0a' }}>
-                        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: 2 }}>DM TOOLS</div>
-                        <button onClick={() => setPanel('aoe')} style={{ ...btn.action, background: 'rgba(155,89,182,0.12)', border: '1px solid rgba(155,89,182,0.35)', color: '#9b59b6', fontSize: '0.78rem' }}>💥 AoE Damage</button>
-                        <button onClick={() => setPanel('concentrate')} style={{ ...btn.action, background: 'rgba(155,89,182,0.12)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6', fontSize: '0.78rem' }}>
-                          🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}
-                        </button>
-                        <button onClick={() => setPanel('save')} style={{ ...btn.action, background: 'rgba(41,128,185,0.12)', border: '1px solid rgba(41,128,185,0.35)', color: '#3498db', fontSize: '0.78rem' }}>🎲 Saving Throw</button>
-                      </div>
-                    )}
-                    {canAct && (
-                      <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71', marginTop: 8, width: '100%' }}>
-                        ➜ End Turn
-                      </button>
-                    )}
-                  </>
-                )}
-              </div>
-            );
-          })()}
-
-          {renderPanels()}
-
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 5, fontFamily: "'Cinzel', Georgia, serif" }}>TURN ORDER</div>
-          <div style={{ maxHeight: 340, overflowY: 'auto' }}>
-            {combatants.map((c, i) => (
-              <CombatantRow
-                key={c.id}
-                combatant={c}
-                isActive={i === currentTurn}
-                isSelected={c.id === selectedToken}
-                colorIndex={buildTypeIndex(combatants)[c.type]?.[c.id] || 0}
-                dmMode={dmMode}
-                onSelectToken={handleTokenClick}
-                onHpChange={handleHpChange}
-                onAddCondition={onAddCondition}
-                onRemoveCondition={onRemoveCondition}
-                onRollDeathSave={onRollDeathSave}
-                onStabilize={onStabilize}
-              />
-            ))}
-          </div>
-
-          {dmMode && (
-            <button onClick={onEndEncounter} style={{ ...btn.ghost, marginTop: 10, width: '100%', fontSize: '0.78rem', color: '#c0392b', borderColor: 'rgba(192,57,43,0.4)' }}>
-              ✕ End Combat
-            </button>
+          )}
+          {selectedToken && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Token selected — click cell to move</div>}
+          {(allEnemiesDead || partyDead) && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.8rem', color: allEnemiesDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
+                {allEnemiesDead ? '🏆 Victory!' : '💀 Party defeated!'}
+              </span>
+              {allEnemiesDead && totalXp > 0 && <span style={{ fontSize: '0.7rem', color: '#f1c40f' }}>{totalXp.toLocaleString()} XP</span>}
+              {allEnemiesDead && dmMode && totalXp > 0 && !xpAwarded && (
+                <button onClick={() => { awardXp(totalXp); setXpAwarded(true); }} style={{ ...btn.small, color: '#f1c40f', borderColor: 'rgba(241,196,15,0.4)', fontSize: '0.7rem' }}>✦ Award XP</button>
+              )}
+              {xpAwarded && <span style={{ fontSize: '0.68rem', color: '#2ecc71' }}>XP awarded!</span>}
+              {allEnemiesDead && dmMode && (
+                <button onClick={() => setShowLoot(l => !l)} style={{ ...btn.small, color: '#d4af37', borderColor: 'var(--border-gold)', fontSize: '0.7rem' }}>🎁 Loot</button>
+              )}
+            </div>
           )}
         </div>
+
+        <div style={{ overflowX: 'auto' }}>
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} />
+        </div>
+
+        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 3 }}>
+          {activeCombatant && (
+            <span>Move: <span style={{ color: (activeCombatant.remainingMove ?? 0) > 0 ? '#2ecc71' : '#e74c3c', fontWeight: 600 }}>
+              {activeCombatant.remainingMove ?? Math.floor((activeCombatant.speed || 30) / 5)} cells
+            </span>{!dmMode && myCharacter && (activeCombatant.name === myCharacter?.name || activeCombatant.id === myCharacter?.id) ? ' · Your turn' : !dmMode ? ' · Waiting…' : ' · Click token → cell'}</span>
+          )}
+        </div>
+
+        <div style={{ marginTop: 8 }}>
+          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginBottom: 3, fontFamily: "'Cinzel', Georgia, serif" }}>COMBAT LOG</div>
+          <div ref={logRef} style={{ background: '#0f0a04', border: '1px solid #2a1a0a', borderRadius: 5, padding: '6px 8px', maxHeight: 160, overflowY: 'auto', fontFamily: 'monospace', fontSize: '0.72rem' }}>
+            {log.length === 0 && <div style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>No actions yet.</div>}
+            {log.map((entry, i) => (
+              <div key={i} style={{ color: i === 0 ? 'var(--text-secondary)' : 'var(--text-muted)', padding: '1px 0', borderBottom: i < log.length - 1 ? '1px solid #1a1006' : 'none' }}>{entry}</div>
+            ))}
+          </div>
+        </div>
+
+        {showLoot && <div style={{ marginTop: 8 }}><LootGenerator defaultCr={avgCr} onClose={() => setShowLoot(false)} /></div>}
+      </div>
+
+      {/* Right: Actions panel */}
+      <div style={{ width: isTablet ? 220 : 250, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto', maxHeight: 'calc(55vh - 20px)' }}>
+        {panel === null && activeCombatant && (() => {
+          if (isEnemy && activeCombatant.currentHp > 0) return (
+            <div style={{ background: '#1a1006', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 8, padding: 10 }}>
+              <div style={{ fontSize: '0.75rem', color: '#e74c3c', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 4 }}>ENEMY TURN — {activeCombatant.name}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: 8 }}>{dmMode ? 'AI is deciding…' : 'Waiting for enemy…'}</div>
+              {dmMode && <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>➜ Skip (Force Next)</button>}
+            </div>
+          );
+
+          if (!canAct && !isDying) return (
+            <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 10 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif" }}>
+                Turn: <strong style={{ color: 'var(--gold)' }}>{activeCombatant.name}</strong> — waiting…
+              </div>
+            </div>
+          );
+
+          return (
+            <div style={{ background: '#1a1006', border: `1px solid ${isDying ? 'rgba(243,156,18,0.5)' : '#2a1a0a'}`, borderRadius: 8, padding: 10 }}>
+              <div style={{ fontSize: '0.75rem', color: isDying ? '#f39c12' : 'var(--text-muted)', marginBottom: 8, fontFamily: "'Cinzel', Georgia, serif" }}>
+                {isDying ? `⚠ ${activeCombatant.name} DYING` : `ACTIONS — ${activeCombatant.name}`}
+              </div>
+              {isDying ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {(isMyDying || dmMode) && <button onClick={() => onRollDeathSave(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}>🎲 Death Save</button>}
+                  {dmMode && <button onClick={() => onStabilize(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>✚ Stabilize</button>}
+                  {canAct && <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>➜ Next Turn</button>}
+                </div>
+              ) : (
+                <>
+                  {incapCondition ? (
+                    <div style={{ background: 'rgba(192,57,43,0.12)', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 6, padding: '6px 8px', marginBottom: 8, fontSize: '0.72rem', color: '#e74c3c' }}>
+                      ⚠ {activeCombatant.name} is <strong>{incapCondition}</strong> — cannot act
+                    </div>
+                  ) : (
+                    <ActionPanel combatant={activeCombatant} onAttack={() => setPanel('attack')} onSpell={(c, action) => handleSpellOpen(c, action)} onSpecial={() => {}} style={{ marginBottom: 8 }} />
+                  )}
+                  {dmMode && !incapCondition && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4, paddingTop: 8, borderTop: '1px solid #2a1a0a' }}>
+                      <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', letterSpacing: '0.08em' }}>DM TOOLS</div>
+                      <button onClick={() => setPanel('aoe')} style={{ ...btn.action, background: 'rgba(155,89,182,0.12)', border: '1px solid rgba(155,89,182,0.35)', color: '#9b59b6', fontSize: '0.75rem' }}>💥 AoE Damage</button>
+                      <button onClick={() => setPanel('concentrate')} style={{ ...btn.action, background: 'rgba(155,89,182,0.12)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6', fontSize: '0.75rem' }}>
+                        🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}
+                      </button>
+                      <button onClick={() => setPanel('save')} style={{ ...btn.action, background: 'rgba(41,128,185,0.12)', border: '1px solid rgba(41,128,185,0.35)', color: '#3498db', fontSize: '0.75rem' }}>🎲 Saving Throw</button>
+                    </div>
+                  )}
+                  {canAct && <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71', marginTop: 6, width: '100%' }}>➜ End Turn</button>}
+                </>
+              )}
+            </div>
+          );
+        })()}
+
+        {renderPanels()}
+
+        {/* DM: End Combat always visible */}
+        {dmMode && (
+          <button onClick={onEndEncounter} style={{ ...btn.ghost, width: '100%', fontSize: '0.75rem', color: '#c0392b', borderColor: 'rgba(192,57,43,0.4)' }}>
+            ✕ End Combat
+          </button>
+        )}
       </div>
     </div>
   );
