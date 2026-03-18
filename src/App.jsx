@@ -51,6 +51,9 @@ export default function App() {
   const addSessionEntry = useStore(s => s.addSessionEntry);
   const setMyCharacter   = useStore(s => s.setMyCharacter);
   const setPartyMembers  = useStore(s => s.setPartyMembers);
+  const saveSessionState = useStore(s => s.saveSessionStateToSupabase);
+
+  const sessionPersistDebounce = useRef(null);
 
   useEffect(() => {
     // Pick up invite code from URL or localStorage
@@ -108,6 +111,12 @@ export default function App() {
       }
     });
 
+    // Player token movement (player → all others for immediate visual feedback, DM authoritative)
+    ch.on('broadcast', { event: 'player-move' }, ({ payload }) => {
+      if (payload.userId === user?.id) return; // skip own echo
+      useStore.getState().moveToken(payload.tokenId, payload.x, payload.y, payload.cost || 0);
+    });
+
     // Dice roll broadcast (any player → all others)
     ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
       // Only add entries from OTHER users — we already logged our own roll
@@ -153,6 +162,16 @@ export default function App() {
     }, 400);
     return () => clearTimeout(broadcastDebounce.current);
   }, [encounter, isDM, dmMode, liveConnected]);
+
+  // DM persists session state (scene + encounter) to Supabase so players can refresh
+  useEffect(() => {
+    if (!isDM || !dmMode || !activeCampaign?.id) return;
+    clearTimeout(sessionPersistDebounce.current);
+    sessionPersistDebounce.current = setTimeout(() => {
+      saveSessionState();
+    }, 2000);
+    return () => clearTimeout(sessionPersistDebounce.current);
+  }, [campaign.currentSceneIndex, encounter, isDM, dmMode, activeCampaign?.id]);
 
   async function handleSession(session) {
     const authUser = session.user;
@@ -212,17 +231,31 @@ export default function App() {
       loadCampaignSettings(campaignRecord.settings);
     }
 
+    // Restore DM's saved scene position (loadCampaign always resets to 0)
+    const savedSceneIndex = campaignRecord.settings?.currentSceneIndex;
+    if (savedSceneIndex != null && savedSceneIndex > 0) {
+      setCurrentScene(savedSceneIndex);
+    }
+
+    // Restore active encounter state (combat/initiative in progress)
+    const savedEncounter = campaignRecord.settings?.encounterState;
+    if (savedEncounter?.phase && savedEncounter.phase !== 'idle') {
+      syncEncounterDown(savedEncounter);
+    }
+
     // Save campaign ID so refresh restores to game view
     sessionStorage.setItem('activeCampaignId', campaignRecord.id);
 
-    // ── Load real player characters (partyMembers) ────────────────────────────
+    // ── Load real player characters (partyMembers) ─────────────────────────────
     const { data: allMembers } = await supabase
       .from('campaign_members')
       .select('user_id, role, character_data')
       .eq('campaign_id', campaignRecord.id);
 
+    // Dedup: one character per user_id (take the first/only row per user)
+    const seenUsers = new Set();
     const realPlayers = (allMembers || [])
-      .filter(m => m.character_data?.name)
+      .filter(m => m.character_data?.name && !seenUsers.has(m.user_id) && seenUsers.add(m.user_id))
       .map(m => ({ ...m.character_data }));
     setPartyMembers(realPlayers);
 
@@ -350,8 +383,9 @@ export default function App() {
                 .from('campaign_members')
                 .select('user_id, role, character_data')
                 .eq('campaign_id', activeCampaign.id);
+              const seen = new Set();
               const players = (members || [])
-                .filter(m => m.character_data?.name)
+                .filter(m => m.character_data?.name && !seen.has(m.user_id) && seen.add(m.user_id))
                 .map(m => ({ ...m.character_data }));
               setPartyMembers(players);
             }

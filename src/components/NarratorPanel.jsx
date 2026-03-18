@@ -264,7 +264,10 @@ export default function NarratorPanel() {
       if (result.startCombat) {
         const store    = useStore.getState();
         const curScene = store.campaign.scenes?.[store.campaign.currentSceneIndex];
-        const enemies  = curScene?.enemies || [];
+        // Use enemies from AI response first, then fall back to scene data
+        const enemies  = (result.enemies?.length > 0)
+          ? result.enemies
+          : curScene?.enemies || curScene?.encounters?.[0]?.enemies || [];
         const party    = store.partyMembers || [];
         store.startEncounter(enemies, party, true); // true = auto-roll initiative
         broadcastStartCombat({ enemies, party, autoRoll: true });
