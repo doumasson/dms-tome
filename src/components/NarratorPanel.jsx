@@ -79,7 +79,13 @@ export default function NarratorPanel() {
     if (!currentScene || !campaign.loaded) return;
     const sceneKey = `${activeCampaign?.id}:${idx}`;
     if (lastAutoPostedRef.current === sceneKey) return;
-    // On first mount with existing history (resumed session), skip auto-post
+    // Skip auto-post if this scene's content is already in history (resumed session)
+    const sceneText = [currentScene.title, currentScene.text].filter(Boolean).join('\n\n');
+    if (narrator.history.some(m => m.text === sceneText)) {
+      lastAutoPostedRef.current = sceneKey;
+      return;
+    }
+    // On first mount with any existing history, skip to avoid re-narrating mid-campaign
     if (autoPostFirstRunRef.current) {
       autoPostFirstRunRef.current = false;
       if (narrator.history.length > 0) {
@@ -87,6 +93,7 @@ export default function NarratorPanel() {
         return;
       }
     }
+    autoPostFirstRunRef.current = false;
     lastAutoPostedRef.current = sceneKey;
 
     const text = [currentScene.title, currentScene.text].filter(Boolean).join('\n\n');
