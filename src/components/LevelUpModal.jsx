@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CLASSES, getSpellSlots, getFeaturesUpToLevel } from '../data/classes';
+import SpellPickPanel, { getSpellGainCount, isPreparedCaster } from './levelUp/SpellPickPanel';
 
 // ─── D&D 5e XP thresholds ─────────────────────────────────────────────────────
 const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000];
@@ -62,6 +63,11 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
   const [hpChoice, setHpChoice] = useState('average'); // 'average' | 'roll'
   const [rolledHp, setRolledHp] = useState(null);
   const [confirmed, setConfirmed] = useState(false);
+  const [spellStep, setSpellStep] = useState(false); // true = showing spell picker
+  const [pickedSpells, setPickedSpells] = useState([]);
+
+  const spellsToGain = getSpellGainCount(cls);
+  const needsSpellPick = (spellsToGain > 0 || isPreparedCaster(cls)) && clsData?.castingType;
 
   if (!clsData) {
     return (
@@ -90,16 +96,31 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
     setRolledHp(r);
   }
 
+  function handleNext() {
+    if (needsSpellPick && !spellStep) {
+      setSpellStep(true);
+    } else {
+      handleConfirm();
+    }
+  }
+
   function handleConfirm() {
     setConfirmed(true);
+    const existingSpells = character.spells || [];
+    const updatedSpells = pickedSpells.length > 0
+      ? [...existingSpells, ...pickedSpells]
+      : existingSpells;
     onConfirm({
       level: newLevel,
       maxHp: finalHp,
-      hp: finalHp, // fully heal on level up (optional — can change)
+      hp: finalHp,
       spellSlots: Object.keys(newSlots).length > 0 ? newSlots : character.spellSlots,
       features: allFeaturesNew,
+      spells: updatedSpells,
     });
   }
+
+  const hpRollPending = hpChoice === 'roll' && rolledHp === null;
 
   return (
     <div style={s.overlay} onClick={e => e.target === e.currentTarget && onCancel()}>
@@ -113,87 +134,125 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
           </div>
         </div>
 
-        {/* HP gain */}
-        <div style={s.section}>
-          <div style={s.sectionTitle}>Hit Points</div>
-          <div style={s.hpRow}>
-            <div style={s.hpGainBox}>
-              <span style={s.hpGainNum}>+{Math.max(1, hpGain)}</span>
-              <span style={s.hpGainLabel}>HP gained</span>
-            </div>
-            <div style={s.hpDetail}>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: 8 }}>
-                d{hitDie} + CON ({statMod(character.stats?.con ?? 10)})
-              </div>
-              <div style={s.hpChoiceRow}>
-                <button
-                  style={{ ...s.choiceBtn, ...(hpChoice === 'average' ? s.choiceBtnActive : {}) }}
-                  onClick={() => setHpChoice('average')}
-                >
-                  Average ({avgHp})
-                </button>
-                <button
-                  style={{ ...s.choiceBtn, ...(hpChoice === 'roll' ? s.choiceBtnActive : {}) }}
-                  onClick={() => setHpChoice('roll')}
-                >
-                  Roll d{hitDie}
-                </button>
-              </div>
-              {hpChoice === 'roll' && (
-                <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <button style={s.rollBtn} onClick={doRoll}>
-                    🎲 Roll!
-                  </button>
-                  {rolledHp !== null && (
-                    <span style={{ color: '#d4af37', fontWeight: 700, fontFamily: "'Cinzel', Georgia, serif" }}>
-                      {rolledHp} + {conMod >= 0 ? '+' : ''}{conMod} = {Math.max(1, rolledHp + conMod)}
-                    </span>
-                  )}
+        {/* Step indicator for casters */}
+        {needsSpellPick && (
+          <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
+            {['Stats', 'Spells'].map((label, i) => {
+              const isActive = (i === 0 && !spellStep) || (i === 1 && spellStep);
+              const isDone = i === 0 && spellStep;
+              return (
+                <div key={label} style={{
+                  flex: 1, textAlign: 'center', padding: '8px 0',
+                  fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.7rem',
+                  letterSpacing: '0.08em', fontWeight: 700,
+                  color: isActive ? '#d4af37' : isDone ? '#2ecc71' : 'rgba(200,180,140,0.3)',
+                  borderBottom: isActive ? '2px solid #d4af37' : '2px solid transparent',
+                  cursor: isDone ? 'pointer' : 'default',
+                  transition: 'all 0.2s',
+                }} onClick={() => isDone && setSpellStep(false)}>
+                  {isDone ? '✓ ' : ''}{label}
                 </div>
-              )}
-            </div>
-          </div>
-          <div style={s.hpTotalRow}>
-            <span style={s.hpTotalLabel}>New Max HP</span>
-            <span style={s.hpTotalVal}>{finalHp}</span>
-            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginLeft: 6 }}>
-              (was {character.maxHp})
-            </span>
-          </div>
-        </div>
-
-        {/* New features */}
-        {newFeatures.length > 0 && (
-          <div style={s.section}>
-            <div style={s.sectionTitle}>New Features at Level {newLevel}</div>
-            <div style={s.featureList}>
-              {newFeatures.map(f => (
-                <div key={f} style={s.featureBadge}>{f}</div>
-              ))}
-            </div>
+              );
+            })}
           </div>
         )}
 
-        {/* Spell slots if changed */}
-        {clsData.castingType && Object.keys(newSlots).length > 0 && (
+        {/* Spell Selection Step */}
+        {spellStep && (
           <div style={s.section}>
-            <div style={s.sectionTitle}>Spell Slots at Level {newLevel}</div>
-            <div style={s.slotRow}>
-              {Object.entries(newSlots).map(([lvl, sl]) => {
-                const prevTotal = character.spellSlots?.[lvl]?.total || 0;
-                const gained = sl.total - prevTotal;
-                return (
-                  <div key={lvl} style={{ ...s.slotBadge, ...(gained > 0 ? s.slotBadgeNew : {}) }}>
-                    <span style={s.slotLvlLabel}>
-                      {lvl === '1' ? '1st' : lvl === '2' ? '2nd' : lvl === '3' ? '3rd' : `${lvl}th`}
-                    </span>
-                    <span style={s.slotCount}>{sl.total}</span>
-                    {gained > 0 && <span style={s.slotGainedTag}>+{gained}</span>}
-                  </div>
-                );
-              })}
-            </div>
+            <div style={s.sectionTitle}>Choose New Spells</div>
+            <SpellPickPanel
+              cls={cls}
+              newSlots={newSlots}
+              knownSpells={character.spells || []}
+              onChange={setPickedSpells}
+            />
           </div>
+        )}
+
+        {/* Stats step: HP + features + spell slots */}
+        {!spellStep && (
+          <>
+            <div style={s.section}>
+              <div style={s.sectionTitle}>Hit Points</div>
+              <div style={s.hpRow}>
+                <div style={s.hpGainBox}>
+                  <span style={s.hpGainNum}>+{Math.max(1, hpGain)}</span>
+                  <span style={s.hpGainLabel}>HP gained</span>
+                </div>
+                <div style={s.hpDetail}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: 8 }}>
+                    d{hitDie} + CON ({statMod(character.stats?.con ?? 10)})
+                  </div>
+                  <div style={s.hpChoiceRow}>
+                    <button
+                      style={{ ...s.choiceBtn, ...(hpChoice === 'average' ? s.choiceBtnActive : {}) }}
+                      onClick={() => setHpChoice('average')}
+                    >
+                      Average ({avgHp})
+                    </button>
+                    <button
+                      style={{ ...s.choiceBtn, ...(hpChoice === 'roll' ? s.choiceBtnActive : {}) }}
+                      onClick={() => setHpChoice('roll')}
+                    >
+                      Roll d{hitDie}
+                    </button>
+                  </div>
+                  {hpChoice === 'roll' && (
+                    <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <button style={s.rollBtn} onClick={doRoll}>
+                        🎲 Roll!
+                      </button>
+                      {rolledHp !== null && (
+                        <span style={{ color: '#d4af37', fontWeight: 700, fontFamily: "'Cinzel', Georgia, serif" }}>
+                          {rolledHp} + {conMod >= 0 ? '+' : ''}{conMod} = {Math.max(1, rolledHp + conMod)}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={s.hpTotalRow}>
+                <span style={s.hpTotalLabel}>New Max HP</span>
+                <span style={s.hpTotalVal}>{finalHp}</span>
+                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginLeft: 6 }}>
+                  (was {character.maxHp})
+                </span>
+              </div>
+            </div>
+
+            {newFeatures.length > 0 && (
+              <div style={s.section}>
+                <div style={s.sectionTitle}>New Features at Level {newLevel}</div>
+                <div style={s.featureList}>
+                  {newFeatures.map(f => (
+                    <div key={f} style={s.featureBadge}>{f}</div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {clsData.castingType && Object.keys(newSlots).length > 0 && (
+              <div style={s.section}>
+                <div style={s.sectionTitle}>Spell Slots at Level {newLevel}</div>
+                <div style={s.slotRow}>
+                  {Object.entries(newSlots).map(([lvl, sl]) => {
+                    const prevTotal = character.spellSlots?.[lvl]?.total || 0;
+                    const gained = sl.total - prevTotal;
+                    return (
+                      <div key={lvl} style={{ ...s.slotBadge, ...(gained > 0 ? s.slotBadgeNew : {}) }}>
+                        <span style={s.slotLvlLabel}>
+                          {lvl === '1' ? '1st' : lvl === '2' ? '2nd' : lvl === '3' ? '3rd' : `${lvl}th`}
+                        </span>
+                        <span style={s.slotCount}>{sl.total}</span>
+                        {gained > 0 && <span style={s.slotGainedTag}>+{gained}</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* XP next level */}
@@ -205,15 +264,31 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
 
         {/* Buttons */}
         <div style={s.btnRow}>
-          <button style={s.cancelBtn} onClick={onCancel} disabled={confirmed}>
-            Not Yet
-          </button>
+          {spellStep ? (
+            <button style={s.cancelBtn} onClick={() => setSpellStep(false)} disabled={confirmed}>
+              ← Back
+            </button>
+          ) : (
+            <button style={s.cancelBtn} onClick={onCancel} disabled={confirmed}>
+              Not Yet
+            </button>
+          )}
           <button
-            style={{ ...s.confirmBtn, ...(hpChoice === 'roll' && rolledHp === null ? s.confirmBtnDisabled : {}) }}
-            onClick={handleConfirm}
-            disabled={confirmed || (hpChoice === 'roll' && rolledHp === null)}
+            style={{
+              ...s.confirmBtn,
+              ...((hpRollPending && !spellStep) ? s.confirmBtnDisabled : {}),
+            }}
+            onClick={spellStep ? handleConfirm : handleNext}
+            disabled={confirmed || (hpRollPending && !spellStep)}
           >
-            {confirmed ? 'Leveling up…' : `✦ Level Up to ${newLevel}!`}
+            {confirmed
+              ? 'Leveling up…'
+              : spellStep
+                ? `✦ Level Up to ${newLevel}!`
+                : needsSpellPick
+                  ? `Next: Pick Spells →`
+                  : `✦ Level Up to ${newLevel}!`
+            }
           </button>
         </div>
       </div>

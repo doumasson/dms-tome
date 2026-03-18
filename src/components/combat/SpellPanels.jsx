@@ -17,15 +17,26 @@ export function SavingThrowPanel({ combatants, onLog, onCancel }) {
     setSelectedIds(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   }
 
+  // Per 5e rules: Paralyzed/Stunned/Incapacitated auto-fail STR and DEX saves
+  const AUTO_FAIL_CONDITIONS = new Set(['Paralyzed', 'Stunned', 'Incapacitated']);
+  const AUTO_FAIL_ABILITIES = new Set(['str', 'dex']);
+
   function rollSaves() {
     const targets = combatants.filter(c => selectedIds.includes(c.id) && c.currentHp > 0);
     const res = targets.map(t => {
+      const autoFail = AUTO_FAIL_ABILITIES.has(ability) &&
+        (t.conditions || []).some(cond => AUTO_FAIL_CONDITIONS.has(cond));
+      if (autoFail) {
+        return { name: t.name, d20: 1, mod: 0, total: 1, pass: false, autoFail: true };
+      }
       const mod = getAbilityModifier(t.stats?.[ability] ?? 10);
       const d20 = rollDie(20);
       const total = d20 + mod;
       return { name: t.name, d20, mod, total, pass: total >= dc };
     });
-    onLog(`Save (${SAVE_NAMES[ability]} DC ${dc}): ` + res.map(r => `${r.name} ${r.pass ? '✓' : '✗'}(${r.total})`).join(', '));
+    onLog(`Save (${SAVE_NAMES[ability]} DC ${dc}): ` + res.map(r =>
+      `${r.name} ${r.pass ? '✓' : '✗'}(${r.autoFail ? 'auto-fail' : r.total})`
+    ).join(', '));
     setResults(res);
   }
 
@@ -37,7 +48,11 @@ export function SavingThrowPanel({ combatants, onLog, onCancel }) {
           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', padding: '2px 0' }}>
             <span style={{ color: 'var(--text-secondary)' }}>{r.name}</span>
             <span style={{ color: r.pass ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
-              {r.pass ? '✓ Pass' : '✗ Fail'} ({r.d20}{formatModifier(r.mod)}={r.total})
+              {r.pass ? '✓ Pass' : '✗ Fail'}{' '}
+              {r.autoFail
+                ? '(auto-fail)'
+                : `(${r.d20}${formatModifier(r.mod)}=${r.total})`
+              }
             </span>
           </div>
         ))}

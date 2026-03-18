@@ -231,69 +231,67 @@ All D&D 5e SRD content (classes, races, spells, monsters, equipment, conditions)
 - Combat tracker (initiative order, HP, conditions, death saves, concentration)
 - Realtime multiplayer sync via Supabase broadcast (combat state, narrator messages, scene changes)
 - Turn gating — only the active player can take actions; DM can always override
-- Character sheets, dice roller, loot generator, notes
+- Dice roller, loot generator (DM tool), notes tab
 - Free scene image gen (Pollinations.ai, fetch+retry, blob URL)
 - API key sharing — DM's Claude key shared to all players via Supabase settings
+- **Action economy** — `actionsUsed`, `bonusActionsUsed`, `movementUsed` tracked per turn; UI disables spent actions; Dash doubles movement
+- **Class-aware action menus** — all 12 classes have per-class action/bonus action panels (ActionPanel.jsx); spell slots displayed
+- **Rest system** — Short/Long rest modal with majority-vote flow (RestModal.jsx); host can force
+- **Full character builder** — Race, Class, Background, Abilities (standard array/point buy/roll), Identity; SRD data throughout
+- **Spell selection at creation** — Spellcasting classes (Wizard/Sorcerer/Warlock/Bard/Cleric/Druid/Paladin/Ranger) pick cantrips + spells per SRD limits in StepSpells.jsx
+- **Inventory system** — Characters have `inventory[]`, `equippedItems{}`, `gold`; new characters start with a healing potion
+- **Character sheet modal** — Two-pane modal: left = HP bar, combat stats, ability scores, 9 equipment slots (drag-and-drop from inventory), Features/Spells/Skills tabs; right = inventory with equip/use/drop. Click portrait in party sidebar to open. Read-only for other players. Own sheet also via 🎒 backpack button.
+- **Post-combat loot screen** — Auto-triggers when all enemies die. Shows XP split by party size (crToXp), CR-based gold with variance, 1–2 random consumable item drops (each claimable individually). Applies to character via store actions.
+- **Rules Assistant** — Floating `?` button; players ask D&D 5e rules questions; Claude Haiku answers with SRD keyword context (spells, items) auto-injected from local data
+- **Level-up wizard** — XP threshold triggers LevelUpModal; HP, proficiency bonus, features recalculate; spell slots updated
 
 ## In Progress / What's Next
 Priority order:
 
-### 1. D&D Action Economy (HIGH)
-Every combatant gets per-turn: 1 action, 1 bonus action (if class has one), movement up to speed.
-- Track `actionsUsed`, `bonusActionsUsed`, `movementUsed` on each combatant per turn
-- Dash = action, grants extra movement equal to speed
-- UI disables action buttons once action is spent; re-enables on Next Turn
-- Disengage, Dodge, Help, Hide as valid action choices
+### 1. Enemy Turns (CRITICAL — game doesn't work without this)
+When it's an enemy's turn, the Dungeon Master automatically:
+- Decides action (attack nearest player, move toward target)
+- Rolls attack + damage using enemy's attack definitions
+- Applies HP changes to the target combatant
+- Narrates what happened in chat (1–2 sentences)
+- Calls Next Turn
+No human input required. Host client (`dmMode`) drives this. Must broadcast all state changes so non-host players stay in sync.
 
 ### 2. Interactive Spell Targeting (HIGH)
-Replace the "AoE button" with real spatial targeting on the scene image.
-- Cone, line, sphere, single-target modes
-- SVG/canvas overlay renders the shape as player aims
-- Tokens inside the area are highlighted
-- On confirm: hit tokens roll saves (via chat button), AI processes enemy saves silently
+Replace "Cast Spell" button with real spatial targeting on the scene image.
+- Single-target: click an enemy token
+- Sphere (Fireball): click a point, radius renders, confirm
+- Cone (Burning Hands): rotatable cone SVG from caster, click to confirm
+- Line (Lightning Bolt): aim line, click to fire
+- Tokens inside area highlighted before confirm; hit tokens roll saves via chat button
 
-### 3. Enemy Turns (HIGH — core to no-DM play)
-When it's an enemy's turn, the Dungeon Master automatically:
-- Decides action (attack nearest player, cast spell, move)
-- Rolls attack/damage
-- Applies results (HP changes, conditions)
-- Narrates what happened in chat
-- Calls Next Turn
-No human input required for enemy turns.
+### 3. NPC Proximity Interaction (HIGH — north star feature)
+When a player token is dragged near an NPC or point of interest on the scene:
+- A contextual prompt appears organically ("You approach the hooded figure…")
+- Player types/speaks → Dungeon Master responds in-character as that NPC
+- No mode switch, no UI change — the world just talks back
+Requires NPCs to be defined in scene data with position and personality.
 
-### 4. NPC Proximity Interaction (HIGH — Bioware north star)
-When a player token approaches an NPC, building, or point of interest:
-- A contextual prompt appears ("You near the hooded figure by the fire…")
-- Player acts/speaks → Dungeon Master responds as that NPC
-- Seamless — no mode switch, no UI change, just the world talking back
-This makes the world feel alive and organic, not scripted.
+### 4. Token Sync (MEDIUM — multiplayer correctness)
+Token position changes aren't currently broadcast. When Player A drags their token, Player B doesn't see it move.
+- Broadcast `token-move` events via Supabase Realtime on drag-end
+- All clients apply position update immediately
 
-### 5. Class-Aware Action Menus (MEDIUM)
-Replace generic Attack/Spell buttons with class-specific panels:
-- Wizard/Sorcerer: spell slots, known spells, spell school tags
-- Fighter: Action Surge, Second Wind, fighting style bonuses
-- Rogue: Sneak Attack condition check, Cunning Action bonus actions
-- Cleric: Channel Divinity, spell slots, domain features
-- Ranger, Paladin, Barbarian, Bard, Druid, Monk, Warlock — each correct
+### 5. Level-Up Spell Selection for Casters (MEDIUM)
+When a spellcasting class levels up, LevelUpModal should include a spell pick step (same StepSpells component used at creation) so Wizards/Sorcerers/etc. gain new spells on level-up, not just HP.
 
-### 5. Conditions System (MEDIUM)
-Properly implement: Blinded, Charmed, Frightened, Grappled, Incapacitated, Invisible, Paralyzed, Petrified, Poisoned, Prone, Restrained, Stunned, Unconscious.
-Each has mechanical effects that must be enforced in combat (e.g., Prone = disadvantage on attack rolls, half movement to stand).
+### 6. Conditions Mechanical Enforcement (MEDIUM)
+Conditions are tracked visually but don't affect rolls yet.
+- Prone: disadvantage on attacks, half movement to stand
+- Paralyzed: auto-fail STR/DEX saves, attacks against have advantage, crits on melee
+- Poisoned: disadvantage on attack rolls and ability checks
+- Etc. — enforce each per SRD at the point of roll resolution
 
-### 6. Token Sync (MEDIUM)
-Broadcast token position changes via Supabase Realtime so all players see tokens move.
+### 7. Fog of War (MEDIUM)
+Per-scene fog of war with shared party vision. Reveal squares as the party explores. On by default for dungeons (`fogOfWar: true` in scene JSON), off for towns.
 
-### 7. Full Character Builder (MEDIUM)
-Full SRD-backed character creation wizard: class, race, background, ability score generation, starting spells/equipment auto-filled from bundled SRD JSON.
-
-### 8. Fog of War (MEDIUM)
-Per-scene fog of war with shared party vision. Reveal squares as the party explores. On by default for dungeons, off for towns.
-
-### 9. Rest System (MEDIUM)
-Short/long rest with majority-vote flow. Timer, vote UI, auto-yes for AFK players, host force option.
-
-### 10. Portable Characters (LOWER)
-Character ownership model: characters live on the player's profile, not the campaign. Import/export between campaigns with level-reset transfer rules.
+### 8. Portable Characters (LOWER)
+Character ownership model: characters live on the player's profile, not the campaign. Import/export between campaigns with level-reset transfer rules (identity transfers, progression resets).
 
 ## Design Rules
 - Dark fantasy theme, gold accents (`#d4af37`), deep brown/black backgrounds
