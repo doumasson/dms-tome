@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import useStore from '../store/useStore';
 import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib/dalleApi';
-import { broadcastFogReveal, broadcastFogToggle } from '../lib/liveChannel';
+import { broadcastFogReveal, broadcastFogToggle, broadcastSceneTokenMove } from '../lib/liveChannel';
 
 // Fog grid dimensions (cols × rows)
 const FOG_COLS = 12;
@@ -32,20 +32,26 @@ export default function ScenePanel() {
   const sceneImages     = useStore(s => s.sceneImages);
   const setSceneImage   = useStore(s => s.setSceneImage);
   const partyMembers    = useStore(s => s.partyMembers);
-  const fogEnabled      = useStore(s => s.fogEnabled);
-  const fogRevealed     = useStore(s => s.fogRevealed);
-  const initFogForScene = useStore(s => s.initFogForScene);
-  const revealFogCells  = useStore(s => s.revealFogCells);
-  const toggleFog       = useStore(s => s.toggleFog);
+  const fogEnabled           = useStore(s => s.fogEnabled);
+  const fogRevealed          = useStore(s => s.fogRevealed);
+  const initFogForScene      = useStore(s => s.initFogForScene);
+  const revealFogCells       = useStore(s => s.revealFogCells);
+  const toggleFog            = useStore(s => s.toggleFog);
+  const sceneTokenPositions  = useStore(s => s.sceneTokenPositions);
+  const setSceneTokenPosition = useStore(s => s.setSceneTokenPosition);
 
   const [imgLoading, setImgLoading] = useState(false);
   const [imgError, setImgError]     = useState(false);
   const [imgReady, setImgReady]     = useState(false);
   const [imgAttempt, setImgAttempt] = useState(0);
 
-  // Draggable tokens
-  const [tokenPositions, setTokenPositions] = useState({});
+  // Draggable tokens — local state while dragging, synced to store on drop
+  const [localPositions, setLocalPositions] = useState({});
   const [dragging, setDragging]             = useState(null); // { memberId, offsetX, offsetY }
+
+  // Merged positions: store (remote) positions merged with local overrides
+  const remotePositions = sceneTokenPositions[sceneKey] || {};
+  const tokenPositions  = { ...remotePositions, ...localPositions };
   const containerRef = useRef(null);
   const imgAbortRef  = useRef(null);
 
@@ -147,22 +153,28 @@ export default function ScenePanel() {
     const rect = containerRef.current.getBoundingClientRect();
     const x = Math.max(2, Math.min(98, ((e.clientX - rect.left - dragging.offsetX) / rect.width)  * 100));
     const y = Math.max(2, Math.min(96, ((e.clientY - rect.top  - dragging.offsetY) / rect.height) * 100));
-    setTokenPositions(prev => ({ ...prev, [dragging.memberId]: { x, y } }));
+    setLocalPositions(prev => ({ ...prev, [dragging.memberId]: { x, y } }));
   }
 
   function stopDrag() {
-    if (dragging && isFogOn) {
-      // Reveal fog cells around the final token position
+    if (dragging) {
       const memberId = dragging.memberId;
-      const pos = tokenPositions[memberId];
+      const pos = localPositions[memberId] || tokenPositions[memberId];
       if (pos) {
-        // Convert % position to grid cell
-        const cx = Math.floor((pos.x / 100) * FOG_COLS);
-        const cy = Math.floor((pos.y / 100) * FOG_ROWS);
-        const cells = cellsInRadius(cx, cy, FOG_REVEAL_RADIUS);
-        revealFogCells(sceneKey, cells);
-        broadcastFogReveal(sceneKey, cells);
+        // Persist final position to store + broadcast to other clients
+        setSceneTokenPosition(sceneKey, memberId, pos);
+        broadcastSceneTokenMove(memberId, pos.x, pos.y, sceneKey);
+
+        // Fog of war reveal
+        if (isFogOn) {
+          const cx = Math.floor((pos.x / 100) * FOG_COLS);
+          const cy = Math.floor((pos.y / 100) * FOG_ROWS);
+          const cells = cellsInRadius(cx, cy, FOG_REVEAL_RADIUS);
+          revealFogCells(sceneKey, cells);
+          broadcastFogReveal(sceneKey, cells);
+        }
       }
+      setLocalPositions({});
     }
     setDragging(null);
   }

@@ -31,6 +31,11 @@ export function broadcastApiKeySync(apiKey) {
   _channel?.send({ type: 'broadcast', event: 'api-key-sync', payload: { apiKey } });
 }
 
+// Scene token position sync (free movement outside combat)
+export function broadcastSceneTokenMove(memberId, x, y, sceneKey) {
+  _channel?.send({ type: 'broadcast', event: 'scene-token-move', payload: { memberId, x, y, sceneKey } });
+}
+
 // Fog of war: reveal cells (sceneKey + array of "x,y" cell keys)
 export function broadcastFogReveal(sceneKey, cells) {
   _channel?.send({ type: 'broadcast', event: 'fog-reveal', payload: { sceneKey, cells } });

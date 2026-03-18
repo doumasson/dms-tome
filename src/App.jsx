@@ -156,6 +156,14 @@ export default function App() {
       }
     });
 
+    // Scene token position sync (free movement outside combat)
+    ch.on('broadcast', { event: 'scene-token-move' }, ({ payload }) => {
+      const { memberId, x, y, sceneKey } = payload;
+      if (memberId && sceneKey) {
+        useStore.getState().setSceneTokenPosition(sceneKey, memberId, { x, y });
+      }
+    });
+
     // Dice roll broadcast (any player → all others)
     ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
       // Only add entries from OTHER users — we already logged our own roll

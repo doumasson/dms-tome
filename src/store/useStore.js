@@ -1058,6 +1058,19 @@ const useStore = create((set, get) => ({
       fogEnabled: { ...state.fogEnabled, [sceneKey]: val },
     })),
 
+  // === Scene Token Positions (free movement outside combat) ===
+  sceneTokenPositions: {}, // { [sceneKey]: { [memberId]: { x, y } } }
+  setSceneTokenPosition: (sceneKey, memberId, pos) =>
+    set((state) => ({
+      sceneTokenPositions: {
+        ...state.sceneTokenPositions,
+        [sceneKey]: {
+          ...(state.sceneTokenPositions[sceneKey] || {}),
+          [memberId]: pos,
+        },
+      },
+    })),
+
   // === Narrator (AI DM) ===
   narrator: {
     history: [], // { id, role: 'player'|'dm', speaker, text, rollRequest, timestamp }
