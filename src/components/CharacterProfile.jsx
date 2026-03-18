@@ -9,7 +9,7 @@ const CLASS_COLORS = {
   Sorcerer: '#8e44ad', Warlock: '#6c3483', Wizard: '#2980b9',
 };
 
-export default function CharacterProfile({ onClose, campaignId }) {
+export default function CharacterProfile({ onClose, campaignId, onCreateNew }) {
   const myCharacters     = useStore(s => s.myCharacters);
   const loadMyCharacters = useStore(s => s.loadMyCharacters);
   const user             = useStore(s => s.user);
@@ -52,6 +52,11 @@ export default function CharacterProfile({ onClose, campaignId }) {
       <div style={styles.header}>
         <button onClick={onClose} style={styles.backBtn}>← Back</button>
         <h1 style={styles.title}>My Characters</h1>
+        {onCreateNew && (
+          <button onClick={onCreateNew} style={styles.createBtn}>
+            ✦ New Character
+          </button>
+        )}
       </div>
 
       {myCharacters.length === 0 ? (
@@ -167,6 +172,19 @@ const styles = {
     fontSize: '0.85rem',
     cursor: 'pointer',
     fontFamily: "'Cinzel', Georgia, serif",
+  },
+  createBtn: {
+    background: 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.08))',
+    border: '1px solid rgba(212,175,55,0.5)',
+    color: '#d4af37',
+    borderRadius: 6,
+    padding: '6px 14px',
+    fontSize: '0.82rem',
+    fontWeight: 700,
+    cursor: 'pointer',
+    fontFamily: "'Cinzel', Georgia, serif",
+    letterSpacing: '0.03em',
+    marginLeft: 'auto',
   },
   title: {
     fontFamily: "'Cinzel', Georgia, serif",

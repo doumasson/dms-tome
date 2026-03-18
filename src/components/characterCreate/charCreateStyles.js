@@ -1,18 +1,20 @@
 // Shared styles for the character creation wizard.
 export const s = {
   page: {
-    height: '100vh',
+    flex: 1,
     background: 'var(--bg-primary)',
     display: 'flex',
     justifyContent: 'center',
     overflow: 'hidden',
+    minHeight: 0,
   },
   card: {
     width: '100%',
     maxWidth: 860,
     display: 'flex',
     flexDirection: 'column',
-    height: '100vh',
+    height: '100%',
+    minHeight: 0,
   },
   cardTop: {
     flexShrink: 0,

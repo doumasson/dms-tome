@@ -539,7 +539,7 @@ export default function App() {
 
   // ── Character Profile ─────────────────────────────────────────────────────────
   if (appView === 'character-profile') {
-    return <CharacterProfile onClose={() => setAppView('game')} campaignId={activeCampaign?.id} />;
+    return <CharacterProfile onClose={() => setAppView('game')} campaignId={activeCampaign?.id} onCreateNew={() => setAppView('character-create')} />;
   }
 
   // ── Main Game UI ─────────────────────────────────────────────────────────────
