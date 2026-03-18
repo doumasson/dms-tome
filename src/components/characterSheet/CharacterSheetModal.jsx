@@ -11,9 +11,11 @@ export default function CharacterSheetModal({ character, onClose }) {
   if (!character) return null;
 
   const isOwn = myCharacter?.id === character.id || myCharacter?.name === character.name;
+  // Use live store character for own sheet so equip/drop/use updates instantly without reopening
+  const liveChar = isOwn ? (myCharacter ?? character) : character;
   const inCombat = encounter.phase !== 'idle';
 
-  const avatarUrl = `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(character.name)}&backgroundColor=transparent`;
+  const avatarUrl = `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(liveChar.name)}&backgroundColor=transparent`;
 
   function handleDropOnSlot(slotName, item) {
     if (!isOwn) return;
@@ -28,10 +30,10 @@ export default function CharacterSheetModal({ character, onClose }) {
           <img src={avatarUrl} alt="" style={s.portrait}
             onError={e => { e.currentTarget.style.display = 'none'; }} />
           <div style={s.headerInfo}>
-            <div style={s.charName}>{character.name}</div>
+            <div style={s.charName}>{liveChar.name}</div>
             <div style={s.charSub}>
-              Level {character.level || 1} {character.race} {character.class}
-              {character.background ? ` · ${character.background}` : ''}
+              Level {liveChar.level || 1} {liveChar.race} {liveChar.class}
+              {liveChar.background ? ` · ${liveChar.background}` : ''}
               {!isOwn ? ' (view only)' : ''}
             </div>
           </div>
@@ -41,12 +43,12 @@ export default function CharacterSheetModal({ character, onClose }) {
         {/* Body: two panes */}
         <div style={s.body}>
           <EquipmentPane
-            character={character}
+            character={liveChar}
             readOnly={!isOwn}
             onDropOnSlot={handleDropOnSlot}
           />
           <InventoryPane
-            character={character}
+            character={liveChar}
             readOnly={!isOwn}
             inCombat={inCombat}
           />

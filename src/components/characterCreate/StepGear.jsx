@@ -16,8 +16,12 @@ function detectWeaponPicker(text) {
   return null;
 }
 
-function getWeaponsForPicker(cats) {
-  return WEAPONS.filter(w => cats.includes(w.category));
+function getWeaponsForPicker(cats, oneHandedOnly = false) {
+  return WEAPONS.filter(w => {
+    if (!cats.includes(w.category)) return false;
+    if (oneHandedOnly && w.properties?.includes('two-handed')) return false;
+    return true;
+  });
 }
 
 // PHB starting gold by class (dice count × sides × multiplier)
@@ -234,7 +238,8 @@ function FixedItemRow({ text, lineIdx, gearChoices, setWeaponPick }) {
 
 // ── WeaponPicker: compact scrollable list of weapons ──────────────────────────
 function WeaponPicker({ picker, pickKey, gearChoices, setWeaponPick }) {
-  const weapons = getWeaponsForPicker(picker.cat);
+  // When shield is included, only show one-handed weapons
+  const weapons = getWeaponsForPicker(picker.cat, !!picker.withShield);
   const picks = gearChoices.weaponPicks || {};
 
   if (picker.count === 1) {
