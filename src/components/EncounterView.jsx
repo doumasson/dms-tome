@@ -8,7 +8,7 @@ import { btn } from './combat/combatStyles';
 
 // ─── Idle Phase (scene viewer shown when no combat is active) ─────────────────
 
-function IdlePhase({ campaign, dmMode, encounter, onStartEncounter, onStartCustom }) {
+function IdlePhase({ campaign, isHost, encounter, onStartEncounter, onStartCustom }) {
   const setCurrentScene = useStore(s => s.setCurrentScene);
   const { scenes, currentSceneIndex, loaded } = campaign;
   const scene = scenes[currentSceneIndex] || null;
@@ -19,7 +19,7 @@ function IdlePhase({ campaign, dmMode, encounter, onStartEncounter, onStartCusto
         <div style={{ fontSize: '2rem', marginBottom: 12 }}>📜</div>
         <div style={{ fontFamily: "'Cinzel', Georgia, serif", fontSize: '1rem', marginBottom: 8 }}>No Campaign Loaded</div>
         <div style={{ fontSize: '0.82rem' }}>Import a campaign JSON in the Import tab to begin.</div>
-        {dmMode && (
+        {isHost && (
           <button onClick={onStartCustom} style={{ ...btn.gold, marginTop: 20 }}>
             ⚔ Start Custom Combat
           </button>
@@ -54,7 +54,7 @@ function IdlePhase({ campaign, dmMode, encounter, onStartEncounter, onStartCusto
         </button>
       </div>
 
-      {scene && hasEncounter && dmMode && (
+      {scene && hasEncounter && isHost && (
         <div style={{ background: '#1a1006', border: '1px solid rgba(192,57,43,0.3)', borderRadius: 8, padding: 14, marginBottom: 12 }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 8, fontFamily: "'Cinzel', Georgia, serif" }}>
             ENCOUNTER — {enemies.length} enemy group{enemies.length !== 1 ? 's' : ''}
@@ -72,7 +72,7 @@ function IdlePhase({ campaign, dmMode, encounter, onStartEncounter, onStartCusto
         </div>
       )}
 
-      {dmMode && !hasEncounter && (
+      {isHost && !hasEncounter && (
         <button onClick={onStartCustom} style={{ ...btn.ghost, width: '100%' }}>
           ⚔ Start Custom Combat
         </button>
@@ -88,6 +88,7 @@ export default function EncounterView() {
 
   const campaign     = useStore(s => s.campaign);
   const encounter    = useStore(s => s.encounter);
+  const isDM         = useStore(s => s.isDM);
   const dmMode       = useStore(s => s.dmMode);
   const myCharacter  = useStore(s => s.myCharacter);
   const user         = useStore(s => s.user);
@@ -145,12 +146,12 @@ export default function EncounterView() {
   }
 
   if (encounter.phase === 'initiative') {
-    if (!dmMode) {
+    if (!isDM) {
       return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 12, color: 'var(--text-muted)', padding: 40 }}>
           <div style={{ fontSize: '3rem' }}>⚔</div>
           <div style={{ fontFamily: "'Cinzel', Georgia, serif", fontSize: '1.1rem', color: 'var(--parchment)' }}>Combat is beginning…</div>
-          <div style={{ fontSize: '0.85rem' }}>The DM is rolling initiative.</div>
+          <div style={{ fontSize: '0.85rem' }}>The host is rolling initiative.</div>
         </div>
       );
     }
@@ -198,7 +199,7 @@ export default function EncounterView() {
     <div style={{ padding: '16px 0' }}>
       <IdlePhase
         campaign={campaign}
-        dmMode={dmMode}
+        isHost={isDM}
         encounter={encounter}
         onStartEncounter={handleStartEncounter}
         onStartCustom={() => setCustomSetup(true)}

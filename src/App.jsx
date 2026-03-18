@@ -102,7 +102,7 @@ export default function App() {
 
     // Encounter state sync (DM → players) — also includes fog state for late joiners
     ch.on('broadcast', { event: 'encounter-sync' }, ({ payload }) => {
-      if (!isDM || !dmMode) {
+      if (!useStore.getState().isDM) {
         syncEncounterDown(payload);
         if (payload._fogEnabled || payload._fogRevealed) {
           useStore.getState().applyFogSync(payload._fogEnabled, payload._fogRevealed);
@@ -110,25 +110,24 @@ export default function App() {
       }
     });
 
-    // Scene change sync (DM → players)
+    // Scene change sync (host → players)
     ch.on('broadcast', { event: 'scene-sync' }, ({ payload }) => {
-      if (!isDM || !dmMode) setCurrentScene(payload.sceneIndex);
+      if (!useStore.getState().isDM) setCurrentScene(payload.sceneIndex);
     });
 
-    // DM appended AI-generated continuation scenes → all players
+    // Host appended AI-generated continuation scenes → all players
     ch.on('broadcast', { event: 'append-scenes' }, ({ payload }) => {
-      if (!isDM || !dmMode) {
+      if (!useStore.getState().isDM) {
         useStore.getState().appendScenes(payload.scenes || []);
         useStore.getState().setCurrentScene(payload.nextSceneIndex);
         useStore.getState().setCampaignComplete(false);
       }
     });
 
-    // AI-triggered combat start (DM → players via NarratorPanel)
+    // AI-triggered combat start (host → players via NarratorPanel)
     ch.on('broadcast', { event: 'combat-start' }, ({ payload }) => {
-      const store = useStore.getState();
-      if (!store.isDM || !store.dmMode) {
-        store.startEncounter(payload.enemies || [], payload.party || [], payload.autoRoll ?? true);
+      if (!useStore.getState().isDM) {
+        useStore.getState().startEncounter(payload.enemies || [], payload.party || [], payload.autoRoll ?? true);
       }
     });
 
@@ -225,7 +224,7 @@ export default function App() {
 
   // DM broadcasts encounter state changes (debounced 400ms)
   useEffect(() => {
-    if (!isDM || !dmMode || !channelRef.current || !liveConnected) return;
+    if (!isDM || !channelRef.current || !liveConnected) return;
     clearTimeout(broadcastDebounce.current);
     broadcastDebounce.current = setTimeout(() => {
       channelRef.current?.send({
@@ -235,23 +234,23 @@ export default function App() {
       });
     }, 400);
     return () => clearTimeout(broadcastDebounce.current);
-  }, [encounter, isDM, dmMode, liveConnected]);
+  }, [encounter, isDM, liveConnected]);
 
   // DM persists session state (scene + encounter) to Supabase so players can refresh
   useEffect(() => {
-    if (!isDM || !dmMode || !activeCampaign?.id) return;
+    if (!isDM || !activeCampaign?.id) return;
     clearTimeout(sessionPersistDebounce.current);
     sessionPersistDebounce.current = setTimeout(() => {
       saveSessionState();
     }, 2000);
     return () => clearTimeout(sessionPersistDebounce.current);
-  }, [campaign.currentSceneIndex, encounter, isDM, dmMode, activeCampaign?.id]);
+  }, [campaign.currentSceneIndex, encounter, isDM, activeCampaign?.id]);
 
   // DM heartbeat: broadcast full encounter state every 5s when in combat so late-joining
   // players sync within seconds of refreshing (can't rely on Supabase save timing)
   useEffect(() => {
     clearInterval(encounterHeartbeat.current);
-    if (!isDM || !dmMode || !liveConnected || encounter.phase === 'idle') return;
+    if (!isDM || !liveConnected || encounter.phase === 'idle') return;
     encounterHeartbeat.current = setInterval(() => {
       const s = useStore.getState();
       channelRef.current?.send({
@@ -264,7 +263,7 @@ export default function App() {
       });
     }, 5000);
     return () => clearInterval(encounterHeartbeat.current);
-  }, [isDM, dmMode, liveConnected, encounter.phase]);
+  }, [isDM, liveConnected, encounter.phase]);
 
   async function handleSession(session) {
     const authUser = session.user;
@@ -574,6 +573,7 @@ export default function App() {
         onLeave={handleLeaveCampaign}
         onManage={() => setShowManager(true)}
         onSettings={() => setShowSettings(true)}
+        onRemakeCharacter={() => setAppView('character-select')}
       />
 
       {showManager && <CampaignManager onClose={() => setShowManager(false)} />}

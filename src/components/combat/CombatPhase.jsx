@@ -45,7 +45,13 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const cellPx = getCellPx(winWidth);
 
   const activeCombatant = combatants[currentTurn] || null;
-  const { runEnemyTurn, sessionApiKey, narrateCombatAction, addNarratorMessage, addEncounterEffect, removeEncounterEffect } = useStore();
+  const runEnemyTurn = useStore(s => s.runEnemyTurn);
+  const sessionApiKey = useStore(s => s.sessionApiKey);
+  const narrateCombatAction = useStore(s => s.narrateCombatAction);
+  const addNarratorMessage = useStore(s => s.addNarratorMessage);
+  const addEncounterEffect = useStore(s => s.addEncounterEffect);
+  const removeEncounterEffect = useStore(s => s.removeEncounterEffect);
+  const isDM = useStore(s => s.isDM);
   const activeEffects = useStore(s => s.encounter.activeEffects || []);
 
   // Use the campaign scene image as the battle map background
@@ -74,11 +80,11 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       const t = setTimeout(() => onNextTurn(), 600);
       return () => clearTimeout(t);
     }
-    if (!dmMode) return;
+    if (!isDM) return;
     const t = setTimeout(() => runEnemyTurn(sessionApiKey), 800);
     return () => clearTimeout(t);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [encounter.currentTurn, encounter.phase, dmMode]);
+  }, [encounter.currentTurn, encounter.phase, isDM]);
 
   // 60-second player turn timer — auto-ends turn on timeout
   const [turnSecsLeft, setTurnSecsLeft] = useState(60);

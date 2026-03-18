@@ -18,7 +18,7 @@ import LootScreen from './LootScreen';
 import CharacterSheetModal from './characterSheet/CharacterSheetModal';
 import RulesAssistant from './RulesAssistant';
 
-export default function GameLayout({ liveConnected, onLeave, onManage, onSettings }) {
+export default function GameLayout({ liveConnected, onLeave, onManage, onSettings, onRemakeCharacter }) {
   const encounter = useStore(s => s.encounter);
   const user = useStore(s => s.user);
   const isDM = useStore(s => s.isDM);
@@ -122,6 +122,7 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
           onSettings={onSettings}
           onRest={proposeRest}
           onOpenSheet={setSheetChar}
+          onRemakeCharacter={onRemakeCharacter}
           liveConnected={liveConnected}
         />
       </div>

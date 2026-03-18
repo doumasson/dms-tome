@@ -363,7 +363,7 @@ export default function ScenePanel() {
         </div>
 
         {/* DM Navigation overlay — top-left */}
-        {isDM && dmMode && (
+        {isDM && (
           <div style={styles.dmOverlay}>
             <button
               onClick={() => setCurrentScene(Math.max(0, idx - 1))}
