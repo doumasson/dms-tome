@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { getClaudeApiKey, setClaudeApiKey } from '../lib/claudeApi';
 import { getOpenAiKey, setOpenAiKey } from '../lib/dalleApi';
 import { supabase } from '../lib/supabase';
+import { broadcastApiKeySync } from '../lib/liveChannel';
 import useStore from '../store/useStore';
 
 export default function ApiKeySettings({ userId, onClose }) {
@@ -28,6 +29,8 @@ export default function ApiKeySettings({ userId, onClose }) {
           .update({ settings: { ...(cur?.settings || {}), claudeApiKey: ck } })
           .eq('id', activeCampaign.id);
       } catch { /* non-critical */ }
+      // Broadcast to all currently-connected players so they can use it immediately
+      broadcastApiKeySync(ck);
     }
 
     setSaved(true);

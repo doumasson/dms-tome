@@ -1,7 +1,8 @@
 // TTS chain (best to worst voice quality):
 //  1. TikTok TTS  — en_uk_001  (AWS Polly neural, CORS-open, free)
 //  2. StreamElements — Brian   (AWS Polly neural, may have CORS issues)
-//  3. Web Speech API           (browser-native, quality varies by OS)
+//  3. Google Translate TTS     (natural voice, limited to ~200 chars)
+//  4. Web Speech API           (browser-native, quality varies by OS)
 
 let currentAudio     = null;
 let currentUtterance = null;
@@ -24,6 +25,13 @@ export async function speak(text, onEnd) {
   const seUrl = await tryStreamElementsTTS(text);
   if (seUrl) {
     playAudioUrl(seUrl, text, onEnd);
+    return;
+  }
+
+  // Try Google Translate TTS (natural voice, 200-char chunks)
+  const gtUrl = await tryGoogleTTS(text);
+  if (gtUrl) {
+    playAudioUrl(gtUrl, text, onEnd);
     return;
   }
 
@@ -74,6 +82,23 @@ async function tryStreamElementsTTS(text) {
   }
 }
 
+// ── Google Translate TTS (natural voice, ~200 char limit, no auth) ─────────────
+async function tryGoogleTTS(text) {
+  try {
+    const chunk = text.slice(0, 200);
+    const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=en-gb&client=tw-ob&q=${encodeURIComponent(chunk)}`;
+    const controller = new AbortController();
+    const timeout    = setTimeout(() => controller.abort(), 6000);
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    return URL.createObjectURL(blob);
+  } catch {
+    return null;
+  }
+}
+
 // ── Shared audio player ───────────────────────────────────────────────────────
 function playAudioUrl(url, text, onEnd) {
   const audio    = new Audio(url);
@@ -118,22 +143,39 @@ async function speakWebSpeech(text, onEnd) {
   utterance.pitch  = 0.75;
   utterance.volume = 1;
 
-  // Prefer Chrome cloud voices (sound human) over platform eSpeak/Festival
+  // Prefer cloud voices (sound human) — aggressively avoid eSpeak/Festival (Linux)
   const voices   = await getWebVoices();
   const preferred = [
     'Google UK English Male',
     'Google UK English Female',
     'Microsoft George - English (United Kingdom)',
     'Microsoft David - English (United States)',
-    'Daniel', 'Alex',
+    'Microsoft Zira - English (United States)',
+    'Daniel (Enhanced)',
+    'Daniel',
+    'Karen',
+    'Moira',
+    'Alex',
     'Google US English',
   ];
+  const BAD_VOICE_PATTERNS = ['espeak', 'novice', 'festival', 'mbrola', 'flite'];
   let chosen = null;
   for (const name of preferred) {
     chosen = voices.find(v => v.name === name);
     if (chosen) break;
   }
-  if (!chosen) chosen = voices.find(v => v.lang?.startsWith('en')) || null;
+  if (!chosen) {
+    // Prefer remote (cloud) voices first, then any English voice that isn't eSpeak
+    const cloudVoices = voices.filter(v =>
+      v.lang?.startsWith('en') &&
+      !v.localService &&
+      !BAD_VOICE_PATTERNS.some(p => v.name.toLowerCase().includes(p))
+    );
+    chosen = cloudVoices[0] || voices.find(v =>
+      v.lang?.startsWith('en') &&
+      !BAD_VOICE_PATTERNS.some(p => v.name.toLowerCase().includes(p))
+    ) || null;
+  }
   if (chosen)  utterance.voice = chosen;
   if (onEnd)   utterance.onend = onEnd;
 

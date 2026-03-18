@@ -117,6 +117,31 @@ export default function App() {
       useStore.getState().moveToken(payload.tokenId, payload.x, payload.y, payload.cost || 0);
     });
 
+    // Encounter actions from any player → apply to all clients immediately
+    ch.on('broadcast', { event: 'encounter-action' }, ({ payload }) => {
+      if (payload.userId === user?.id) return; // skip own echo
+      const store = useStore.getState();
+      switch (payload.type) {
+        case 'next-turn':        store.nextEncounterTurn(); break;
+        case 'damage':           store.applyEncounterDamage(payload.targetId, payload.amount); break;
+        case 'heal':             store.applyEncounterHeal(payload.targetId, payload.amount); break;
+        case 'log':              store.addEncounterLog(payload.entry); break;
+        case 'death-save':       store.applyDeathSaveResult(payload.id, payload.roll); break;
+        case 'stabilize':        store.stabilizeCombatant(payload.id); break;
+        case 'end-encounter':    store.endEncounter(); break;
+        case 'add-condition':    store.addEncounterCondition(payload.id, payload.condition); break;
+        case 'remove-condition': store.removeEncounterCondition(payload.id, payload.condition); break;
+        case 'long-rest':           store.longRest(); break;
+        case 'set-concentration':   store.setConcentration(payload.id, payload.spell); break;
+        case 'clear-concentration': store.clearConcentration(payload.id); break;
+      }
+    });
+
+    // DM broadcasts their API key → all players cache it for AI narrator use
+    ch.on('broadcast', { event: 'api-key-sync' }, ({ payload }) => {
+      if (payload.apiKey) useStore.getState().setSessionApiKey(payload.apiKey);
+    });
+
     // Dice roll broadcast (any player → all others)
     ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
       // Only add entries from OTHER users — we already logged our own roll

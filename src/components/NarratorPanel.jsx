@@ -26,6 +26,8 @@ export default function NarratorPanel() {
   const isDM             = useStore(s => s.isDM);
   const partyMembers     = useStore(s => s.partyMembers);
   const narrator         = useStore(s => s.narrator);
+  const sessionApiKey    = useStore(s => s.sessionApiKey);
+  const setSessionApiKey = useStore(s => s.setSessionApiKey);
   const addNarratorMessage   = useStore(s => s.addNarratorMessage);
   const setNarratorOpen      = useStore(s => s.setNarratorOpen);
   const clearNarratorHistory = useStore(s => s.clearNarratorHistory);
@@ -206,13 +208,15 @@ export default function NarratorPanel() {
     const text = (overrideText ?? input).trim();
     if (!text || loading || !canSpeak) return;
 
-    // Try local key first, then fetch the campaign's shared key fresh from Supabase
-    let apiKey = getClaudeApiKey(user?.id);
+    // Key priority: local key → session broadcast key → Supabase fetch
+    let apiKey = getClaudeApiKey(user?.id) || sessionApiKey;
     if (!apiKey && activeCampaign?.id) {
       try {
         const { data } = await supabase
           .from('campaigns').select('settings').eq('id', activeCampaign.id).single();
         apiKey = data?.settings?.claudeApiKey || null;
+        // Cache so next request is instant
+        if (apiKey) setSessionApiKey(apiKey);
       } catch { /* ignore */ }
     }
     if (!apiKey) {
@@ -420,7 +424,7 @@ export default function NarratorPanel() {
                 >🎙</button>
               )}
 
-              {/* Floor claim button — show when floor is free and we don't have it */}
+              {/* Floor claim button — visually distinct from mic/PTT button */}
               {!iHoldFloor && !isDM && (
                 <button
                   onClick={claimFloor}
@@ -429,14 +433,14 @@ export default function NarratorPanel() {
                     ...styles.floorBtn,
                     ...(floorHolder ? styles.floorBtnDisabled : {}),
                   }}
-                  title={floorHolder ? `${floorHolder.userName} is speaking` : 'Take the floor to speak'}
+                  title={floorHolder ? `${floorHolder.userName} is speaking` : 'Claim floor to speak'}
                 >
-                  {floorHolder ? '🔒' : '🎤'}
+                  {floorHolder ? '⏳' : '✋ Floor'}
                 </button>
               )}
               {iHoldFloor && (
-                <button onClick={releaseFloor} style={styles.releaseBtn} title="Release the floor">
-                  ⬛
+                <button onClick={releaseFloor} style={{ ...styles.releaseBtn, fontSize: '0.75rem', padding: '6px 10px', minWidth: 'unset' }} title="Release floor">
+                  ✋ Done
                 </button>
               )}
 
@@ -509,7 +513,10 @@ export default function NarratorPanel() {
         <div style={styles.barRight}>
           {/* Floor claim in collapsed bar */}
           {!iHoldFloor && !isDM && !floorHolder && (
-            <button onClick={claimFloor} style={styles.floorBtn} title="Take the floor">🎤</button>
+            <button onClick={claimFloor} style={{ ...styles.floorBtn, fontSize: '0.72rem', padding: '5px 8px' }} title="Claim floor to speak">✋ Floor</button>
+          )}
+          {iHoldFloor && (
+            <button onClick={releaseFloor} style={{ ...styles.releaseBtn, fontSize: '0.72rem', padding: '5px 8px', minWidth: 'unset' }} title="Release floor">✋ Done</button>
           )}
           <input
             style={{ ...styles.barInput, opacity: canSpeak ? 1 : 0.4 }}

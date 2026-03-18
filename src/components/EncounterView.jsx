@@ -9,7 +9,7 @@ import PartyPanel from './PartyPanel';
 import CharDetailPanel from './CharDetailPanel';
 import { crToXp } from '../lib/xpTable';
 import { CONDITION_INFO } from '../lib/conditionDescriptions';
-import { broadcastPlayerMove } from '../lib/liveChannel';
+import { broadcastPlayerMove, broadcastEncounterAction } from '../lib/liveChannel';
 
 const MAP_W = 10;
 const MAP_H = 8;
@@ -519,8 +519,10 @@ function AoEPanel({ combatants, onApply, onCancel }) {
 
 // ─── Concentrate Panel ────────────────────────────────────────────────────────
 
-function ConcentratePanel({ combatant, onSet, onClear, onCancel }) {
-  const [spell, setSpell] = useState(combatant.concentration || '');
+function ConcentratePanel({ combatant, onSet, onClear, onCancel, dmMode }) {
+  const spells = combatant.spells || [];
+  const hasSpells = spells.length > 0;
+  const [spell, setSpell] = useState(combatant.concentration || (hasSpells ? spells[0] : ''));
 
   return (
     <div style={apStyle.panel}>
@@ -530,18 +532,32 @@ function ConcentratePanel({ combatant, onSet, onClear, onCancel }) {
           Currently: <strong>{combatant.concentration}</strong>
         </div>
       )}
-      <input
-        autoFocus
-        placeholder="Spell name (e.g. Hold Person)"
-        value={spell}
-        onChange={e => setSpell(e.target.value)}
-        onKeyDown={e => { if (e.key === 'Enter' && spell.trim()) onSet(spell.trim()); }}
-        style={{ width: '100%', background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 4, padding: '5px 8px', fontSize: '0.85rem', boxSizing: 'border-box', marginBottom: 8 }}
-      />
+      {hasSpells ? (
+        <select
+          value={spell}
+          onChange={e => setSpell(e.target.value)}
+          style={{ width: '100%', background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 4, padding: '5px 8px', fontSize: '0.85rem', marginBottom: 8 }}
+        >
+          {spells.map(s => <option key={s} value={s}>{s}</option>)}
+        </select>
+      ) : dmMode ? (
+        <input
+          autoFocus
+          placeholder="Spell name (e.g. Hold Person)"
+          value={spell}
+          onChange={e => setSpell(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && spell.trim()) onSet(spell.trim()); }}
+          style={{ width: '100%', background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 4, padding: '5px 8px', fontSize: '0.85rem', boxSizing: 'border-box', marginBottom: 8 }}
+        />
+      ) : (
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 8 }}>No concentration spells available.</div>
+      )}
       <div style={{ display: 'flex', gap: 6 }}>
-        <button onClick={() => spell.trim() && onSet(spell.trim())} disabled={!spell.trim()} style={{ ...apStyle.btn, opacity: spell.trim() ? 1 : 0.4 }}>
-          Set
-        </button>
+        {(hasSpells || dmMode) && (
+          <button onClick={() => spell.trim() && onSet(spell.trim())} disabled={!spell.trim()} style={{ ...apStyle.btn, opacity: spell.trim() ? 1 : 0.4 }}>
+            Set
+          </button>
+        )}
         {combatant.concentration && (
           <button onClick={onClear} style={{ ...apStyle.cancel, color: '#e74c3c', borderColor: 'rgba(231,76,60,0.4)' }}>
             Drop
@@ -844,6 +860,12 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
 
   const activeCombatant = combatants[currentTurn] || null;
 
+  // Turn & action authorization
+  const isMyTurn = !!(activeCombatant && myCharacter && (
+    activeCombatant.id === myCharacter.id || activeCombatant.name === myCharacter.name
+  ));
+  const canAct = dmMode || isMyTurn;
+
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = 0;
   }, [log.length]);
@@ -986,7 +1008,15 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
       <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {/* Action panel */}
         {panel === null && activeCombatant && (() => {
-          const isDying = activeCombatant.currentHp <= 0 && activeCombatant.type === 'player';
+          const isDying = activeCombatant.currentHp <= 0 && activeCombatant.type === 'player' && !(activeCombatant.deathSaves?.failures >= 3);
+          const isMyDying = isDying && isMyTurn;
+          if (!canAct && !isDying) return (
+            <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 10 }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif" }}>
+                Turn: <strong style={{ color: 'var(--gold)' }}>{activeCombatant.name}</strong> — waiting…
+              </div>
+            </div>
+          );
           return (
             <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 10 }}>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>
@@ -995,18 +1025,18 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {isDying ? (
                   <>
-                    <button onClick={() => onRollDeathSave(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}>🎲 Death Save</button>
-                    <button onClick={() => onStabilize(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>✚ Stabilize</button>
+                    {(isMyDying || dmMode) && <button onClick={() => onRollDeathSave(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}>🎲 Death Save</button>}
+                    {dmMode && <button onClick={() => onStabilize(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>✚ Stabilize</button>}
                   </>
                 ) : (
                   <>
                     <button onClick={() => setPanel('attack')} style={{ ...btn.action, background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.4)', color: '#e74c3c' }}>⚔ Attack</button>
-                    <button onClick={() => setPanel('aoe')} style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: '1px solid rgba(155,89,182,0.4)', color: '#9b59b6' }}>💥 AoE</button>
-                    <button onClick={() => setPanel('concentrate')} style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6' }}>🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}</button>
-                    <button onClick={() => setPanel('save')} style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}>🎲 Save</button>
+                    {dmMode && <button onClick={() => setPanel('aoe')} style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: '1px solid rgba(155,89,182,0.4)', color: '#9b59b6' }}>💥 AoE</button>}
+                    {(dmMode || activeCombatant.spells?.length > 0) && <button onClick={() => setPanel('concentrate')} style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6' }}>🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}</button>}
+                    {dmMode && <button onClick={() => setPanel('save')} style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}>🎲 Save</button>}
                   </>
                 )}
-                <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>➜ Next Turn</button>
+                {canAct && <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>➜ Next Turn</button>}
               </div>
             </div>
           );
@@ -1014,7 +1044,7 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
         {panel === 'attack'     && activeCombatant && <AttackPanel attacker={activeCombatant} combatants={combatants} onResolve={handleAttackResolve} onCancel={() => setPanel(null)} />}
         {panel === 'aoe'        && <AoEPanel combatants={combatants} onApply={handleAoEApply} onCancel={() => setPanel(null)} />}
         {panel === 'save'       && <SavingThrowPanel combatants={combatants} onLog={handleLogOnly} onCancel={() => setPanel(null)} />}
-        {panel === 'concentrate' && activeCombatant && <ConcentratePanel combatant={activeCombatant} onSet={spell => { onSetConcentration(activeCombatant.id, spell); setPanel(null); }} onClear={() => { onClearConcentration(activeCombatant.id); setPanel(null); }} onCancel={() => setPanel(null)} />}
+        {panel === 'concentrate' && activeCombatant && <ConcentratePanel combatant={activeCombatant} dmMode={dmMode} onSet={spell => { onSetConcentration(activeCombatant.id, spell); setPanel(null); }} onClear={() => { onClearConcentration(activeCombatant.id); setPanel(null); }} onCancel={() => setPanel(null)} />}
         {/* Turn order */}
         <div>
           <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginBottom: 5, fontFamily: "'Cinzel', Georgia, serif" }}>TURN ORDER</div>
@@ -1191,6 +1221,15 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
         {/* Action buttons */}
         {panel === null && activeCombatant && (() => {
           const isDying = activeCombatant.currentHp <= 0 && activeCombatant.type === 'player' && !(activeCombatant.deathSaves?.failures >= 3);
+          const isMyDying = isDying && isMyTurn;
+          // Non-DM players only see full actions on their turn
+          if (!canAct && !isDying) return (
+            <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 10, marginBottom: 10 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif" }}>
+                Turn: <strong style={{ color: 'var(--gold)' }}>{activeCombatant.name}</strong> — waiting…
+              </div>
+            </div>
+          );
           return (
             <div style={{ background: '#1a1006', border: `1px solid ${isDying ? 'rgba(243,156,18,0.5)' : '#2a1a0a'}`, borderRadius: 8, padding: 10, marginBottom: 10 }}>
               <div style={{ fontSize: '0.75rem', color: isDying ? '#f39c12' : 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>
@@ -1199,18 +1238,22 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {isDying ? (
                   <>
-                    <button
-                      onClick={() => onRollDeathSave(activeCombatant.id)}
-                      style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}
-                    >
-                      🎲 Roll Death Save
-                    </button>
-                    <button
-                      onClick={() => onStabilize(activeCombatant.id)}
-                      style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}
-                    >
-                      ✚ Stabilize (Medicine)
-                    </button>
+                    {(isMyDying || dmMode) && (
+                      <button
+                        onClick={() => onRollDeathSave(activeCombatant.id)}
+                        style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}
+                      >
+                        🎲 Roll Death Save
+                      </button>
+                    )}
+                    {dmMode && (
+                      <button
+                        onClick={() => onStabilize(activeCombatant.id)}
+                        style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}
+                      >
+                        ✚ Stabilize (Medicine)
+                      </button>
+                    )}
                   </>
                 ) : (
                   <>
@@ -1220,29 +1263,37 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
                     >
                       ⚔ Attack
                     </button>
-                    <button
-                      onClick={() => setPanel('aoe')}
-                      style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: '1px solid rgba(155,89,182,0.4)', color: '#9b59b6' }}
-                    >
-                      💥 AoE Damage
-                    </button>
-                    <button
-                      onClick={() => setPanel('concentrate')}
-                      style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6' }}
-                    >
-                      🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}
-                    </button>
-                    <button
-                      onClick={() => setPanel('save')}
-                      style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}
-                    >
-                      🎲 Saving Throw
-                    </button>
+                    {dmMode && (
+                      <button
+                        onClick={() => setPanel('aoe')}
+                        style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: '1px solid rgba(155,89,182,0.4)', color: '#9b59b6' }}
+                      >
+                        💥 AoE Damage
+                      </button>
+                    )}
+                    {(dmMode || (activeCombatant.spells?.length > 0)) && (
+                      <button
+                        onClick={() => setPanel('concentrate')}
+                        style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6' }}
+                      >
+                        🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}
+                      </button>
+                    )}
+                    {dmMode && (
+                      <button
+                        onClick={() => setPanel('save')}
+                        style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}
+                      >
+                        🎲 Saving Throw
+                      </button>
+                    )}
                   </>
                 )}
-                <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
-                  ➜ Next Turn
-                </button>
+                {canAct && (
+                  <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
+                    ➜ Next Turn
+                  </button>
+                )}
               </div>
             </div>
           );
@@ -1276,6 +1327,7 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
         {panel === 'concentrate' && activeCombatant && (
           <ConcentratePanel
             combatant={activeCombatant}
+            dmMode={dmMode}
             onSet={spell => { onSetConcentration(activeCombatant.id, spell); setPanel(null); }}
             onClear={() => { onClearConcentration(activeCombatant.id); setPanel(null); }}
             onCancel={() => setPanel(null)}
@@ -1701,6 +1753,8 @@ export default function EncounterView() {
   const dmMode = useStore(s => s.dmMode);
   const myCharacter = useStore(s => s.myCharacter);
 
+  const user = useStore(s => s.user);
+
   const startEncounter = useStore(s => s.startEncounter);
   const setEncounterInitiative = useStore(s => s.setEncounterInitiative);
   const beginCombat = useStore(s => s.beginCombat);
@@ -1712,13 +1766,32 @@ export default function EncounterView() {
   const removeEncounterCondition = useStore(s => s.removeEncounterCondition);
   const moveToken = useStore(s => s.moveToken);
   const endEncounter = useStore(s => s.endEncounter);
-  const rollDeathSave = useStore(s => s.rollDeathSave);
+  const applyDeathSaveResult = useStore(s => s.applyDeathSaveResult);
   const stabilizeCombatant = useStore(s => s.stabilizeCombatant);
   const setConcentration = useStore(s => s.setConcentration);
   const clearConcentration = useStore(s => s.clearConcentration);
   const shortRest = useStore(s => s.shortRest);
   const longRest = useStore(s => s.longRest);
   const partyMembers = useStore(s => s.partyMembers);
+
+  // ── Broadcast wrappers — call store action + broadcast to all clients ──────
+  const uid = user?.id;
+  function wrappedNextTurn() { nextEncounterTurn(); broadcastEncounterAction({ type: 'next-turn', userId: uid }); }
+  function wrappedDamage(id, amount) { applyEncounterDamage(id, amount); broadcastEncounterAction({ type: 'damage', targetId: id, amount, userId: uid }); }
+  function wrappedHeal(id, amount) { applyEncounterHeal(id, amount); broadcastEncounterAction({ type: 'heal', targetId: id, amount, userId: uid }); }
+  function wrappedLog(entry) { addEncounterLog(entry); broadcastEncounterAction({ type: 'log', entry, userId: uid }); }
+  function wrappedRollDeathSave(id) {
+    const roll = Math.floor(Math.random() * 20) + 1;
+    applyDeathSaveResult(id, roll);
+    broadcastEncounterAction({ type: 'death-save', id, roll, userId: uid });
+  }
+  function wrappedStabilize(id) { stabilizeCombatant(id); broadcastEncounterAction({ type: 'stabilize', id, userId: uid }); }
+  function wrappedEndEncounter() { endEncounter(); broadcastEncounterAction({ type: 'end-encounter', userId: uid }); }
+  function wrappedAddCondition(id, condition) { addEncounterCondition(id, condition); broadcastEncounterAction({ type: 'add-condition', id, condition, userId: uid }); }
+  function wrappedRemoveCondition(id, condition) { removeEncounterCondition(id, condition); broadcastEncounterAction({ type: 'remove-condition', id, condition, userId: uid }); }
+  function wrappedLongRest() { longRest(); broadcastEncounterAction({ type: 'long-rest', userId: uid }); }
+  function wrappedSetConcentration(id, spell) { setConcentration(id, spell); broadcastEncounterAction({ type: 'set-concentration', id, spell, userId: uid }); }
+  function wrappedClearConcentration(id) { clearConcentration(id); broadcastEncounterAction({ type: 'clear-concentration', id, userId: uid }); }
 
   function handleStartEncounter(enemies) {
     setCustomSetup(false);
@@ -1768,21 +1841,21 @@ export default function EncounterView() {
           encounter={encounter}
           dmMode={dmMode}
           myCharacter={myCharacter}
-          onNextTurn={nextEncounterTurn}
-          onEndEncounter={endEncounter}
-          onDamage={applyEncounterDamage}
-          onHeal={applyEncounterHeal}
-          onLog={addEncounterLog}
-          onAddCondition={addEncounterCondition}
-          onRemoveCondition={removeEncounterCondition}
+          onNextTurn={wrappedNextTurn}
+          onEndEncounter={wrappedEndEncounter}
+          onDamage={wrappedDamage}
+          onHeal={wrappedHeal}
+          onLog={wrappedLog}
+          onAddCondition={wrappedAddCondition}
+          onRemoveCondition={wrappedRemoveCondition}
           onMoveToken={moveToken}
-          onRollDeathSave={rollDeathSave}
-          onStabilize={stabilizeCombatant}
-          onSetConcentration={setConcentration}
-          onClearConcentration={clearConcentration}
+          onRollDeathSave={wrappedRollDeathSave}
+          onStabilize={wrappedStabilize}
+          onSetConcentration={wrappedSetConcentration}
+          onClearConcentration={wrappedClearConcentration}
           characters={campaign.characters}
           onShortRest={shortRest}
-          onLongRest={longRest}
+          onLongRest={wrappedLongRest}
         />
       </div>
     );
