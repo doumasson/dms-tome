@@ -379,7 +379,7 @@ export default function NarratorPanel() {
       {/* Header */}
       <div style={styles.header}>
         <span style={styles.headerIcon}>{loading ? '⏳' : '🎭'}</span>
-        <span style={styles.headerTitle}>AI Narrator</span>
+        <span style={styles.headerTitle}>AI DM</span>
         {heyDmMode && (
           <span style={styles.heyDmPill}>
             <span style={styles.heyDmDot} />
