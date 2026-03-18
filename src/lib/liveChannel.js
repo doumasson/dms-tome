@@ -45,3 +45,8 @@ export function broadcastFogReveal(sceneKey, cells) {
 export function broadcastFogToggle(sceneKey, enabled) {
   _channel?.send({ type: 'broadcast', event: 'fog-toggle', payload: { sceneKey, enabled } });
 }
+
+// Narrator message from DM AI (enemy turns, auto-events) → all players
+export function broadcastNarratorMessage(msg) {
+  _channel?.send({ type: 'broadcast', event: 'narrator-message', payload: msg });
+}

@@ -164,6 +164,11 @@ export default function App() {
       }
     });
 
+    // AI DM narrator messages (enemy turns, auto-events) → all players
+    ch.on('broadcast', { event: 'narrator-message' }, ({ payload }) => {
+      if (payload?.text) useStore.getState().addNarratorMessage(payload);
+    });
+
     // Dice roll broadcast (any player → all others)
     ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
       // Only add entries from OTHER users — we already logged our own roll

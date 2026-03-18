@@ -54,6 +54,14 @@ You and your friends sit down to play D&D — you've got your characters, your g
 
 This is not a campaign manager or a helper tool. This is a game. Players open a browser and play D&D together right now, with no extra setup and no human DM required.
 
+### CRITICAL ARCHITECTURE NOTE: This is multiplayer-only. There is no solo play.
+- **All players are human.** The AI is the Dungeon Master — not a player.
+- **1–6 human players** join a session via invite code. They play together simultaneously.
+- **The host's client** is the `dmMode` client. It handles AI enemy turns and broadcasts all AI-originated state changes (narrator messages, turn advances, damage) to all connected clients via Supabase Realtime.
+- **All encounter state must be broadcast** to every client. When building features that modify encounter/narrator state from AI (enemy turns, auto-events), always call `broadcastEncounterAction` and `broadcastNarratorMessage` so non-host players stay in sync.
+- **If a feature only works for the host and not other players, it's broken.** Fix it before shipping.
+- The `dmMode` flag means "this client is the host running the AI DM" — NOT "playing solo without other players."
+
 ## North Star: Organic Living-World RPG
 
 **A living world you explore — not a chatbot you type at.**

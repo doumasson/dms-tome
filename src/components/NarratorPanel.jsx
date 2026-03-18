@@ -3,6 +3,7 @@ import useStore from '../store/useStore';
 import { supabase } from '../lib/supabase';
 import { buildSystemPrompt, callNarrator } from '../lib/narratorApi';
 import { speak, stopSpeaking } from '../lib/tts';
+import { ambient } from '../lib/ambientAudio';
 import { getClaudeApiKey } from '../lib/claudeApi';
 import { broadcastSceneChange, broadcastStartCombat } from '../lib/liveChannel';
 
@@ -47,8 +48,9 @@ export default function NarratorPanel() {
   const [input, setInput]           = useState('');
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState(null);
-  const [ttsEnabled, setTtsEnabled] = useState(true);
-  const [heyDmMode, setHeyDmMode]   = useState(false);
+  const [ttsEnabled, setTtsEnabled]       = useState(true);
+  const [ambientEnabled, setAmbientEnabled] = useState(true);
+  const [heyDmMode, setHeyDmMode]         = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
   // ── Floor system — one speaker at a time ─────────────────────────────────
@@ -544,6 +546,16 @@ export default function NarratorPanel() {
           style={{ ...styles.iconBtn, ...(ttsEnabled ? styles.iconBtnOn : {}) }}
           title={ttsEnabled ? 'Mute DM voice' : 'Unmute DM voice'}
         >{ttsEnabled ? '🔊' : '🔇'}</button>
+
+        <button
+          onClick={() => {
+            const next = !ambientEnabled;
+            setAmbientEnabled(next);
+            ambient.setMuted(!next);
+          }}
+          style={{ ...styles.iconBtn, ...(ambientEnabled ? styles.iconBtnOn : {}) }}
+          title={ambientEnabled ? 'Mute ambient sound' : 'Enable ambient sound'}
+        >{ambientEnabled ? '🎵' : '🎵'}</button>
 
         <button onClick={clearNarratorHistory} style={styles.iconBtn} title="Clear history">🗑</button>
 
