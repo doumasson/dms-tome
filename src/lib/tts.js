@@ -78,8 +78,20 @@ async function tryOpenAiTTS(text, apiKey, voice = 'onyx') {
 // ── Pollinations TTS (OpenAI tts-1 quality, free, CORS-open) ─────────────────
 // No API key required — anonymous tier is rate-limited to 1 req/15s.
 // Same voice names as OpenAI: onyx, nova, alloy, echo, fable, shimmer.
+// NPC voices are deterministic per NPC name (via getNpcVoice hash), so each
+// character always gets the same voice. Back-to-back calls (e.g. narrator
+// auto-post + DM response) are spaced by a minimum interval to stay within
+// the rate limit without blocking.
+let _pollinationsLastCall = 0;
+const POLLINATIONS_MIN_MS = 15500; // 15s + small buffer
+
 async function tryPollinationsTTS(text, voice = 'onyx') {
   try {
+    // Enforce minimum spacing between calls — wait out the remaining window
+    const wait = POLLINATIONS_MIN_MS - (Date.now() - _pollinationsLastCall);
+    if (wait > 0) await new Promise(r => setTimeout(r, wait));
+    _pollinationsLastCall = Date.now();
+
     const controller = new AbortController();
     const timeout    = setTimeout(() => controller.abort(), 12000);
 
@@ -95,6 +107,7 @@ async function tryPollinationsTTS(text, voice = 'onyx') {
     });
     clearTimeout(timeout);
 
+    // 429 = rate limited despite spacing (server-side bucket); fall through
     if (!response.ok) return null;
     const blob = await response.blob();
     if (blob.size < 1000) return null;
