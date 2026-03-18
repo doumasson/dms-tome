@@ -6,7 +6,7 @@ import {
   weightBarBg, weightBarFill,
   itemCard, itemIconStyle, itemNameStyle, itemQty,
   tinyBtn, overflowSection, overflowLabel, overflowItem,
-  tooltipWrapper, tooltip, tooltipTitle, tooltipLine,
+  tooltip, tooltipTitle, tooltipLine,
 } from './inventoryGridStyles';
 
 // ── Item grid sizes (columns × rows) ────────────────────────────────────────
@@ -56,7 +56,8 @@ function itemIcon(item) {
   return '📦';
 }
 
-// Pack items into grid. Items with _gridCol/_gridRow preferences are placed first.
+// Pack items. Items with _gridCol/_gridRow go first (in visual order).
+// Everything else fills left-to-right, top-to-bottom in array order.
 function packItems(items) {
   const grid = Array.from({ length: GRID_ROWS }, () => new Array(GRID_COLS).fill(false));
   const placed = [];
@@ -74,43 +75,39 @@ function packItems(items) {
       for (let c = col; c < col + w; c++)
         grid[r][c] = true;
   }
+  function firstFit(item) {
+    const [w, h] = getItemSize(item);
+    for (let row = 0; row < GRID_ROWS; row++)
+      for (let col = 0; col < GRID_COLS; col++)
+        if (fits(col, row, w, h)) {
+          mark(col, row, w, h);
+          placed.push({ item, col, row, w, h });
+          return true;
+        }
+    overflow.push(item);
+    return false;
+  }
 
-  // Preferred items first (in grid-position order), then remaining in array order
+  // 1. Place items with saved positions first (sorted top-left → bottom-right)
   const preferred = items
     .filter(i => i._gridCol !== undefined)
     .sort((a, b) => a._gridRow !== b._gridRow ? a._gridRow - b._gridRow : a._gridCol - b._gridCol);
-  const unplaced = items.filter(i => i._gridCol === undefined);
-  const sorted = [...preferred, ...unplaced];
 
-  for (const item of sorted) {
+  for (const item of preferred) {
     const [w, h] = getItemSize(item);
-    let found = false;
-
-    // Try preferred position first
-    if (item._gridCol !== undefined && item._gridRow !== undefined) {
-      const pc = Math.min(item._gridCol, GRID_COLS - w);
-      const pr = Math.min(item._gridRow, GRID_ROWS - h);
-      if (fits(pc, pr, w, h)) {
-        mark(pc, pr, w, h);
-        placed.push({ item, col: pc, row: pr, w, h });
-        found = true;
-      }
+    const pc = Math.min(item._gridCol, GRID_COLS - w);
+    const pr = Math.min(item._gridRow, GRID_ROWS - h);
+    if (fits(pc, pr, w, h)) {
+      mark(pc, pr, w, h);
+      placed.push({ item, col: pc, row: pr, w, h });
+    } else {
+      firstFit(item); // preferred spot taken, fall back
     }
+  }
 
-    if (!found) {
-      outer: for (let row = 0; row < GRID_ROWS; row++) {
-        for (let col = 0; col < GRID_COLS; col++) {
-          if (fits(col, row, w, h)) {
-            mark(col, row, w, h);
-            placed.push({ item, col, row, w, h });
-            found = true;
-            break outer;
-          }
-        }
-      }
-    }
-
-    if (!found) overflow.push(item);
+  // 2. Place remaining items in array order (no size sort → natural horizontal fill)
+  for (const item of items.filter(i => i._gridCol === undefined)) {
+    firstFit(item);
   }
 
   return { placed, overflow };
@@ -118,13 +115,12 @@ function packItems(items) {
 
 function ItemTooltip({ item, canEquip, canUse, isOwn }) {
   const lines = [];
-  if (item.damage)  lines.push(`Damage: ${item.damage} ${item.damageType || ''}`);
-  if (item.baseAC)  lines.push(`AC: ${item.baseAC}${item.addDex ? ' + DEX' : ''}${item.maxDex != null ? ` (max +${item.maxDex})` : ''}`);
+  if (item.damage)           lines.push(`Damage: ${item.damage} ${item.damageType || ''}`);
+  if (item.baseAC)           lines.push(`AC: ${item.baseAC}${item.addDex ? ' + DEX' : ''}${item.maxDex != null ? ` (max +${item.maxDex})` : ''}`);
   if (item.properties?.length) lines.push(`Properties: ${item.properties.join(', ')}`);
-  if (item.weight)  lines.push(`Weight: ${item.weight} lb`);
-  if (item.cost)    lines.push(`Value: ${item.cost}`);
-  if (item.description) lines.push(item.description);
-
+  if (item.weight)           lines.push(`Weight: ${item.weight} lb`);
+  if (item.cost)             lines.push(`Value: ${item.cost}`);
+  if (item.description)      lines.push(item.description);
   return (
     <div style={tooltip}>
       <div style={tooltipTitle}>{item.name}</div>
@@ -132,7 +128,7 @@ function ItemTooltip({ item, canEquip, canUse, isOwn }) {
       {isOwn && (
         <div style={{ ...tooltipLine, marginTop: 6, borderTop: '1px solid rgba(212,175,55,0.2)', paddingTop: 5, color: 'rgba(212,175,55,0.6)' }}>
           {canEquip && <div>Double-click to equip</div>}
-          {canUse && <div>Double-click to use</div>}
+          {canUse   && <div>Double-click to use</div>}
           <div>Drag to move · Shift+click to drop</div>
         </div>
       )}
@@ -163,19 +159,28 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
 
   const { placed, overflow } = useMemo(() => packItems(inventory), [inventory]);
 
-  const [hoveredId, setHoveredId] = useState(null);
-  const dragItemRef = useRef(null);
-  const [dragOverId, setDragOverId] = useState(null);   // hovering over an item
-  const [dragOverCell, setDragOverCell] = useState(null); // hovering over empty cell {col,row}
+  const [hoveredId, setHoveredId]   = useState(null);
+  const [dragOverId, setDragOverId] = useState(null);
+  const [dragOverCell, setDragOverCell] = useState(null); // {col, row}
+  const dragItemRef   = useRef(null);
+  const dragOffsetRef = useRef({ col: 0, row: 0 }); // cell offset within item where grab started
 
   function itemKey(item) { return item.instanceId || item.name; }
 
   function handleDragStart(e, item) {
     dragItemRef.current = item;
     e.dataTransfer.effectAllowed = 'move';
+    // Record which cell within the item the user grabbed, so drop aligns correctly
+    const rect = e.currentTarget.getBoundingClientRect();
+    dragOffsetRef.current = {
+      col: Math.floor((e.clientX - rect.left)  / CELL_PX),
+      row: Math.floor((e.clientY - rect.top)   / CELL_PX),
+    };
+    // Anchor ghost image to grab point so it looks natural
+    e.dataTransfer.setDragImage(e.currentTarget, e.clientX - rect.left, e.clientY - rect.top);
   }
 
-  // Drop onto another item → swap order
+  // Drop onto another item → swap array order
   function handleDropOnItem(e, targetItem) {
     e.preventDefault();
     e.stopPropagation();
@@ -192,24 +197,34 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
     updateMyCharacter({ inventory: inv });
   }
 
-  // Drop onto empty cell → store preferred grid position
+  // Drop onto empty cell → save preferred grid position (offset-adjusted)
   function handleDropOnCell(e, col, row) {
     e.preventDefault();
     setDragOverCell(null);
     const src = dragItemRef.current;
+    const offset = dragOffsetRef.current;
     dragItemRef.current = null;
     if (!src) return;
     const [w, h] = getItemSize(src);
-    const clampedCol = Math.min(col, GRID_COLS - w);
-    const clampedRow = Math.min(row, GRID_ROWS - h);
+    const targetCol = Math.max(0, Math.min(col - offset.col, GRID_COLS - w));
+    const targetRow = Math.max(0, Math.min(row - offset.row, GRID_ROWS - h));
     updateMyCharacter({
       inventory: inventory.map(i =>
         itemKey(i) === itemKey(src)
-          ? { ...i, _gridCol: clampedCol, _gridRow: clampedRow }
+          ? { ...i, _gridCol: targetCol, _gridRow: targetRow }
           : i
       ),
     });
   }
+
+  function resetLayout() {
+    updateMyCharacter({
+      inventory: inventory.map(({ _gridCol, _gridRow, ...rest }) => rest),
+    });
+  }
+
+  // Find hovered placed item for tooltip (rendered at grid level, not inside item card)
+  const hoveredPlaced = hoveredId ? placed.find(p => itemKey(p.item) === hoveredId) : null;
 
   return (
     <div style={container}>
@@ -218,7 +233,16 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
         <span style={weightLabel}>
           {encumbered ? (heavilyEnc ? '🐢 Heavily Encumbered' : '⚠ Encumbered') : '🎒 Carry Weight'}
         </span>
-        <span style={weightNum}>{totalWeight.toFixed(1)} / {carryCapacity} lb</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={weightNum}>{totalWeight.toFixed(1)} / {carryCapacity} lb</span>
+          {isOwn && (
+            <button
+              onClick={resetLayout}
+              title="Reset item layout"
+              style={{ background: 'none', border: 'none', color: 'rgba(212,175,55,0.4)', fontSize: '0.7rem', cursor: 'pointer', padding: 0 }}
+            >⟳ Reset</button>
+          )}
+        </span>
       </div>
       <div style={weightBarBg}>
         <div style={{ ...weightBarFill, width: `${weightPct}%`, background: heavilyEnc ? '#c0392b' : encumbered ? '#e67e22' : '#2ecc71' }} />
@@ -243,8 +267,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                 width: CELL_PX - 1, height: CELL_PX - 1,
                 background: isTarget ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.02)',
                 border: isTarget ? '1px solid rgba(212,175,55,0.5)' : '1px solid rgba(255,255,255,0.05)',
-                borderRadius: 2,
-                boxSizing: 'border-box',
+                borderRadius: 2, boxSizing: 'border-box',
               }}
             />
           );
@@ -254,9 +277,8 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
         {placed.map(({ item, col, row, w, h }) => {
           const slot = getSlotType(item);
           const canEquip = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
-          const canUse = isOwn && item.type === 'consumable';
+          const canUse   = isOwn && item.type === 'consumable';
           const key = itemKey(item);
-          const isHov = hoveredId === key;
           const isDragTarget = dragOverId === key;
           return (
             <div
@@ -275,36 +297,45 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                 left: col * CELL_PX + 1, top: row * CELL_PX + 1,
                 width: w * CELL_PX - 2, height: h * CELL_PX - 2,
                 ...itemCard,
+                overflow: 'hidden', // clip item content; tooltip is rendered at grid level
                 border: isDragTarget
                   ? '1px solid rgba(212,175,55,0.8)'
-                  : isHov
+                  : hoveredId === key
                     ? '1px solid rgba(212,175,55,0.45)'
                     : '1px solid rgba(212,175,55,0.25)',
                 background: isDragTarget ? 'rgba(212,175,55,0.12)' : itemCard.background,
                 cursor: isOwn ? 'grab' : 'default',
-                zIndex: isHov ? 10 : 1,
+                zIndex: hoveredId === key ? 10 : 1,
               }}
             >
               <div style={itemIconStyle}>{itemIcon(item)}</div>
               {w > 1 && h > 1 && <div style={itemNameStyle}>{item.name}</div>}
-              {(w === 1 && h >= 2) && <div style={{ ...itemNameStyle, fontSize: '0.52rem', lineHeight: 1.1 }}>{item.name}</div>}
+              {w === 1 && h >= 2 && <div style={{ ...itemNameStyle, fontSize: '0.52rem', lineHeight: 1.1 }}>{item.name}</div>}
               {item.quantity > 1 && <div style={itemQty}>×{item.quantity}</div>}
-
-              {/* Hover tooltip */}
-              {isHov && (
-                <div style={{
-                  ...tooltipWrapper,
-                  left: col >= GRID_COLS / 2 ? 'auto' : '100%',
-                  right: col >= GRID_COLS / 2 ? '100%' : 'auto',
-                  top: row >= GRID_ROWS / 2 ? 'auto' : 0,
-                  bottom: row >= GRID_ROWS / 2 ? 0 : 'auto',
-                }}>
-                  <ItemTooltip item={item} canEquip={canEquip} canUse={canUse} isOwn={isOwn} />
-                </div>
-              )}
             </div>
           );
         })}
+
+        {/* Tooltip rendered at grid level — not clipped by item card overflow:hidden */}
+        {hoveredPlaced && (() => {
+          const { item, col, row, w, h } = hoveredPlaced;
+          const slot = getSlotType(item);
+          const canEquip = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
+          const canUse   = isOwn && item.type === 'consumable';
+          return (
+            <div style={{
+              position: 'absolute',
+              left:   col < GRID_COLS / 2 ? (col + w) * CELL_PX + 4 : undefined,
+              right:  col >= GRID_COLS / 2 ? (GRID_COLS - col) * CELL_PX + 4 : undefined,
+              top:    row < GRID_ROWS / 2 ? row * CELL_PX : undefined,
+              bottom: row >= GRID_ROWS / 2 ? (GRID_ROWS - row - h) * CELL_PX : undefined,
+              zIndex: 200,
+              pointerEvents: 'none',
+            }}>
+              <ItemTooltip item={item} canEquip={canEquip} canUse={canUse} isOwn={isOwn} />
+            </div>
+          );
+        })()}
       </div>
 
       {/* Overflow items */}
@@ -315,7 +346,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
             {overflow.map(item => {
               const slot = getSlotType(item);
               const canEquip = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
-              const canUse = isOwn && item.type === 'consumable';
+              const canUse   = isOwn && item.type === 'consumable';
               const key = itemKey(item);
               return (
                 <div
@@ -327,17 +358,13 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                   {itemIcon(item)} {item.name}
                   {isOwn && (
                     <>
-                      {canEquip && (
-                        <button style={{ ...tinyBtn, marginLeft: 4, background: 'rgba(212,175,55,0.3)' }} onClick={() => onEquip(item)}>E</button>
-                      )}
-                      {canUse && (
-                        <button style={{ ...tinyBtn, marginLeft: 2, background: 'rgba(46,204,113,0.3)' }} onClick={() => onUse(item)}>U</button>
-                      )}
+                      {canEquip && <button style={{ ...tinyBtn, marginLeft: 4, background: 'rgba(212,175,55,0.3)' }} onClick={() => onEquip(item)}>E</button>}
+                      {canUse   && <button style={{ ...tinyBtn, marginLeft: 2, background: 'rgba(46,204,113,0.3)'  }} onClick={() => onUse(item)}>U</button>}
                       <button style={{ ...tinyBtn, marginLeft: 2 }} onClick={() => onDrop(item)}>✕</button>
                     </>
                   )}
                   {hoveredId === `ov-${key}` && (
-                    <div style={{ ...tooltipWrapper, top: 'auto', bottom: '100%', left: 0, right: 'auto' }}>
+                    <div style={{ position: 'absolute', bottom: '100%', left: 0, zIndex: 200, pointerEvents: 'none' }}>
                       <ItemTooltip item={item} canEquip={canEquip} canUse={canUse} isOwn={isOwn} />
                     </div>
                   )}
