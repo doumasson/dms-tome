@@ -233,8 +233,10 @@ export default function App() {
     }
 
     // ── Character requirement check ──────────────────────────────────────────
+    // Use getState() to avoid stale closure — setUser() above hasn't re-rendered yet
+    const freshUserId = useStore.getState().user?.id;
     const isAiDm  = campaignRecord.settings?.isAiDm ?? false;
-    const userIsDM = campaignRecord.dm_user_id === user?.id;
+    const userIsDM = campaignRecord.dm_user_id === freshUserId;
 
     // Human DM doesn't need their own character
     if (!isAiDm && userIsDM) {
@@ -247,7 +249,7 @@ export default function App() {
       .from('campaign_members')
       .select('character_data')
       .eq('campaign_id', campaignRecord.id)
-      .eq('user_id', user?.id)
+      .eq('user_id', freshUserId)
       .maybeSingle();
 
     if (memberData?.character_data?.name) {
@@ -340,8 +342,19 @@ export default function App() {
         <CharacterCreate
           user={user}
           campaignId={activeCampaign?.id}
-          onDone={(char) => {
+          onDone={async (char) => {
             setMyCharacter(char);
+            // Refresh partyMembers so the new character shows immediately in the sidebar
+            if (activeCampaign?.id) {
+              const { data: members } = await supabase
+                .from('campaign_members')
+                .select('user_id, role, character_data')
+                .eq('campaign_id', activeCampaign.id);
+              const players = (members || [])
+                .filter(m => m.character_data?.name)
+                .map(m => ({ ...m.character_data }));
+              setPartyMembers(players);
+            }
             setAppView('game');
           }}
         />

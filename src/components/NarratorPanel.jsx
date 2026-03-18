@@ -9,10 +9,15 @@ import { broadcastSceneChange, broadcastStartCombat } from '../lib/liveChannel';
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const SPEECH_SUPPORTED = !!SpeechRecognition;
 
-// ── Helper: resolve API key ───────────────────────────────────────────────────
-function resolveApiKey(userId, campaignSettings) {
-  return getClaudeApiKey(userId) || campaignSettings?.claudeApiKey || null;
-}
+// ── Skill → ability mapping for auto-roll ────────────────────────────────────
+const SKILL_ABILITY = {
+  strength: 'str', athletics: 'str', grapple: 'str',
+  dexterity: 'dex', acrobatics: 'dex', stealth: 'dex', 'sleight of hand': 'dex',
+  constitution: 'con',
+  intelligence: 'int', arcana: 'int', history: 'int', investigation: 'int', nature: 'int', religion: 'int',
+  wisdom: 'wis', perception: 'wis', insight: 'wis', 'animal handling': 'wis', medicine: 'wis', survival: 'wis',
+  charisma: 'cha', deception: 'cha', intimidation: 'cha', performance: 'cha', persuasion: 'cha',
+};
 
 export default function NarratorPanel() {
   const user             = useStore(s => s.user);
@@ -201,9 +206,17 @@ export default function NarratorPanel() {
     const text = (overrideText ?? input).trim();
     if (!text || loading || !canSpeak) return;
 
-    const apiKey = resolveApiKey(user?.id, activeCampaign?.settings);
+    // Try local key first, then fetch the campaign's shared key fresh from Supabase
+    let apiKey = getClaudeApiKey(user?.id);
+    if (!apiKey && activeCampaign?.id) {
+      try {
+        const { data } = await supabase
+          .from('campaigns').select('settings').eq('id', activeCampaign.id).single();
+        apiKey = data?.settings?.claudeApiKey || null;
+      } catch { /* ignore */ }
+    }
     if (!apiKey) {
-      setError('No API key — the DM must add a Claude key in Settings.');
+      setError('No API key — the DM must add a Claude key in ⚙ Settings.');
       return;
     }
 
@@ -280,6 +293,32 @@ export default function NarratorPanel() {
     }
   }
 
+  // ── Auto-roll handler for DM roll requests ───────────────────────────────
+  function handleRollRequest(rr) {
+    const skillLower = (rr.skill || '').toLowerCase();
+    let abilityKey = 'str';
+    for (const [k, v] of Object.entries(SKILL_ABILITY)) {
+      if (skillLower.includes(k)) { abilityKey = v; break; }
+    }
+    // Find the character by name in partyMembers
+    const charName  = (rr.character || '').toLowerCase();
+    const character = partyMembers.find(p => p.name.toLowerCase().includes(charName) || charName.includes(p.name.toLowerCase()))
+                   || partyMembers[0];
+
+    const abilityScore = character?.stats?.[abilityKey] ?? 10;
+    const mod  = Math.floor((abilityScore - 10) / 2);
+    const d20  = Math.floor(Math.random() * 20) + 1;
+    const total = d20 + mod;
+    const dc   = rr.dc || 10;
+    const success = total >= dc;
+
+    const modStr  = mod >= 0 ? `+${mod}` : `${mod}`;
+    const charDisplay = character?.name || rr.character || 'Player';
+    const resultText = `${charDisplay} rolls ${rr.skill} — d20(${d20})${modStr} = ${total} vs DC ${dc}: ${success ? 'SUCCESS!' : 'FAILURE.'}`;
+
+    handleSend(resultText);
+  }
+
   // ── Collapsed bar preview ─────────────────────────────────────────────────
   const lastDmMsg = [...narrator.history].reverse().find(m => m.role === 'dm');
 
@@ -336,11 +375,18 @@ export default function NarratorPanel() {
                   </span>
                   <p style={styles.bubbleText}>{msg.text}</p>
                   {msg.rollRequest && (
-                    <div style={styles.rollCard}>
-                      🎲 <strong>{msg.rollRequest.character || 'You'}</strong> — Roll{' '}
-                      <strong>{msg.rollRequest.skill}</strong> vs DC{' '}
-                      <strong>{msg.rollRequest.dc}</strong>
-                    </div>
+                    <button
+                      style={styles.rollBtn}
+                      onClick={() => handleRollRequest(msg.rollRequest)}
+                    >
+                      <span style={styles.rollBtnIcon}>🎲</span>
+                      <span style={styles.rollBtnText}>
+                        <strong>{msg.rollRequest.character || 'Player'}</strong>
+                        {' — Roll '}<strong>{msg.rollRequest.skill}</strong>
+                        {' vs DC '}<strong>{msg.rollRequest.dc}</strong>
+                      </span>
+                      <span style={styles.rollBtnCta}>Roll Now →</span>
+                    </button>
                   )}
                 </div>
               ))}
@@ -596,11 +642,18 @@ const styles = {
     letterSpacing: '0.05em', marginBottom: 4, textAlign: 'right',
   },
   bubbleText: { margin: 0, color: '#e8dcc8', fontSize: '0.88rem', lineHeight: 1.55 },
-  rollCard: {
-    marginTop: 8, padding: '6px 12px',
-    background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
-    borderRadius: 6, color: '#d4af37', fontSize: '0.82rem',
-    fontFamily: "'Cinzel', Georgia, serif",
+  rollBtn: {
+    display: 'flex', alignItems: 'center', gap: 10,
+    marginTop: 10, padding: '10px 14px', width: '100%',
+    background: 'linear-gradient(135deg, rgba(212,175,55,0.14), rgba(212,175,55,0.07))',
+    border: '2px solid rgba(212,175,55,0.5)', borderRadius: 8,
+    cursor: 'pointer', textAlign: 'left', animation: 'goldPulse 2s infinite',
+  },
+  rollBtnIcon: { fontSize: '1.4rem', flexShrink: 0 },
+  rollBtnText: { flex: 1, color: '#e8dcc8', fontSize: '0.88rem', lineHeight: 1.4 },
+  rollBtnCta: {
+    color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif",
+    fontWeight: 700, fontSize: '0.78rem', flexShrink: 0, letterSpacing: '0.04em',
   },
   floorBanner: {
     background: 'rgba(230,126,34,0.1)', border: '1px solid rgba(230,126,34,0.3)',

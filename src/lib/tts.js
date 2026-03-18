@@ -1,113 +1,147 @@
-// StreamElements TTS (AWS Polly neural, Brian = deep UK male) is the primary voice.
-// Falls back to Web Speech API if StreamElements is unavailable.
+// TTS chain (best to worst voice quality):
+//  1. TikTok TTS  — en_uk_001  (AWS Polly neural, CORS-open, free)
+//  2. StreamElements — Brian   (AWS Polly neural, may have CORS issues)
+//  3. Web Speech API           (browser-native, quality varies by OS)
 
-let currentAudio    = null;  // HTMLAudioElement for StreamElements
-let currentUtterance = null; // SpeechSynthesisUtterance for fallback
+let currentAudio     = null;
+let currentUtterance = null;
 
-const SE_BASE = 'https://api.streamelements.com/kappa/v2/speech';
-const SE_VOICE = 'Brian'; // Deep UK male — sounds like a storyteller
+export function isTTSSupported() { return true; }
 
-export function isTTSSupported() {
-  return true; // StreamElements works everywhere; Web Speech is the fallback
-}
-
+// ── Main entry point ──────────────────────────────────────────────────────────
 export async function speak(text, onEnd) {
   if (!text) return;
   stopSpeaking();
 
-  // ── StreamElements (primary) ──────────────────────────────────────────────
+  // Try TikTok TTS first (best quality, CORS-enabled, no auth)
+  const tiktokUrl = await tryTikTokTTS(text);
+  if (tiktokUrl) {
+    playAudioUrl(tiktokUrl, text, onEnd);
+    return;
+  }
+
+  // Try StreamElements (AWS Polly Brian, may have CORS restrictions)
+  const seUrl = await tryStreamElementsTTS(text);
+  if (seUrl) {
+    playAudioUrl(seUrl, text, onEnd);
+    return;
+  }
+
+  // Last resort: browser Web Speech API
+  speakWebSpeech(text, onEnd);
+}
+
+// ── TikTok TTS (UK male "en_uk_001", sounds like a storyteller) ──────────────
+async function tryTikTokTTS(text) {
   try {
-    const url = `${SE_BASE}?voice=${SE_VOICE}&text=${encodeURIComponent(text)}`;
+    const controller = new AbortController();
+    const timeout    = setTimeout(() => controller.abort(), 6000);
+
+    const response = await fetch('https://tiktok-tts.weilbyte.dev/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text.slice(0, 500), voice: 'en_uk_001' }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (!response.ok) return null;
+    const json = await response.json();
+    if (!json?.data) return null;
+
+    return `data:audio/mpeg;base64,${json.data}`;
+  } catch {
+    return null;
+  }
+}
+
+// ── StreamElements TTS (AWS Polly Brian, UK male) ─────────────────────────────
+async function tryStreamElementsTTS(text) {
+  try {
+    const url = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`;
 
     const controller = new AbortController();
-    const timeout    = setTimeout(() => controller.abort(), 8000);
+    const timeout    = setTimeout(() => controller.abort(), 7000);
 
     const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timeout);
 
-    if (response.ok) {
-      const blob     = await response.blob();
-      const audioUrl = URL.createObjectURL(blob);
-      const audio    = new Audio(audioUrl);
-
-      currentAudio = audio;
-
-      audio.onended = () => {
-        URL.revokeObjectURL(audioUrl);
-        currentAudio = null;
-        if (onEnd) onEnd();
-      };
-
-      audio.onerror = () => {
-        URL.revokeObjectURL(audioUrl);
-        currentAudio = null;
-        speakFallback(text, onEnd);
-      };
-
-      audio.play().catch(() => {
-        // Auto-play blocked — fall through to Web Speech
-        currentAudio = null;
-        speakFallback(text, onEnd);
-      });
-
-      return;
-    }
+    if (!response.ok) return null;
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
   } catch {
-    // StreamElements unreachable — fall through
+    return null;
   }
-
-  speakFallback(text, onEnd);
 }
 
-// ── Web Speech fallback ───────────────────────────────────────────────────────
+// ── Shared audio player ───────────────────────────────────────────────────────
+function playAudioUrl(url, text, onEnd) {
+  const audio    = new Audio(url);
+  currentAudio   = audio;
+  const isBlob   = url.startsWith('blob:');
 
+  audio.onended = () => {
+    if (isBlob) URL.revokeObjectURL(url);
+    currentAudio = null;
+    if (onEnd) onEnd();
+  };
+  audio.onerror = () => {
+    if (isBlob) URL.revokeObjectURL(url);
+    currentAudio = null;
+    speakWebSpeech(text, onEnd);
+  };
+  audio.play().catch(() => {
+    // Auto-play blocked by browser policy — fall back to Web Speech
+    if (isBlob) URL.revokeObjectURL(url);
+    currentAudio = null;
+    speakWebSpeech(text, onEnd);
+  });
+}
+
+// ── Web Speech API fallback ───────────────────────────────────────────────────
 function getWebVoices() {
-  return new Promise((resolve) => {
-    const voices = speechSynthesis.getVoices();
-    if (voices.length > 0) {
-      resolve(voices);
+  return new Promise(resolve => {
+    const v = speechSynthesis.getVoices();
+    if (v.length > 0) {
+      resolve(v);
     } else {
       speechSynthesis.onvoiceschanged = () => resolve(speechSynthesis.getVoices());
     }
   });
 }
 
-async function getDMVoice() {
-  const voices = await getWebVoices();
-  // Prefer deep English male voices in order
-  const preferred = [
-    'Google UK English Male',
-    'Microsoft David - English (United States)',
-    'Daniel',
-    'Alex',
-    'Google US English',
-  ];
-  for (const name of preferred) {
-    const v = voices.find(v => v.name === name);
-    if (v) return v;
-  }
-  return voices.find(v => v.lang?.startsWith('en')) || null;
-}
-
-async function speakFallback(text, onEnd) {
-  if (!('speechSynthesis' in window)) {
-    if (onEnd) onEnd();
-    return;
-  }
+async function speakWebSpeech(text, onEnd) {
+  if (!('speechSynthesis' in window)) { if (onEnd) onEnd(); return; }
 
   const utterance  = new SpeechSynthesisUtterance(text);
-  utterance.rate   = 0.88;
-  utterance.pitch  = 0.8;
+  utterance.rate   = 0.85;
+  utterance.pitch  = 0.75;
   utterance.volume = 1;
 
-  const voice = await getDMVoice();
-  if (voice) utterance.voice = voice;
-  if (onEnd) utterance.onend = onEnd;
+  // Prefer Chrome cloud voices (sound human) over platform eSpeak/Festival
+  const voices   = await getWebVoices();
+  const preferred = [
+    'Google UK English Male',
+    'Google UK English Female',
+    'Microsoft George - English (United Kingdom)',
+    'Microsoft David - English (United States)',
+    'Daniel', 'Alex',
+    'Google US English',
+  ];
+  let chosen = null;
+  for (const name of preferred) {
+    chosen = voices.find(v => v.name === name);
+    if (chosen) break;
+  }
+  if (!chosen) chosen = voices.find(v => v.lang?.startsWith('en')) || null;
+  if (chosen)  utterance.voice = chosen;
+  if (onEnd)   utterance.onend = onEnd;
 
   currentUtterance = utterance;
   speechSynthesis.speak(utterance);
 }
 
+// ── Controls ──────────────────────────────────────────────────────────────────
 export function stopSpeaking() {
   if (currentAudio) {
     currentAudio.pause();
