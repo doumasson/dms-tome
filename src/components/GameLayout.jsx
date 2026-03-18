@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useStore from '../store/useStore';
 import PartySidebar from './PartySidebar';
 import ScenePanel from './ScenePanel';
 import EncounterView from './EncounterView';
 import NarratorPanel from './NarratorPanel';
+import PlayerStatusBar from './PlayerStatusBar';
+import TurnAnnouncement from './TurnAnnouncement';
 import DiceTray from './DiceTray';
 import LootGenerator from './LootGenerator';
 import NotesTab from './NotesTab';
@@ -36,6 +38,23 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
   }, [myCharacter?.xp]);
 
   const inCombat = encounter.phase !== 'idle';
+
+  // Turn announcement: fires when the active combatant changes
+  const [turnAnnounceTrigger, setTurnAnnounceTrigger] = useState(0);
+  const prevTurnRef = useRef(null);
+  useEffect(() => {
+    if (!inCombat) return;
+    const key = `${encounter.currentTurn}-${encounter.round}`;
+    if (prevTurnRef.current !== key) {
+      prevTurnRef.current = key;
+      setTurnAnnounceTrigger(t => t + 1);
+    }
+  }, [encounter.currentTurn, encounter.round, inCombat]);
+
+  const activeCombatant = inCombat ? (encounter.combatants?.[encounter.currentTurn] ?? null) : null;
+  const isMyTurn = !!(activeCombatant && myCharacter && (
+    activeCombatant.id === myCharacter.id || activeCombatant.name === myCharacter.name
+  ));
 
   function proposeRest(type) {
     setRestProposal({ type, proposedBy: myCharacter?.name || user?.email || 'Someone' });
@@ -83,9 +102,20 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
       {/* Main content area */}
       <div style={styles.mainArea}>
         {/* Combat or Scene — fixed 55vh hero area */}
-        <div style={styles.contentArea}>
+        <div style={{ ...styles.contentArea, position: 'relative' }}>
           {inCombat ? <EncounterView /> : <ScenePanel />}
+          {/* "Your Turn" / "[Name]'s Turn" announcement */}
+          {inCombat && activeCombatant && (
+            <TurnAnnouncement
+              name={activeCombatant.name}
+              isMyTurn={isMyTurn}
+              trigger={turnAnnounceTrigger}
+            />
+          )}
         </div>
+
+        {/* Always-visible character status strip */}
+        <PlayerStatusBar />
 
         {/* Narrator — fills remaining space, always visible */}
         <div style={styles.narratorArea}>
