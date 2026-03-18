@@ -2,10 +2,22 @@ import { create } from 'zustand/react';
 import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
 import { triggerEnemyTurn } from '../lib/enemyAi';
+import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 
+// Generate a deterministic Pollinations portrait URL for a character.
+// Same name/race/class always produces the same portrait.
+// Falls back to initials-based seed so even partial data gives a unique image.
 function makePortraitUrl(name, race, cls) {
-  const seed = encodeURIComponent(`${name || ''} ${race || ''} ${cls || ''}`.trim());
-  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=transparent`;
+  const n = (name || 'adventurer').trim().toLowerCase();
+  const r = (race || 'human').toLowerCase();
+  const c = (cls  || 'fighter').toLowerCase();
+  // Numeric seed from character name for determinism
+  const seed = [...n].reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % 99999;
+  const prompt = encodeURIComponent(
+    `portrait of a ${r} ${c} named ${n}, fantasy D&D 5e character art, dramatic lighting, ` +
+    `detailed face, dark background, heroic, no text, no border`
+  );
+  return `https://image.pollinations.ai/prompt/${prompt}?width=256&height=256&nologo=true&model=flux-schnell&seed=${seed}`;
 }
 
 const useStore = create((set, get) => ({
@@ -728,16 +740,39 @@ const useStore = create((set, get) => ({
         });
       }
 
-      // Narrate in chat
+      // Narrate in chat — broadcast to ALL players, not just the DM's client
       if (result.narrative) {
-        get().addNarratorMessage({ role: 'dm', text: result.narrative, speaker: 'Dungeon Master' });
+        const msg = {
+          role: 'dm', speaker: 'Dungeon Master',
+          text: result.narrative,
+          id: crypto.randomUUID(), timestamp: Date.now(),
+        };
+        get().addNarratorMessage(msg);
+        broadcastNarratorMessage(msg);
+      }
+
+      // If all enemies are now dead, trigger a victory narration after combat resolves
+      const afterEncounter = get().encounter;
+      const allEnemiesDead = afterEncounter.combatants.every(
+        c => c.type !== 'enemy' || c.currentHp <= 0
+      );
+      if (allEnemiesDead) {
+        setTimeout(() => {
+          get().setPendingDmTrigger(
+            'The battle is over. Describe the aftermath as the party catches their breath and surveys the scene.'
+          );
+        }, 2800);
       }
     } catch (err) {
       get().addEncounterLog(`⚔ ${active.name} hesitates. (${err.message})`);
     }
 
-    // Auto-advance to next turn after a short delay
-    setTimeout(() => get().nextEncounterTurn(), 1800);
+    // Auto-advance to next turn — broadcast so ALL clients advance simultaneously
+    const userId = get().user?.id;
+    setTimeout(() => {
+      get().nextEncounterTurn();
+      broadcastEncounterAction({ type: 'next-turn', userId: userId || 'system' });
+    }, 1800);
   },
 
   setConcentration: (id, spell) =>

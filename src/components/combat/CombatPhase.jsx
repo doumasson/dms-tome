@@ -10,6 +10,7 @@ import ActionPanel from '../ActionPanel';
 import LootGenerator from '../LootGenerator';
 import SpellTargeting from '../SpellTargeting';
 import BattleMap, { buildTypeIndex } from './BattleMap';
+import TurnAnnouncement from '../TurnAnnouncement';
 import CombatantRow from './CombatantRow';
 import AttackPanel from './AttackPanel';
 import { SavingThrowPanel, AoEPanel, ConcentratePanel, SpellSelectPanel } from './SpellPanels';
@@ -50,6 +51,8 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const activeCampaign = useStore(s => s.activeCampaign);
   const campaignState  = useStore(s => s.campaign);
   const battleSceneUrl = sceneImages[`${activeCampaign?.id}:${campaignState.currentSceneIndex}`] || null;
+  const fogEnabledMap = useStore(s => s.fogEnabled);
+  const combatFogEnabled = fogEnabledMap[`${activeCampaign?.id}:${campaignState.currentSceneIndex}`] ?? false;
 
   const isMyTurn = !!(activeCombatant && myCharacter && (
     activeCombatant.id === myCharacter.id || activeCombatant.name === myCharacter.name
@@ -338,8 +341,13 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
             </>
           )}
         </div>
-        <div style={{ overflowX: 'auto' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
+        <div style={{ overflowX: 'auto', position: 'relative' }}>
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
+          <TurnAnnouncement
+            name={activeCombatant?.name}
+            isMyTurn={isMyTurn}
+            trigger={encounter.currentTurn}
+          />
         </div>
         <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 3 }}>
           {activeCombatant ? (
@@ -495,8 +503,13 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           )}
         </div>
 
-        <div style={{ overflowX: 'auto' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
+        <div style={{ overflowX: 'auto', position: 'relative' }}>
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
+          <TurnAnnouncement
+            name={activeCombatant?.name}
+            isMyTurn={isMyTurn}
+            trigger={encounter.currentTurn}
+          />
         </div>
 
         <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 3 }}>

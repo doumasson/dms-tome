@@ -140,9 +140,38 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
         {loading ? (
           <div style={styles.loadingMsg}>Loading campaigns...</div>
         ) : campaigns.length === 0 ? (
-          <div style={styles.emptyState}>
-            <p style={styles.emptyText}>You haven't joined any campaigns yet.</p>
-            <p style={styles.emptyHint}>Create a new one or enter an invite code above.</p>
+          <div style={styles.onboarding}>
+            <div style={styles.onboardingD20}>⚔</div>
+            <h3 style={styles.onboardingTitle}>Your adventure awaits.</h3>
+            <p style={styles.onboardingSubtitle}>
+              DM's Tome is a real D&amp;D 5e game — played with friends, run by an AI Dungeon Master.
+              No human DM needed.
+            </p>
+
+            <div style={styles.onboardingSteps}>
+              {[
+                { n: '1', head: 'Create a campaign', body: 'Set the tone, world, and villain. The AI builds the story.' },
+                { n: '2', head: 'Invite your party', body: 'Share a code. Friends join on any device — phone, tablet, laptop.' },
+                { n: '3', head: 'Play', body: 'The Dungeon Master narrates, runs enemies, calls for rolls. You just play.' },
+              ].map(({ n, head, body }) => (
+                <div key={n} style={styles.onboardingStep}>
+                  <div style={styles.onboardingStepNum}>{n}</div>
+                  <div>
+                    <div style={styles.onboardingStepHead}>{head}</div>
+                    <div style={styles.onboardingStepBody}>{body}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={styles.onboardingNote}>
+              <strong style={{ color: '#d4af37' }}>You'll need a Claude API key</strong> to power the AI Dungeon Master.
+              Get one free at{' '}
+              <a href="https://console.anthropic.com" target="_blank" rel="noreferrer" style={{ color: '#d4af37' }}>
+                console.anthropic.com
+              </a>
+              {' '}— add it in ⚙ Settings after creating your first campaign.
+            </div>
           </div>
         ) : (
           <div style={styles.campaignList}>
@@ -468,5 +497,93 @@ const styles = {
     marginTop: 12,
     letterSpacing: '0.04em',
     boxShadow: '0 0 20px rgba(212,175,55,0.2)',
+  },
+
+  // ── Onboarding empty state ──────────────────────────────────────────────
+  onboarding: {
+    textAlign: 'center',
+    padding: '32px 16px 24px',
+    border: '1px solid rgba(212,175,55,0.12)',
+    borderRadius: 12,
+    background: 'rgba(255,255,255,0.018)',
+    marginBottom: 16,
+  },
+  onboardingD20: {
+    fontSize: '2.8rem',
+    marginBottom: 12,
+    filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.4))',
+  },
+  onboardingTitle: {
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '1.25rem',
+    color: '#d4af37',
+    fontWeight: 700,
+    margin: '0 0 8px',
+    letterSpacing: '0.06em',
+  },
+  onboardingSubtitle: {
+    fontSize: '0.88rem',
+    color: 'var(--text-secondary)',
+    margin: '0 0 28px',
+    lineHeight: 1.65,
+    maxWidth: 420,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  onboardingSteps: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 12,
+    textAlign: 'left',
+    maxWidth: 400,
+    margin: '0 auto 24px',
+  },
+  onboardingStep: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 14,
+    background: 'rgba(212,175,55,0.04)',
+    border: '1px solid rgba(212,175,55,0.1)',
+    borderRadius: 8,
+    padding: '12px 16px',
+  },
+  onboardingStepNum: {
+    width: 26,
+    height: 26,
+    borderRadius: '50%',
+    background: 'rgba(212,175,55,0.15)',
+    border: '1px solid rgba(212,175,55,0.4)',
+    color: '#d4af37',
+    fontSize: '0.75rem',
+    fontWeight: 700,
+    fontFamily: "'Cinzel', Georgia, serif",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    marginTop: 1,
+  },
+  onboardingStepHead: {
+    fontSize: '0.88rem',
+    color: '#e8dcc8',
+    fontWeight: 600,
+    marginBottom: 3,
+    fontFamily: "'Cinzel', Georgia, serif",
+  },
+  onboardingStepBody: {
+    fontSize: '0.8rem',
+    color: 'var(--text-muted)',
+    lineHeight: 1.5,
+  },
+  onboardingNote: {
+    fontSize: '0.78rem',
+    color: 'var(--text-muted)',
+    lineHeight: 1.6,
+    maxWidth: 380,
+    margin: '0 auto',
+    padding: '12px 16px',
+    background: 'rgba(212,175,55,0.04)',
+    border: '1px solid rgba(212,175,55,0.1)',
+    borderRadius: 8,
   },
 };

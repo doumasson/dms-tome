@@ -6,6 +6,7 @@ import LoginPage from './components/LoginPage';
 import CampaignSelect from './components/CampaignSelect';
 import CreateCampaign from './components/CreateCampaign';
 import CharacterCreate from './components/CharacterCreate';
+import CharacterSelect from './components/CharacterSelect';
 import ApiKeySettings from './components/ApiKeySettings';
 import CampaignManager from './components/CampaignManager';
 import GameLayout from './components/GameLayout';
@@ -162,6 +163,11 @@ export default function App() {
       if (memberId && sceneKey) {
         useStore.getState().setSceneTokenPosition(sceneKey, memberId, { x, y });
       }
+    });
+
+    // AI DM narrator messages (enemy turns, auto-events) → all players
+    ch.on('broadcast', { event: 'narrator-message' }, ({ payload }) => {
+      if (payload?.text) useStore.getState().addNarratorMessage(payload);
     });
 
     // Dice roll broadcast (any player → all others)
@@ -353,7 +359,7 @@ export default function App() {
       setMyCharacter(memberData.character_data);
       setAppView('game');
     } else {
-      setAppView('character-create');
+      setAppView('character-select');
     }
   }
 
@@ -416,6 +422,47 @@ export default function App() {
           setAppView('select');
         }}
       />
+    );
+  }
+
+  // ── Character Select (portable characters) ───────────────────────────────────
+  if (appView === 'character-select') {
+    return (
+      <div style={styles.app}>
+        <header style={styles.header}>
+          <div style={styles.headerLeft}>
+            <D20Icon />
+            <h1 style={styles.appTitle}>DM's Tome</h1>
+            {activeCampaign && (
+              <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
+            )}
+          </div>
+          {user?.avatar_url && (
+            <img src={user.avatar_url} alt="" style={styles.headerAvatar} referrerPolicy="no-referrer" />
+          )}
+        </header>
+        <div style={styles.headerRule} />
+        <CharacterSelect
+          user={user}
+          campaignId={activeCampaign?.id}
+          onSelectExisting={async (char) => {
+            setMyCharacter(char);
+            if (activeCampaign?.id) {
+              const { data: members } = await supabase
+                .from('campaign_members')
+                .select('user_id, role, character_data')
+                .eq('campaign_id', activeCampaign.id);
+              const seen = new Set();
+              const players = (members || [])
+                .filter(m => m.character_data?.name && !seen.has(m.user_id) && seen.add(m.user_id))
+                .map(m => ({ ...m.character_data }));
+              setPartyMembers(players);
+            }
+            setAppView('game');
+          }}
+          onCreateNew={() => setAppView('character-create')}
+        />
+      </div>
     );
   }
 

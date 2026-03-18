@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import useStore from '../store/useStore';
+import { ambient } from '../lib/ambientAudio';
 import PartySidebar from './PartySidebar';
 import ScenePanel from './ScenePanel';
 import EncounterView from './EncounterView';
@@ -26,7 +27,25 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
   const [restProposal, setRestProposal] = useState(null); // { type: 'short'|'long', proposedBy }
   const [showLevelUp, setShowLevelUp] = useState(false);
 
-  // Watch for XP crossing a level threshold
+  const campaign = useStore(s => s.campaign);
+
+  // ── Ambient audio: switch between scene/combat soundscapes ───────────────
+  useEffect(() => {
+    const scene = campaign?.scenes?.[campaign?.currentSceneIndex];
+    if (inCombat) {
+      ambient.combatMode(true, scene);
+    } else {
+      ambient.combatMode(false, scene);
+    }
+  }, [inCombat]); // eslint-disable-line
+
+  useEffect(() => {
+    if (inCombat) return; // combat mode handles its own audio
+    const scene = campaign?.scenes?.[campaign?.currentSceneIndex];
+    ambient.play(ambient.detect(scene));
+  }, [campaign?.currentSceneIndex]); // eslint-disable-line
+
+  // ── Watch for XP crossing a level threshold ──────────────────────────────
   useEffect(() => {
     if (!myCharacter) return;
     const xp = myCharacter.xp || 0;

@@ -3,6 +3,7 @@ import useStore from '../store/useStore';
 import { supabase } from '../lib/supabase';
 import { buildSystemPrompt, callNarrator } from '../lib/narratorApi';
 import { speak, stopSpeaking } from '../lib/tts';
+import { ambient } from '../lib/ambientAudio';
 import { getClaudeApiKey } from '../lib/claudeApi';
 import { broadcastSceneChange, broadcastStartCombat } from '../lib/liveChannel';
 
@@ -34,7 +35,6 @@ export default function NarratorPanel() {
   const setCurrentScene       = useStore(s => s.setCurrentScene);
   const pendingDmTrigger      = useStore(s => s.pendingDmTrigger);
   const clearPendingDmTrigger = useStore(s => s.clearPendingDmTrigger);
-  const campaign          = useStore(s => s.campaign);
   const encounter         = useStore(s => s.encounter);
 
   const inCombat = encounter.phase !== 'idle';
@@ -47,9 +47,12 @@ export default function NarratorPanel() {
   const [input, setInput]           = useState('');
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState(null);
-  const [ttsEnabled, setTtsEnabled] = useState(true);
-  const [heyDmMode, setHeyDmMode]   = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+  const [ttsEnabled, setTtsEnabled]       = useState(true);
+  const [ambientEnabled, setAmbientEnabled] = useState(true);
+  const [heyDmMode, setHeyDmMode]         = useState(false);
+  const [isRecording, setIsRecording]     = useState(false);
+  // ID of the message whose roll button is currently animating
+  const [rollingId, setRollingId]         = useState(null);
 
   // ── Floor system — one speaker at a time ─────────────────────────────────
   const [floorHolder, setFloorHolder] = useState(null);
@@ -452,22 +455,54 @@ export default function NarratorPanel() {
             <p style={styles.bubbleText}>{msg.text}</p>
             {msg.rollRequest && (
               <button
-                style={styles.rollBtn}
-                onClick={() => handleRollRequest(msg.rollRequest)}
+                style={{
+                  ...styles.rollBtn,
+                  opacity: rollingId === msg.id ? 0.8 : 1,
+                  cursor: rollingId === msg.id ? 'default' : 'pointer',
+                }}
+                onClick={() => {
+                  if (rollingId) return; // already rolling something
+                  setRollingId(msg.id);
+                  setTimeout(() => {
+                    handleRollRequest(msg.rollRequest);
+                    setRollingId(null);
+                  }, 1100);
+                }}
               >
-                <span style={styles.rollBtnIcon}>🎲</span>
-                <div style={styles.rollBtnText}>
-                  <div style={{ fontSize: '0.75rem', color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 2 }}>
-                    {msg.rollRequest.skill} Check — DC {msg.rollRequest.dc}
+                {rollingId === msg.id ? (
+                  // Spinning d20 animation while rolling
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%' }}>
+                    <div style={{
+                      fontSize: '2rem',
+                      animation: 'spin360 0.4s linear infinite',
+                      display: 'inline-block',
+                    }}>🎲</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '0.72rem', color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif" }}>
+                        Rolling {msg.rollRequest.skill}…
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#e8dcc8', marginTop: 2 }}>
+                        May the dice be ever in your favour
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ fontSize: '0.82rem', color: '#e8dcc8' }}>
-                    {msg.rollRequest.character || 'Your character'} must roll
-                  </div>
-                </div>
-                <div style={styles.rollBtnCta}>
-                  <div style={{ fontSize: '1.4rem' }}>🎲</div>
-                  <div style={{ fontSize: '0.7rem' }}>Roll</div>
-                </div>
+                ) : (
+                  <>
+                    <span style={styles.rollBtnIcon}>🎲</span>
+                    <div style={styles.rollBtnText}>
+                      <div style={{ fontSize: '0.75rem', color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 2 }}>
+                        {msg.rollRequest.skill} Check — DC {msg.rollRequest.dc}
+                      </div>
+                      <div style={{ fontSize: '0.82rem', color: '#e8dcc8' }}>
+                        {msg.rollRequest.character || 'Your character'} must roll
+                      </div>
+                    </div>
+                    <div style={styles.rollBtnCta}>
+                      <div style={{ fontSize: '1.4rem' }}>🎲</div>
+                      <div style={{ fontSize: '0.7rem' }}>Roll</div>
+                    </div>
+                  </>
+                )}
               </button>
             )}
           </div>
@@ -544,6 +579,16 @@ export default function NarratorPanel() {
           style={{ ...styles.iconBtn, ...(ttsEnabled ? styles.iconBtnOn : {}) }}
           title={ttsEnabled ? 'Mute DM voice' : 'Unmute DM voice'}
         >{ttsEnabled ? '🔊' : '🔇'}</button>
+
+        <button
+          onClick={() => {
+            const next = !ambientEnabled;
+            setAmbientEnabled(next);
+            ambient.setMuted(!next);
+          }}
+          style={{ ...styles.iconBtn, ...(ambientEnabled ? styles.iconBtnOn : {}) }}
+          title={ambientEnabled ? 'Mute ambient sound' : 'Enable ambient sound'}
+        >{ambientEnabled ? '🎵' : '🎵'}</button>
 
         <button onClick={clearNarratorHistory} style={styles.iconBtn} title="Clear history">🗑</button>
 
