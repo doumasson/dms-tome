@@ -54,6 +54,7 @@ export default function App() {
   const saveSessionState = useStore(s => s.saveSessionStateToSupabase);
 
   const sessionPersistDebounce = useRef(null);
+  const encounterHeartbeat = useRef(null);
 
   useEffect(() => {
     // Pick up invite code from URL or localStorage
@@ -198,6 +199,17 @@ export default function App() {
     return () => clearTimeout(sessionPersistDebounce.current);
   }, [campaign.currentSceneIndex, encounter, isDM, dmMode, activeCampaign?.id]);
 
+  // DM heartbeat: broadcast full encounter state every 5s when in combat so late-joining
+  // players sync within seconds of refreshing (can't rely on Supabase save timing)
+  useEffect(() => {
+    clearInterval(encounterHeartbeat.current);
+    if (!isDM || !dmMode || !liveConnected || encounter.phase === 'idle') return;
+    encounterHeartbeat.current = setInterval(() => {
+      channelRef.current?.send({ type: 'broadcast', event: 'encounter-sync', payload: useStore.getState().encounter });
+    }, 5000);
+    return () => clearInterval(encounterHeartbeat.current);
+  }, [isDM, dmMode, liveConnected, encounter.phase]);
+
   async function handleSession(session) {
     const authUser = session.user;
     const currentUser = useStore.getState().user;
@@ -266,6 +278,12 @@ export default function App() {
     const savedEncounter = campaignRecord.settings?.encounterState;
     if (savedEncounter?.phase && savedEncounter.phase !== 'idle') {
       syncEncounterDown(savedEncounter);
+    }
+
+    // Cache DM's Claude API key for all players (so narrator works without their own key)
+    const sharedApiKey = campaignRecord.settings?.claudeApiKey;
+    if (sharedApiKey) {
+      useStore.getState().setSessionApiKey(sharedApiKey);
     }
 
     // Save campaign ID so refresh restores to game view

@@ -1,12 +1,12 @@
 const DALLE_URL = 'https://api.openai.com/v1/images/generations';
 
 // Free image generation via Pollinations.ai — no API key required
-// Smaller size (800×450) loads ~4x faster than 1792×1024; model=flux is the most reliable
+// model=turbo is fastest and most stable; keep prompt short to avoid URL length issues
 export function generateSceneImageFree(title) {
-  const safeTitle = (title || 'fantasy scene').slice(0, 70).replace(/[^\w\s,'-]/g, '');
-  const prompt = `Dark fantasy RPG scene: ${safeTitle}. Dramatic atmospheric lighting, detailed environment, cinematic, no text.`;
+  const safeTitle = (title || 'fantasy scene').slice(0, 60).replace(/[^\w\s,'-]/g, '').trim();
+  const prompt = `dark fantasy RPG, ${safeTitle}, atmospheric lighting, cinematic, digital art`;
   const seed = Math.floor(Math.random() * 99999);
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=450&nologo=true&seed=${seed}&model=flux`;
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&seed=${seed}&model=turbo`;
 }
 
 export function getOpenAiKey(userId) {

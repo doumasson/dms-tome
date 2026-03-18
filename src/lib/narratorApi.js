@@ -59,7 +59,7 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
     },
     body: JSON.stringify({
       model: NARRATOR_MODEL,
-      max_tokens: 512,
+      max_tokens: 1024,
       system: systemPrompt,
       messages,
     }),
@@ -73,14 +73,29 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
   const data = await response.json();
   const raw  = data.content[0].text.trim();
 
-  // Extract JSON from potential markdown code fences (```json ... ```) anywhere in the string
-  const codeBlockMatch = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  const text = codeBlockMatch ? codeBlockMatch[1].trim() : raw.trim();
+  // Step 1: strip opening/closing code fences (handles truncated responses too)
+  let text = raw
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```\s*$/, '')
+    .trim();
+
+  // Step 2: find the outermost JSON object boundaries (handles stray leading chars)
+  const jsonStart = text.indexOf('{');
+  const jsonEnd   = text.lastIndexOf('}');
+  if (jsonStart !== -1 && jsonEnd > jsonStart) {
+    text = text.slice(jsonStart, jsonEnd + 1);
+  }
 
   try {
     return JSON.parse(text);
   } catch {
-    // JSON parse failed — treat entire text as narrative prose
-    return { narrative: text, rollRequest: null, stateHint: null, advanceScene: false };
+    // Last resort: return only the narrative value if we can pull it out
+    const narrativeMatch = text.match(/"narrative"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+    if (narrativeMatch) {
+      return { narrative: narrativeMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"'), rollRequest: null, stateHint: null, advanceScene: false };
+    }
+    // Absolute fallback: strip all JSON artifacts and show as prose
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').replace(/^\{.*?"narrative"\s*:\s*"/s, '').split('"')[0];
+    return { narrative: cleaned || raw.slice(0, 400), rollRequest: null, stateHint: null, advanceScene: false };
   }
 }
