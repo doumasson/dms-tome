@@ -3,6 +3,7 @@ import useStore from '../store/useStore';
 
 const DICE_TYPES = [4, 6, 8, 10, 12, 20, 100];
 
+
 function rollDie(sides) {
   return Math.floor(Math.random() * sides) + 1;
 }
@@ -11,12 +12,15 @@ export default function DiceRoller() {
   const addRoll = useStore((s) => s.addRoll);
   const rollHistory = useStore((s) => s.dice.rollHistory);
   const clearHistory = useStore((s) => s.clearHistory);
+  const characters = useStore((s) => s.campaign.characters);
+  const user = useStore((s) => s.user);
 
   const [selectedDie, setSelectedDie] = useState(20);
   const [advantage, setAdvantage] = useState('normal'); // 'normal' | 'advantage' | 'disadvantage'
   const [modifier, setModifier] = useState(0);
   const [count, setCount] = useState(1);
   const [lastResult, setLastResult] = useState(null);
+  const [rolledBy, setRolledBy] = useState('DM');
 
   function handleRoll() {
     const rolls = [];
@@ -50,6 +54,7 @@ export default function DiceRoller() {
       modifier: Number(modifier),
       total: finalValue,
       timestamp: new Date().toLocaleTimeString(),
+      rolledBy,
     };
 
     setLastResult(entry);
@@ -128,6 +133,25 @@ export default function DiceRoller() {
           <button className="btn-dark btn-sm" onClick={() => setModifier((m) => m + 1)}>+</button>
         </div>
       </div>
+
+      {/* Rolling as */}
+      {characters.length > 0 && (
+        <div style={styles.section}>
+          <h3 style={styles.sectionTitle}>Rolling As</h3>
+          <div style={styles.row}>
+            {['DM', ...characters.map(c => c.name)].map(name => (
+              <button
+                key={name}
+                className={rolledBy === name ? 'btn-gold' : 'btn-dark'}
+                style={styles.advButton}
+                onClick={() => setRolledBy(name)}
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Roll Button */}
       <button className="btn-gold" style={styles.rollButton} onClick={handleRoll}>

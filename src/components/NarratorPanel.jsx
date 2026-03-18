@@ -31,11 +31,10 @@ export default function NarratorPanel() {
   const ttsEnabledRef    = useRef(ttsEnabled);
   const heyDmModeRef     = useRef(heyDmMode);
 
-  // Keep refs in sync
   useEffect(() => { ttsEnabledRef.current = ttsEnabled; }, [ttsEnabled]);
   useEffect(() => { heyDmModeRef.current = heyDmMode; }, [heyDmMode]);
 
-  // Auto-scroll history to bottom on new messages
+  // Auto-scroll history to bottom on new messages when expanded
   useEffect(() => {
     if (historyRef.current && narrator.open) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
@@ -45,38 +44,29 @@ export default function NarratorPanel() {
   // Supabase Realtime — receive narrator messages from other players
   useEffect(() => {
     if (!activeCampaign?.id) return;
-
     const ch = supabase.channel(`narrator:${activeCampaign.id}`, {
       config: { broadcast: { ack: false } },
     });
-
     ch.on('broadcast', { event: 'narrator-msg' }, ({ payload }) => {
-      if (payload.senderId === user?.id) return; // skip own echoes
+      if (payload.senderId === user?.id) return;
       addNarratorMessage(payload.message);
       if (ttsEnabledRef.current && payload.message.role === 'dm') {
         speak(payload.message.text);
       }
     });
-
     ch.subscribe();
     channelRef.current = ch;
-
-    return () => {
-      ch.unsubscribe();
-      channelRef.current = null;
-    };
+    return () => { ch.unsubscribe(); channelRef.current = null; };
   }, [activeCampaign?.id, user?.id]);
 
   // "Hey DM" always-listening wake word
   useEffect(() => {
     if (!heyDmMode || !SPEECH_SUPPORTED) return;
-
     function startWakeWord() {
       const r = new SpeechRecognition();
       r.continuous = true;
       r.interimResults = true;
       r.lang = 'en-US';
-
       r.onresult = (e) => {
         for (let i = e.resultIndex; i < e.results.length; i++) {
           const t = e.results[i][0].transcript.toLowerCase();
@@ -88,25 +78,13 @@ export default function NarratorPanel() {
           }
         }
       };
-
-      r.onend = () => {
-        if (heyDmModeRef.current) setTimeout(startWakeWord, 600);
-      };
-
-      r.onerror = () => {
-        if (heyDmModeRef.current) setTimeout(startWakeWord, 1500);
-      };
-
+      r.onend = () => { if (heyDmModeRef.current) setTimeout(startWakeWord, 600); };
+      r.onerror = () => { if (heyDmModeRef.current) setTimeout(startWakeWord, 1500); };
       r.start();
       heyDmRecogRef.current = r;
     }
-
     startWakeWord();
-
-    return () => {
-      heyDmRecogRef.current?.stop();
-      heyDmRecogRef.current = null;
-    };
+    return () => { heyDmRecogRef.current?.stop(); heyDmRecogRef.current = null; };
   }, [heyDmMode]);
 
   function startPTT() {
@@ -115,14 +93,9 @@ export default function NarratorPanel() {
     r.lang = 'en-US';
     r.interimResults = false;
     r.maxAlternatives = 1;
-
-    r.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setInput(transcript);
-    };
+    r.onresult = (e) => { setInput(e.results[0][0].transcript); };
     r.onerror = () => setIsRecording(false);
     r.onend = () => setIsRecording(false);
-
     r.start();
     pttRecogRef.current = r;
     setIsRecording(true);
@@ -143,7 +116,6 @@ export default function NarratorPanel() {
   }
 
   function buildConversationMessages() {
-    // Last 14 exchanges as the rolling context window
     return narrator.history.slice(-14).map((msg) => ({
       role: msg.role === 'dm' ? 'assistant' : 'user',
       content: msg.role === 'player' ? `[${msg.speaker}]: ${msg.text}` : msg.text,
@@ -156,22 +128,16 @@ export default function NarratorPanel() {
 
     const apiKey = getClaudeApiKey(user?.id);
     if (!apiKey) {
-      setError('No API key set — add your Claude key in Settings (⚙ icon on campaign select screen).');
+      setError('No API key — add your Claude key in Settings.');
       return;
     }
 
     setInput('');
     setError(null);
 
-    const playerMsg = {
-      role: 'player',
-      speaker: user?.name || 'Adventurer',
-      text,
-    };
-
+    const playerMsg = { role: 'player', speaker: user?.name || 'Adventurer', text };
     addNarratorMessage(playerMsg);
-    const fullPlayerMsg = { ...playerMsg, id: crypto.randomUUID(), timestamp: Date.now() };
-    broadcast(fullPlayerMsg);
+    broadcast({ ...playerMsg, id: crypto.randomUUID(), timestamp: Date.now() });
 
     setLoading(true);
     try {
@@ -181,14 +147,11 @@ export default function NarratorPanel() {
         campaign.characters,
         currentScene
       );
-
       const messages = [
         ...buildConversationMessages(),
         { role: 'user', content: `[${user?.name || 'Adventurer'}]: ${text}` },
       ];
-
       const result = await callNarrator({ messages, systemPrompt, apiKey });
-
       const dmMsg = {
         role: 'dm',
         speaker: 'Dungeon Master',
@@ -196,11 +159,8 @@ export default function NarratorPanel() {
         rollRequest: result.rollRequest || null,
         stateHint: result.stateHint || null,
       };
-
       addNarratorMessage(dmMsg);
-      const fullDmMsg = { ...dmMsg, id: crypto.randomUUID(), timestamp: Date.now() };
-      broadcast(fullDmMsg);
-
+      broadcast({ ...dmMsg, id: crypto.randomUUID(), timestamp: Date.now() });
       if (ttsEnabled) speak(result.narrative);
     } catch (err) {
       setError(err.message);
@@ -209,177 +169,300 @@ export default function NarratorPanel() {
     }
   }
 
-  const panelHeight = narrator.open ? 400 : 52;
+  // Last DM message for collapsed preview
+  const lastDmMsg = [...narrator.history].reverse().find(m => m.role === 'dm');
 
   return (
-    <div style={{ ...styles.panel, height: panelHeight }}>
-
-      {/* Handle bar — always visible */}
-      <div style={styles.handle} onClick={() => setNarratorOpen(!narrator.open)}>
-        <span style={styles.handleIcon}>{loading ? '⏳' : '🎭'}</span>
-        <span style={styles.handleTitle}>AI Narrator</span>
-        {heyDmMode && (
-          <span style={styles.heyDmPill}>
-            <span style={styles.heyDmDot} />
-            Hey DM
-          </span>
-        )}
-        {loading && <span style={styles.thinkingLabel}>thinking...</span>}
-        <span style={styles.chevron}>{narrator.open ? '▼' : '▲'}</span>
-      </div>
-
+    <>
+      {/* Expanded overlay — sits above scene, does NOT push content */}
       {narrator.open && (
-        <>
-          {/* Message history */}
-          <div ref={historyRef} style={styles.history}>
-            {narrator.history.length === 0 && (
-              <p style={styles.emptyHint}>
-                Describe your action, speak to an NPC, or ask the DM anything.
-                {SPEECH_SUPPORTED
-                  ? ' Hold 🎤 to speak, or enable Hey DM mode for hands-free.'
-                  : ' Type your action below.'}
-              </p>
-            )}
+        <div style={styles.overlay}>
+          {/* Backdrop click to collapse */}
+          <div style={styles.overlayBackdrop} onClick={() => setNarratorOpen(false)} />
 
-            {narrator.history.map((msg, i) => (
-              <div
-                key={msg.id || i}
-                style={msg.role === 'dm' ? styles.dmBubble : styles.playerBubble}
-              >
-                <span style={msg.role === 'dm' ? styles.dmLabel : styles.playerLabel}>
-                  {msg.role === 'dm' ? '🎲 Dungeon Master' : `⚔ ${msg.speaker}`}
+          <div style={styles.expandedPanel}>
+            {/* Header */}
+            <div style={styles.header}>
+              <span style={styles.headerIcon}>{loading ? '⏳' : '🎭'}</span>
+              <span style={styles.headerTitle}>AI Narrator</span>
+              {heyDmMode && (
+                <span style={styles.heyDmPill}>
+                  <span style={styles.heyDmDot} />
+                  Hey DM
                 </span>
-                <p style={styles.bubbleText}>{msg.text}</p>
-                {msg.rollRequest && (
-                  <div style={styles.rollCard}>
-                    🎲 <strong>{msg.rollRequest.character || 'You'}</strong> — Roll{' '}
-                    <strong>{msg.rollRequest.skill}</strong> vs DC{' '}
-                    <strong>{msg.rollRequest.dc}</strong>
-                  </div>
-                )}
-              </div>
-            ))}
+              )}
+              {loading && <span style={styles.thinkingLabel}>thinking…</span>}
+              <button style={styles.collapseBtn} onClick={() => setNarratorOpen(false)}>▼</button>
+            </div>
 
-            {loading && (
-              <div style={styles.dmBubble}>
-                <span style={styles.dmLabel}>🎲 Dungeon Master</span>
-                <p style={{ ...styles.bubbleText, opacity: 0.45 }}>• • •</p>
-              </div>
-            )}
-          </div>
+            {/* Message history */}
+            <div ref={historyRef} style={styles.history}>
+              {narrator.history.length === 0 && (
+                <p style={styles.emptyHint}>
+                  Describe your action, speak to an NPC, or ask the DM anything.
+                  {SPEECH_SUPPORTED
+                    ? ' Hold 🎤 to speak, or enable Hey DM mode for hands-free.'
+                    : ' Type your action below.'}
+                </p>
+              )}
+              {narrator.history.map((msg, i) => (
+                <div key={msg.id || i} style={msg.role === 'dm' ? styles.dmBubble : styles.playerBubble}>
+                  <span style={msg.role === 'dm' ? styles.dmLabel : styles.playerLabel}>
+                    {msg.role === 'dm' ? '🎲 Dungeon Master' : `⚔ ${msg.speaker}`}
+                  </span>
+                  <p style={styles.bubbleText}>{msg.text}</p>
+                  {msg.rollRequest && (
+                    <div style={styles.rollCard}>
+                      🎲 <strong>{msg.rollRequest.character || 'You'}</strong> — Roll{' '}
+                      <strong>{msg.rollRequest.skill}</strong> vs DC{' '}
+                      <strong>{msg.rollRequest.dc}</strong>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {loading && (
+                <div style={styles.dmBubble}>
+                  <span style={styles.dmLabel}>🎲 Dungeon Master</span>
+                  <p style={{ ...styles.bubbleText, opacity: 0.45 }}>• • •</p>
+                </div>
+              )}
+            </div>
 
-          {error && <div style={styles.errorBar}>{error}</div>}
+            {error && <div style={styles.errorBar}>{error}</div>}
 
-          {/* Input row */}
-          <div style={styles.inputRow}>
-            {/* Hey DM toggle */}
-            {SPEECH_SUPPORTED && (
+            {/* Input row */}
+            <div style={styles.inputRow}>
+              {SPEECH_SUPPORTED && (
+                <button
+                  onClick={() => setHeyDmMode(v => !v)}
+                  style={{ ...styles.iconBtn, ...(heyDmMode ? styles.iconBtnOn : {}) }}
+                  title={heyDmMode ? 'Disable "Hey DM" wake word' : 'Enable "Hey DM" wake word'}
+                >🎙</button>
+              )}
+              <input
+                style={styles.input}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
+                placeholder="Describe your action or speak to an NPC…"
+                disabled={loading}
+                autoFocus
+              />
+              {SPEECH_SUPPORTED && (
+                <button
+                  style={{ ...styles.iconBtn, ...(isRecording ? styles.iconBtnRecording : {}) }}
+                  onMouseDown={startPTT}
+                  onMouseUp={stopPTT}
+                  onTouchStart={e => { e.preventDefault(); startPTT(); }}
+                  onTouchEnd={e => { e.preventDefault(); stopPTT(); }}
+                  title="Hold to speak"
+                >{isRecording ? '🔴' : '🎤'}</button>
+              )}
               <button
-                onClick={() => setHeyDmMode(v => !v)}
-                style={{ ...styles.iconBtn, ...(heyDmMode ? styles.iconBtnOn : {}) }}
-                title={heyDmMode ? 'Disable "Hey DM" wake word' : 'Enable "Hey DM" wake word'}
-              >
-                🎙
-              </button>
-            )}
-
-            {/* Text input */}
-            <input
-              style={styles.input}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
-              placeholder="Describe your action or speak to an NPC…"
-              disabled={loading}
-            />
-
-            {/* Push-to-talk */}
-            {SPEECH_SUPPORTED && (
+                onClick={() => { setTtsEnabled(v => !v); if (ttsEnabled) stopSpeaking(); }}
+                style={{ ...styles.iconBtn, ...(ttsEnabled ? styles.iconBtnOn : {}) }}
+                title={ttsEnabled ? 'Mute DM voice' : 'Unmute DM voice'}
+              >{ttsEnabled ? '🔊' : '🔇'}</button>
+              <button onClick={clearNarratorHistory} style={styles.iconBtn} title="Clear history">🗑</button>
               <button
-                style={{
-                  ...styles.iconBtn,
-                  ...(isRecording ? styles.iconBtnRecording : {}),
-                }}
-                onMouseDown={startPTT}
-                onMouseUp={stopPTT}
-                onTouchStart={e => { e.preventDefault(); startPTT(); }}
-                onTouchEnd={e => { e.preventDefault(); stopPTT(); }}
-                title="Hold to speak"
-              >
-                {isRecording ? '🔴' : '🎤'}
-              </button>
-            )}
-
-            {/* TTS toggle */}
-            <button
-              onClick={() => { setTtsEnabled(v => !v); if (ttsEnabled) stopSpeaking(); }}
-              style={{ ...styles.iconBtn, ...(ttsEnabled ? styles.iconBtnOn : {}) }}
-              title={ttsEnabled ? 'Mute DM voice' : 'Unmute DM voice'}
-            >
-              {ttsEnabled ? '🔊' : '🔇'}
-            </button>
-
-            {/* Clear */}
-            <button
-              onClick={clearNarratorHistory}
-              style={styles.iconBtn}
-              title="Clear history"
-            >
-              🗑
-            </button>
-
-            {/* Send */}
-            <button
-              onClick={() => handleSend()}
-              disabled={loading || !input.trim()}
-              style={{
-                ...styles.sendBtn,
-                opacity: loading || !input.trim() ? 0.45 : 1,
-              }}
-            >
-              Send
-            </button>
+                onClick={() => handleSend()}
+                disabled={loading || !input.trim()}
+                style={{ ...styles.sendBtn, opacity: loading || !input.trim() ? 0.45 : 1 }}
+              >Send</button>
+            </div>
           </div>
-        </>
+        </div>
       )}
-    </div>
+
+      {/* Collapsed bar — always visible at bottom, ~12vh */}
+      <div style={styles.collapsedBar}>
+        {/* Left: icon + preview of last DM message */}
+        <div style={styles.barLeft} onClick={() => setNarratorOpen(true)}>
+          <span style={styles.barIcon}>{loading ? '⏳' : '🎭'}</span>
+          <div style={styles.barPreview}>
+            {loading
+              ? <span style={styles.barPreviewText}>Dungeon Master is thinking…</span>
+              : lastDmMsg
+                ? <span style={styles.barPreviewText} title={lastDmMsg.text}>
+                    <strong style={styles.barDmLabel}>DM: </strong>{lastDmMsg.text}
+                  </span>
+                : <span style={styles.barHint}>Tap to speak with the AI Narrator</span>
+            }
+          </div>
+          {heyDmMode && (
+            <span style={styles.heyDmPill}>
+              <span style={styles.heyDmDot} />
+              Hey DM
+            </span>
+          )}
+        </div>
+
+        {/* Right: quick input row */}
+        <div style={styles.barRight}>
+          <input
+            style={styles.barInput}
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                setNarratorOpen(true);
+                handleSend();
+              }
+            }}
+            onFocus={() => setNarratorOpen(true)}
+            placeholder="Ask the DM…"
+            disabled={loading}
+          />
+          {SPEECH_SUPPORTED && (
+            <button
+              style={{ ...styles.iconBtn, ...(isRecording ? styles.iconBtnRecording : {}) }}
+              onMouseDown={startPTT}
+              onMouseUp={stopPTT}
+              onTouchStart={e => { e.preventDefault(); startPTT(); }}
+              onTouchEnd={e => { e.preventDefault(); stopPTT(); }}
+              title="Hold to speak"
+            >{isRecording ? '🔴' : '🎤'}</button>
+          )}
+          <button
+            onClick={() => { setNarratorOpen(true); handleSend(); }}
+            disabled={loading || !input.trim()}
+            style={{ ...styles.sendBtn, opacity: loading || !input.trim() ? 0.45 : 1 }}
+          >Send</button>
+        </div>
+      </div>
+    </>
   );
 }
 
 const styles = {
-  panel: {
-    position: 'sticky',
-    bottom: 0,
-    zIndex: 95,
+  // ── Collapsed bar (always visible) ─────────────────────────────────────────
+  collapsedBar: {
+    height: '12vh',
+    minHeight: 72,
+    maxHeight: 110,
+    flexShrink: 0,
+    display: 'flex',
+    alignItems: 'stretch',
     background: 'linear-gradient(180deg, #1a1008 0%, #110b05 100%)',
     borderTop: '2px solid',
     borderImage: 'linear-gradient(90deg, transparent, #d4af37, #a8841f, #d4af37, transparent) 1',
+    zIndex: 10,
     overflow: 'hidden',
-    transition: 'height 0.25s ease',
-    display: 'flex',
-    flexDirection: 'column',
-    flexShrink: 0,
   },
-  handle: {
+  barLeft: {
+    flex: 1,
     display: 'flex',
     alignItems: 'center',
     gap: 10,
-    padding: '0 20px',
-    height: 52,
+    padding: '0 14px',
     cursor: 'pointer',
-    userSelect: 'none',
+    overflow: 'hidden',
+    minWidth: 0,
+  },
+  barIcon: {
+    fontSize: '1.2rem',
     flexShrink: 0,
   },
-  handleIcon: {
-    fontSize: '1.1rem',
+  barPreview: {
+    flex: 1,
+    overflow: 'hidden',
+    minWidth: 0,
   },
-  handleTitle: {
+  barPreviewText: {
+    display: 'block',
+    color: '#e8dcc8',
+    fontSize: '0.82rem',
+    lineHeight: 1.4,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  barDmLabel: {
+    color: '#d4af37',
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '0.75rem',
+  },
+  barHint: {
+    display: 'block',
+    color: 'rgba(200,180,140,0.4)',
+    fontSize: '0.78rem',
+    fontStyle: 'italic',
+  },
+  barRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    padding: '0 10px 0 0',
+    flexShrink: 0,
+  },
+  barInput: {
+    width: 180,
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(212,175,55,0.2)',
+    borderRadius: 6,
+    color: '#e8dcc8',
+    padding: '7px 11px',
+    fontSize: '0.85rem',
+    fontFamily: 'inherit',
+    outline: 'none',
+    minHeight: 36,
+  },
+
+  // ── Expanded overlay ────────────────────────────────────────────────────────
+  overlay: {
+    position: 'absolute',
+    inset: 0,
+    zIndex: 80,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    pointerEvents: 'none',
+  },
+  overlayBackdrop: {
+    flex: 1,
+    pointerEvents: 'all',
+    cursor: 'pointer',
+  },
+  expandedPanel: {
+    pointerEvents: 'all',
+    height: '58%',
+    minHeight: 320,
+    maxHeight: '72%',
+    display: 'flex',
+    flexDirection: 'column',
+    background: 'linear-gradient(180deg, #1a1008 0%, #110b05 100%)',
+    borderTop: '2px solid',
+    borderImage: 'linear-gradient(90deg, transparent, #d4af37, #a8841f, #d4af37, transparent) 1',
+    boxShadow: '0 -8px 40px rgba(0,0,0,0.7)',
+    overflow: 'hidden',
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    padding: '0 16px',
+    height: 46,
+    flexShrink: 0,
+    borderBottom: '1px solid rgba(212,175,55,0.1)',
+  },
+  headerIcon: { fontSize: '1rem', flexShrink: 0 },
+  headerTitle: {
     fontFamily: "'Cinzel', Georgia, serif",
     fontWeight: 700,
-    fontSize: '0.9rem',
+    fontSize: '0.88rem',
     color: '#d4af37',
     letterSpacing: '0.06em',
     flex: 1,
+  },
+  collapseBtn: {
+    background: 'transparent',
+    border: '1px solid rgba(212,175,55,0.2)',
+    color: 'rgba(212,175,55,0.6)',
+    borderRadius: 4,
+    padding: '3px 9px',
+    cursor: 'pointer',
+    fontSize: '0.7rem',
+    flexShrink: 0,
   },
   heyDmPill: {
     display: 'flex',
@@ -388,10 +471,11 @@ const styles = {
     background: 'rgba(212,175,55,0.12)',
     border: '1px solid rgba(212,175,55,0.3)',
     borderRadius: 12,
-    padding: '2px 10px',
-    fontSize: '0.72rem',
+    padding: '2px 9px',
+    fontSize: '0.7rem',
     color: '#d4af37',
     fontFamily: "'Cinzel', Georgia, serif",
+    flexShrink: 0,
   },
   heyDmDot: {
     width: 6,
@@ -405,10 +489,7 @@ const styles = {
     color: 'rgba(212,175,55,0.5)',
     fontSize: '0.75rem',
     fontStyle: 'italic',
-  },
-  chevron: {
-    color: 'rgba(212,175,55,0.5)',
-    fontSize: '0.7rem',
+    flexShrink: 0,
   },
   history: {
     flex: 1,
@@ -513,8 +594,8 @@ const styles = {
     fontSize: '1rem',
     cursor: 'pointer',
     padding: '6px 9px',
-    minHeight: 38,
-    minWidth: 38,
+    minHeight: 36,
+    minWidth: 36,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -538,9 +619,9 @@ const styles = {
     fontWeight: 700,
     fontSize: '0.85rem',
     fontFamily: "'Cinzel', Georgia, serif",
-    padding: '8px 16px',
+    padding: '7px 14px',
     cursor: 'pointer',
-    minHeight: 38,
+    minHeight: 36,
     flexShrink: 0,
   },
 };
