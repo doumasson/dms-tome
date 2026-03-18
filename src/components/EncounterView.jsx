@@ -251,6 +251,28 @@ function rollWithAdvantage(mode) {
   return { d20: a, alt: null };
 }
 
+// Compute condition-based advantage/disadvantage for an attack
+function getConditionModifiers(attacker, target) {
+  const aC = attacker.conditions || [];
+  const tC = target.conditions || [];
+
+  // Attacker conditions that impose disadvantage on their attacks
+  const attackerDisadv = aC.some(c => ['Blinded', 'Prone', 'Restrained', 'Poisoned', 'Frightened'].includes(c));
+  // Target conditions that give the attacker advantage (Prone = melee advantage by default)
+  const targetGrantsAdv = tC.some(c => ['Paralyzed', 'Restrained', 'Stunned', 'Unconscious', 'Prone'].includes(c));
+  // Invisible attacker → advantage; invisible target → disadvantage
+  const attackerInvis = aC.includes('Invisible');
+  const targetInvis = tC.includes('Invisible');
+
+  const hasAdv = attackerInvis || targetGrantsAdv;
+  const hasDisadv = attackerDisadv || targetInvis;
+
+  // Paralyzed/Unconscious: melee hits are automatic crits (5e PHB)
+  const autoCrit = tC.some(c => ['Paralyzed', 'Unconscious'].includes(c));
+
+  return { hasAdv, hasDisadv, autoCrit };
+}
+
 function AttackPanel({ attacker, combatants, onResolve, onCancel }) {
   const hasWeapons = attacker.attacks && attacker.attacks.length > 0;
   const [weapon, setWeapon] = useState(hasWeapons && attacker.attacks.length === 1 ? attacker.attacks[0] : null);
@@ -262,10 +284,20 @@ function AttackPanel({ attacker, combatants, onResolve, onCancel }) {
   function doAttack(target) {
     const w = weapon || { name: 'Unarmed Strike', bonus: '+0', damage: '1' };
     const bonus = parseAttackBonus(w.bonus);
-    const { d20, alt } = rollWithAdvantage(advMode);
+
+    // Determine effective advantage mode: merge manual choice with condition-based modifiers
+    const condMods = getConditionModifiers(attacker, target);
+    let effectiveMode = advMode;
+    if (condMods.hasAdv && !condMods.hasDisadv) effectiveMode = 'advantage';
+    else if (condMods.hasDisadv && !condMods.hasAdv) effectiveMode = 'disadvantage';
+    else if (condMods.hasAdv && condMods.hasDisadv) effectiveMode = 'normal'; // cancel out
+    // If player manually set advantage/disadvantage, their choice stacks on top only if conditions don't already set it
+    if (advMode !== 'normal' && effectiveMode === 'normal') effectiveMode = advMode;
+
+    const { d20, alt } = rollWithAdvantage(effectiveMode);
     const total = d20 + bonus;
-    const isCrit = d20 === 20;
-    const isFumble = d20 === 1 && advMode !== 'advantage';
+    const isCrit = d20 === 20 || condMods.autoCrit; // Paralyzed/Unconscious = auto-crit on hit
+    const isFumble = d20 === 1 && effectiveMode !== 'advantage';
     const hit = !isFumble && (isCrit || total >= (target.ac || 10));
     let damage = 0;
     let dmgDisplay = '';
@@ -274,12 +306,20 @@ function AttackPanel({ attacker, combatants, onResolve, onCancel }) {
       damage = isCrit ? rolled.total * 2 : rolled.total;
       dmgDisplay = isCrit ? `CRIT ×2 = ${damage}` : rolled.display;
     }
-    const advSuffix = advMode !== 'normal' ? ` (${advMode}, dropped ${alt})` : '';
+
+    // Build condition reason suffix for log
+    const condReasons = [];
+    if (condMods.hasAdv) condReasons.push('adv from conditions');
+    if (condMods.hasDisadv) condReasons.push('disadv from conditions');
+    if (condMods.autoCrit) condReasons.push('auto-crit: Paralyzed/Unconscious');
+    const condSuffix = condReasons.length ? ` [${condReasons.join(', ')}]` : '';
+    const advSuffix = effectiveMode !== 'normal' ? ` (${effectiveMode}, dropped ${alt})` : '';
+
     const entry = hit
-      ? `${attacker.name} → ${target.name}: HIT! d20(${d20})${bonus >= 0 ? '+' : ''}${bonus}=${total} vs AC ${target.ac}${advSuffix}. Dmg: ${damage} (${w.name})`
-      : `${attacker.name} → ${target.name}: MISS. d20(${d20})${bonus >= 0 ? '+' : ''}${bonus}=${total} vs AC ${target.ac}${advSuffix} (${w.name})`;
+      ? `${attacker.name} → ${target.name}: HIT! d20(${d20})${bonus >= 0 ? '+' : ''}${bonus}=${total} vs AC ${target.ac}${advSuffix}${condSuffix}. Dmg: ${damage} (${w.name})`
+      : `${attacker.name} → ${target.name}: MISS. d20(${d20})${bonus >= 0 ? '+' : ''}${bonus}=${total} vs AC ${target.ac}${advSuffix}${condSuffix} (${w.name})`;
     onResolve(hit ? target.id : null, damage, entry);
-    setResult({ hit, isCrit, isFumble, d20, alt, bonus, total, ac: target.ac, damage, dmgDisplay, targetName: target.name });
+    setResult({ hit, isCrit, isFumble, d20, alt, bonus, total, ac: target.ac, damage, dmgDisplay, targetName: target.name, condReasons });
   }
 
   function autoAttack() {
@@ -295,6 +335,11 @@ function AttackPanel({ attacker, combatants, onResolve, onCancel }) {
         <div style={{ color: result.hit ? '#2ecc71' : '#e74c3c', fontWeight: 700, textAlign: 'center', fontSize: '1rem' }}>
           {result.hit ? '✔ HIT' : '✘ MISS'}
         </div>
+        {result.condReasons?.length > 0 && (
+          <div style={{ fontSize: '0.7rem', color: '#f39c12', textAlign: 'center', marginBottom: 4 }}>
+            {result.condReasons.join(' · ')}
+          </div>
+        )}
         <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.7, textAlign: 'center' }}>
           {attacker.name} → {result.targetName}<br />
           d20(<strong>{result.d20}</strong>){result.alt !== null && <span style={{ color: 'var(--text-muted)' }}> / {result.alt}</span>}
@@ -817,8 +862,8 @@ function CombatantRow({ combatant, isActive, isSelected, colorIndex, dmMode, onS
         </div>
       )}
 
-      {/* Conditions */}
-      {dmMode && (
+      {/* Conditions — DM can add/remove; players see them read-only */}
+      {dmMode ? (
         <div style={{ marginTop: 4 }} onClick={e => e.stopPropagation()}>
           <ConditionPicker
             combatantId={combatant.id}
@@ -826,6 +871,16 @@ function CombatantRow({ combatant, isActive, isSelected, colorIndex, dmMode, onS
             onAdd={onAddCondition}
             onRemove={onRemoveCondition}
           />
+        </div>
+      ) : combatant.conditions?.length > 0 && (
+        <div style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+          {combatant.conditions.map(c => (
+            <span key={c}
+              title={CONDITION_INFO[c] || c}
+              style={{ fontSize: '0.65rem', background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.4)', color: '#e88', borderRadius: 3, padding: '1px 4px' }}>
+              {c}
+            </span>
+          ))}
         </div>
       )}
     </div>
@@ -1022,6 +1077,15 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
     const token = combatants.find(c => c.id === selectedToken);
     if (!token) { setSelectedToken(null); return; }
 
+    // Speed-0 conditions block all movement
+    const speedZeroConditions = ['Grappled', 'Restrained', 'Paralyzed', 'Stunned', 'Petrified', 'Incapacitated'];
+    if (token.conditions?.some(c => speedZeroConditions.includes(c))) {
+      const blocking = token.conditions.filter(c => speedZeroConditions.includes(c)).join(', ');
+      onLog(`${token.name} cannot move — ${blocking}`);
+      setSelectedToken(null);
+      return;
+    }
+
     if (!dmMode) {
       // Players can only move their own token
       const isMyToken = myCharacter && (
@@ -1048,6 +1112,14 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
       const dx = Math.abs(x - from.x);
       const dy = Math.abs(y - from.y);
       cost = Math.max(dx, dy);
+    }
+
+    // Prone: costs half speed (in cells) to stand up before moving (5e PHB p. 292)
+    const isProne = token.conditions?.includes('Prone');
+    if (isProne) {
+      const standCost = Math.ceil((token.speed || 30) / 10); // half speed in 5ft cells
+      cost += standCost;
+      onLog(`${token.name} stands up from Prone (−${standCost} cells movement) then moves`);
     }
 
     onMoveToken(selectedToken, x, y, cost);
@@ -1167,6 +1239,10 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
 
   const activeChar = characters?.find(c => c.id === activeCombatant?.id || c.name === activeCombatant?.name) || null;
 
+  // Conditions that prevent taking actions
+  const INCAP_CONDITIONS = ['Incapacitated', 'Paralyzed', 'Stunned', 'Unconscious', 'Petrified'];
+  const incapCondition = activeCombatant?.conditions?.find(c => INCAP_CONDITIONS.includes(c)) || null;
+
   // ── Mobile: tab bar + single-panel view ──────────────────────────────────
   if (isMobile) {
     const partyContent = (
@@ -1237,6 +1313,10 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
                     {(isMyDying || dmMode) && <button onClick={() => onRollDeathSave(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}>🎲 Death Save</button>}
                     {dmMode && <button onClick={() => onStabilize(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>✚ Stabilize</button>}
                   </>
+                ) : incapCondition ? (
+                  <div style={{ background: 'rgba(192,57,43,0.12)', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 6, padding: '6px 8px', fontSize: '0.72rem', color: '#e74c3c' }}>
+                    ⚠ {activeCombatant.name} is <strong>{incapCondition}</strong> — cannot take actions
+                  </div>
                 ) : (
                   <>
                     <button onClick={() => setPanel('attack')} style={{ ...btn.action, background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.4)', color: '#e74c3c' }}>⚔ Attack</button>
@@ -1502,14 +1582,23 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
                 </div>
               ) : (
                 <>
+                  {/* Incapacitated warning */}
+                  {incapCondition && (
+                    <div style={{ background: 'rgba(192,57,43,0.12)', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 6, padding: '6px 8px', marginBottom: 8, fontSize: '0.72rem', color: '#e74c3c' }}>
+                      ⚠ {activeCombatant.name} is <strong>{incapCondition}</strong> — cannot take actions or reactions
+                    </div>
+                  )}
+
                   {/* Class-aware ActionPanel for active player */}
-                  <ActionPanel
-                    combatant={activeCombatant}
-                    onAttack={() => setPanel('attack')}
-                    onSpell={(c, action) => handleSpellOpen(c, action)}
-                    onSpecial={(c, action) => {}}
-                    style={{ marginBottom: 8 }}
-                  />
+                  {!incapCondition && (
+                    <ActionPanel
+                      combatant={activeCombatant}
+                      onAttack={() => setPanel('attack')}
+                      onSpell={(c, action) => handleSpellOpen(c, action)}
+                      onSpecial={(c, action) => {}}
+                      style={{ marginBottom: 8 }}
+                    />
+                  )}
 
                   {/* DM-only extra tools */}
                   {dmMode && (
