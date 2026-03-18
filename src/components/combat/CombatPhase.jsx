@@ -44,7 +44,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const cellPx = getCellPx(winWidth);
 
   const activeCombatant = combatants[currentTurn] || null;
-  const { runEnemyTurn, sessionApiKey } = useStore();
+  const { runEnemyTurn, sessionApiKey, narrateCombatAction } = useStore();
 
   // Use the campaign scene image as the battle map background
   const sceneImages    = useStore(s => s.sceneImages);
@@ -128,6 +128,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       const standCost = Math.ceil((token.speed || 30) / 10);
       cost += standCost;
       onLog(`${token.name} stands up from Prone (−${standCost} cells movement) then moves`);
+      onRemoveCondition(selectedToken, 'Prone');
     }
 
     onMoveToken(selectedToken, x, y, cost);
@@ -147,6 +148,13 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   function handleAttackResolve(targetId, damage, logEntry) {
     if (targetId) onDamage(targetId, damage);
     onLog(logEntry);
+    // Narrate the attack result (fire-and-forget)
+    if (activeCombatant && sessionApiKey) {
+      const target = combatants.find(c => c.id === targetId);
+      const hit = logEntry.includes('HIT') || logEntry.includes('hit') || damage > 0;
+      const resultDesc = hit ? `Hit for ${damage} damage` : 'Missed';
+      narrateCombatAction(activeCombatant.name, 'Attack', target?.name, resultDesc, sessionApiKey);
+    }
   }
 
   function handleAoEApply(applications, total, dmgType) {
@@ -158,6 +166,9 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       })
       .join(', ');
     onLog(`💥 ${dmgType} ${total} dmg → ${summary}`);
+    if (activeCombatant && sessionApiKey) {
+      narrateCombatAction(activeCombatant.name, `AoE ${dmgType}`, summary, `${total} total damage`, sessionApiKey);
+    }
     setPanel(null);
   }
 
@@ -208,6 +219,12 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       if (def.concentration) onSetConcentration(activeCombatant.id, def.name);
     }
 
+    // Narrate the spell (fire-and-forget)
+    if (activeCombatant && sessionApiKey) {
+      const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
+      const resultDesc = isHealing ? `healed ${names}` : hasDamage ? `hit ${names}` : `affected ${names}`;
+      narrateCombatAction(activeCombatant.name, def.name, names, resultDesc, sessionApiKey);
+    }
     setPanel(null);
     setActiveSpell(null);
   }

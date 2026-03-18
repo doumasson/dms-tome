@@ -95,9 +95,14 @@ export default function App() {
       config: { broadcast: { ack: false } },
     });
 
-    // Encounter state sync (DM → players)
+    // Encounter state sync (DM → players) — also includes fog state for late joiners
     ch.on('broadcast', { event: 'encounter-sync' }, ({ payload }) => {
-      if (!isDM || !dmMode) syncEncounterDown(payload);
+      if (!isDM || !dmMode) {
+        syncEncounterDown(payload);
+        if (payload._fogEnabled || payload._fogRevealed) {
+          useStore.getState().applyFogSync(payload._fogEnabled, payload._fogRevealed);
+        }
+      }
     });
 
     // Scene change sync (DM → players)
@@ -232,7 +237,15 @@ export default function App() {
     clearInterval(encounterHeartbeat.current);
     if (!isDM || !dmMode || !liveConnected || encounter.phase === 'idle') return;
     encounterHeartbeat.current = setInterval(() => {
-      channelRef.current?.send({ type: 'broadcast', event: 'encounter-sync', payload: useStore.getState().encounter });
+      const s = useStore.getState();
+      channelRef.current?.send({
+        type: 'broadcast', event: 'encounter-sync',
+        payload: {
+          ...s.encounter,
+          _fogEnabled: s.fogEnabled,
+          _fogRevealed: s.fogRevealed,
+        },
+      });
     }, 5000);
     return () => clearInterval(encounterHeartbeat.current);
   }, [isDM, dmMode, liveConnected, encounter.phase]);
