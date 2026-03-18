@@ -145,6 +145,7 @@ function validateCampaignJson(text) {
 
 const DEFAULT_FIELDS = {
   name: '',
+  isAiDm: false,      // false = Human DM, true = AI DM (everyone plays)
   tone: TONES[0],
   setting: SETTINGS[0],
   length: LENGTHS[0],
@@ -220,6 +221,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           dm_user_id: user.id,
           invite_code: inviteCode,
           campaign_data: { __draft: true, __step: 1, fields },
+          settings: { isAiDm: fields.isAiDm },
         })
         .select()
         .single();
@@ -322,6 +324,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
         .update({
           name: validation.data.title || fields.name,
           campaign_data: validation.data,
+          settings: { isAiDm: fields.isAiDm },
         })
         .eq('id', campaignId)
         .select()
@@ -343,6 +346,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           dm_user_id: user.id,
           invite_code: inviteCode,
           campaign_data: validation.data,
+          settings: { isAiDm: fields.isAiDm },
         })
         .select()
         .single();
@@ -389,10 +393,33 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           </div>
         )}
 
-        {/* Step 1: Name */}
+        {/* Step 1: Name + DM Type */}
         {step === 1 && (
           <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>Name Your Campaign</h2>
+            <h2 style={styles.stepTitle}>New Campaign</h2>
+
+            {/* DM type choice */}
+            <p style={styles.dmTypeHeading}>Who runs the game?</p>
+            <div style={styles.dmTypeRow}>
+              <button
+                onClick={() => setField('isAiDm', false)}
+                style={{ ...styles.dmTypeBtn, ...(fields.isAiDm === false ? styles.dmTypeBtnActive : {}) }}
+              >
+                <span style={styles.dmTypeIcon}>👤</span>
+                <span style={styles.dmTypeName}>I'm the DM</span>
+                <span style={styles.dmTypeDesc}>You run the game. Players join and take actions — you don't need a character.</span>
+              </button>
+              <button
+                onClick={() => setField('isAiDm', true)}
+                style={{ ...styles.dmTypeBtn, ...(fields.isAiDm === true ? styles.dmTypeBtnActive : {}) }}
+              >
+                <span style={styles.dmTypeIcon}>🤖</span>
+                <span style={styles.dmTypeName}>AI DM</span>
+                <span style={styles.dmTypeDesc}>AI narrates the story. Everyone — including you — creates a character and plays.</span>
+              </button>
+            </div>
+
+            <label style={{ ...styles.label, marginTop: 20 }}>Campaign Name</label>
             <input
               autoFocus
               value={fields.name}
@@ -633,6 +660,53 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
+  },
+  dmTypeHeading: {
+    color: 'rgba(200,180,140,0.55)',
+    fontSize: '0.72rem',
+    fontFamily: "'Cinzel', Georgia, serif",
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+    fontWeight: 600,
+    margin: '4px 0 0',
+  },
+  dmTypeRow: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: 10,
+  },
+  dmTypeBtn: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 4,
+    background: 'rgba(255,255,255,0.02)',
+    border: '2px solid rgba(255,255,255,0.08)',
+    borderRadius: 10,
+    padding: '14px 14px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    transition: 'border-color 0.2s, background 0.2s',
+    color: '#f0e6d0',
+  },
+  dmTypeBtnActive: {
+    background: 'rgba(212,175,55,0.08)',
+    borderColor: '#d4af37',
+  },
+  dmTypeIcon: {
+    fontSize: '1.6rem',
+    lineHeight: 1,
+  },
+  dmTypeName: {
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontWeight: 700,
+    fontSize: '0.9rem',
+    color: '#d4af37',
+  },
+  dmTypeDesc: {
+    color: 'rgba(200,180,140,0.55)',
+    fontSize: '0.72rem',
+    lineHeight: 1.4,
   },
   stepTitle: {
     fontFamily: "'Cinzel', Georgia, serif",

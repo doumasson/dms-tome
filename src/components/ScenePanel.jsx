@@ -45,7 +45,7 @@ export default function ScenePanel() {
       // Free: Pollinations.ai — URL is set immediately but still needs to
       // load in the browser; skeleton stays until onLoad fires
       setImgLoading(true);
-      const url = generateSceneImageFree(scene.title, scene.text);
+      const url = generateSceneImageFree(scene.title);
       setSceneImage(imageKey, url);
     }
   }, [idx, activeCampaign?.id]);
