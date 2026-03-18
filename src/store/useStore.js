@@ -1028,6 +1028,11 @@ const useStore = create((set, get) => ({
   sessionApiKey: null,
   setSessionApiKey: (key) => set({ sessionApiKey: key }),
 
+  // === Pending DM Trigger (NPC proximity interaction → auto-send to narrator) ===
+  pendingDmTrigger: null,
+  setPendingDmTrigger: (text) => set({ pendingDmTrigger: text }),
+  clearPendingDmTrigger: () => set({ pendingDmTrigger: null }),
+
   // === Scene Images (DALL-E cache) ===
   sceneImages: {}, // { [campaignId:sceneIndex]: imageUrl }
   setSceneImage: (key, url) =>

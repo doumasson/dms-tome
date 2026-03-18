@@ -45,6 +45,12 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const activeCombatant = combatants[currentTurn] || null;
   const { runEnemyTurn, sessionApiKey } = useStore();
 
+  // Use the campaign scene image as the battle map background
+  const sceneImages    = useStore(s => s.sceneImages);
+  const activeCampaign = useStore(s => s.activeCampaign);
+  const campaignState  = useStore(s => s.campaign);
+  const battleSceneUrl = sceneImages[`${activeCampaign?.id}:${campaignState.currentSceneIndex}`] || null;
+
   const isMyTurn = !!(activeCombatant && myCharacter && (
     activeCombatant.id === myCharacter.id || activeCombatant.name === myCharacter.name
   ));
@@ -333,7 +339,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           )}
         </div>
         <div style={{ overflowX: 'auto' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} />
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
         </div>
         <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 3 }}>
           {activeCombatant ? (
@@ -490,7 +496,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
         </div>
 
         <div style={{ overflowX: 'auto' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} />
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
         </div>
 
         <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 3 }}>

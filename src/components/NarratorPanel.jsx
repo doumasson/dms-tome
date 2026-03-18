@@ -29,9 +29,11 @@ export default function NarratorPanel() {
   const narrator         = useStore(s => s.narrator);
   const sessionApiKey    = useStore(s => s.sessionApiKey);
   const setSessionApiKey = useStore(s => s.setSessionApiKey);
-  const addNarratorMessage   = useStore(s => s.addNarratorMessage);
-  const clearNarratorHistory = useStore(s => s.clearNarratorHistory);
-  const setCurrentScene      = useStore(s => s.setCurrentScene);
+  const addNarratorMessage    = useStore(s => s.addNarratorMessage);
+  const clearNarratorHistory  = useStore(s => s.clearNarratorHistory);
+  const setCurrentScene       = useStore(s => s.setCurrentScene);
+  const pendingDmTrigger      = useStore(s => s.pendingDmTrigger);
+  const clearPendingDmTrigger = useStore(s => s.clearPendingDmTrigger);
 
   const [input, setInput]           = useState('');
   const [loading, setLoading]       = useState(false);
@@ -246,10 +248,22 @@ export default function NarratorPanel() {
     }));
   }
 
+  // ── Consume proximity interaction triggers from the scene map ────────────
+  useEffect(() => {
+    if (!pendingDmTrigger) return;
+    const text = pendingDmTrigger;
+    clearPendingDmTrigger();
+    // Small delay so any in-progress state settles first
+    const t = setTimeout(() => handleSend(text, true), 150);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingDmTrigger]);
+
   // ── Main send ─────────────────────────────────────────────────────────────
-  async function handleSend(overrideText) {
+  // worldTrigger=true bypasses the floor system (used for scene proximity interactions)
+  async function handleSend(overrideText, worldTrigger = false) {
     const text = (overrideText ?? input).trim();
-    if (!text || loading || !canSpeak) return;
+    if (!text || loading || (!worldTrigger && !canSpeak)) return;
 
     // Key priority: local key → session broadcast key → Supabase fetch
     let apiKey = getClaudeApiKey(user?.id) || sessionApiKey;

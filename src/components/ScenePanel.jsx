@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import useStore from '../store/useStore';
 import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib/dalleApi';
 import { broadcastFogReveal, broadcastFogToggle, broadcastSceneTokenMove } from '../lib/liveChannel';
+import SceneTitleCard from './SceneTitleCard';
+import InteractionZone from './InteractionZone';
 
 // Fog grid dimensions (cols × rows)
 const FOG_COLS = 12;
@@ -27,6 +29,8 @@ export default function ScenePanel() {
   const campaign       = useStore(s => s.campaign);
   const dmMode         = useStore(s => s.dmMode);
   const isDM           = useStore(s => s.isDM);
+  const myCharacter    = useStore(s => s.myCharacter);
+  const setPendingDmTrigger = useStore(s => s.setPendingDmTrigger);
   const setCurrentScene = useStore(s => s.setCurrentScene);
   const startEncounter  = useStore(s => s.startEncounter);
   const sceneImages     = useStore(s => s.sceneImages);
@@ -185,6 +189,32 @@ export default function ScenePanel() {
     startEncounter(scene.enemies, partyMembers.length > 0 ? partyMembers : []);
   }
 
+  // ── NPC Proximity interaction zones ─────────────────────────────────────────
+  // Default: one "Explore" zone at center. Scenes can override with interactionPoints[].
+  const interactionZones = scene?.interactionPoints || (scene ? [
+    { id: 'explore', x: 50, y: 38, label: scene.title },
+  ] : []);
+
+  // Find zones a party member is within 20% of
+  const nearbyZones = interactionZones.filter(zone =>
+    partyMembers.some(member => {
+      const memberId = member.id || member.name;
+      const pos = tokenPositions[memberId] || getDefaultTokenPos(
+        partyMembers.findIndex(m => (m.id || m.name) === memberId),
+        partyMembers.length
+      );
+      const dx = pos.x - zone.x;
+      const dy = pos.y - zone.y;
+      return Math.sqrt(dx * dx + dy * dy) < 20;
+    })
+  );
+
+  function handleInteract(zone) {
+    const speaker = myCharacter?.name || user?.name || 'The party';
+    const text = zone.prompt || `${speaker} looks around the area.`;
+    setPendingDmTrigger(text);
+  }
+
   if (!campaign.loaded) {
     return (
       <div style={styles.empty}>
@@ -254,6 +284,16 @@ export default function ScenePanel() {
         <div style={styles.titleOverlay}>
           <h2 style={styles.sceneTitle}>{scene.title}</h2>
         </div>
+
+        {/* Cinematic title card on scene change */}
+        {campaign.loaded && scene && (
+          <SceneTitleCard title={scene.title} sceneIndex={idx} />
+        )}
+
+        {/* NPC proximity interaction zones — only when image is loaded and not loading */}
+        {imgReady && nearbyZones.map(zone => (
+          <InteractionZone key={zone.id} zone={zone} onClick={() => handleInteract(zone)} />
+        ))}
 
         {/* Scene badge */}
         <div style={styles.sceneBadge}>

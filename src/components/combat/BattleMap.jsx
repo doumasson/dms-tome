@@ -66,7 +66,7 @@ export function Token({ combatant, colorIndex, isSelected, isActive, onClick, ce
   );
 }
 
-export default function BattleMap({ combatants, selectedToken, activeCombatantId, onCellClick, onTokenClick, cellPx = CELL_PX }) {
+export default function BattleMap({ combatants, selectedToken, activeCombatantId, onCellClick, onTokenClick, cellPx = CELL_PX, sceneImageUrl }) {
   const posMap = {};
   const typeIdx = buildTypeIndex(combatants);
 
@@ -74,15 +74,17 @@ export default function BattleMap({ combatants, selectedToken, activeCombatantId
     if (c.position) posMap[`${c.position.x},${c.position.y}`] = c;
   });
 
+  const hasImage = !!sceneImageUrl;
+
   return (
     <div style={{
       display: 'grid',
       gridTemplateColumns: `repeat(${MAP_W}, ${cellPx}px)`,
       gridTemplateRows: `repeat(${MAP_H}, ${cellPx}px)`,
-      border: '2px solid #3a2a14',
+      border: `2px solid ${hasImage ? 'rgba(212,175,55,0.3)' : '#3a2a14'}`,
       borderRadius: 4,
       overflow: 'hidden',
-      background: '#130d06',
+      background: hasImage ? `url(${sceneImageUrl}) center/cover no-repeat` : '#130d06',
       flexShrink: 0,
     }}>
       {Array.from({ length: MAP_W * MAP_H }).map((_, i) => {
@@ -99,12 +101,14 @@ export default function BattleMap({ combatants, selectedToken, activeCombatantId
             onClick={() => onCellClick(x, y)}
             style={{
               position: 'relative',
-              border: '1px solid #2a1a0a',
+              border: `1px solid ${hasImage ? 'rgba(212,175,55,0.12)' : '#2a1a0a'}`,
               background: isActive && c
-                ? 'rgba(241,196,15,0.08)'
+                ? 'rgba(241,196,15,0.22)'
                 : canDrop
-                  ? 'rgba(255,255,255,0.07)'
-                  : (x + y) % 2 === 0 ? 'rgba(255,255,255,0.012)' : 'transparent',
+                  ? 'rgba(255,255,255,0.18)'
+                  : hasImage
+                    ? ((x + y) % 2 === 0 ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.12)')
+                    : ((x + y) % 2 === 0 ? 'rgba(255,255,255,0.012)' : 'transparent'),
               cursor: canDrop ? 'crosshair' : 'default',
             }}
           >
