@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CLASSES, getSpellSlots, getFeaturesUpToLevel } from '../data/classes';
-import SpellPickPanel, { getSpellGainCount, isPreparedCaster } from './levelUp/SpellPickPanel';
+import SpellPickPanel, { getSpellGainCount, getCantripGainCount, isPreparedCaster } from './levelUp/SpellPickPanel';
 
 // ─── D&D 5e XP thresholds ─────────────────────────────────────────────────────
 const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000];
@@ -67,7 +67,8 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
   const [pickedSpells, setPickedSpells] = useState([]);
 
   const spellsToGain = getSpellGainCount(cls);
-  const needsSpellPick = (spellsToGain > 0 || isPreparedCaster(cls)) && clsData?.castingType;
+  const cantripGain = getCantripGainCount(cls, newLevel);
+  const needsSpellPick = (spellsToGain > 0 || cantripGain > 0 || isPreparedCaster(cls)) && clsData?.castingType;
 
   if (!clsData) {
     return (
@@ -165,6 +166,7 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
               cls={cls}
               newSlots={newSlots}
               knownSpells={character.spells || []}
+              cantripGain={cantripGain}
               onChange={setPickedSpells}
             />
           </div>

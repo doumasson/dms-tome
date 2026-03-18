@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import useStore from '../store/useStore';
+import { CLASSES } from '../data/classes';
 
 const VOTE_TIMEOUT_MS = 60000; // 60 seconds
 
@@ -15,10 +16,12 @@ const VOTE_TIMEOUT_MS = 60000; // 60 seconds
  *   isHost: boolean — host can force the rest
  */
 export default function RestModal({ type, proposedBy, partyMembers, onResolve, onCancel, isHost }) {
-  const { shortRest, longRest, user } = useStore();
+  const { shortRest, longRest, spendHitDie, myCharacter, user } = useStore();
   const [votes, setVotes] = useState({}); // { playerId: true | false }
   const [elapsed, setElapsed] = useState(0);
   const [resolved, setResolved] = useState(false);
+  const [hitDicePhase, setHitDicePhase] = useState(false); // short rest: spend hit dice after vote
+  const [hitDiceLog, setHitDiceLog] = useState([]); // { roll, healed, remaining }
   const timerRef = useRef();
   const totalPlayers = partyMembers?.length || 1;
 
@@ -65,9 +68,25 @@ export default function RestModal({ type, proposedBy, partyMembers, onResolve, o
     if (resolved) return;
     setResolved(true);
     clearInterval(timerRef.current);
-    if (type === 'long') longRest();
-    else shortRest();
+    if (type === 'long') {
+      longRest();
+      onResolve(type);
+    } else {
+      // Short rest: show hit dice spending before finalizing
+      shortRest(); // restores class resources
+      setHitDicePhase(true);
+    }
+  }
+
+  function finishShortRest() {
+    setHitDicePhase(false);
     onResolve(type);
+  }
+
+  function handleSpendHitDie() {
+    if (!myCharacter) return;
+    const result = spendHitDie(myCharacter.id || myCharacter.name);
+    if (result) setHitDiceLog(prev => [...prev, result]);
   }
 
   const myVote = user ? votes[user.id] : null;
@@ -199,12 +218,76 @@ export default function RestModal({ type, proposedBy, partyMembers, onResolve, o
           </button>
         )}
 
-        {/* Result message */}
-        {resolved && (
+        {/* Result message (long rest or rejection) */}
+        {resolved && !hitDicePhase && (
           <div style={{ textAlign: 'center', fontSize: '0.88rem', fontWeight: 700, color: approved ? '#2ecc71' : '#e74c3c', marginTop: 8 }}>
             {approved ? `${restIcon} Rest approved! Resources restored.` : '✗ Rest rejected — adventure continues!'}
           </div>
         )}
+
+        {/* Short rest hit dice spending */}
+        {hitDicePhase && myCharacter && (() => {
+          const hitDie = CLASSES[myCharacter.class]?.hitDie || 8;
+          const conMod = Math.floor(((myCharacter.stats?.con || 10) - 10) / 2);
+          const remaining = myCharacter.hitDiceRemaining ?? myCharacter.level ?? 1;
+          const totalHpGained = hitDiceLog.reduce((s, r) => s + r.healed, 0);
+          return (
+            <div style={{ marginTop: 16, borderTop: '1px solid rgba(212,175,55,0.15)', paddingTop: 14 }}>
+              <div style={{ fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.78rem', color: '#d4af37', fontWeight: 700, marginBottom: 10, textAlign: 'center' }}>
+                🌙 Spend Hit Dice
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: 10 }}>
+                <span>{myCharacter.name} — d{hitDie}{conMod >= 0 ? `+${conMod}` : conMod} CON</span>
+                <span style={{ color: remaining > 0 ? 'var(--text-secondary)' : '#e74c3c' }}>
+                  {remaining} dice left
+                </span>
+              </div>
+
+              {/* Roll log */}
+              {hitDiceLog.length > 0 && (
+                <div style={{ maxHeight: 80, overflowY: 'auto', marginBottom: 8 }}>
+                  {hitDiceLog.map((r, i) => (
+                    <div key={i} style={{ fontSize: '0.75rem', color: '#2ecc71', padding: '1px 0' }}>
+                      d{hitDie}({r.roll}){conMod >= 0 ? `+${conMod}` : conMod} = +{r.healed} HP
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {totalHpGained > 0 && (
+                <div style={{ textAlign: 'center', fontSize: '0.82rem', color: '#2ecc71', fontWeight: 700, marginBottom: 10 }}>
+                  Total recovered: +{totalHpGained} HP
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  onClick={handleSpendHitDie}
+                  disabled={remaining <= 0}
+                  style={{
+                    flex: 1, padding: '9px 0', borderRadius: 6, cursor: remaining > 0 ? 'pointer' : 'not-allowed',
+                    fontWeight: 700, fontSize: '0.85rem',
+                    background: remaining > 0 ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                    border: `1px solid ${remaining > 0 ? 'rgba(212,175,55,0.5)' : 'rgba(255,255,255,0.08)'}`,
+                    color: remaining > 0 ? '#d4af37' : 'var(--text-muted)',
+                  }}
+                >
+                  🎲 Roll d{hitDie}
+                </button>
+                <button
+                  onClick={finishShortRest}
+                  style={{
+                    flex: 1, padding: '9px 0', borderRadius: 6, cursor: 'pointer',
+                    fontWeight: 700, fontSize: '0.85rem',
+                    background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71',
+                  }}
+                >
+                  ✓ Done Resting
+                </button>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

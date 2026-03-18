@@ -10,11 +10,25 @@ export const LEVEL_UP_SPELL_GAINS = {
   Ranger: 1,
 };
 
-// Prepared casters don't pick — they prepare from the full class list daily
+// Cantrip gains: class → levels at which +1 cantrip is gained
+const CANTRIP_GAIN_LEVELS = {
+  Wizard:   [4, 10],
+  Sorcerer: [4, 10],
+  Warlock:  [4, 10],
+  Bard:     [4, 10],
+  Cleric:   [4, 10],
+  Druid:    [4, 10],
+};
+
+// Prepared casters don't pick leveled spells — they prepare from the full class list daily
 const PREPARED_CASTERS = new Set(['Cleric', 'Druid', 'Paladin']);
 
 export function getSpellGainCount(cls) {
   return LEVEL_UP_SPELL_GAINS[cls] || 0;
+}
+
+export function getCantripGainCount(cls, newLevel) {
+  return (CANTRIP_GAIN_LEVELS[cls] || []).includes(newLevel) ? 1 : 0;
 }
 
 export function isPreparedCaster(cls) {
@@ -27,9 +41,10 @@ const SCHOOL_COLORS = {
   necromancy: '#2c3e50', transmutation: '#16a085',
 };
 
-export default function SpellPickPanel({ cls, newSlots, knownSpells, onChange }) {
+export default function SpellPickPanel({ cls, newSlots, knownSpells, onChange, cantripGain = 0 }) {
   const [filter, setFilter] = useState('');
   const [selected, setSelected] = useState([]);
+  const [selectedCantrips, setSelectedCantrips] = useState([]);
 
   const spellsToGain = getSpellGainCount(cls);
 
@@ -57,6 +72,12 @@ export default function SpellPickPanel({ cls, newSlots, knownSpells, onChange })
       .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name));
   }, [cls, maxSpellLevel, knownNames]);
 
+  const availableCantrips = useMemo(() => {
+    return (SPELLS || [])
+      .filter(sp => sp.level === 0 && sp.classes?.includes(cls) && !knownNames.has(sp.name))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [cls, knownNames]);
+
   const filtered = filter
     ? available.filter(sp => sp.name.toLowerCase().includes(filter.toLowerCase()))
     : available;
@@ -71,12 +92,27 @@ export default function SpellPickPanel({ cls, newSlots, knownSpells, onChange })
       } else {
         return prev;
       }
-      onChange(next);
+      onChange([...next, ...selectedCantrips]);
       return next;
     });
   }
 
-  if (isPreparedCaster(cls)) {
+  function toggleCantrip(spell) {
+    setSelectedCantrips(prev => {
+      let next;
+      if (prev.find(s => s.name === spell.name)) {
+        next = prev.filter(s => s.name !== spell.name);
+      } else if (prev.length < cantripGain) {
+        next = [...prev, spell];
+      } else {
+        return prev;
+      }
+      onChange([...selected, ...next]);
+      return next;
+    });
+  }
+
+  if (isPreparedCaster(cls) && cantripGain === 0) {
     return (
       <div style={sp.preparedNote}>
         <div style={sp.preparedIcon}>📖</div>
@@ -88,7 +124,8 @@ export default function SpellPickPanel({ cls, newSlots, knownSpells, onChange })
     );
   }
 
-  if (spellsToGain === 0 || maxSpellLevel === 0) return null;
+  if (spellsToGain === 0 && cantripGain === 0) return null;
+  if (spellsToGain > 0 && maxSpellLevel === 0 && cantripGain === 0) return null;
 
   return (
     <div>
@@ -139,6 +176,49 @@ export default function SpellPickPanel({ cls, newSlots, knownSpells, onChange })
           );
         })}
       </div>
+
+      {/* Cantrip gain section */}
+      {cantripGain > 0 && (
+        <div style={{ marginTop: 14 }}>
+          <div style={sp.counter}>
+            <span style={{ color: selectedCantrips.length >= cantripGain ? '#2ecc71' : '#5b8fff' }}>
+              {selectedCantrips.length}
+            </span>
+            <span style={{ color: 'rgba(200,180,140,0.4)' }}>/{cantripGain} cantrip selected</span>
+            <span style={{ marginLeft: 'auto', fontSize: '0.65rem', color: 'rgba(200,180,140,0.35)' }}>
+              NEW CANTRIP
+            </span>
+          </div>
+          <div style={{ ...sp.spellList, maxHeight: 160 }}>
+            {availableCantrips.length === 0 && (
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', padding: '8px 0', textAlign: 'center', fontStyle: 'italic' }}>
+                No available cantrips.
+              </div>
+            )}
+            {availableCantrips.map(spell => {
+              const isSelected = !!selectedCantrips.find(s => s.name === spell.name);
+              const isDisabled = !isSelected && selectedCantrips.length >= cantripGain;
+              const schoolColor = SCHOOL_COLORS[spell.school] || '#888';
+              return (
+                <button
+                  key={spell.name}
+                  onClick={() => !isDisabled && toggleCantrip(spell)}
+                  style={{
+                    ...sp.spellBtn,
+                    ...(isSelected ? { background: 'rgba(91,143,255,0.12)', border: '1px solid rgba(91,143,255,0.4)' } : {}),
+                    ...(isDisabled ? sp.spellBtnDisabled : {}),
+                  }}
+                >
+                  <span style={{ ...sp.schoolDot, background: schoolColor }} />
+                  <span style={sp.spellName}>{spell.name}</span>
+                  <span style={{ ...sp.levelBadge, color: '#5b8fff', borderColor: 'rgba(91,143,255,0.3)' }}>C</span>
+                  {isSelected && <span style={{ ...sp.checkmark, color: '#5b8fff' }}>✓</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
