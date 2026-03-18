@@ -520,7 +520,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           if (isEnemy && activeCombatant.currentHp > 0) return (
             <div style={{ background: '#1a1006', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 8, padding: 10 }}>
               <div style={{ fontSize: '0.75rem', color: '#e74c3c', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 4 }}>ENEMY TURN — {activeCombatant.name}</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: 8 }}>{dmMode ? 'AI is deciding…' : 'Waiting for enemy…'}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: 8 }}>{dmMode ? 'Deciding…' : 'Waiting for enemy…'}</div>
               {dmMode && <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>➜ Skip (Force Next)</button>}
             </div>
           );

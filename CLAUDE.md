@@ -50,22 +50,37 @@ When given a bug report: just fix it. Don't ask for hand-holding. Point at logs,
 
 **DM's Tome is a real D&D 5e roleplaying game where the Dungeon Master is AI.**
 
-You and your friends sit down to play D&D — you've got your characters, your group chat, your vibe. The one thing missing is a human DM. DM's Tome fills that seat with AI. The AI narrates the story, voices NPCs, runs enemy combat, calls for skill checks, adjudicates rules, and advances the plot. The game still feels like sitting around a table with your boys — the banter, the chaos, the "wait what do I even do" moments — but the DM role is fully automated.
+You and your friends sit down to play D&D — you've got your characters, your group chat, your vibe. The one thing missing is a human DM. DM's Tome fills that seat with the Dungeon Master — an AI-powered narrator that runs everything. The Dungeon Master narrates the story, voices NPCs, runs enemy combat, calls for skill checks, adjudicates rules, and advances the plot. The game still feels like sitting around a table with your boys — the banter, the chaos, the "wait what do I even do" moments — but the DM role is fully automated.
 
 This is not a campaign manager or a helper tool. This is a game. Players open a browser and play D&D together right now, with no extra setup and no human DM required.
 
+## North Star: Organic Living-World RPG
+
+**A living world you explore — not a chatbot you type at.**
+
+The world is alive. Players move their tokens freely on the scene map. When they approach an NPC, a building, a point of interest — an interaction prompt appears organically. They act, the Dungeon Master responds. No menus. No mode-switching. The story emerges from spatial exploration.
+
+- Players move tokens on the world map to explore
+- Approaching an NPC or building triggers a contextual prompt ("You near the blacksmith's forge…")
+- Typing or speaking an action/dialogue flows directly into the Dungeon Master
+- The Dungeon Master responds as a living world — not as a chatbot replying to messages
+- Combat erupts when the Dungeon Master decides it does — tokens transition to combat grid
+- Victory fades back to the world map; players continue exploring
+
+This is the north star for every design decision. If a feature feels like organic RPG gameplay, ship it. If it feels like a chatbot UI feature, rethink it.
+
 ## Product Feel
 
-Think **Icewind Dale / Baldur's Gate meets a live D&D session.**
+Think **classic isometric RPG meets a live D&D session.**
 
-- Top ~55% of the screen: the scene. An AI-generated image of where the party is, with player and enemy tokens on a grid. Grid is always visible. In combat the grid activates for turn-based movement.
-- Bottom ~45%: the narrator chat. The scene description auto-posts when a scene loads. Players type or speak their actions. The AI DM responds, drives the story, triggers combat, calls for rolls.
+- Top ~55% of the screen: the scene. A generated image of where the party is, with player and enemy tokens on a grid. Grid is always visible. In combat the grid activates for turn-based movement.
+- Bottom ~45%: the narrator chat. The scene description auto-posts when a scene loads. Players type or speak their actions. The Dungeon Master responds, drives the story, triggers combat, calls for rolls.
 - No menus in the way. No "click here to open the DM panel." It's all on screen, all the time.
 - Each player has their own screen/device (laptop, phone, tablet). All state syncs — they're all looking at the same world.
 
 ## Core Design Principles
 
-1. **The AI DM runs everything.** Story narration, NPC dialogue, enemy turns, saving throw adjudication, loot drops, scene transitions — all AI. Players never need to touch a DM panel. A "DM mode" exists only for the host to optionally oversee or force override in an emergency.
+1. **The Dungeon Master runs everything.** Story narration, NPC dialogue, enemy turns, saving throw adjudication, loot drops, scene transitions — all handled by the Dungeon Master. Players never need to touch a DM panel. A "DM mode" exists only for the host to optionally oversee or force override in an emergency.
 
 2. **Real D&D 5e rules, no shortcuts.** Classes, races, ability scores, AC, saving throws, spell slots, conditions, concentration, move speed, action economy — all enforced. Do not invent simplified mechanics. If something is in the 5e SRD, implement it correctly. All free SRD content (all 12 classes, all races, all spells, all monsters) is available in this app.
 
@@ -78,7 +93,7 @@ Think **Icewind Dale / Baldur's Gate meets a live D&D session.**
    - Single target: player clicks an enemy token.
    - Affected tokens are auto-highlighted before confirmation so the player knows what they're about to hit.
 
-5. **Players roll for themselves. AI rolls for enemies/NPCs.** When a roll is required, the player's chat shows a "Roll [skill/save] DC [X]" button they click to auto-roll (d20 + modifier). The AI DM calls for NPC/enemy rolls, computes them, and narrates results — players never touch enemy math.
+5. **Players roll for themselves. The Dungeon Master rolls for enemies/NPCs.** When a roll is required, the player's chat shows a "Roll [skill/save] DC [X]" button they click to auto-roll (d20 + modifier). The Dungeon Master calls for NPC/enemy rolls, computes them, and narrates results — players never touch enemy math.
 
 6. **Multiplayer is the default mode.** Everyone joins the same campaign via invite code. All state — token positions, combat turns, HP, conditions, narrator chat — syncs in real time via Supabase Realtime. The game works with 1–6 players. No human DM required at all.
 
@@ -92,21 +107,21 @@ Think **Icewind Dale / Baldur's Gate meets a live D&D session.**
 - Each square = 5 feet. Movement is tracked in squares.
 - **Outside combat**: free movement — players drag their token anywhere on the grid without turn restrictions.
 - **In combat**: strict turn-based movement. Each combatant can move up to their speed in squares per turn. The UI highlights valid move squares and blocks illegal movement.
-- Enemy tokens are placed by the AI at the start of combat in contextually appropriate positions (e.g., guards near a door, a bartender behind the bar, bandits spread around the room — never clumped randomly).
+- Enemy tokens are placed by the Dungeon Master at the start of combat in contextually appropriate positions (e.g., guards near a door, a bartender behind the bar, bandits spread around the room — never clumped randomly).
 
 ## Enemy Tokens
 
-- Enemies have token images. Source priority: **bundled sprite library first** (open-license art for common monsters), **Pollinations.ai AI generation** as fallback for anything not in the library.
-- All enemy actions are fully AI-controlled — movement decisions, attack targets, spell choices, retreat behavior.
-- Enemy HP, conditions, and position are visible to all players (transparent DM screen — the AI narrates what players can perceive).
+- Enemies have token images. Source priority: **bundled sprite library first** (open-license art for common monsters), **Pollinations.ai generation** as fallback for anything not in the library.
+- All enemy actions are fully controlled by the Dungeon Master — movement decisions, attack targets, spell choices, retreat behavior.
+- Enemy HP, conditions, and position are visible to all players (transparent DM screen — the Dungeon Master narrates what players can perceive).
 
 ## Host & DM Roles
 
 - **Host** = the player who created the campaign. They manage campaign settings, players, characters, and API keys.
 - The host can transfer their host role to another player at any time.
-- **AI DM mode** (default): AI runs everything. The host plays as a regular character.
-- **Human DM mode** (emergency override): The host can take control as the DM — force scene changes, edit HP, skip turns. This exists as a safety valve, not a normal play mode.
-- When AI DM mode is on, the AI is the DM. Period. No human input is needed or expected for story/combat decisions.
+- **Dungeon Master mode** (default): The Dungeon Master runs everything. The host plays as a regular character.
+- **Human override mode** (emergency): The host can take control — force scene changes, edit HP, skip turns. This exists as a safety valve, not a normal play mode.
+- When the Dungeon Master is running, it runs everything. No human input is needed or expected for story/combat decisions.
 
 ## Characters & Character System
 
@@ -119,7 +134,7 @@ Think **Icewind Dale / Baldur's Gate meets a live D&D session.**
 - Characters are owned by the player, not the campaign.
 - A player can bring their character to any campaign.
 - When transferring to a campaign at a different level, the character's **identity transfers** (personality, appearance, backstory) but **progression resets** (level, spell slots, spells, equipment, and gold reset to level 1 defaults for that class). The player then levels up in the new campaign.
-- Characters **level up in-app** after completing milestones or combat encounters — the AI DM declares when leveling is appropriate.
+- Characters **level up in-app** after completing milestones or combat encounters — the Dungeon Master declares when leveling is appropriate.
 
 ### Session Persistence
 - HP, spell slots, hit dice, conditions, and gold persist between sessions.
@@ -150,21 +165,21 @@ All D&D 5e SRD content (classes, races, spells, monsters, equipment, conditions)
 1. One player creates a campaign (fills out settings, gets a JSON prompt, pastes it to Claude to generate the campaign, imports the JSON).
 2. They share an invite code with friends.
 3. Everyone signs in, joins, picks or creates a character.
-4. The first scene image loads. The AI narrator auto-posts the scene description and begins narrating.
-5. Players interact via the chat. The AI drives everything from here — NPCs, encounters, story beats.
+4. The first scene image loads. The Dungeon Master auto-posts the scene description and begins narrating.
+5. Players interact via the chat. The Dungeon Master drives everything from here — NPCs, encounters, story beats.
 6. When combat triggers, the battle grid activates, initiative is rolled, turns proceed under full 5e rules.
 7. The story advances through scenes until the campaign ends.
 
 ### Campaign Setup
-- Create campaign → fill tone/theme/character slots → copy the generated prompt → paste into Claude AI to generate JSON → import JSON.
-- The human just sets the stage. Once the session starts, AI runs it.
+- Create campaign → fill tone/theme/character slots → copy the generated prompt → paste into Claude to generate JSON → import JSON.
+- The human just sets the stage. Once the session starts, the Dungeon Master runs it.
 
 ## Tech Stack
 - React + Vite (frontend)
 - Zustand (client state)
 - Supabase (auth, PostgreSQL, Realtime broadcast) — user data only, not SRD reference data
 - Vercel (hosting, auto-deploy on push)
-- Anthropic Claude API (AI DM narrator — `claude-haiku-4-5-20251001` for speed)
+- Anthropic Claude API (Dungeon Master — `claude-haiku-4-5-20251001` for speed)
 - Pollinations.ai (free scene + enemy token image generation — no API key needed)
 - Web Speech API (TTS narration + push-to-talk input)
 - Bundled SRD JSON (all 5e free content — classes, races, spells, monsters, equipment)
@@ -203,8 +218,8 @@ All D&D 5e SRD content (classes, races, spells, monsters, equipment, conditions)
 
 ## Built & Working
 - Google sign-in, campaign creation wizard, JSON import
-- Scene viewer (full-height AI image, draggable tokens, overlay controls)
-- AI narrator chat (always-inline, auto-narrates scenes, broadcasts to all players)
+- Scene viewer (full-height generated image, draggable tokens, overlay controls)
+- Dungeon Master chat (always-inline, auto-narrates scenes, broadcasts to all players)
 - Combat tracker (initiative order, HP, conditions, death saves, concentration)
 - Realtime multiplayer sync via Supabase broadcast (combat state, narrator messages, scene changes)
 - Turn gating — only the active player can take actions; DM can always override
@@ -229,8 +244,8 @@ Replace the "AoE button" with real spatial targeting on the scene image.
 - Tokens inside the area are highlighted
 - On confirm: hit tokens roll saves (via chat button), AI processes enemy saves silently
 
-### 3. AI Enemy Turns (HIGH — core to no-DM play)
-When it's an enemy's turn, AI automatically:
+### 3. Enemy Turns (HIGH — core to no-DM play)
+When it's an enemy's turn, the Dungeon Master automatically:
 - Decides action (attack nearest player, cast spell, move)
 - Rolls attack/damage
 - Applies results (HP changes, conditions)
@@ -238,7 +253,14 @@ When it's an enemy's turn, AI automatically:
 - Calls Next Turn
 No human input required for enemy turns.
 
-### 4. Class-Aware Action Menus (MEDIUM)
+### 4. NPC Proximity Interaction (HIGH — Bioware north star)
+When a player token approaches an NPC, building, or point of interest:
+- A contextual prompt appears ("You near the hooded figure by the fire…")
+- Player acts/speaks → Dungeon Master responds as that NPC
+- Seamless — no mode switch, no UI change, just the world talking back
+This makes the world feel alive and organic, not scripted.
+
+### 5. Class-Aware Action Menus (MEDIUM)
 Replace generic Attack/Spell buttons with class-specific panels:
 - Wizard/Sorcerer: spell slots, known spells, spell school tags
 - Fighter: Action Surge, Second Wind, fighting style bonuses
