@@ -78,6 +78,26 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [encounter.currentTurn, encounter.phase, dmMode]);
 
+  // 60-second player turn timer — auto-ends turn on timeout
+  const [turnSecsLeft, setTurnSecsLeft] = useState(60);
+  useEffect(() => {
+    setTurnSecsLeft(60);
+    if (encounter.phase !== 'combat') return;
+    if (!activeCombatant || activeCombatant.type !== 'player' || activeCombatant.currentHp <= 0) return;
+    const interval = setInterval(() => {
+      setTurnSecsLeft(s => {
+        if (s <= 1) {
+          clearInterval(interval);
+          onNextTurn();
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [encounter.currentTurn, encounter.phase]);
+
   function handleTokenClick(id) {
     setSelectedToken(prev => prev === id ? null : id);
     setPanel(null);
@@ -596,8 +616,20 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
 
           return (
             <div style={{ background: '#1a1006', border: `1px solid ${isDying ? 'rgba(243,156,18,0.5)' : '#2a1a0a'}`, borderRadius: 8, padding: 10 }}>
-              <div style={{ fontSize: '0.75rem', color: isDying ? '#f39c12' : 'var(--text-muted)', marginBottom: 8, fontFamily: "'Cinzel', Georgia, serif" }}>
-                {isDying ? `⚠ ${activeCombatant.name} DYING` : `ACTIONS — ${activeCombatant.name}`}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <div style={{ fontSize: '0.75rem', color: isDying ? '#f39c12' : 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif" }}>
+                  {isDying ? `⚠ ${activeCombatant.name} DYING` : `ACTIONS — ${activeCombatant.name}`}
+                </div>
+                {!isDying && isMyTurn && encounter.phase === 'combat' && (
+                  <div style={{
+                    fontSize: '0.8rem', fontWeight: 700, fontFamily: "'Cinzel', Georgia, serif",
+                    color: turnSecsLeft <= 10 ? '#e74c3c' : turnSecsLeft <= 20 ? '#e67e22' : 'rgba(200,180,140,0.45)',
+                    minWidth: 28, textAlign: 'right',
+                    animation: turnSecsLeft <= 10 ? 'goldPulse 0.8s infinite' : 'none',
+                  }}>
+                    {turnSecsLeft}s
+                  </div>
+                )}
               </div>
               {isDying ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>

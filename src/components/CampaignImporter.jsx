@@ -1,5 +1,60 @@
 import { useState, useRef } from 'react';
 import useStore from '../store/useStore';
+import { getClaudeApiKey } from '../lib/claudeApi';
+
+const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
+
+async function generateCampaignJson({ title, tone, numScenes, apiKey }) {
+  const prompt = `Generate a D&D 5e campaign JSON with the following parameters:
+- Title: "${title}"
+- Tone/Theme: ${tone}
+- Number of scenes: ${numScenes}
+
+Return ONLY valid JSON matching this exact schema (no markdown, no explanation):
+{
+  "title": "string",
+  "scenes": [
+    {
+      "id": "scene1",
+      "title": "Scene Title",
+      "text": "Narrative description shown to players (2-3 sentences, vivid and immersive).",
+      "dmNotes": "Private DM context and secrets.",
+      "fogOfWar": true,
+      "isEncounter": false,
+      "enemies": []
+    }
+  ],
+  "characters": []
+}
+
+Rules:
+- scenes array must have exactly ${numScenes} entries
+- Each scene id must be unique (scene1, scene2, etc.)
+- isEncounter: true for combat scenes; include 2-4 enemies with name, hp, ac, speed, stats (str/dex/con/int/wis/cha), attacks ([{name, bonus, damage}]), startPosition {x,y}
+- fogOfWar: true for dungeons/indoors, false for towns/outdoors
+- characters array should be empty (players create their own)
+- text must be evocative, atmospheric, and advance the story
+- dmNotes must include encounter triggers, hidden info, and DM guidance
+Return only the JSON object.`;
+
+  const res = await fetch(CLAUDE_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 4096,
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+  if (!res.ok) throw new Error(`API error ${res.status}`);
+  const data = await res.json();
+  return data.content?.[0]?.text || '';
+}
 
 const EXAMPLE_JSON = `{
   "title": "The Lost Mines of Phandelver",
@@ -100,13 +155,66 @@ export default function CampaignImporter({ onSuccess }) {
   const campaign = useStore((s) => s.campaign);
   const activeCampaign = useStore((s) => s.activeCampaign);
   const preGenerateSceneImages = useStore((s) => s.preGenerateSceneImages);
+  const sessionApiKey = useStore((s) => s.sessionApiKey);
+  const user = useStore((s) => s.user);
 
+  const [tab, setTab] = useState('generate'); // 'generate' | 'import'
   const [jsonText, setJsonText] = useState('');
   const [errors, setErrors] = useState([]);
   const [validData, setValidData] = useState(null);
   const [status, setStatus] = useState('idle'); // 'idle' | 'valid' | 'invalid' | 'loaded'
   const [showExample, setShowExample] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Generate tab state
+  const [genTitle, setGenTitle] = useState('');
+  const [genTone, setGenTone] = useState('');
+  const [genScenes, setGenScenes] = useState(3);
+  const [genLoading, setGenLoading] = useState(false);
+  const [genError, setGenError] = useState(null);
+
+  async function handleGenerate() {
+    const apiKey = (user?.id ? getClaudeApiKey(user.id) : null) || sessionApiKey;
+    if (!apiKey) {
+      setGenError('No Claude API key found. Add one in ⚙ Settings first.');
+      return;
+    }
+    if (!genTitle.trim()) {
+      setGenError('Enter a campaign title.');
+      return;
+    }
+    setGenLoading(true);
+    setGenError(null);
+    try {
+      const raw = await generateCampaignJson({
+        title: genTitle.trim(),
+        tone: genTone.trim() || 'classic high fantasy adventure',
+        numScenes: genScenes,
+        apiKey,
+      });
+      // Clean and parse
+      let text = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+      const firstBrace = text.indexOf('{');
+      if (firstBrace > 0) text = text.slice(firstBrace);
+      const lastBrace = text.lastIndexOf('}');
+      if (lastBrace !== -1) text = text.slice(0, lastBrace + 1);
+
+      const parsed = JSON.parse(text);
+      const errs = validateCampaign(parsed);
+      if (errs.length > 0) {
+        setGenError('Generated JSON had validation issues: ' + errs.join(', '));
+        return;
+      }
+      // Auto-load
+      loadCampaign(parsed);
+      preGenerateSceneImages(activeCampaign?.id || 'local', parsed.scenes || []);
+      onSuccess?.();
+    } catch (e) {
+      setGenError(`Generation failed: ${e.message}`);
+    } finally {
+      setGenLoading(false);
+    }
+  }
 
   function cleanJsonText(text) {
     let cleaned = text.trim();
@@ -242,7 +350,100 @@ export default function CampaignImporter({ onSuccess }) {
 
   return (
     <div style={styles.container}>
-      <h2>Campaign Importer</h2>
+      <h2>Campaign Setup</h2>
+
+      {/* Tab switcher */}
+      <div style={{ display: 'flex', gap: 0, borderBottom: '2px solid rgba(212,175,55,0.15)', marginBottom: 4 }}>
+        {[
+          { id: 'generate', label: '✨ Generate with AI' },
+          { id: 'import', label: '📂 Import JSON' },
+        ].map(t => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            style={{
+              flex: 1, padding: '10px 0', cursor: 'pointer', fontWeight: 700,
+              fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.82rem', letterSpacing: '0.04em',
+              background: 'transparent', border: 'none',
+              borderBottom: tab === t.id ? '2px solid #d4af37' : '2px solid transparent',
+              color: tab === t.id ? '#d4af37' : 'var(--text-muted)',
+              marginBottom: -2, transition: 'all 0.15s',
+            }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Generate tab */}
+      {tab === 'generate' && (
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif", letterSpacing: '0.08em', marginBottom: 6 }}>CAMPAIGN TITLE</div>
+            <input
+              value={genTitle}
+              onChange={e => setGenTitle(e.target.value)}
+              placeholder="e.g. The Lost Mines of Phandelver"
+              style={{ width: '100%', background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 6, padding: '9px 12px', fontSize: '0.9rem', boxSizing: 'border-box' }}
+            />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif", letterSpacing: '0.08em', marginBottom: 6 }}>TONE & THEME <span style={{ opacity: 0.5 }}>(optional)</span></div>
+            <input
+              value={genTone}
+              onChange={e => setGenTone(e.target.value)}
+              placeholder="e.g. dark gothic horror, seafaring pirates, political intrigue"
+              style={{ width: '100%', background: '#0f0804', border: '1px solid var(--border-light)', color: 'var(--text-primary)', borderRadius: 6, padding: '9px 12px', fontSize: '0.9rem', boxSizing: 'border-box' }}
+            />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif", letterSpacing: '0.08em', marginBottom: 6 }}>NUMBER OF SCENES</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {[2, 3, 4, 5, 6].map(n => (
+                <button
+                  key={n}
+                  onClick={() => setGenScenes(n)}
+                  style={{
+                    flex: 1, padding: '8px 0', borderRadius: 6, cursor: 'pointer',
+                    fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700, fontSize: '0.85rem',
+                    background: genScenes === n ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
+                    border: `1px solid ${genScenes === n ? 'rgba(212,175,55,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                    color: genScenes === n ? '#d4af37' : 'var(--text-muted)',
+                  }}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {genError && (
+            <div style={{ background: 'rgba(192,57,43,0.1)', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 6, padding: '10px 14px', color: '#e74c3c', fontSize: '0.82rem' }}>
+              {genError}
+            </div>
+          )}
+
+          <button
+            onClick={handleGenerate}
+            disabled={genLoading || !genTitle.trim()}
+            style={{
+              padding: '14px 0', borderRadius: 8, cursor: genLoading || !genTitle.trim() ? 'not-allowed' : 'pointer',
+              fontFamily: "'Cinzel', Georgia, serif", fontWeight: 900, fontSize: '0.95rem', letterSpacing: '0.04em',
+              background: genLoading || !genTitle.trim() ? 'rgba(255,255,255,0.06)' : 'linear-gradient(135deg, #d4af37, #a8841f)',
+              border: 'none', color: genLoading || !genTitle.trim() ? 'var(--text-muted)' : '#1a0e00',
+              boxShadow: genLoading ? 'none' : '0 4px 20px rgba(212,175,55,0.25)',
+            }}
+          >
+            {genLoading ? '✦ Generating campaign…' : '✦ Generate Campaign'}
+          </button>
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center', fontStyle: 'italic' }}>
+            Uses your Claude API key. Takes ~10-20 seconds. Scenes, enemies, and DM notes are auto-generated.
+          </div>
+        </div>
+      )}
+
+      {/* Import tab */}
+      {tab === 'import' && <>
 
       {/* Currently loaded campaign */}
       {campaign.loaded && (
@@ -400,7 +601,7 @@ export default function CampaignImporter({ onSuccess }) {
         </div>
       </div>
 
-      {/* Format reference */}
+      {/* Format reference — import tab only */}
       <div className="card" style={styles.referenceCard}>
         <h3 style={styles.refTitle}>Expected JSON Format</h3>
         <div style={styles.refGrid}>
@@ -454,6 +655,7 @@ export default function CampaignImporter({ onSuccess }) {
           </div>
         </div>
       </div>
+      </> /* end import tab */}
     </div>
   );
 }

@@ -116,11 +116,29 @@ export default function CharacterCreate({ user, campaignId, onDone }) {
       .eq('campaign_id', campaignId)
       .eq('user_id', user.id);
 
-    setSaving(false);
     if (dbErr) {
+      setSaving(false);
       setError('Failed to save character. Please try again.');
       return;
     }
+
+    // Also save to player-owned `characters` table for portability (fire-and-forget)
+    try {
+      await supabase.from('characters').upsert({
+        owner_user_id: user.id,
+        name: character.name,
+        class: character.class || '',
+        race: character.race || '',
+        background: character.background || '',
+        appearance: character.appearance || '',
+        backstory: character.backstory || '',
+        portrait_url: character.portrait || '',
+        character_data: character,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'owner_user_id,name' });
+    } catch { /* table may not exist yet — non-critical */ }
+
+    setSaving(false);
     onDone(character);
   }
 

@@ -4,6 +4,7 @@ import { getClassResources } from '../lib/classResources';
 import { triggerEnemyTurn } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 import { computeAcFromEquipped } from '../data/equipment';
+import { CLASSES } from '../data/classes';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -25,6 +26,51 @@ const useStore = create((set, get) => ({
   // === Auth ===
   user: null,
   setUser: (user) => set({ user }),
+
+  // === Player-owned Characters (portable across campaigns) ===
+  myCharacters: [],   // All characters owned by this user (from `characters` Supabase table)
+  loadMyCharacters: async () => {
+    const user = get().user;
+    if (!user?.id) return;
+    try {
+      const { data, error } = await supabase
+        .from('characters')
+        .select('*')
+        .eq('owner_user_id', user.id)
+        .order('updated_at', { ascending: false });
+      if (!error && data) {
+        set({ myCharacters: data.map(row => ({ ...row.character_data, _characterId: row.id, _updatedAt: row.updated_at })) });
+      }
+    } catch { /* table may not exist yet — fail silently */ }
+  },
+  saveCharacterToProfile: async (character) => {
+    const user = get().user;
+    if (!user?.id) return null;
+    try {
+      const { data, error } = await supabase
+        .from('characters')
+        .upsert({
+          owner_user_id: user.id,
+          name: character.name,
+          class: character.class || '',
+          race: character.race || '',
+          background: character.background || '',
+          appearance: character.appearance || '',
+          backstory: character.backstory || '',
+          portrait_url: character.portrait || '',
+          character_data: character,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'owner_user_id,name' })
+        .select()
+        .single();
+      if (!error && data) {
+        // Refresh local list
+        get().loadMyCharacters();
+        return data.id;
+      }
+    } catch { /* fail silently if table doesn't exist */ }
+    return null;
+  },
 
   // === Active Campaign (Supabase record) ===
   activeCampaign: null,
@@ -442,21 +488,23 @@ const useStore = create((set, get) => ({
       };
     }),
 
-  applyEncounterDamage: (targetId, amount) =>
+  applyEncounterDamage: (targetId, amount) => {
+    let concentrationBroke = false;
     set((state) => {
       const target = state.encounter.combatants.find(c => c.id === targetId);
       const extraLog = [];
 
-      // Concentration Con save (PHB: DC = max(10, half damage taken))
+      // Concentration CON save — DC = max(10, half damage taken) per PHB
       if (target && target.concentration && target.currentHp > 0 && amount > 0) {
         const dc = Math.max(10, Math.floor(amount / 2));
         const roll = Math.floor(Math.random() * 20) + 1;
         const conMod = Math.floor(((target.stats?.con || 10) - 10) / 2);
         const total = roll + conMod;
         const pass = total >= dc;
+        if (!pass) concentrationBroke = true;
         extraLog.push(
           `🎯 ${target.name} concentration (${target.concentration}) DC ${dc}: ` +
-          `d20(${roll})${conMod >= 0 ? '+' : ''}${conMod}=${total} — ${pass ? '✓ Maintained' : '✗ BROKEN'}`
+          `d20(${roll})${conMod >= 0 ? '+' : ''}${conMod}=${total} — ${pass ? '✓ Maintained' : '✗ BROKEN — spell ends'}`
         );
       }
 
@@ -467,7 +515,7 @@ const useStore = create((set, get) => ({
         if (c.currentHp === 0 && amount >= c.maxHp) {
           return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 3, stable: false } };
         }
-        // Dropping to 0: enter dying state
+        // Dropping to 0: enter dying state (concentration also cleared)
         if (newHp === 0 && c.currentHp > 0 && c.type === 'player') {
           return { ...c, currentHp: 0, concentration: null, deathSaves: { successes: 0, failures: 0, stable: false } };
         }
@@ -475,7 +523,8 @@ const useStore = create((set, get) => ({
         if (c.currentHp === 0 && c.type === 'player' && !c.deathSaves?.stable) {
           return { ...c, deathSaves: { ...c.deathSaves, failures: Math.min(3, (c.deathSaves?.failures || 0) + 1) } };
         }
-        return { ...c, currentHp: newHp };
+        // Normal hit — clear concentration if save failed
+        return { ...c, currentHp: newHp, ...(concentrationBroke ? { concentration: null } : {}) };
       });
 
       return {
@@ -487,7 +536,12 @@ const useStore = create((set, get) => ({
             : state.encounter.log,
         },
       };
-    }),
+    });
+    // Broadcast concentration break so all clients clear it
+    if (concentrationBroke) {
+      broadcastEncounterAction({ type: 'clear-concentration', id: targetId, userId: get().user?.id || 'system' });
+    }
+  },
 
   applyEncounterHeal: (targetId, amount) =>
     set((state) => ({
@@ -890,6 +944,7 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     })),
 
   shortRest: () => {
+    // Restore short-rest class resources (HP recovery happens via spendHitDie calls)
     set((state) => ({
       campaign: {
         ...state.campaign,
@@ -902,10 +957,51 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
       },
       encounter: {
         ...get().encounter,
-        log: ['🌙 Short rest taken — short-rest resources restored.', ...get().encounter.log].slice(0, 30),
+        log: ['🌙 Short rest — short-rest resources restored.', ...get().encounter.log].slice(0, 30),
       },
     }));
     get().saveCampaignToSupabase();
+  },
+
+  // Spend one hit die during a short rest — rolls hitDie + CON mod, recovers HP
+  spendHitDie: (charId) => {
+    const { campaign, myCharacter } = get();
+    const char = campaign.characters.find(c => c.id === charId || c.name === charId)
+      || myCharacter;
+    if (!char) return;
+
+    const hitDie = CLASSES[char.class]?.hitDie || 8;
+    const conMod = Math.floor(((char.stats?.con || 10) - 10) / 2);
+    const roll = Math.floor(Math.random() * hitDie) + 1;
+    const healed = Math.max(1, roll + conMod);
+    const remaining = Math.max(0, (char.hitDiceRemaining ?? char.level ?? 1) - 1);
+    const newHp = Math.min(char.maxHp, (char.currentHp || 0) + healed);
+
+    set((state) => ({
+      campaign: {
+        ...state.campaign,
+        characters: state.campaign.characters.map(c =>
+          (c.id === charId || c.name === charId || c.id === char.id)
+            ? { ...c, currentHp: newHp, hitDiceRemaining: remaining }
+            : c
+        ),
+      },
+      myCharacter: (state.myCharacter?.id === char.id || state.myCharacter?.name === char.name)
+        ? { ...state.myCharacter, currentHp: newHp, hitDiceRemaining: remaining }
+        : state.myCharacter,
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map(c =>
+          (c.id === char.id || c.name === char.name)
+            ? { ...c, currentHp: newHp }
+            : c
+        ),
+        log: [`🎲 ${char.name} spends a hit die: d${hitDie}(${roll})${conMod >= 0 ? '+' : ''}${conMod} = +${healed} HP`, ...state.encounter.log].slice(0, 30),
+      },
+    }));
+    get().saveCampaignToSupabase();
+
+    return { roll, healed, remaining, newHp };
   },
 
   longRest: () => {
@@ -916,7 +1012,12 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
               Object.entries(c.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])
             )
           : c.spellSlots;
-        return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots };
+        // Long rest restores half your level in hit dice (minimum 1)
+        const totalHitDice = c.level || 1;
+        const restored = Math.max(1, Math.floor(totalHitDice / 2));
+        const current = c.hitDiceRemaining ?? totalHitDice;
+        const hitDiceRemaining = Math.min(totalHitDice, current + restored);
+        return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots, hitDiceRemaining };
       });
       // Also restore HP for player combatants in an active encounter
       const updatedCombatants = state.encounter.combatants.map((c) => {
