@@ -9,6 +9,7 @@ import PartyPanel from './PartyPanel';
 import CharDetailPanel from './CharDetailPanel';
 import { crToXp } from '../lib/xpTable';
 import { CONDITION_INFO } from '../lib/conditionDescriptions';
+import { broadcastPlayerMove } from '../lib/liveChannel';
 
 const MAP_W = 10;
 const MAP_H = 8;
@@ -828,7 +829,8 @@ function InitiativePhase({ combatants, onSetInitiative, onBeginCombat, onCancel 
 
 // ─── Combat Phase ─────────────────────────────────────────────────────────────
 
-function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter, onDamage, onHeal, onLog, onAddCondition, onRemoveCondition, onMoveToken, onRollDeathSave, onStabilize, onSetConcentration, onClearConcentration, onShortRest, onLongRest }) {
+function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, onEndEncounter, onDamage, onHeal, onLog, onAddCondition, onRemoveCondition, onMoveToken, onRollDeathSave, onStabilize, onSetConcentration, onClearConcentration, onShortRest, onLongRest }) {
+  const currentUser = useStore(s => s.user);
   const { combatants, currentTurn, round, log } = encounter;
   const [selectedToken, setSelectedToken] = useState(null);
   const [panel, setPanel] = useState(null); // null | 'attack' | 'aoe' | 'save' | 'concentrate'
@@ -852,10 +854,47 @@ function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter
   }
 
   function handleCellClick(x, y) {
-    if (selectedToken) {
-      onMoveToken(selectedToken, x, y);
-      setSelectedToken(null);
+    if (!selectedToken) return;
+
+    const token = combatants.find(c => c.id === selectedToken);
+    if (!token) { setSelectedToken(null); return; }
+
+    if (!dmMode) {
+      // Players can only move their own token
+      const isMyToken = myCharacter && (
+        token.id === myCharacter.id || token.name === myCharacter.name
+      );
+      if (!isMyToken) { setSelectedToken(null); return; }
+
+      // During combat: only on your turn
+      if (encounter.phase === 'combat') {
+        const isMyTurn = activeCombatant && myCharacter && (
+          activeCombatant.id === myCharacter.id ||
+          activeCombatant.name === myCharacter.name
+        );
+        if (!isMyTurn) { setSelectedToken(null); return; }
+        // No movement remaining
+        if ((token.remainingMove ?? 0) <= 0) { setSelectedToken(null); return; }
+      }
     }
+
+    // Calculate movement cost (Chebyshev distance — diagonal = 1 cell like 5e)
+    const from = token.position;
+    let cost = 1;
+    if (from) {
+      const dx = Math.abs(x - from.x);
+      const dy = Math.abs(y - from.y);
+      cost = Math.max(dx, dy);
+    }
+
+    onMoveToken(selectedToken, x, y, cost);
+
+    // Players broadcast their movement so DM and others see it immediately
+    if (!dmMode) {
+      broadcastPlayerMove(selectedToken, x, y, cost, currentUser?.id);
+    }
+
+    setSelectedToken(null);
   }
 
   function handleHpChange(id, delta) {
@@ -926,7 +965,16 @@ function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter
         <div style={{ overflowX: 'auto' }}>
           <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} />
         </div>
-        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 3 }}>Tap token · tap cell to move</div>
+        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 3 }}>
+          {activeCombatant ? (
+            <>
+              {activeCombatant.name} — Move: <span style={{ color: (activeCombatant.remainingMove ?? 0) > 0 ? '#2ecc71' : '#e74c3c' }}>{activeCombatant.remainingMove ?? Math.floor((activeCombatant.speed || 30) / 5)} cells</span>
+              {!dmMode && myCharacter && (activeCombatant.name === myCharacter?.name || activeCombatant.id === myCharacter?.id)
+                ? ' · Tap your token then a cell'
+                : !dmMode ? ' · Waiting for your turn' : ' · Tap token · tap cell'}
+            </>
+          ) : 'Tap token · tap cell to move'}
+        </div>
         <div ref={logRef} style={{ background: '#0f0a04', border: '1px solid #2a1a0a', borderRadius: 6, padding: '6px 8px', maxHeight: 100, overflowY: 'auto', fontFamily: 'monospace', fontSize: '0.7rem', marginTop: 8 }}>
           {log.map((entry, i) => <div key={i} style={{ color: i === 0 ? 'var(--text-secondary)' : 'var(--text-muted)', padding: '1px 0' }}>{entry}</div>)}
         </div>
@@ -1101,7 +1149,16 @@ function CombatPhase({ encounter, dmMode, characters, onNextTurn, onEndEncounter
           />
         </div>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4 }}>
-          Click token to select · click empty cell to move · click selected token to deselect
+          {activeCombatant && (
+            <span>
+              Move: <span style={{ color: (activeCombatant.remainingMove ?? 0) > 0 ? '#2ecc71' : '#e74c3c', fontWeight: 600 }}>
+                {activeCombatant.remainingMove ?? Math.floor((activeCombatant.speed || 30) / 5)} cells remaining
+              </span>
+              {!dmMode && myCharacter && (activeCombatant.name === myCharacter?.name || activeCombatant.id === myCharacter?.id)
+                ? ' · Your turn — click your token then a cell'
+                : !dmMode ? ' · Waiting for your turn…' : ' · Click token then cell to move'}
+            </span>
+          )}
         </div>
 
         {/* Combat Log */}
@@ -1642,6 +1699,7 @@ export default function EncounterView() {
   const campaign = useStore(s => s.campaign);
   const encounter = useStore(s => s.encounter);
   const dmMode = useStore(s => s.dmMode);
+  const myCharacter = useStore(s => s.myCharacter);
 
   const startEncounter = useStore(s => s.startEncounter);
   const setEncounterInitiative = useStore(s => s.setEncounterInitiative);
@@ -1660,17 +1718,20 @@ export default function EncounterView() {
   const clearConcentration = useStore(s => s.clearConcentration);
   const shortRest = useStore(s => s.shortRest);
   const longRest = useStore(s => s.longRest);
+  const partyMembers = useStore(s => s.partyMembers);
 
   function handleStartEncounter(enemies) {
     setCustomSetup(false);
-    startEncounter(enemies, campaign.characters);
+    // Use real party members (from campaign_members) not NPC list from campaign JSON
+    const party = partyMembers.length > 0 ? partyMembers : campaign.characters;
+    startEncounter(enemies, party);
   }
 
   if (customSetup) {
     return (
       <div style={{ padding: '16px 0' }}>
         <CustomCombatSetup
-          partyMembers={campaign.characters}
+          partyMembers={partyMembers.length > 0 ? partyMembers : campaign.characters}
           onStart={handleStartEncounter}
           onCancel={() => setCustomSetup(false)}
         />
@@ -1706,6 +1767,7 @@ export default function EncounterView() {
         <CombatPhase
           encounter={encounter}
           dmMode={dmMode}
+          myCharacter={myCharacter}
           onNextTurn={nextEncounterTurn}
           onEndEncounter={endEncounter}
           onDamage={applyEncounterDamage}

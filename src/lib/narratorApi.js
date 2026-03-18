@@ -10,8 +10,13 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
     )
     .join('\n');
 
+  // Include enemy info if scene has it, so AI knows what opponents exist
+  const sceneEnemies = currentScene?.enemies || currentScene?.encounters?.[0]?.enemies || [];
+  const enemyList = sceneEnemies.length > 0
+    ? `\nEnemies available for combat: ${sceneEnemies.map(e => `${e.name} (HP ${e.hp}, AC ${e.ac})`).join(', ')}`
+    : '';
   const sceneText = currentScene
-    ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}`
+    ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}`
     : 'The party is between scenes.';
 
   // After 4+ exchanges in a scene, allow the AI to conclude it
@@ -35,11 +40,12 @@ You are narrating this live session. When players describe their actions or spea
 - React to creative, unexpected actions with "yes, and" energy${advanceHint}
 
 Respond ONLY with a raw JSON object — no markdown, no code fences, no extra text before or after:
-{"narrative":"Your DM narration here.","rollRequest":{"character":"CharacterName","skill":"Stealth","dc":14},"stateHint":"Brief internal note or null","advanceScene":false,"startCombat":false}
+{"narrative":"Your DM narration here.","rollRequest":{"character":"CharacterName","skill":"Stealth","dc":14},"stateHint":"Brief internal note or null","advanceScene":false,"startCombat":false,"enemies":[]}
 
 Rules for special fields:
 - advanceScene: true ONLY when the scene has clearly concluded and the story must move to the next scene. Default false.
-- startCombat: true ONLY when the players are clearly initiating combat (charging, attacking, drawing weapons aggressively). This triggers the battle map. Default false. Do NOT combine startCombat and advanceScene in the same response.`;
+- startCombat: true ONLY when the players are clearly initiating combat (charging, attacking, drawing weapons aggressively). This triggers the battle map. Default false. Do NOT combine startCombat and advanceScene in the same response.
+- enemies: ONLY populate when startCombat is true. Use the enemies listed in the scene, or invent appropriate opponents that fit the narrative. Each enemy: {"name":"Goblin","hp":7,"ac":15,"speed":30,"stats":{"str":8,"dex":14,"con":10,"int":10,"wis":8,"cha":8},"attacks":[{"name":"Scimitar","bonus":"+4","damage":"1d6+2"}],"count":1}`;
 }
 
 export async function callNarrator({ messages, systemPrompt, apiKey }) {

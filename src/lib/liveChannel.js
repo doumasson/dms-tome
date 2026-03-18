@@ -16,3 +16,7 @@ export function broadcastSceneChange(sceneIndex) {
 export function broadcastStartCombat(payload) {
   _channel?.send({ type: 'broadcast', event: 'combat-start', payload });
 }
+
+export function broadcastPlayerMove(tokenId, x, y, cost, userId) {
+  _channel?.send({ type: 'broadcast', event: 'player-move', payload: { tokenId, x, y, cost, userId } });
+}

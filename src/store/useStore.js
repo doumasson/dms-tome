@@ -234,6 +234,7 @@ const useStore = create((set, get) => ({
     // Expand enemy groups by count
     enemies?.forEach((group, gi) => {
       const count = group.count || 1;
+      const spd = Number(group.speed) || 30;
       for (let i = 0; i < count; i++) {
         const label = count > 1 ? `${group.name} ${i + 1}` : group.name;
         combatants.push({
@@ -244,7 +245,8 @@ const useStore = create((set, get) => ({
           maxHp: Number(group.hp) || 10,
           currentHp: Number(group.hp) || 10,
           ac: Number(group.ac) || 10,
-          speed: Number(group.speed) || 30,
+          speed: spd,
+          remainingMove: Math.floor(spd / 5),
           stats: group.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
           attacks: group.attacks || [],
           conditions: [],
@@ -257,6 +259,7 @@ const useStore = create((set, get) => ({
 
     // Add party members from campaign characters
     partyMembers?.forEach((char) => {
+      const spd = char.speed || 30;
       combatants.push({
         id: char.id || crypto.randomUUID(),
         name: char.name,
@@ -265,7 +268,8 @@ const useStore = create((set, get) => ({
         maxHp: char.maxHp || 10,
         currentHp: char.currentHp ?? char.maxHp ?? 10,
         ac: char.ac || 10,
-        speed: char.speed || 30,
+        speed: spd,
+        remainingMove: Math.floor(spd / 5),
         stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
         attacks: (char.weapons || []).map(w =>
           typeof w === 'string'
@@ -289,10 +293,23 @@ const useStore = create((set, get) => ({
       // Sort descending and start combat immediately
       const sorted = [...combatants].sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
       const initLog = sorted.map(c => `${c.name}: ${c.initiative}`).join(', ');
+
+      // Auto-place: players left side (x 0-2), enemies right side (x 7-9)
+      const players = sorted.filter(c => c.type !== 'enemy');
+      const enemies = sorted.filter(c => c.type === 'enemy');
+      const place = (list, startX) =>
+        list.map((c, i) => ({
+          ...c,
+          position: { x: Math.min(startX + (i % 3), 9), y: Math.min(Math.floor(i / 3) * 2, 7) },
+          remainingMove: Math.floor((c.speed || 30) / 5),
+        }));
+      const placed = [...place(players, 0), ...place(enemies, 7)]
+        .sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
+
       set({
         encounter: {
           phase: 'combat',
-          combatants: sorted,
+          combatants: placed,
           currentTurn: 0,
           round: 1,
           log: [`Initiative rolled — ${initLog}`],
@@ -343,7 +360,9 @@ const useStore = create((set, get) => ({
       const placed = [
         ...place(players, 0),
         ...place(enemies, 7),
-      ].sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
+      ]
+        .sort((a, b) => (b.initiative || 0) - (a.initiative || 0))
+        .map(c => ({ ...c, remainingMove: Math.floor((c.speed || 30) / 5) }));
 
       return {
         encounter: {
@@ -362,14 +381,20 @@ const useStore = create((set, get) => ({
       const { combatants, currentTurn, round } = state.encounter;
       if (combatants.length === 0) return state;
       const isLast = currentTurn >= combatants.length - 1;
+      const nextTurn = isLast ? 0 : currentTurn + 1;
       const nextRound = isLast ? round + 1 : round;
       const log = isLast
         ? [`Round ${nextRound} begins.`, ...state.encounter.log]
         : state.encounter.log;
+      // Reset movement for the next combatant
+      const updated = combatants.map((c, i) =>
+        i === nextTurn ? { ...c, remainingMove: Math.floor((c.speed || 30) / 5) } : c
+      );
       return {
         encounter: {
           ...state.encounter,
-          currentTurn: isLast ? 0 : currentTurn + 1,
+          combatants: updated,
+          currentTurn: nextTurn,
           round: nextRound,
           log: log.slice(0, 30),
         },
@@ -527,12 +552,18 @@ const useStore = create((set, get) => ({
       },
     })),
 
-  moveToken: (id, x, y) =>
+  moveToken: (id, x, y, cost = 0) =>
     set((state) => ({
       encounter: {
         ...state.encounter,
         combatants: state.encounter.combatants.map((c) =>
-          c.id === id ? { ...c, position: { x, y } } : c
+          c.id === id ? {
+            ...c,
+            position: { x, y },
+            remainingMove: cost > 0
+              ? Math.max(0, (c.remainingMove ?? Math.floor((c.speed || 30) / 5)) - cost)
+              : c.remainingMove,
+          } : c
         ),
       },
     })),
@@ -715,10 +746,33 @@ const useStore = create((set, get) => ({
     const { activeCampaign } = get();
     if (!activeCampaign?.id) return;
     const c = campaignState || get().campaign;
-    await supabase
-      .from('campaigns')
-      .update({ settings: { notes: c.notes, savedEncounters: c.savedEncounters } })
-      .eq('id', activeCampaign.id);
+    try {
+      const { data: cur } = await supabase
+        .from('campaigns').select('settings').eq('id', activeCampaign.id).maybeSingle();
+      await supabase
+        .from('campaigns')
+        .update({ settings: { ...(cur?.settings || {}), notes: c.notes, savedEncounters: c.savedEncounters } })
+        .eq('id', activeCampaign.id);
+    } catch { /* non-critical */ }
+  },
+
+  saveSessionStateToSupabase: async () => {
+    const { activeCampaign, campaign, encounter, isDM } = get();
+    if (!activeCampaign?.id || !isDM) return;
+    try {
+      const { data: cur } = await supabase
+        .from('campaigns').select('settings').eq('id', activeCampaign.id).maybeSingle();
+      await supabase
+        .from('campaigns')
+        .update({
+          settings: {
+            ...(cur?.settings || {}),
+            currentSceneIndex: campaign.currentSceneIndex,
+            encounterState: encounter.phase !== 'idle' ? encounter : null,
+          },
+        })
+        .eq('id', activeCampaign.id);
+    } catch { /* non-critical */ }
   },
 
   saveCampaignToSupabase: async () => {
