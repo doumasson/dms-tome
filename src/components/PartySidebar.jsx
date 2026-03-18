@@ -56,14 +56,15 @@ const CONDITION_COLORS = {
 };
 
 export default function PartySidebar({ onTool, onManage, onLeave, onSettings, liveConnected }) {
-  const campaign  = useStore(s => s.campaign);
-  const encounter = useStore(s => s.encounter);
-  const isDM      = useStore(s => s.isDM);
-  const dmMode    = useStore(s => s.dmMode);
+  const encounter    = useStore(s => s.encounter);
+  const isDM         = useStore(s => s.isDM);
+  const dmMode       = useStore(s => s.dmMode);
   const toggleDmMode = useStore(s => s.toggleDmMode);
+  const partyMembers = useStore(s => s.partyMembers);
   const [expandedId, setExpandedId] = useState(null);
 
-  const characters = campaign.characters || [];
+  // Show real players from campaign_members, not NPC characters from JSON
+  const characters = partyMembers;
 
   // During combat, prefer encounter HP for matching combatants
   function getCharHp(char) {

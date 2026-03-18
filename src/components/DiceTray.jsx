@@ -84,11 +84,15 @@ function DiceAnimation({ result, die, rolledBy, onDone }) {
 }
 
 export default function DiceTray({ open, onClose }) {
-  const addRoll    = useStore(s => s.addRoll);
-  const characters = useStore(s => s.campaign.characters);
-  const user       = useStore(s => s.user);
-  const isDM       = useStore(s => s.isDM);
-  const myCharacter = useStore(s => s.myCharacter);
+  const addRoll      = useStore(s => s.addRoll);
+  const partyMembers = useStore(s => s.partyMembers);
+  const user         = useStore(s => s.user);
+  const isDM         = useStore(s => s.isDM);
+  const dmMode       = useStore(s => s.dmMode);
+  const myCharacter  = useStore(s => s.myCharacter);
+
+  // DM in DM mode = elevated (can pick any character); otherwise locked to own character
+  const isDMActive = isDM && dmMode;
 
   const [die, setDie]         = useState(20);
   const [count, setCount]     = useState(1);
@@ -97,18 +101,18 @@ export default function DiceTray({ open, onClose }) {
   const [rolledBy, setRolledBy] = useState('');
   const [animation, setAnimation] = useState(null); // { result, die, rolledBy }
 
-  // Determine the default "rolling as" identity:
-  // - Non-DMs are always locked to their own character
-  // - DMs default to their first party member or 'DM'
+  // Set default rolling identity:
+  // - DM with DM mode ON: can pick freely, defaults to first party member
+  // - Everyone else: locked to their own character
   useEffect(() => {
-    if (!isDM && myCharacter?.name) {
+    if (isDMActive) {
+      setRolledBy(partyMembers[0]?.name || 'DM');
+    } else if (myCharacter?.name) {
       setRolledBy(myCharacter.name);
-    } else if (isDM) {
-      setRolledBy(characters[0]?.name || 'DM');
     } else {
-      setRolledBy(user?.name || 'DM');
+      setRolledBy(user?.name || 'Adventurer');
     }
-  }, [isDM, myCharacter, characters, user]);
+  }, [isDMActive, myCharacter, partyMembers, user]);
 
   if (!open && !animation) return null;
 
@@ -152,8 +156,8 @@ export default function DiceTray({ open, onClose }) {
     if (v !== 'normal') setCount(1);
   }
 
-  const charOptions = characters.length > 0
-    ? ['DM', ...characters.map(c => c.name)]
+  const charOptions = partyMembers.length > 0
+    ? ['DM', ...partyMembers.map(c => c.name)]
     : ['DM'];
 
   return (
@@ -251,8 +255,8 @@ export default function DiceTray({ open, onClose }) {
               {/* Rolling as */}
               <div style={tray.rollingAsRow}>
                 <span style={tray.controlLabel}>Rolling as</span>
-                {isDM ? (
-                  // DMs can pick any character
+                {isDMActive ? (
+                  // DM with DM mode ON can pick any character
                   <div style={tray.charChips}>
                     {charOptions.map(name => (
                       <button
@@ -265,7 +269,7 @@ export default function DiceTray({ open, onClose }) {
                     ))}
                   </div>
                 ) : (
-                  // Players are locked to their own character
+                  // Everyone else is locked to their own character
                   <div style={{ ...tray.charChip, ...tray.charChipActive, cursor: 'default', opacity: 0.85 }}>
                     {rolledBy}
                   </div>
