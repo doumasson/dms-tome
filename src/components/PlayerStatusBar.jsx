@@ -1,6 +1,26 @@
 import { useRef } from 'react';
 import useStore from '../store/useStore';
 
+// 5e condition mechanics — shown as tooltip on hover
+const CONDITION_TIPS = {
+  'Blinded':       'Attacks: disadvantage. Attacks vs you: advantage.',
+  'Charmed':       'Cannot attack the charmer. Charmer has adv on social checks.',
+  'Deafened':      'Cannot hear. Fails checks requiring hearing.',
+  'Exhaustion':    'Stacks 1–6. Each level applies increasing penalties.',
+  'Frightened':    'Attacks: disadvantage while source of fear is visible.',
+  'Grappled':      'Speed = 0.',
+  'Incapacitated': 'Cannot take actions or reactions.',
+  'Invisible':     'Attacks: advantage. Attacks vs you: disadvantage.',
+  'Paralyzed':     'Incapacitated. Auto-fail STR/DEX saves. Melee attacks: auto-crit.',
+  'Petrified':     'Incapacitated. Resistant to all damage. Auto-fail STR/DEX saves.',
+  'Poisoned':      'Attack rolls and ability checks: disadvantage.',
+  'Prone':         'Attacks: disadvantage. Melee attacks vs you: advantage.',
+  'Restrained':    'Speed = 0. Attacks: disadvantage. Attacks vs you: advantage.',
+  'Stunned':       'Incapacitated. Auto-fail STR/DEX saves. Attacks vs you: advantage.',
+  'Unconscious':   'Incapacitated. Drops items. Auto-fail STR/DEX. Melee: auto-crit.',
+  'Concentration': 'Maintaining concentration on a spell. Taking damage requires CON save.',
+};
+
 // Ordinal label for spell slot levels
 function ordinal(n) {
   if (n === 1) return '1st';
@@ -160,20 +180,31 @@ export default function PlayerStatusBar() {
         </>
       )}
 
-      {/* Active conditions */}
+      {/* Active conditions — hover for 5e mechanic description */}
       {conditions.length > 0 && (
         <>
           <Divider />
           <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
-            {conditions.slice(0, 4).map(c => (
-              <span key={c} style={{
-                fontSize: '0.58rem', padding: '0 5px',
-                background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.4)',
-                borderRadius: 10, color: '#e74c3c', whiteSpace: 'nowrap',
-              }}>
+            {conditions.slice(0, 5).map(c => (
+              <span
+                key={c}
+                title={CONDITION_TIPS[c] || c}
+                style={{
+                  fontSize: '0.58rem', padding: '2px 6px',
+                  background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.4)',
+                  borderRadius: 10, color: '#e74c3c', whiteSpace: 'nowrap',
+                  cursor: 'help',
+                }}
+              >
                 {c}
               </span>
             ))}
+            {conditions.length > 5 && (
+              <span style={{
+                fontSize: '0.58rem', padding: '2px 5px',
+                color: 'rgba(231,76,60,0.6)',
+              }}>+{conditions.length - 5}</span>
+            )}
           </div>
         </>
       )}

@@ -10,6 +10,7 @@ import ActionPanel from '../ActionPanel';
 import LootGenerator from '../LootGenerator';
 import SpellTargeting from '../SpellTargeting';
 import BattleMap, { buildTypeIndex } from './BattleMap';
+import TurnAnnouncement from '../TurnAnnouncement';
 import CombatantRow from './CombatantRow';
 import AttackPanel from './AttackPanel';
 import { SavingThrowPanel, AoEPanel, ConcentratePanel, SpellSelectPanel } from './SpellPanels';
@@ -338,8 +339,13 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
             </>
           )}
         </div>
-        <div style={{ overflowX: 'auto' }}>
+        <div style={{ overflowX: 'auto', position: 'relative' }}>
           <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
+          <TurnAnnouncement
+            name={activeCombatant?.name}
+            isMyTurn={isMyTurn}
+            trigger={encounter.currentTurn}
+          />
         </div>
         <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 3 }}>
           {activeCombatant ? (
@@ -495,8 +501,13 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           )}
         </div>
 
-        <div style={{ overflowX: 'auto' }}>
+        <div style={{ overflowX: 'auto', position: 'relative' }}>
           <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
+          <TurnAnnouncement
+            name={activeCombatant?.name}
+            isMyTurn={isMyTurn}
+            trigger={encounter.currentTurn}
+          />
         </div>
 
         <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 3 }}>

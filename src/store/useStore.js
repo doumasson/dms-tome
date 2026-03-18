@@ -4,9 +4,20 @@ import { getClassResources } from '../lib/classResources';
 import { triggerEnemyTurn } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 
+// Generate a deterministic Pollinations portrait URL for a character.
+// Same name/race/class always produces the same portrait.
+// Falls back to initials-based seed so even partial data gives a unique image.
 function makePortraitUrl(name, race, cls) {
-  const seed = encodeURIComponent(`${name || ''} ${race || ''} ${cls || ''}`.trim());
-  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=transparent`;
+  const n = (name || 'adventurer').trim().toLowerCase();
+  const r = (race || 'human').toLowerCase();
+  const c = (cls  || 'fighter').toLowerCase();
+  // Numeric seed from character name for determinism
+  const seed = [...n].reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % 99999;
+  const prompt = encodeURIComponent(
+    `portrait of a ${r} ${c} named ${n}, fantasy D&D 5e character art, dramatic lighting, ` +
+    `detailed face, dark background, heroic, no text, no border`
+  );
+  return `https://image.pollinations.ai/prompt/${prompt}?width=256&height=256&nologo=true&model=flux-schnell&seed=${seed}`;
 }
 
 const useStore = create((set, get) => ({
