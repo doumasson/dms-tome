@@ -7,6 +7,7 @@ import {
 import LootGenerator from './LootGenerator';
 import PartyPanel from './PartyPanel';
 import CharDetailPanel from './CharDetailPanel';
+import ActionPanel from './ActionPanel';
 import { crToXp } from '../lib/xpTable';
 import { CONDITION_INFO } from '../lib/conditionDescriptions';
 import { broadcastPlayerMove, broadcastEncounterAction } from '../lib/liveChannel';
@@ -859,6 +860,7 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
   const cellPx = getCellPx(winWidth);
 
   const activeCombatant = combatants[currentTurn] || null;
+  const { runEnemyTurn, sessionApiKey } = useStore();
 
   // Turn & action authorization
   const isMyTurn = !!(activeCombatant && myCharacter && (
@@ -869,6 +871,23 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = 0;
   }, [log.length]);
+
+  // Auto-trigger AI enemy turns
+  useEffect(() => {
+    if (encounter.phase !== 'combat') return;
+    if (!activeCombatant) return;
+    if (activeCombatant.type !== 'enemy') return;
+    if (activeCombatant.currentHp <= 0) {
+      // Dead enemy — skip automatically after short pause
+      const t = setTimeout(() => onNextTurn(), 600);
+      return () => clearTimeout(t);
+    }
+    // Only the DM (or DM-mode) triggers AI; everyone else just watches the state sync
+    if (!dmMode) return;
+    const t = setTimeout(() => runEnemyTurn(sessionApiKey), 800);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [encounter.currentTurn, encounter.phase, dmMode]);
 
   function handleTokenClick(id) {
     setSelectedToken(prev => prev === id ? null : id);
@@ -1222,7 +1241,26 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
         {panel === null && activeCombatant && (() => {
           const isDying = activeCombatant.currentHp <= 0 && activeCombatant.type === 'player' && !(activeCombatant.deathSaves?.failures >= 3);
           const isMyDying = isDying && isMyTurn;
-          // Non-DM players only see full actions on their turn
+          const isEnemy = activeCombatant.type === 'enemy';
+
+          // Enemy turn: show "acting" state
+          if (isEnemy && activeCombatant.currentHp > 0) return (
+            <div style={{ background: '#1a1006', border: '1px solid rgba(192,57,43,0.4)', borderRadius: 8, padding: 10, marginBottom: 10 }}>
+              <div style={{ fontSize: '0.75rem', color: '#e74c3c', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 4 }}>
+                ENEMY TURN — {activeCombatant.name}
+              </div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                {dmMode ? 'AI is deciding action…' : 'Waiting for enemy action…'}
+              </div>
+              {dmMode && (
+                <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71', marginTop: 8 }}>
+                  ➜ Skip (Force Next Turn)
+                </button>
+              )}
+            </div>
+          );
+
+          // Non-DM players waiting for another player's turn
           if (!canAct && !isDying) return (
             <div style={{ background: '#1a1006', border: '1px solid #2a1a0a', borderRadius: 8, padding: 10, marginBottom: 10 }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: "'Cinzel', Georgia, serif" }}>
@@ -1230,71 +1268,65 @@ function CombatPhase({ encounter, dmMode, myCharacter, characters, onNextTurn, o
               </div>
             </div>
           );
+
           return (
             <div style={{ background: '#1a1006', border: `1px solid ${isDying ? 'rgba(243,156,18,0.5)' : '#2a1a0a'}`, borderRadius: 8, padding: 10, marginBottom: 10 }}>
-              <div style={{ fontSize: '0.75rem', color: isDying ? '#f39c12' : 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cinzel', Georgia, serif" }}>
+              <div style={{ fontSize: '0.75rem', color: isDying ? '#f39c12' : 'var(--text-muted)', marginBottom: 8, fontFamily: "'Cinzel', Georgia, serif" }}>
                 {isDying ? `⚠ ${activeCombatant.name} is DYING` : `ACTIONS — ${activeCombatant.name}`}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {isDying ? (
-                  <>
-                    {(isMyDying || dmMode) && (
-                      <button
-                        onClick={() => onRollDeathSave(activeCombatant.id)}
-                        style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}
-                      >
-                        🎲 Roll Death Save
-                      </button>
-                    )}
-                    {dmMode && (
-                      <button
-                        onClick={() => onStabilize(activeCombatant.id)}
-                        style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}
-                      >
-                        ✚ Stabilize (Medicine)
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => setPanel('attack')}
-                      style={{ ...btn.action, background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.4)', color: '#e74c3c' }}
-                    >
-                      ⚔ Attack
+
+              {isDying ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {(isMyDying || dmMode) && (
+                    <button onClick={() => onRollDeathSave(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(243,156,18,0.15)', border: '1px solid rgba(243,156,18,0.5)', color: '#f39c12' }}>
+                      🎲 Roll Death Save
                     </button>
-                    {dmMode && (
-                      <button
-                        onClick={() => setPanel('aoe')}
-                        style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: '1px solid rgba(155,89,182,0.4)', color: '#9b59b6' }}
-                      >
+                  )}
+                  {dmMode && (
+                    <button onClick={() => onStabilize(activeCombatant.id)} style={{ ...btn.action, background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
+                      ✚ Stabilize (Medicine)
+                    </button>
+                  )}
+                  {canAct && (
+                    <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
+                      ➜ Next Turn
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <>
+                  {/* Class-aware ActionPanel for active player */}
+                  <ActionPanel
+                    combatant={activeCombatant}
+                    onAttack={() => setPanel('attack')}
+                    onSpell={(c, action) => setPanel('concentrate')}
+                    onSpecial={(c, action) => {}}
+                    style={{ marginBottom: 8 }}
+                  />
+
+                  {/* DM-only extra tools */}
+                  {dmMode && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 4, paddingTop: 8, borderTop: '1px solid #2a1a0a' }}>
+                      <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: 2 }}>DM TOOLS</div>
+                      <button onClick={() => setPanel('aoe')} style={{ ...btn.action, background: 'rgba(155,89,182,0.12)', border: '1px solid rgba(155,89,182,0.35)', color: '#9b59b6', fontSize: '0.78rem' }}>
                         💥 AoE Damage
                       </button>
-                    )}
-                    {(dmMode || (activeCombatant.spells?.length > 0)) && (
-                      <button
-                        onClick={() => setPanel('concentrate')}
-                        style={{ ...btn.action, background: 'rgba(155,89,182,0.15)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6' }}
-                      >
+                      <button onClick={() => setPanel('concentrate')} style={{ ...btn.action, background: 'rgba(155,89,182,0.12)', border: `1px solid ${activeCombatant.concentration ? 'rgba(155,89,182,0.7)' : 'rgba(155,89,182,0.3)'}`, color: '#9b59b6', fontSize: '0.78rem' }}>
                         🎯 {activeCombatant.concentration ? `Conc: ${activeCombatant.concentration}` : 'Concentrate'}
                       </button>
-                    )}
-                    {dmMode && (
-                      <button
-                        onClick={() => setPanel('save')}
-                        style={{ ...btn.action, background: 'rgba(41,128,185,0.15)', border: '1px solid rgba(41,128,185,0.4)', color: '#3498db' }}
-                      >
+                      <button onClick={() => setPanel('save')} style={{ ...btn.action, background: 'rgba(41,128,185,0.12)', border: '1px solid rgba(41,128,185,0.35)', color: '#3498db', fontSize: '0.78rem' }}>
                         🎲 Saving Throw
                       </button>
-                    )}
-                  </>
-                )}
-                {canAct && (
-                  <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71' }}>
-                    ➜ Next Turn
-                  </button>
-                )}
-              </div>
+                    </div>
+                  )}
+
+                  {canAct && (
+                    <button onClick={onNextTurn} style={{ ...btn.action, background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71', marginTop: 8, width: '100%' }}>
+                      ➜ End Turn
+                    </button>
+                  )}
+                </>
+              )}
             </div>
           );
         })()}

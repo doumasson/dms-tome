@@ -55,7 +55,7 @@ const CONDITION_COLORS = {
   Exhausted: '#ff9800',
 };
 
-export default function PartySidebar({ onTool, onManage, onLeave, onSettings, liveConnected }) {
+export default function PartySidebar({ onTool, onManage, onLeave, onSettings, onRest, liveConnected }) {
   const encounter    = useStore(s => s.encounter);
   const isDM         = useStore(s => s.isDM);
   const dmMode       = useStore(s => s.dmMode);
@@ -206,6 +206,17 @@ export default function PartySidebar({ onTool, onManage, onLeave, onSettings, li
         <button style={styles.toolBtn} onClick={onSettings}>
           ⚙ Settings
         </button>
+        {/* Rest buttons — available to all players */}
+        {onRest && (
+          <>
+            <button style={{ ...styles.toolBtn, color: '#aac4ff' }} onClick={() => onRest('short')}>
+              🌙 Short Rest
+            </button>
+            <button style={{ ...styles.toolBtn, color: '#d4af37' }} onClick={() => onRest('long')}>
+              ☀️ Long Rest
+            </button>
+          </>
+        )}
       </div>
 
       <div style={styles.divider} />

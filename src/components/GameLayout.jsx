@@ -9,13 +9,23 @@ import LootGenerator from './LootGenerator';
 import NotesTab from './NotesTab';
 import CampaignImporter from './CampaignImporter';
 import ActivityLog from './ActivityLog';
+import RestModal from './RestModal';
 
 export default function GameLayout({ liveConnected, onLeave, onManage, onSettings }) {
   const encounter = useStore(s => s.encounter);
+  const user = useStore(s => s.user);
+  const isDM = useStore(s => s.isDM);
+  const partyMembers = useStore(s => s.partyMembers);
+  const myCharacter = useStore(s => s.myCharacter);
   const [toolPanel, setToolPanel] = useState(null); // null | 'dice' | 'loot' | 'notes' | 'import'
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile only
+  const [restProposal, setRestProposal] = useState(null); // { type: 'short'|'long', proposedBy }
 
   const inCombat = encounter.phase !== 'idle';
+
+  function proposeRest(type) {
+    setRestProposal({ type, proposedBy: myCharacter?.name || user?.email || 'Someone' });
+  }
 
   function closeTool() { setToolPanel(null); }
 
@@ -51,6 +61,7 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
           onManage={onManage}
           onLeave={onLeave}
           onSettings={onSettings}
+          onRest={proposeRest}
           liveConnected={liveConnected}
         />
       </div>
@@ -86,6 +97,18 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
             )}
           </div>
         </div>
+      )}
+
+      {/* Rest proposal modal */}
+      {restProposal && (
+        <RestModal
+          type={restProposal.type}
+          proposedBy={restProposal.proposedBy}
+          partyMembers={partyMembers?.length ? partyMembers : [{ id: user?.id, name: myCharacter?.name || 'You' }]}
+          isHost={isDM}
+          onResolve={() => setRestProposal(null)}
+          onCancel={() => setRestProposal(null)}
+        />
       )}
     </div>
   );
