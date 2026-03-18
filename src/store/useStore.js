@@ -228,7 +228,7 @@ const useStore = create((set, get) => ({
     log: [],
   },
 
-  startEncounter: (enemies, partyMembers) => {
+  startEncounter: (enemies, partyMembers, autoRollInitiative = false) => {
     const combatants = [];
 
     // Expand enemy groups by count
@@ -280,15 +280,35 @@ const useStore = create((set, get) => ({
       });
     });
 
-    set({
-      encounter: {
-        phase: 'initiative',
-        combatants,
-        currentTurn: 0,
-        round: 1,
-        log: ['Encounter started — roll initiative for all combatants.'],
-      },
-    });
+    if (autoRollInitiative) {
+      // Auto-roll initiative: d20 + DEX modifier for each combatant
+      combatants.forEach(c => {
+        const dexMod = Math.floor(((c.stats?.dex || 10) - 10) / 2);
+        c.initiative = Math.floor(Math.random() * 20) + 1 + dexMod;
+      });
+      // Sort descending and start combat immediately
+      const sorted = [...combatants].sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
+      const initLog = sorted.map(c => `${c.name}: ${c.initiative}`).join(', ');
+      set({
+        encounter: {
+          phase: 'combat',
+          combatants: sorted,
+          currentTurn: 0,
+          round: 1,
+          log: [`Initiative rolled — ${initLog}`],
+        },
+      });
+    } else {
+      set({
+        encounter: {
+          phase: 'initiative',
+          combatants,
+          currentTurn: 0,
+          round: 1,
+          log: ['Encounter started — roll initiative for all combatants.'],
+        },
+      });
+    }
   },
 
   setEncounterInitiative: (id, value) =>

@@ -1,20 +1,37 @@
 import { useState } from 'react';
 import { getClaudeApiKey, setClaudeApiKey } from '../lib/claudeApi';
 import { getOpenAiKey, setOpenAiKey } from '../lib/dalleApi';
+import { supabase } from '../lib/supabase';
+import useStore from '../store/useStore';
 
 export default function ApiKeySettings({ userId, onClose }) {
+  const activeCampaign = useStore(s => s.activeCampaign);
+  const isDM           = useStore(s => s.isDM);
+
   const [claudeKey, setClaudeKey] = useState(getClaudeApiKey(userId));
   const [openAiKey, setOpenAiKeyState] = useState(getOpenAiKey(userId));
   const [saved, setSaved] = useState(false);
 
-  function handleSave() {
-    setClaudeApiKey(userId, claudeKey.trim());
-    setOpenAiKey(userId, openAiKey.trim());
+  async function handleSave() {
+    const ck = claudeKey.trim();
+    const ok = openAiKey.trim();
+    setClaudeApiKey(userId, ck);
+    setOpenAiKey(userId, ok);
+
+    // DMs: share their Claude key with the campaign so all players can use it
+    if (isDM && activeCampaign?.id && ck) {
+      try {
+        const { data: cur } = await supabase
+          .from('campaigns').select('settings').eq('id', activeCampaign.id).single();
+        await supabase
+          .from('campaigns')
+          .update({ settings: { ...(cur?.settings || {}), claudeApiKey: ck } })
+          .eq('id', activeCampaign.id);
+      } catch { /* non-critical */ }
+    }
+
     setSaved(true);
-    setTimeout(() => {
-      setSaved(false);
-      onClose();
-    }, 800);
+    setTimeout(() => { setSaved(false); onClose(); }, 800);
   }
 
   return (
@@ -23,7 +40,7 @@ export default function ApiKeySettings({ userId, onClose }) {
         <button onClick={onClose} style={styles.closeBtn} aria-label="Close">✕</button>
         <h2 style={styles.title}>API Keys</h2>
         <p style={styles.hint}>
-          Keys are stored locally on this device only — never sent to any server except the respective API.
+          DM's Claude key is shared with the campaign so all players can use the AI Narrator. Keys are never stored on any server outside the respective AI provider and your Supabase campaign record.
         </p>
 
         {/* Claude Key */}

@@ -43,6 +43,9 @@ export default function App() {
   const campaign        = useStore(s => s.campaign);
   const isDM            = useStore(s => s.isDM);
   const dmMode          = useStore(s => s.dmMode);
+  const setCurrentScene   = useStore(s => s.setCurrentScene);
+  const startEncounter    = useStore(s => s.startEncounter);
+  const addNarratorMessage = useStore(s => s.addNarratorMessage);
   const encounter       = useStore(s => s.encounter);
   const syncEncounterDown = useStore(s => s.syncEncounterDown);
   const addSessionEntry = useStore(s => s.addSessionEntry);
@@ -90,6 +93,19 @@ export default function App() {
     // Encounter state sync (DM → players)
     ch.on('broadcast', { event: 'encounter-sync' }, ({ payload }) => {
       if (!isDM || !dmMode) syncEncounterDown(payload);
+    });
+
+    // Scene change sync (DM → players)
+    ch.on('broadcast', { event: 'scene-sync' }, ({ payload }) => {
+      if (!isDM || !dmMode) setCurrentScene(payload.sceneIndex);
+    });
+
+    // AI-triggered combat start (DM → players via NarratorPanel)
+    ch.on('broadcast', { event: 'combat-start' }, ({ payload }) => {
+      const store = useStore.getState();
+      if (!store.isDM || !store.dmMode) {
+        store.startEncounter(payload.enemies || [], payload.party || [], payload.autoRoll ?? true);
+      }
     });
 
     // Dice roll broadcast (any player → all others)
@@ -209,6 +225,12 @@ export default function App() {
       .filter(m => m.character_data?.name)
       .map(m => ({ ...m.character_data }));
     setPartyMembers(realPlayers);
+
+    // ── Load saved narrator history (last 50 messages) ───────────────────────
+    const savedLog = campaignRecord.settings?.narratorLog;
+    if (savedLog?.length) {
+      savedLog.forEach(msg => addNarratorMessage(msg));
+    }
 
     // ── Character requirement check ──────────────────────────────────────────
     const isAiDm  = campaignRecord.settings?.isAiDm ?? false;

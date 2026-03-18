@@ -33,6 +33,20 @@ export default function ScenePanel() {
     setImgError(false);
   }, [idx, activeCampaign?.id]);
 
+  // Auto-narrate when scene changes (small delay lets image start loading)
+  useEffect(() => {
+    if (!scene) return;
+    const t = setTimeout(() => {
+      const text = [scene.title, scene.text].filter(Boolean).join('. ');
+      setNarrating(true);
+      speak(text, () => setNarrating(false));
+    }, 600);
+    return () => {
+      clearTimeout(t);
+      stopSpeaking();
+    };
+  }, [idx, activeCampaign?.id]);
+
   // Auto-generate scene image when scene changes and nothing cached yet
   useEffect(() => {
     if (!scene || imageUrl || imgLoading) return;
