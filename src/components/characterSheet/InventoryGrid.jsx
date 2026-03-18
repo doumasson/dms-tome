@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import useStore from '../../store/useStore';
 import { getSlotType } from '../../data/equipment';
 import {
@@ -136,6 +136,17 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
   const weightPct = Math.min(100, (totalWeight / carryCapacity) * 100);
   const encumbered = totalWeight > strScore * 5;
   const heavilyEnc = totalWeight > strScore * 10;
+
+  // Migrate existing characters that lack instanceId on their inventory items
+  useEffect(() => {
+    if (!isOwn) return;
+    const needsIds = inventory.some(i => !i.instanceId);
+    if (needsIds) {
+      updateMyCharacter({
+        inventory: inventory.map(i => i.instanceId ? i : { ...i, instanceId: crypto.randomUUID() }),
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { placed, overflow } = useMemo(() => packItems(inventory), [inventory]);
 

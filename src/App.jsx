@@ -227,10 +227,15 @@ export default function App() {
     if (!isDM || !channelRef.current || !liveConnected) return;
     clearTimeout(broadcastDebounce.current);
     broadcastDebounce.current = setTimeout(() => {
+      const s = useStore.getState();
       channelRef.current?.send({
         type: 'broadcast',
         event: 'encounter-sync',
-        payload: encounter,
+        payload: {
+          ...encounter,
+          _fogEnabled: s.fogEnabled,
+          _fogRevealed: s.fogRevealed,
+        },
       });
     }, 400);
     return () => clearTimeout(broadcastDebounce.current);
