@@ -3,11 +3,15 @@ import { Component } from 'react';
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { error: null };
+    this.state = { error: null, componentStack: null };
   }
 
   static getDerivedStateFromError(error) {
     return { error };
+  }
+
+  componentDidCatch(error, info) {
+    this.setState({ componentStack: info?.componentStack });
   }
 
   render() {
@@ -19,18 +23,18 @@ export default class ErrorBoundary extends Component {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: 24, fontFamily: "'Cinzel', Georgia, serif",
       }}>
-        <div style={{ maxWidth: 480, textAlign: 'center' }}>
+        <div style={{ maxWidth: 560, textAlign: 'center' }}>
           <div style={{ fontSize: '3rem', marginBottom: 16, filter: 'drop-shadow(0 0 12px rgba(192,57,43,0.5))' }}>⚠</div>
           <h1 style={{ color: '#d4af37', fontSize: '1.4rem', margin: '0 0 12px' }}>Something went wrong</h1>
           <p style={{ color: 'rgba(200,180,140,0.6)', fontSize: '0.85rem', margin: '0 0 24px', lineHeight: 1.6 }}>
             The dungeon has collapsed. Refresh the page to continue your adventure — your progress is saved.
           </p>
-          <details style={{ textAlign: 'left', marginBottom: 24 }}>
+          <details style={{ textAlign: 'left', marginBottom: 24 }} open>
             <summary style={{ color: 'rgba(200,180,140,0.4)', fontSize: '0.72rem', cursor: 'pointer', marginBottom: 8 }}>
               Error details
             </summary>
             <pre style={{ color: '#e74c3c', fontSize: '0.68rem', background: 'rgba(0,0,0,0.4)', padding: 12, borderRadius: 6, overflow: 'auto', whiteSpace: 'pre-wrap' }}>
-              {this.state.error.message}
+              {this.state.error.message}{'\n\n'}{this.state.error.stack}{this.state.componentStack ? '\n\nComponent Stack:' + this.state.componentStack : ''}
             </pre>
           </details>
           <button

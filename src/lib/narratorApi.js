@@ -1,4 +1,5 @@
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
+const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
 // ── Rules Assistant ──────────────────────────────────────────────────────────
 
@@ -34,7 +35,6 @@ ${srdContext ? `\n## Relevant SRD Reference\n${srdContext}` : ''}`;
   const data = await response.json();
   return data.content[0].text.trim();
 }
-const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
 export function buildSystemPrompt(campaignData, partyMembers, currentScene, exchangeCount) {
   const title = campaignData?.title || 'an unnamed campaign';
