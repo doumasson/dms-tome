@@ -1,6 +1,7 @@
 import { create } from 'zustand/react';
 import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
+import { triggerEnemyTurn } from '../lib/enemyAi';
 
 function makePortraitUrl(name, race, cls) {
   const seed = encodeURIComponent(`${name || ''} ${race || ''} ${cls || ''}`.trim());
@@ -247,8 +248,11 @@ const useStore = create((set, get) => ({
           ac: Number(group.ac) || 10,
           speed: spd,
           remainingMove: Math.floor(spd / 5),
+          actionsUsed: 0,
+          bonusActionsUsed: 0,
           stats: group.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
           attacks: group.attacks || [],
+          spells: group.spells || [],
           conditions: [],
           concentration: null,
           position: null,
@@ -264,12 +268,16 @@ const useStore = create((set, get) => ({
         id: char.id || crypto.randomUUID(),
         name: char.name,
         type: 'player',
+        class: char.class || '',
+        level: char.level || 1,
         initiative: null,
         maxHp: char.maxHp || 10,
         currentHp: char.currentHp ?? char.maxHp ?? 10,
         ac: char.ac || 10,
         speed: spd,
         remainingMove: Math.floor(spd / 5),
+        actionsUsed: 0,
+        bonusActionsUsed: 0,
         stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
         attacks: (char.weapons || char.attacks || []).map(w =>
           typeof w === 'string'
@@ -277,6 +285,8 @@ const useStore = create((set, get) => ({
             : { name: w.name || w, bonus: w.attackBonus || w.bonus || '+0', damage: w.damage || '1d6' }
         ),
         spells: char.spells || [],
+        spellSlots: char.spellSlots || null,
+        resourcesUsed: char.resourcesUsed || {},
         conditions: [],
         concentration: null,
         position: null,
@@ -363,7 +373,7 @@ const useStore = create((set, get) => ({
         ...place(enemies, 7),
       ]
         .sort((a, b) => (b.initiative || 0) - (a.initiative || 0))
-        .map(c => ({ ...c, remainingMove: Math.floor((c.speed || 30) / 5) }));
+        .map(c => ({ ...c, remainingMove: Math.floor((c.speed || 30) / 5), actionsUsed: 0, bonusActionsUsed: 0 }));
 
       return {
         encounter: {
@@ -387,9 +397,14 @@ const useStore = create((set, get) => ({
       const log = isLast
         ? [`Round ${nextRound} begins.`, ...state.encounter.log]
         : state.encounter.log;
-      // Reset movement for the next combatant
+      // Reset movement + action economy for the next combatant
       const updated = combatants.map((c, i) =>
-        i === nextTurn ? { ...c, remainingMove: Math.floor((c.speed || 30) / 5) } : c
+        i === nextTurn ? {
+          ...c,
+          remainingMove: Math.floor((c.speed || 30) / 5),
+          actionsUsed: 0,
+          bonusActionsUsed: 0,
+        } : c
       );
       return {
         encounter: {
@@ -614,6 +629,103 @@ const useStore = create((set, get) => ({
       },
     }),
 
+  // === Action Economy ===
+  useAction: (id) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map((c) =>
+          c.id === id ? { ...c, actionsUsed: (c.actionsUsed || 0) + 1 } : c
+        ),
+      },
+    })),
+
+  useBonusAction: (id) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map((c) =>
+          c.id === id ? { ...c, bonusActionsUsed: (c.bonusActionsUsed || 0) + 1 } : c
+        ),
+      },
+    })),
+
+  useMovement: (id, squares) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map((c) =>
+          c.id === id ? { ...c, remainingMove: Math.max(0, (c.remainingMove ?? 0) - squares) } : c
+        ),
+      },
+    })),
+
+  // Dash: spend 1 action, double remaining movement
+  dashAction: (id) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map((c) =>
+          c.id === id ? {
+            ...c,
+            actionsUsed: (c.actionsUsed || 0) + 1,
+            remainingMove: (c.remainingMove ?? 0) + Math.floor((c.speed || 30) / 5),
+          } : c
+        ),
+        log: [`${state.encounter.combatants.find(c => c.id === id)?.name} dashes!`, ...state.encounter.log].slice(0, 30),
+      },
+    })),
+
+  // === AI Enemy Turns ===
+  runEnemyTurn: async (apiKey) => {
+    const { encounter, campaign } = get();
+    const active = encounter.combatants[encounter.currentTurn];
+    if (!active || active.type !== 'enemy' || active.currentHp <= 0) {
+      get().nextEncounterTurn();
+      return;
+    }
+
+    get().addEncounterLog(`⚔ ${active.name} is acting...`);
+
+    try {
+      const result = await triggerEnemyTurn(active, encounter, apiKey);
+
+      // Move token if AI decided to move
+      if (result.moveToPosition && typeof result.moveToPosition.x === 'number') {
+        const { x, y } = result.moveToPosition;
+        const occupied = encounter.combatants.some(c => c.id !== active.id && c.position?.x === x && c.position?.y === y);
+        if (!occupied) get().moveToken(active.id, x, y);
+      }
+
+      // Apply attack damage
+      if (result.targetId && typeof result.damage === 'number' && result.damage > 0) {
+        get().applyEncounterDamage(result.targetId, result.damage);
+        const target = encounter.combatants.find(c => c.id === result.targetId);
+        get().addEncounterLog(
+          `⚔ ${active.name} attacks ${target?.name || '?'}: ` +
+          `${result.hit ? `HIT for ${result.damage} ${result.damageType || ''} damage` : 'MISS'}`
+        );
+      }
+
+      // Apply conditions
+      if (result.appliedConditions?.length) {
+        result.appliedConditions.forEach(cond => {
+          if (result.targetId) get().addEncounterCondition(result.targetId, cond);
+        });
+      }
+
+      // Narrate in chat
+      if (result.narrative) {
+        get().addNarratorMessage({ role: 'dm', text: result.narrative, speaker: 'Dungeon Master' });
+      }
+    } catch (err) {
+      get().addEncounterLog(`⚔ ${active.name} hesitates. (${err.message})`);
+    }
+
+    // Auto-advance to next turn after a short delay
+    setTimeout(() => get().nextEncounterTurn(), 1800);
+  },
+
   setConcentration: (id, spell) =>
     set((state) => ({
       encounter: {
@@ -770,7 +882,7 @@ const useStore = create((set, get) => ({
       return { campaign: { ...state.campaign, savedEncounters } };
     }),
 
-  // === XP ===
+  // === XP & Level Up ===
   awardXp: (amount) =>
     set((state) => ({
       campaign: {
@@ -781,6 +893,28 @@ const useStore = create((set, get) => ({
         })),
       },
     })),
+
+  // Apply confirmed level-up to myCharacter + campaign characters
+  applyLevelUp: (updates) => {
+    set((state) => {
+      const myChar = state.myCharacter;
+      const updatedChar = myChar ? { ...myChar, ...updates } : myChar;
+      const updatedCampaignChars = state.campaign.characters.map(c =>
+        (c.id === myChar?.id || c.name === myChar?.name)
+          ? { ...c, ...updates }
+          : c
+      );
+      return {
+        myCharacter: updatedChar,
+        campaign: { ...state.campaign, characters: updatedCampaignChars },
+      };
+    });
+    get().saveCampaignToSupabase();
+  },
+
+  // Notify that a character is ready to level up (sets a flag watched by GameLayout)
+  pendingLevelUp: false,
+  setPendingLevelUp: (val) => set({ pendingLevelUp: val }),
 
   saveSettingsToSupabase: async (campaignState) => {
     const { activeCampaign } = get();
@@ -883,8 +1017,59 @@ const useStore = create((set, get) => ({
   // === Scene Images (DALL-E cache) ===
   sceneImages: {}, // { [campaignId:sceneIndex]: imageUrl }
   setSceneImage: (key, url) =>
-    set((state) => ({ sceneImages: { ...state.sceneImages, [key]: url } })),
+    set((state) => {
+      const next = { ...state.sceneImages };
+      if (url == null) { delete next[key]; } else { next[key] = url; }
+      return { sceneImages: next };
+    }),
   clearSceneImages: () => set({ sceneImages: {} }),
+
+  // === Fog of War ===
+  fogEnabled: {},   // { [sceneKey]: boolean }
+  fogRevealed: {},  // { [sceneKey]: { [cellKey]: true } } — cellKey = "x,y"
+
+  initFogForScene: (sceneKey, defaultEnabled) =>
+    set((state) => ({
+      fogEnabled: {
+        ...state.fogEnabled,
+        [sceneKey]: state.fogEnabled[sceneKey] ?? defaultEnabled,
+      },
+      fogRevealed: {
+        ...state.fogRevealed,
+        [sceneKey]: state.fogRevealed[sceneKey] || {},
+      },
+    })),
+
+  revealFogCells: (sceneKey, cells) =>
+    set((state) => {
+      const prev = state.fogRevealed[sceneKey] || {};
+      const next = { ...prev };
+      cells.forEach(k => { next[k] = true; });
+      return { fogRevealed: { ...state.fogRevealed, [sceneKey]: next } };
+    }),
+
+  toggleFog: (sceneKey) =>
+    set((state) => ({
+      fogEnabled: { ...state.fogEnabled, [sceneKey]: !state.fogEnabled[sceneKey] },
+    })),
+
+  setFogEnabled: (sceneKey, val) =>
+    set((state) => ({
+      fogEnabled: { ...state.fogEnabled, [sceneKey]: val },
+    })),
+
+  // === Scene Token Positions (free movement outside combat) ===
+  sceneTokenPositions: {}, // { [sceneKey]: { [memberId]: { x, y } } }
+  setSceneTokenPosition: (sceneKey, memberId, pos) =>
+    set((state) => ({
+      sceneTokenPositions: {
+        ...state.sceneTokenPositions,
+        [sceneKey]: {
+          ...(state.sceneTokenPositions[sceneKey] || {}),
+          [memberId]: pos,
+        },
+      },
+    })),
 
   // === Narrator (AI DM) ===
   narrator: {

@@ -54,6 +54,7 @@ export default function App() {
   const saveSessionState = useStore(s => s.saveSessionStateToSupabase);
 
   const sessionPersistDebounce = useRef(null);
+  const encounterHeartbeat = useRef(null);
 
   useEffect(() => {
     // Pick up invite code from URL or localStorage
@@ -142,6 +143,27 @@ export default function App() {
       if (payload.apiKey) useStore.getState().setSessionApiKey(payload.apiKey);
     });
 
+    // Fog of war sync
+    ch.on('broadcast', { event: 'fog-reveal' }, ({ payload }) => {
+      if (payload.sceneKey && payload.cells) {
+        useStore.getState().revealFogCells(payload.sceneKey, payload.cells);
+      }
+    });
+
+    ch.on('broadcast', { event: 'fog-toggle' }, ({ payload }) => {
+      if (payload.sceneKey !== undefined) {
+        useStore.getState().setFogEnabled(payload.sceneKey, payload.enabled);
+      }
+    });
+
+    // Scene token position sync (free movement outside combat)
+    ch.on('broadcast', { event: 'scene-token-move' }, ({ payload }) => {
+      const { memberId, x, y, sceneKey } = payload;
+      if (memberId && sceneKey) {
+        useStore.getState().setSceneTokenPosition(sceneKey, memberId, { x, y });
+      }
+    });
+
     // Dice roll broadcast (any player → all others)
     ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
       // Only add entries from OTHER users — we already logged our own roll
@@ -197,6 +219,17 @@ export default function App() {
     }, 2000);
     return () => clearTimeout(sessionPersistDebounce.current);
   }, [campaign.currentSceneIndex, encounter, isDM, dmMode, activeCampaign?.id]);
+
+  // DM heartbeat: broadcast full encounter state every 5s when in combat so late-joining
+  // players sync within seconds of refreshing (can't rely on Supabase save timing)
+  useEffect(() => {
+    clearInterval(encounterHeartbeat.current);
+    if (!isDM || !dmMode || !liveConnected || encounter.phase === 'idle') return;
+    encounterHeartbeat.current = setInterval(() => {
+      channelRef.current?.send({ type: 'broadcast', event: 'encounter-sync', payload: useStore.getState().encounter });
+    }, 5000);
+    return () => clearInterval(encounterHeartbeat.current);
+  }, [isDM, dmMode, liveConnected, encounter.phase]);
 
   async function handleSession(session) {
     const authUser = session.user;
@@ -266,6 +299,12 @@ export default function App() {
     const savedEncounter = campaignRecord.settings?.encounterState;
     if (savedEncounter?.phase && savedEncounter.phase !== 'idle') {
       syncEncounterDown(savedEncounter);
+    }
+
+    // Cache DM's Claude API key for all players (so narrator works without their own key)
+    const sharedApiKey = campaignRecord.settings?.claudeApiKey;
+    if (sharedApiKey) {
+      useStore.getState().setSessionApiKey(sharedApiKey);
     }
 
     // Save campaign ID so refresh restores to game view

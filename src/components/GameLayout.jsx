@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useStore from '../store/useStore';
 import PartySidebar from './PartySidebar';
 import ScenePanel from './ScenePanel';
@@ -9,13 +9,37 @@ import LootGenerator from './LootGenerator';
 import NotesTab from './NotesTab';
 import CampaignImporter from './CampaignImporter';
 import ActivityLog from './ActivityLog';
+import RestModal from './RestModal';
+import LevelUpModal, { levelFromXp, xpForLevel } from './LevelUpModal';
 
 export default function GameLayout({ liveConnected, onLeave, onManage, onSettings }) {
   const encounter = useStore(s => s.encounter);
+  const user = useStore(s => s.user);
+  const isDM = useStore(s => s.isDM);
+  const partyMembers = useStore(s => s.partyMembers);
+  const myCharacter = useStore(s => s.myCharacter);
+  const applyLevelUp = useStore(s => s.applyLevelUp);
   const [toolPanel, setToolPanel] = useState(null); // null | 'dice' | 'loot' | 'notes' | 'import'
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile only
+  const [restProposal, setRestProposal] = useState(null); // { type: 'short'|'long', proposedBy }
+  const [showLevelUp, setShowLevelUp] = useState(false);
+
+  // Watch for XP crossing a level threshold
+  useEffect(() => {
+    if (!myCharacter) return;
+    const xp = myCharacter.xp || 0;
+    const currentLevel = myCharacter.level || 1;
+    const earnedLevel = levelFromXp(xp);
+    if (earnedLevel > currentLevel && currentLevel < 20) {
+      setShowLevelUp(true);
+    }
+  }, [myCharacter?.xp]);
 
   const inCombat = encounter.phase !== 'idle';
+
+  function proposeRest(type) {
+    setRestProposal({ type, proposedBy: myCharacter?.name || user?.email || 'Someone' });
+  }
 
   function closeTool() { setToolPanel(null); }
 
@@ -51,19 +75,22 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
           onManage={onManage}
           onLeave={onLeave}
           onSettings={onSettings}
+          onRest={proposeRest}
           liveConnected={liveConnected}
         />
       </div>
 
       {/* Main content area */}
       <div style={styles.mainArea}>
-        {/* Combat or Scene */}
+        {/* Combat or Scene — fixed 55vh hero area */}
         <div style={styles.contentArea}>
           {inCombat ? <EncounterView /> : <ScenePanel />}
         </div>
 
-        {/* Narrator always at bottom */}
-        <NarratorPanel />
+        {/* Narrator — fills remaining space, always visible */}
+        <div style={styles.narratorArea}>
+          <NarratorPanel />
+        </div>
       </div>
 
       {/* Right activity log */}
@@ -84,6 +111,30 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
             )}
           </div>
         </div>
+      )}
+
+      {/* Rest proposal modal */}
+      {restProposal && (
+        <RestModal
+          type={restProposal.type}
+          proposedBy={restProposal.proposedBy}
+          partyMembers={partyMembers?.length ? partyMembers : [{ id: user?.id, name: myCharacter?.name || 'You' }]}
+          isHost={isDM}
+          onResolve={() => setRestProposal(null)}
+          onCancel={() => setRestProposal(null)}
+        />
+      )}
+
+      {/* Level Up modal */}
+      {showLevelUp && myCharacter && (
+        <LevelUpModal
+          character={myCharacter}
+          onConfirm={(updates) => {
+            applyLevelUp(updates);
+            setShowLevelUp(false);
+          }}
+          onCancel={() => setShowLevelUp(false)}
+        />
       )}
     </div>
   );
@@ -124,11 +175,21 @@ const styles = {
     position: 'relative',
   },
   contentArea: {
-    flex: 1,
+    height: '55vh',
+    minHeight: 220,
+    flexShrink: 0,
     overflow: 'hidden',
-    minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
+  },
+  narratorArea: {
+    flex: 1,
+    minHeight: 0,
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    borderTop: '2px solid',
+    borderImage: 'linear-gradient(90deg, transparent, #d4af37, #a8841f, #d4af37, transparent) 1',
   },
   hamburger: {
     display: 'none', // hidden on desktop; shown via media query in CSS
