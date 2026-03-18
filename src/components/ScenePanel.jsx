@@ -15,6 +15,7 @@ export default function ScenePanel() {
 
   const [imgLoading, setImgLoading] = useState(false);
   const [imgError, setImgError]     = useState(false);
+  const [imgReady, setImgReady]     = useState(false); // true once browser finishes fetching
 
   const scenes = campaign.scenes || [];
   const idx    = campaign.currentSceneIndex || 0;
@@ -22,21 +23,28 @@ export default function ScenePanel() {
   const imageKey = `${activeCampaign?.id}:${idx}`;
   const imageUrl = sceneImages[imageKey];
 
+  // Reset ready state when scene changes
+  useEffect(() => {
+    setImgReady(false);
+    setImgError(false);
+  }, [idx, activeCampaign?.id]);
+
   // Auto-generate scene image when scene changes and nothing cached yet
   useEffect(() => {
     if (!scene || imageUrl || imgLoading) return;
-    setImgError(false);
 
     const openAiKey = getOpenAiKey(user?.id);
     if (openAiKey) {
-      // Paid: DALL-E 3 high quality
+      // Paid: DALL-E 3 — async, show skeleton while waiting
       setImgLoading(true);
       generateSceneImage(scene.title, scene.text, openAiKey)
         .then(url => setSceneImage(imageKey, url))
         .catch(() => setImgError(true))
         .finally(() => setImgLoading(false));
     } else {
-      // Free: Pollinations.ai — URL resolves in browser, no async needed
+      // Free: Pollinations.ai — URL is set immediately but still needs to
+      // load in the browser; skeleton stays until onLoad fires
+      setImgLoading(true);
       const url = generateSceneImageFree(scene.title, scene.text);
       setSceneImage(imageKey, url);
     }
@@ -73,26 +81,28 @@ export default function ScenePanel() {
     <div style={styles.panel}>
       {/* Scene Image */}
       <div style={styles.imageContainer}>
-        {imgLoading && (
+        {/* Skeleton shows while URL is pending OR while browser is fetching */}
+        {(imgLoading || (imageUrl && !imgReady && !imgError)) && (
           <div style={styles.imageSkeleton}>
             <div style={styles.skeletonShimmer} />
             <span style={styles.skeletonLabel}>✦ Painting the scene…</span>
           </div>
         )}
-        {imageUrl && !imgLoading && !imgError && (
+        {imageUrl && !imgError && (
           <img
             src={imageUrl}
             alt={scene.title}
-            style={styles.sceneImage}
-            onError={() => setImgError(true)}
+            style={{ ...styles.sceneImage, opacity: imgReady ? 0.92 : 0 }}
+            onLoad={() => { setImgReady(true); setImgLoading(false); }}
+            onError={() => { setImgError(true); setImgLoading(false); }}
           />
         )}
-        {(!imageUrl || imgError) && !imgLoading && (
+        {(!imageUrl && !imgLoading) || imgError ? (
           <div style={styles.imagePlaceholder}>
             <span style={styles.placeholderGlyph}>⚔</span>
             {imgError && <span style={styles.imgErrorNote}>Image unavailable</span>}
           </div>
-        )}
+        ) : null}
         {/* Scene index badge */}
         <div style={styles.sceneBadge}>
           Scene {idx + 1} / {scenes.length}

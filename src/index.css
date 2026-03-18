@@ -342,6 +342,25 @@ textarea {
   100% { transform: translateX(100%); }
 }
 
+/* === Dice tray + animation keyframes === */
+@keyframes traySlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes diePopIn {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+@keyframes dieSpin {
+  0%   { transform: rotate(0deg)   scale(0.6); opacity: 0; }
+  60%  { transform: rotate(540deg) scale(1.05); opacity: 1; }
+  100% { transform: rotate(720deg) scale(1);    opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
 /* === Game layout mobile sidebar === */
 @media (max-width: 768px) {
   .game-sidebar-wrapper {
