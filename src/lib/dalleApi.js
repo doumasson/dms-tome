@@ -20,8 +20,8 @@ export async function generateSceneImageFree(title, signal) {
   const safeTitle = (title || 'fantasy scene').slice(0, 60).replace(/[^\w\s,'-]/g, '').trim();
   const seed = Math.floor(Math.random() * 99999);
 
-  // Try models in priority order; flux is higher quality but slower
-  const models = ['turbo', 'flux'];
+  // Try flux first (better quality), fall back to turbo
+  const models = ['flux', 'turbo'];
 
   for (const model of models) {
     const prompt = `dark fantasy RPG, ${safeTitle}, atmospheric, cinematic, digital art`;
@@ -29,11 +29,13 @@ export async function generateSceneImageFree(title, signal) {
       `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}` +
       `?width=1024&height=576&nologo=true&seed=${seed}&model=${model}`;
 
-    for (let attempt = 0; attempt < 2; attempt++) {
+    const delays = [0, 4000, 8000]; // 3 attempts: immediate, 4s, 8s
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt > 0) await new Promise(r => setTimeout(r, delays[attempt]));
+      if (signal?.aborted) return null;
       try {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 50000);
-        // Combine with caller's signal so scene-change cancels the fetch
+        const timer = setTimeout(() => controller.abort(), 55000);
         const onAbort = () => controller.abort();
         signal?.addEventListener('abort', onAbort);
 
@@ -45,11 +47,10 @@ export async function generateSceneImageFree(title, signal) {
         const contentType = res.headers.get('content-type') || '';
         if (!contentType.startsWith('image/')) throw new Error('Not an image');
         const blob = await res.blob();
-        if (blob.size < 8000) throw new Error('Response too small — likely an error page');
+        if (blob.size < 8000) throw new Error('Response too small');
         return URL.createObjectURL(blob);
-      } catch (e) {
-        if (signal?.aborted) return null; // scene changed — abort silently
-        if (attempt === 0) await new Promise(r => setTimeout(r, 4000)); // wait before retry
+      } catch {
+        if (signal?.aborted) return null;
       }
     }
   }

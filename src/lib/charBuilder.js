@@ -112,6 +112,28 @@ export function buildFeatures(className, level = 1) {
   return getFeaturesUpToLevel(className, level);
 }
 
+// Sensible level-1 starting spells for each spellcasting class.
+// Gives new players a functional kit without overwhelming them.
+export const STARTER_SPELLS = {
+  Wizard:   ['Mage Hand', 'Fire Bolt', 'Magic Missile', 'Shield', 'Sleep'],
+  Sorcerer: ['Mage Hand', 'Fire Bolt', 'Chromatic Orb', 'Shield', 'Thunderwave'],
+  Warlock:  ['Eldritch Blast', 'Minor Illusion', 'Hex', 'Armor of Agathys'],
+  Cleric:   ['Sacred Flame', 'Guidance', 'Cure Wounds', 'Bless', 'Guiding Bolt'],
+  Druid:    ['Shillelagh', 'Thorn Whip', 'Healing Word', 'Entangle', 'Faerie Fire'],
+  Bard:     ['Vicious Mockery', 'Minor Illusion', 'Healing Word', 'Thunderwave', 'Charm Person'],
+  Paladin:  ['Divine Smite', 'Bless', 'Cure Wounds', 'Shield of Faith'],
+  Ranger:   ["Hunter's Mark", 'Goodberry', 'Hail of Thorns'],
+  // Martials get empty list — they rely on attacks
+  Fighter:  [],
+  Rogue:    [],
+  Barbarian:[],
+  Monk:     [],
+};
+
+export function getStarterSpells(className) {
+  return STARTER_SPELLS[className] || [];
+}
+
 export function avatarUrl(name, race, cls) {
   const seed = encodeURIComponent(`${name} ${race} ${cls}`.trim());
   return `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=transparent`;

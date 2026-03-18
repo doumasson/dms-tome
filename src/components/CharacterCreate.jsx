@@ -4,7 +4,7 @@ import { CLASSES } from '../data/classes';
 import { getRace, applyRacialBonuses } from '../data/races';
 import {
   STEPS, calcHp, calcAc, buildAttacks, buildSpellSlots, buildFeatures,
-  avatarUrl, profBonus,
+  avatarUrl, profBonus, getStarterSpells,
 } from '../lib/charBuilder';
 import { s } from './characterCreate/charCreateStyles';
 import StepRace       from './characterCreate/StepRace';
@@ -83,6 +83,7 @@ export default function CharacterCreate({ user, campaignId, onDone }) {
       attacks,
       features,
       spellSlots,
+      spells: getStarterSpells(cls),
       equipment: clsData?.startingEquipment || [],
       proficiencyBonus: pb,
       portrait: avatarUrl(name.trim(), race, cls),

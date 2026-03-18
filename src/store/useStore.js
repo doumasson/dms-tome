@@ -181,6 +181,7 @@ const useStore = create((set, get) => ({
           savedEncounters: settings?.savedEncounters || [],
         },
         sceneImages: { ...state.sceneImages, ...sceneImageUpdates },
+        sceneTokenPositions: settings?.sceneTokenPositions || state.sceneTokenPositions,
       };
     }),
   unloadCampaign: () =>
@@ -716,11 +717,15 @@ const useStore = create((set, get) => ({
     try {
       const result = await triggerEnemyTurn(active, encounter, apiKey);
 
-      // Move token if AI decided to move
+      // Move token if AI decided to move — deduct movement cost
       if (result.moveToPosition && typeof result.moveToPosition.x === 'number') {
         const { x, y } = result.moveToPosition;
         const occupied = encounter.combatants.some(c => c.id !== active.id && c.position?.x === x && c.position?.y === y);
-        if (!occupied) get().moveToken(active.id, x, y);
+        if (!occupied) {
+          const from = active.position;
+          const cost = from ? Math.max(Math.abs(x - from.x), Math.abs(y - from.y)) : 1;
+          get().moveToken(active.id, x, y, cost);
+        }
       }
 
       // Apply attack damage
@@ -773,6 +778,39 @@ const useStore = create((set, get) => ({
       get().nextEncounterTurn();
       broadcastEncounterAction({ type: 'next-turn', userId: userId || 'system' });
     }, 1800);
+  },
+
+  // Narrate a player combat action in 1-2 sentences via Claude Haiku.
+  // Fires-and-forgets — does not block turn progression.
+  narrateCombatAction: async (actorName, actionLabel, targetName, resultDesc, apiKey) => {
+    if (!apiKey) return;
+    const prompt = `You are the Dungeon Master narrating a D&D 5e combat action.
+${actorName} uses ${actionLabel}${targetName ? ` against ${targetName}` : ''}.
+Result: ${resultDesc}
+Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice numbers. Pure immersive narration.`;
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 120,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const text = data.content?.[0]?.text?.trim();
+      if (!text) return;
+      const msg = { role: 'dm', speaker: 'Dungeon Master', text, id: crypto.randomUUID(), timestamp: Date.now() };
+      get().addNarratorMessage(msg);
+      broadcastNarratorMessage(msg);
+    } catch { /* non-critical — narration is best-effort */ }
   },
 
   setConcentration: (id, spell) =>
@@ -1105,6 +1143,7 @@ const useStore = create((set, get) => ({
   // === Fog of War ===
   fogEnabled: {},   // { [sceneKey]: boolean }
   fogRevealed: {},  // { [sceneKey]: { [cellKey]: true } } — cellKey = "x,y"
+  applyFogSync: (enabled, revealed) => set({ fogEnabled: enabled || {}, fogRevealed: revealed || {} }),
 
   initFogForScene: (sceneKey, defaultEnabled) =>
     set((state) => ({
@@ -1138,7 +1177,7 @@ const useStore = create((set, get) => ({
 
   // === Scene Token Positions (free movement outside combat) ===
   sceneTokenPositions: {}, // { [sceneKey]: { [memberId]: { x, y } } }
-  setSceneTokenPosition: (sceneKey, memberId, pos) =>
+  setSceneTokenPosition: (sceneKey, memberId, pos) => {
     set((state) => ({
       sceneTokenPositions: {
         ...state.sceneTokenPositions,
@@ -1147,7 +1186,22 @@ const useStore = create((set, get) => ({
           [memberId]: pos,
         },
       },
-    })),
+    }));
+    // Debounced persist to Supabase so positions survive refresh
+    clearTimeout(get()._tokenPosSaveTimer);
+    const timer = setTimeout(async () => {
+      const { activeCampaign, sceneTokenPositions } = get();
+      if (!activeCampaign?.id) return;
+      try {
+        const { data: cur } = await supabase.from('campaigns').select('settings').eq('id', activeCampaign.id).single();
+        await supabase.from('campaigns').update({
+          settings: { ...(cur?.settings || {}), sceneTokenPositions },
+        }).eq('id', activeCampaign.id);
+      } catch { /* non-critical */ }
+    }, 2000);
+    set({ _tokenPosSaveTimer: timer });
+  },
+  _tokenPosSaveTimer: null,
 
   // === Narrator (AI DM) ===
   narrator: {
