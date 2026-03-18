@@ -196,7 +196,7 @@ export default function DiceTray({ open, onClose }) {
                       ...(die === d ? tray.dieBtnActive : {}),
                     }}
                   >
-                    <svg viewBox="0 0 100 100" width={36} height={36}>
+                    <svg viewBox="0 0 100 100" width={28} height={28}>
                       <path
                         d={DIE_SHAPES[d] || DIE_SHAPES[6]}
                         fill={die === d ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)'}
@@ -372,23 +372,23 @@ const tray = {
   handle: {
     display: 'flex',
     justifyContent: 'center',
-    padding: '10px 0 4px',
+    padding: '7px 0 2px',
   },
   handlePill: {
-    width: 40,
-    height: 4,
+    width: 36,
+    height: 3,
     borderRadius: 2,
     background: 'rgba(212,175,55,0.25)',
   },
   inner: {
-    padding: '12px 20px 28px',
+    padding: '6px 16px 16px',
     display: 'flex',
     flexDirection: 'column',
-    gap: 14,
+    gap: 10,
   },
   diceRow: {
     display: 'flex',
-    gap: 6,
+    gap: 4,
     justifyContent: 'center',
     flexWrap: 'wrap',
   },
@@ -400,10 +400,10 @@ const tray = {
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    padding: '4px 2px',
+    padding: '3px 1px',
     borderRadius: 8,
     transition: 'transform 0.1s',
-    minWidth: 44,
+    minWidth: 36,
   },
   dieBtnActive: {
     transform: 'scale(1.15)',
@@ -444,13 +444,13 @@ const tray = {
     border: '1px solid rgba(255,255,255,0.1)',
     color: 'rgba(200,180,140,0.7)',
     borderRadius: 6,
-    width: 30,
-    height: 30,
+    width: 26,
+    height: 26,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     fontWeight: 700,
   },
   spinVal: {
@@ -505,17 +505,17 @@ const tray = {
   rollBtn: {
     background: 'linear-gradient(135deg, #d4af37 0%, #a8841f 100%)',
     border: 'none',
-    borderRadius: 10,
+    borderRadius: 8,
     color: '#1a0e00',
     fontFamily: "'Cinzel', Georgia, serif",
     fontWeight: 900,
-    fontSize: '1.1rem',
-    letterSpacing: '0.06em',
-    padding: '16px',
+    fontSize: '0.95rem',
+    letterSpacing: '0.05em',
+    padding: '10px',
     cursor: 'pointer',
     width: '100%',
-    marginTop: 4,
-    boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
-    minHeight: 54,
+    marginTop: 2,
+    boxShadow: '0 3px 14px rgba(212,175,55,0.25)',
+    minHeight: 42,
   },
 };

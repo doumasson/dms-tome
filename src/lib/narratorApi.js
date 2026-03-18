@@ -1,10 +1,10 @@
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
-export function buildSystemPrompt(campaignData, characters, currentScene) {
+export function buildSystemPrompt(campaignData, partyMembers, currentScene, exchangeCount) {
   const title = campaignData?.title || 'an unnamed campaign';
 
-  const partyLines = (characters || [])
+  const partyLines = (partyMembers || [])
     .map(c =>
       `- ${c.name}, Level ${c.level || 1} ${c.class || 'Adventurer'} (${c.race || 'Unknown'}) — HP: ${c.currentHp ?? c.maxHp}/${c.maxHp}, AC: ${c.ac || 10}`
     )
@@ -13,6 +13,11 @@ export function buildSystemPrompt(campaignData, characters, currentScene) {
   const sceneText = currentScene
     ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}`
     : 'The party is between scenes.';
+
+  // After 4+ exchanges in a scene, allow the AI to conclude it
+  const advanceHint = (exchangeCount || 0) >= 4
+    ? `\n- After ${exchangeCount} exchanges the scene energy is building — if the players have taken a meaningful action and it is narratively satisfying, set advanceScene to true to move the story forward.`
+    : '';
 
   return `You are the Dungeon Master for a D&D 5e campaign called "${title}".
 
@@ -27,14 +32,14 @@ You are narrating this live session. When players describe their actions or spea
 - When a player's action requires a roll, name the skill and set a DC
 - Honor failure as richly as success — both tell a good story
 - Stay immersed; never break character or reference being an AI
-- React to creative, unexpected actions with "yes, and" energy
+- React to creative, unexpected actions with "yes, and" energy${advanceHint}
 
-Respond ONLY with valid JSON in this exact format (no markdown, no extra text):
-{
-  "narrative": "Your DM narration here.",
-  "rollRequest": { "character": "CharacterName", "skill": "Stealth", "dc": 14 } or null,
-  "stateHint": "Brief internal note for DM awareness, or null"
-}`;
+Respond ONLY with a raw JSON object — no markdown, no code fences, no extra text before or after:
+{"narrative":"Your DM narration here.","rollRequest":{"character":"CharacterName","skill":"Stealth","dc":14},"stateHint":"Brief internal note or null","advanceScene":false,"startCombat":false}
+
+Rules for special fields:
+- advanceScene: true ONLY when the scene has clearly concluded and the story must move to the next scene. Default false.
+- startCombat: true ONLY when the players are clearly initiating combat (charging, attacking, drawing weapons aggressively). This triggers the battle map. Default false. Do NOT combine startCombat and advanceScene in the same response.`;
 }
 
 export async function callNarrator({ messages, systemPrompt, apiKey }) {
@@ -60,19 +65,16 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
   }
 
   const data = await response.json();
-  const raw = data.content[0].text.trim();
+  const raw  = data.content[0].text.trim();
 
-  // Claude sometimes wraps its JSON in ```json ... ``` despite the instruction — strip it
-  const text = raw
-    .replace(/^```json\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/\s*```$/i, '')
-    .trim();
+  // Extract JSON from potential markdown code fences (```json ... ```) anywhere in the string
+  const codeBlockMatch = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+  const text = codeBlockMatch ? codeBlockMatch[1].trim() : raw.trim();
 
   try {
     return JSON.parse(text);
   } catch {
-    // If still not valid JSON, treat the whole thing as narrative prose
-    return { narrative: text, rollRequest: null, stateHint: null };
+    // JSON parse failed — treat entire text as narrative prose
+    return { narrative: text, rollRequest: null, stateHint: null, advanceScene: false };
   }
 }

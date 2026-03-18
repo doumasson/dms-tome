@@ -4,18 +4,27 @@ import { supabase } from '../lib/supabase';
 import { buildSystemPrompt, callNarrator } from '../lib/narratorApi';
 import { speak, stopSpeaking } from '../lib/tts';
 import { getClaudeApiKey } from '../lib/claudeApi';
+import { broadcastSceneChange, broadcastStartCombat } from '../lib/liveChannel';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const SPEECH_SUPPORTED = !!SpeechRecognition;
 
+// ── Helper: resolve API key ───────────────────────────────────────────────────
+function resolveApiKey(userId, campaignSettings) {
+  return getClaudeApiKey(userId) || campaignSettings?.claudeApiKey || null;
+}
+
 export default function NarratorPanel() {
-  const user        = useStore(s => s.user);
-  const activeCampaign = useStore(s => s.activeCampaign);
-  const campaign    = useStore(s => s.campaign);
-  const narrator    = useStore(s => s.narrator);
-  const addNarratorMessage = useStore(s => s.addNarratorMessage);
-  const setNarratorOpen    = useStore(s => s.setNarratorOpen);
+  const user             = useStore(s => s.user);
+  const activeCampaign   = useStore(s => s.activeCampaign);
+  const campaign         = useStore(s => s.campaign);
+  const isDM             = useStore(s => s.isDM);
+  const partyMembers     = useStore(s => s.partyMembers);
+  const narrator         = useStore(s => s.narrator);
+  const addNarratorMessage   = useStore(s => s.addNarratorMessage);
+  const setNarratorOpen      = useStore(s => s.setNarratorOpen);
   const clearNarratorHistory = useStore(s => s.clearNarratorHistory);
+  const setCurrentScene      = useStore(s => s.setCurrentScene);
 
   const [input, setInput]           = useState('');
   const [loading, setLoading]       = useState(false);
@@ -24,29 +33,44 @@ export default function NarratorPanel() {
   const [heyDmMode, setHeyDmMode]   = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
-  const historyRef       = useRef(null);
-  const channelRef       = useRef(null);
-  const pttRecogRef      = useRef(null);
-  const heyDmRecogRef    = useRef(null);
-  const ttsEnabledRef    = useRef(ttsEnabled);
-  const heyDmModeRef     = useRef(heyDmMode);
+  // ── Floor system — one speaker at a time ─────────────────────────────────
+  // { userId, userName } | null
+  const [floorHolder, setFloorHolder] = useState(null);
+  const iHoldFloor = floorHolder?.userId === user?.id;
+  const canSpeak   = !floorHolder || iHoldFloor || isDM;
 
-  useEffect(() => { ttsEnabledRef.current = ttsEnabled; }, [ttsEnabled]);
-  useEffect(() => { heyDmModeRef.current = heyDmMode; }, [heyDmMode]);
+  // ── Exchange counter — used to decide when advanceScene is allowed ────────
+  const exchangeCountRef = useRef(0);
 
-  // Auto-scroll history to bottom on new messages when expanded
+  const historyRef    = useRef(null);
+  const channelRef    = useRef(null);
+  const saveLogRef    = useRef(null);
+  const pttRecogRef   = useRef(null);
+  const heyDmRecogRef = useRef(null);
+  const ttsEnabledRef   = useRef(ttsEnabled);
+  const heyDmModeRef    = useRef(heyDmMode);
+  const floorHolderRef  = useRef(floorHolder);
+
+  useEffect(() => { ttsEnabledRef.current  = ttsEnabled;  }, [ttsEnabled]);
+  useEffect(() => { heyDmModeRef.current   = heyDmMode;   }, [heyDmMode]);
+  useEffect(() => { floorHolderRef.current = floorHolder; }, [floorHolder]);
+
+  // Auto-scroll
   useEffect(() => {
     if (historyRef.current && narrator.open) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
     }
   }, [narrator.history, narrator.open]);
 
-  // Supabase Realtime — receive narrator messages from other players
+  // ── Supabase Realtime ─────────────────────────────────────────────────────
   useEffect(() => {
     if (!activeCampaign?.id) return;
+
     const ch = supabase.channel(`narrator:${activeCampaign.id}`, {
       config: { broadcast: { ack: false } },
     });
+
+    // Receive narrator messages from other players
     ch.on('broadcast', { event: 'narrator-msg' }, ({ payload }) => {
       if (payload.senderId === user?.id) return;
       addNarratorMessage(payload.message);
@@ -54,19 +78,33 @@ export default function NarratorPanel() {
         speak(payload.message.text);
       }
     });
+
+    // Floor system — who has the mic
+    ch.on('broadcast', { event: 'narrator-floor' }, ({ payload }) => {
+      setFloorHolder(payload.holder ?? null);
+    });
+
     ch.subscribe();
     channelRef.current = ch;
     return () => { ch.unsubscribe(); channelRef.current = null; };
   }, [activeCampaign?.id, user?.id]);
 
-  // "Hey DM" always-listening wake word
+  // ── Load historical log when joining ─────────────────────────────────────
+  useEffect(() => {
+    const log = activeCampaign?.settings?.narratorLog;
+    if (log?.length && narrator.history.length === 0) {
+      log.forEach(msg => addNarratorMessage(msg));
+    }
+    // Reset exchange counter on campaign join
+    exchangeCountRef.current = 0;
+  }, [activeCampaign?.id]);
+
+  // ── "Hey DM" wake word ────────────────────────────────────────────────────
   useEffect(() => {
     if (!heyDmMode || !SPEECH_SUPPORTED) return;
     function startWakeWord() {
       const r = new SpeechRecognition();
-      r.continuous = true;
-      r.interimResults = true;
-      r.lang = 'en-US';
+      r.continuous = true; r.interimResults = true; r.lang = 'en-US';
       r.onresult = (e) => {
         for (let i = e.resultIndex; i < e.results.length; i++) {
           const t = e.results[i][0].transcript.toLowerCase();
@@ -78,7 +116,7 @@ export default function NarratorPanel() {
           }
         }
       };
-      r.onend = () => { if (heyDmModeRef.current) setTimeout(startWakeWord, 600); };
+      r.onend  = () => { if (heyDmModeRef.current) setTimeout(startWakeWord, 600); };
       r.onerror = () => { if (heyDmModeRef.current) setTimeout(startWakeWord, 1500); };
       r.start();
       heyDmRecogRef.current = r;
@@ -87,34 +125,70 @@ export default function NarratorPanel() {
     return () => { heyDmRecogRef.current?.stop(); heyDmRecogRef.current = null; };
   }, [heyDmMode]);
 
+  // ── Push-to-talk ──────────────────────────────────────────────────────────
   function startPTT() {
     if (!SPEECH_SUPPORTED || isRecording) return;
     const r = new SpeechRecognition();
-    r.lang = 'en-US';
-    r.interimResults = false;
-    r.maxAlternatives = 1;
+    r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 1;
     r.onresult = (e) => { setInput(e.results[0][0].transcript); };
-    r.onerror = () => setIsRecording(false);
-    r.onend = () => setIsRecording(false);
+    r.onerror  = () => setIsRecording(false);
+    r.onend    = () => setIsRecording(false);
     r.start();
     pttRecogRef.current = r;
     setIsRecording(true);
   }
-
   function stopPTT() {
     pttRecogRef.current?.stop();
     pttRecogRef.current = null;
     setIsRecording(false);
   }
 
+  // ── Floor claim / release ─────────────────────────────────────────────────
+  function claimFloor() {
+    const holder = { userId: user?.id, userName: user?.name || 'Player' };
+    setFloorHolder(holder);
+    channelRef.current?.send({
+      type: 'broadcast', event: 'narrator-floor',
+      payload: { holder },
+    });
+  }
+  function releaseFloor() {
+    setFloorHolder(null);
+    channelRef.current?.send({
+      type: 'broadcast', event: 'narrator-floor',
+      payload: { holder: null },
+    });
+  }
+
+  // ── Broadcast helper ──────────────────────────────────────────────────────
   function broadcast(message) {
     channelRef.current?.send({
-      type: 'broadcast',
-      event: 'narrator-msg',
+      type: 'broadcast', event: 'narrator-msg',
       payload: { senderId: user?.id, message },
     });
   }
 
+  // ── Persist log to Supabase (debounced 3 s) ───────────────────────────────
+  function scheduleLogSave(newHistory) {
+    clearTimeout(saveLogRef.current);
+    saveLogRef.current = setTimeout(async () => {
+      if (!activeCampaign?.id) return;
+      const log = newHistory.slice(-50).map(({ id, role, speaker, text, rollRequest, timestamp }) => ({
+        id: id || crypto.randomUUID(), role, speaker, text, rollRequest,
+        timestamp: timestamp || Date.now(),
+      }));
+      try {
+        const { data: cur } = await supabase
+          .from('campaigns').select('settings').eq('id', activeCampaign.id).single();
+        await supabase
+          .from('campaigns')
+          .update({ settings: { ...(cur?.settings || {}), narratorLog: log } })
+          .eq('id', activeCampaign.id);
+      } catch { /* non-critical */ }
+    }, 3000);
+  }
+
+  // ── Conversation messages ─────────────────────────────────────────────────
   function buildConversationMessages() {
     return narrator.history.slice(-14).map((msg) => ({
       role: msg.role === 'dm' ? 'assistant' : 'user',
@@ -122,13 +196,14 @@ export default function NarratorPanel() {
     }));
   }
 
+  // ── Main send ─────────────────────────────────────────────────────────────
   async function handleSend(overrideText) {
     const text = (overrideText ?? input).trim();
-    if (!text || loading) return;
+    if (!text || loading || !canSpeak) return;
 
-    const apiKey = getClaudeApiKey(user?.id);
+    const apiKey = resolveApiKey(user?.id, activeCampaign?.settings);
     if (!apiKey) {
-      setError('No API key — add your Claude key in Settings.');
+      setError('No API key — the DM must add a Claude key in Settings.');
       return;
     }
 
@@ -141,27 +216,63 @@ export default function NarratorPanel() {
 
     setLoading(true);
     try {
-      const currentScene = campaign.scenes?.[campaign.currentSceneIndex] || null;
+      const currentScene  = campaign.scenes?.[campaign.currentSceneIndex] || null;
+      exchangeCountRef.current += 1;
+
       const systemPrompt = buildSystemPrompt(
         activeCampaign?.campaign_data,
-        campaign.characters,
-        currentScene
+        partyMembers,
+        currentScene,
+        exchangeCountRef.current,
       );
       const messages = [
         ...buildConversationMessages(),
         { role: 'user', content: `[${user?.name || 'Adventurer'}]: ${text}` },
       ];
+
       const result = await callNarrator({ messages, systemPrompt, apiKey });
+
       const dmMsg = {
         role: 'dm',
         speaker: 'Dungeon Master',
         text: result.narrative,
         rollRequest: result.rollRequest || null,
-        stateHint: result.stateHint || null,
+        stateHint:   result.stateHint   || null,
       };
       addNarratorMessage(dmMsg);
       broadcast({ ...dmMsg, id: crypto.randomUUID(), timestamp: Date.now() });
       if (ttsEnabled) speak(result.narrative);
+
+      // Persist the updated log
+      const updated = [...narrator.history, playerMsg, { ...dmMsg, id: crypto.randomUUID(), timestamp: Date.now() }];
+      scheduleLogSave(updated);
+
+      // AI-triggered combat start → opens battle map and auto-rolls initiative
+      if (result.startCombat) {
+        const store    = useStore.getState();
+        const curScene = store.campaign.scenes?.[store.campaign.currentSceneIndex];
+        const enemies  = curScene?.enemies || [];
+        const party    = store.partyMembers || [];
+        store.startEncounter(enemies, party, true); // true = auto-roll initiative
+        broadcastStartCombat({ enemies, party, autoRoll: true });
+      }
+
+      // Auto-advance scene when AI says the scene has concluded
+      if (result.advanceScene && !result.startCombat) {
+        const store     = useStore.getState();
+        const curIdx    = store.campaign.currentSceneIndex || 0;
+        const scenes    = store.campaign.scenes || [];
+        const nextIdx   = curIdx + 1;
+        if (nextIdx < scenes.length) {
+          store.setCurrentScene(nextIdx);
+          broadcastSceneChange(nextIdx);
+          exchangeCountRef.current = 0; // reset for next scene
+        }
+      }
+
+      // Release floor after sending
+      if (iHoldFloor) releaseFloor();
+
     } catch (err) {
       setError(err.message);
     } finally {
@@ -169,15 +280,21 @@ export default function NarratorPanel() {
     }
   }
 
-  // Last DM message for collapsed preview
+  // ── Collapsed bar preview ─────────────────────────────────────────────────
   const lastDmMsg = [...narrator.history].reverse().find(m => m.role === 'dm');
+
+  // ── Floor status label ────────────────────────────────────────────────────
+  function floorLabel() {
+    if (!floorHolder) return null;
+    if (iHoldFloor) return 'You have the floor';
+    return `${floorHolder.userName} is speaking…`;
+  }
 
   return (
     <>
-      {/* Expanded overlay — sits above scene, does NOT push content */}
+      {/* Expanded overlay */}
       {narrator.open && (
         <div style={styles.overlay}>
-          {/* Backdrop click to collapse */}
           <div style={styles.overlayBackdrop} onClick={() => setNarratorOpen(false)} />
 
           <div style={styles.expandedPanel}>
@@ -192,6 +309,11 @@ export default function NarratorPanel() {
                 </span>
               )}
               {loading && <span style={styles.thinkingLabel}>thinking…</span>}
+              {floorHolder && !loading && (
+                <span style={{ ...styles.thinkingLabel, color: iHoldFloor ? '#2ecc71' : '#e67e22' }}>
+                  {floorLabel()}
+                </span>
+              )}
               <button style={styles.collapseBtn} onClick={() => setNarratorOpen(false)}>▼</button>
             </div>
 
@@ -199,10 +321,12 @@ export default function NarratorPanel() {
             <div ref={historyRef} style={styles.history}>
               {narrator.history.length === 0 && (
                 <p style={styles.emptyHint}>
-                  Describe your action, speak to an NPC, or ask the DM anything.
-                  {SPEECH_SUPPORTED
-                    ? ' Hold 🎤 to speak, or enable Hey DM mode for hands-free.'
-                    : ' Type your action below.'}
+                  {canSpeak
+                    ? 'Describe your action or speak to an NPC.'
+                    : `${floorHolder?.userName} has the floor. Wait for your turn.`}
+                  {SPEECH_SUPPORTED && canSpeak
+                    ? ' Hold 🎤 to speak, or enable Hey DM mode.'
+                    : ''}
                 </p>
               )}
               {narrator.history.map((msg, i) => (
@@ -230,25 +354,58 @@ export default function NarratorPanel() {
 
             {error && <div style={styles.errorBar}>{error}</div>}
 
+            {/* Floor status banner */}
+            {floorHolder && !iHoldFloor && !isDM && (
+              <div style={styles.floorBanner}>
+                🎤 <strong>{floorHolder.userName}</strong> has the floor — wait for your turn
+              </div>
+            )}
+
             {/* Input row */}
             <div style={styles.inputRow}>
               {SPEECH_SUPPORTED && (
                 <button
                   onClick={() => setHeyDmMode(v => !v)}
                   style={{ ...styles.iconBtn, ...(heyDmMode ? styles.iconBtnOn : {}) }}
-                  title={heyDmMode ? 'Disable "Hey DM" wake word' : 'Enable "Hey DM" wake word'}
+                  title={heyDmMode ? 'Disable "Hey DM"' : 'Enable "Hey DM" wake word'}
                 >🎙</button>
               )}
+
+              {/* Floor claim button — show when floor is free and we don't have it */}
+              {!iHoldFloor && !isDM && (
+                <button
+                  onClick={claimFloor}
+                  disabled={!!floorHolder}
+                  style={{
+                    ...styles.floorBtn,
+                    ...(floorHolder ? styles.floorBtnDisabled : {}),
+                  }}
+                  title={floorHolder ? `${floorHolder.userName} is speaking` : 'Take the floor to speak'}
+                >
+                  {floorHolder ? '🔒' : '🎤'}
+                </button>
+              )}
+              {iHoldFloor && (
+                <button onClick={releaseFloor} style={styles.releaseBtn} title="Release the floor">
+                  ⬛
+                </button>
+              )}
+
               <input
-                style={styles.input}
+                style={{ ...styles.input, opacity: canSpeak ? 1 : 0.4 }}
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
-                placeholder="Describe your action or speak to an NPC…"
-                disabled={loading}
+                placeholder={
+                  canSpeak
+                    ? 'Describe your action or speak to an NPC…'
+                    : `${floorHolder?.userName} is speaking — wait your turn`
+                }
+                disabled={loading || !canSpeak}
                 autoFocus
               />
-              {SPEECH_SUPPORTED && (
+
+              {SPEECH_SUPPORTED && canSpeak && (
                 <button
                   style={{ ...styles.iconBtn, ...(isRecording ? styles.iconBtnRecording : {}) }}
                   onMouseDown={startPTT}
@@ -258,49 +415,55 @@ export default function NarratorPanel() {
                   title="Hold to speak"
                 >{isRecording ? '🔴' : '🎤'}</button>
               )}
+
               <button
                 onClick={() => { setTtsEnabled(v => !v); if (ttsEnabled) stopSpeaking(); }}
                 style={{ ...styles.iconBtn, ...(ttsEnabled ? styles.iconBtnOn : {}) }}
                 title={ttsEnabled ? 'Mute DM voice' : 'Unmute DM voice'}
               >{ttsEnabled ? '🔊' : '🔇'}</button>
+
               <button onClick={clearNarratorHistory} style={styles.iconBtn} title="Clear history">🗑</button>
+
               <button
                 onClick={() => handleSend()}
-                disabled={loading || !input.trim()}
-                style={{ ...styles.sendBtn, opacity: loading || !input.trim() ? 0.45 : 1 }}
+                disabled={loading || !input.trim() || !canSpeak}
+                style={{ ...styles.sendBtn, opacity: (loading || !input.trim() || !canSpeak) ? 0.45 : 1 }}
               >Send</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Collapsed bar — always visible at bottom, ~12vh */}
+      {/* Collapsed bar — always visible at bottom */}
       <div style={styles.collapsedBar}>
-        {/* Left: icon + preview of last DM message */}
         <div style={styles.barLeft} onClick={() => setNarratorOpen(true)}>
           <span style={styles.barIcon}>{loading ? '⏳' : '🎭'}</span>
           <div style={styles.barPreview}>
             {loading
               ? <span style={styles.barPreviewText}>Dungeon Master is thinking…</span>
-              : lastDmMsg
-                ? <span style={styles.barPreviewText} title={lastDmMsg.text}>
-                    <strong style={styles.barDmLabel}>DM: </strong>{lastDmMsg.text}
-                  </span>
-                : <span style={styles.barHint}>Tap to speak with the AI Narrator</span>
+              : floorHolder && !iHoldFloor
+                ? <span style={styles.barPreviewText}>🎤 <strong>{floorHolder.userName}</strong> has the floor</span>
+                : lastDmMsg
+                  ? <span style={styles.barPreviewText} title={lastDmMsg.text}>
+                      <strong style={styles.barDmLabel}>DM: </strong>{lastDmMsg.text}
+                    </span>
+                  : <span style={styles.barHint}>Tap to speak with the AI Narrator</span>
             }
           </div>
           {heyDmMode && (
             <span style={styles.heyDmPill}>
-              <span style={styles.heyDmDot} />
-              Hey DM
+              <span style={styles.heyDmDot} />Hey DM
             </span>
           )}
         </div>
 
-        {/* Right: quick input row */}
         <div style={styles.barRight}>
+          {/* Floor claim in collapsed bar */}
+          {!iHoldFloor && !isDM && !floorHolder && (
+            <button onClick={claimFloor} style={styles.floorBtn} title="Take the floor">🎤</button>
+          )}
           <input
-            style={styles.barInput}
+            style={{ ...styles.barInput, opacity: canSpeak ? 1 : 0.4 }}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => {
@@ -309,11 +472,11 @@ export default function NarratorPanel() {
                 handleSend();
               }
             }}
-            onFocus={() => setNarratorOpen(true)}
-            placeholder="Ask the DM…"
-            disabled={loading}
+            onFocus={() => { if (canSpeak) setNarratorOpen(true); }}
+            placeholder={canSpeak ? 'Ask the DM…' : 'Wait your turn'}
+            disabled={loading || !canSpeak}
           />
-          {SPEECH_SUPPORTED && (
+          {SPEECH_SUPPORTED && canSpeak && (
             <button
               style={{ ...styles.iconBtn, ...(isRecording ? styles.iconBtnRecording : {}) }}
               onMouseDown={startPTT}
@@ -325,8 +488,8 @@ export default function NarratorPanel() {
           )}
           <button
             onClick={() => { setNarratorOpen(true); handleSend(); }}
-            disabled={loading || !input.trim()}
-            style={{ ...styles.sendBtn, opacity: loading || !input.trim() ? 0.45 : 1 }}
+            disabled={loading || !input.trim() || !canSpeak}
+            style={{ ...styles.sendBtn, opacity: (loading || !input.trim() || !canSpeak) ? 0.45 : 1 }}
           >Send</button>
         </div>
       </div>
@@ -335,293 +498,157 @@ export default function NarratorPanel() {
 }
 
 const styles = {
-  // ── Collapsed bar (always visible) ─────────────────────────────────────────
   collapsedBar: {
-    height: '12vh',
-    minHeight: 72,
-    maxHeight: 110,
-    flexShrink: 0,
-    display: 'flex',
-    alignItems: 'stretch',
+    height: '12vh', minHeight: 72, maxHeight: 110, flexShrink: 0,
+    display: 'flex', alignItems: 'stretch',
     background: 'linear-gradient(180deg, #1a1008 0%, #110b05 100%)',
     borderTop: '2px solid',
     borderImage: 'linear-gradient(90deg, transparent, #d4af37, #a8841f, #d4af37, transparent) 1',
-    zIndex: 10,
-    overflow: 'hidden',
+    zIndex: 10, overflow: 'hidden',
   },
   barLeft: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    padding: '0 14px',
-    cursor: 'pointer',
-    overflow: 'hidden',
-    minWidth: 0,
+    flex: 1, display: 'flex', alignItems: 'center', gap: 10,
+    padding: '0 14px', cursor: 'pointer', overflow: 'hidden', minWidth: 0,
   },
-  barIcon: {
-    fontSize: '1.2rem',
-    flexShrink: 0,
-  },
-  barPreview: {
-    flex: 1,
-    overflow: 'hidden',
-    minWidth: 0,
-  },
+  barIcon: { fontSize: '1.2rem', flexShrink: 0 },
+  barPreview: { flex: 1, overflow: 'hidden', minWidth: 0 },
   barPreviewText: {
-    display: 'block',
-    color: '#e8dcc8',
-    fontSize: '0.82rem',
-    lineHeight: 1.4,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+    display: 'block', color: '#e8dcc8', fontSize: '0.82rem',
+    lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
   },
-  barDmLabel: {
-    color: '#d4af37',
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontSize: '0.75rem',
-  },
-  barHint: {
-    display: 'block',
-    color: 'rgba(200,180,140,0.4)',
-    fontSize: '0.78rem',
-    fontStyle: 'italic',
-  },
-  barRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    padding: '0 10px 0 0',
-    flexShrink: 0,
-  },
+  barDmLabel: { color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.75rem' },
+  barHint: { display: 'block', color: 'rgba(200,180,140,0.4)', fontSize: '0.78rem', fontStyle: 'italic' },
+  barRight: { display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px 0 0', flexShrink: 0 },
   barInput: {
-    width: 180,
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(212,175,55,0.2)',
-    borderRadius: 6,
-    color: '#e8dcc8',
-    padding: '7px 11px',
-    fontSize: '0.85rem',
-    fontFamily: 'inherit',
-    outline: 'none',
-    minHeight: 36,
+    width: 180, background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(212,175,55,0.2)', borderRadius: 6,
+    color: '#e8dcc8', padding: '7px 11px', fontSize: '0.85rem',
+    fontFamily: 'inherit', outline: 'none', minHeight: 36,
   },
-
-  // ── Expanded overlay ────────────────────────────────────────────────────────
   overlay: {
-    position: 'absolute',
-    inset: 0,
-    zIndex: 80,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
+    position: 'absolute', inset: 0, zIndex: 80,
+    display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
     pointerEvents: 'none',
   },
-  overlayBackdrop: {
-    flex: 1,
-    pointerEvents: 'all',
-    cursor: 'pointer',
-  },
+  overlayBackdrop: { flex: 1, pointerEvents: 'all', cursor: 'pointer' },
   expandedPanel: {
-    pointerEvents: 'all',
-    height: '58%',
-    minHeight: 320,
-    maxHeight: '72%',
-    display: 'flex',
-    flexDirection: 'column',
+    pointerEvents: 'all', height: '60%', minHeight: 340, maxHeight: '74%',
+    display: 'flex', flexDirection: 'column',
     background: 'linear-gradient(180deg, #1a1008 0%, #110b05 100%)',
     borderTop: '2px solid',
     borderImage: 'linear-gradient(90deg, transparent, #d4af37, #a8841f, #d4af37, transparent) 1',
-    boxShadow: '0 -8px 40px rgba(0,0,0,0.7)',
-    overflow: 'hidden',
+    boxShadow: '0 -8px 40px rgba(0,0,0,0.7)', overflow: 'hidden',
   },
   header: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    padding: '0 16px',
-    height: 46,
-    flexShrink: 0,
+    display: 'flex', alignItems: 'center', gap: 10,
+    padding: '0 16px', height: 46, flexShrink: 0,
     borderBottom: '1px solid rgba(212,175,55,0.1)',
   },
   headerIcon: { fontSize: '1rem', flexShrink: 0 },
   headerTitle: {
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontWeight: 700,
-    fontSize: '0.88rem',
-    color: '#d4af37',
-    letterSpacing: '0.06em',
-    flex: 1,
+    fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700,
+    fontSize: '0.88rem', color: '#d4af37', letterSpacing: '0.06em', flex: 1,
   },
   collapseBtn: {
-    background: 'transparent',
-    border: '1px solid rgba(212,175,55,0.2)',
-    color: 'rgba(212,175,55,0.6)',
-    borderRadius: 4,
-    padding: '3px 9px',
-    cursor: 'pointer',
-    fontSize: '0.7rem',
-    flexShrink: 0,
+    background: 'transparent', border: '1px solid rgba(212,175,55,0.2)',
+    color: 'rgba(212,175,55,0.6)', borderRadius: 4, padding: '3px 9px',
+    cursor: 'pointer', fontSize: '0.7rem', flexShrink: 0,
   },
   heyDmPill: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 5,
-    background: 'rgba(212,175,55,0.12)',
-    border: '1px solid rgba(212,175,55,0.3)',
-    borderRadius: 12,
-    padding: '2px 9px',
-    fontSize: '0.7rem',
-    color: '#d4af37',
-    fontFamily: "'Cinzel', Georgia, serif",
-    flexShrink: 0,
+    display: 'flex', alignItems: 'center', gap: 5,
+    background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
+    borderRadius: 12, padding: '2px 9px', fontSize: '0.7rem',
+    color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif", flexShrink: 0,
   },
   heyDmDot: {
-    width: 6,
-    height: 6,
-    borderRadius: '50%',
-    background: '#2ecc71',
-    boxShadow: '0 0 6px rgba(46,204,113,0.8)',
-    animation: 'pulse 1.5s infinite',
+    width: 6, height: 6, borderRadius: '50%', background: '#2ecc71',
+    boxShadow: '0 0 6px rgba(46,204,113,0.8)', animation: 'pulse 1.5s infinite',
   },
   thinkingLabel: {
-    color: 'rgba(212,175,55,0.5)',
-    fontSize: '0.75rem',
-    fontStyle: 'italic',
-    flexShrink: 0,
+    color: 'rgba(212,175,55,0.5)', fontSize: '0.75rem', fontStyle: 'italic', flexShrink: 0,
   },
   history: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: '10px 16px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
+    flex: 1, overflowY: 'auto', padding: '10px 16px',
+    display: 'flex', flexDirection: 'column', gap: 10,
   },
   emptyHint: {
-    color: 'rgba(200,180,140,0.4)',
-    fontSize: '0.82rem',
-    fontStyle: 'italic',
-    textAlign: 'center',
-    margin: 'auto 0',
-    lineHeight: 1.6,
+    color: 'rgba(200,180,140,0.4)', fontSize: '0.82rem',
+    fontStyle: 'italic', textAlign: 'center', margin: 'auto 0', lineHeight: 1.6,
   },
   dmBubble: {
-    background: 'rgba(212,175,55,0.06)',
-    border: '1px solid rgba(212,175,55,0.18)',
-    borderRadius: '4px 12px 12px 12px',
-    padding: '10px 14px',
-    maxWidth: '85%',
-    alignSelf: 'flex-start',
+    background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.18)',
+    borderRadius: '4px 12px 12px 12px', padding: '10px 14px',
+    maxWidth: '85%', alignSelf: 'flex-start',
   },
   playerBubble: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: '12px 4px 12px 12px',
-    padding: '8px 14px',
-    maxWidth: '75%',
-    alignSelf: 'flex-end',
+    background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '12px 4px 12px 12px', padding: '8px 14px',
+    maxWidth: '75%', alignSelf: 'flex-end',
   },
   dmLabel: {
-    display: 'block',
-    color: '#d4af37',
-    fontSize: '0.7rem',
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontWeight: 700,
-    letterSpacing: '0.05em',
-    marginBottom: 5,
+    display: 'block', color: '#d4af37', fontSize: '0.7rem',
+    fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700,
+    letterSpacing: '0.05em', marginBottom: 5,
   },
   playerLabel: {
-    display: 'block',
-    color: 'rgba(200,180,140,0.6)',
-    fontSize: '0.7rem',
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontWeight: 600,
-    letterSpacing: '0.05em',
-    marginBottom: 4,
-    textAlign: 'right',
+    display: 'block', color: 'rgba(200,180,140,0.6)', fontSize: '0.7rem',
+    fontFamily: "'Cinzel', Georgia, serif", fontWeight: 600,
+    letterSpacing: '0.05em', marginBottom: 4, textAlign: 'right',
   },
-  bubbleText: {
-    margin: 0,
-    color: '#e8dcc8',
-    fontSize: '0.88rem',
-    lineHeight: 1.55,
-  },
+  bubbleText: { margin: 0, color: '#e8dcc8', fontSize: '0.88rem', lineHeight: 1.55 },
   rollCard: {
-    marginTop: 8,
-    padding: '6px 12px',
-    background: 'rgba(212,175,55,0.12)',
-    border: '1px solid rgba(212,175,55,0.3)',
-    borderRadius: 6,
-    color: '#d4af37',
-    fontSize: '0.82rem',
+    marginTop: 8, padding: '6px 12px',
+    background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
+    borderRadius: 6, color: '#d4af37', fontSize: '0.82rem',
     fontFamily: "'Cinzel', Georgia, serif",
+  },
+  floorBanner: {
+    background: 'rgba(230,126,34,0.1)', border: '1px solid rgba(230,126,34,0.3)',
+    color: 'rgba(230,150,50,0.9)', fontSize: '0.8rem', padding: '6px 16px', flexShrink: 0,
+    textAlign: 'center',
   },
   errorBar: {
-    background: 'rgba(231,76,60,0.15)',
-    border: '1px solid rgba(231,76,60,0.4)',
-    color: '#e74c3c',
-    padding: '7px 16px',
-    fontSize: '0.8rem',
-    flexShrink: 0,
+    background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.4)',
+    color: '#e74c3c', padding: '7px 16px', fontSize: '0.8rem', flexShrink: 0,
   },
   inputRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    padding: '8px 12px',
-    borderTop: '1px solid rgba(212,175,55,0.15)',
-    flexShrink: 0,
+    display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px',
+    borderTop: '1px solid rgba(212,175,55,0.15)', flexShrink: 0,
   },
   input: {
-    flex: 1,
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(212,175,55,0.2)',
-    borderRadius: 6,
-    color: '#e8dcc8',
-    padding: '8px 12px',
-    fontSize: '0.88rem',
-    fontFamily: 'inherit',
-    outline: 'none',
-    minHeight: 38,
+    flex: 1, background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(212,175,55,0.2)', borderRadius: 6,
+    color: '#e8dcc8', padding: '8px 12px', fontSize: '0.88rem',
+    fontFamily: 'inherit', outline: 'none', minHeight: 38,
   },
   iconBtn: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: 6,
-    color: 'rgba(200,180,140,0.6)',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    padding: '6px 9px',
-    minHeight: 36,
-    minWidth: 36,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
+    background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: 6, color: 'rgba(200,180,140,0.6)', fontSize: '1rem',
+    cursor: 'pointer', padding: '6px 9px', minHeight: 36, minWidth: 36,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
-  iconBtnOn: {
-    background: 'rgba(212,175,55,0.12)',
-    border: '1px solid rgba(212,175,55,0.35)',
-    color: '#d4af37',
+  iconBtnOn: { background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)', color: '#d4af37' },
+  iconBtnRecording: { background: 'rgba(231,76,60,0.2)', border: '1px solid rgba(231,76,60,0.5)', animation: 'pulse 0.8s infinite' },
+  floorBtn: {
+    background: 'rgba(46,204,113,0.1)', border: '1px solid rgba(46,204,113,0.35)',
+    borderRadius: 6, color: '#2ecc71', fontSize: '1rem', cursor: 'pointer',
+    padding: '6px 9px', minHeight: 36, minWidth: 36,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
-  iconBtnRecording: {
-    background: 'rgba(231,76,60,0.2)',
-    border: '1px solid rgba(231,76,60,0.5)',
-    animation: 'pulse 0.8s infinite',
+  floorBtnDisabled: {
+    background: 'rgba(150,150,150,0.07)', border: '1px solid rgba(150,150,150,0.2)',
+    color: 'rgba(150,150,150,0.4)', cursor: 'not-allowed',
+  },
+  releaseBtn: {
+    background: 'rgba(231,76,60,0.1)', border: '1px solid rgba(231,76,60,0.35)',
+    borderRadius: 6, color: '#e74c3c', fontSize: '1rem', cursor: 'pointer',
+    padding: '6px 9px', minHeight: 36, minWidth: 36,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   sendBtn: {
-    background: 'linear-gradient(135deg, #d4af37, #a8841f)',
-    border: 'none',
-    borderRadius: 6,
-    color: '#1a0e00',
-    fontWeight: 700,
-    fontSize: '0.85rem',
-    fontFamily: "'Cinzel', Georgia, serif",
-    padding: '7px 14px',
-    cursor: 'pointer',
-    minHeight: 36,
-    flexShrink: 0,
+    background: 'linear-gradient(135deg, #d4af37, #a8841f)', border: 'none',
+    borderRadius: 6, color: '#1a0e00', fontWeight: 700, fontSize: '0.85rem',
+    fontFamily: "'Cinzel', Georgia, serif", padding: '7px 14px',
+    cursor: 'pointer', minHeight: 36, flexShrink: 0,
   },
 };
