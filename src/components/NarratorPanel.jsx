@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import useStore from '../store/useStore';
+import { styles } from './narratorStyles';
 import { supabase } from '../lib/supabase';
 import { buildSystemPrompt, callNarrator } from '../lib/narratorApi';
 import { speak, stopSpeaking, getNpcVoice } from '../lib/tts';
@@ -45,6 +46,10 @@ export default function NarratorPanel() {
     : null;
   const isEnemyTurn = inCombat && encounter.combatants?.[encounter.currentTurn]?.type === 'enemy';
 
+  const [minimized, setMinimized]   = useState(true);
+  const [unread, setUnread]         = useState(0);
+  const prevHistoryLenRef           = useRef(0);
+
   const [input, setInput]           = useState('');
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState(null);
@@ -78,6 +83,19 @@ export default function NarratorPanel() {
   useEffect(() => { ttsEnabledRef.current  = ttsEnabled;  }, [ttsEnabled]);
   useEffect(() => { heyDmModeRef.current   = heyDmMode;   }, [heyDmMode]);
   useEffect(() => { floorHolderRef.current = floorHolder; }, [floorHolder]);
+
+  // Track unread DM messages while minimized
+  useEffect(() => {
+    const newLen = narrator.history.length;
+    const oldLen = prevHistoryLenRef.current;
+    if (newLen > oldLen) {
+      if (minimized) {
+        const newDmMessages = narrator.history.slice(oldLen).filter(m => m.role === 'dm').length;
+        if (newDmMessages > 0) setUnread(u => u + newDmMessages);
+      }
+      prevHistoryLenRef.current = newLen;
+    }
+  }, [narrator.history.length]); // eslint-disable-line
 
   // Auto-scroll when history changes
   useEffect(() => {
@@ -417,6 +435,24 @@ export default function NarratorPanel() {
     return `${floorHolder.userName} is speaking…`;
   }
 
+  // ── Minimized bar ─────────────────────────────────────────────────────────
+  if (minimized) {
+    return (
+      <div style={styles.minimizedBar} onClick={() => { setMinimized(false); setUnread(0); }}>
+        <span style={styles.headerIcon}>{loading ? '⏳' : isEnemyTurn ? '⚔' : '🎭'}</span>
+        <span style={styles.minimizedTitle}>Dungeon Master</span>
+        {currentSceneName && (
+          <span style={styles.minimizedScene}>· {currentSceneName}</span>
+        )}
+        {loading && <span style={{ ...styles.thinkingLabel, marginLeft: 6 }}>narrating…</span>}
+        {unread > 0 && (
+          <span style={styles.unreadBadge}>{unread}</span>
+        )}
+        <span style={styles.expandBtn}>▲ Open</span>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.panel}>
       {/* Header */}
@@ -447,6 +483,11 @@ export default function NarratorPanel() {
             {floorLabel()}
           </span>
         )}
+        <button
+          style={styles.minimizeBtn}
+          onClick={() => setMinimized(true)}
+          title="Minimize narrator"
+        >▼</button>
       </div>
 
       {/* Message history */}
@@ -619,139 +660,4 @@ export default function NarratorPanel() {
   );
 }
 
-const styles = {
-  panel: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    background: 'linear-gradient(180deg, #1a1008 0%, #110b05 100%)',
-    overflow: 'hidden',
-  },
-  header: {
-    display: 'flex', alignItems: 'center', gap: 10,
-    padding: '0 14px', minHeight: 42, flexShrink: 0,
-    borderBottom: '1px solid rgba(212,175,55,0.12)',
-    paddingTop: 5, paddingBottom: 5,
-  },
-  headerIcon: { fontSize: '1rem', flexShrink: 0 },
-  headerTitle: {
-    fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700,
-    fontSize: '0.82rem', color: '#d4af37', letterSpacing: '0.06em',
-    lineHeight: 1.2,
-  },
-  headerScene: {
-    fontSize: '0.6rem', color: 'rgba(200,180,140,0.45)',
-    letterSpacing: '0.04em', marginTop: 1,
-    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-  },
-  heyDmPill: {
-    display: 'flex', alignItems: 'center', gap: 5,
-    background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
-    borderRadius: 12, padding: '2px 9px', fontSize: '0.7rem',
-    color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif", flexShrink: 0,
-  },
-  heyDmDot: {
-    width: 6, height: 6, borderRadius: '50%', background: '#2ecc71',
-    boxShadow: '0 0 6px rgba(46,204,113,0.8)', animation: 'pulse 1.5s infinite',
-  },
-  thinkingLabel: {
-    color: 'rgba(212,175,55,0.5)', fontSize: '0.75rem', fontStyle: 'italic', flexShrink: 0,
-  },
-  history: {
-    flex: 1, overflowY: 'auto', padding: '10px 16px',
-    display: 'flex', flexDirection: 'column', gap: 10,
-  },
-  emptyHint: {
-    color: 'rgba(200,180,140,0.35)', fontSize: '0.82rem',
-    fontStyle: 'italic', textAlign: 'center', margin: 'auto 0', lineHeight: 1.7,
-  },
-  // DM messages: narrative text block with left accent, no chat bubble
-  dmBubble: {
-    borderLeft: '3px solid rgba(212,175,55,0.35)',
-    background: 'rgba(212,175,55,0.03)',
-    padding: '8px 14px',
-    alignSelf: 'stretch',
-  },
-  // Player messages: compact right-aligned bubble
-  playerBubble: {
-    background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)',
-    borderRadius: '10px 2px 10px 10px', padding: '7px 12px',
-    maxWidth: '70%', alignSelf: 'flex-end',
-  },
-  dmLabel: {
-    display: 'block', color: 'rgba(212,175,55,0.55)', fontSize: '0.62rem',
-    fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700,
-    letterSpacing: '0.08em', marginBottom: 6, textTransform: 'uppercase',
-  },
-  playerLabel: {
-    display: 'block', color: 'rgba(200,180,140,0.5)', fontSize: '0.65rem',
-    fontFamily: "'Cinzel', Georgia, serif", fontWeight: 600,
-    letterSpacing: '0.05em', marginBottom: 4, textAlign: 'right',
-  },
-  bubbleText: { margin: 0, color: '#e8dcc8', fontSize: '0.9rem', lineHeight: 1.65 },
-  // Roll request: large, obvious game button
-  rollBtn: {
-    display: 'flex', alignItems: 'center', gap: 14,
-    marginTop: 12, padding: '12px 16px', width: '100%',
-    background: 'linear-gradient(135deg, rgba(212,175,55,0.12), rgba(212,175,55,0.05))',
-    border: '1px solid rgba(212,175,55,0.5)', borderRadius: 6,
-    cursor: 'pointer', textAlign: 'left', animation: 'goldPulse 2.2s infinite',
-  },
-  rollBtnIcon: { display: 'none' }, // replaced inline
-  rollBtnText: { flex: 1, lineHeight: 1.4 },
-  rollBtnCta: {
-    display: 'flex', flexDirection: 'column', alignItems: 'center',
-    color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif",
-    fontWeight: 700, fontSize: '0.72rem', flexShrink: 0, letterSpacing: '0.04em',
-    gap: 2,
-  },
-  floorBanner: {
-    background: 'rgba(230,126,34,0.1)', border: '1px solid rgba(230,126,34,0.3)',
-    color: 'rgba(230,150,50,0.9)', fontSize: '0.8rem', padding: '6px 16px', flexShrink: 0,
-    textAlign: 'center',
-  },
-  errorBar: {
-    background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.4)',
-    color: '#e74c3c', padding: '7px 16px', fontSize: '0.8rem', flexShrink: 0,
-  },
-  inputRow: {
-    display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px',
-    borderTop: '1px solid rgba(212,175,55,0.15)', flexShrink: 0,
-  },
-  input: {
-    flex: 1, background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(212,175,55,0.2)', borderRadius: 6,
-    color: '#e8dcc8', padding: '8px 12px', fontSize: '0.88rem',
-    fontFamily: 'inherit', outline: 'none', minHeight: 38,
-  },
-  iconBtn: {
-    background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: 6, color: 'rgba(200,180,140,0.6)', fontSize: '1rem',
-    cursor: 'pointer', padding: '6px 9px', minHeight: 36, minWidth: 36,
-    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-  },
-  iconBtnOn: { background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)', color: '#d4af37' },
-  iconBtnRecording: { background: 'rgba(231,76,60,0.2)', border: '1px solid rgba(231,76,60,0.5)', animation: 'pulse 0.8s infinite' },
-  floorBtn: {
-    background: 'rgba(46,204,113,0.1)', border: '1px solid rgba(46,204,113,0.35)',
-    borderRadius: 6, color: '#2ecc71', fontSize: '0.8rem', cursor: 'pointer',
-    padding: '6px 9px', minHeight: 36,
-    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-  },
-  floorBtnDisabled: {
-    background: 'rgba(150,150,150,0.07)', border: '1px solid rgba(150,150,150,0.2)',
-    color: 'rgba(150,150,150,0.4)', cursor: 'not-allowed',
-  },
-  releaseBtn: {
-    background: 'rgba(231,76,60,0.1)', border: '1px solid rgba(231,76,60,0.35)',
-    borderRadius: 6, color: '#e74c3c', fontSize: '1rem', cursor: 'pointer',
-    padding: '6px 9px', minHeight: 36,
-    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-  },
-  sendBtn: {
-    background: 'linear-gradient(135deg, #d4af37, #a8841f)', border: 'none',
-    borderRadius: 6, color: '#1a0e00', fontWeight: 700, fontSize: '0.85rem',
-    fontFamily: "'Cinzel', Georgia, serif", padding: '7px 14px',
-    cursor: 'pointer', minHeight: 36, flexShrink: 0,
-  },
-};
+// styles are imported from ./narratorStyles.js

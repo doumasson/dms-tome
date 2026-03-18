@@ -6,7 +6,7 @@ import {
   calcHp, calcAc, buildAttacks, buildSpellSlots, buildFeatures,
   avatarUrl, profBonus, getStarterSpells,
 } from '../lib/charBuilder';
-import { getStartingInventory } from '../data/equipment';
+import { getStartingInventory, WEAPONS, ARMOR, getSlotType, computeAcFromEquipped } from '../data/equipment';
 import { s } from './characterCreate/charCreateStyles';
 import StepRace       from './characterCreate/StepRace';
 import StepClass      from './characterCreate/StepClass';
@@ -73,7 +73,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     if (label === 'Spells')     return true;
     if (label === 'Abilities')  return true;
     if (label === 'Identity')   return !!name.trim();
-    if (label === 'Gear')       return true;
+    if (label === 'Gear')       return gearChoices.method === 'equipment' || gearChoices.gold > 0;
     return false;
   }
 
@@ -92,6 +92,20 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     // Build starting inventory from gear step
     const starterItems = getStartingInventory();
     const gearItems = buildGearInventory(gearChoices, clsData);
+    const allItems = [...starterItems, ...gearItems];
+
+    // Auto-equip: first weapon → mainHand, armor → chest, shield → offHand
+    const equippedItems = {};
+    for (const item of allItems) {
+      const slot = getSlotType(item);
+      if (slot === 'mainHand' && !equippedItems.mainHand) equippedItems.mainHand = item;
+      else if (slot === 'twoHanded' && !equippedItems.twoHanded && !equippedItems.mainHand) equippedItems.twoHanded = item;
+      else if (slot === 'chest' && !equippedItems.chest) equippedItems.chest = item;
+      else if (slot === 'offHand' && !equippedItems.offHand) equippedItems.offHand = item;
+    }
+    const startingAc = Object.keys(equippedItems).length > 0
+      ? computeAcFromEquipped(equippedItems, finalStats)
+      : ac;
 
     const character = {
       id: crypto.randomUUID(),
@@ -105,7 +119,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       level: 1,
       xp: 0,
       hp, maxHp: hp, currentHp: hp,
-      ac,
+      ac: startingAc,
       speed: raceData?.speed || 30,
       stats: finalStats,
       skills,
@@ -114,8 +128,8 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       spellSlots,
       spells: selectedSpells.length > 0 ? selectedSpells : getStarterSpells(cls),
       equipment: clsData?.startingEquipment || [],
-      inventory: [...starterItems, ...gearItems],
-      equippedItems: {},
+      inventory: allItems,
+      equippedItems,
       gold: gearChoices.method === 'gold' ? gearChoices.gold : 0,
       proficiencyBonus: pb,
       portrait: avatarUrl(name.trim(), race, cls),
@@ -249,6 +263,28 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
   );
 }
 
+// Look up real item data from WEAPONS/ARMOR, or return a generic item
+function resolveItem(name) {
+  if (!name) return null;
+  const clean = name.replace(/^(a |an |the |\d+× )/i, '').trim();
+  const weapon = WEAPONS.find(w => w.name.toLowerCase() === clean.toLowerCase());
+  if (weapon) return { ...weapon, quantity: 1, type: 'weapon' };
+  const armorEntry = ARMOR.find(a => a.name.toLowerCase() === clean.toLowerCase());
+  if (armorEntry) {
+    // Map 'type' → 'armorType' so getSlotType + computeAcFromEquipped work correctly
+    return { ...armorEntry, armorType: armorEntry.type, type: 'armor', quantity: 1 };
+  }
+  // Generic item
+  const countMatch = name.match(/^(\d+)\s+/);
+  return {
+    name: clean.charAt(0).toUpperCase() + clean.slice(1),
+    type: 'equipment',
+    quantity: countMatch ? parseInt(countMatch[1]) : 1,
+    description: 'Starting equipment',
+    weight: 0.5,
+  };
+}
+
 // Convert gear choices to inventory items
 function buildGearInventory(gearChoices, clsData) {
   if (!clsData) return [];
@@ -256,30 +292,56 @@ function buildGearInventory(gearChoices, clsData) {
 
   const items = [];
   const equipLines = clsData.startingEquipment || [];
+  const weaponPicks = gearChoices.weaponPicks || {};
 
   equipLines.forEach((line, idx) => {
     const abMatch = line.match(/^\(a\)\s*(.+?)\s+or\s+\(b\)\s*(.+)$/i);
     if (abMatch) {
       const choice = gearChoices.selections?.[idx];
-      const chosen = choice === 'b' ? abMatch[2] : abMatch[1];
-      items.push(...parseItemString(chosen));
+      const chosenText = choice === 'b' ? abMatch[2] : abMatch[1];
+      const opt = choice || 'a';
+      items.push(...parseItemString(chosenText, idx, opt, weaponPicks));
     } else {
-      items.push(...parseItemString(line));
+      items.push(...parseItemString(line, idx, 'fixed', weaponPicks));
     }
   });
 
   return items;
 }
 
-function parseItemString(str) {
+function parseItemString(str, lineIdx, opt, weaponPicks = {}) {
+  const t = str.toLowerCase();
+  const results = [];
+
+  // Detect "two martial weapons" or "a martial weapon"
+  if (/two martial weapons/.test(t)) {
+    const w0 = weaponPicks[`${lineIdx}-${opt}-0`] || weaponPicks[`fixed-${lineIdx}-0`];
+    const w1 = weaponPicks[`${lineIdx}-${opt}-1`] || weaponPicks[`fixed-${lineIdx}-1`];
+    if (w0) results.push(resolveItem(w0));
+    if (w1) results.push(resolveItem(w1));
+    return results.filter(Boolean);
+  }
+  if (/a martial weapon and a shield/.test(t)) {
+    const w0 = weaponPicks[`${lineIdx}-${opt}-0`] || weaponPicks[`fixed-${lineIdx}-0`];
+    if (w0) results.push(resolveItem(w0));
+    results.push(resolveItem('Shield'));
+    return results.filter(Boolean);
+  }
+  if (/a martial weapon|any martial melee weapon|any martial weapon/.test(t)) {
+    const w0 = weaponPicks[`${lineIdx}-${opt}-0`] || weaponPicks[`fixed-${lineIdx}-0`];
+    if (w0) results.push(resolveItem(w0));
+    return results.filter(Boolean);
+  }
+  if (/any simple melee weapon|any simple weapon/.test(t)) {
+    const w0 = weaponPicks[`${lineIdx}-${opt}-0`] || weaponPicks[`fixed-${lineIdx}-0`];
+    if (w0) results.push(resolveItem(w0));
+    return results.filter(Boolean);
+  }
+
+  // Generic: split on commas/and
   const clean = str.replace(/^(a |an |the )/i, '').trim();
   const parts = clean.split(/,\s*and\s*|\s+and\s+|,\s+/)
     .map(p => p.trim())
     .filter(p => p.length > 2);
-  return parts.map(p => ({
-    name: p.charAt(0).toUpperCase() + p.slice(1),
-    type: 'equipment',
-    quantity: 1,
-    description: 'Starting equipment',
-  }));
+  return parts.map(p => resolveItem(p)).filter(Boolean);
 }

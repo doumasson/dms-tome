@@ -129,7 +129,7 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
 
       {/* Main content area */}
       <div style={styles.mainArea}>
-        {/* Combat or Scene — fixed 55vh hero area */}
+        {/* Combat or Scene — fills remaining space, narrator floats over it */}
         <div style={{ ...styles.contentArea, position: 'relative' }}>
           {inCombat ? <EncounterView /> : <ScenePanel />}
           {/* "Your Turn" / "[Name]'s Turn" announcement */}
@@ -140,15 +140,12 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
               trigger={turnAnnounceTrigger}
             />
           )}
+          {/* Floating narrator overlay */}
+          <NarratorPanel />
         </div>
 
         {/* Always-visible character status strip */}
         <PlayerStatusBar />
-
-        {/* Narrator — fills remaining space, always visible */}
-        <div style={styles.narratorArea}>
-          <NarratorPanel />
-        </div>
       </div>
 
       {/* Right activity log */}
@@ -264,22 +261,12 @@ const styles = {
     position: 'relative',
   },
   contentArea: {
-    height: '55vh',
-    minHeight: 220,
-    flexShrink: 0,
+    flex: 1,
+    minHeight: 0,
     overflowY: 'auto',
     overflowX: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-  },
-  narratorArea: {
-    flex: 1,
-    minHeight: 0,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    borderTop: '2px solid',
-    borderImage: 'linear-gradient(90deg, transparent, #d4af37, #a8841f, #d4af37, transparent) 1',
   },
   hamburger: {
     display: 'none', // hidden on desktop; shown via media query in CSS
