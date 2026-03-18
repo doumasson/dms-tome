@@ -29,7 +29,6 @@ export default function NarratorPanel() {
   const sessionApiKey    = useStore(s => s.sessionApiKey);
   const setSessionApiKey = useStore(s => s.setSessionApiKey);
   const addNarratorMessage   = useStore(s => s.addNarratorMessage);
-  const setNarratorOpen      = useStore(s => s.setNarratorOpen);
   const clearNarratorHistory = useStore(s => s.clearNarratorHistory);
   const setCurrentScene      = useStore(s => s.setCurrentScene);
 
@@ -41,7 +40,6 @@ export default function NarratorPanel() {
   const [isRecording, setIsRecording] = useState(false);
 
   // ── Floor system — one speaker at a time ─────────────────────────────────
-  // { userId, userName } | null
   const [floorHolder, setFloorHolder] = useState(null);
   const iHoldFloor = floorHolder?.userId === user?.id;
   const canSpeak   = !floorHolder || iHoldFloor || isDM;
@@ -57,17 +55,46 @@ export default function NarratorPanel() {
   const ttsEnabledRef   = useRef(ttsEnabled);
   const heyDmModeRef    = useRef(heyDmMode);
   const floorHolderRef  = useRef(floorHolder);
+  const lastAutoPostedRef = useRef(-1);
 
   useEffect(() => { ttsEnabledRef.current  = ttsEnabled;  }, [ttsEnabled]);
   useEffect(() => { heyDmModeRef.current   = heyDmMode;   }, [heyDmMode]);
   useEffect(() => { floorHolderRef.current = floorHolder; }, [floorHolder]);
 
-  // Auto-scroll
+  // Auto-scroll when history changes
   useEffect(() => {
-    if (historyRef.current && narrator.open) {
+    if (historyRef.current) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
     }
-  }, [narrator.history, narrator.open]);
+  }, [narrator.history]);
+
+  // ── Auto-post scene description to narrator chat on scene change ──────────
+  const idx          = campaign.currentSceneIndex || 0;
+  const scenes       = campaign.scenes || [];
+  const currentScene = scenes[idx] || null;
+
+  useEffect(() => {
+    if (!currentScene || !campaign.loaded) return;
+    const sceneKey = `${activeCampaign?.id}:${idx}`;
+    if (lastAutoPostedRef.current === sceneKey) return;
+    lastAutoPostedRef.current = sceneKey;
+
+    const text = [currentScene.title, currentScene.text].filter(Boolean).join('\n\n');
+    const msg = {
+      role: 'dm',
+      speaker: 'Dungeon Master',
+      text,
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+    };
+    addNarratorMessage(msg);
+    // Broadcast to other players
+    channelRef.current?.send({
+      type: 'broadcast', event: 'narrator-msg',
+      payload: { senderId: user?.id, message: msg },
+    });
+    if (ttsEnabledRef.current) speak(text);
+  }, [idx, activeCampaign?.id, campaign.loaded]);
 
   // ── Supabase Realtime ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -117,7 +144,6 @@ export default function NarratorPanel() {
           const t = e.results[i][0].transcript.toLowerCase();
           if (t.includes('hey dm') || t.includes('hey dungeon master')) {
             r.stop();
-            setNarratorOpen(true);
             setTimeout(() => startPTT(), 400);
             return;
           }
@@ -233,7 +259,6 @@ export default function NarratorPanel() {
 
     setLoading(true);
     try {
-      const currentScene  = campaign.scenes?.[campaign.currentSceneIndex] || null;
       exchangeCountRef.current += 1;
 
       const systemPrompt = buildSystemPrompt(
@@ -281,9 +306,9 @@ export default function NarratorPanel() {
       if (result.advanceScene && !result.startCombat) {
         const store     = useStore.getState();
         const curIdx    = store.campaign.currentSceneIndex || 0;
-        const scenes    = store.campaign.scenes || [];
+        const sceneList = store.campaign.scenes || [];
         const nextIdx   = curIdx + 1;
-        if (nextIdx < scenes.length) {
+        if (nextIdx < sceneList.length) {
           store.setCurrentScene(nextIdx);
           broadcastSceneChange(nextIdx);
           exchangeCountRef.current = 0; // reset for next scene
@@ -307,7 +332,6 @@ export default function NarratorPanel() {
     for (const [k, v] of Object.entries(SKILL_ABILITY)) {
       if (skillLower.includes(k)) { abilityKey = v; break; }
     }
-    // Find the character by name in partyMembers
     const charName  = (rr.character || '').toLowerCase();
     const character = partyMembers.find(p => p.name.toLowerCase().includes(charName) || charName.includes(p.name.toLowerCase()))
                    || partyMembers[0];
@@ -326,9 +350,6 @@ export default function NarratorPanel() {
     handleSend(resultText);
   }
 
-  // ── Collapsed bar preview ─────────────────────────────────────────────────
-  const lastDmMsg = [...narrator.history].reverse().find(m => m.role === 'dm');
-
   // ── Floor status label ────────────────────────────────────────────────────
   function floorLabel() {
     if (!floorHolder) return null;
@@ -337,278 +358,160 @@ export default function NarratorPanel() {
   }
 
   return (
-    <>
-      {/* Expanded overlay */}
-      {narrator.open && (
-        <div style={styles.overlay}>
-          <div style={styles.overlayBackdrop} onClick={() => setNarratorOpen(false)} />
+    <div style={styles.panel}>
+      {/* Header */}
+      <div style={styles.header}>
+        <span style={styles.headerIcon}>{loading ? '⏳' : '🎭'}</span>
+        <span style={styles.headerTitle}>AI Narrator</span>
+        {heyDmMode && (
+          <span style={styles.heyDmPill}>
+            <span style={styles.heyDmDot} />
+            Hey DM
+          </span>
+        )}
+        {loading && <span style={styles.thinkingLabel}>thinking…</span>}
+        {floorHolder && !loading && (
+          <span style={{ ...styles.thinkingLabel, color: iHoldFloor ? '#2ecc71' : '#e67e22' }}>
+            {floorLabel()}
+          </span>
+        )}
+      </div>
 
-          <div style={styles.expandedPanel}>
-            {/* Header */}
-            <div style={styles.header}>
-              <span style={styles.headerIcon}>{loading ? '⏳' : '🎭'}</span>
-              <span style={styles.headerTitle}>AI Narrator</span>
-              {heyDmMode && (
-                <span style={styles.heyDmPill}>
-                  <span style={styles.heyDmDot} />
-                  Hey DM
+      {/* Message history */}
+      <div ref={historyRef} style={styles.history}>
+        {narrator.history.length === 0 && (
+          <p style={styles.emptyHint}>
+            {canSpeak
+              ? 'Describe your action or speak to an NPC.'
+              : `${floorHolder?.userName} has the floor. Wait for your turn.`}
+            {SPEECH_SUPPORTED && canSpeak ? ' Hold 🎤 to speak, or enable Hey DM mode.' : ''}
+          </p>
+        )}
+        {narrator.history.map((msg, i) => (
+          <div key={msg.id || i} style={msg.role === 'dm' ? styles.dmBubble : styles.playerBubble}>
+            <span style={msg.role === 'dm' ? styles.dmLabel : styles.playerLabel}>
+              {msg.role === 'dm' ? '🎲 Dungeon Master' : `⚔ ${msg.speaker}`}
+            </span>
+            <p style={styles.bubbleText}>{msg.text}</p>
+            {msg.rollRequest && (
+              <button
+                style={styles.rollBtn}
+                onClick={() => handleRollRequest(msg.rollRequest)}
+              >
+                <span style={styles.rollBtnIcon}>🎲</span>
+                <span style={styles.rollBtnText}>
+                  <strong>{msg.rollRequest.character || 'Player'}</strong>
+                  {' — Roll '}<strong>{msg.rollRequest.skill}</strong>
+                  {' vs DC '}<strong>{msg.rollRequest.dc}</strong>
                 </span>
-              )}
-              {loading && <span style={styles.thinkingLabel}>thinking…</span>}
-              {floorHolder && !loading && (
-                <span style={{ ...styles.thinkingLabel, color: iHoldFloor ? '#2ecc71' : '#e67e22' }}>
-                  {floorLabel()}
-                </span>
-              )}
-              <button style={styles.collapseBtn} onClick={() => setNarratorOpen(false)}>▼</button>
-            </div>
-
-            {/* Message history */}
-            <div ref={historyRef} style={styles.history}>
-              {narrator.history.length === 0 && (
-                <p style={styles.emptyHint}>
-                  {canSpeak
-                    ? 'Describe your action or speak to an NPC.'
-                    : `${floorHolder?.userName} has the floor. Wait for your turn.`}
-                  {SPEECH_SUPPORTED && canSpeak
-                    ? ' Hold 🎤 to speak, or enable Hey DM mode.'
-                    : ''}
-                </p>
-              )}
-              {narrator.history.map((msg, i) => (
-                <div key={msg.id || i} style={msg.role === 'dm' ? styles.dmBubble : styles.playerBubble}>
-                  <span style={msg.role === 'dm' ? styles.dmLabel : styles.playerLabel}>
-                    {msg.role === 'dm' ? '🎲 Dungeon Master' : `⚔ ${msg.speaker}`}
-                  </span>
-                  <p style={styles.bubbleText}>{msg.text}</p>
-                  {msg.rollRequest && (
-                    <button
-                      style={styles.rollBtn}
-                      onClick={() => handleRollRequest(msg.rollRequest)}
-                    >
-                      <span style={styles.rollBtnIcon}>🎲</span>
-                      <span style={styles.rollBtnText}>
-                        <strong>{msg.rollRequest.character || 'Player'}</strong>
-                        {' — Roll '}<strong>{msg.rollRequest.skill}</strong>
-                        {' vs DC '}<strong>{msg.rollRequest.dc}</strong>
-                      </span>
-                      <span style={styles.rollBtnCta}>Roll Now →</span>
-                    </button>
-                  )}
-                </div>
-              ))}
-              {loading && (
-                <div style={styles.dmBubble}>
-                  <span style={styles.dmLabel}>🎲 Dungeon Master</span>
-                  <p style={{ ...styles.bubbleText, opacity: 0.45 }}>• • •</p>
-                </div>
-              )}
-            </div>
-
-            {error && <div style={styles.errorBar}>{error}</div>}
-
-            {/* Floor status banner */}
-            {floorHolder && !iHoldFloor && !isDM && (
-              <div style={styles.floorBanner}>
-                🎤 <strong>{floorHolder.userName}</strong> has the floor — wait for your turn
-              </div>
+                <span style={styles.rollBtnCta}>Roll Now →</span>
+              </button>
             )}
-
-            {/* Input row */}
-            <div style={styles.inputRow}>
-              {SPEECH_SUPPORTED && (
-                <button
-                  onClick={() => setHeyDmMode(v => !v)}
-                  style={{ ...styles.iconBtn, ...(heyDmMode ? styles.iconBtnOn : {}) }}
-                  title={heyDmMode ? 'Disable "Hey DM"' : 'Enable "Hey DM" wake word'}
-                >🎙</button>
-              )}
-
-              {/* Floor claim button — visually distinct from mic/PTT button */}
-              {!iHoldFloor && !isDM && (
-                <button
-                  onClick={claimFloor}
-                  disabled={!!floorHolder}
-                  style={{
-                    ...styles.floorBtn,
-                    ...(floorHolder ? styles.floorBtnDisabled : {}),
-                  }}
-                  title={floorHolder ? `${floorHolder.userName} is speaking` : 'Claim floor to speak'}
-                >
-                  {floorHolder ? '⏳' : '✋ Floor'}
-                </button>
-              )}
-              {iHoldFloor && (
-                <button onClick={releaseFloor} style={{ ...styles.releaseBtn, fontSize: '0.75rem', padding: '6px 10px', minWidth: 'unset' }} title="Release floor">
-                  ✋ Done
-                </button>
-              )}
-
-              <input
-                style={{ ...styles.input, opacity: canSpeak ? 1 : 0.4 }}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
-                placeholder={
-                  canSpeak
-                    ? 'Describe your action or speak to an NPC…'
-                    : `${floorHolder?.userName} is speaking — wait your turn`
-                }
-                disabled={loading || !canSpeak}
-                autoFocus
-              />
-
-              {SPEECH_SUPPORTED && canSpeak && (
-                <button
-                  style={{ ...styles.iconBtn, ...(isRecording ? styles.iconBtnRecording : {}) }}
-                  onMouseDown={startPTT}
-                  onMouseUp={stopPTT}
-                  onTouchStart={e => { e.preventDefault(); startPTT(); }}
-                  onTouchEnd={e => { e.preventDefault(); stopPTT(); }}
-                  title="Hold to speak"
-                >{isRecording ? '🔴' : '🎤'}</button>
-              )}
-
-              <button
-                onClick={() => { setTtsEnabled(v => !v); if (ttsEnabled) stopSpeaking(); }}
-                style={{ ...styles.iconBtn, ...(ttsEnabled ? styles.iconBtnOn : {}) }}
-                title={ttsEnabled ? 'Mute DM voice' : 'Unmute DM voice'}
-              >{ttsEnabled ? '🔊' : '🔇'}</button>
-
-              <button onClick={clearNarratorHistory} style={styles.iconBtn} title="Clear history">🗑</button>
-
-              <button
-                onClick={() => handleSend()}
-                disabled={loading || !input.trim() || !canSpeak}
-                style={{ ...styles.sendBtn, opacity: (loading || !input.trim() || !canSpeak) ? 0.45 : 1 }}
-              >Send</button>
-            </div>
           </div>
+        ))}
+        {loading && (
+          <div style={styles.dmBubble}>
+            <span style={styles.dmLabel}>🎲 Dungeon Master</span>
+            <p style={{ ...styles.bubbleText, opacity: 0.45 }}>• • •</p>
+          </div>
+        )}
+      </div>
+
+      {error && <div style={styles.errorBar}>{error}</div>}
+
+      {/* Floor status banner */}
+      {floorHolder && !iHoldFloor && !isDM && (
+        <div style={styles.floorBanner}>
+          🎤 <strong>{floorHolder.userName}</strong> has the floor — wait for your turn
         </div>
       )}
 
-      {/* Collapsed bar — always visible at bottom */}
-      <div style={styles.collapsedBar}>
-        <div style={styles.barLeft} onClick={() => setNarratorOpen(true)}>
-          <span style={styles.barIcon}>{loading ? '⏳' : '🎭'}</span>
-          <div style={styles.barPreview}>
-            {loading
-              ? <span style={styles.barPreviewText}>Dungeon Master is thinking…</span>
-              : floorHolder && !iHoldFloor
-                ? <span style={styles.barPreviewText}>🎤 <strong>{floorHolder.userName}</strong> has the floor</span>
-                : lastDmMsg
-                  ? <span style={styles.barPreviewText} title={lastDmMsg.text}>
-                      <strong style={styles.barDmLabel}>DM: </strong>{lastDmMsg.text}
-                    </span>
-                  : <span style={styles.barHint}>Tap to speak with the AI Narrator</span>
-            }
-          </div>
-          {heyDmMode && (
-            <span style={styles.heyDmPill}>
-              <span style={styles.heyDmDot} />Hey DM
-            </span>
-          )}
-        </div>
-
-        <div style={styles.barRight}>
-          {/* Floor claim in collapsed bar */}
-          {!iHoldFloor && !isDM && !floorHolder && (
-            <button onClick={claimFloor} style={{ ...styles.floorBtn, fontSize: '0.72rem', padding: '5px 8px' }} title="Claim floor to speak">✋ Floor</button>
-          )}
-          {iHoldFloor && (
-            <button onClick={releaseFloor} style={{ ...styles.releaseBtn, fontSize: '0.72rem', padding: '5px 8px', minWidth: 'unset' }} title="Release floor">✋ Done</button>
-          )}
-          <input
-            style={{ ...styles.barInput, opacity: canSpeak ? 1 : 0.4 }}
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                setNarratorOpen(true);
-                handleSend();
-              }
-            }}
-            onFocus={() => { if (canSpeak) setNarratorOpen(true); }}
-            placeholder={canSpeak ? 'Ask the DM…' : 'Wait your turn'}
-            disabled={loading || !canSpeak}
-          />
-          {SPEECH_SUPPORTED && canSpeak && (
-            <button
-              style={{ ...styles.iconBtn, ...(isRecording ? styles.iconBtnRecording : {}) }}
-              onMouseDown={startPTT}
-              onMouseUp={stopPTT}
-              onTouchStart={e => { e.preventDefault(); startPTT(); }}
-              onTouchEnd={e => { e.preventDefault(); stopPTT(); }}
-              title="Hold to speak"
-            >{isRecording ? '🔴' : '🎤'}</button>
-          )}
+      {/* Input row */}
+      <div style={styles.inputRow}>
+        {SPEECH_SUPPORTED && (
           <button
-            onClick={() => { setNarratorOpen(true); handleSend(); }}
-            disabled={loading || !input.trim() || !canSpeak}
-            style={{ ...styles.sendBtn, opacity: (loading || !input.trim() || !canSpeak) ? 0.45 : 1 }}
-          >Send</button>
-        </div>
+            onClick={() => setHeyDmMode(v => !v)}
+            style={{ ...styles.iconBtn, ...(heyDmMode ? styles.iconBtnOn : {}) }}
+            title={heyDmMode ? 'Disable "Hey DM"' : 'Enable "Hey DM" wake word'}
+          >🎙</button>
+        )}
+
+        {!iHoldFloor && !isDM && (
+          <button
+            onClick={claimFloor}
+            disabled={!!floorHolder}
+            style={{ ...styles.floorBtn, ...(floorHolder ? styles.floorBtnDisabled : {}) }}
+            title={floorHolder ? `${floorHolder.userName} is speaking` : 'Claim floor to speak'}
+          >
+            {floorHolder ? '⏳' : '✋ Floor'}
+          </button>
+        )}
+        {iHoldFloor && (
+          <button onClick={releaseFloor} style={{ ...styles.releaseBtn, fontSize: '0.75rem', padding: '6px 10px', minWidth: 'unset' }} title="Release floor">
+            ✋ Done
+          </button>
+        )}
+
+        <input
+          style={{ ...styles.input, opacity: canSpeak ? 1 : 0.4 }}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
+          placeholder={
+            canSpeak
+              ? 'Describe your action or speak to an NPC…'
+              : `${floorHolder?.userName} is speaking — wait your turn`
+          }
+          disabled={loading || !canSpeak}
+          autoFocus
+        />
+
+        {SPEECH_SUPPORTED && canSpeak && (
+          <button
+            style={{ ...styles.iconBtn, ...(isRecording ? styles.iconBtnRecording : {}) }}
+            onMouseDown={startPTT}
+            onMouseUp={stopPTT}
+            onTouchStart={e => { e.preventDefault(); startPTT(); }}
+            onTouchEnd={e => { e.preventDefault(); stopPTT(); }}
+            title="Hold to speak"
+          >{isRecording ? '🔴' : '🎤'}</button>
+        )}
+
+        <button
+          onClick={() => { setTtsEnabled(v => !v); if (ttsEnabled) stopSpeaking(); }}
+          style={{ ...styles.iconBtn, ...(ttsEnabled ? styles.iconBtnOn : {}) }}
+          title={ttsEnabled ? 'Mute DM voice' : 'Unmute DM voice'}
+        >{ttsEnabled ? '🔊' : '🔇'}</button>
+
+        <button onClick={clearNarratorHistory} style={styles.iconBtn} title="Clear history">🗑</button>
+
+        <button
+          onClick={() => handleSend()}
+          disabled={loading || !input.trim() || !canSpeak}
+          style={{ ...styles.sendBtn, opacity: (loading || !input.trim() || !canSpeak) ? 0.45 : 1 }}
+        >Send</button>
       </div>
-    </>
+    </div>
   );
 }
 
 const styles = {
-  collapsedBar: {
-    height: '12vh', minHeight: 72, maxHeight: 110, flexShrink: 0,
-    display: 'flex', alignItems: 'stretch',
+  panel: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
     background: 'linear-gradient(180deg, #1a1008 0%, #110b05 100%)',
-    borderTop: '2px solid',
-    borderImage: 'linear-gradient(90deg, transparent, #d4af37, #a8841f, #d4af37, transparent) 1',
-    zIndex: 10, overflow: 'hidden',
-  },
-  barLeft: {
-    flex: 1, display: 'flex', alignItems: 'center', gap: 10,
-    padding: '0 14px', cursor: 'pointer', overflow: 'hidden', minWidth: 0,
-  },
-  barIcon: { fontSize: '1.2rem', flexShrink: 0 },
-  barPreview: { flex: 1, overflow: 'hidden', minWidth: 0 },
-  barPreviewText: {
-    display: 'block', color: '#e8dcc8', fontSize: '0.82rem',
-    lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-  },
-  barDmLabel: { color: '#d4af37', fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.75rem' },
-  barHint: { display: 'block', color: 'rgba(200,180,140,0.4)', fontSize: '0.78rem', fontStyle: 'italic' },
-  barRight: { display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px 0 0', flexShrink: 0 },
-  barInput: {
-    width: 180, background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(212,175,55,0.2)', borderRadius: 6,
-    color: '#e8dcc8', padding: '7px 11px', fontSize: '0.85rem',
-    fontFamily: 'inherit', outline: 'none', minHeight: 36,
-  },
-  overlay: {
-    position: 'absolute', inset: 0, zIndex: 80,
-    display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-    pointerEvents: 'none',
-  },
-  overlayBackdrop: { flex: 1, pointerEvents: 'all', cursor: 'pointer' },
-  expandedPanel: {
-    pointerEvents: 'all', height: '60%', minHeight: 340, maxHeight: '74%',
-    display: 'flex', flexDirection: 'column',
-    background: 'linear-gradient(180deg, #1a1008 0%, #110b05 100%)',
-    borderTop: '2px solid',
-    borderImage: 'linear-gradient(90deg, transparent, #d4af37, #a8841f, #d4af37, transparent) 1',
-    boxShadow: '0 -8px 40px rgba(0,0,0,0.7)', overflow: 'hidden',
+    overflow: 'hidden',
   },
   header: {
     display: 'flex', alignItems: 'center', gap: 10,
-    padding: '0 16px', height: 46, flexShrink: 0,
+    padding: '0 16px', height: 42, flexShrink: 0,
     borderBottom: '1px solid rgba(212,175,55,0.1)',
   },
   headerIcon: { fontSize: '1rem', flexShrink: 0 },
   headerTitle: {
     fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700,
     fontSize: '0.88rem', color: '#d4af37', letterSpacing: '0.06em', flex: 1,
-  },
-  collapseBtn: {
-    background: 'transparent', border: '1px solid rgba(212,175,55,0.2)',
-    color: 'rgba(212,175,55,0.6)', borderRadius: 4, padding: '3px 9px',
-    cursor: 'pointer', fontSize: '0.7rem', flexShrink: 0,
   },
   heyDmPill: {
     display: 'flex', alignItems: 'center', gap: 5,
@@ -694,8 +597,8 @@ const styles = {
   iconBtnRecording: { background: 'rgba(231,76,60,0.2)', border: '1px solid rgba(231,76,60,0.5)', animation: 'pulse 0.8s infinite' },
   floorBtn: {
     background: 'rgba(46,204,113,0.1)', border: '1px solid rgba(46,204,113,0.35)',
-    borderRadius: 6, color: '#2ecc71', fontSize: '1rem', cursor: 'pointer',
-    padding: '6px 9px', minHeight: 36, minWidth: 36,
+    borderRadius: 6, color: '#2ecc71', fontSize: '0.8rem', cursor: 'pointer',
+    padding: '6px 9px', minHeight: 36,
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   floorBtnDisabled: {
@@ -705,7 +608,7 @@ const styles = {
   releaseBtn: {
     background: 'rgba(231,76,60,0.1)', border: '1px solid rgba(231,76,60,0.35)',
     borderRadius: 6, color: '#e74c3c', fontSize: '1rem', cursor: 'pointer',
-    padding: '6px 9px', minHeight: 36, minWidth: 36,
+    padding: '6px 9px', minHeight: 36,
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   sendBtn: {

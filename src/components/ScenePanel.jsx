@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useStore from '../store/useStore';
 import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib/dalleApi';
-import { speak, stopSpeaking, isSpeaking } from '../lib/tts';
 
 export default function ScenePanel() {
   const user           = useStore(s => s.user);
@@ -13,19 +12,22 @@ export default function ScenePanel() {
   const startEncounter  = useStore(s => s.startEncounter);
   const sceneImages     = useStore(s => s.sceneImages);
   const setSceneImage   = useStore(s => s.setSceneImage);
-
-  const partyMembers = useStore(s => s.partyMembers);
+  const partyMembers    = useStore(s => s.partyMembers);
 
   const [imgLoading, setImgLoading] = useState(false);
   const [imgError, setImgError]     = useState(false);
   const [imgReady, setImgReady]     = useState(false);
-  const [imgAttempt, setImgAttempt] = useState(0); // increment to trigger retry
-  const [narrating, setNarrating]   = useState(false);
-  const imgAbortRef = useRef(null);
+  const [imgAttempt, setImgAttempt] = useState(0);
 
-  const scenes = campaign.scenes || [];
-  const idx    = campaign.currentSceneIndex || 0;
-  const scene  = scenes[idx] || null;
+  // Draggable tokens
+  const [tokenPositions, setTokenPositions] = useState({});
+  const [dragging, setDragging]             = useState(null); // { memberId, offsetX, offsetY }
+  const containerRef = useRef(null);
+  const imgAbortRef  = useRef(null);
+
+  const scenes   = campaign.scenes || [];
+  const idx      = campaign.currentSceneIndex || 0;
+  const scene    = scenes[idx] || null;
   const imageKey = `${activeCampaign?.id}:${idx}`;
   const imageUrl = sceneImages[imageKey];
 
@@ -38,22 +40,7 @@ export default function ScenePanel() {
     setImgAttempt(0);
   }, [idx, activeCampaign?.id]);
 
-  // Auto-narrate when scene changes (small delay lets image start loading)
-  useEffect(() => {
-    if (!scene) return;
-    const t = setTimeout(() => {
-      const text = [scene.title, scene.text].filter(Boolean).join('. ');
-      setNarrating(true);
-      speak(text, () => setNarrating(false));
-    }, 600);
-    return () => {
-      clearTimeout(t);
-      stopSpeaking();
-    };
-  }, [idx, activeCampaign?.id]);
-
-  // Generate scene image — uses fetch() with 50s timeout + 2 retries so
-  // slow Pollinations.ai responses don't get killed by the browser's <img> timeout
+  // Generate scene image
   useEffect(() => {
     if (!scene || imageUrl) return;
 
@@ -72,34 +59,53 @@ export default function ScenePanel() {
     promise
       .then(url => {
         if (abort.signal.aborted) return;
-        if (url) {
-          setSceneImage(imageKey, url);
-        } else {
-          setImgError(true);
-        }
+        if (url) { setSceneImage(imageKey, url); } else { setImgError(true); }
       })
       .catch(() => { if (!abort.signal.aborted) setImgError(true); })
       .finally(() => { if (!abort.signal.aborted) setImgLoading(false); });
 
     return () => abort.abort();
-  // imgAttempt in deps lets the Retry button re-trigger this effect
   }, [idx, activeCampaign?.id, imgAttempt]);
+
+  // ── Token drag handlers ──────────────────────────────────────────────────
+  function getDefaultTokenPos(index, total) {
+    const spacing = 90 / (total + 1);
+    return { x: 5 + spacing * (index + 1), y: 72 };
+  }
+
+  function startDrag(e, memberId) {
+    e.preventDefault();
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const pos  = tokenPositions[memberId] || getDefaultTokenPos(
+      partyMembers.findIndex(m => (m.id || m.name) === memberId),
+      partyMembers.length
+    );
+    const tokenPixelX = (pos.x / 100) * rect.width;
+    const tokenPixelY = (pos.y / 100) * rect.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    setDragging({
+      memberId,
+      offsetX: clientX - rect.left - tokenPixelX,
+      offsetY: clientY - rect.top  - tokenPixelY,
+    });
+    containerRef.current.setPointerCapture?.(e.pointerId);
+  }
+
+  function onDrag(e) {
+    if (!dragging || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = Math.max(2, Math.min(98, ((e.clientX - rect.left - dragging.offsetX) / rect.width)  * 100));
+    const y = Math.max(2, Math.min(96, ((e.clientY - rect.top  - dragging.offsetY) / rect.height) * 100));
+    setTokenPositions(prev => ({ ...prev, [dragging.memberId]: { x, y } }));
+  }
+
+  function stopDrag() { setDragging(null); }
 
   function handleStartCombat() {
     if (!scene?.enemies?.length) return;
-    // Use real player characters (partyMembers) not NPC characters from JSON
     startEncounter(scene.enemies, partyMembers.length > 0 ? partyMembers : []);
-  }
-
-  function handleNarrate() {
-    if (narrating) {
-      stopSpeaking();
-      setNarrating(false);
-      return;
-    }
-    const text = [scene.title, scene.text].filter(Boolean).join('. ');
-    setNarrating(true);
-    speak(text, () => setNarrating(false));
   }
 
   if (!campaign.loaded) {
@@ -107,9 +113,7 @@ export default function ScenePanel() {
       <div style={styles.empty}>
         <div style={styles.emptyIcon}>📜</div>
         <h2 style={styles.emptyTitle}>No Campaign Loaded</h2>
-        <p style={styles.emptyText}>
-          Import a campaign JSON to begin your adventure.
-        </p>
+        <p style={styles.emptyText}>Import a campaign JSON to begin your adventure.</p>
       </div>
     );
   }
@@ -126,27 +130,32 @@ export default function ScenePanel() {
 
   return (
     <div style={styles.panel}>
-      {/* Scene Image */}
-      <div style={styles.imageContainer}>
-        {/* Skeleton shows while URL is pending OR while browser is fetching */}
+      <div
+        ref={containerRef}
+        style={styles.imageContainer}
+        onPointerMove={onDrag}
+        onPointerUp={stopDrag}
+        onPointerLeave={stopDrag}
+      >
+        {/* Skeleton while loading */}
         {(imgLoading || (imageUrl && !imgReady && !imgError)) && (
           <div style={styles.imageSkeleton}>
             <div style={styles.skeletonShimmer} />
             <span style={styles.skeletonLabel}>✦ Painting the scene…</span>
-            <span style={{ color: 'rgba(212,175,55,0.25)', fontSize: '0.65rem', fontFamily: 'monospace', zIndex: 1 }}>
-              generating free AI art — up to 30s
-            </span>
+            <span style={styles.skeletonHint}>generating free AI art — up to 30s</span>
           </div>
         )}
+
         {imageUrl && !imgError && (
           <img
             src={imageUrl}
             alt={scene.title}
-            style={{ ...styles.sceneImage, opacity: imgReady ? 0.92 : 0 }}
+            style={{ ...styles.sceneImage, opacity: imgReady ? 1 : 0 }}
             onLoad={() => { setImgReady(true); setImgLoading(false); }}
             onError={() => { setImgError(true); setImgLoading(false); }}
           />
         )}
+
         {((!imageUrl && !imgLoading) || imgError) && (
           <div style={styles.imagePlaceholder}>
             <span style={styles.placeholderGlyph}>⚔</span>
@@ -163,59 +172,69 @@ export default function ScenePanel() {
             )}
           </div>
         )}
-        {/* Scene index badge */}
+
+        {/* Bottom gradient + scene title */}
+        <div style={styles.titleOverlay}>
+          <h2 style={styles.sceneTitle}>{scene.title}</h2>
+          {isDM && dmMode && scene.dmNotes && (
+            <p style={styles.dmNotesText}>📌 {scene.dmNotes}</p>
+          )}
+        </div>
+
+        {/* Scene badge */}
         <div style={styles.sceneBadge}>
           Scene {idx + 1} / {scenes.length}
         </div>
-      </div>
 
-      {/* Scene Content */}
-      <div style={styles.content}>
-        <h2 style={styles.sceneTitle}>{scene.title}</h2>
-
-        {scene.text && (
-          <p style={styles.sceneText}>{scene.text}</p>
-        )}
-
-        {/* DM Notes */}
-        {isDM && dmMode && scene.dmNotes && (
-          <div className="dm-only" style={styles.dmNotes}>
-            <span style={styles.dmNotesLabel}>DM Notes</span>
-            <p style={styles.dmNotesText}>{scene.dmNotes}</p>
-          </div>
-        )}
-
-        {/* Narrate button — reads scene aloud with DM voice */}
-        <button onClick={handleNarrate} style={{ ...styles.narrateBtn, ...(narrating ? styles.narrateBtnActive : {}) }}>
-          {narrating ? '■ Stop' : '▶ Narrate Scene'}
-        </button>
-
-        {/* DM Navigation Controls */}
+        {/* DM Navigation overlay — top-left */}
         {isDM && dmMode && (
-          <div style={styles.dmControls}>
+          <div style={styles.dmOverlay}>
             <button
               onClick={() => setCurrentScene(Math.max(0, idx - 1))}
               disabled={idx === 0}
               style={styles.navBtn}
-            >
-              ◀ Prev
-            </button>
+            >◀ Prev</button>
 
             <button
               onClick={() => setCurrentScene(Math.min(scenes.length - 1, idx + 1))}
               disabled={idx >= scenes.length - 1}
               style={styles.navBtn}
-            >
-              Next ▶
-            </button>
+            >Next ▶</button>
 
             {scene.isEncounter && scene.enemies?.length > 0 && (
               <button onClick={handleStartCombat} style={styles.combatBtn}>
-                ⚔ Start Combat
+                ⚔ Combat
               </button>
             )}
           </div>
         )}
+
+        {/* Draggable player tokens */}
+        {partyMembers.map((member, i) => {
+          const memberId = member.id || member.name;
+          const pos = tokenPositions[memberId] || getDefaultTokenPos(i, partyMembers.length);
+          return (
+            <div
+              key={memberId}
+              style={{
+                ...styles.token,
+                left: `${pos.x}%`,
+                top:  `${pos.y}%`,
+                cursor: dragging?.memberId === memberId ? 'grabbing' : 'grab',
+                boxShadow: dragging?.memberId === memberId
+                  ? '0 0 0 3px #d4af37, 0 4px 16px rgba(0,0,0,0.8)'
+                  : '0 2px 8px rgba(0,0,0,0.7)',
+              }}
+              onPointerDown={e => startDrag(e, memberId)}
+              title={member.name}
+            >
+              <span style={styles.tokenInitials}>
+                {(member.name || '?').slice(0, 2).toUpperCase()}
+              </span>
+              <span style={styles.tokenName}>{member.name?.split(' ')[0]}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -226,34 +245,31 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    overflowY: 'auto',
-    background: 'var(--bg-primary)',
+    background: '#0a0705',
   },
   imageContainer: {
+    flex: 1,
     position: 'relative',
-    width: '100%',
-    height: 280,
-    flexShrink: 0,
-    background: '#0a0705',
     overflow: 'hidden',
+    background: '#0a0705',
+    userSelect: 'none',
   },
   sceneImage: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
     display: 'block',
-    opacity: 0.92,
+    transition: 'opacity 0.5s ease',
   },
   imageSkeleton: {
-    width: '100%',
-    height: '100%',
+    position: 'absolute',
+    inset: 0,
     background: 'linear-gradient(135deg, #1a1008 0%, #0e0b07 50%, #1a1008 100%)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 12,
-    position: 'relative',
     overflow: 'hidden',
   },
   skeletonShimmer: {
@@ -270,9 +286,15 @@ const styles = {
     zIndex: 1,
     animation: 'goldPulse 2s infinite',
   },
+  skeletonHint: {
+    color: 'rgba(212,175,55,0.25)',
+    fontSize: '0.65rem',
+    fontFamily: 'monospace',
+    zIndex: 1,
+  },
   imagePlaceholder: {
-    width: '100%',
-    height: '100%',
+    position: 'absolute',
+    inset: 0,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -280,10 +302,7 @@ const styles = {
     gap: 10,
     background: 'linear-gradient(160deg, #1a1008, #0e0b07)',
   },
-  placeholderGlyph: {
-    fontSize: '3rem',
-    opacity: 0.12,
-  },
+  placeholderGlyph: { fontSize: '3rem', opacity: 0.12 },
   imgErrorNote: {
     color: 'rgba(200,180,140,0.4)',
     fontSize: '0.72rem',
@@ -299,12 +318,37 @@ const styles = {
     cursor: 'pointer',
     fontFamily: "'Cinzel', Georgia, serif",
     letterSpacing: '0.04em',
-    marginTop: 4,
+  },
+  // Bottom gradient overlay — title
+  titleOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: '40px 18px 14px',
+    background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%)',
+    pointerEvents: 'none',
+  },
+  sceneTitle: {
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    color: 'var(--gold-light, #f0d060)',
+    letterSpacing: '0.05em',
+    margin: 0,
+    textShadow: '0 1px 6px rgba(0,0,0,0.9)',
+  },
+  dmNotesText: {
+    color: 'rgba(240,200,200,0.75)',
+    fontSize: '0.78rem',
+    lineHeight: 1.5,
+    margin: '4px 0 0',
+    fontStyle: 'italic',
   },
   sceneBadge: {
     position: 'absolute',
-    top: 12,
-    right: 12,
+    top: 10,
+    right: 10,
     background: 'rgba(0,0,0,0.65)',
     border: '1px solid rgba(212,175,55,0.25)',
     borderRadius: 4,
@@ -313,97 +357,76 @@ const styles = {
     fontFamily: "'Cinzel', Georgia, serif",
     letterSpacing: '0.06em',
     padding: '3px 9px',
+    pointerEvents: 'none',
   },
-  content: {
-    padding: '24px 28px 32px',
+  // DM controls — top-left overlay
+  dmOverlay: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
     display: 'flex',
-    flexDirection: 'column',
-    gap: 18,
-  },
-  sceneTitle: {
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontSize: '1.5rem',
-    fontWeight: 700,
-    color: 'var(--gold-light)',
-    letterSpacing: '0.05em',
-    margin: 0,
-    textShadow: '0 0 20px rgba(212,175,55,0.3)',
-  },
-  sceneText: {
-    color: 'var(--text-secondary)',
-    fontSize: '0.97rem',
-    lineHeight: 1.75,
-    margin: 0,
-    fontStyle: 'italic',
-  },
-  dmNotes: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-  },
-  dmNotesLabel: {
-    color: 'rgba(200,80,80,0.8)',
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontSize: '0.7rem',
-    fontWeight: 700,
-    letterSpacing: '0.1em',
-    textTransform: 'uppercase',
-  },
-  dmNotesText: {
-    color: 'rgba(240,200,200,0.8)',
-    fontSize: '0.88rem',
-    lineHeight: 1.6,
-    margin: 0,
-  },
-  narrateBtn: {
-    alignSelf: 'flex-start',
-    background: 'rgba(212,175,55,0.08)',
-    border: '1px solid rgba(212,175,55,0.25)',
-    borderRadius: 8,
-    color: 'rgba(212,175,55,0.8)',
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontWeight: 700,
-    fontSize: '0.78rem',
-    letterSpacing: '0.06em',
-    padding: '8px 18px',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
-  narrateBtnActive: {
-    background: 'rgba(212,175,55,0.15)',
-    border: '1px solid rgba(212,175,55,0.5)',
-    color: '#d4af37',
-  },
-  dmControls: {
-    display: 'flex',
-    gap: 10,
-    flexWrap: 'wrap',
-    paddingTop: 8,
-    borderTop: '1px solid rgba(212,175,55,0.1)',
+    gap: 6,
+    zIndex: 10,
   },
   navBtn: {
-    background: 'linear-gradient(160deg, #3a2412, #2e1e0e)',
-    border: '1px solid var(--border-light)',
-    color: 'var(--text-secondary)',
+    background: 'rgba(0,0,0,0.7)',
+    border: '1px solid rgba(212,175,55,0.35)',
+    color: 'rgba(212,175,55,0.85)',
     borderRadius: 6,
-    padding: '8px 18px',
-    fontSize: '0.82rem',
+    padding: '5px 12px',
+    fontSize: '0.75rem',
     fontFamily: "'Cinzel', Georgia, serif",
     cursor: 'pointer',
-    minHeight: 40,
+    minHeight: 32,
+    backdropFilter: 'blur(4px)',
   },
   combatBtn: {
-    background: 'linear-gradient(135deg, #8b0000, #5a0000)',
-    border: '1px solid rgba(200,50,50,0.4)',
+    background: 'rgba(139,0,0,0.8)',
+    border: '1px solid rgba(200,50,50,0.5)',
     color: '#ffd0cc',
     borderRadius: 6,
-    padding: '8px 22px',
-    fontSize: '0.85rem',
+    padding: '5px 12px',
+    fontSize: '0.75rem',
     fontFamily: "'Cinzel', Georgia, serif",
     fontWeight: 700,
     cursor: 'pointer',
-    minHeight: 40,
-    letterSpacing: '0.04em',
+    minHeight: 32,
+    backdropFilter: 'blur(4px)',
+  },
+  // Player tokens
+  token: {
+    position: 'absolute',
+    transform: 'translate(-50%, -50%)',
+    width: 44,
+    height: 44,
+    borderRadius: '50%',
+    background: 'linear-gradient(135deg, #2c1a0e, #1a0e05)',
+    border: '2px solid #d4af37',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20,
+    touchAction: 'none',
+    userSelect: 'none',
+  },
+  tokenInitials: {
+    color: '#d4af37',
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontWeight: 700,
+    fontSize: '0.72rem',
+    lineHeight: 1,
+  },
+  tokenName: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: '0.5rem',
+    lineHeight: 1,
+    marginTop: 1,
+    maxWidth: 40,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    textAlign: 'center',
   },
   empty: {
     flex: 1,
@@ -414,11 +437,9 @@ const styles = {
     gap: 16,
     padding: 40,
     textAlign: 'center',
+    background: 'var(--bg-primary)',
   },
-  emptyIcon: {
-    fontSize: '3rem',
-    opacity: 0.3,
-  },
+  emptyIcon: { fontSize: '3rem', opacity: 0.3 },
   emptyTitle: {
     fontFamily: "'Cinzel', Georgia, serif",
     color: 'var(--text-muted)',
