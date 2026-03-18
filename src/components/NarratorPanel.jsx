@@ -24,6 +24,7 @@ export default function NarratorPanel() {
   const activeCampaign   = useStore(s => s.activeCampaign);
   const campaign         = useStore(s => s.campaign);
   const isDM             = useStore(s => s.isDM);
+  const myCharacter      = useStore(s => s.myCharacter);
   const partyMembers     = useStore(s => s.partyMembers);
   const narrator         = useStore(s => s.narrator);
   const sessionApiKey    = useStore(s => s.sessionApiKey);
@@ -56,6 +57,7 @@ export default function NarratorPanel() {
   const heyDmModeRef    = useRef(heyDmMode);
   const floorHolderRef  = useRef(floorHolder);
   const lastAutoPostedRef = useRef(-1);
+  const autoPostFirstRunRef = useRef(true);
 
   useEffect(() => { ttsEnabledRef.current  = ttsEnabled;  }, [ttsEnabled]);
   useEffect(() => { heyDmModeRef.current   = heyDmMode;   }, [heyDmMode]);
@@ -77,6 +79,14 @@ export default function NarratorPanel() {
     if (!currentScene || !campaign.loaded) return;
     const sceneKey = `${activeCampaign?.id}:${idx}`;
     if (lastAutoPostedRef.current === sceneKey) return;
+    // On first mount with existing history (resumed session), skip auto-post
+    if (autoPostFirstRunRef.current) {
+      autoPostFirstRunRef.current = false;
+      if (narrator.history.length > 0) {
+        lastAutoPostedRef.current = sceneKey;
+        return;
+      }
+    }
     lastAutoPostedRef.current = sceneKey;
 
     const text = [currentScene.title, currentScene.text].filter(Boolean).join('\n\n');
@@ -253,7 +263,7 @@ export default function NarratorPanel() {
     setInput('');
     setError(null);
 
-    const playerMsg = { role: 'player', speaker: user?.name || 'Adventurer', text };
+    const playerMsg = { role: 'player', speaker: myCharacter?.name || user?.name || 'Adventurer', text };
     addNarratorMessage(playerMsg);
     broadcast({ ...playerMsg, id: crypto.randomUUID(), timestamp: Date.now() });
 

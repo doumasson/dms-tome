@@ -281,9 +281,16 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           <span style={{ fontSize: '0.82rem', color: 'var(--gold)', fontWeight: 700, fontFamily: "'Cinzel', Georgia, serif" }}>Round {round}</span>
           {activeCombatant && <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Turn: <strong>{activeCombatant.name}</strong></span>}
           {(allEnemiesDead || partyDead) && (
-            <span style={{ fontSize: '0.78rem', color: allEnemiesDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
-              {allEnemiesDead ? '🏆 Victory!' : '💀 Defeated!'}
-            </span>
+            <>
+              <span style={{ fontSize: '0.78rem', color: allEnemiesDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
+                {allEnemiesDead ? '🏆 Victory!' : '💀 Defeated!'}
+              </span>
+              {dmMode && (
+                <button onClick={onEndEncounter} style={{ ...btn.small, color: '#c0392b', borderColor: 'rgba(192,57,43,0.5)', fontSize: '0.7rem', padding: '2px 8px' }}>
+                  ✕ End Combat
+                </button>
+              )}
+            </>
           )}
         </div>
         <div style={{ overflowX: 'auto' }}>
@@ -448,6 +455,11 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
                 {allEnemiesDead && dmMode && (
                   <button onClick={() => setShowLoot(l => !l)} style={{ ...btn.small, color: '#d4af37', borderColor: 'var(--border-gold)', fontSize: '0.72rem' }}>
                     🎁 Loot
+                  </button>
+                )}
+                {dmMode && (allEnemiesDead || partyDead) && (
+                  <button onClick={onEndEncounter} style={{ ...btn.small, color: '#c0392b', borderColor: 'rgba(192,57,43,0.5)', fontSize: '0.72rem' }}>
+                    ✕ End Combat
                   </button>
                 )}
               </div>

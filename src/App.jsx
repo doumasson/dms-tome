@@ -246,8 +246,8 @@ export default function App() {
     await supabase.from('profiles').upsert(userData, { onConflict: 'id' });
     setUser(userData);
 
-    // Restore last campaign on page refresh
-    const savedId = sessionStorage.getItem('activeCampaignId');
+    // Restore last campaign on sign-in or page refresh
+    const savedId = localStorage.getItem('activeCampaignId');
     if (savedId) {
       const { data: member } = await supabase
         .from('campaign_members')
@@ -307,8 +307,8 @@ export default function App() {
       useStore.getState().setSessionApiKey(sharedApiKey);
     }
 
-    // Save campaign ID so refresh restores to game view
-    sessionStorage.setItem('activeCampaignId', campaignRecord.id);
+    // Save campaign ID so sign-in/refresh restores to game view
+    localStorage.setItem('activeCampaignId', campaignRecord.id);
 
     // ── Load real player characters (partyMembers) ─────────────────────────────
     const { data: allMembers } = await supabase
@@ -358,7 +358,7 @@ export default function App() {
   }
 
   function handleLeaveCampaign() {
-    sessionStorage.removeItem('activeCampaignId');
+    localStorage.removeItem('activeCampaignId');
     clearActiveCampaign();
     setAppView('select');
   }
