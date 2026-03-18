@@ -54,9 +54,9 @@ You and your friends sit down to play D&D — you've got your characters, your g
 
 This is not a campaign manager or a helper tool. This is a game. Players open a browser and play D&D together right now, with no extra setup and no human DM required.
 
-## North Star: Bioware-Style Organic RPG
+## North Star: Organic Living-World RPG
 
-**Think Baldur's Gate 3 / KOTOR / Dragon Age — not a chatbot.**
+**A living world you explore — not a chatbot you type at.**
 
 The world is alive. Players move their tokens freely on the scene map. When they approach an NPC, a building, a point of interest — an interaction prompt appears organically. They act, the Dungeon Master responds. No menus. No mode-switching. The story emerges from spatial exploration.
 
@@ -67,11 +67,11 @@ The world is alive. Players move their tokens freely on the scene map. When they
 - Combat erupts when the Dungeon Master decides it does — tokens transition to combat grid
 - Victory fades back to the world map; players continue exploring
 
-This is the north star for every design decision. If a feature would feel at home in Baldur's Gate 3, ship it. If it feels like a chatbot UI feature, rethink it.
+This is the north star for every design decision. If a feature feels like organic RPG gameplay, ship it. If it feels like a chatbot UI feature, rethink it.
 
 ## Product Feel
 
-Think **Icewind Dale / Baldur's Gate meets a live D&D session.**
+Think **classic isometric RPG meets a live D&D session.**
 
 - Top ~55% of the screen: the scene. A generated image of where the party is, with player and enemy tokens on a grid. Grid is always visible. In combat the grid activates for turn-based movement.
 - Bottom ~45%: the narrator chat. The scene description auto-posts when a scene loads. Players type or speak their actions. The Dungeon Master responds, drives the story, triggers combat, calls for rolls.
