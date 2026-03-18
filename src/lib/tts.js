@@ -1,9 +1,7 @@
 // TTS chain (best to worst voice quality):
-//  1. OpenAI TTS   — tts-1 model, neural voices  (requires OpenAI key)
-//  2. TikTok TTS   — en_uk_001                   (CORS-open proxy, free)
-//  3. StreamElements — Brian                      (AWS Polly, may have CORS)
-//  4. Google Translate TTS                        (natural, ~200 char limit)
-//  5. Web Speech API                              (browser-native fallback)
+//  1. OpenAI TTS       — tts-1 model, neural voices  (requires OpenAI key)
+//  2. Pollinations TTS — same tts-1 voices, CORS-open (free, no key; 1 req/15s anonymous)
+//  3. Web Speech API   — browser-native fallback
 //
 // Narrator voice: 'onyx'   (deep, authoritative storyteller)
 // NPC voices: deterministic per-NPC from [echo, fable, alloy, nova, shimmer]
@@ -38,19 +36,11 @@ export async function speak(text, onEnd, options = {}) {
     if (url) { playAudioUrl(url, text, onEnd); return; }
   }
 
-  // 2. TikTok TTS (UK male, AWS Polly neural, CORS-open, free)
-  const tiktokUrl = await tryTikTokTTS(text);
-  if (tiktokUrl) { playAudioUrl(tiktokUrl, text, onEnd); return; }
+  // 2. Pollinations TTS (same tts-1 quality, free, no key needed)
+  const pollinationsUrl = await tryPollinationsTTS(text, voice);
+  if (pollinationsUrl) { playAudioUrl(pollinationsUrl, text, onEnd); return; }
 
-  // 3. StreamElements (AWS Polly Brian, UK male)
-  const seUrl = await tryStreamElementsTTS(text);
-  if (seUrl) { playAudioUrl(seUrl, text, onEnd); return; }
-
-  // 4. Google Translate TTS (natural, 200-char chunks)
-  const gtUrl = await tryGoogleTTS(text);
-  if (gtUrl) { playAudioUrl(gtUrl, text, onEnd); return; }
-
-  // 5. Last resort: browser Web Speech API
+  // 3. Last resort: browser Web Speech API
   speakWebSpeech(text, onEnd);
 }
 
@@ -85,60 +75,29 @@ async function tryOpenAiTTS(text, apiKey, voice = 'onyx') {
   }
 }
 
-// ── TikTok TTS (UK male "en_uk_001", sounds like a storyteller) ──────────────
-async function tryTikTokTTS(text) {
+// ── Pollinations TTS (OpenAI tts-1 quality, free, CORS-open) ─────────────────
+// No API key required — anonymous tier is rate-limited to 1 req/15s.
+// Same voice names as OpenAI: onyx, nova, alloy, echo, fable, shimmer.
+async function tryPollinationsTTS(text, voice = 'onyx') {
   try {
     const controller = new AbortController();
-    const timeout    = setTimeout(() => controller.abort(), 6000);
+    const timeout    = setTimeout(() => controller.abort(), 12000);
 
-    const response = await fetch('https://tiktok-tts.weilbyte.dev/api/generate', {
+    const response = await fetch('https://gen.pollinations.ai/v1/audio/speech', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: text.slice(0, 500), voice: 'en_uk_001' }),
+      body: JSON.stringify({
+        model: 'tts-1',
+        input: text.slice(0, 4096),
+        voice,
+      }),
       signal: controller.signal,
     });
     clearTimeout(timeout);
 
     if (!response.ok) return null;
-    const json = await response.json();
-    if (!json?.data) return null;
-
-    return `data:audio/mpeg;base64,${json.data}`;
-  } catch {
-    return null;
-  }
-}
-
-// ── StreamElements TTS (AWS Polly Brian, UK male) ─────────────────────────────
-async function tryStreamElementsTTS(text) {
-  try {
-    const url = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`;
-
-    const controller = new AbortController();
-    const timeout    = setTimeout(() => controller.abort(), 7000);
-
-    const response = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeout);
-
-    if (!response.ok) return null;
     const blob = await response.blob();
-    return URL.createObjectURL(blob);
-  } catch {
-    return null;
-  }
-}
-
-// ── Google Translate TTS (natural voice, ~200 char limit, no auth) ─────────────
-async function tryGoogleTTS(text) {
-  try {
-    const chunk = text.slice(0, 200);
-    const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=en-gb&client=tw-ob&q=${encodeURIComponent(chunk)}`;
-    const controller = new AbortController();
-    const timeout    = setTimeout(() => controller.abort(), 6000);
-    const res = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const blob = await res.blob();
+    if (blob.size < 1000) return null;
     return URL.createObjectURL(blob);
   } catch {
     return null;
