@@ -75,15 +75,12 @@ function packItems(items) {
         grid[r][c] = true;
   }
 
-  // Preferred items first, then largest first
-  const sorted = [...items].sort((a, b) => {
-    const aPref = a._gridCol !== undefined ? 1 : 0;
-    const bPref = b._gridCol !== undefined ? 1 : 0;
-    if (aPref !== bPref) return bPref - aPref;
-    const [aw, ah] = getItemSize(a);
-    const [bw, bh] = getItemSize(b);
-    return (bw * bh) - (aw * ah);
-  });
+  // Preferred items first (in grid-position order), then remaining in array order
+  const preferred = items
+    .filter(i => i._gridCol !== undefined)
+    .sort((a, b) => a._gridRow !== b._gridRow ? a._gridRow - b._gridRow : a._gridCol - b._gridCol);
+  const unplaced = items.filter(i => i._gridCol === undefined);
+  const sorted = [...preferred, ...unplaced];
 
   for (const item of sorted) {
     const [w, h] = getItemSize(item);
