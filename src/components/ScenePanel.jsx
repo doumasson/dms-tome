@@ -97,7 +97,7 @@ export default function ScenePanel() {
 
   // Generate scene image
   useEffect(() => {
-    if (!scene || imageUrl) return;
+    if (!campaign.loaded || !scene || imageUrl) return;
 
     imgAbortRef.current?.abort();
     const abort = new AbortController();
@@ -120,7 +120,7 @@ export default function ScenePanel() {
       .finally(() => { if (!abort.signal.aborted) setImgLoading(false); });
 
     return () => abort.abort();
-  }, [idx, activeCampaign?.id, imgAttempt]);
+  }, [idx, activeCampaign?.id, imgAttempt, campaign.loaded]);
 
   // ── Token drag handlers ──────────────────────────────────────────────────
   function getDefaultTokenPos(index, total) {
