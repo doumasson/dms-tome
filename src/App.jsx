@@ -143,6 +143,7 @@ export default function App() {
         case 'set-concentration':   store.setConcentration(payload.id, payload.spell); break;
         case 'clear-concentration': store.clearConcentration(payload.id); break;
         case 'add-effect':          store.applyEncounterEffect(payload.effect); break;
+        case 'remove-effect':       store.applyRemoveEffect(payload.effectId); break;
       }
     });
 
@@ -524,7 +525,7 @@ export default function App() {
 
   // ── Character Profile ─────────────────────────────────────────────────────────
   if (appView === 'character-profile') {
-    return <CharacterProfile onClose={() => setAppView('game')} />;
+    return <CharacterProfile onClose={() => setAppView('game')} campaignId={activeCampaign?.id} />;
   }
 
   // ── Main Game UI ─────────────────────────────────────────────────────────────

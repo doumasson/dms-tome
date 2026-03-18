@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import useStore from '../store/useStore';
 import { supabase } from '../lib/supabase';
 import { buildSystemPrompt, callNarrator } from '../lib/narratorApi';
-import { speak, stopSpeaking } from '../lib/tts';
+import { speak, stopSpeaking, getNpcVoice } from '../lib/tts';
+import { getOpenAiKey } from '../lib/dalleApi';
 import { ambient } from '../lib/ambientAudio';
 import { getClaudeApiKey } from '../lib/claudeApi';
 import { broadcastSceneChange, broadcastStartCombat } from '../lib/liveChannel';
@@ -72,6 +73,7 @@ export default function NarratorPanel() {
   const floorHolderRef  = useRef(floorHolder);
   const lastAutoPostedRef = useRef(-1);
   const autoPostFirstRunRef = useRef(true);
+  const activeNpcRef = useRef(null); // { name, voice } when player approached an NPC
 
   useEffect(() => { ttsEnabledRef.current  = ttsEnabled;  }, [ttsEnabled]);
   useEffect(() => { heyDmModeRef.current   = heyDmMode;   }, [heyDmMode]);
@@ -124,7 +126,7 @@ export default function NarratorPanel() {
       type: 'broadcast', event: 'narrator-msg',
       payload: { senderId: user?.id, message: msg },
     });
-    if (ttsEnabledRef.current) speak(text);
+    if (ttsEnabledRef.current) speak(text, null, { openAiKey: getOpenAiKey(user?.id), voice: 'onyx' });
   }, [idx, activeCampaign?.id, campaign.loaded]);
 
   // ── Supabase Realtime ─────────────────────────────────────────────────────
@@ -140,7 +142,10 @@ export default function NarratorPanel() {
       if (payload.senderId === user?.id) return;
       addNarratorMessage(payload.message);
       if (ttsEnabledRef.current && payload.message.role === 'dm') {
-        speak(payload.message.text);
+        speak(payload.message.text, null, {
+          openAiKey: getOpenAiKey(user?.id),
+          voice: payload.message.npcVoice || 'onyx',
+        });
       }
     });
 
@@ -265,6 +270,12 @@ export default function NarratorPanel() {
     if (!pendingDmTrigger) return;
     const text = pendingDmTrigger;
     clearPendingDmTrigger();
+    // Parse NPC name from proximity trigger to set voice context
+    const npcMatch = text.match(/^You (?:approach|near) (.+?)[\.,]/i);
+    if (npcMatch) {
+      const npcName = npcMatch[1].trim();
+      activeNpcRef.current = { name: npcName, voice: getNpcVoice(npcName) };
+    }
     // Small delay so any in-progress state settles first
     const t = setTimeout(() => handleSend(text, true), 150);
     return () => clearTimeout(t);
@@ -317,16 +328,19 @@ export default function NarratorPanel() {
 
       const result = await callNarrator({ messages, systemPrompt, apiKey });
 
+      const npcVoice = activeNpcRef.current?.voice || null;
+      activeNpcRef.current = null; // reset after each DM response
       const dmMsg = {
         role: 'dm',
         speaker: 'Dungeon Master',
         text: result.narrative,
         rollRequest: result.rollRequest || null,
         stateHint:   result.stateHint   || null,
+        npcVoice,
       };
       addNarratorMessage(dmMsg);
       broadcast({ ...dmMsg, id: crypto.randomUUID(), timestamp: Date.now() });
-      if (ttsEnabled) speak(result.narrative);
+      if (ttsEnabled) speak(result.narrative, null, { openAiKey: getOpenAiKey(user?.id), voice: npcVoice || 'onyx' });
 
       // Persist the updated log
       const updated = [...narrator.history, playerMsg, { ...dmMsg, id: crypto.randomUUID(), timestamp: Date.now() }];

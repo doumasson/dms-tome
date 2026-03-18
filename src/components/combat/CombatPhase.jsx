@@ -45,7 +45,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const cellPx = getCellPx(winWidth);
 
   const activeCombatant = combatants[currentTurn] || null;
-  const { runEnemyTurn, sessionApiKey, narrateCombatAction, addNarratorMessage, addEncounterEffect } = useStore();
+  const { runEnemyTurn, sessionApiKey, narrateCombatAction, addNarratorMessage, addEncounterEffect, removeEncounterEffect } = useStore();
   const activeEffects = useStore(s => s.encounter.activeEffects || []);
 
   // Use the campaign scene image as the battle map background
@@ -695,6 +695,23 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           <button onClick={onEndEncounter} style={{ ...btn.ghost, width: '100%', fontSize: '0.75rem', color: '#c0392b', borderColor: 'rgba(192,57,43,0.4)' }}>
             ✕ End Combat
           </button>
+        )}
+
+        {/* DM: Active spell effects list */}
+        {dmMode && activeEffects.length > 0 && (
+          <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <div style={{ fontSize: '0.6rem', color: 'rgba(155,89,182,0.7)', fontFamily: "'Cinzel', Georgia, serif", letterSpacing: '0.06em', marginBottom: 2 }}>ACTIVE EFFECTS</div>
+            {activeEffects.map(e => (
+              <div key={e.id} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(155,89,182,0.08)', border: '1px solid rgba(155,89,182,0.25)', borderRadius: 5, padding: '3px 8px' }}>
+                <span style={{ flex: 1, fontSize: '0.72rem', color: 'rgba(155,89,182,0.9)' }}>✨ {e.spellName || e.areaType}</span>
+                <button
+                  onClick={() => removeEncounterEffect(e.id)}
+                  style={{ background: 'none', border: 'none', color: 'rgba(155,89,182,0.6)', cursor: 'pointer', fontSize: '0.75rem', padding: '0 2px', lineHeight: 1 }}
+                  title="Dismiss effect"
+                >✕</button>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>

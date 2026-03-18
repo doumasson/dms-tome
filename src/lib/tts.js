@@ -1,42 +1,88 @@
 // TTS chain (best to worst voice quality):
-//  1. TikTok TTS  — en_uk_001  (AWS Polly neural, CORS-open, free)
-//  2. StreamElements — Brian   (AWS Polly neural, may have CORS issues)
-//  3. Google Translate TTS     (natural voice, limited to ~200 chars)
-//  4. Web Speech API           (browser-native, quality varies by OS)
+//  1. OpenAI TTS   — tts-1 model, neural voices  (requires OpenAI key)
+//  2. TikTok TTS   — en_uk_001                   (CORS-open proxy, free)
+//  3. StreamElements — Brian                      (AWS Polly, may have CORS)
+//  4. Google Translate TTS                        (natural, ~200 char limit)
+//  5. Web Speech API                              (browser-native fallback)
+//
+// Narrator voice: 'onyx'   (deep, authoritative storyteller)
+// NPC voices: deterministic per-NPC from [echo, fable, alloy, nova, shimmer]
 
 let currentAudio     = null;
 let currentUtterance = null;
 
+// OpenAI TTS voices assigned to NPCs deterministically from their name
+const NPC_VOICES = ['echo', 'fable', 'alloy', 'nova', 'shimmer'];
+
+export function getNpcVoice(npcName) {
+  let hash = 5381;
+  for (const c of (npcName || '')) hash = ((hash << 5) + hash + c.charCodeAt(0)) | 0;
+  return NPC_VOICES[Math.abs(hash) % NPC_VOICES.length];
+}
+
 export function isTTSSupported() { return true; }
 
 // ── Main entry point ──────────────────────────────────────────────────────────
-export async function speak(text, onEnd) {
+// options: { openAiKey, voice }
+//   voice defaults to 'onyx' (narrator). Pass getNpcVoice(name) for NPC speech.
+export async function speak(text, onEnd, options = {}) {
   if (!text) return;
   stopSpeaking();
 
-  // Try TikTok TTS first (best quality, CORS-enabled, no auth)
+  const voice = options.voice || 'onyx';
+  const openAiKey = options.openAiKey || null;
+
+  // 1. OpenAI TTS (best quality — requires user's OpenAI key)
+  if (openAiKey) {
+    const url = await tryOpenAiTTS(text, openAiKey, voice);
+    if (url) { playAudioUrl(url, text, onEnd); return; }
+  }
+
+  // 2. TikTok TTS (UK male, AWS Polly neural, CORS-open, free)
   const tiktokUrl = await tryTikTokTTS(text);
-  if (tiktokUrl) {
-    playAudioUrl(tiktokUrl, text, onEnd);
-    return;
-  }
+  if (tiktokUrl) { playAudioUrl(tiktokUrl, text, onEnd); return; }
 
-  // Try StreamElements (AWS Polly Brian, may have CORS restrictions)
+  // 3. StreamElements (AWS Polly Brian, UK male)
   const seUrl = await tryStreamElementsTTS(text);
-  if (seUrl) {
-    playAudioUrl(seUrl, text, onEnd);
-    return;
-  }
+  if (seUrl) { playAudioUrl(seUrl, text, onEnd); return; }
 
-  // Try Google Translate TTS (natural voice, 200-char chunks)
+  // 4. Google Translate TTS (natural, 200-char chunks)
   const gtUrl = await tryGoogleTTS(text);
-  if (gtUrl) {
-    playAudioUrl(gtUrl, text, onEnd);
-    return;
-  }
+  if (gtUrl) { playAudioUrl(gtUrl, text, onEnd); return; }
 
-  // Last resort: browser Web Speech API
+  // 5. Last resort: browser Web Speech API
   speakWebSpeech(text, onEnd);
+}
+
+// ── OpenAI TTS (tts-1, neural quality) ───────────────────────────────────────
+async function tryOpenAiTTS(text, apiKey, voice = 'onyx') {
+  try {
+    const controller = new AbortController();
+    const timeout    = setTimeout(() => controller.abort(), 15000);
+
+    const response = await fetch('https://api.openai.com/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'tts-1',
+        input: text.slice(0, 4096),
+        voice,
+        response_format: 'mp3',
+      }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (!response.ok) return null;
+    const blob = await response.blob();
+    if (blob.size < 1000) return null;
+    return URL.createObjectURL(blob);
+  } catch {
+    return null;
+  }
 }
 
 // ── TikTok TTS (UK male "en_uk_001", sounds like a storyteller) ──────────────
@@ -165,7 +211,6 @@ async function speakWebSpeech(text, onEnd) {
     if (chosen) break;
   }
   if (!chosen) {
-    // Prefer remote (cloud) voices first, then any English voice that isn't eSpeak
     const cloudVoices = voices.filter(v =>
       v.lang?.startsWith('en') &&
       !v.localService &&
