@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useEffect } from 'react';
+import { useMemo, useState, useRef, useEffect, useCallback } from 'react';
 import useStore from '../../store/useStore';
 import { getSlotType } from '../../data/equipment';
 import {
@@ -9,7 +9,6 @@ import {
   tooltip, tooltipTitle, tooltipLine,
 } from './inventoryGridStyles';
 
-// ── Item grid sizes (columns × rows) ────────────────────────────────────────
 const ITEM_SIZES = {
   'Dagger': [1, 1], 'Dart': [1, 1], 'Sling': [1, 1],
   'Shortsword': [1, 2], 'Handaxe': [1, 2], 'Mace': [1, 2],
@@ -56,8 +55,6 @@ function itemIcon(item) {
   return '📦';
 }
 
-// Pack items. Items with _gridCol/_gridRow go first (in visual order).
-// Everything else fills left-to-right, top-to-bottom in array order.
 function packItems(items) {
   const grid = Array.from({ length: GRID_ROWS }, () => new Array(GRID_COLS).fill(false));
   const placed = [];
@@ -79,16 +76,11 @@ function packItems(items) {
     const [w, h] = getItemSize(item);
     for (let row = 0; row < GRID_ROWS; row++)
       for (let col = 0; col < GRID_COLS; col++)
-        if (fits(col, row, w, h)) {
-          mark(col, row, w, h);
-          placed.push({ item, col, row, w, h });
-          return true;
-        }
+        if (fits(col, row, w, h)) { mark(col, row, w, h); placed.push({ item, col, row, w, h }); return; }
     overflow.push(item);
-    return false;
   }
 
-  // 1. Place items with saved positions first (sorted top-left → bottom-right)
+  // Preferred positions first (top-left → bottom-right)
   const preferred = items
     .filter(i => i._gridCol !== undefined)
     .sort((a, b) => a._gridRow !== b._gridRow ? a._gridRow - b._gridRow : a._gridCol - b._gridCol);
@@ -97,30 +89,22 @@ function packItems(items) {
     const [w, h] = getItemSize(item);
     const pc = Math.min(item._gridCol, GRID_COLS - w);
     const pr = Math.min(item._gridRow, GRID_ROWS - h);
-    if (fits(pc, pr, w, h)) {
-      mark(pc, pr, w, h);
-      placed.push({ item, col: pc, row: pr, w, h });
-    } else {
-      firstFit(item); // preferred spot taken, fall back
-    }
+    if (fits(pc, pr, w, h)) { mark(pc, pr, w, h); placed.push({ item, col: pc, row: pr, w, h }); }
+    else firstFit(item);
   }
 
-  // 2. Place remaining items in array order (no size sort → natural horizontal fill)
-  for (const item of items.filter(i => i._gridCol === undefined)) {
-    firstFit(item);
-  }
-
+  for (const item of items.filter(i => i._gridCol === undefined)) firstFit(item);
   return { placed, overflow };
 }
 
 function ItemTooltip({ item, canEquip, canUse, isOwn }) {
   const lines = [];
-  if (item.damage)           lines.push(`Damage: ${item.damage} ${item.damageType || ''}`);
-  if (item.baseAC)           lines.push(`AC: ${item.baseAC}${item.addDex ? ' + DEX' : ''}${item.maxDex != null ? ` (max +${item.maxDex})` : ''}`);
+  if (item.damage)             lines.push(`Damage: ${item.damage} ${item.damageType || ''}`);
+  if (item.baseAC)             lines.push(`AC: ${item.baseAC}${item.addDex ? ' + DEX' : ''}${item.maxDex != null ? ` (max +${item.maxDex})` : ''}`);
   if (item.properties?.length) lines.push(`Properties: ${item.properties.join(', ')}`);
-  if (item.weight)           lines.push(`Weight: ${item.weight} lb`);
-  if (item.cost)             lines.push(`Value: ${item.cost}`);
-  if (item.description)      lines.push(item.description);
+  if (item.weight)             lines.push(`Weight: ${item.weight} lb`);
+  if (item.cost)               lines.push(`Value: ${item.cost}`);
+  if (item.description)        lines.push(item.description);
   return (
     <div style={tooltip}>
       <div style={tooltipTitle}>{item.name}</div>
@@ -139,109 +123,120 @@ function ItemTooltip({ item, canEquip, canUse, isOwn }) {
 export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse }) {
   const updateMyCharacter = useStore(s => s.updateMyCharacter);
   const inventory = character.inventory || [];
-  const stats = character.stats || {};
-  const strScore = stats.str || 10;
+  const stats     = character.stats || {};
+  const strScore  = stats.str || 10;
   const carryCapacity = strScore * 15;
-  const totalWeight = inventory.reduce((sum, i) => sum + ((i.weight || 0) * (i.quantity || 1)), 0);
-  const weightPct = Math.min(100, (totalWeight / carryCapacity) * 100);
-  const encumbered = totalWeight > strScore * 5;
-  const heavilyEnc = totalWeight > strScore * 10;
+  const totalWeight   = inventory.reduce((sum, i) => sum + ((i.weight || 0) * (i.quantity || 1)), 0);
+  const weightPct     = Math.min(100, (totalWeight / carryCapacity) * 100);
+  const encumbered    = totalWeight > strScore * 5;
+  const heavilyEnc    = totalWeight > strScore * 10;
 
   // Migrate existing characters that lack instanceId
   useEffect(() => {
     if (!isOwn) return;
     if (inventory.some(i => !i.instanceId)) {
-      updateMyCharacter({
-        inventory: inventory.map(i => i.instanceId ? i : { ...i, instanceId: crypto.randomUUID() }),
-      });
+      updateMyCharacter({ inventory: inventory.map(i => i.instanceId ? i : { ...i, instanceId: crypto.randomUUID() }) });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { placed, overflow } = useMemo(() => packItems(inventory), [inventory]);
 
-  const [hoveredId, setHoveredId]   = useState(null);
-  const [dragOverId, setDragOverId] = useState(null);
-  const [dragOverCell, setDragOverCell] = useState(null); // {col, row}
-  const dragItemRef   = useRef(null);
-  const dragOffsetRef = useRef({ col: 0, row: 0 }); // cell offset within item where grab started
+  const [hoveredId, setHoveredId] = useState(null);
+  const gridRef   = useRef(null);
 
-  function itemKey(item) { return item.instanceId || item.name; }
+  // ── Mouse-based drag state ────────────────────────────────────────────────
+  const [drag, setDrag]         = useState(null);  // { item, w, h, offsetX, offsetY }
+  const [cursorPx, setCursorPx] = useState(null);  // { x, y } relative to grid
+  const inventoryRef = useRef(inventory);
+  const placedRef    = useRef(placed);
+  useEffect(() => { inventoryRef.current = inventory; }, [inventory]);
+  useEffect(() => { placedRef.current    = placed; },    [placed]);
 
-  function handleDragStart(e, item) {
-    dragItemRef.current = item;
-    e.dataTransfer.effectAllowed = 'move';
-    // Record which cell within the item the user grabbed, so drop aligns correctly
-    const rect = e.currentTarget.getBoundingClientRect();
-    dragOffsetRef.current = {
-      col: Math.floor((e.clientX - rect.left)  / CELL_PX),
-      row: Math.floor((e.clientY - rect.top)   / CELL_PX),
-    };
-    // Anchor ghost image to grab point so it looks natural
-    e.dataTransfer.setDragImage(e.currentTarget, e.clientX - rect.left, e.clientY - rect.top);
-  }
+  function itemKey(i) { return i.instanceId || i.name; }
 
-  // Drop onto another item → swap array order
-  function handleDropOnItem(e, targetItem) {
+  function handleMouseDown(e, item) {
+    if (!isOwn || e.button !== 0) return;
     e.preventDefault();
-    e.stopPropagation();
-    setDragOverId(null);
-    const src = dragItemRef.current;
-    dragItemRef.current = null;
-    if (!src || itemKey(src) === itemKey(targetItem)) return;
-    const inv = [...inventory];
-    const si = inv.findIndex(i => itemKey(i) === itemKey(src));
-    const ti = inv.findIndex(i => itemKey(i) === itemKey(targetItem));
-    if (si === -1 || ti === -1) return;
-    const [removed] = inv.splice(si, 1);
-    inv.splice(ti, 0, removed);
-    updateMyCharacter({ inventory: inv });
+    const rect   = e.currentTarget.getBoundingClientRect();
+    const [w, h] = getItemSize(item);
+    setDrag({ item, w, h, offsetX: e.clientX - rect.left, offsetY: e.clientY - rect.top });
+    const gRect = gridRef.current?.getBoundingClientRect();
+    if (gRect) setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
   }
 
-  // Drop onto empty cell → save preferred grid position (offset-adjusted)
-  function handleDropOnCell(e, col, row) {
-    e.preventDefault();
-    setDragOverCell(null);
-    const src = dragItemRef.current;
-    const offset = dragOffsetRef.current;
-    dragItemRef.current = null;
-    if (!src) return;
-    const [w, h] = getItemSize(src);
-    const targetCol = Math.max(0, Math.min(col - offset.col, GRID_COLS - w));
-    const targetRow = Math.max(0, Math.min(row - offset.row, GRID_ROWS - h));
-    updateMyCharacter({
-      inventory: inventory.map(i =>
-        itemKey(i) === itemKey(src)
-          ? { ...i, _gridCol: targetCol, _gridRow: targetRow }
-          : i
-      ),
-    });
-  }
+  const commitDrop = useCallback((clientX, clientY) => {
+    const gRect = gridRef.current?.getBoundingClientRect();
+    const d     = drag;
+    if (!gRect || !d) return;
+    const { w, h, offsetX, offsetY, item } = d;
+
+    const col = Math.max(0, Math.min(Math.round((clientX - gRect.left - offsetX) / CELL_PX), GRID_COLS - w));
+    const row = Math.max(0, Math.min(Math.round((clientY - gRect.top  - offsetY) / CELL_PX), GRID_ROWS - h));
+
+    // Find any item whose placed rect overlaps the target footprint
+    const target = placedRef.current.find(p =>
+      itemKey(p.item) !== itemKey(item) &&
+      col < p.col + p.w && col + w > p.col &&
+      row < p.row + p.h && row + h > p.row
+    );
+
+    if (target) {
+      // Swap array order
+      const inv = [...inventoryRef.current];
+      const si  = inv.findIndex(i => itemKey(i) === itemKey(item));
+      const ti  = inv.findIndex(i => itemKey(i) === itemKey(target.item));
+      if (si !== -1 && ti !== -1) {
+        const [removed] = inv.splice(si, 1);
+        inv.splice(ti, 0, removed);
+        updateMyCharacter({ inventory: inv });
+      }
+    } else {
+      // Save preferred position
+      updateMyCharacter({
+        inventory: inventoryRef.current.map(i =>
+          itemKey(i) === itemKey(item) ? { ...i, _gridCol: col, _gridRow: row } : i
+        ),
+      });
+    }
+  }, [drag, updateMyCharacter]);
+
+  useEffect(() => {
+    if (!drag) return;
+    function onMove(e) {
+      const gRect = gridRef.current?.getBoundingClientRect();
+      if (gRect) setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
+    }
+    function onUp(e) {
+      commitDrop(e.clientX, e.clientY);
+      setDrag(null);
+      setCursorPx(null);
+    }
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+  }, [drag, commitDrop]);
+
+  // Target footprint highlight
+  const targetCell = (drag && cursorPx) ? {
+    col: Math.max(0, Math.min(Math.round((cursorPx.x - drag.offsetX) / CELL_PX), GRID_COLS - drag.w)),
+    row: Math.max(0, Math.min(Math.round((cursorPx.y - drag.offsetY) / CELL_PX), GRID_ROWS - drag.h)),
+  } : null;
 
   function resetLayout() {
-    updateMyCharacter({
-      inventory: inventory.map(({ _gridCol, _gridRow, ...rest }) => rest),
-    });
+    updateMyCharacter({ inventory: inventory.map(({ _gridCol, _gridRow, ...rest }) => rest) });
   }
 
-  // Find hovered placed item for tooltip (rendered at grid level, not inside item card)
   const hoveredPlaced = hoveredId ? placed.find(p => itemKey(p.item) === hoveredId) : null;
 
   return (
     <div style={container}>
-      {/* Weight bar */}
       <div style={weightRow}>
         <span style={weightLabel}>
           {encumbered ? (heavilyEnc ? '🐢 Heavily Encumbered' : '⚠ Encumbered') : '🎒 Carry Weight'}
         </span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={weightNum}>{totalWeight.toFixed(1)} / {carryCapacity} lb</span>
-          {isOwn && (
-            <button
-              onClick={resetLayout}
-              title="Reset item layout"
-              style={{ background: 'none', border: 'none', color: 'rgba(212,175,55,0.4)', fontSize: '0.7rem', cursor: 'pointer', padding: 0 }}
-            >⟳ Reset</button>
-          )}
+          {isOwn && <button onClick={resetLayout} title="Reset item layout" style={{ background: 'none', border: 'none', color: 'rgba(212,175,55,0.4)', fontSize: '0.7rem', cursor: 'pointer', padding: 0 }}>⟳ Reset</button>}
         </span>
       </div>
       <div style={weightBarBg}>
@@ -249,46 +244,37 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
       </div>
 
       {/* Grid */}
-      <div style={{ position: 'relative', width: GRID_COLS * CELL_PX, height: GRID_ROWS * CELL_PX, flexShrink: 0 }}>
-        {/* Background cells — drop targets for empty space */}
+      <div ref={gridRef} style={{ position: 'relative', width: GRID_COLS * CELL_PX, height: GRID_ROWS * CELL_PX, flexShrink: 0, userSelect: 'none' }}>
+        {/* Background cells */}
         {Array.from({ length: GRID_ROWS * GRID_COLS }, (_, i) => {
-          const col = i % GRID_COLS;
-          const row = Math.floor(i / GRID_COLS);
-          const isTarget = dragOverCell && dragOverCell.col === col && dragOverCell.row === row;
+          const col = i % GRID_COLS, row = Math.floor(i / GRID_COLS);
+          const inTarget = targetCell && drag &&
+            col >= targetCell.col && col < targetCell.col + drag.w &&
+            row >= targetCell.row && row < targetCell.row + drag.h;
           return (
-            <div
-              key={i}
-              onDragOver={isOwn ? e => { e.preventDefault(); setDragOverCell({ col, row }); } : undefined}
-              onDragLeave={isOwn ? () => setDragOverCell(null) : undefined}
-              onDrop={isOwn ? e => handleDropOnCell(e, col, row) : undefined}
-              style={{
-                position: 'absolute',
-                left: col * CELL_PX, top: row * CELL_PX,
-                width: CELL_PX - 1, height: CELL_PX - 1,
-                background: isTarget ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.02)',
-                border: isTarget ? '1px solid rgba(212,175,55,0.5)' : '1px solid rgba(255,255,255,0.05)',
-                borderRadius: 2, boxSizing: 'border-box',
-              }}
-            />
+            <div key={i} style={{
+              position: 'absolute', left: col * CELL_PX, top: row * CELL_PX,
+              width: CELL_PX - 1, height: CELL_PX - 1,
+              background: inTarget ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.02)',
+              border: inTarget ? '1px solid rgba(212,175,55,0.6)' : '1px solid rgba(255,255,255,0.05)',
+              borderRadius: 2, boxSizing: 'border-box',
+            }} />
           );
         })}
 
         {/* Placed items */}
         {placed.map(({ item, col, row, w, h }) => {
-          const slot = getSlotType(item);
+          const slot     = getSlotType(item);
           const canEquip = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
           const canUse   = isOwn && item.type === 'consumable';
-          const key = itemKey(item);
-          const isDragTarget = dragOverId === key;
+          const key      = itemKey(item);
+          const isDragging = drag && itemKey(drag.item) === key;
+          const isHov    = hoveredId === key && !drag;
           return (
             <div
               key={key}
-              draggable={isOwn}
-              onDragStart={isOwn ? e => handleDragStart(e, item) : undefined}
-              onDragOver={isOwn ? e => { e.preventDefault(); e.stopPropagation(); setDragOverId(key); setDragOverCell(null); } : undefined}
-              onDragLeave={isOwn ? () => setDragOverId(null) : undefined}
-              onDrop={isOwn ? e => handleDropOnItem(e, item) : undefined}
-              onMouseEnter={() => setHoveredId(key)}
+              onMouseDown={isOwn ? e => handleMouseDown(e, item) : undefined}
+              onMouseEnter={() => { if (!drag) setHoveredId(key); }}
               onMouseLeave={() => setHoveredId(null)}
               onDoubleClick={isOwn ? () => { if (canUse) onUse(item); else if (canEquip) onEquip(item); } : undefined}
               onClick={isOwn ? e => { if (e.shiftKey) onDrop(item); } : undefined}
@@ -297,15 +283,11 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                 left: col * CELL_PX + 1, top: row * CELL_PX + 1,
                 width: w * CELL_PX - 2, height: h * CELL_PX - 2,
                 ...itemCard,
-                overflow: 'hidden', // clip item content; tooltip is rendered at grid level
-                border: isDragTarget
-                  ? '1px solid rgba(212,175,55,0.8)'
-                  : hoveredId === key
-                    ? '1px solid rgba(212,175,55,0.45)'
-                    : '1px solid rgba(212,175,55,0.25)',
-                background: isDragTarget ? 'rgba(212,175,55,0.12)' : itemCard.background,
-                cursor: isOwn ? 'grab' : 'default',
-                zIndex: hoveredId === key ? 10 : 1,
+                overflow: 'hidden',
+                opacity: isDragging ? 0.25 : 1,
+                border: isHov ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(212,175,55,0.25)',
+                cursor: isOwn ? (isDragging ? 'grabbing' : 'grab') : 'default',
+                zIndex: isHov ? 10 : 1,
               }}
             >
               <div style={itemIconStyle}>{itemIcon(item)}</div>
@@ -316,10 +298,32 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           );
         })}
 
-        {/* Tooltip rendered at grid level — not clipped by item card overflow:hidden */}
+        {/* Dragging ghost */}
+        {drag && cursorPx && (
+          <div style={{
+            position: 'absolute',
+            left: cursorPx.x - drag.offsetX,
+            top:  cursorPx.y - drag.offsetY,
+            width:  drag.w * CELL_PX - 2,
+            height: drag.h * CELL_PX - 2,
+            ...itemCard,
+            overflow: 'hidden',
+            opacity: 0.85,
+            pointerEvents: 'none',
+            zIndex: 500,
+            boxShadow: '0 6px 24px rgba(0,0,0,0.7)',
+            transform: 'scale(1.06)',
+          }}>
+            <div style={itemIconStyle}>{itemIcon(drag.item)}</div>
+            {drag.w > 1 && drag.h > 1 && <div style={itemNameStyle}>{drag.item.name}</div>}
+            {drag.w === 1 && drag.h >= 2 && <div style={{ ...itemNameStyle, fontSize: '0.52rem', lineHeight: 1.1 }}>{drag.item.name}</div>}
+          </div>
+        )}
+
+        {/* Tooltip at grid level (not clipped by item overflow:hidden) */}
         {hoveredPlaced && (() => {
           const { item, col, row, w, h } = hoveredPlaced;
-          const slot = getSlotType(item);
+          const slot     = getSlotType(item);
           const canEquip = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
           const canUse   = isOwn && item.type === 'consumable';
           return (
@@ -329,8 +333,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
               right:  col >= GRID_COLS / 2 ? (GRID_COLS - col) * CELL_PX + 4 : undefined,
               top:    row < GRID_ROWS / 2 ? row * CELL_PX : undefined,
               bottom: row >= GRID_ROWS / 2 ? (GRID_ROWS - row - h) * CELL_PX : undefined,
-              zIndex: 200,
-              pointerEvents: 'none',
+              zIndex: 200, pointerEvents: 'none',
             }}>
               <ItemTooltip item={item} canEquip={canEquip} canUse={canUse} isOwn={isOwn} />
             </div>
@@ -338,31 +341,25 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
         })()}
       </div>
 
-      {/* Overflow items */}
+      {/* Overflow */}
       {overflow.length > 0 && (
         <div style={overflowSection}>
           <div style={overflowLabel}>Overflow — {overflow.length} items don't fit</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
             {overflow.map(item => {
-              const slot = getSlotType(item);
+              const slot     = getSlotType(item);
               const canEquip = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
               const canUse   = isOwn && item.type === 'consumable';
-              const key = itemKey(item);
+              const key      = itemKey(item);
               return (
-                <div
-                  key={key}
-                  style={{ ...overflowItem, position: 'relative' }}
-                  onMouseEnter={() => setHoveredId(`ov-${key}`)}
-                  onMouseLeave={() => setHoveredId(null)}
-                >
+                <div key={key} style={{ ...overflowItem, position: 'relative' }}
+                  onMouseEnter={() => setHoveredId(`ov-${key}`)} onMouseLeave={() => setHoveredId(null)}>
                   {itemIcon(item)} {item.name}
-                  {isOwn && (
-                    <>
-                      {canEquip && <button style={{ ...tinyBtn, marginLeft: 4, background: 'rgba(212,175,55,0.3)' }} onClick={() => onEquip(item)}>E</button>}
-                      {canUse   && <button style={{ ...tinyBtn, marginLeft: 2, background: 'rgba(46,204,113,0.3)'  }} onClick={() => onUse(item)}>U</button>}
-                      <button style={{ ...tinyBtn, marginLeft: 2 }} onClick={() => onDrop(item)}>✕</button>
-                    </>
-                  )}
+                  {isOwn && <>
+                    {canEquip && <button style={{ ...tinyBtn, marginLeft: 4, background: 'rgba(212,175,55,0.3)' }} onClick={() => onEquip(item)}>E</button>}
+                    {canUse   && <button style={{ ...tinyBtn, marginLeft: 2, background: 'rgba(46,204,113,0.3)'  }} onClick={() => onUse(item)}>U</button>}
+                    <button style={{ ...tinyBtn, marginLeft: 2 }} onClick={() => onDrop(item)}>✕</button>
+                  </>}
                   {hoveredId === `ov-${key}` && (
                     <div style={{ position: 'absolute', bottom: '100%', left: 0, zIndex: 200, pointerEvents: 'none' }}>
                       <ItemTooltip item={item} canEquip={canEquip} canUse={canUse} isOwn={isOwn} />
