@@ -79,7 +79,7 @@ export default function ScenePanel() {
             <span style={styles.skeletonLabel}>✦ Painting the scene…</span>
           </div>
         )}
-        {imageUrl && !imgLoading && (
+        {imageUrl && !imgLoading && !imgError && (
           <img
             src={imageUrl}
             alt={scene.title}
@@ -87,7 +87,7 @@ export default function ScenePanel() {
             onError={() => setImgError(true)}
           />
         )}
-        {!imageUrl && !imgLoading && (
+        {(!imageUrl || imgError) && !imgLoading && (
           <div style={styles.imagePlaceholder}>
             <span style={styles.placeholderGlyph}>⚔</span>
             {imgError && <span style={styles.imgErrorNote}>Image unavailable</span>}

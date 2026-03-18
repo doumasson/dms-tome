@@ -119,6 +119,7 @@ const styles = {
     overflow: 'hidden',
     minHeight: 0,
     minWidth: 0,
+    position: 'relative',
   },
   contentArea: {
     flex: 1,

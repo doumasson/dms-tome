@@ -746,7 +746,7 @@ const useStore = create((set, get) => ({
             timestamp: Date.now(),
             type: 'roll',
             icon: isNat ? '⭐' : isFail ? '💀' : '🎲',
-            title: `${label} = ${rollEntry.total}${isNat ? ' — NAT 20!' : isFail ? ' — NAT 1!' : ''}`,
+            title: `${rollEntry.rolledBy ? `${rollEntry.rolledBy}: ` : ''}${label} = ${rollEntry.total}${isNat ? ' — NAT 20!' : isFail ? ' — NAT 1!' : ''}`,
             detail,
           },
           ...state.sessionLog,
