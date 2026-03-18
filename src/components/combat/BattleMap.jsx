@@ -1,5 +1,9 @@
+import { useState } from 'react';
 import { getTokenColor } from '../../lib/dice';
 import { MAP_W, MAP_H, CELL_PX } from './combatStyles';
+
+// How many squares a player can see in fog-of-war (Manhattan distance)
+const VISION_RADIUS = 5;
 
 // Per-type index map for coloring tokens consistently
 export function buildTypeIndex(combatants) {
@@ -14,15 +18,21 @@ export function buildTypeIndex(combatants) {
 }
 
 export function Token({ combatant, colorIndex, isSelected, isActive, onClick, cellPx = CELL_PX }) {
-  const color = getTokenColor(combatant.type, colorIndex);
-  const pct = combatant.maxHp > 0 ? combatant.currentHp / combatant.maxHp : 0;
-  const ring = pct > 0.5 ? '#2ecc71' : pct > 0.25 ? '#f39c12' : '#e74c3c';
-  const dead = combatant.currentHp <= 0;
-  const dying = dead && combatant.type === 'player' && !(combatant.deathSaves?.failures >= 3);
-  const initials = combatant.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  const hasPortrait = !!combatant.portrait;
-  const borderColor = isSelected ? '#fff' : isActive ? '#f1c40f' : ring;
-  const size = cellPx - 6;
+  // Portrait loads async (Pollinations ~5-10s first time).
+  // Always show initials until image finishes loading; fall back to initials on error.
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError,  setImgError]  = useState(false);
+
+  const color      = getTokenColor(combatant.type, colorIndex);
+  const pct        = combatant.maxHp > 0 ? combatant.currentHp / combatant.maxHp : 0;
+  const ring       = pct > 0.5 ? '#2ecc71' : pct > 0.25 ? '#f39c12' : '#e74c3c';
+  const dead       = combatant.currentHp <= 0;
+  const dying      = dead && combatant.type === 'player' && !(combatant.deathSaves?.failures >= 3);
+  const initials   = combatant.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const hasPortrait  = !!combatant.portrait;
+  const showPortrait = hasPortrait && imgLoaded && !imgError;
+  const borderColor  = isSelected ? '#fff' : isActive ? '#f1c40f' : ring;
+  const size         = cellPx - 6;
 
   return (
     <div
@@ -33,7 +43,8 @@ export function Token({ combatant, colorIndex, isSelected, isActive, onClick, ce
         width: size, height: size,
         borderRadius: '50%',
         border: `3px solid ${borderColor}`,
-        background: dead && !hasPortrait ? '#2a1a0a' : !hasPortrait ? color : 'transparent',
+        // Show colour background until portrait is loaded
+        background: dead && !showPortrait ? '#2a1a0a' : !showPortrait ? color : 'transparent',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         fontSize: 11, fontWeight: 700, color: dead ? '#555' : '#fff',
         cursor: 'pointer', overflow: 'hidden',
@@ -43,21 +54,34 @@ export function Token({ combatant, colorIndex, isSelected, isActive, onClick, ce
         opacity: dead && !dying ? 0.45 : 1,
       }}
     >
-      {hasPortrait ? (
-        <img
-          src={combatant.portrait}
-          alt={combatant.name}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', filter: dead ? 'grayscale(1) brightness(0.5)' : 'none' }}
-          onError={e => { e.currentTarget.style.display = 'none'; }}
-        />
-      ) : (
+      {/* Initials — always rendered; hidden under portrait once loaded */}
+      {!showPortrait && (
         <>
           {initials}
           {dead && <span style={{ fontSize: 9, lineHeight: 1 }}>☠</span>}
         </>
       )}
-      {dead && hasPortrait && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>☠</div>
+
+      {/* Portrait image — fades in after load, hidden on error */}
+      {hasPortrait && !imgError && (
+        <img
+          src={combatant.portrait}
+          alt={combatant.name}
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%',
+            objectFit: 'cover', borderRadius: '50%',
+            filter: dead ? 'grayscale(1) brightness(0.5)' : 'none',
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.4s ease',
+          }}
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+        />
+      )}
+
+      {dead && showPortrait && (
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, zIndex: 1 }}>☠</div>
       )}
       {dying && (
         <div style={{ position: 'absolute', inset: -3, borderRadius: '50%', border: '2px solid #f39c12', animation: 'goldPulse 1.5s infinite', pointerEvents: 'none' }} />
@@ -66,7 +90,12 @@ export function Token({ combatant, colorIndex, isSelected, isActive, onClick, ce
   );
 }
 
-export default function BattleMap({ combatants, selectedToken, activeCombatantId, onCellClick, onTokenClick, cellPx = CELL_PX, sceneImageUrl }) {
+export default function BattleMap({
+  combatants, selectedToken, activeCombatantId,
+  onCellClick, onTokenClick,
+  cellPx = CELL_PX, sceneImageUrl,
+  fogEnabled = false,
+}) {
   const posMap = {};
   const typeIdx = buildTypeIndex(combatants);
 
@@ -75,6 +104,17 @@ export default function BattleMap({ combatants, selectedToken, activeCombatantId
   });
 
   const hasImage = !!sceneImageUrl;
+
+  // Compute which cells are lit when fog is on.
+  // A cell is visible if any living player token is within VISION_RADIUS squares (Manhattan).
+  const playerPositions = fogEnabled
+    ? combatants.filter(c => c.type === 'player' && c.currentHp > 0 && c.position).map(c => c.position)
+    : null;
+
+  function cellVisible(x, y) {
+    if (!fogEnabled || !playerPositions) return true;
+    return playerPositions.some(p => Math.abs(p.x - x) + Math.abs(p.y - y) <= VISION_RADIUS);
+  }
 
   return (
     <div style={{
@@ -91,9 +131,12 @@ export default function BattleMap({ combatants, selectedToken, activeCombatantId
         const x = i % MAP_W;
         const y = Math.floor(i / MAP_W);
         const c = posMap[`${x},${y}`];
-        const isActive = c?.id === activeCombatantId;
+        const isActive   = c?.id === activeCombatantId;
         const isSelected = c?.id === selectedToken;
-        const canDrop = !!selectedToken && !c;
+        const canDrop    = !!selectedToken && !c;
+        const visible    = cellVisible(x, y);
+        // Enemies hidden in fog — players always visible to themselves
+        const showToken  = c && (visible || c.type === 'player');
 
         return (
           <div
@@ -112,7 +155,7 @@ export default function BattleMap({ combatants, selectedToken, activeCombatantId
               cursor: canDrop ? 'crosshair' : 'default',
             }}
           >
-            {c && (
+            {showToken && (
               <Token
                 combatant={c}
                 colorIndex={typeIdx[c.type]?.[c.id] || 0}
@@ -127,6 +170,15 @@ export default function BattleMap({ combatants, selectedToken, activeCombatantId
                 position: 'absolute', inset: 0,
                 border: '2px solid rgba(241,196,15,0.5)',
                 borderRadius: 2, pointerEvents: 'none',
+              }} />
+            )}
+            {/* Fog of war cell overlay */}
+            {fogEnabled && !visible && (
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'rgba(0,0,0,0.88)',
+                pointerEvents: 'none',
+                transition: 'background 0.5s ease',
               }} />
             )}
           </div>

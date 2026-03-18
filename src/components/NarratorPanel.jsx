@@ -35,7 +35,6 @@ export default function NarratorPanel() {
   const setCurrentScene       = useStore(s => s.setCurrentScene);
   const pendingDmTrigger      = useStore(s => s.pendingDmTrigger);
   const clearPendingDmTrigger = useStore(s => s.clearPendingDmTrigger);
-  const campaign          = useStore(s => s.campaign);
   const encounter         = useStore(s => s.encounter);
 
   const inCombat = encounter.phase !== 'idle';

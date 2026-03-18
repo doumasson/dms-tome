@@ -51,6 +51,8 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const activeCampaign = useStore(s => s.activeCampaign);
   const campaignState  = useStore(s => s.campaign);
   const battleSceneUrl = sceneImages[`${activeCampaign?.id}:${campaignState.currentSceneIndex}`] || null;
+  const fogEnabledMap = useStore(s => s.fogEnabled);
+  const combatFogEnabled = fogEnabledMap[`${activeCampaign?.id}:${campaignState.currentSceneIndex}`] ?? false;
 
   const isMyTurn = !!(activeCombatant && myCharacter && (
     activeCombatant.id === myCharacter.id || activeCombatant.name === myCharacter.name
@@ -340,7 +342,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           )}
         </div>
         <div style={{ overflowX: 'auto', position: 'relative' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
           <TurnAnnouncement
             name={activeCombatant?.name}
             isMyTurn={isMyTurn}
@@ -502,7 +504,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
         </div>
 
         <div style={{ overflowX: 'auto', position: 'relative' }}>
-          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} />
+          <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
           <TurnAnnouncement
             name={activeCombatant?.name}
             isMyTurn={isMyTurn}
