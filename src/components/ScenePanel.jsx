@@ -49,9 +49,6 @@ export default function ScenePanel() {
   const [localPositions, setLocalPositions] = useState({});
   const [dragging, setDragging]             = useState(null); // { memberId, offsetX, offsetY }
 
-  // Merged positions: store (remote) positions merged with local overrides
-  const remotePositions = sceneTokenPositions[sceneKey] || {};
-  const tokenPositions  = { ...remotePositions, ...localPositions };
   const containerRef = useRef(null);
   const imgAbortRef  = useRef(null);
 
@@ -61,8 +58,12 @@ export default function ScenePanel() {
   const imageKey = `${activeCampaign?.id}:${idx}`;
   const imageUrl = sceneImages[imageKey];
 
-  // Fog state for current scene
+  // Fog + token state for current scene (sceneKey must be declared before use)
   const sceneKey = `${activeCampaign?.id ?? 'local'}:${idx}`;
+
+  // Merged positions: store (remote) positions merged with local overrides
+  const remotePositions = sceneTokenPositions[sceneKey] || {};
+  const tokenPositions  = { ...remotePositions, ...localPositions };
   const isFogOn  = fogEnabled[sceneKey] ?? false;
   const revealed = fogRevealed[sceneKey] || {};
 

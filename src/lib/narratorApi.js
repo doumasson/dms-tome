@@ -59,7 +59,7 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
     },
     body: JSON.stringify({
       model: NARRATOR_MODEL,
-      max_tokens: 1024,
+      max_tokens: 2048,
       system: systemPrompt,
       messages,
     }),
@@ -87,15 +87,20 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
   }
 
   try {
-    return JSON.parse(text);
+    const parsed = JSON.parse(text);
+    // Ensure narrative is a plain string, not an object
+    if (parsed && typeof parsed.narrative === 'string') return parsed;
+    return { narrative: String(parsed?.narrative || '(No response)'), rollRequest: null, stateHint: null, advanceScene: false };
   } catch {
-    // Last resort: return only the narrative value if we can pull it out
+    // Try to extract narrative value with a regex that handles escaped quotes
     const narrativeMatch = text.match(/"narrative"\s*:\s*"((?:[^"\\]|\\.)*)"/);
     if (narrativeMatch) {
-      return { narrative: narrativeMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"'), rollRequest: null, stateHint: null, advanceScene: false };
+      return {
+        narrative: narrativeMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"'),
+        rollRequest: null, stateHint: null, advanceScene: false,
+      };
     }
-    // Absolute fallback: strip all JSON artifacts and show as prose
-    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').replace(/^\{.*?"narrative"\s*:\s*"/s, '').split('"')[0];
-    return { narrative: cleaned || raw.slice(0, 400), rollRequest: null, stateHint: null, advanceScene: false };
+    // Never show raw JSON — return a DM pause message
+    return { narrative: '(The Dungeon Master pauses to consider the situation…)', rollRequest: null, stateHint: null, advanceScene: false };
   }
 }

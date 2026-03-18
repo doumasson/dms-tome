@@ -618,7 +618,7 @@ const useStore = create((set, get) => ({
       },
     })),
 
-  endEncounter: () =>
+  endEncounter: () => {
     set({
       encounter: {
         phase: 'idle',
@@ -627,7 +627,10 @@ const useStore = create((set, get) => ({
         round: 1,
         log: [],
       },
-    }),
+    });
+    // Persist idle state immediately so refresh doesn't restore old combat
+    setTimeout(() => get().saveSessionStateToSupabase(), 0);
+  },
 
   // === Action Economy ===
   useAction: (id) =>

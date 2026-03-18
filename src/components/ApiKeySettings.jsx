@@ -43,11 +43,11 @@ export default function ApiKeySettings({ userId, onClose }) {
         <button onClick={onClose} style={styles.closeBtn} aria-label="Close">✕</button>
         <h2 style={styles.title}>API Keys</h2>
         <p style={styles.hint}>
-          DM's Claude key is shared with the campaign so all players can use the AI Narrator. Keys are never stored on any server outside the respective AI provider and your Supabase campaign record.
+          DM's Claude key is shared with the campaign so all players can use the AI DM. Keys are never stored on any server outside the respective AI provider and your Supabase campaign record.
         </p>
 
         {/* Claude Key */}
-        <label style={styles.label}>Claude API Key <span style={styles.labelHint}>(AI Narrator • console.anthropic.com)</span></label>
+        <label style={styles.label}>Claude API Key <span style={styles.labelHint}>(AI DM • console.anthropic.com)</span></label>
         <input
           type="password"
           value={claudeKey}
