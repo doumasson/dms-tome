@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useStore from '../store/useStore';
+import { supabase } from '../lib/supabase';
 
 const CLASS_COLORS = {
   Barbarian: '#e74c3c', Bard: '#9b59b6', Cleric: '#f1c40f',
@@ -8,11 +9,43 @@ const CLASS_COLORS = {
   Sorcerer: '#8e44ad', Warlock: '#6c3483', Wizard: '#2980b9',
 };
 
-export default function CharacterProfile({ onClose }) {
-  const myCharacters = useStore(s => s.myCharacters);
+export default function CharacterProfile({ onClose, campaignId }) {
+  const myCharacters     = useStore(s => s.myCharacters);
   const loadMyCharacters = useStore(s => s.loadMyCharacters);
+  const user             = useStore(s => s.user);
+  const setMyCharacter   = useStore(s => s.setMyCharacter);
+  const setPartyMembers  = useStore(s => s.setPartyMembers);
+  const partyMembers     = useStore(s => s.partyMembers);
+  const [playingId, setPlayingId] = useState(null);
 
   useEffect(() => { loadMyCharacters(); }, []);
+
+  async function handlePlay(char) {
+    if (!campaignId || !user?.id) return;
+    setPlayingId(char._characterId);
+    try {
+      // Update campaign_members to link this character
+      await supabase
+        .from('campaign_members')
+        .update({ character_id: char._characterId })
+        .eq('campaign_id', campaignId)
+        .eq('user_id', user.id);
+
+      // Update partyMembers: replace current user's entry
+      const updated = partyMembers.map(m =>
+        (m.userId === user.id || m.user_id === user.id) ? { ...char, userId: user.id } : m
+      );
+      // If not found, append
+      if (!updated.some(m => m.userId === user.id || m.user_id === user.id)) {
+        updated.push({ ...char, userId: user.id });
+      }
+      setMyCharacter(char);
+      setPartyMembers(updated);
+      onClose();
+    } catch {
+      setPlayingId(null);
+    }
+  }
 
   return (
     <div style={styles.page}>
@@ -82,6 +115,17 @@ export default function CharacterProfile({ onClose }) {
                       </div>
                     ))}
                   </div>
+                )}
+
+                {/* Play button — only shown when in a campaign */}
+                {campaignId && (
+                  <button
+                    onClick={() => handlePlay(char)}
+                    disabled={playingId === char._characterId}
+                    style={{ ...styles.playBtn, borderColor: accentColor + '88', color: accentColor, opacity: playingId === char._characterId ? 0.6 : 1 }}
+                  >
+                    {playingId === char._characterId ? 'Joining…' : '▶ Play in Campaign'}
+                  </button>
                 )}
               </div>
             );
@@ -225,4 +269,17 @@ const styles = {
   },
   abilityLabel: { color: 'rgba(212,175,55,0.6)', fontSize: '0.55rem', fontWeight: 700 },
   abilityVal: { color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontWeight: 700 },
+  playBtn: {
+    background: 'transparent',
+    border: '1px solid',
+    borderRadius: 6,
+    padding: '6px 0',
+    fontSize: '0.78rem',
+    fontFamily: "'Cinzel', Georgia, serif",
+    fontWeight: 700,
+    letterSpacing: '0.04em',
+    cursor: 'pointer',
+    width: '100%',
+    marginTop: 4,
+  },
 };

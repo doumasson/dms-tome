@@ -259,21 +259,16 @@ All D&D 5e SRD content (classes, races, spells, monsters, equipment, conditions)
 - **Saving throw broadcast** — After DM rolls saves, result narrated to all players via broadcastNarratorMessage
 - **Spell effect persistence** — Concentration area spells (sphere/cone/line) leave persistent SVG overlays on battle map until concentration breaks; broadcast to all clients via `add-effect` encounter action; SpellEffectLayer.jsx renders them
 - **Character Profile Page** — "⚔ Characters" button in game header; shows all owned characters (myCharacters) in a card grid with class/race/level/HP/ability scores; accessible at `appView='character-profile'`
+- **Character Profile "Play" button** — "▶ Play in Campaign" button on each character card; updates `campaign_members`, sets `myCharacter` + `setPartyMembers`, navigates back to game
+- **DM Manual Effect Clear** — ACTIVE EFFECTS panel in DM combat sidebar; each effect has ✕ dismiss button; `removeEncounterEffect` broadcasts `remove-effect` to all clients; `applyRemoveEffect` handles receive
+- **NPC voice/personality injection** — NPC names + personalities injected into `buildSystemPrompt`; DM AI voices NPCs in first person; proximity trigger parses NPC name → sets `activeNpcRef.current` → assigns deterministic OpenAI voice
+- **OpenAI TTS** — `tts-1` model with narrator voice `onyx`; NPCs get deterministic voices from `[echo, fable, alloy, nova, shimmer]` via `getNpcVoice(name)` hash; `npcVoice` stored on DM message for broadcast receivers; full fallback chain: OpenAI → TikTok → StreamElements → Google → Web Speech
 
 ## In Progress / What's Next
 Priority order:
 
 ### 1. Nano Banana / Deevid Integration (PENDING API)
 User's brother has accounts. nanobananaimg.com (image gen) could replace Pollinations for scene images. deevid.ai (video gen) could power cinematic scene transition videos. Need API details.
-
-### 2. DM Manual Effect Clear (SMALL)
-DM should be able to manually dismiss a persisted spell effect (e.g., when concentration ends by DM fiat or when duration expires). Add a "clear effect" button in combat DM panel.
-
-### 3. Character Profile "Play" Button (SMALL)
-CharacterProfile page shows owned characters. Add a "Play in [Campaign]" button to import a character into the current campaign directly from the profile screen.
-
-### 4. NPC Voice/Personality Injection (MEDIUM)
-When a player interacts with an NPC, the DM system prompt currently receives the NPC's personality as a single line. Expand to include the NPC's role, secrets, and quest hooks from campaign JSON so DM responses are more specific to that NPC.
 
 ## Design Rules
 - Dark fantasy theme, gold accents (`#d4af37`), deep brown/black backgrounds

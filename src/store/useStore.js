@@ -932,6 +932,21 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     broadcastEncounterAction({ type: 'add-effect', effect, userId: get().user?.id });
   },
 
+  // Remove a spell area effect by id (state only — no broadcast).
+  applyRemoveEffect: (id) =>
+    set((state) => ({
+      encounter: {
+        ...state.encounter,
+        activeEffects: (state.encounter.activeEffects || []).filter(e => e.id !== id),
+      },
+    })),
+
+  // Remove a spell area effect and broadcast to all clients (DM only).
+  removeEncounterEffect: (id) => {
+    get().applyRemoveEffect(id);
+    broadcastEncounterAction({ type: 'remove-effect', effectId: id, userId: get().user?.id });
+  },
+
   // Received from Supabase Realtime — non-DM clients sync encounter state
   syncEncounterDown: (encounterData) =>
     set({ encounter: encounterData }),

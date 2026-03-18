@@ -50,8 +50,14 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
   const enemyList = sceneEnemies.length > 0
     ? `\nEnemies available for combat: ${sceneEnemies.map(e => `${e.name} (HP ${e.hp}, AC ${e.ac})`).join(', ')}`
     : '';
+  const npcList = (currentScene?.npcs || [])
+    .map(n => `  - ${n.name}: ${n.personality || 'a local inhabitant'}`)
+    .join('\n');
+  const npcBlock = npcList
+    ? `\nNPCs present in this scene:\n${npcList}\n(Voice each NPC in first person when they speak; keep their personality consistent.)`
+    : '';
   const sceneText = currentScene
-    ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}`
+    ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}${npcBlock}`
     : 'The party is between scenes.';
 
   // After 4+ exchanges in a scene, allow the AI to conclude it
