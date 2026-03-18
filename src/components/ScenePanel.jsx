@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useStore from '../store/useStore';
 import { generateSceneImage, generateSceneImageFree, getOpenAiKey } from '../lib/dalleApi';
 import { speak, stopSpeaking, isSpeaking } from '../lib/tts';
@@ -18,8 +18,10 @@ export default function ScenePanel() {
 
   const [imgLoading, setImgLoading] = useState(false);
   const [imgError, setImgError]     = useState(false);
-  const [imgReady, setImgReady]     = useState(false); // true once browser finishes fetching
+  const [imgReady, setImgReady]     = useState(false);
+  const [imgAttempt, setImgAttempt] = useState(0); // increment to trigger retry
   const [narrating, setNarrating]   = useState(false);
+  const imgAbortRef = useRef(null);
 
   const scenes = campaign.scenes || [];
   const idx    = campaign.currentSceneIndex || 0;
@@ -27,10 +29,13 @@ export default function ScenePanel() {
   const imageKey = `${activeCampaign?.id}:${idx}`;
   const imageUrl = sceneImages[imageKey];
 
-  // Reset ready state when scene changes
+  // Cancel in-flight image fetch and reset state when scene changes
   useEffect(() => {
+    imgAbortRef.current?.abort();
+    imgAbortRef.current = null;
     setImgReady(false);
     setImgError(false);
+    setImgAttempt(0);
   }, [idx, activeCampaign?.id]);
 
   // Auto-narrate when scene changes (small delay lets image start loading)
@@ -47,26 +52,38 @@ export default function ScenePanel() {
     };
   }, [idx, activeCampaign?.id]);
 
-  // Auto-generate scene image when scene changes and nothing cached yet
+  // Generate scene image — uses fetch() with 50s timeout + 2 retries so
+  // slow Pollinations.ai responses don't get killed by the browser's <img> timeout
   useEffect(() => {
-    if (!scene || imageUrl || imgLoading) return;
+    if (!scene || imageUrl) return;
+
+    imgAbortRef.current?.abort();
+    const abort = new AbortController();
+    imgAbortRef.current = abort;
+
+    setImgLoading(true);
+    setImgError(false);
 
     const openAiKey = getOpenAiKey(user?.id);
-    if (openAiKey) {
-      // Paid: DALL-E 3 — async, show skeleton while waiting
-      setImgLoading(true);
-      generateSceneImage(scene.title, scene.text, openAiKey)
-        .then(url => setSceneImage(imageKey, url))
-        .catch(() => setImgError(true))
-        .finally(() => setImgLoading(false));
-    } else {
-      // Free: Pollinations.ai — URL is set immediately but still needs to
-      // load in the browser; skeleton stays until onLoad fires
-      setImgLoading(true);
-      const url = generateSceneImageFree(scene.title);
-      setSceneImage(imageKey, url);
-    }
-  }, [idx, activeCampaign?.id]);
+    const promise = openAiKey
+      ? generateSceneImage(scene.title, scene.text, openAiKey)
+      : generateSceneImageFree(scene.title, abort.signal);
+
+    promise
+      .then(url => {
+        if (abort.signal.aborted) return;
+        if (url) {
+          setSceneImage(imageKey, url);
+        } else {
+          setImgError(true);
+        }
+      })
+      .catch(() => { if (!abort.signal.aborted) setImgError(true); })
+      .finally(() => { if (!abort.signal.aborted) setImgLoading(false); });
+
+    return () => abort.abort();
+  // imgAttempt in deps lets the Retry button re-trigger this effect
+  }, [idx, activeCampaign?.id, imgAttempt]);
 
   function handleStartCombat() {
     if (!scene?.enemies?.length) return;
@@ -116,6 +133,9 @@ export default function ScenePanel() {
           <div style={styles.imageSkeleton}>
             <div style={styles.skeletonShimmer} />
             <span style={styles.skeletonLabel}>✦ Painting the scene…</span>
+            <span style={{ color: 'rgba(212,175,55,0.25)', fontSize: '0.65rem', fontFamily: 'monospace', zIndex: 1 }}>
+              generating free AI art — up to 30s
+            </span>
           </div>
         )}
         {imageUrl && !imgError && (
@@ -127,12 +147,22 @@ export default function ScenePanel() {
             onError={() => { setImgError(true); setImgLoading(false); }}
           />
         )}
-        {(!imageUrl && !imgLoading) || imgError ? (
+        {((!imageUrl && !imgLoading) || imgError) && (
           <div style={styles.imagePlaceholder}>
             <span style={styles.placeholderGlyph}>⚔</span>
-            {imgError && <span style={styles.imgErrorNote}>Image unavailable</span>}
+            {imgError && (
+              <>
+                <span style={styles.imgErrorNote}>Image failed to load</span>
+                <button
+                  onClick={() => { setImgError(false); setSceneImage(imageKey, null); setImgAttempt(a => a + 1); }}
+                  style={styles.retryBtn}
+                >
+                  ↺ Retry
+                </button>
+              </>
+            )}
           </div>
-        ) : null}
+        )}
         {/* Scene index badge */}
         <div style={styles.sceneBadge}>
           Scene {idx + 1} / {scenes.length}
@@ -255,9 +285,21 @@ const styles = {
     opacity: 0.12,
   },
   imgErrorNote: {
-    color: 'rgba(200,180,140,0.3)',
+    color: 'rgba(200,180,140,0.4)',
     fontSize: '0.72rem',
     fontStyle: 'italic',
+  },
+  retryBtn: {
+    background: 'rgba(212,175,55,0.12)',
+    border: '1px solid rgba(212,175,55,0.3)',
+    color: 'rgba(212,175,55,0.7)',
+    borderRadius: 6,
+    padding: '5px 14px',
+    fontSize: '0.78rem',
+    cursor: 'pointer',
+    fontFamily: "'Cinzel', Georgia, serif",
+    letterSpacing: '0.04em',
+    marginTop: 4,
   },
   sceneBadge: {
     position: 'absolute',

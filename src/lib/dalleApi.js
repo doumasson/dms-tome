@@ -1,12 +1,46 @@
 const DALLE_URL = 'https://api.openai.com/v1/images/generations';
 
 // Free image generation via Pollinations.ai — no API key required
-// model=turbo is fastest and most stable; keep prompt short to avoid URL length issues
-export function generateSceneImageFree(title) {
+// Uses fetch() with retry so we control the timeout (browser <img> gives up too early)
+// Returns a blob: URL so the image displays instantly once downloaded
+export async function generateSceneImageFree(title, signal) {
   const safeTitle = (title || 'fantasy scene').slice(0, 60).replace(/[^\w\s,'-]/g, '').trim();
-  const prompt = `dark fantasy RPG, ${safeTitle}, atmospheric lighting, cinematic, digital art`;
   const seed = Math.floor(Math.random() * 99999);
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&seed=${seed}&model=turbo`;
+
+  // Try models in priority order; flux is higher quality but slower
+  const models = ['turbo', 'flux'];
+
+  for (const model of models) {
+    const prompt = `dark fantasy RPG, ${safeTitle}, atmospheric, cinematic, digital art`;
+    const url =
+      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}` +
+      `?width=1024&height=576&nologo=true&seed=${seed}&model=${model}`;
+
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 50000);
+        // Combine with caller's signal so scene-change cancels the fetch
+        const onAbort = () => controller.abort();
+        signal?.addEventListener('abort', onAbort);
+
+        const res = await fetch(url, { signal: controller.signal });
+        clearTimeout(timer);
+        signal?.removeEventListener('abort', onAbort);
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.startsWith('image/')) throw new Error('Not an image');
+        const blob = await res.blob();
+        if (blob.size < 8000) throw new Error('Response too small — likely an error page');
+        return URL.createObjectURL(blob);
+      } catch (e) {
+        if (signal?.aborted) return null; // scene changed — abort silently
+        if (attempt === 0) await new Promise(r => setTimeout(r, 4000)); // wait before retry
+      }
+    }
+  }
+  return null; // all attempts exhausted
 }
 
 export function getOpenAiKey(userId) {

@@ -883,7 +883,11 @@ const useStore = create((set, get) => ({
   // === Scene Images (DALL-E cache) ===
   sceneImages: {}, // { [campaignId:sceneIndex]: imageUrl }
   setSceneImage: (key, url) =>
-    set((state) => ({ sceneImages: { ...state.sceneImages, [key]: url } })),
+    set((state) => {
+      const next = { ...state.sceneImages };
+      if (url == null) { delete next[key]; } else { next[key] = url; }
+      return { sceneImages: next };
+    }),
   clearSceneImages: () => set({ sceneImages: {} }),
 
   // === Narrator (AI DM) ===
