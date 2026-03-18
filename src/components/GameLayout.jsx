@@ -4,7 +4,7 @@ import PartySidebar from './PartySidebar';
 import ScenePanel from './ScenePanel';
 import EncounterView from './EncounterView';
 import NarratorPanel from './NarratorPanel';
-import DiceRoller from './DiceRoller';
+import DiceTray from './DiceTray';
 import LootGenerator from './LootGenerator';
 import NotesTab from './NotesTab';
 import CampaignImporter from './CampaignImporter';
@@ -69,12 +69,14 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
       {/* Right activity log */}
       <ActivityLog />
 
-      {/* Tool overlay modals */}
-      {toolPanel && (
+      {/* Dice pull-up tray (not a modal) */}
+      <DiceTray open={toolPanel === 'dice'} onClose={closeTool} />
+
+      {/* Tool overlay modals (non-dice tools) */}
+      {toolPanel && toolPanel !== 'dice' && (
         <div style={styles.toolOverlay} onClick={e => e.target === e.currentTarget && closeTool()}>
           <div style={styles.toolModal}>
             <button style={styles.toolCloseBtn} onClick={closeTool}>✕</button>
-            {toolPanel === 'dice'   && <DiceRoller />}
             {toolPanel === 'loot'   && <LootGenerator />}
             {toolPanel === 'notes'  && <NotesTab />}
             {toolPanel === 'import' && (
