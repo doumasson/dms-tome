@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import * as PIXI from 'pixi.js'
 import { loadTileAtlas, getTileSize } from './tileAtlas'
 import { renderTilemap, clearTilemap } from './TilemapRenderer'
 import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens, isAnimating } from './TokenLayer'
-import { renderExits } from './ExitZone'
+import { renderExits, clearExits } from './ExitZone'
 
-export default function PixiApp({ zone, tokens, onTileClick, onExitClick, inCombat }) {
+export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, inCombat }, ref) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
   const stageLayersRef = useRef({})
@@ -16,6 +16,8 @@ export default function PixiApp({ zone, tokens, onTileClick, onExitClick, inComb
   const onExitClickRef = useRef(onExitClick)
   onExitClickRef.current = onExitClick
   const [ready, setReady] = useState(false)
+
+  useImperativeHandle(ref, () => ({ getApp: () => appRef.current }), [])
 
   // Initialize PixiJS application
   useEffect(() => {
@@ -100,7 +102,9 @@ export default function PixiApp({ zone, tokens, onTileClick, onExitClick, inComb
     renderTilemap(props, zone.layers.props)
     clearGrid(grid)
     renderGrid(grid, zone.width, zone.height, inCombat ? 0xcc3333 : 0xc9a84c, inCombat ? 0.08 : 0.04)
-    if (zone.exits?.length) {
+    // Clear exits first, then render only if not in combat
+    clearExits(stageLayersRef.current.exits)
+    if (zone.exits?.length && !inCombat) {
       renderExits(stageLayersRef.current.exits, zone.exits, (exitData) => {
         onExitClickRef.current?.(exitData)
       })
@@ -156,4 +160,4 @@ export default function PixiApp({ zone, tokens, onTileClick, onExitClick, inComb
       style={{ position: 'absolute', inset: 0, zIndex: 0 }}
     />
   )
-}
+})

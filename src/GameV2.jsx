@@ -10,6 +10,7 @@ import { findPath, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
+import { playZoneTransition } from './engine/ZoneTransition'
 import DiceTray from './components/DiceTray'
 import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
 import RestModal from './components/RestModal'
@@ -42,7 +43,10 @@ export default function GameV2() {
   const campaign = useStore(s => s.campaign)
   const partyMembers = useStore(s => s.partyMembers)
   const narrator = useStore(s => s.narrator)
+  const pendingEntryPoint = useStore(s => s.pendingEntryPoint)
+  const clearPendingEntryPoint = useStore(s => s.clearPendingEntryPoint)
 
+  const pixiRef = useRef(null)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
   const [transitioning, setTransitioning] = useState(false)
   const [toolPanel, setToolPanel] = useState(null)
@@ -69,6 +73,16 @@ export default function GameV2() {
       }
     }
   }, [zones, loadZoneWorld])
+
+  // Handle zone transitions received from multiplayer broadcast (non-DM clients)
+  useEffect(() => {
+    if (pendingEntryPoint) {
+      setPlayerPos(pendingEntryPoint)
+      playerPosRef.current = pendingEntryPoint
+      lastNpcTriggerRef.current = null
+      clearPendingEntryPoint()
+    }
+  }, [pendingEntryPoint, clearPendingEntryPoint])
 
   const zone = zones?.[currentZoneId] || null
 
@@ -164,16 +178,32 @@ export default function GameV2() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  // Zone transition via exit click
+  // Zone transition via exit click — fade-to-black visual
   const handleExitClick = useCallback(({ targetZone, entryPoint }) => {
-    if (transitioning || !zones?.[targetZone]) return
+    if (transitioning || inCombat || !zones?.[targetZone]) return
     setTransitioning(true)
     broadcastZoneTransition(targetZone, entryPoint)
-    setCurrentZone(targetZone)
-    setPlayerPos(entryPoint || { x: 5, y: 5 })
     lastNpcTriggerRef.current = null
-    setTimeout(() => setTransitioning(false), 700)
-  }, [transitioning, zones, setCurrentZone])
+
+    const app = pixiRef.current?.getApp()
+    if (app) {
+      playZoneTransition(app, () => {
+        // Midpoint (screen is black) — swap zone
+        setCurrentZone(targetZone)
+        setPlayerPos(entryPoint || { x: 5, y: 5 })
+        playerPosRef.current = entryPoint || { x: 5, y: 5 }
+      }, () => {
+        // Complete — fade back in done
+        setTransitioning(false)
+      })
+    } else {
+      // Fallback if no PixiJS app
+      setCurrentZone(targetZone)
+      setPlayerPos(entryPoint || { x: 5, y: 5 })
+      playerPosRef.current = entryPoint || { x: 5, y: 5 }
+      setTimeout(() => setTransitioning(false), 100)
+    }
+  }, [transitioning, inCombat, zones, setCurrentZone])
 
   const handleTool = useCallback((tool) => {
     if (tool === 'dice') setToolPanel('dice')
@@ -329,7 +359,7 @@ export default function GameV2() {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
-      <PixiApp zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} inCombat={inCombat} />
+      <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} inCombat={inCombat} />
       <GameHUD zone={zone} onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn} onAction={handleCombatAction} />
       {/* Debug: start test combat */}
       {!inCombat && (

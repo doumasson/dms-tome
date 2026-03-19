@@ -201,9 +201,9 @@ export default function App() {
     // Zone transition sync (host → players for V2 world map)
     ch.on('broadcast', { event: 'zone-transition' }, ({ payload }) => {
       if (!useStore.getState().isDM) {
-        const { targetZone } = payload;
+        const { targetZone, entryPoint } = payload;
         const { setCurrentZone } = useStore.getState();
-        setCurrentZone(targetZone);
+        setCurrentZone(targetZone, entryPoint);
       }
     });
 

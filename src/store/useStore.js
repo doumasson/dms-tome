@@ -1582,10 +1582,13 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
   visitedZones: new Set(),
   zoneTokenPositions: {},
 
-  setCurrentZone: (zoneId) => set(state => ({
+  pendingEntryPoint: null,
+  setCurrentZone: (zoneId, entryPoint) => set(state => ({
     currentZoneId: zoneId,
     visitedZones: new Set([...state.visitedZones, zoneId]),
+    pendingEntryPoint: entryPoint || null,
   })),
+  clearPendingEntryPoint: () => set({ pendingEntryPoint: null }),
 
   setZoneTokenPosition: (zoneId, memberId, pos) => set(state => ({
     zoneTokenPositions: {
