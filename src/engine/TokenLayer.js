@@ -10,10 +10,10 @@ let activeAnimation = null
  * @param {PIXI.Container} container - The tokens layer
  * @param {Array} tokens - Array of { id, name, x, y, color, borderColor, isNpc, questRelevant }
  */
-export function renderTokens(container, tokens) {
+export function renderTokens(container, tokens, tileSizeOverride) {
   container.removeChildren()
   tokenGroupMap.clear()
-  const tileSize = getTileSize()
+  const tileSize = tileSizeOverride || getTileSize()
 
   for (const token of tokens) {
     const group = new PIXI.Container()
@@ -31,15 +31,18 @@ export function renderTokens(container, tokens) {
     })
     group.addChild(bg)
 
+    // Scale factor for text/indicators relative to tile size
+    const scale = tileSize / 32
+
     // Quest indicator for relevant NPCs
     if (token.isNpc && token.questRelevant) {
       const quest = new PIXI.Graphics()
-      quest.circle(radius * 0.7, -radius * 0.7, 5).fill(0xc9a84c)
+      quest.circle(radius * 0.7, -radius * 0.7, 5 * scale).fill(0xc9a84c)
       group.addChild(quest)
 
       const bang = new PIXI.Text({
         text: '!',
-        style: { fontSize: 8, fontWeight: 'bold', fill: 0x08060c, fontFamily: 'Cinzel, serif' },
+        style: { fontSize: 8 * scale, fontWeight: 'bold', fill: 0x08060c, fontFamily: 'Cinzel, serif' },
       })
       bang.anchor.set(0.5)
       bang.x = radius * 0.7
@@ -51,12 +54,12 @@ export function renderTokens(container, tokens) {
     const nameLabel = new PIXI.Text({
       text: token.name || '',
       style: {
-        fontSize: 9,
+        fontSize: 9 * scale,
         fill: token.isNpc ? 0xbba878 : 0xffffff,
         fontFamily: 'Cinzel, serif',
         fontWeight: token.isNpc ? '400' : '700',
-        letterSpacing: 1,
-        dropShadow: { color: 0x000000, blur: 2, distance: 1 },
+        letterSpacing: 1 * scale,
+        dropShadow: { color: 0x000000, blur: 2 * scale, distance: 1 * scale },
       },
     })
     nameLabel.anchor.set(0.5, 0)
@@ -75,7 +78,7 @@ export function renderTokens(container, tokens) {
  * @param {Function} onStep - Called with {x, y} after each tile step completes
  * @param {Function} onComplete - Called when entire path is walked
  */
-export function animateTokenAlongPath(tokenId, path, onStep, onComplete) {
+export function animateTokenAlongPath(tokenId, path, onStep, onComplete, tileSizeOverride) {
   const group = tokenGroupMap.get(tokenId)
   if (!group || path.length < 2) {
     onComplete?.()
@@ -87,11 +90,11 @@ export function animateTokenAlongPath(tokenId, path, onStep, onComplete) {
     activeAnimation.cancelled = true
   }
 
-  const tileSize = getTileSize()
+  const tileSize = tileSizeOverride || getTileSize()
   const anim = { cancelled: false }
   activeAnimation = anim
   let step = 1
-  const speed = 3 // pixels per frame (~5 tiles/second at 60fps)
+  const speed = tileSize * 0.15 // ~5 tiles/second at 60fps regardless of tile size
 
   function tick() {
     if (anim.cancelled || step >= path.length) {

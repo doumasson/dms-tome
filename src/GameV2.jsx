@@ -3,14 +3,14 @@ import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
 import demoWorld from './data/demoWorld.json'
-import { buildWorldFromAiOutput } from './lib/campaignGenerator'
+import { buildAreaWorld } from './lib/campaignGenerator'
 import { buildTestArea } from './data/testArea.js'
 import { broadcastZoneTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
 import { handleInteract } from './lib/interactionController'
-import { findPathLegacy as findPath, buildWalkabilityGrid } from './lib/pathfinding'
+import { findPath, findPathLegacy, buildWalkabilityGrid, buildCollisionLayer } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import Camera from './engine/Camera'
@@ -97,14 +97,14 @@ export default function GameV2({ onLeave }) {
     cameraRef.current = cam
   }, [useAreaCamera, zone?.width, zone?.height])
 
-  // Camera keyboard controls — pan with WASD/arrows, spacebar to recenter
+  // Camera keyboard controls — arrow keys pan camera, spacebar recenters on player
+  // (WASD reserved for token movement in V2 mode)
   useEffect(() => {
     const cam = cameraRef.current
     if (!cam) return
 
     const keyMap = {
       ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
-      w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right',
     }
 
     const onKeyDown = (e) => {
@@ -112,7 +112,7 @@ export default function GameV2({ onLeave }) {
       if (keyMap[e.key]) { cam.startPan(keyMap[e.key]); e.preventDefault() }
       if (e.key === ' ') {
         const myPos = playerPosRef.current
-        if (myPos) cam.centerOn(myPos.x, myPos.y, 200)
+        if (myPos) cam.centerOn(myPos.x, myPos.y, zone?.tileSize || 200)
         e.preventDefault()
       }
     }
@@ -126,22 +126,6 @@ export default function GameV2({ onLeave }) {
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
     }
-  }, [useAreaCamera])
-
-  // Camera scroll-wheel zoom
-  useEffect(() => {
-    const cam = cameraRef.current
-    if (!cam) return
-    const onWheel = (e) => {
-      e.preventDefault()
-      const delta = e.deltaY > 0 ? -0.05 : 0.05
-      cam.zoomAt(delta, e.clientX, e.clientY)
-    }
-    let canvas
-    try { canvas = pixiRef.current?.getApp?.()?.canvas } catch { /* app not ready */ }
-    if (!canvas) return
-    canvas.addEventListener('wheel', onWheel, { passive: false })
-    return () => canvas.removeEventListener('wheel', onWheel)
   }, [useAreaCamera])
 
   // --- Fog of War refs (area camera mode only) ---
@@ -213,6 +197,8 @@ export default function GameV2({ onLeave }) {
               title: area.name,
               width: area.width,
               height: area.height,
+              tileSize: area.tileSize,
+              useCamera: true,
               exits: [],
               npcs: area.npcs,
               palette: area.palette,
@@ -235,7 +221,7 @@ export default function GameV2({ onLeave }) {
       const campaignData = campaign
       const hasZoneData = campaignData?.zones && (Array.isArray(campaignData.zones) ? campaignData.zones.length > 0 : Object.keys(campaignData.zones).length > 0)
       const source = hasZoneData ? campaignData : demoWorld
-      const world = buildWorldFromAiOutput(source)
+      const world = buildAreaWorld(source)
       console.log('[GameV2] Built world:', world.title, Object.keys(world.zones).length, 'zones', hasZoneData ? '(from campaign)' : '(demo)')
       loadZoneWorld(world)
       worldLoadedRef.current = true
@@ -303,13 +289,33 @@ export default function GameV2({ onLeave }) {
     }
   }, [campaign?.id, user?.id, isDM])
 
-  // Build walkability grid from zone data
-  const walkGrid = useMemo(() => {
+  // Build walkability data from zone — V2 uses flat collision array, V1 uses boolean[][] grid
+  const isV2Zone = Boolean(zone?.palette)
+  const walkData = useMemo(() => {
     if (!zone?.layers) return null
-    return buildWalkabilityGrid(zone.layers.walls, zone.layers.props, getBlockingSet(), zone.width, zone.height)
-  }, [zone])
-  const walkGridRef = useRef(walkGrid)
-  walkGridRef.current = walkGrid
+    if (isV2Zone) {
+      // V2: build flat Uint8Array collision from palette + layers
+      // Walls layer = blocked unless the tile is a door (contains "door" in ID)
+      const w = zone.width, h = zone.height
+      const palette = zone.palette || []
+      const collision = new Uint8Array(w * h)
+      const wallLayer = zone.layers.walls
+      if (wallLayer) {
+        for (let i = 0; i < wallLayer.length; i++) {
+          const idx = wallLayer[i]
+          if (idx === 0) continue
+          const tileId = palette[idx] || ''
+          if (tileId.includes('door')) continue // doors are walkable
+          collision[i] = 1
+        }
+      }
+      return { type: 'v2', collision, width: w, height: h }
+    }
+    // V1: legacy boolean[][] grid
+    return { type: 'v1', grid: buildWalkabilityGrid(zone.layers.walls, zone.layers.props, getBlockingSet(), zone.width, zone.height) }
+  }, [zone, isV2Zone])
+  const walkDataRef = useRef(walkData)
+  walkDataRef.current = walkData
 
   // Build token list — uses playerPos so tokens update as player walks
   const tokens = useMemo(() => {
@@ -357,33 +363,46 @@ export default function GameV2({ onLeave }) {
   // Only update React state at the END — PixiJS handles the visual walk directly
   const handleTileClick = useCallback(({ x, y }) => {
     if (isAnimating()) return
-    const grid = walkGridRef.current
+    const wd = walkDataRef.current
     const pos = playerPosRef.current
-    if (!grid || !grid[y]?.[x]) return
-    const path = findPath(grid, pos, { x, y })
+    if (!wd) return
+
+    let path
+    if (wd.type === 'v2') {
+      if (wd.collision[y * wd.width + x] === 1) return // blocked
+      path = findPath(wd.collision, wd.width, wd.height, pos, { x, y })
+    } else {
+      if (!wd.grid[y]?.[x]) return
+      path = findPathLegacy(wd.grid, pos, { x, y })
+    }
+
     if (path && path.length > 1) {
-      // Update ref immediately so WASD knows the target position
       playerPosRef.current = { x, y }
+      const tileSize = zone?.tileSize || 32
       animateTokenAlongPath('player', path, null, () => {
         setPlayerPos({ x, y })
-      })
+        // Auto-follow camera
+        if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
+      }, isV2Zone ? tileSize : undefined)
     }
-  }, [])
+  }, [zone, isV2Zone])
 
   // WASD keyboard movement — one tile at a time
   useEffect(() => {
+    // WASD always moves token; arrows move token only when no camera (V1 zones)
     const dirs = {
-      w: { x: 0, y: -1 }, W: { x: 0, y: -1 }, ArrowUp: { x: 0, y: -1 },
-      s: { x: 0, y: 1 },  S: { x: 0, y: 1 },  ArrowDown: { x: 0, y: 1 },
-      a: { x: -1, y: 0 }, A: { x: -1, y: 0 }, ArrowLeft: { x: -1, y: 0 },
-      d: { x: 1, y: 0 },  D: { x: 1, y: 0 },  ArrowRight: { x: 1, y: 0 },
+      w: { x: 0, y: -1 }, W: { x: 0, y: -1 },
+      s: { x: 0, y: 1 },  S: { x: 0, y: 1 },
+      a: { x: -1, y: 0 }, A: { x: -1, y: 0 },
+      d: { x: 1, y: 0 },  D: { x: 1, y: 0 },
+      ...(!cameraRef.current ? {
+        ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 },
+        ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 },
+      } : {}),
     }
 
     function handleKeyDown(e) {
-      // Don't move if typing in an input
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
-
-      // Block movement during NPC dialog
       if (dialogOpenRef.current) return
 
       // E key — interact with adjacent NPC or exit
@@ -398,24 +417,34 @@ export default function GameV2({ onLeave }) {
       e.preventDefault()
 
       if (isAnimating()) return
-      const grid = walkGridRef.current
+      const wd = walkDataRef.current
       const pos = playerPosRef.current
       const nx = pos.x + dir.x
       const ny = pos.y + dir.y
-      if (!grid || ny < 0 || nx < 0 || ny >= grid.length || nx >= grid[0]?.length) return
-      if (!grid[ny][nx]) return
 
-      // Animate one tile step
+      if (wd?.type === 'v2') {
+        if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
+        if (wd.collision[ny * wd.width + nx] === 1) return
+      } else if (wd?.type === 'v1') {
+        if (!wd.grid || ny < 0 || nx < 0 || ny >= wd.grid.length || nx >= wd.grid[0]?.length) return
+        if (!wd.grid[ny][nx]) return
+      } else {
+        return
+      }
+
+      const tileSize = zone?.tileSize || 32
       playerPosRef.current = { x: nx, y: ny }
       const path = [pos, { x: nx, y: ny }]
       animateTokenAlongPath('player', path, null, () => {
         setPlayerPos({ x: nx, y: ny })
-      })
+        // Auto-follow camera
+        if (cameraRef.current) cameraRef.current.centerOn(nx, ny, tileSize)
+      }, isV2Zone ? tileSize : undefined)
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  }, [zone, isV2Zone])
 
   // Zone transition via exit click — fade-to-black visual
   const handleExitClick = useCallback(({ targetZone, entryPoint }) => {
@@ -636,7 +665,7 @@ export default function GameV2({ onLeave }) {
         <ChatBubble
           key={npc.name}
           npc={npc}
-          tileSize={32}
+          tileSize={zone?.tileSize || 32}
           worldTransform={worldTransform}
         />
       ))}

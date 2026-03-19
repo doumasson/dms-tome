@@ -1,71 +1,42 @@
-import { getTemplate } from '../data/roomTemplates/index.js'
+import { buildAreaFromBrief } from './areaBuilder.js'
 
 /**
- * Merge a zone (from AI generation) with a room template.
- * Template provides: layers, width, height, spawnPoints, exitSlots.
- * Zone provides: npcs, exits, name, lighting, ambience.
+ * Convert AI-generated campaign output into the final campaign data structure.
+ * Builds only the starting area; remaining areas stay as briefs for on-demand generation.
+ *
+ * @param {object} aiOutput — AI-generated campaign:
+ *   { title, startArea, areaBriefs: { [areaId]: brief }, questObjectives, storyMilestones }
+ * @returns {object} campaign data with built starting area + remaining briefs
  */
-export function mergeZoneWithTemplate(zone, template) {
-  const merged = {
-    ...zone,
-    width: template.width,
-    height: template.height,
-    layers: template.layers,
+export function buildAreaWorld(aiOutput) {
+  const {
+    title = 'Untitled Campaign',
+    startArea,
+    areaBriefs = {},
+    questObjectives = [],
+    storyMilestones = [],
+  } = aiOutput
+
+  // Validate we have a starting area
+  const startBrief = areaBriefs[startArea]
+  if (!startBrief) {
+    console.error(`[campaignGenerator] No brief found for startArea "${startArea}"`)
+    return { title, startArea: null, areas: {}, areaBriefs, questObjectives, storyMilestones }
   }
 
-  // Fill NPC positions from spawnPoints if not already set
-  if (merged.npcs && template.spawnPoints) {
-    merged.npcs = merged.npcs.map(npc => {
-      if (npc.position) return npc
-      const spawnKey = Object.keys(template.spawnPoints).find(k =>
-        k === npc.role || k.startsWith(npc.role)
-      )
-      if (spawnKey) {
-        return { ...npc, position: template.spawnPoints[spawnKey] }
-      }
-      return { ...npc, position: { x: Math.floor(template.width / 2), y: Math.floor(template.height / 2) } }
-    })
-  }
+  // Build the starting area from its brief
+  const builtStartArea = buildAreaFromBrief(startBrief, 42)
 
-  // Fill exit positions from exitSlots if not already set
-  if (merged.exits && template.exitSlots) {
-    merged.exits = merged.exits.map(exit => {
-      if (exit.position) return exit
-      const slot = template.exitSlots[exit.direction]
-      if (slot) {
-        return { ...exit, position: { x: slot.x, y: slot.y }, width: slot.width || 1 }
-      }
-      return exit
-    })
-  }
-
-  return merged
-}
-
-/**
- * Build a complete zone world from AI-generated zone graph + templates.
- * @param {object} aiWorld - { title, startZone, questObjectives, zones: [...] or {...} }
- * @returns {object} World with zones as a map, each zone fully merged with template
- */
-export function buildWorldFromAiOutput(aiWorld) {
-  const zonesMap = {}
-  const zoneList = Array.isArray(aiWorld.zones) ? aiWorld.zones : Object.values(aiWorld.zones)
-
-  for (const zone of zoneList) {
-    const template = getTemplate(zone.type)
-    if (template) {
-      zonesMap[zone.id] = mergeZoneWithTemplate(zone, template)
-    } else {
-      console.warn(`No template for zone type: ${zone.type}`)
-      zonesMap[zone.id] = { ...zone, width: 10, height: 8, layers: { floor: [], walls: [], props: [] } }
-    }
-  }
+  // Keep remaining briefs for on-demand generation
+  const remainingBriefs = { ...areaBriefs }
+  delete remainingBriefs[startArea]
 
   return {
-    title: aiWorld.title,
-    startZone: aiWorld.startZone,
-    questObjectives: aiWorld.questObjectives || [],
-    storyMilestones: aiWorld.storyMilestones || [],
-    zones: zonesMap,
+    title,
+    startArea,
+    areas: { [startArea]: builtStartArea },
+    areaBriefs: remainingBriefs,
+    questObjectives,
+    storyMilestones,
   }
 }

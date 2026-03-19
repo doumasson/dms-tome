@@ -11,7 +11,7 @@ export default {
     'atlas-floors:brick_floor_03_d1',                      // 1 = brick floor A
     'atlas-floors:brick_floor_03_d2',                      // 2 = brick floor B
     'atlas-floors:brick_floor_04_d1',                      // 3 = brick floor C
-    'atlas-structures:wall_stone_earthy_a_connector_a_1x1', // 4 = stone wall
+    'atlas-floors:flat_stones_overlay_a3',                 // 4 = stone wall (solid fill)
     'atlas-structures:door_metal_gray_b_1x1',              // 5 = metal door
     'atlas-props-decor:amphora_clay_brown_a1_1x1',         // 6 = amphora
     'atlas-props-decor:arranged_clutter_a10_1x1',          // 7 = clutter
@@ -42,12 +42,12 @@ export default {
     // prettier-ignore
     props: [
       0, 0, 0, 0, 0, 0, 0, 0,
-      0, 6, 0, 0, 0, 0, 0, 0, // amphora in corner
+      0, 6, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 7, 0, // clutter
-      0, 0, 0, 0, 0, 0, 6, 0, // amphora
+      0, 0, 0, 0, 0, 0, 7, 0,
+      0, 0, 0, 0, 0, 0, 6, 0,
       0, 0, 0, 0, 0, 0, 0, 0,
     ],
     // prettier-ignore

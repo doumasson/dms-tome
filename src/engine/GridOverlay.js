@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js'
 import { getTileSize } from './tileAtlas'
 
-export function renderGrid(container, width, height, color = 0xc9a84c, alpha = 0.04) {
-  const tileSize = getTileSize()
+export function renderGrid(container, width, height, color = 0xc9a84c, alpha = 0.04, tileSizeOverride) {
+  const tileSize = tileSizeOverride || getTileSize()
   const g = new PIXI.Graphics()
 
   // PixiJS v8 Graphics API: chain moveTo/lineTo then call stroke() with style
