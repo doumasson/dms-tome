@@ -555,6 +555,12 @@ export default function App() {
   }
 
   // ── Main Game UI ─────────────────────────────────────────────────────────────
+
+  // V2: fullscreen game — no header, no V1 wrapper
+  if (localStorage.getItem('useV2') === '1') {
+    return <GameV2 />;
+  }
+
   return (
     <div style={styles.app}>
       <header style={styles.header}>
@@ -581,17 +587,13 @@ export default function App() {
 
       <div style={styles.headerRule} />
 
-      {localStorage.getItem('useV2') === '1' ? (
-        <GameV2 />
-      ) : (
-        <GameLayout
-          liveConnected={liveConnected}
-          onLeave={handleLeaveCampaign}
-          onManage={() => setShowManager(true)}
-          onSettings={() => setShowSettings(true)}
-          onRemakeCharacter={() => setAppView('character-select')}
-        />
-      )}
+      <GameLayout
+        liveConnected={liveConnected}
+        onLeave={handleLeaveCampaign}
+        onManage={() => setShowManager(true)}
+        onSettings={() => setShowSettings(true)}
+        onRemakeCharacter={() => setAppView('character-select')}
+      />
 
       {showManager && <CampaignManager onClose={() => setShowManager(false)} />}
       {showSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowSettings(false)} />}
