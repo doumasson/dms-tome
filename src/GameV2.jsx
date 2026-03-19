@@ -18,6 +18,7 @@ import DiceTray from './components/DiceTray'
 import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
 import RestModal from './components/RestModal'
 import ApiKeySettings from './components/ApiKeySettings'
+import NpcDialog from './components/NpcDialog'
 import './hud/hud.css'
 
 const CLASS_COLORS = {
@@ -514,6 +515,9 @@ export default function GameV2({ onLeave }) {
           onResolve={() => setRestProposal(null)}
           onCancel={() => setRestProposal(null)}
         />
+      )}
+      {activeNpc && !activeNpc.isCutscene && (
+        <NpcDialog npc={activeNpc} onClose={() => setActiveNpc(null)} />
       )}
     </div>
   )
