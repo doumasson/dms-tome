@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as PIXI from 'pixi.js'
 import { loadTileAtlas } from './tileAtlas'
 import { renderTilemap, clearTilemap } from './TilemapRenderer'
@@ -12,7 +12,9 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
   const stageLayersRef = useRef({})
   const onTileClickRef = useRef(onTileClick)
   onTileClickRef.current = onTileClick
+  const [ready, setReady] = useState(false)
 
+  // Initialize PixiJS application
   useEffect(() => {
     const app = new PIXI.Application()
     appRef.current = app
@@ -27,7 +29,6 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
         autoDensity: true,
       })
 
-      // React 19 strict mode can unmount before init finishes
       if (destroyed) return
 
       containerRef.current.appendChild(app.canvas)
@@ -56,13 +57,15 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
         const ty = Math.floor(pos.y / tileSize)
         onTileClickRef.current({ x: tx, y: ty })
       })
+
+      // Signal that init + atlas load is complete
+      setReady(true)
     }
 
     init()
 
     return () => {
       destroyed = true
-      // Only destroy if init completed (app.canvas exists when init finished)
       try {
         if (app.canvas) app.destroy(true, { children: true })
       } catch (e) {
@@ -72,8 +75,9 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     }
   }, [])
 
+  // Render zone tilemap AFTER atlas is loaded
   useEffect(() => {
-    if (!zone || !stageLayersRef.current.floor) return
+    if (!ready || !zone || !stageLayersRef.current.floor) return
     const { floor, walls, props, grid } = stageLayersRef.current
     clearTilemap(floor)
     clearTilemap(walls)
@@ -83,21 +87,21 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     renderTilemap(props, zone.layers.props)
     clearGrid(grid)
     renderGrid(grid, zone.width, zone.height)
-    // Render exits
     if (zone.exits?.length) {
       renderExits(stageLayersRef.current.exits, zone.exits)
     }
-  }, [zone])
+  }, [zone, ready])
 
+  // Render tokens
   useEffect(() => {
-    if (!tokens?.length || !stageLayersRef.current.tokens) return
+    if (!ready || !tokens?.length || !stageLayersRef.current.tokens) return
     renderTokens(stageLayersRef.current.tokens, tokens)
-  }, [tokens])
+  }, [tokens, ready])
 
   return (
     <div
       ref={containerRef}
-      style={{ position: 'absolute', inset: 0, bottom: 134 }}
+      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 134 }}
     />
   )
 }
