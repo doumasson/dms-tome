@@ -1,7 +1,7 @@
 # Procedural Map System — Design Specification
 
 > **Date:** 2026-03-19
-> **Status:** Draft
+> **Status:** Revised (v2)
 > **Branch:** `phase1/tilemap-renderer-hud`
 
 ---
@@ -51,13 +51,7 @@ Examples of areas:
   "biome": "grassland",
   "tags": ["settlement", "outdoor", "temperate"],
   "lighting": "bright",
-  "layers": {
-    "terrain": [[ ... ]],
-    "floor": [[ ... ]],
-    "walls": [[ ... ]],
-    "props": [[ ... ]],
-    "roof": [[ ... ]]
-  },
+  "layers": "stored separately — see §2.4 Layer Storage",
   "buildings": [
     {
       "id": "rusty-flagon",
@@ -114,6 +108,54 @@ Examples of areas:
 8. fog       — fog of war overlay (topmost)
 ```
 
+### 2.4 Layer Data Storage & Compression
+
+An 80x60 area with 5 layers = 24,000 tile entries. At ~30 chars per string tile ID, raw JSON would be ~1.4MB per area. This is too large for inline campaign JSON.
+
+**Solution: Integer-indexed RLE layers stored as separate blobs.**
+
+**Step 1: Integer tile IDs in storage.** Each area carries a local `tilePalette` — an array mapping integer indices to string tile IDs. Layer data uses integers, not strings:
+
+```json
+{
+  "tilePalette": ["floors:grass_01", "floors:grass_02", "floors:stone_01", "walls:stone_v_a1", ...],
+  "layerRefs": {
+    "terrain": "areas/millhaven-village/terrain.bin",
+    "floor": "areas/millhaven-village/floor.bin",
+    "walls": "areas/millhaven-village/walls.bin",
+    "props": "areas/millhaven-village/props.bin",
+    "roof": "areas/millhaven-village/roof.bin",
+    "collision": "areas/millhaven-village/collision.bin"
+  }
+}
+```
+
+**Step 2: Run-length encoding.** Terrain and floor layers are highly repetitive (large stretches of grass, stone). RLE compresses a row like `[0,0,0,0,0,3,3,0,0,0]` to `[5,0,2,3,3,0]` (count, value pairs). Typical compression ratio: 5-10x for terrain, 2-3x for props.
+
+**Step 3: Separate blob storage.** Layer binary blobs stored in Supabase Storage, not inline in the campaign JSON row. Campaign JSON holds only metadata, NPCs, buildings, encounters, and `layerRefs` pointing to Storage blobs.
+
+**In-memory format:** On load, layers decompress to flat `Uint16Array` (width × height). Tile at (x, y) = `layer[y * width + x]`. Max palette size: 65,535 tiles (Uint16).
+
+**Estimated sizes after RLE:**
+- 80x60 terrain layer: ~2-5KB (very repetitive)
+- 80x60 props layer: ~10-20KB (sparse, mostly empty)
+- Total per area (5 layers): ~30-80KB
+- Campaign with 5 areas: ~150-400KB in Storage
+
+### 2.5 Collision Layer
+
+A dedicated boolean collision layer determines walkability. Stored as a `Uint8Array` (0 = walkable, 1 = blocked) with the same RLE compression.
+
+The collision layer is composited during area assembly:
+- Chunk walls → blocked
+- Chunk props with `blocking: true` tag → blocked
+- Water tiles → blocked (unless bridge)
+- Tree trunks → blocked (canopy tiles walkable)
+- Building exterior walls → blocked
+- Doors → walkable
+
+The pathfinding system and movement range calculator read this layer directly. No per-frame tile ID lookups needed.
+
 ---
 
 ## 3. Camera System
@@ -166,8 +208,11 @@ Sprites are pooled and recycled as the camera moves. No creation/destruction dur
 
 ### 4.2 Multiplayer
 
-- Roof reveal state broadcasts to all clients: `{ type: "roof-reveal", buildingId, revealed: true/false }`
-- All clients render the same roof state regardless of which player entered
+- **Host is the authority** for roof state changes (consistent with existing DM-client-as-authority pattern)
+- Host tracks party member positions relative to building door tiles
+- When host detects a party member entering → broadcasts `{ type: "roof-reveal", buildingId, revealed: true }`
+- When host detects all party members outside → broadcasts `{ type: "roof-reveal", buildingId, revealed: false }`
+- Non-host clients do NOT independently determine roof state — they only react to broadcasts
 - Roof state stored in area data, persists across sessions
 
 ### 4.3 Door Tiles
@@ -208,6 +253,10 @@ Each character has a vision profile derived from their race and class features:
 | Gnome | Yes | 60 ft (12 tiles) |
 | Tiefling | Yes | 60 ft (12 tiles) |
 | Drow | Yes | 120 ft (24 tiles) — Superior Darkvision |
+| Deep Gnome (Svirfneblin) | Yes | 120 ft (24 tiles) — Superior Darkvision |
+| Duergar (Gray Dwarf) | Yes | 120 ft (24 tiles) — Superior Darkvision |
+
+> **Note:** This table covers PHB + SRD core races. Additional races from supplements are supported via the character data `darkvision` field — the vision calculator reads the numeric range directly rather than hardcoding a race lookup.
 
 **Class Feature Modifiers:**
 - Gloom Stalker Ranger (3rd level): +60 ft darkvision (grants 60 ft if none, extends to 90 ft if has it)
@@ -218,16 +267,18 @@ Each character has a vision profile derived from their race and class features:
 **Feat Modifiers:**
 - Characters may gain darkvision from racial feats or magic items (read from character data)
 
-### 5.3 Lighting Conditions
+### 5.3 Lighting Conditions & Vision Model
 
-Each area has a base lighting level. Individual zones within the area can override:
+> **Design note:** 5e RAW has no vision radius in bright light — you see everything not obscured by walls. We apply a **gamified viewport limit** for gameplay purposes: even in bright light, characters have a maximum active vision radius. This prevents the entire outdoor map from being instantly revealed and maintains exploration tension. This is a deliberate departure from RAW, similar to how Baldur's Gate and other CRPGs handle it.
 
-| Condition | Effect on Vision |
-|-----------|-----------------|
-| **Bright light** | All characters see at full vision radius (8 tiles base) |
-| **Dim light** | Characters without darkvision: half vision radius. With darkvision: treat as bright light |
-| **Darkness** | No darkvision: blind (0 tiles) unless carrying light source. With darkvision: see at darkvision range but in grayscale/dim rendering |
-| **Magical darkness** | Only *Devil's Sight* or specific spells penetrate. Darkvision does NOT work. |
+Each area has a base lighting level. Individual regions within the area can override (e.g., a building interior is "dim" while the outdoor area is "bright"):
+
+| Condition | Without Darkvision | With Darkvision |
+|-----------|-------------------|-----------------|
+| **Bright light** | Vision radius: 15 tiles (75 ft) | Vision radius: 15 tiles (75 ft) |
+| **Dim light** | Vision radius: 8 tiles (40 ft), lightly obscured (slight desaturation) | Vision radius: 15 tiles — treats dim as bright per 5e |
+| **Darkness** | Blind (0 tiles) unless carrying light source | See at darkvision range (race-dependent) in grayscale/dim rendering |
+| **Magical darkness** | Blind, light sources don't help | Blind — darkvision does NOT penetrate. Only *Devil's Sight* or *Daylight* works |
 
 ### 5.4 Light Sources
 
@@ -263,9 +314,10 @@ Per game tick (on any party member movement):
 
 ### 5.6 Multiplayer Sync
 
-- Fog state (explored tiles bitfield) stored per-area in campaign data
-- Active vision computed client-side per frame (no broadcast needed — all clients have party positions)
-- Explored tiles broadcast on change: `{ type: "fog-update", areaId, newlyExplored: [[x,y], ...] }`
+- **Explored tiles storage:** Base64-encoded bitfield per area (1 bit per tile). 120x80 = 9,600 bits = 1.2KB. Stored in campaign data per area.
+- **Active vision:** Computed client-side per frame from party positions (no broadcast needed — all clients have position data).
+- **Explored tile broadcasts:** Batched and rate-limited to 1 update per second max. Payload: `{ type: "fog-update", areaId, bitfield: "<base64>" }`. Full bitfield sent (1.2KB) rather than deltas, avoiding ordering issues.
+- **On area load:** Client fetches the stored bitfield and applies it immediately. Active vision computed from current party positions.
 
 ---
 
@@ -295,7 +347,8 @@ Per game tick (on any party member movement):
     "floor": [[ ... ]],
     "walls": [[ ... ]],
     "props": [[ ... ]],
-    "roof": [[ ... ]]
+    "roof": [[ ... ]],
+    "collision": [[ ... ]]
   },
   "doors": [
     { "localX": 5, "localY": 9, "facing": "south" }
@@ -442,13 +495,26 @@ Dungeons use a different strategy — **BSP (Binary Space Partition)** for room 
 
 ### 7.3 Performance Budget
 
+**Map generation:**
 - AI call (Claude Haiku): ~2-3 seconds
 - Position resolution: <10ms
 - Chunk matching: <50ms
 - Grid assembly: <100ms
 - Road pathfinding: <50ms per connection
 - Terrain fill: <200ms
+- Collision layer build: <50ms
 - **Total generation: ~3 seconds** (dominated by AI call)
+
+**Generation UX:** Areas are pre-generated at campaign creation time (all at once). Campaign creation shows a progress indicator ("Building Millhaven Village... Building The Undercrypt..."). This avoids loading pauses during gameplay. Area data is stored in Supabase Storage and loaded on area enter.
+
+**Runtime pathfinding (click-to-move):**
+- Target: <16ms per pathfind (one frame budget)
+- Current A* uses linear-scan open list — must upgrade to binary heap priority queue
+- On 120x80 grid with binary heap A*: ~2-5ms typical
+- Consider Jump Point Search (JPS) for further speedup on uniform-cost grids — 10-50x faster than standard A*
+- Pathfinding reads the pre-built `Uint8Array` collision layer directly
+
+**Chunk generation fallback:** If AI chunk generation fails (rate limit, network error, malformed output), the assembler uses a generic placeholder chunk of the correct type and size (e.g., a plain stone room for a missing dungeon room, a simple wooden building for a missing shop). The area is always playable; placeholder chunks are logged for later replacement.
 
 ---
 
@@ -527,6 +593,24 @@ Each atlas gets a companion JSON: `atlas-floors.json` mapping tile IDs to `{ x, 
 - Core atlases loaded on game start (cached by browser)
 - Expansion atlases fetched on demand
 
+**Biome Manifest (`src/data/biomes.json`):** Maps biome identifiers to required atlases and default terrain fills:
+```json
+{
+  "grassland": {
+    "requiredAtlases": ["atlas-floors", "atlas-walls", "atlas-terrain", "atlas-props-furniture"],
+    "defaultTerrain": "floors:grass_01",
+    "terrainVariants": ["floors:grass_01", "floors:grass_02", "floors:grass_03"],
+    "edgeTiles": { "water": "terrain:water_edge_*", "cliff": "terrain:cliff_*" }
+  },
+  "underdark": {
+    "requiredAtlases": ["atlas-floors", "atlas-walls", "atlas-terrain", "atlas-underdark"],
+    "defaultTerrain": "floors:cave_stone_01",
+    "terrainVariants": ["floors:cave_stone_01", "floors:cave_stone_02"],
+    "edgeTiles": { "chasm": "terrain:chasm_edge_*", "fungal": "terrain:mushroom_*" }
+  }
+}
+```
+
 ---
 
 ## 9. Tile ID System
@@ -545,14 +629,16 @@ Tile IDs are strings that reference a specific tile in a specific atlas:
 
 Format: `{atlas}:{tile_name}`
 
-The atlas JSON maps tile names to coordinates:
+The atlas JSON maps tile names to coordinates and grid dimensions:
 ```json
 {
-  "stone_earthy_01": { "x": 0, "y": 0, "w": 200, "h": 200 },
-  "stone_earthy_02": { "x": 200, "y": 0, "w": 200, "h": 200 },
-  "wood_planks_01": { "x": 400, "y": 0, "w": 200, "h": 200 }
+  "stone_earthy_01": { "x": 0, "y": 0, "w": 200, "h": 200, "gw": 1, "gh": 1 },
+  "stone_earthy_02": { "x": 200, "y": 0, "w": 200, "h": 200, "gw": 1, "gh": 1 },
+  "table_round_dark_a1": { "x": 0, "y": 200, "w": 400, "h": 400, "gw": 2, "gh": 2 }
 }
 ```
+
+**Multi-tile props:** Props larger than 1x1 (e.g., a 2x2 table) are represented in layer data by placing the tile ID in the **top-left cell**. The remaining cells hold `0` (empty). The renderer reads `gw`/`gh` from the atlas metadata and draws the sprite spanning multiple grid cells. The collision layer marks all occupied cells as blocked.
 
 ### 9.2 Migration from Current System
 
@@ -589,7 +675,13 @@ Existing token position sync works unchanged — positions are now in the larger
 
 ### 10.5 Combat
 
-Combat continues to work within the area. Initiative strip, action economy, movement range highlights all function the same but in the larger map context. Camera may auto-zoom to the combat encounter zone.
+Combat continues to work within the area. Initiative strip, action economy, movement range highlights all function the same but in the larger map context.
+
+**Camera behavior during combat:**
+- On combat start, camera auto-pans and zooms to frame the encounter zone (all combatants visible)
+- Camera panning is soft-locked to the encounter zone bounds (±5 tile buffer). Players can look around the immediate combat area but can't scout the whole map during someone else's turn.
+- A "Center Combat" button appears in the HUD to snap back if the player has panned away
+- On combat end, camera lock releases and full free-pan resumes
 
 ---
 
@@ -625,7 +717,7 @@ This ensures future universe support (steampunk, gothic, 1920s) is additive — 
 - PixiJS WebGL rendering (upgraded, not replaced)
 - Zustand state management
 - Supabase multiplayer broadcast
-- A* pathfinding (works on larger grids)
+- A* pathfinding (upgraded — binary heap priority queue required for large grids, target <16ms per pathfind. Consider Jump Point Search for uniform-cost grids.)
 - NPC interaction system (E-key, dialog, cutscenes)
 - Combat system (initiative, actions, spells)
 - HUD (bottom bar, portraits, session log)
@@ -681,7 +773,7 @@ src/
       build.js
       generateChunks.js
   store/
-    useStore.js           — MODIFIED: area state replaces zone state
+    useStore.js           — MODIFIED: area state replaces zone state (see §13.1)
 public/
   tilesets/
     atlas-floors.png      — NEW: FA floor textures atlas
@@ -693,3 +785,50 @@ assets/
   imports/                — NEW: drop FA zips here for processing
   manifest.json           — NEW: generated catalog of all FA assets
 ```
+
+### 13.1 Zustand Store Migration
+
+**Old zone state (to be replaced):**
+```js
+currentZoneId: null,
+visitedZones: new Set(),
+zoneTokenPositions: { zoneId: { playerId: { x, y } } },
+pendingEntryPoint: null,
+zones: {},  // { zoneId: mergedZoneData }
+setCurrentZone, loadZoneWorld, setZoneTokenPosition, clearPendingEntryPoint
+```
+
+**New area state:**
+```js
+// Area management
+currentAreaId: null,
+areas: {},                    // { areaId: areaMetadata (no layers — loaded separately) }
+areaLayers: null,             // Decompressed layers for current area (Uint16Arrays)
+areaCollision: null,          // Uint8Array collision grid for current area
+areaTilePalette: [],          // String tile ID lookup for current area
+
+// Camera
+cameraX: 0,
+cameraY: 0,
+cameraZoom: 0.5,
+
+// Fog of war
+fogBitfields: {},             // { areaId: Uint8Array } — explored tiles per area
+
+// Buildings
+roofStates: {},               // { buildingId: boolean } — revealed roofs in current area
+
+// Tokens (same shape, larger coordinate space)
+areaTokenPositions: { areaId: { playerId: { x, y } } },
+pendingEntryPoint: null,
+
+// Actions
+setCurrentArea, loadAreaLayers, setCamera, setZoom,
+updateFog, setRoofState, setAreaTokenPosition
+```
+
+**Migration approach:** Zone state and area state coexist during development. V2 with `?v2` param uses area state. Existing zone-based demo world continues to work until replaced with area-based demo world. No breaking changes to V1.
+
+### 13.2 Bullseye Lantern
+
+Directional light sources (bullseye lantern) are deferred to a future phase. For now, bullseye lanterns render as standard radial light (same as hooded lantern). The atlas and data model support a `facing` property for future implementation.
