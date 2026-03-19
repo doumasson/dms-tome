@@ -6,7 +6,7 @@ import { getTileSize } from './tileAtlas'
  * @param {PIXI.Container} container - The exits layer
  * @param {Array} exits - Array of { position: {x,y}, width, direction, targetZone, label }
  */
-export function renderExits(container, exits) {
+export function renderExits(container, exits, onExitClick) {
   container.removeChildren()
   const tileSize = getTileSize()
 
@@ -61,6 +61,13 @@ export function renderExits(container, exits) {
     // Hover interaction
     group.eventMode = 'static'
     group.cursor = 'pointer'
+    group.on('pointerdown', () => {
+      onExitClick?.({
+        targetZone: exit.targetZone,
+        entryPoint: exit.entryPoint || { x: 0, y: 0 },
+        label: exit.label,
+      })
+    })
     group.on('pointerover', () => {
       bg.clear()
       bg.rect(0, 0, ew * tileSize, tileSize)

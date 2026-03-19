@@ -6,13 +6,15 @@ import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens } from './TokenLayer'
 import { renderExits } from './ExitZone'
 
-export default function PixiApp({ zone, tokens, onTileClick }) {
+export default function PixiApp({ zone, tokens, onTileClick, onExitClick }) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
   const stageLayersRef = useRef({})
   const worldRef = useRef(null)
   const onTileClickRef = useRef(onTileClick)
   onTileClickRef.current = onTileClick
+  const onExitClickRef = useRef(onExitClick)
+  onExitClickRef.current = onExitClick
   const [ready, setReady] = useState(false)
 
   // Initialize PixiJS application
@@ -99,7 +101,9 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     clearGrid(grid)
     renderGrid(grid, zone.width, zone.height)
     if (zone.exits?.length) {
-      renderExits(stageLayersRef.current.exits, zone.exits)
+      renderExits(stageLayersRef.current.exits, zone.exits, (exitData) => {
+        onExitClickRef.current?.(exitData)
+      })
     }
 
     // Scale the world to fit the viewport, centered
