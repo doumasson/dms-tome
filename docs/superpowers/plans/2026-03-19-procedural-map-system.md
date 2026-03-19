@@ -532,6 +532,129 @@ git commit -m "feat: add sprite atlas builder with bin-packing and Sharp composi
 
 ---
 
+### Task 2b: RLE Compression + Supabase Storage Loader
+
+**Files:**
+- Create: `src/lib/rleCodec.js`
+- Create: `src/lib/rleCodec.test.js`
+
+- [ ] **Step 1: Write failing tests for RLE encode/decode**
+
+```js
+// src/lib/rleCodec.test.js
+import { describe, it, expect } from 'vitest';
+import { rleEncode, rleDecode } from './rleCodec.js';
+
+describe('RLE codec', () => {
+  it('compresses repeated values', () => {
+    const input = new Uint16Array([1, 1, 1, 1, 1, 2, 2, 3]);
+    const encoded = rleEncode(input);
+    expect(encoded.length).toBeLessThan(input.length * 2); // compressed
+    const decoded = rleDecode(encoded, input.length);
+    expect(Array.from(decoded)).toEqual(Array.from(input));
+  });
+
+  it('handles single values (no repeats)', () => {
+    const input = new Uint16Array([1, 2, 3, 4, 5]);
+    const decoded = rleDecode(rleEncode(input), input.length);
+    expect(Array.from(decoded)).toEqual(Array.from(input));
+  });
+
+  it('handles all-same values', () => {
+    const input = new Uint16Array(1000).fill(42);
+    const encoded = rleEncode(input);
+    expect(encoded.length).toBeLessThan(10); // highly compressed
+    const decoded = rleDecode(encoded, 1000);
+    expect(decoded.every(v => v === 42)).toBe(true);
+  });
+
+  it('roundtrips a large realistic layer (80x60)', () => {
+    const input = new Uint16Array(80 * 60);
+    // Fill with repetitive terrain pattern
+    for (let i = 0; i < input.length; i++) input[i] = i % 3 === 0 ? 1 : 2;
+    input[500] = 10; // a few unique tiles
+    input[2000] = 15;
+    const decoded = rleDecode(rleEncode(input), input.length);
+    expect(Array.from(decoded)).toEqual(Array.from(input));
+  });
+});
+```
+
+- [ ] **Step 2: Run to verify failure**
+
+Run: `npx vitest run src/lib/rleCodec.test.js`
+
+- [ ] **Step 3: Implement RLE codec**
+
+```js
+// src/lib/rleCodec.js
+
+/**
+ * Run-length encode a Uint16Array into a compact Uint16Array.
+ * Format: [count, value, count, value, ...]
+ */
+export function rleEncode(data) {
+  const pairs = [];
+  let i = 0;
+  while (i < data.length) {
+    const val = data[i];
+    let count = 1;
+    while (i + count < data.length && data[i + count] === val && count < 65535) {
+      count++;
+    }
+    pairs.push(count, val);
+    i += count;
+  }
+  return new Uint16Array(pairs);
+}
+
+/**
+ * Decode an RLE-encoded Uint16Array back to original size.
+ */
+export function rleDecode(encoded, expectedLength) {
+  const output = new Uint16Array(expectedLength);
+  let outIdx = 0;
+  for (let i = 0; i < encoded.length; i += 2) {
+    const count = encoded[i];
+    const val = encoded[i + 1];
+    for (let j = 0; j < count && outIdx < expectedLength; j++) {
+      output[outIdx++] = val;
+    }
+  }
+  return output;
+}
+
+/**
+ * Serialize an RLE-encoded Uint16Array to a binary blob (ArrayBuffer).
+ */
+export function rleToBlob(encoded) {
+  return encoded.buffer.slice(encoded.byteOffset, encoded.byteOffset + encoded.byteLength);
+}
+
+/**
+ * Deserialize a binary blob back to an RLE-encoded Uint16Array.
+ */
+export function blobToRle(buffer) {
+  return new Uint16Array(buffer);
+}
+```
+
+- [ ] **Step 4: Run tests**
+
+Run: `npx vitest run src/lib/rleCodec.test.js`
+Expected: PASS
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add src/lib/rleCodec.js src/lib/rleCodec.test.js
+git commit -m "feat: add RLE codec for layer compression with blob serialization"
+```
+
+> **Note:** Supabase Storage upload/download for layer blobs is deferred to integration (Task 13+). The codec is the core primitive; Storage wiring happens when area loading is implemented.
+
+---
+
 ## Phase 2: Camera System
 
 ### Task 3: Camera Controller
@@ -587,12 +710,22 @@ describe('Camera', () => {
     expect(cam.x).toBe(xFinal); // fully stopped
   });
 
-  it('centerOn snaps to a tile position', () => {
+  it('centerOnImmediate snaps to a tile position', () => {
     const cam = new Camera(800, 600);
     cam.setAreaBounds(80 * 200, 60 * 200);
-    cam.centerOn(40, 30, 200); // tile 40,30 at 200px/tile
+    cam.centerOnImmediate(40, 30, 200); // tile 40,30 at 200px/tile
     // Camera x,y should center that tile in viewport
     expect(cam.x).toBeCloseTo(40 * 200 + 100 - 400); // tile center - half viewport
+    expect(cam.y).toBeCloseTo(30 * 200 + 100 - 300);
+  });
+
+  it('centerOn smoothly animates via update ticks', () => {
+    const cam = new Camera(800, 600);
+    cam.setAreaBounds(80 * 200, 60 * 200);
+    cam.centerOn(40, 30, 200);
+    expect(cam.x).toBe(0); // not moved yet
+    cam.update(5000); // large dt to complete animation
+    expect(cam.x).toBeCloseTo(40 * 200 + 100 - 400);
     expect(cam.y).toBeCloseTo(30 * 200 + 100 - 300);
   });
 
@@ -1315,8 +1448,8 @@ Expected: PASS, and the large-grid test completes in <16ms
 
 In `src/GameV2.jsx`, find the pathfinding import and update:
 
-Change: `import { findPath, buildWalkabilityGrid } from '../lib/pathfinding'`
-To: `import { findPathLegacy as findPath, buildWalkabilityGrid } from '../lib/pathfinding'`
+Change: `import { findPath, buildWalkabilityGrid } from './lib/pathfinding'`
+To: `import { findPathLegacy as findPath, buildWalkabilityGrid } from './lib/pathfinding'`
 
 This ensures V1 continues working while V2 can use the new Uint8Array-based pathfinding.
 
@@ -1542,19 +1675,27 @@ describe('resolvePositions', () => {
 
 Run: `npx vitest run src/lib/mapGenerator.test.js`
 
-- [ ] **Step 3: Implement position resolver**
+- [ ] **Step 2b: Create shared seededRandom utility**
 
 ```js
-// src/lib/mapGenerator.js
-
-/** Simple seeded random for reproducible jitter */
-function seededRandom(seed) {
+// src/lib/seededRandom.js
+/** Simple seeded PRNG for reproducible procedural generation. */
+export function seededRandom(seed) {
   let s = seed;
   return () => {
     s = (s * 1103515245 + 12345) & 0x7fffffff;
     return s / 0x7fffffff;
   };
 }
+```
+
+Both `mapGenerator.js` and `dungeonGenerator.js` import from this shared file instead of duplicating.
+
+- [ ] **Step 3: Implement position resolver**
+
+```js
+// src/lib/mapGenerator.js
+import { seededRandom } from './seededRandom.js';
 
 const POSITION_MAP = {
   'north-center': { col: 2, row: 0 },
@@ -1720,6 +1861,18 @@ describe('stampChunk', () => {
   });
 });
 
+describe('connectWithRoad', () => {
+  it('paints road tiles between two points', () => {
+    const areaW = 20;
+    const terrain = new Uint16Array(20 * 20);
+    connectWithRoad(terrain, 5, { x: 2, y: 5 }, { x: 15, y: 12 }, 2, areaW);
+    // Horizontal segment at y=5
+    expect(terrain[5 * areaW + 8]).toBe(5);
+    // Vertical segment at x=15
+    expect(terrain[10 * areaW + 15]).toBe(5);
+  });
+});
+
 describe('fillTerrain', () => {
   it('fills empty cells with variant tiles', () => {
     const layer = new Uint16Array(25); // 5x5
@@ -1741,7 +1894,7 @@ Expected: PASS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add src/lib/mapGenerator.js src/lib/mapGenerator.test.js
+git add src/lib/mapGenerator.js src/lib/mapGenerator.test.js src/lib/seededRandom.js
 git commit -m "feat: add map generator with position resolver, chunk stamping, and terrain fill"
 ```
 
@@ -1802,14 +1955,7 @@ Run: `npx vitest run src/lib/dungeonGenerator.test.js`
 
 ```js
 // src/lib/dungeonGenerator.js
-
-function seededRandom(seed) {
-  let s = seed;
-  return () => {
-    s = (s * 1103515245 + 12345) & 0x7fffffff;
-    return s / 0x7fffffff;
-  };
-}
+import { seededRandom } from './seededRandom.js';
 
 class BSPNode {
   constructor(x, y, w, h) {
@@ -1956,7 +2102,7 @@ git commit -m "feat: add BSP dungeon generator with rooms, corridors, and door p
 ```js
 // src/lib/visionCalculator.test.js
 import { describe, it, expect } from 'vitest';
-import { computeVision, getCharacterVisionRange } from './visionCalculator.js';
+import { computeVision, getCharacterVisionRange, encodeExploredBitfield, decodeExploredBitfield } from './visionCalculator.js';
 
 describe('getCharacterVisionRange', () => {
   it('returns 0 for human in darkness without light', () => {
@@ -2018,6 +2164,21 @@ describe('computeVision', () => {
     expect(vision.active.has('5,5')).toBe(true);
     expect(vision.active.has('20,20')).toBe(true);
     expect(vision.active.has('15,15')).toBe(false); // between the two, not in range
+  });
+});
+
+describe('explored bitfield roundtrip', () => {
+  it('encodes and decodes a set of explored tiles', () => {
+    const explored = new Set(['0,0', '5,3', '19,14', '79,59']);
+    const encoded = encodeExploredBitfield(explored, 80, 60);
+    expect(typeof encoded).toBe('string'); // base64
+    const decoded = decodeExploredBitfield(encoded, 80, 60);
+    expect(decoded.has('0,0')).toBe(true);
+    expect(decoded.has('5,3')).toBe(true);
+    expect(decoded.has('19,14')).toBe(true);
+    expect(decoded.has('79,59')).toBe(true);
+    expect(decoded.has('10,10')).toBe(false);
+    expect(decoded.size).toBe(4);
   });
 });
 ```
@@ -2247,7 +2408,8 @@ export function buildFogTileStates(activeVision, exploredSet, width, height) {
 
 /**
  * Render fog of war overlay onto a PixiJS container.
- * Only renders tiles within the visible viewport bounds.
+ * Uses two shared Graphics objects (one per fog state) to batch all rects
+ * into minimal draw calls, avoiding per-tile object creation.
  * @param {PIXI.Container} container — fog layer container
  * @param {Map} fogStates — from buildFogTileStates
  * @param {object} bounds — { startX, startY, endX, endY } from camera
@@ -2257,25 +2419,28 @@ export function buildFogTileStates(activeVision, exploredSet, width, height) {
 export function renderFog(container, fogStates, bounds, tileSize, PIXI) {
   container.removeChildren();
 
+  // Single Graphics for unexplored (fully opaque black)
+  const unexploredGfx = new PIXI.Graphics();
+  // Single Graphics for explored (semi-transparent dark)
+  const exploredGfx = new PIXI.Graphics();
+
   for (let y = bounds.startY; y < bounds.endY; y++) {
     for (let x = bounds.startX; x < bounds.endX; x++) {
       const key = `${x},${y}`;
       const state = fogStates.get(key) || 'unexplored';
 
-      if (state === 'active') continue; // no overlay
+      if (state === 'active') continue;
 
-      const rect = new PIXI.Graphics();
-      if (state === 'unexplored') {
-        rect.rect(x * tileSize, y * tileSize, tileSize, tileSize);
-        rect.fill({ color: 0x000000, alpha: 1.0 });
-      } else {
-        // explored — dark semi-transparent overlay
-        rect.rect(x * tileSize, y * tileSize, tileSize, tileSize);
-        rect.fill({ color: 0x000000, alpha: 0.55 });
-      }
-      container.addChild(rect);
+      const gfx = state === 'unexplored' ? unexploredGfx : exploredGfx;
+      gfx.rect(x * tileSize, y * tileSize, tileSize, tileSize);
     }
   }
+
+  unexploredGfx.fill({ color: 0x000000, alpha: 1.0 });
+  exploredGfx.fill({ color: 0x000000, alpha: 0.55 });
+
+  container.addChild(unexploredGfx);
+  container.addChild(exploredGfx);
 }
 
 /**
@@ -2499,6 +2664,12 @@ git commit -m "feat: add RoofManager for building reveal state and door detectio
 ---
 
 ## Phase 9: Store Migration + Integration
+
+> **Architecture notes:**
+> - `PixiApp.jsx` (182 lines) will grow with camera, fog, and roof wiring. To stay under the 400-line limit, extract area-mode rendering into `src/engine/AreaRenderer.js` — a helper that PixiApp delegates to when rendering areas (vs legacy zones). PixiApp remains a thin orchestrator.
+> - Area-to-area transitions reuse the existing `ZoneTransition.js` fade effect. Wire it in Task 14 alongside camera: `playZoneTransition` at midpoint → `setCurrentArea(newAreaId)` + load new layers. Same broadcast pattern as current zone transitions.
+> - `tileAtlas.js` is NOT modified — it continues serving V1. Only the new `tileAtlasV2.js` is used for area rendering.
+> - Supabase `chunks` table for generated chunk storage is deferred — initial implementation uses bundled JSON only.
 
 ### Task 13: Zustand Area State
 
