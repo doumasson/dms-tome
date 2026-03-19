@@ -6,7 +6,7 @@ import EnemyInfoPanel from './EnemyInfoPanel'
 import useStore from '../store/useStore'
 import './hud.css'
 
-export default function GameHUD({ zone, onTool, onChat, onEndTurn }) {
+export default function GameHUD({ zone, onTool, onChat, onEndTurn, onAction }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const encounter = useStore(s => s.encounter)
   const myCharacter = useStore(s => s.myCharacter)
@@ -32,7 +32,7 @@ export default function GameHUD({ zone, onTool, onChat, onEndTurn }) {
         <ZoneLabel zone={zone} />
       )}
       <NarratorFloat />
-      <BottomBar onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} />
+      <BottomBar onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} />
     </div>
   )
 }

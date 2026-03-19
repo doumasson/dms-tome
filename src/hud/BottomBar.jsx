@@ -6,7 +6,7 @@ import CombatActionBar from './CombatActionBar'
 import OrnateDivider from './OrnateDivider'
 import FiligreeBar from './FiligreeBar'
 
-export default function BottomBar({ onTool, onChat, onEndTurn }) {
+export default function BottomBar({ onTool, onChat, onEndTurn, onAction }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
 
   return (
@@ -17,7 +17,7 @@ export default function BottomBar({ onTool, onChat, onEndTurn }) {
       <SessionLog />
       <OrnateDivider color={inCombat ? '#cc3333' : '#c9a84c'} />
       {inCombat ? (
-        <CombatActionBar onEndTurn={onEndTurn} />
+        <CombatActionBar onEndTurn={onEndTurn} onAction={onAction} />
       ) : (
         <ActionArea onTool={onTool} onChat={onChat} />
       )}

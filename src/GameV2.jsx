@@ -27,6 +27,11 @@ export default function GameV2() {
   const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
   const inCombat = encounter.phase === 'combat'
   const sessionApiKey = useStore(s => s.sessionApiKey)
+  const isDM = useStore(s => s.isDM)
+  const runEnemyTurn = useStore(s => s.runEnemyTurn)
+  const applyEncounterDamage = useStore(s => s.applyEncounterDamage)
+  const useAction = useStore(s => s.useAction)
+  const narrateCombatAction = useStore(s => s.narrateCombatAction)
   const campaign = useStore(s => s.campaign)
   const partyMembers = useStore(s => s.partyMembers)
   const narrator = useStore(s => s.narrator)
@@ -169,6 +174,62 @@ export default function GameV2() {
     nextEncounterTurn()
   }, [nextEncounterTurn])
 
+  const handleCombatAction = useCallback((type) => {
+    if (type === 'attack') {
+      // Auto-attack the first living enemy (simplified — full target selection comes later)
+      const enemies = encounter.combatants?.filter(c => c.isEnemy && c.hp > 0)
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!enemies?.length || !active) return
+
+      const target = enemies[0]
+      const bonus = active.attackBonus || 0
+      const d20 = Math.floor(Math.random() * 20) + 1
+      const total = d20 + bonus
+      const hit = d20 === 20 || total >= (target.ac || 10)
+      const damage = hit ? Math.floor(Math.random() * 8) + 1 + (active.damageMod || 0) : 0
+
+      if (hit && damage > 0) {
+        applyEncounterDamage(target.id || target.name, damage)
+      }
+      useAction()
+
+      const resultDesc = hit ? `Hit! ${damage} damage` : 'Miss!'
+      const logEntry = `${active.name} attacks ${target.name}: d20=${d20}+${bonus}=${total} vs AC ${target.ac} — ${resultDesc}`
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: logEntry })
+
+      // Fire-and-forget narration
+      const apiKey = sessionApiKey || localStorage.getItem('claude_api_key')
+      if (apiKey) {
+        narrateCombatAction(active.name, 'Attack', target.name, resultDesc, apiKey)
+      }
+    } else if (type === 'cast') {
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Spell casting UI coming soon — use the dice roller for manual rolls.' })
+    } else if (type === 'move') {
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Click a tile to move during combat.' })
+    } else if (type === 'say') {
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Type your message in the chat and press enter.' })
+    }
+  }, [encounter, applyEncounterDamage, useAction, addNarratorMessage, sessionApiKey, narrateCombatAction])
+
+  // Auto-run enemy turns (host only)
+  useEffect(() => {
+    if (!inCombat) return
+    const active = encounter.combatants?.[encounter.currentTurn]
+    if (!active || !active.isEnemy) return
+
+    const apiKey = sessionApiKey || localStorage.getItem('claude_api_key')
+    const timer = setTimeout(() => {
+      if (apiKey) {
+        runEnemyTurn(apiKey)
+      } else {
+        // No API key — just skip enemy turn
+        nextEncounterTurn()
+      }
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [encounter.currentTurn, encounter.phase, inCombat, runEnemyTurn, sessionApiKey, nextEncounterTurn])
+
   const handleChat = useCallback(async (text) => {
     if (!text.trim()) return
     const apiKey = sessionApiKey || localStorage.getItem('claude_api_key')
@@ -257,7 +318,7 @@ export default function GameV2() {
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
       <PixiApp zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} inCombat={inCombat} />
-      <GameHUD zone={zone} onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn} />
+      <GameHUD zone={zone} onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn} onAction={handleCombatAction} />
       {/* Debug: start test combat */}
       {!inCombat && (
         <button
