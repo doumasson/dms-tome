@@ -91,19 +91,22 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] V1 fully preserved, V2 opt-in via `?v2` URL param
 - Branch: `phase1/tilemap-renderer-hud` (17 commits)
 
-### Phase 2: Zone World System — UP NEXT
-- [ ] Zone graph data model (replaces linear scenes)
-- [ ] Exit/door click → zone transition with fade
-- [ ] Campaign generation outputs zone graph (Claude → template matching)
-- [ ] Zustand store V2 schema (currentZoneId, visitedZones, zoneTokenPositions)
-- [ ] Multiplayer zone-transition broadcast
+### Phase 2: Zone World System ✅ COMPLETE
+- [x] Zone graph data model (replaces linear scenes) — Zustand store with currentZoneId, visitedZones, zoneTokenPositions
+- [x] Exit/door click → zone transition with fade-to-black visual (ZoneTransition.js)
+- [x] Campaign generation outputs zone graph (Claude → 8 room templates)
+- [x] Zustand store V2 schema (currentZoneId, visitedZones, zoneTokenPositions, pendingEntryPoint)
+- [x] Multiplayer zone-transition broadcast (bidirectional with entryPoint)
+- [x] Exits blocked during combat
+- [x] API key settings wired in V2 (was broken, blocking AI features)
+- Room templates: tavern_bar, tavern_kitchen, town_square, dungeon_room, dungeon_corridor, forest_clearing, cave, throne_room
 
-### Phase 3: Combat UX Overhaul
-- [ ] Action palette (Attack/Cast/Move/Dodge/Dash/Hide)
-- [ ] Initiative strip (top-center portrait row)
-- [ ] Movement range highlights (flood-fill from token)
-- [ ] Turn timer, combat log integration
-- [ ] Grid tint shift (gold → red in combat)
+### Phase 3: Combat UX Overhaul ✅ COMPLETE
+- [x] Action palette (Attack/Cast/Move/Dodge/Dash/Hide)
+- [x] Initiative strip (top-center portrait row)
+- [x] Movement range highlights (flood-fill from token)
+- [x] Combat action wiring (attack resolution, enemy AI turns)
+- [x] Grid tint shift (gold → red in combat)
 
 ### Phase 4: Polish
 - [ ] AI character portraits for PCs/NPCs
@@ -130,3 +133,4 @@ _(Empty — add items as they come up)_
 ## Recently Changed
 
 - **2026-03-18:** Phase 1 V2 rebuild complete — PixiJS tilemap renderer + ornate HUD on branch `phase1/tilemap-renderer-hud`. V1 untouched, V2 opt-in via `?v2`.
+- **2026-03-18:** Phases 2 & 3 complete — zone transitions with fade, 8 room templates, zone-based campaign gen, combat UX, API key fix. Branch has 46 commits ahead of main.
