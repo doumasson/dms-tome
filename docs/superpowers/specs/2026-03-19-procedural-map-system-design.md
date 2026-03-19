@@ -301,7 +301,7 @@ Carried light sources move with the character token. Placed sources (fireplaces,
 
 Per game tick (on any party member movement):
 1. For each party member, compute their vision radius based on:
-   - Base vision (8 tiles in bright light)
+   - Base vision (15 tiles in bright light, 8 in dim without darkvision — see §5.3)
    - Area/zone lighting condition
    - Character's darkvision (from race + class + items)
    - Carried light sources
