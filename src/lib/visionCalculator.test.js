@@ -60,7 +60,7 @@ describe('computeVision', () => {
     expect(vision.active.size).toBeGreaterThan(0)
     expect(vision.active.has('5,5')).toBe(true)
     expect(vision.active.has('20,20')).toBe(true)
-    expect(vision.active.has('15,15')).toBe(false)
+    expect(vision.active.has('12,12')).toBe(false) // midpoint, out of both radii
   })
 })
 

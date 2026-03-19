@@ -98,8 +98,10 @@ export function computeVision(partyVisions, width, height) {
           active.add(key)
         } else if (dist <= (pv.dimRadius || 0)) {
           dim.add(key)
+          active.add(key)
         } else if (dist <= (pv.darkvisionRadius || 0)) {
           darkvisionTiles.add(key)
+          active.add(key)
         }
       }
     }
