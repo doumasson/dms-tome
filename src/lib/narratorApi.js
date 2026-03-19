@@ -45,6 +45,19 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
     )
     .join('\n');
 
+  // Zone-based prompt (V2) — activates when scene has a type but no text field
+  let sceneBlock = ''
+  if (currentScene && currentScene.type && !currentScene.text) {
+    const zoneContext = `Current location: ${currentScene.name} (${currentScene.type.replace(/_/g, ' ')}).`
+    const npcList = (currentScene.npcs || []).map(n =>
+      `- ${n.name} (${n.role}): ${n.personality}`
+    ).join('\n')
+    const exitList = (currentScene.exits || []).map(e =>
+      `- Exit ${e.direction}: leads to ${e.label}`
+    ).join('\n')
+    sceneBlock = `${zoneContext}\n\nNPCs present:\n${npcList}\n\nExits:\n${exitList}`
+  }
+
   // Include enemy info if scene has it, so AI knows what opponents exist
   const sceneEnemies = currentScene?.enemies || currentScene?.encounters?.[0]?.enemies || [];
   const enemyList = sceneEnemies.length > 0
@@ -56,9 +69,12 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
   const npcBlock = npcList
     ? `\nNPCs present in this scene:\n${npcList}\n(Voice each NPC in first person when they speak; keep their personality consistent.)`
     : '';
-  const sceneText = currentScene
-    ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}${npcBlock}`
-    : 'The party is between scenes.';
+  // V2 zone path takes priority; fall back to V1 scene text
+  const sceneText = sceneBlock
+    ? sceneBlock
+    : currentScene
+      ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}${npcBlock}`
+      : 'The party is between scenes.';
 
   // After 4+ exchanges in a scene, allow the AI to conclude it
   const advanceHint = (exchangeCount || 0) >= 4
