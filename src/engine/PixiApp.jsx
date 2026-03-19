@@ -16,6 +16,7 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
   useEffect(() => {
     const app = new PIXI.Application()
     appRef.current = app
+    let destroyed = false
 
     const init = async () => {
       await app.init({
@@ -25,6 +26,9 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
         resolution: window.devicePixelRatio || 1,
         autoDensity: true,
       })
+
+      // React 19 strict mode can unmount before init finishes
+      if (destroyed) return
 
       containerRef.current.appendChild(app.canvas)
 
@@ -40,6 +44,7 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
       stageLayersRef.current = layers
 
       await loadTileAtlas()
+      if (destroyed) return
 
       app.stage.eventMode = 'static'
       app.stage.hitArea = app.screen
@@ -56,7 +61,13 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     init()
 
     return () => {
-      app.destroy(true, { children: true })
+      destroyed = true
+      // Only destroy if init completed (app.canvas exists when init finished)
+      try {
+        if (app.canvas) app.destroy(true, { children: true })
+      } catch (e) {
+        // Silently handle if destroy fails during partial init
+      }
       appRef.current = null
     }
   }, [])
