@@ -12,6 +12,7 @@ import CampaignEndModal from './components/CampaignEndModal';
 import ApiKeySettings from './components/ApiKeySettings';
 import CampaignManager from './components/CampaignManager';
 import GameLayout from './components/GameLayout';
+import GameV2 from './GameV2';
 
 function D20Icon() {
   return (
@@ -65,6 +66,13 @@ export default function App() {
   useEffect(() => {
     // Pick up invite code from URL or localStorage
     const params = new URLSearchParams(window.location.search);
+
+    // V2 mode detection — persist to localStorage since replaceState strips params
+    const v2Param = params.get('v2')
+    if (v2Param !== null) {
+      localStorage.setItem('useV2', '1')
+    }
+
     const urlInvite = params.get('invite');
     if (urlInvite) {
       pendingInviteRef.current = urlInvite;
@@ -573,13 +581,17 @@ export default function App() {
 
       <div style={styles.headerRule} />
 
-      <GameLayout
-        liveConnected={liveConnected}
-        onLeave={handleLeaveCampaign}
-        onManage={() => setShowManager(true)}
-        onSettings={() => setShowSettings(true)}
-        onRemakeCharacter={() => setAppView('character-select')}
-      />
+      {localStorage.getItem('useV2') === '1' ? (
+        <GameV2 />
+      ) : (
+        <GameLayout
+          liveConnected={liveConnected}
+          onLeave={handleLeaveCampaign}
+          onManage={() => setShowManager(true)}
+          onSettings={() => setShowSettings(true)}
+          onRemakeCharacter={() => setAppView('character-select')}
+        />
+      )}
 
       {showManager && <CampaignManager onClose={() => setShowManager(false)} />}
       {showSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowSettings(false)} />}
