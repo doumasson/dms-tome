@@ -178,6 +178,30 @@ export default function GameV2() {
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
       <PixiApp zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} inCombat={inCombat} />
       <GameHUD zone={zone} onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn} />
+      {/* Debug: start test combat */}
+      {!inCombat && (
+        <button
+          onClick={() => {
+            const { startEncounter } = useStore.getState()
+            startEncounter([
+              { name: 'Goblin', hp: 15, maxHp: 15, ac: 15, isEnemy: true, type: 'enemy',
+                attacks: [{ name: 'Scimitar', bonus: '+4', damage: '1d6+2' }],
+                position: { x: 6, y: 4 }, speed: 30 },
+              { name: 'Goblin Archer', hp: 12, maxHp: 12, ac: 13, isEnemy: true, type: 'enemy',
+                attacks: [{ name: 'Shortbow', bonus: '+4', damage: '1d6+2' }],
+                position: { x: 8, y: 3 }, speed: 30 },
+            ])
+          }}
+          style={{
+            position: 'fixed', top: 50, right: 10, zIndex: 100,
+            background: '#cc3333', color: '#fff', border: 'none',
+            padding: '8px 16px', cursor: 'pointer', fontFamily: "'Cinzel', serif",
+            fontSize: 11, letterSpacing: 1, fontWeight: 700,
+          }}
+        >
+          ⚔ TEST COMBAT
+        </button>
+      )}
       <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
       {sheetChar && (
         <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />
