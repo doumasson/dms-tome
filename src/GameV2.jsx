@@ -204,11 +204,26 @@ export default function GameV2({ onLeave }) {
     // Check for campaign areas
     const campaignData = campaign?.campaign_data || campaign
     if (campaignData?.areas || campaignData?.areaBriefs) {
+      const areas = campaignData.areas || {}
+      const briefs = { ...(campaignData.areaBriefs || {}) }
+      const startId = campaignData.startArea
+
+      // Build starting area from brief if not already built
+      if (startId && !areas[startId] && briefs[startId]) {
+        try {
+          areas[startId] = buildAreaFromBrief(briefs[startId], 42)
+          delete briefs[startId]
+          console.log('[GameV2] Built starting area from brief:', startId)
+        } catch (e) {
+          console.error('[GameV2] Failed to build starting area:', e)
+        }
+      }
+
       loadAreaWorld({
         title: campaignData.title,
-        startArea: campaignData.startArea,
-        areas: campaignData.areas || {},
-        areaBriefs: campaignData.areaBriefs || {},
+        startArea: startId,
+        areas,
+        areaBriefs: briefs,
         questObjectives: campaignData.questObjectives || [],
       })
       return

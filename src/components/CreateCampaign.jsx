@@ -42,7 +42,7 @@ function cleanJsonText(str) {
 }
 
 function generatePrompt(fields) {
-  return `You are a D&D 5e campaign designer. Create a complete campaign as a zone-based world graph with the following specifications:
+  return `You are a D&D 5e campaign designer. Create a complete campaign as a set of interconnected area briefs with the following specifications:
 
 Campaign Name: ${fields.name}
 Tone: ${fields.tone}
@@ -57,82 +57,87 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
 
 {
   "title": "${fields.name}",
-  "startZone": "zone-id-of-starting-location",
+  "startArea": "area-village",
   "questObjectives": [
     { "id": "q1", "name": "Main quest objective description", "status": "active" }
   ],
-  "zones": [
-    {
-      "id": "tavern-main",
-      "name": "The Rusty Flagon",
-      "type": "tavern_bar",
-      "tags": ["safe", "indoor"],
+  "storyMilestones": ["Meet the hermit", "Enter the dungeon"],
+  "areaBriefs": {
+    "area-village": {
+      "id": "area-village",
+      "name": "Thornwood Village",
+      "width": 40,
+      "height": 30,
+      "theme": "village",
+      "pois": [
+        { "type": "tavern_main", "position": "center-west", "label": "The Rusty Flagon" },
+        { "type": "house_small", "position": "center-east", "label": "Elder's House" },
+        { "type": "clearing_grass", "position": "south-center", "label": "Market Square" }
+      ],
+      "connections": [
+        { "from": "The Rusty Flagon", "to": "Market Square" },
+        { "from": "Market Square", "to": "Elder's House" }
+      ],
       "npcs": [
-        { "name": "Barkeep Hilda", "role": "bartender", "personality": "gruff but kind, knows local rumors", "questRelevant": true }
+        { "name": "Barkeep Hilda", "position": "The Rusty Flagon", "personality": "Gruff but kind tavern owner, knows local rumors", "questRelevant": true }
       ],
       "exits": [
-        { "direction": "south", "targetZone": "town-square", "label": "Town Square" }
-      ],
-      "lighting": "warm",
-      "ambience": "tavern",
-      "dmNotes": "Secret DM info — hidden clues, what happens if players investigate."
+        { "edge": "north", "targetArea": "area-forest", "label": "Forest Path" }
+      ]
     },
-    {
-      "id": "dungeon-entrance",
-      "name": "Goblin Cave",
-      "type": "cave",
-      "tags": ["dangerous", "underground"],
-      "npcs": [],
-      "exits": [
-        { "direction": "south", "targetZone": "forest-path", "label": "Forest Path" },
-        { "direction": "east", "targetZone": "dungeon-throne", "label": "Deeper In..." }
+    "area-forest": {
+      "id": "area-forest",
+      "name": "Darkwood Pass",
+      "width": 40,
+      "height": 30,
+      "theme": "forest",
+      "pois": [
+        { "type": "clearing_grass", "position": "center", "label": "Clearing" },
+        { "type": "house_small", "position": "north-west", "label": "Hermit's Hut" }
       ],
-      "lighting": "dark",
-      "ambience": "cave",
-      "dmNotes": "Tactical notes for combat encounters.",
-      "encounter": {
-        "enemies": [
-          {
-            "name": "Goblin",
-            "hp": 7, "ac": 15, "speed": 30,
-            "stats": { "str": 8, "dex": 14, "con": 10, "int": 10, "wis": 8, "cha": 8 },
-            "attacks": [{ "name": "Scimitar", "bonus": "+4", "damage": "1d6+2" }],
-            "cr": "1/4"
-          }
-        ]
-      }
+      "connections": [
+        { "from": "Clearing", "to": "Hermit's Hut" }
+      ],
+      "npcs": [
+        { "name": "Old Marren", "position": "Hermit's Hut", "personality": "Paranoid hermit who knows about the curse" }
+      ],
+      "exits": [
+        { "edge": "south", "targetArea": "area-village", "label": "Back to Village" },
+        { "edge": "north", "targetArea": "area-dungeon", "label": "Dungeon Entrance" }
+      ]
     }
-  ]
+  }
 }
 
-AVAILABLE ZONE TYPES (you MUST use only these):
-- tavern_bar — indoor tavern/bar room
-- tavern_kitchen — back kitchen of a tavern
-- town_square — outdoor town center
-- dungeon_room — stone dungeon chamber
-- dungeon_corridor — long narrow stone hallway
-- forest_clearing — outdoor wooded area
-- cave — underground cave chamber
-- throne_room — large boss/throne chamber
+AVAILABLE POI TYPES (chunk IDs — you MUST use only these):
+- tavern_main — indoor tavern building (10x8 tiles)
+- house_small — small house/hut building (6x6 tiles)
+- clearing_grass — open grass clearing (6x6 tiles)
+- dungeon_room_basic — stone dungeon chamber (8x8 tiles)
+- road_horizontal — horizontal road segment (8x3 tiles)
 
-NPC ROLES (used to place NPCs at predefined spawn points in each zone type):
-- tavern_bar: bartender, patron_1, patron_2
-- town_square: quest_giver, merchant, guard
-- dungeon_room: guard, prisoner, chest
-- dungeon_corridor: guard, ambush
-- forest_clearing: quest_giver, merchant, guard
-- cave: creature, nest
-- throne_room: boss, guard, advisor
+AVAILABLE THEMES:
+- village — grass terrain with stone roads
+- forest — grass terrain with dirt roads
+- dungeon — brick/stone terrain
+- cave — dark stone terrain
+- town — cobblestone terrain with paved roads
+
+POSITION VALUES (where to place the POI on the map):
+center, north, south, east, west, north-east, north-west, south-east, south-west, center-north, center-south, center-east, center-west
+
+EXIT EDGES: north, south, east, west
 
 Requirements:
-- Create 5–10 zones forming a connected graph (every zone reachable via exits)
-- Exits MUST be bidirectional: if zone A exits to zone B, zone B must exit back to zone A
-- At least 3 zones should have "encounter" with enemies appropriate for level ${fields.level}
-- Enemy stats must match the challenge rating (use real 5e SRD monster stats)
-- Include 3–6 NPCs spread across safe zones with distinct personalities
-- The villain (${fields.villain}) should appear in a combat zone
-- NPC "role" should match available roles for the zone type when possible
+- Create 3–6 areas forming a connected graph (every area reachable via exits)
+- Exits MUST be bidirectional: if area A exits to area B, area B must exit back to area A
+- Each area should have 2–5 POIs
+- Include 3–6 NPCs across areas with distinct personalities
+- The villain (${fields.villain}) should appear in a later area
 - Set questRelevant: true on NPCs that advance the story
+- Area dimensions: width 30–60, height 20–40
+- NPC "position" must match a POI "label" in the same area
+- Connection "from"/"to" must match POI "label" values in the same area
 - Tone: ${fields.tone}
 
 OUTPUT INSTRUCTIONS:
@@ -151,10 +156,11 @@ function validateCampaignJson(text) {
   try {
     const data = JSON.parse(cleaned);
     if (!data.title) throw new Error('Missing "title" field');
-    // Accept both V1 (scenes array) and V2 (zones array/object)
+    // Accept V1 (scenes), V2 legacy (zones), or V2 area briefs
     const hasScenes = Array.isArray(data.scenes) && data.scenes.length > 0;
     const hasZones = (Array.isArray(data.zones) && data.zones.length > 0) || (data.zones && typeof data.zones === 'object' && Object.keys(data.zones).length > 0);
-    if (!hasScenes && !hasZones) throw new Error('Missing "zones" or "scenes" — campaign has no content');
+    const hasAreaBriefs = data.areaBriefs && typeof data.areaBriefs === 'object' && Object.keys(data.areaBriefs).length > 0;
+    if (!hasScenes && !hasZones && !hasAreaBriefs) throw new Error('Missing "areaBriefs", "zones", or "scenes" — campaign has no content');
     return { ok: true, data };
   } catch (e) {
     const hint = e instanceof SyntaxError

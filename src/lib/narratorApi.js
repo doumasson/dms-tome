@@ -47,9 +47,20 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
     )
     .join('\n');
 
-  // Zone-based prompt (V2) — activates when scene has a type but no text field
+  // Area-based prompt (V2) — activates when scene has theme or generated flag
   let sceneBlock = ''
-  if (currentScene && currentScene.type && !currentScene.text) {
+  if (currentScene && (currentScene.theme || currentScene.generated)) {
+    const areaContext = `Current location: ${currentScene.name} (${currentScene.theme || 'unknown'} area).`
+    const areaNpcs = (currentScene.npcs || []).map(n =>
+      `- ${n.name}: ${n.personality || 'a local inhabitant'}`
+    ).join('\n')
+    const areaExits = (currentScene.exits || []).map(e =>
+      `- Exit ${e.edge || e.direction}: leads to ${e.label}`
+    ).join('\n')
+    sceneBlock = `${areaContext}\n\nNPCs present:\n${areaNpcs}\n\nExits:\n${areaExits}`
+  }
+  // Legacy zone-based prompt — activates when scene has a type but no text field
+  else if (currentScene && currentScene.type && !currentScene.text) {
     const zoneContext = `Current location: ${currentScene.name} (${currentScene.type.replace(/_/g, ' ')}).`
     const npcList = (currentScene.npcs || []).map(n =>
       `- ${n.name} (${n.role}): ${n.personality}`
