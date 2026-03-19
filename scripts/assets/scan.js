@@ -32,6 +32,15 @@ const MATERIAL_WORDS = new Set([
   'cobblestone', 'brick', 'sand', 'dirt', 'grass', 'snow', 'ice',
 ])
 
+const SUBCATEGORY_NAMES = new Set([
+  'structures', 'decor', 'clutter', 'furniture', 'textures', 'walls',
+  'lightsources', 'combat', 'flora', 'elevation', 'natural_decor',
+  'workplace_equipment', 'vehicles', 'burial_and_graves', 'gore',
+  'water', 'pillars', 'paths', 'fire', 'lightning', 'magic', 'smoke',
+  'webs', 'spore_clouds', 'blast_marks', 'shadow_paths', 'texture_overlays',
+  'misc_paths',
+])
+
 const BIOME_WORDS = {
   wilderness: 'wilderness',
   settlement: 'settlement',
@@ -102,6 +111,7 @@ export function parseFAFilename(filepath) {
   // But be lenient — work with what we have.
 
   // Derive category from the segment starting with '!'
+  // Fallback: themed paths like FA_Assets/Underdark/Drow_Settlement/Structures/...
   let category = ''
   let subcategoryIndex = -1
   for (let i = 0; i < parts.length - 1; i++) {
@@ -110,6 +120,24 @@ export function parseFAFilename(filepath) {
       category = parts[i].replace(/^!/, '').replace(/^\d+_/, '')
       subcategoryIndex = i + 1
       break
+    }
+  }
+
+  // Fallback for themed settlement/wilderness paths without '!' prefix
+  // e.g., FA_Assets / Underdark / Drow_Settlement / Structures / ...
+  if (!category && parts.length >= 4 && parts[0] === 'FA_Assets') {
+    category = parts[1] // e.g., "Underdark", "Mountain"
+    // Find the first segment that looks like a known subcategory
+    for (let i = 2; i < parts.length - 1; i++) {
+      const lower = parts[i].toLowerCase()
+      if (SUBCATEGORY_NAMES.has(lower)) {
+        subcategoryIndex = i
+        break
+      }
+    }
+    // If no known subcategory found, use the segment after the settlement name
+    if (subcategoryIndex === -1 && parts.length >= 5) {
+      subcategoryIndex = 3
     }
   }
 
@@ -184,9 +212,12 @@ export function parseFAFilename(filepath) {
  * @param {{ limit?: number }} [options]
  * @returns {Promise<Array>}
  */
-export async function scanZipManifest(zipPath, { limit = Infinity } = {}) {
+export async function scanZipManifest(zipPath, { limit = Infinity, author = '', license = '' } = {}) {
   const zip = await open(zipPath)
   const results = []
+
+  // Extract just the zip filename for source tracking
+  const sourceZip = zipPath.replace(/\\/g, '/').split('/').pop()
 
   try {
     for await (const entry of zip) {
@@ -199,6 +230,9 @@ export async function scanZipManifest(zipPath, { limit = Infinity } = {}) {
       results.push({
         path: entryPath,
         ...parsed,
+        author,
+        license,
+        sourceZip,
         compressedSize: entry.compressedSize,
         uncompressedSize: entry.uncompressedSize,
       })
@@ -215,17 +249,34 @@ export async function scanZipManifest(zipPath, { limit = Infinity } = {}) {
 // ---------------------------------------------------------------------------
 
 async function main(args) {
-  if (args.length === 0) {
-    console.error('Usage: node scripts/assets/scan.js <zip-path> [zip-path...]')
+  // Parse --author and --license flags
+  let author = ''
+  let license = ''
+  const zipPaths = []
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--author' && i + 1 < args.length) {
+      author = args[++i]
+    } else if (args[i] === '--license' && i + 1 < args.length) {
+      license = args[++i]
+    } else {
+      zipPaths.push(args[i])
+    }
+  }
+
+  if (zipPaths.length === 0) {
+    console.error('Usage: node scripts/assets/scan.js [--author "Name"] [--license "Type"] <zip-path> [zip-path...]')
     process.exit(1)
   }
+
+  if (author) console.log(`Author: ${author}`)
+  if (license) console.log(`License: ${license}`)
 
   let total = 0
   const allEntries = []
 
-  for (const zipPath of args) {
+  for (const zipPath of zipPaths) {
     console.log(`Scanning: ${zipPath}`)
-    const entries = await scanZipManifest(zipPath)
+    const entries = await scanZipManifest(zipPath, { author, license })
     console.log(`  Found ${entries.length} PNG assets`)
     allEntries.push(...entries)
     total += entries.length

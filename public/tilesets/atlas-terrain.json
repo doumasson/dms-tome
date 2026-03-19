@@ -1,0 +1,3202 @@
+{
+  "atlas-terrain:bank_stone_earthy_path_a1": {
+    "x": 0,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a10_1x1": {
+    "x": 200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_ashen_a6_1x1": {
+    "x": 400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_burnt_a2_1x1": {
+    "x": 600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_burnt_a10_1x1": {
+    "x": 800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_burnt_a10_1x1": {
+    "x": 1000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bush_multicolor2_a1_1x1": {
+    "x": 1200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cabbage_green_a1": {
+    "x": 1400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:carrot_a1": {
+    "x": 1600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_cascade_a10_1x1": {
+    "x": 1800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cattail_blue_a10_1x1": {
+    "x": 2000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:burrows_cave_stone_earthy_path_a1": {
+    "x": 2200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_path_top_blue_a": {
+    "x": 2400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:corn_a1": {
+    "x": 2600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_black_c1_1x1": {
+    "x": 2800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_large_black1_a1_1x1": {
+    "x": 3000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_foam_flow_a1_1x1": {
+    "x": 3200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grape_vine_a1": {
+    "x": 3400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_patch_green1_a10_1x1": {
+    "x": 3600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:hay_bale_01_b1_1x1": {
+    "x": 3800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_multicolor2_b2_1x1": {
+    "x": 0,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaves_piles_brown1_a1_1x1": {
+    "x": 200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_leafless_brown_a3_1x1": {
+    "x": 400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaf_brown1_a10_1x1": {
+    "x": 600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lichen_blue_a1_1x1": {
+    "x": 800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lilypad_multicolor2_a10_1x1": {
+    "x": 1000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:long_grass_multicolor2_a10_1x1": {
+    "x": 1200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:moss_multicolor2_b10_1x1": {
+    "x": 1400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:underdark_mushroom_stalk_dark_a1_1x1": {
+    "x": 1600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:mushroom_blue_a10_1x1": {
+    "x": 1800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:palm_tree_trunk_ashen_a1_1x1": {
+    "x": 2000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_patch_multicolor2_a1_1x1": {
+    "x": 2200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:clover_edge_path_01_a1": {
+    "x": 2400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_multicolor2_a1_1x1": {
+    "x": 2600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_huge_multicolor2_a1_1x1": {
+    "x": 2800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_large_multicolor2_a1_1x1": {
+    "x": 3000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:giant_carved_pumpkin_a1": {
+    "x": 3200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ridge_grassy_stone_earthy_path_a1": {
+    "x": 3400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_ripples_a10_1x1": {
+    "x": 3600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:root_ashen_small_a10_1x1": {
+    "x": 3800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_wood_ashen_d1_tilted_1x1": {
+    "x": 0,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_ashen_a1_1x1": {
+    "x": 200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fir_tree_stump_a1_1x1": {
+    "x": 400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_flesh_huge_a1_1x1": {
+    "x": 600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_huge_a1_1x1": {
+    "x": 800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_huge_thorny_a1_1x1": {
+    "x": 1000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_ashen_a10_1x1": {
+    "x": 1200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:under_cliff_stone_earthy_path_a1": {
+    "x": 1400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:vine_multicolor2_a13_1x1": {
+    "x": 1600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:waterfall_d1_1x1": {
+    "x": 1800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_wave_b10_1x1": {
+    "x": 2000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_edge_green1_a2_1x1": {
+    "x": 2200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_multicolor2_a10_1x1": {
+    "x": 2400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:wheat_field_a1": {
+    "x": 2600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bank_stone_earthy_path_a2": {
+    "x": 2800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a11_1x1": {
+    "x": 3000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_ashen_a7_1x1": {
+    "x": 3200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_burnt_a3_1x1": {
+    "x": 3400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_burnt_a1_1x1": {
+    "x": 3600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_burnt_a1_1x1": {
+    "x": 3800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bush_multicolor2_a2_1x1": {
+    "x": 0,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cabbage_green_a2": {
+    "x": 200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:carrot_a2": {
+    "x": 400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_cascade_a11_1x1": {
+    "x": 600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cattail_blue_a11_1x1": {
+    "x": 800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:burrows_cave_stone_earthy_path_a2": {
+    "x": 1000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_path_top_blue_b": {
+    "x": 1200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:corn_a2": {
+    "x": 1400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_black_c2_1x1": {
+    "x": 1600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_large_black1_a2_1x1": {
+    "x": 1800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_foam_flow_a5_1x1": {
+    "x": 2000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grape_vine_a2": {
+    "x": 2200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_patch_green1_a11_1x1": {
+    "x": 2400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:hay_bale_01_b2_1x1": {
+    "x": 2600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_multicolor2_d1_1x1": {
+    "x": 2800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaves_piles_brown1_b1_1x1": {
+    "x": 3000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_leafless_brown_a7_1x1": {
+    "x": 3200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaf_brown1_a11_1x1": {
+    "x": 3400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lichen_blue_a2_1x1": {
+    "x": 3600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lilypad_multicolor2_a11_1x1": {
+    "x": 3800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:long_grass_multicolor2_a11_1x1": {
+    "x": 0,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:moss_multicolor2_b11_1x1": {
+    "x": 200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:underdark_mushroom_stalk_dark_a2_1x1": {
+    "x": 400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:mushroom_blue_a11_1x1": {
+    "x": 600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:palm_tree_trunk_ashen_a2_1x1": {
+    "x": 800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_patch_multicolor2_a2_1x1": {
+    "x": 1000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:clover_edge_path_02_a1": {
+    "x": 1200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_multicolor2_a2_1x1": {
+    "x": 1400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_huge_multicolor2_b1_1x1": {
+    "x": 1600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_large_multicolor2_a2_1x1": {
+    "x": 1800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:giant_carved_pumpkin_a2": {
+    "x": 2000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ridge_grassy_stone_earthy_path_a2": {
+    "x": 2200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_ripples_a11_1x1": {
+    "x": 2400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:root_ashen_small_a11_1x1": {
+    "x": 2600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_wood_ashen_d2_tilted_1x1": {
+    "x": 2800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_ashen_a2_1x1": {
+    "x": 3000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fir_tree_stump_a2_1x1": {
+    "x": 3200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_flesh_large_a10_1x1": {
+    "x": 3400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_a10_1x1": {
+    "x": 3600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_thorny_a10_1x1": {
+    "x": 3800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_ashen_a1_1x1": {
+    "x": 0,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:under_cliff_stone_earthy_path_a2": {
+    "x": 200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:vine_multicolor2_a14_1x1": {
+    "x": 400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:waterfall_d2_1x1": {
+    "x": 600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_wave_b11_1x1": {
+    "x": 800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_edge_green1_a3_1x1": {
+    "x": 1000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_multicolor2_a11_1x1": {
+    "x": 1200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:wheat_field_a2": {
+    "x": 1400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bank_stone_earthy_path_a3": {
+    "x": 1600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a12_1x1": {
+    "x": 1800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_ashen_a8_1x1": {
+    "x": 2000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_burnt_a4_1x1": {
+    "x": 2200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_burnt_a2_1x1": {
+    "x": 2400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_burnt_a2_1x1": {
+    "x": 2600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bush_multicolor2_a3_1x1": {
+    "x": 2800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cabbage_red_b1": {
+    "x": 3000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:carrot_row_a1": {
+    "x": 3200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_cascade_a12_1x1": {
+    "x": 3400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cattail_blue_a12_1x1": {
+    "x": 3600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:burrows_cave_stone_earthy_path_a3": {
+    "x": 3800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_path_top_blue_c": {
+    "x": 0,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:corn_a3": {
+    "x": 200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_black_c3_1x1": {
+    "x": 400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_large_black1_a3_1x1": {
+    "x": 600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_foam_flow_a6_1x1": {
+    "x": 800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaves_piles_brown2_a1_1x1": {
+    "x": 1000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_leafless_brown_b1_1x1": {
+    "x": 1200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaf_brown1_a12_1x1": {
+    "x": 1400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lichen_blue_a3_1x1": {
+    "x": 1600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lilypad_multicolor2_a1_1x1": {
+    "x": 1800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:long_grass_multicolor2_a12_1x1": {
+    "x": 2000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:moss_multicolor2_b12_1x1": {
+    "x": 2200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:underdark_mushroom_stalk_dark_a3_1x1": {
+    "x": 2400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:mushroom_blue_a12_1x1": {
+    "x": 2600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:palm_tree_trunk_dark_a1_1x1": {
+    "x": 2800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_patch_multicolor2_a3_1x1": {
+    "x": 3000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:clover_edge_path_03_a1": {
+    "x": 3200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_multicolor2_a3_1x1": {
+    "x": 3400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_huge_multicolor3_a1_1x1": {
+    "x": 3600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_large_multicolor2_a3_1x1": {
+    "x": 3800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:giant_carved_pumpkin_a3": {
+    "x": 0,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ridge_grassy_stone_earthy_path_a3": {
+    "x": 200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_ripples_a12_1x1": {
+    "x": 400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:root_ashen_small_a12_1x1": {
+    "x": 600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_wood_ashen_d3_tilted_1x1": {
+    "x": 800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_ashen_a6_1x1": {
+    "x": 1000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fir_tree_stump_a3_1x1": {
+    "x": 1200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_flesh_large_a11_1x1": {
+    "x": 1400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_a11_1x1": {
+    "x": 1600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_thorny_a11_1x1": {
+    "x": 1800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_ashen_a2_1x1": {
+    "x": 2000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:under_cliff_stone_earthy_path_a3": {
+    "x": 2200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:vine_multicolor2_a15_1x1": {
+    "x": 2400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:waterfall_d3_1x1": {
+    "x": 2600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_wave_b12_1x1": {
+    "x": 2800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_edge_green1_a4_1x1": {
+    "x": 3000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_multicolor2_a12_1x1": {
+    "x": 3200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:wheat_field_b1": {
+    "x": 3400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bank_stone_slate_path_a1": {
+    "x": 3600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a1_1x1": {
+    "x": 3800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_dark_a6_1x1": {
+    "x": 0,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_burnt_a6_1x1": {
+    "x": 200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_burnt_a6_1x1": {
+    "x": 400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_burnt_a3_1x1": {
+    "x": 600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bush_multicolor2_b1_1x1": {
+    "x": 800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cabbage_red_b2": {
+    "x": 1000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:carrot_row_a2": {
+    "x": 1200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_cascade_a13_1x1": {
+    "x": 1400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cattail_blue_a1_1x1": {
+    "x": 1600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:burrows_cave_stone_slate_path_a1": {
+    "x": 1800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_path_top_blue_d": {
+    "x": 2000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:corn_a4": {
+    "x": 2200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_black_c4_1x1": {
+    "x": 2400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_large_black1_a4_1x1": {
+    "x": 2600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_foam_flow_a7_1x1": {
+    "x": 2800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_patch_green1_a12_1x1": {
+    "x": 3000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:hay_bale_01_b3_1x1": {
+    "x": 3200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_multicolor3_b2_1x1": {
+    "x": 3400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaves_piles_brown2_b1_1x1": {
+    "x": 3600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_leafless_brown_b2_1x1": {
+    "x": 3800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaf_brown1_a13_1x1": {
+    "x": 0,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lichen_blue_a4_1x1": {
+    "x": 200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lilypad_multicolor2_a2_1x1": {
+    "x": 400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:long_grass_multicolor2_a13_1x1": {
+    "x": 600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:moss_multicolor2_b13_1x1": {
+    "x": 800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:underdark_mushroom_stalk_dark_a4_1x1": {
+    "x": 1000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:mushroom_blue_a13_1x1": {
+    "x": 1200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:palm_tree_trunk_dark_a2_1x1": {
+    "x": 1400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_patch_multicolor3_a1_1x1": {
+    "x": 1600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:clover_edge_path_04_a1": {
+    "x": 1800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_multicolor2_a4_1x1": {
+    "x": 2000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_huge_multicolor3_b1_1x1": {
+    "x": 2200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_large_multicolor2_a4_1x1": {
+    "x": 2400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:giant_pumpkin_a1": {
+    "x": 2600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ridge_grassy_stone_slate_path_a1": {
+    "x": 2800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_ripples_a13_1x1": {
+    "x": 3000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:root_ashen_small_a13_1x1": {
+    "x": 3200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_wood_ashen_d4_tilted_1x1": {
+    "x": 3400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_ashen_a9_1x1": {
+    "x": 3600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fir_tree_stump_a4_1x1": {
+    "x": 3800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_flesh_large_a1_1x1": {
+    "x": 0,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_a1_1x1": {
+    "x": 200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_thorny_a1_1x1": {
+    "x": 400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_ashen_a3_1x1": {
+    "x": 600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:under_cliff_stone_slate_path_a1": {
+    "x": 800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:vine_multicolor2_a16_1x1": {
+    "x": 1000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:waterfall_d6_1x1": {
+    "x": 1200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_wave_b13_1x1": {
+    "x": 1400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_edge_green1_a5_1x1": {
+    "x": 1600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_multicolor2_a13_1x1": {
+    "x": 1800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:wheat_field_c1": {
+    "x": 2000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bank_stone_slate_path_a2": {
+    "x": 2200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a2_1x1": {
+    "x": 2400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_dark_a7_1x1": {
+    "x": 2600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_burnt_a7_1x1": {
+    "x": 2800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_burnt_a9_1x1": {
+    "x": 3000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_burnt_a4_1x1": {
+    "x": 3200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bush_multicolor2_b2_1x1": {
+    "x": 3400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cabbage_row_green_a1": {
+    "x": 3600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:carrot_row_a3": {
+    "x": 3800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_cascade_a14_1x1": {
+    "x": 0,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cattail_blue_a2_1x1": {
+    "x": 200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:burrows_cave_stone_slate_path_a2": {
+    "x": 400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_path_top_blue_e": {
+    "x": 600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:corn_row_a1": {
+    "x": 800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_black_c5_1x1": {
+    "x": 1000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_large_black2_a1_1x1": {
+    "x": 1200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_foam_flow_a8_1x1": {
+    "x": 1400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_patch_green1_a13_1x1": {
+    "x": 1600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:hay_bale_01_b4_1x1": {
+    "x": 1800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_multicolor3_d1_1x1": {
+    "x": 2000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaves_piles_green1_a1_1x1": {
+    "x": 2200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_leafless_brown_b3_1x1": {
+    "x": 2400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaf_brown1_a14_1x1": {
+    "x": 2600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lichen_blue_a5_1x1": {
+    "x": 2800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lilypad_multicolor2_a3_1x1": {
+    "x": 3000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:long_grass_multicolor2_a14_1x1": {
+    "x": 3200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:moss_multicolor2_b14_1x1": {
+    "x": 3400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:underdark_mushroom_stalk_dark_a5_1x1": {
+    "x": 3600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:mushroom_blue_a14_1x1": {
+    "x": 3800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:palm_tree_trunk_green_a1_1x1": {
+    "x": 0,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_patch_multicolor3_a2_1x1": {
+    "x": 200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_long_path_01_a": {
+    "x": 400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_multicolor2_a5_1x1": {
+    "x": 600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_huge_green1_a1_1x1": {
+    "x": 800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_large_multicolor2_a5_1x1": {
+    "x": 1000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:giant_pumpkin_a2": {
+    "x": 1200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ridge_grassy_stone_slate_path_a2": {
+    "x": 1400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_ripples_a2_1x1": {
+    "x": 1600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:root_ashen_small_a1_1x1": {
+    "x": 1800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_wood_ashen_d5_tilted_1x1": {
+    "x": 2000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_dark_a1_1x1": {
+    "x": 2200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fir_tree_stump_a5_1x1": {
+    "x": 2400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_flesh_large_a2_1x1": {
+    "x": 2600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_a2_1x1": {
+    "x": 2800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_thorny_a2_1x1": {
+    "x": 3000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_ashen_a4_1x1": {
+    "x": 3200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:under_cliff_stone_slate_path_a2": {
+    "x": 3400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:vine_multicolor2_a17_1x1": {
+    "x": 3600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:waterfall_e2_1x1": {
+    "x": 3800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_wave_b1_1x1": {
+    "x": 0,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_edge_green1_a6_1x1": {
+    "x": 200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_multicolor2_a14_1x1": {
+    "x": 400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:wheat_field_d1": {
+    "x": 600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bank_stone_slate_path_a3": {
+    "x": 800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a3_1x1": {
+    "x": 1000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_dark_a8_1x1": {
+    "x": 1200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_burnt_a8_1x1": {
+    "x": 1400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:burrows_cave_stone_slate_path_a3": {
+    "x": 1600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_path_top_gray_a": {
+    "x": 1800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:corn_row_a10": {
+    "x": 2000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_black_d1_1x1": {
+    "x": 2200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_large_black2_a2_1x1": {
+    "x": 2400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_foam_flow_b5_1x1": {
+    "x": 2600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_patch_green1_a14_1x1": {
+    "x": 2800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:hay_bale_01_b5_1x1": {
+    "x": 3000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_green1_b2_1x1": {
+    "x": 3200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaves_piles_green1_b1_1x1": {
+    "x": 3400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_leafless_brown_b4_1x1": {
+    "x": 3600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaf_brown1_a15_1x1": {
+    "x": 3800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lichen_blue_a6_1x1": {
+    "x": 0,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lilypad_multicolor2_a4_1x1": {
+    "x": 200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:long_grass_multicolor2_a15_1x1": {
+    "x": 400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:moss_multicolor2_b15_1x1": {
+    "x": 600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:underdark_mushroom_stalk_dark_a6_1x1": {
+    "x": 800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:mushroom_blue_a1_1x1": {
+    "x": 1000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:palm_tree_trunk_green_a2_1x1": {
+    "x": 1200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_patch_multicolor3_a3_1x1": {
+    "x": 1400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_long_path_01_b": {
+    "x": 1600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_multicolor2_a6_1x1": {
+    "x": 1800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_huge_green1_b1_1x1": {
+    "x": 2000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_large_multicolor2_a6_1x1": {
+    "x": 2200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:giant_pumpkin_a3": {
+    "x": 2400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ridge_grassy_stone_slate_path_a3": {
+    "x": 2600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_ripples_a3_1x1": {
+    "x": 2800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:root_ashen_small_a2_1x1": {
+    "x": 3000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_wood_dark_d1_tilted_1x1": {
+    "x": 3200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_dark_a2_1x1": {
+    "x": 3400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fir_tree_stump_b1_1x1": {
+    "x": 3600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_flesh_large_a3_1x1": {
+    "x": 3800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_a3_1x1": {
+    "x": 0,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_thorny_a3_1x1": {
+    "x": 200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_ashen_a5_1x1": {
+    "x": 400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:under_cliff_stone_slate_path_a3": {
+    "x": 600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:vine_multicolor2_a18_1x1": {
+    "x": 800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:waterfall_mist_a10_1x1": {
+    "x": 1000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_wave_b2_1x1": {
+    "x": 1200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_edge_green2_a2_1x1": {
+    "x": 1400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_multicolor2_a15_1x1": {
+    "x": 1600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:wheat_field_e1": {
+    "x": 1800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bank_stone_volcanic_path_a1": {
+    "x": 2000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a4_1x1": {
+    "x": 2200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_light_a6_1x1": {
+    "x": 2400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_path_top_gray_b": {
+    "x": 2600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:corn_row_a11": {
+    "x": 2800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_black_d2_1x1": {
+    "x": 3000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:flower_large_black2_a3_1x1": {
+    "x": 3200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_foam_flow_b6_1x1": {
+    "x": 3400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_patch_green1_a15_1x1": {
+    "x": 3600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:hay_bale_02_b1_1x1": {
+    "x": 3800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_green1_d1_1x1": {
+    "x": 0,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaves_piles_green2_a1_1x1": {
+    "x": 200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_leafless_brown_corner_a1_1x1": {
+    "x": 400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaf_brown1_a16_1x1": {
+    "x": 600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lichen_blue_a7_1x1": {
+    "x": 800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lilypad_multicolor2_a5_1x1": {
+    "x": 1000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:long_grass_multicolor2_a16_1x1": {
+    "x": 1200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:moss_multicolor2_b16_1x1": {
+    "x": 1400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:underdark_mushroom_stalk_light_a1_1x1": {
+    "x": 1600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:mushroom_blue_a2_1x1": {
+    "x": 1800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:palm_tree_trunk_light_a1_1x1": {
+    "x": 2000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_patch_green_a1_1x1": {
+    "x": 2200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_long_path_02_a": {
+    "x": 2400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_multicolor2_a7_1x1": {
+    "x": 2600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_huge_green2_a1_1x1": {
+    "x": 2800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_large_multicolor2_b4_1x1": {
+    "x": 3000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:pumpkin_a1": {
+    "x": 3200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ridge_stone_earthy_path_a1": {
+    "x": 3400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_ripples_a4_1x1": {
+    "x": 3600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:root_ashen_small_a3_1x1": {
+    "x": 3800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_wood_dark_d2_tilted_1x1": {
+    "x": 0,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_dark_a6_1x1": {
+    "x": 200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fir_tree_stump_b2_1x1": {
+    "x": 400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_flesh_large_a4_1x1": {
+    "x": 600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_a4_1x1": {
+    "x": 800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_thorny_a4_1x1": {
+    "x": 1000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_ashen_a6_1x1": {
+    "x": 1200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:under_cliff_stone_volcanic_path_a1": {
+    "x": 1400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:vine_multicolor2_a1_1x1": {
+    "x": 1600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:waterfall_mist_a11_1x1": {
+    "x": 1800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_wave_b3_1x1": {
+    "x": 2000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_edge_green2_a3_1x1": {
+    "x": 2200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_multicolor2_a16_1x1": {
+    "x": 2400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:wheat_field_f1": {
+    "x": 2600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bank_stone_volcanic_path_a2": {
+    "x": 2800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a5_1x1": {
+    "x": 3000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_light_a7_1x1": {
+    "x": 3200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_burnt_a5_1x1": {
+    "x": 3400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bush_multicolor2_b3_1x1": {
+    "x": 3600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:cabbage_row_green_a2": {
+    "x": 3800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_patch_green1_a16_1x1": {
+    "x": 0,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:hay_bale_02_b2_1x1": {
+    "x": 200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_green2_b2_1x1": {
+    "x": 400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaves_piles_green2_b1_1x1": {
+    "x": 600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ivy_leafless_green1_a3_1x1": {
+    "x": 800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fallen_leaf_brown1_a17_1x1": {
+    "x": 1000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lichen_blue_a8_1x1": {
+    "x": 1200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:lilypad_multicolor2_a6_1x1": {
+    "x": 1400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:long_grass_multicolor2_a17_1x1": {
+    "x": 1600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:moss_multicolor2_b17_1x1": {
+    "x": 1800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:underdark_mushroom_stalk_light_a2_1x1": {
+    "x": 2000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:mushroom_blue_a3_1x1": {
+    "x": 2200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:palm_tree_trunk_light_a2_1x1": {
+    "x": 2400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_patch_green_a2_1x1": {
+    "x": 2600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:grass_long_path_02_b": {
+    "x": 2800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_multicolor2_b1_1x1": {
+    "x": 3000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_huge_green2_b1_1x1": {
+    "x": 3200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:plant_large_multicolor2_b5_1x1": {
+    "x": 3400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:pumpkin_a2": {
+    "x": 3600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ridge_stone_earthy_path_a2": {
+    "x": 3800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_ripples_a5_1x1": {
+    "x": 0,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:root_ashen_small_a4_1x1": {
+    "x": 200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_wood_dark_d3_tilted_1x1": {
+    "x": 400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:stick_large_wood_dark_a9_1x1": {
+    "x": 600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:fir_tree_stump_b3_1x1": {
+    "x": 800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_flesh_large_a5_1x1": {
+    "x": 1000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_a5_1x1": {
+    "x": 1200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:tendril_vine_space_large_thorny_a5_1x1": {
+    "x": 1400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_ashen_a7_1x1": {
+    "x": 1600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:under_cliff_stone_volcanic_path_a2": {
+    "x": 1800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:vine_multicolor2_a2_1x1": {
+    "x": 2000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:waterfall_mist_a12_1x1": {
+    "x": 2200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:water_wave_b4_1x1": {
+    "x": 2400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_edge_green2_a4_1x1": {
+    "x": 2600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:weed_multicolor2_a17_1x1": {
+    "x": 2800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:wheat_field_g1": {
+    "x": 3000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:bank_stone_volcanic_path_a3": {
+    "x": 3200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:ceremorph_blue_bioluminescent_plant_a6_1x1": {
+    "x": 3400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:branch_wood_light_a8_1x1": {
+    "x": 3600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-terrain:twig_wood_burnt_a6_1x1": {
+    "x": 3800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  }
+}

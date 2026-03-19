@@ -25,3 +25,8 @@ dist-ssr
 
 repomix-output.xml
 .superpowers/
+
+# Generated assets (large binary files — build locally via scripts/assets/build.js)
+public/tilesets/*.png
+public/tilesets/*.webp
+assets/manifest.json

@@ -4,6 +4,7 @@ import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
 import demoWorld from './data/demoWorld.json'
 import { buildWorldFromAiOutput } from './lib/campaignGenerator'
+import { buildTestArea } from './data/testArea.js'
 import { broadcastZoneTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
@@ -77,6 +78,8 @@ export default function GameV2({ onLeave }) {
   playerPosRef.current = playerPos
   const lastNpcTriggerRef = useRef(null)
 
+  const zone = zones?.[currentZoneId] || null
+
   // Area camera — instantiate when zone signals camera mode (e.g. large procedural maps)
   const useAreaCamera = zone?.useCamera || false
   useEffect(() => {
@@ -84,12 +87,11 @@ export default function GameV2({ onLeave }) {
       cameraRef.current = null
       return
     }
-    const container = pixiRef.current?.getApp()?.canvas?.parentElement
-    const w = container?.clientWidth || window.innerWidth
-    const h = container?.clientHeight || window.innerHeight
+    const w = window.innerWidth
+    const h = window.innerHeight
     const cam = new Camera(w, h)
-    const tileSize = 200 // procedural area tile size
-    cam.setAreaBounds(zone.width * tileSize, zone.height * tileSize)
+    const tileSize = zone?.tileSize || 200
+    cam.setAreaBounds((zone?.width || 40) * tileSize, (zone?.height || 30) * tileSize)
     // Center on player start
     cam.centerOnImmediate(playerPosRef.current.x, playerPosRef.current.y, tileSize)
     cameraRef.current = cam
@@ -135,7 +137,8 @@ export default function GameV2({ onLeave }) {
       const delta = e.deltaY > 0 ? -0.05 : 0.05
       cam.zoomAt(delta, e.clientX, e.clientY)
     }
-    const canvas = pixiRef.current?.getApp()?.canvas
+    let canvas
+    try { canvas = pixiRef.current?.getApp?.()?.canvas } catch { /* app not ready */ }
     if (!canvas) return
     canvas.addEventListener('wheel', onWheel, { passive: false })
     return () => canvas.removeEventListener('wheel', onWheel)
@@ -188,25 +191,61 @@ export default function GameV2({ onLeave }) {
     }
   }, [inCombat, encounter.combatants])
 
-  // Load zone world on mount — use campaign zones if available, else demo world
+  // Load zone world on mount — test area or normal campaign/demo
+  const [testAreaData, setTestAreaData] = useState(null)
+  const worldLoadedRef = useRef(false)
   useEffect(() => {
-    if (!zones) {
+    if (worldLoadedRef.current) return
+    if (zones) { worldLoadedRef.current = true; return }
+
+    const params = new URLSearchParams(window.location.search)
+
+    if (params.has('testarea')) {
       try {
-        // Check if campaign has zone data from AI generation
-        const campaignData = campaign
-        const hasZoneData = campaignData?.zones && (Array.isArray(campaignData.zones) ? campaignData.zones.length > 0 : Object.keys(campaignData.zones).length > 0)
-        const source = hasZoneData ? campaignData : demoWorld
-        const world = buildWorldFromAiOutput(source)
-        console.log('[GameV2] Built world:', world.title, Object.keys(world.zones).length, 'zones', hasZoneData ? '(from campaign)' : '(demo)')
-        loadZoneWorld(world)
-        const startZone = world.zones[world.startZone]
-        if (startZone) {
-          const entrance = startZone.exits?.[0]?.entryPoint || { x: Math.floor(startZone.width / 2), y: Math.floor(startZone.height / 2) }
-          setPlayerPos(entrance)
-        }
+        const area = buildTestArea()
+        setTestAreaData(area)
+        console.log('[GameV2] Test area loaded:', area.name, `${area.width}x${area.height}`, area.palette.length, 'palette entries')
+        loadZoneWorld({
+          title: area.name,
+          zones: {
+            'test-area': {
+              id: 'test-area',
+              title: area.name,
+              width: area.width,
+              height: area.height,
+              exits: [],
+              npcs: area.npcs,
+              palette: area.palette,
+              layers: area.layers,
+              buildings: area.buildings,
+            },
+          },
+          startZone: 'test-area',
+        })
+        setPlayerPos(area.playerStart)
+        worldLoadedRef.current = true
+        console.log('[GameV2] Test area zone set, currentZoneId should be test-area')
       } catch (e) {
-        console.error('[GameV2] Failed to build world:', e)
+        console.error('[GameV2] Failed to build test area:', e)
       }
+      return
+    }
+
+    try {
+      const campaignData = campaign
+      const hasZoneData = campaignData?.zones && (Array.isArray(campaignData.zones) ? campaignData.zones.length > 0 : Object.keys(campaignData.zones).length > 0)
+      const source = hasZoneData ? campaignData : demoWorld
+      const world = buildWorldFromAiOutput(source)
+      console.log('[GameV2] Built world:', world.title, Object.keys(world.zones).length, 'zones', hasZoneData ? '(from campaign)' : '(demo)')
+      loadZoneWorld(world)
+      worldLoadedRef.current = true
+      const startZone = world.zones[world.startZone]
+      if (startZone) {
+        const entrance = startZone.exits?.[0]?.entryPoint || { x: Math.floor(startZone.width / 2), y: Math.floor(startZone.height / 2) }
+        setPlayerPos(entrance)
+      }
+    } catch (e) {
+      console.error('[GameV2] Failed to build world:', e)
     }
   }, [zones, loadZoneWorld, campaign])
 
@@ -263,8 +302,6 @@ export default function GameV2({ onLeave }) {
       return () => { clearTimeout(timer); unsub() }
     }
   }, [campaign?.id, user?.id, isDM])
-
-  const zone = zones?.[currentZoneId] || null
 
   // Build walkability grid from zone data
   const walkGrid = useMemo(() => {

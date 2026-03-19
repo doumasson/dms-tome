@@ -1,0 +1,3202 @@
+{
+  "atlas-props-furniture:adornments_furniture_corner_metal_black_a10_1x1": {
+    "x": 0,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:armchair_fabric_black_a1_1x1": {
+    "x": 200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:baby_bath_wood_ashen_a1_1x1": {
+    "x": 400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pump_metal_brass_a_1x1": {
+    "x": 600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tub_metal_gray_b_empty_1x1": {
+    "x": 800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:single_bed_ladder_wood_ashen_a_1x1": {
+    "x": 1000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_bedroll_cloth_beige_d_1x1": {
+    "x": 1200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_sleeping_bag_black_b1_1x1": {
+    "x": 1400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_base_stone_earthy_b1_1x1": {
+    "x": 1600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_blanket_cloth_beige_e_1x1": {
+    "x": 1800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookstand_metal_brass_a1_1x1": {
+    "x": 2000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookcase_path_wood_ashen_connector_a1_1x1": {
+    "x": 2200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookshelf_path_wood_ashen_connector_a1_1x1": {
+    "x": 2400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_top_broken_metal_gray_blue_d1_1x1": {
+    "x": 2600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_canopy_black_wood_walnut_a1_1x1": {
+    "x": 2800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wood_ashen_a_1x1": {
+    "x": 3000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:childs_chair_wood_ashen_a1_1x1": {
+    "x": 3200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_control_desk_blue_side_a1_1x1": {
+    "x": 3400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cooking_pit_brick_earthy_a1_1x1": {
+    "x": 3600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_triangular_wood_ashen_a_1x1": {
+    "x": 3800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_wood_ashen_a1_1x1": {
+    "x": 0,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:couch_sectional_fabric_black_a4_1x1": {
+    "x": 200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cupboard_door_wood_ashen_a_1x1": {
+    "x": 400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_earthy_damaged_a1_1x1": {
+    "x": 600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:decorative_pillow_black_a1_1x1": {
+    "x": 800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:desk_book_holder_wood_ashen_a1_1x1": {
+    "x": 1000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_base_metal_gray_d_1x1": {
+    "x": 1200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_pillow_cloth_black_a_1x1": {
+    "x": 1400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_wood_ashen_a1_1x1": {
+    "x": 1600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_earthy_fallen_b1_1x1": {
+    "x": 1800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_dresser_door_wood_ashen_a1_1x1": {
+    "x": 2000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_ashen_filled_a10_1x1": {
+    "x": 2200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:coffee_table_glass_blue_wood_ashen_b1_1x1": {
+    "x": 2400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:highchair_wood_ashen_a1_1x1": {
+    "x": 2600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_beige_a10_1x1": {
+    "x": 2800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wrought_metal_brass_a1_1x1": {
+    "x": 3000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_metal_brass_a_1x1": {
+    "x": 3200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_blue_metal_brass_a1_1x1": {
+    "x": 3400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_misc_wood_ashen_a1_1x1": {
+    "x": 3600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_mobile_dragons_wood_ashen_metal_gray_a1_1x1": {
+    "x": 3800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:modular_privy_connector_stone_earthy_a1_1x1": {
+    "x": 0,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:nightstand_wood_ashen_a1_1x1": {
+    "x": 200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ottoman_fabric_black_wood_ashen_a1_1x1": {
+    "x": 400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_part_metal_brass_a_1x1": {
+    "x": 600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bar_a_ashen_path": {
+    "x": 800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_a_beige_a10_1x1": {
+    "x": 1000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_b_beige_a10_1x1": {
+    "x": 1200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_fancy_a_black_a10_1x1": {
+    "x": 1400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_pillow_cloth_beige_a_1x1": {
+    "x": 1600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:orrery_blackhole_large_a1_1x1": {
+    "x": 1800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:library_section_plaque_metal_brass_a10_1x1": {
+    "x": 2000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pool_ball_a_red_1x1": {
+    "x": 2200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_desk_riser_wood_ashen_b1_1x1": {
+    "x": 2400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:roomdivider_black_solo_large_a_1x1": {
+    "x": 2600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_round_wood_ashen_d1_1x1": {
+    "x": 2800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:school_desk_wood_ashen_a1_1x1": {
+    "x": 3000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:scroll_shelf_wood_ashen_a2_1x1": {
+    "x": 3200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:sink_metal_gray_a_1x1": {
+    "x": 3400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_square_wood_ashen_e1_1x1": {
+    "x": 3600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:privy_stone_earthy_a1_1x1": {
+    "x": 3800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_fabric_black_wood_ashen_a1_1x1": {
+    "x": 0,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_striped_beige_a10_1x1": {
+    "x": 200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_base_stone_earthy_a1_1x1": {
+    "x": 400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_blue_pedestal_table_a1_1x1": {
+    "x": 600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tap_metal_black_a1_1x1": {
+    "x": 800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:throne_leather_black_metal_black_c1_1x1": {
+    "x": 1000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:toilet_lid_wood_ashen_a_1x1": {
+    "x": 1200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:vanity_mirror_wood_ashen_a1_1x1": {
+    "x": 1400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:wardrobe_door_wood_ashen_a_1x1": {
+    "x": 1600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:adornments_furniture_corner_metal_black_a11_1x1": {
+    "x": 1800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:armchair_fabric_black_b1_1x1": {
+    "x": 2000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:baby_bath_wood_ashen_dirty_a1_1x1": {
+    "x": 2200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pump_metal_gold_a_1x1": {
+    "x": 2400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tub_metal_gray_b_full_1x1": {
+    "x": 2600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:single_bed_ladder_wood_dark_a_1x1": {
+    "x": 2800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_bedroll_cloth_beige_e_1x1": {
+    "x": 3000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_sleeping_bag_black_b2_1x1": {
+    "x": 3200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_base_stone_redrock_b1_1x1": {
+    "x": 3400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_blanket_cloth_beige_e_fur_1x1": {
+    "x": 3600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookstand_metal_brass_b1_1x1": {
+    "x": 3800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookcase_path_wood_ashen_connector_b1_1x1": {
+    "x": 0,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookshelf_path_wood_ashen_connector_b1_1x1": {
+    "x": 200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_top_broken_metal_gray_blue_d2_1x1": {
+    "x": 400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_canopy_blue_wood_dark_a1_1x1": {
+    "x": 600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wood_ashen_b_1x1": {
+    "x": 800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:childs_chair_wood_dark_a1_1x1": {
+    "x": 1000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_control_desk_blue_side_b1_1x1": {
+    "x": 1200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cooking_pit_brick_earthy_a2_1x1": {
+    "x": 1400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_triangular_wood_dark_a_1x1": {
+    "x": 1600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_wood_ashen_bedding_white_a1_1x1": {
+    "x": 1800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:couch_sectional_fabric_black_a5_1x1": {
+    "x": 2000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cupboard_door_wood_dark_a_1x1": {
+    "x": 2200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_redrock_damaged_a1_1x1": {
+    "x": 2400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:decorative_pillow_black_a2_1x1": {
+    "x": 2600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:desk_book_holder_wood_ashen_a2_1x1": {
+    "x": 2800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_base_metal_gray_i_1x1": {
+    "x": 3000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_pillow_cloth_black_b_1x1": {
+    "x": 3200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_wood_ashen_a2_1x1": {
+    "x": 3400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_redrock_fallen_b1_1x1": {
+    "x": 3600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_dresser_door_wood_ashen_b1_1x1": {
+    "x": 3800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_ashen_filled_a1_1x1": {
+    "x": 0,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:coffee_table_glass_blue_wood_ashen_j1_1x1": {
+    "x": 200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:highchair_wood_ashen_a2_1x1": {
+    "x": 400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_beige_a11_1x1": {
+    "x": 600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wrought_metal_gray_a1_1x1": {
+    "x": 800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_metal_brass_b_1x1": {
+    "x": 1000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_blue_metal_brass_a2_1x1": {
+    "x": 1200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_misc_wood_ashen_b1_1x1": {
+    "x": 1400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_mobile_dragons_wood_ashen_metal_rusty_a1_1x1": {
+    "x": 1600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:modular_privy_connector_stone_redrock_a1_1x1": {
+    "x": 1800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:nightstand_wood_ashen_a2_1x1": {
+    "x": 2000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ottoman_fabric_black_wood_ashen_a2_1x1": {
+    "x": 2200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_part_metal_brass_b_1x1": {
+    "x": 2400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bar_a_ashen_rusty_path": {
+    "x": 2600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_a_beige_a11_1x1": {
+    "x": 2800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_b_beige_a11_1x1": {
+    "x": 3000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_fancy_a_black_a11_1x1": {
+    "x": 3200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_pillow_cloth_beige_b_1x1": {
+    "x": 3400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:orrery_planet_large_a1_1x1": {
+    "x": 3600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:library_section_plaque_metal_brass_a1_1x1": {
+    "x": 3800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pool_ball_a_white_1x1": {
+    "x": 0,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_desk_riser_wood_dark_b1_1x1": {
+    "x": 200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:roomdivider_black_solo_small_a_1x1": {
+    "x": 400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_round_wood_ashen_d2_1x1": {
+    "x": 600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:school_desk_wood_ashen_a2_1x1": {
+    "x": 800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:scroll_shelf_wood_ashen_filled_a2_1x1": {
+    "x": 1000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:sink_metal_gray_b_1x1": {
+    "x": 1200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_square_wood_ashen_e2_1x1": {
+    "x": 1400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:privy_stone_earthy_b1_1x1": {
+    "x": 1600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_fabric_black_wood_ashen_b1_1x1": {
+    "x": 1800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_striped_beige_a11_1x1": {
+    "x": 2000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_base_stone_earthy_b1_1x1": {
+    "x": 2200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_blue_side_table_b1_1x1": {
+    "x": 2400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tap_metal_black_b1_1x1": {
+    "x": 2600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:throne_leather_black_metal_black_d1_1x1": {
+    "x": 2800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:toilet_lid_wood_dark_a_1x1": {
+    "x": 3000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:vanity_mirror_wood_ashen_b1_1x1": {
+    "x": 3200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:wardrobe_door_wood_dark_a_1x1": {
+    "x": 3400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:adornments_furniture_corner_metal_black_a12_1x1": {
+    "x": 3600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:armchair_fabric_black_wood_ashen_c1_1x1": {
+    "x": 3800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:baby_bath_wood_dark_a1_1x1": {
+    "x": 0,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pump_metal_gray_a_1x1": {
+    "x": 200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tub_metal_rusty_b_empty_1x1": {
+    "x": 400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:single_bed_ladder_wood_light_a_1x1": {
+    "x": 600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_bedroll_cloth_beige_f_1x1": {
+    "x": 800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_sleeping_bag_black_c1_1x1": {
+    "x": 1000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_base_stone_sandstone_b1_1x1": {
+    "x": 1200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_blanket_cloth_black_e_1x1": {
+    "x": 1400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookstand_metal_gray_a1_1x1": {
+    "x": 1600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookcase_path_wood_ashen_corner_a1_1x1": {
+    "x": 1800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookshelf_path_wood_ashen_divider_a1_1x1": {
+    "x": 2000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_top_broken_metal_gray_blue_d3_1x1": {
+    "x": 2200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_canopy_cream_wood_ashen_a1_1x1": {
+    "x": 2400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wood_ashen_c_1x1": {
+    "x": 2600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:childs_chair_wood_light_a1_1x1": {
+    "x": 2800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_control_desk_blue_side_c1_1x1": {
+    "x": 3000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cooking_pit_brick_redrock_a1_1x1": {
+    "x": 3200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_triangular_wood_light_a_1x1": {
+    "x": 3400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_wood_dark_a1_1x1": {
+    "x": 3600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:couch_sectional_fabric_blue_a4_1x1": {
+    "x": 3800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cupboard_door_wood_light_a_1x1": {
+    "x": 0,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_sandstone_damaged_a1_1x1": {
+    "x": 200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:decorative_pillow_black_b1_1x1": {
+    "x": 400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:desk_book_holder_wood_dark_a1_1x1": {
+    "x": 600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_base_metal_gray_k_1x1": {
+    "x": 800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_pillow_cloth_black_c_1x1": {
+    "x": 1000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_wood_ashen_b_1x1": {
+    "x": 1200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_sandstone_fallen_b1_1x1": {
+    "x": 1400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_dresser_door_wood_dark_a1_1x1": {
+    "x": 1600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_ashen_filled_a2_1x1": {
+    "x": 1800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:coffee_table_glass_blue_wood_ashen_k1_1x1": {
+    "x": 2000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:highchair_wood_ashen_b1_1x1": {
+    "x": 2200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_beige_a12_1x1": {
+    "x": 2400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wrought_metal_polished_a1_1x1": {
+    "x": 2600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_metal_brass_c_1x1": {
+    "x": 2800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_blue_metal_brass_b1_1x1": {
+    "x": 3000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_misc_wood_dark_a1_1x1": {
+    "x": 3200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_mobile_dragons_wood_dark_metal_gray_a1_1x1": {
+    "x": 3400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:modular_privy_connector_stone_sandstone_a1_1x1": {
+    "x": 3600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:nightstand_wood_dark_a1_1x1": {
+    "x": 3800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ottoman_fabric_black_wood_ashen_b1_1x1": {
+    "x": 0,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_part_metal_brass_c_1x1": {
+    "x": 200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bar_a_dark_path": {
+    "x": 400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_a_beige_a12_1x1": {
+    "x": 600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_b_beige_a12_1x1": {
+    "x": 800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_fancy_a_black_a12_1x1": {
+    "x": 1000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_pillow_cloth_beige_c_1x1": {
+    "x": 1200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:orrery_planet_medium_a1_1x1": {
+    "x": 1400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:library_section_plaque_metal_brass_a2_1x1": {
+    "x": 1600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:school_desk_wood_ashen_a3_1x1": {
+    "x": 1800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:scroll_shelf_wood_dark_a2_1x1": {
+    "x": 2000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:sink_metal_rusty_a_1x1": {
+    "x": 2200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_square_wood_ashen_e3_1x1": {
+    "x": 2400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:privy_stone_redrock_a1_1x1": {
+    "x": 2600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_fabric_black_wood_dark_a1_1x1": {
+    "x": 2800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_striped_beige_a12_1x1": {
+    "x": 3000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_base_stone_earthy_c1_1x1": {
+    "x": 3200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_gray_pedestal_table_a1_1x1": {
+    "x": 3400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tap_metal_black_c1_1x1": {
+    "x": 3600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:throne_leather_black_metal_bronze_c1_1x1": {
+    "x": 3800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:toilet_lid_wood_light_a_1x1": {
+    "x": 0,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:vanity_mirror_wood_dark_a1_1x1": {
+    "x": 200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:wardrobe_door_wood_light_a_1x1": {
+    "x": 400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:adornments_furniture_corner_metal_black_a13_1x1": {
+    "x": 600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:armchair_fabric_black_wood_ashen_d1_1x1": {
+    "x": 800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:baby_bath_wood_dark_dirty_a1_1x1": {
+    "x": 1000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pump_metal_rusty_a_1x1": {
+    "x": 1200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tub_metal_rusty_b_full_1x1": {
+    "x": 1400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookstand_metal_gray_b1_1x1": {
+    "x": 1600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookcase_path_wood_ashen_corner_b1_1x1": {
+    "x": 1800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookshelf_path_wood_ashen_divider_b1_1x1": {
+    "x": 2000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_top_broken_metal_gray_blue_d4_1x1": {
+    "x": 2200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_canopy_pink_wood_red_a1_1x1": {
+    "x": 2400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wood_ashen_d_1x1": {
+    "x": 2600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:childs_chair_wood_red_a1_1x1": {
+    "x": 2800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_control_desk_blue_side_d1_1x1": {
+    "x": 3000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cooking_pit_brick_redrock_a2_1x1": {
+    "x": 3200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_triangular_wood_red_a_1x1": {
+    "x": 3400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_wood_dark_bedding_white_a1_1x1": {
+    "x": 3600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:couch_sectional_fabric_blue_a5_1x1": {
+    "x": 3800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cupboard_door_wood_red_a_1x1": {
+    "x": 0,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_slate_damaged_a1_1x1": {
+    "x": 200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:decorative_pillow_black_b2_1x1": {
+    "x": 400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:desk_book_holder_wood_dark_a2_1x1": {
+    "x": 600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_base_metal_gray_n_1x1": {
+    "x": 800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_pillow_cloth_black_d_1x1": {
+    "x": 1000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_wood_ashen_c_1x1": {
+    "x": 1200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_slate_fallen_b1_1x1": {
+    "x": 1400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_dresser_door_wood_dark_b1_1x1": {
+    "x": 1600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_ashen_filled_a3_1x1": {
+    "x": 1800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:coffee_table_glass_blue_wood_ashen_l1_1x1": {
+    "x": 2000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:highchair_wood_dark_a1_1x1": {
+    "x": 2200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_beige_a13_1x1": {
+    "x": 2400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wrought_metal_rusty_a1_1x1": {
+    "x": 2600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_metal_brass_d_1x1": {
+    "x": 2800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_blue_metal_brass_b2_1x1": {
+    "x": 3000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_misc_wood_dark_b1_1x1": {
+    "x": 3200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_mobile_dragons_wood_light_metal_gray_a1_1x1": {
+    "x": 3400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:modular_privy_connector_stone_slate_a1_1x1": {
+    "x": 3600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:nightstand_wood_dark_a2_1x1": {
+    "x": 3800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ottoman_fabric_black_wood_ashen_b2_1x1": {
+    "x": 0,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_part_metal_brass_d_1x1": {
+    "x": 200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bar_a_light_path": {
+    "x": 400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_a_beige_a13_1x1": {
+    "x": 600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_b_beige_a13_1x1": {
+    "x": 800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_fancy_a_black_a13_1x1": {
+    "x": 1000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_pillow_cloth_beige_d_1x1": {
+    "x": 1200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:orrery_planet_medium_a2_1x1": {
+    "x": 1400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:library_section_plaque_metal_brass_a3_1x1": {
+    "x": 1600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_desk_riser_wood_light_b1_1x1": {
+    "x": 1800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:roomdivider_white_solo_large_a_1x1": {
+    "x": 2000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_round_wood_ashen_e_1x1": {
+    "x": 2200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:school_desk_wood_ashen_b1_1x1": {
+    "x": 2400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:scroll_shelf_wood_dark_filled_a2_1x1": {
+    "x": 2600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:sink_metal_rusty_b_1x1": {
+    "x": 2800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_square_wood_ashen_f1_1x1": {
+    "x": 3000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:privy_stone_redrock_b1_1x1": {
+    "x": 3200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_fabric_black_wood_dark_b1_1x1": {
+    "x": 3400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_striped_beige_a13_1x1": {
+    "x": 3600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_base_stone_redrock_a1_1x1": {
+    "x": 3800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_gray_side_table_b1_1x1": {
+    "x": 0,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tap_metal_black_d1_1x1": {
+    "x": 200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:throne_leather_black_metal_bronze_d1_1x1": {
+    "x": 400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:toilet_lid_wood_red_a_1x1": {
+    "x": 600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:vanity_mirror_wood_dark_b1_1x1": {
+    "x": 800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:wardrobe_door_wood_red_a_1x1": {
+    "x": 1000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:adornments_furniture_corner_metal_black_a1_1x1": {
+    "x": 1200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:armchair_fabric_black_wood_ashen_d2_1x1": {
+    "x": 1400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:baby_bath_wood_light_a1_1x1": {
+    "x": 1600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:wash_basin_metal_gray_a_empty_1x1": {
+    "x": 1800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tub_wood_ashen_b_empty_1x1": {
+    "x": 2000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_bedroll_cloth_beige_f_fur_1x1": {
+    "x": 2200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_sleeping_bag_black_c2_1x1": {
+    "x": 2400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_base_stone_slate_b1_1x1": {
+    "x": 2600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_blanket_cloth_black_e_fur_1x1": {
+    "x": 2800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookstand_metal_rusty_a1_1x1": {
+    "x": 3000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookcase_path_wood_ashen_divider_a1_1x1": {
+    "x": 3200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookshelf_path_wood_ashen_end_a1_1x1": {
+    "x": 3400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_top_broken_metal_gray_blue_i1_1x1": {
+    "x": 3600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_canopy_white_wood_light_a1_1x1": {
+    "x": 3800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_wood_ashen_e_1x1": {
+    "x": 0,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:childs_chair_wood_walnut_a1_1x1": {
+    "x": 200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_control_desk_gray_side_a1_1x1": {
+    "x": 400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cooking_pit_brick_red_a1_1x1": {
+    "x": 600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_triangular_wood_walnut_a_1x1": {
+    "x": 800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_wood_light_a1_1x1": {
+    "x": 1000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:couch_sectional_fabric_brown_a4_1x1": {
+    "x": 1200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cupboard_door_wood_walnut_a_1x1": {
+    "x": 1400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_volcanic_damaged_a1_1x1": {
+    "x": 1600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:decorative_pillow_black_c1_1x1": {
+    "x": 1800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:desk_book_holder_wood_light_a1_1x1": {
+    "x": 2000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_base_metal_gray_o_1x1": {
+    "x": 2200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_pillow_cloth_black_e_1x1": {
+    "x": 2400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_wood_dark_a1_1x1": {
+    "x": 2600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_stone_volcanic_fallen_b1_1x1": {
+    "x": 2800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_dresser_door_wood_light_a1_1x1": {
+    "x": 3000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_ashen_filled_a4_1x1": {
+    "x": 3200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:coffee_table_glass_blue_wood_ashen_m1_1x1": {
+    "x": 3400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:highchair_wood_dark_a2_1x1": {
+    "x": 3600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_beige_a14_1x1": {
+    "x": 3800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_metal_black_a1_1x1": {
+    "x": 0,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_metal_brass_e_1x1": {
+    "x": 200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_blue_metal_brass_c1_1x1": {
+    "x": 400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_misc_wood_light_a1_1x1": {
+    "x": 600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_mobile_dragons_wood_red_metal_gray_a1_1x1": {
+    "x": 800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:modular_privy_connector_stone_volcanic_a1_1x1": {
+    "x": 1000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:nightstand_wood_light_a1_1x1": {
+    "x": 1200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ottoman_fabric_black_wood_dark_a1_1x1": {
+    "x": 1400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_part_metal_brass_e_1x1": {
+    "x": 1600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bar_a_red_path": {
+    "x": 1800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_a_beige_a14_1x1": {
+    "x": 2000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_b_beige_a14_1x1": {
+    "x": 2200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_fancy_a_black_a14_1x1": {
+    "x": 2400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_pillow_cloth_black_a_1x1": {
+    "x": 2600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:orrery_planet_medium_b1_1x1": {
+    "x": 2800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:library_section_plaque_metal_brass_a4_1x1": {
+    "x": 3000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_desk_riser_wood_red_b1_1x1": {
+    "x": 3200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:roomdivider_white_solo_small_a_1x1": {
+    "x": 3400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_round_wood_ashen_f_1x1": {
+    "x": 3600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:school_desk_wood_ashen_b2_1x1": {
+    "x": 3800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:scroll_shelf_wood_light_a2_1x1": {
+    "x": 0,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:sink_wood_ashen_a_1x1": {
+    "x": 200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_square_wood_ashen_f2_1x1": {
+    "x": 400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:privy_stone_sandstone_a1_1x1": {
+    "x": 600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_fabric_black_wood_light_a1_1x1": {
+    "x": 800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_striped_beige_a14_1x1": {
+    "x": 1000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_base_stone_redrock_b1_1x1": {
+    "x": 1200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_green_pedestal_table_a1_1x1": {
+    "x": 1400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tap_metal_black_e1_1x1": {
+    "x": 1600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:throne_leather_black_metal_gold_c1_1x1": {
+    "x": 1800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:toilet_lid_wood_walnut_a_1x1": {
+    "x": 2000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:vanity_mirror_wood_light_a1_1x1": {
+    "x": 2200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:wardrobe_door_wood_walnut_a_1x1": {
+    "x": 2400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:adornments_furniture_corner_metal_black_a2_1x1": {
+    "x": 2600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:armchair_fabric_black_wood_ashen_e1_1x1": {
+    "x": 2800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:baby_bath_wood_light_dirty_a1_1x1": {
+    "x": 3000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:wash_basin_metal_gray_a_full_1x1": {
+    "x": 3200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tub_wood_ashen_b_full_1x1": {
+    "x": 3400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_bedroll_cloth_black_d_1x1": {
+    "x": 3600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_sleeping_bag_brown_a1_1x1": {
+    "x": 3800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bench_base_stone_volcanic_b1_1x1": {
+    "x": 0,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_blanket_cloth_blue_e_1x1": {
+    "x": 200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookstand_metal_rusty_b1_1x1": {
+    "x": 400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookcase_path_wood_ashen_divider_b1_1x1": {
+    "x": 600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bookshelf_path_wood_ashen_end_b1_1x1": {
+    "x": 800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:display_case_top_broken_metal_gray_blue_i2_1x1": {
+    "x": 1000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:couch_sectional_fabric_brown_a5_1x1": {
+    "x": 1200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_fallen_wood_ashen_a1_1x1": {
+    "x": 1400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_dresser_door_wood_light_b1_1x1": {
+    "x": 1600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_ashen_filled_a5_1x1": {
+    "x": 1800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:coffee_table_glass_blue_wood_ashen_n1_1x1": {
+    "x": 2000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:highchair_wood_dark_b1_1x1": {
+    "x": 2200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_beige_a15_1x1": {
+    "x": 2400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_metal_black_b1_1x1": {
+    "x": 2600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_metal_brass_f_1x1": {
+    "x": 2800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_blue_metal_brass_c2_1x1": {
+    "x": 3000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_misc_wood_light_b1_1x1": {
+    "x": 3200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_mobile_dragons_wood_walnut_metal_gray_a1_1x1": {
+    "x": 3400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:modular_privy_corner_stone_earthy_a1_1x1": {
+    "x": 3600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:nightstand_wood_light_a2_1x1": {
+    "x": 3800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ottoman_fabric_black_wood_dark_a2_1x1": {
+    "x": 0,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_part_metal_brass_f_1x1": {
+    "x": 200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bar_a_walnut_path": {
+    "x": 400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_a_beige_a15_1x1": {
+    "x": 600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_b_beige_a15_1x1": {
+    "x": 800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_pattern_fancy_a_black_a15_1x1": {
+    "x": 1000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bedroll_pillow_cloth_black_b_1x1": {
+    "x": 1200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:orrery_planet_medium_b2_1x1": {
+    "x": 1400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:library_section_plaque_metal_brass_a5_1x1": {
+    "x": 1600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_desk_riser_wood_walnut_b1_1x1": {
+    "x": 1800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:roomdivider_wood_ashen_a1_solo_1x1": {
+    "x": 2000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_round_wood_ashen_g_1x1": {
+    "x": 2200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:school_desk_wood_ashen_b3_1x1": {
+    "x": 2400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:scroll_shelf_wood_light_filled_a2_1x1": {
+    "x": 2600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:sink_wood_ashen_b_1x1": {
+    "x": 2800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_square_wood_ashen_f3_1x1": {
+    "x": 3000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:privy_stone_sandstone_b1_1x1": {
+    "x": 3200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_fabric_black_wood_light_b1_1x1": {
+    "x": 3400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_striped_beige_a15_1x1": {
+    "x": 3600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_base_stone_redrock_c1_1x1": {
+    "x": 3800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_green_side_table_b1_1x1": {
+    "x": 0,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:bath_tap_metal_bronze_a1_1x1": {
+    "x": 200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:throne_leather_black_metal_gold_d1_1x1": {
+    "x": 400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:toilet_wood_ashen_a_1x1": {
+    "x": 600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:vanity_mirror_wood_light_b1_1x1": {
+    "x": 800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:rolled_sleeping_bag_brown_a2_1x1": {
+    "x": 1000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:ceremorph_control_desk_gray_side_b1_1x1": {
+    "x": 1200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cooking_pit_brick_red_a2_1x1": {
+    "x": 1400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_wood_dark_a2_1x1": {
+    "x": 1600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:chair_fallen_wood_ashen_a2_1x1": {
+    "x": 1800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:fancy_dresser_door_wood_red_a1_1x1": {
+    "x": 2000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:drawer_ashen_filled_a6_1x1": {
+    "x": 2200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:coffee_table_glass_blue_wood_ashen_o1_1x1": {
+    "x": 2400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:highchair_wood_light_a1_1x1": {
+    "x": 2600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:pillow_large_cloth_beige_a17_1x1": {
+    "x": 2800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:stool_metal_gray_a1_1x1": {
+    "x": 3000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_stand_metal_brass_g_1x1": {
+    "x": 3200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:mirror_blue_metal_brass_d1_1x1": {
+    "x": 3400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:table_misc_wood_red_a1_1x1": {
+    "x": 3600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-furniture:cot_mobile_sun_moon_wood_ashen_metal_gray_a1_1x1": {
+    "x": 3800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  }
+}

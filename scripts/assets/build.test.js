@@ -4,9 +4,9 @@ import { planAtlasLayout, groupByAtlas } from './build.js';
 describe('groupByAtlas', () => {
   it('groups manifest entries into atlas categories', () => {
     const entries = [
-      { category: 'textures', tags: ['floor', 'stone'], gridWidth: 1, gridHeight: 1 },
-      { category: 'furniture', tags: ['table'], gridWidth: 2, gridHeight: 2 },
-      { category: 'textures', tags: ['floor', 'wood'], gridWidth: 1, gridHeight: 1 },
+      { subcategory: 'Textures', tags: ['floor', 'stone'], gridWidth: 1, gridHeight: 1 },
+      { subcategory: 'Furniture', tags: ['table'], gridWidth: 2, gridHeight: 2 },
+      { subcategory: 'Textures', tags: ['floor', 'wood'], gridWidth: 1, gridHeight: 1 },
     ];
     const groups = groupByAtlas(entries);
     expect(groups['atlas-floors']).toHaveLength(2);

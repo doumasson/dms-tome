@@ -131,11 +131,38 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Campaign generator + demo world updated with new NPC schema
 - [x] Multiplayer broadcast (dialog lock, cutscene sync, flag sync, journal sync)
 
-### Phase 4: Polish
+### Phase 5: Procedural Map System ✅ COMPLETE (core modules)
+- [x] FA Asset Scanner (`scripts/assets/scan.js`) — parses FA zip files into manifest
+- [x] Sprite Atlas Builder (`scripts/assets/build.js`) — bin-packing + Sharp compositing
+- [x] RLE Codec (`src/lib/rleCodec.js`) — layer compression for Supabase storage
+- [x] Camera Controller (`src/engine/Camera.js`) — WASD/arrow pan, scroll zoom, inertia, spacebar recenter
+- [x] Viewport Culler (`src/engine/ViewportCuller.js`) — skip off-screen tiles
+- [x] TileAtlasV2 (`src/engine/tileAtlasV2.js`) — multi-atlas tile resolver with integer palette
+- [x] Binary Heap A* (`src/lib/pathfinding.js`) — <1ms on 120x80 grid, Uint8Array collision
+- [x] Chunk Library (`src/lib/chunkLibrary.js`) — tag-based matching for reusable map pieces
+- [x] Map Generator (`src/lib/mapGenerator.js`) — position resolver, chunk stamping, terrain fill
+- [x] BSP Dungeon Generator (`src/lib/dungeonGenerator.js`) — rooms, corridors, doors
+- [x] 5e Vision Calculator (`src/lib/visionCalculator.js`) — darkvision, light sources, bitfield persistence
+- [x] Fog of War Renderer (`src/engine/FogOfWar.js`) — three-state (unexplored/explored/active)
+- [x] Roof Manager (`src/engine/RoofLayer.js`) — building reveal state, door detection
+- [x] Zustand Area State — area slice in store alongside zone state
+- [x] Camera + Fog + Roof + Combat Camera wired into PixiApp/GameV2
+- 117 tests, all passing. 18 commits on branch.
+
+### Phase 5b: Procedural Maps — Integration (IN PROGRESS)
+- [x] Run FA asset scanner on all 3 zip packs → 146,868 assets with author/license tracking
+- [x] Build sprite atlases from manifest → 8 atlases in `public/tilesets/` (3,200 starter tiles, ~22MB WebP)
+- [x] Create first curated chunks — tavern, house, clearing, road, dungeon room (`src/data/chunks/`)
+- [x] Build test area and load in dev mode — `?v2&testarea` renders 40x30 village with V1 placeholder tiles
+- [ ] Wire V2 atlas renderer into PixiApp (replace 32px placeholders with 200px FA tiles + camera)
+- [ ] Wire area loading from Supabase (layer blobs, area metadata)
+- [ ] AI layout generation (Claude describes POIs → mapGenerator assembles)
+- [ ] Campaign generator outputs area graph instead of zone graph
+- [ ] Multiplayer area sync (fog bitfields, token positions, roof states)
+
+### Phase 6: Polish
 - [ ] AI character portraits for PCs/NPCs
 - [ ] Ambient lighting on tilemap (torch glow, shadows)
-- [ ] Procedural dungeon generation (BSP algorithm)
-- [ ] Real Forgotten Adventures tileset integration
 - [ ] Mobile/tablet responsive breakpoints
 
 ---
@@ -159,3 +186,5 @@ _(Empty — add items as they come up)_
 - **2026-03-18:** Phases 2 & 3 complete — zone transitions with fade, 8 room templates, zone-based campaign gen, combat UX, API key fix. Branch has 46 commits ahead of main.
 - **2026-03-18:** V2 Front Door complete — API key gate, campaign bar, sanitization, HUD labels, session log polish, combat fix. 6 new commits.
 - **2026-03-18:** NPC Interaction System complete — E-key interactions, chat bubbles, NPC dialog, story cutscenes, journal, story flags. 10 commits.
+- **2026-03-19:** Phase 5 Procedural Map System core modules complete — 18 tasks: asset pipeline, camera, tile atlas, pathfinding upgrade, chunks, generators, vision, fog, roofs, wiring. 117 tests, 18 commits.
+- **2026-03-19:** Phase 5b integration started — FA scanner with author/license tracking, 8 sprite atlases built (146K assets → 3,200 starter tiles), 5 curated chunks, test area visible at `?v2&testarea`.

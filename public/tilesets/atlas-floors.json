@@ -1,0 +1,3202 @@
+{
+  "atlas-floors:brick_floor_01_d1": {
+    "x": 0,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_01_a1": {
+    "x": 200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_01_a1": {
+    "x": 400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:glass_blue": {
+    "x": 600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:body_parts_01_a1": {
+    "x": 800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_a_01": {
+    "x": 1000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_a_01": {
+    "x": 1200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rocky_overlay_a": {
+    "x": 1400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_blue_a": {
+    "x": 1600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_01_e1": {
+    "x": 1800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_01_a1": {
+    "x": 2000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_01_a1": {
+    "x": 2200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wet_mud_puddles_overlay_a": {
+    "x": 2400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_01": {
+    "x": 2600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:pebbles_overlay_a": {
+    "x": 2800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rocks_overlay_a": {
+    "x": 3000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_01_a1": {
+    "x": 3200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rug_threadbare_overlay_a1": {
+    "x": 3400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_ashen_a3": {
+    "x": 3600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a1_01": {
+    "x": 3800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:flat_stones_overlay_a1": {
+    "x": 0,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:water_still_overlay_a_01": {
+    "x": 200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_ag1": {
+    "x": 400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_01_d2": {
+    "x": 600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_01_a2": {
+    "x": 800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_01_a2": {
+    "x": 1000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:glass_clear": {
+    "x": 1200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:body_parts_01_a2": {
+    "x": 1400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_a_02": {
+    "x": 1600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_a_02": {
+    "x": 1800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_01_a2": {
+    "x": 2000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_01_a2": {
+    "x": 2200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_ashen_b3": {
+    "x": 2400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a1_02": {
+    "x": 2600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:flat_stones_overlay_a2": {
+    "x": 2800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:water_still_overlay_a_02": {
+    "x": 3000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_ag2": {
+    "x": 3200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_01_d3": {
+    "x": 3400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_01_a3": {
+    "x": 3600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_01_a3": {
+    "x": 3800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:glass_clearblue": {
+    "x": 0,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:body_parts_02_a1": {
+    "x": 200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_a_03": {
+    "x": 400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_a_03": {
+    "x": 600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_blue_b": {
+    "x": 800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_01_f1": {
+    "x": 1000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_01_b1": {
+    "x": 1200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_02_a1": {
+    "x": 1400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_02": {
+    "x": 1600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:pebbles_overlay_b": {
+    "x": 1800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_01_a2": {
+    "x": 2000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rug_uneven_overlay_a1": {
+    "x": 2200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_dark_a3": {
+    "x": 2400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a1_03": {
+    "x": 2600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:flat_stones_overlay_a3": {
+    "x": 2800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:water_still_overlay_a_03": {
+    "x": 3000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_ag3": {
+    "x": 3200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_01_d4": {
+    "x": 3400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_01_a4": {
+    "x": 3600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_02_a1": {
+    "x": 3800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:glass_veryclear": {
+    "x": 0,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:body_parts_02_a2": {
+    "x": 200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_b_01": {
+    "x": 400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_a_04": {
+    "x": 600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_gold_a": {
+    "x": 800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_01_g1": {
+    "x": 1000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_01_b2": {
+    "x": 1200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_02_a2": {
+    "x": 1400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_03": {
+    "x": 1600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:herringbone_overlay_a_04": {
+    "x": 1800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:water_still_overlay_a_05": {
+    "x": 2000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_h1": {
+    "x": 2200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_02_d1": {
+    "x": 2400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_02_a1": {
+    "x": 2600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_02_a2": {
+    "x": 2800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_02_a1": {
+    "x": 3000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_03_a1": {
+    "x": 3200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_04": {
+    "x": 3400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_01_a3": {
+    "x": 3600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rug_uneven_overlay_a2": {
+    "x": 3800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_dark_b3": {
+    "x": 0,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a1_04": {
+    "x": 200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:herringbone_overlay_a_05": {
+    "x": 400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:water_still_overlay_a_04": {
+    "x": 600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_h2": {
+    "x": 800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_02_d2": {
+    "x": 1000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_02_a2": {
+    "x": 1200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_02_a3": {
+    "x": 1400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:body_parts_03_a1": {
+    "x": 1600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_b_02": {
+    "x": 1800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_a_05": {
+    "x": 2000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_gold_b": {
+    "x": 2200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_01_h1": {
+    "x": 2400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_02_a2": {
+    "x": 2600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_03_a2": {
+    "x": 2800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_05": {
+    "x": 3000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_01_b1": {
+    "x": 3200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rug_uneven_overlay_a3": {
+    "x": 3400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_light_a3": {
+    "x": 3600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a1_05": {
+    "x": 3800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:herringbone_overlay_a_06": {
+    "x": 0,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_a_06": {
+    "x": 200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_green1_a": {
+    "x": 400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_01_h2": {
+    "x": 600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_02_b1": {
+    "x": 800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_04_a1": {
+    "x": 1000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_06": {
+    "x": 1200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_01_b2": {
+    "x": 1400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:body_parts_03_a2": {
+    "x": 1600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_b_03": {
+    "x": 1800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_b_01": {
+    "x": 2000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_green1_b": {
+    "x": 2200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_02_e1": {
+    "x": 2400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_02_b2": {
+    "x": 2600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_04_a2": {
+    "x": 2800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_07": {
+    "x": 3000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_01_b3": {
+    "x": 3200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_light_b3": {
+    "x": 3400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a2_01": {
+    "x": 3600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:herringbone_overlay_a_07": {
+    "x": 3800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_h3": {
+    "x": 0,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_02_d3": {
+    "x": 200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_02_a3": {
+    "x": 400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_03_a1": {
+    "x": 600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:body_parts_04_a1": {
+    "x": 800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_c_01": {
+    "x": 1000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_b_02": {
+    "x": 1200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_green2_a": {
+    "x": 1400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_02_f1": {
+    "x": 1600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_03_a1": {
+    "x": 1800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_05_a1": {
+    "x": 2000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_08": {
+    "x": 2200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_02_a1": {
+    "x": 2400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_red_a3": {
+    "x": 2600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a2_02": {
+    "x": 2800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:herringbone_overlay_a_08": {
+    "x": 3000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_i1": {
+    "x": 3200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_02_d4": {
+    "x": 3400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_02_a4": {
+    "x": 3600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_03_a2": {
+    "x": 3800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:body_parts_04_a2": {
+    "x": 0,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_c_02": {
+    "x": 200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_b_03": {
+    "x": 400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_green2_b": {
+    "x": 600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_02_g1": {
+    "x": 800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_03_a2": {
+    "x": 1000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_05_a2": {
+    "x": 1200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_glow_01": {
+    "x": 1400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_02_a2": {
+    "x": 1600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_red_b3": {
+    "x": 1800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a2_03": {
+    "x": 2000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:herringbone_overlay_a_gray": {
+    "x": 2200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_i2": {
+    "x": 2400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_03_d1": {
+    "x": 2600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_03_a1": {
+    "x": 2800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_03_a3": {
+    "x": 3000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_damage_overlay_i3": {
+    "x": 3200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_03_d2": {
+    "x": 3400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_03_a2": {
+    "x": 3600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_04_a1": {
+    "x": 3800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_c_03": {
+    "x": 0,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_b_04": {
+    "x": 200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_purple_a": {
+    "x": 400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_02_h1": {
+    "x": 600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_03_b1": {
+    "x": 800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_06_a1": {
+    "x": 1000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_glow_02": {
+    "x": 1200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_02_a3": {
+    "x": 1400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_walnut_a3": {
+    "x": 1600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a2_04": {
+    "x": 1800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:herringbone_overlay_a_orange": {
+    "x": 2000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_floor_scratches_overlay_ag1": {
+    "x": 2200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_03_d3": {
+    "x": 2400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_03_a3": {
+    "x": 2600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_04_a2": {
+    "x": 2800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_d_01": {
+    "x": 3000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_b_05": {
+    "x": 3200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_purple_b": {
+    "x": 3400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_02_h2": {
+    "x": 3600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_03_b2": {
+    "x": 3800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_metal_overlay_06_a2": {
+    "x": 0,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_glow_03": {
+    "x": 200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_02_b1": {
+    "x": 400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:shack_floor_wood_walnut_b3": {
+    "x": 600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:spider_web_overlay_a2_05": {
+    "x": 800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:herringbone_overlay_a_red": {
+    "x": 1000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_floor_scratches_overlay_ag2": {
+    "x": 1200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_03_d4": {
+    "x": 1400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_03_a4": {
+    "x": 1600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:feces_04_a3": {
+    "x": 1800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_d_02": {
+    "x": 2000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_b_06": {
+    "x": 2200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_teal_a": {
+    "x": 2400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_03_e1": {
+    "x": 2600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_04_a1": {
+    "x": 2800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_glow_04": {
+    "x": 3000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_02_b2": {
+    "x": 3200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_floor_scratches_overlay_h1": {
+    "x": 3400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_04_d1": {
+    "x": 3600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_04_a1": {
+    "x": 3800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_glow_05": {
+    "x": 0,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_02_b3": {
+    "x": 200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_03_f1": {
+    "x": 400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_04_a2": {
+    "x": 600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_glow_06": {
+    "x": 800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_03_a1": {
+    "x": 1000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_01_b1": {
+    "x": 1200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_floor_scratches_overlay_h2": {
+    "x": 1400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_04_d2": {
+    "x": 1600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_04_a2": {
+    "x": 1800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_long_d_03": {
+    "x": 2000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_c_01": {
+    "x": 2200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_teal_b": {
+    "x": 2400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_03_g1": {
+    "x": 2600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_04_b1": {
+    "x": 2800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_glow_07": {
+    "x": 3000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_03_a2": {
+    "x": 3200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_01_b2": {
+    "x": 3400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_floor_scratches_overlay_i1": {
+    "x": 3600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_04_d3": {
+    "x": 3800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_04_a3": {
+    "x": 0,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_a_01": {
+    "x": 200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_c_02": {
+    "x": 400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_white_a": {
+    "x": 600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_03_h1": {
+    "x": 800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_04_b2": {
+    "x": 1000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_a_glow_08": {
+    "x": 1200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_03_a3": {
+    "x": 1400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_01_b3": {
+    "x": 1600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:wood_floor_scratches_overlay_i2": {
+    "x": 1800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_04_d4": {
+    "x": 2000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_04_a4": {
+    "x": 2200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_a_02": {
+    "x": 2400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_c_03": {
+    "x": 2600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:ceremorph_magical_overlay_white_b": {
+    "x": 2800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_03_h2": {
+    "x": 3000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_05_a1": {
+    "x": 3200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_b_01": {
+    "x": 3400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_03_b1": {
+    "x": 3600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_01_b4": {
+    "x": 3800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_c_04": {
+    "x": 0,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_c_05": {
+    "x": 200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_04_e1": {
+    "x": 400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_05_a2": {
+    "x": 600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_b_02": {
+    "x": 800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_03_b2": {
+    "x": 1000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_01_b5": {
+    "x": 1200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_05_d1": {
+    "x": 1400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_05_a1": {
+    "x": 1600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_a_03": {
+    "x": 1800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_c_06": {
+    "x": 2000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_04_f1": {
+    "x": 2200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_05_b1": {
+    "x": 2400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_b_03": {
+    "x": 2600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_03_b3": {
+    "x": 2800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_02_b1": {
+    "x": 3000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_05_d2": {
+    "x": 3200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_05_a2": {
+    "x": 3400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_b_01": {
+    "x": 3600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_d_01": {
+    "x": 3800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_04_g1": {
+    "x": 0,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_frame_05_b2": {
+    "x": 200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_b_04": {
+    "x": 400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_04_a1": {
+    "x": 600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_02_b2": {
+    "x": 800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_05_d3": {
+    "x": 1000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_05_a3": {
+    "x": 1200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_b_02": {
+    "x": 1400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_d_02": {
+    "x": 1600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_04_h1": {
+    "x": 1800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_b_05": {
+    "x": 2000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_04_a2": {
+    "x": 2200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_02_b3": {
+    "x": 2400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:brick_floor_05_d4": {
+    "x": 2600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_05_a4": {
+    "x": 2800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_b_03": {
+    "x": 3000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_d_03": {
+    "x": 3200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_04_h2": {
+    "x": 3400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_b_06": {
+    "x": 3600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_04_a3": {
+    "x": 3800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_02_b4": {
+    "x": 0,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_05_e1": {
+    "x": 200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_b_07": {
+    "x": 400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_04_b1": {
+    "x": 600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_02_b5": {
+    "x": 800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_06_a1": {
+    "x": 1000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_c_01": {
+    "x": 1200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_d_04": {
+    "x": 1400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_05_f1": {
+    "x": 1600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:mycelial_overlay_b_08": {
+    "x": 1800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_04_b2": {
+    "x": 2000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_03_b1 ": {
+    "x": 2200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_06_a2": {
+    "x": 2400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_c_02": {
+    "x": 2600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_d_05": {
+    "x": 2800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_05_g1": {
+    "x": 3000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grass_overlay_medium_c_03": {
+    "x": 3200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_d_06": {
+    "x": 3400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_05_h1": {
+    "x": 3600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_04_b3": {
+    "x": 3800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_03_b2": {
+    "x": 0,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_06_a3": {
+    "x": 200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_06_a4": {
+    "x": 400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_e_01": {
+    "x": 600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_grate_05_h2": {
+    "x": 800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_05_a1": {
+    "x": 1000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_03_b3": {
+    "x": 1200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_07_a1": {
+    "x": 1400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_e_02": {
+    "x": 1600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_01_c2": {
+    "x": 1800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_05_a2": {
+    "x": 2000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_03_b4": {
+    "x": 2200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_07_a2": {
+    "x": 2400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_e_03": {
+    "x": 2600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_01_d2": {
+    "x": 2800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_05_a3": {
+    "x": 3000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_03_b5": {
+    "x": 3200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_07_a3": {
+    "x": 3400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_e_04": {
+    "x": 3600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_01_e3": {
+    "x": 3800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_05_b1": {
+    "x": 0,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_04_b1": {
+    "x": 200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:drow_overlay_crystal_07_a4": {
+    "x": 400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_e_05": {
+    "x": 600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_02_c2": {
+    "x": 800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_05_b2": {
+    "x": 1000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_04_b2": {
+    "x": 1200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_hay_05_b3": {
+    "x": 1400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_04_b3": {
+    "x": 1600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_metal_e_06": {
+    "x": 1800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_02_d2": {
+    "x": 2000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_slate_black_a1": {
+    "x": 2200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_04_b4": {
+    "x": 2400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_a_ashen": {
+    "x": 2600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_02_e3": {
+    "x": 2800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_slate_black_a2": {
+    "x": 3000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_04_b5": {
+    "x": 3200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_a_dark": {
+    "x": 3400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_03_c2": {
+    "x": 3600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_slate_blue_a1": {
+    "x": 3800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_05_b1": {
+    "x": 0,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_a_light": {
+    "x": 200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_03_d2": {
+    "x": 400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_slate_blue_a2": {
+    "x": 600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_05_b2": {
+    "x": 800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_a_red": {
+    "x": 1000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_03_e3": {
+    "x": 1200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_slate_mossy_a1": {
+    "x": 1400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_05_b3": {
+    "x": 1600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_a_walnut": {
+    "x": 1800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_04_c2": {
+    "x": 2000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_slate_mossy_a2": {
+    "x": 2200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_05_b4": {
+    "x": 2400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_b_ashen": {
+    "x": 2600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_04_d2": {
+    "x": 2800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_slate_purple_a1": {
+    "x": 3000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:rectangular_tiles_05_b5": {
+    "x": 3200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_b_dark": {
+    "x": 3400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_04_e3": {
+    "x": 3600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_slate_purple_a2": {
+    "x": 3800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_a1": {
+    "x": 0,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_b_light": {
+    "x": 200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_05_c2": {
+    "x": 400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_a2": {
+    "x": 600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_b_red": {
+    "x": 800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_05_d2": {
+    "x": 1000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_b1": {
+    "x": 1200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_b_walnut": {
+    "x": 1400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:metal_square_panels_05_e3": {
+    "x": 1600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_b2": {
+    "x": 1800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_c_ashen": {
+    "x": 2000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_c_dark": {
+    "x": 2200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_c1": {
+    "x": 2400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_c_light": {
+    "x": 2600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_c2": {
+    "x": 2800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_c_red": {
+    "x": 3000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_d1": {
+    "x": 3200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_c_walnut": {
+    "x": 3400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_d2": {
+    "x": 3600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_d_ashen": {
+    "x": 3800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_e1": {
+    "x": 0,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_d_dark": {
+    "x": 200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_e2": {
+    "x": 400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_d_light": {
+    "x": 600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_f1": {
+    "x": 800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_d_red": {
+    "x": 1000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_f2": {
+    "x": 1200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:grate_wood_d_walnut": {
+    "x": 1400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_g1": {
+    "x": 1600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_g2": {
+    "x": 1800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_black_h1": {
+    "x": 2000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_a1": {
+    "x": 2200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_a2": {
+    "x": 2400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_b1": {
+    "x": 2600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_b2": {
+    "x": 2800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_c1": {
+    "x": 3000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_c2": {
+    "x": 3200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_d1": {
+    "x": 3400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_d2": {
+    "x": 3600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-floors:roof_texture_tile_blue_e1": {
+    "x": 3800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  }
+}

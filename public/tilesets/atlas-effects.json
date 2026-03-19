@@ -1,0 +1,3202 @@
+{
+  "atlas-effects:target_arrow_wood_ashen_a_1x1": {
+    "x": 0,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_stand_wood_ashen_a1_1x1": {
+    "x": 200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arranged_armor_a1_1x1": {
+    "x": 400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_a_01_1x1": {
+    "x": 600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_axe_wound_a1_blood_black_overlay_1x1": {
+    "x": 800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:baton_wood_ashen_a1_1x1": {
+    "x": 1000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battering_ram_cap_metal_gray_a1_1x1": {
+    "x": 1200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battleaxe_a_01_1x1": {
+    "x": 1400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_bite_wound_a1_blood_black_overlay_1x1": {
+    "x": 1600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_blade_wound_a1_blood_black_overlay_1x1": {
+    "x": 1800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blast_mark_a3_1x1": {
+    "x": 2000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bloody_footprints_a1_1x1": {
+    "x": 2200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wound_a10_blood_black_overlay_1x1": {
+    "x": 2400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_bolt_a_01_1x1": {
+    "x": 2600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_quiver_a_01_1x1": {
+    "x": 2800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_a1_1x1": {
+    "x": 3000,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_magic_liquid_spill_blue_a1_1x1": {
+    "x": 3200,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:broken_shield_wood_ashen_a1_1x1": {
+    "x": 3400,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cannonball_metal_gray_a_1x1": {
+    "x": 3600,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:catapult_ammo_leather_brown_a1_1x1": {
+    "x": 3800,
+    "y": 0,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_arm_guard_metal_black_a1_1x1": {
+    "x": 0,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_claw_wound_a1_blood_black_overlay_1x1": {
+    "x": 200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:club_a_01_1x1": {
+    "x": 400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cobweb_black_a1_1x1": {
+    "x": 600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_light_a_01_1x1": {
+    "x": 800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremonial_dagger_a_black_1x1": {
+    "x": 1000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:decayed_body_sitting_a_01_1x1": {
+    "x": 1200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:dummy_arm_wood_ashen_a1_1x1": {
+    "x": 1400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_skull_white_a1_1x1": {
+    "x": 1600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_01_a10_1x1": {
+    "x": 1800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_a10_1x1": {
+    "x": 2000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:flayed_body_b_01_1x1": {
+    "x": 2200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fog_overlay_a": {
+    "x": 2400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_bracer_leather_black_a1_1x1": {
+    "x": 2600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_skull_bowl_white_a1_1x1": {
+    "x": 2800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grid_square_a": {
+    "x": 3000,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grunge_a": {
+    "x": 3200,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:helmet_kettle_a1_1x1": {
+    "x": 3400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:hammer_metal_gray_black_a_1x1": {
+    "x": 3600,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:handaxe_a_01_1x1": {
+    "x": 3800,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_helmet_metal_black_a1_1x1": {
+    "x": 0,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_hole_wound_a1_blood_black_overlay_1x1": {
+    "x": 200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_leg_guard_metal_black_a1_1x1": {
+    "x": 400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_light_blue_a10_1x1": {
+    "x": 600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:lightning_black_a12_1x1": {
+    "x": 800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:mace_a_01_1x1": {
+    "x": 1000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:footprints_a_path": {
+    "x": 1200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:underdark_spider_corpse_leg_black_a10_1x1": {
+    "x": 1400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_embers_a_path": {
+    "x": 1600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:brain_a_01_1x1": {
+    "x": 1800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_pile_01_a1_1x1": {
+    "x": 2000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:pistol_wood_ashen_a_1x1": {
+    "x": 2200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blood_pool_black_a10_1x1": {
+    "x": 2400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wrapped_cloth_black_b1_1x1": {
+    "x": 2600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_protruding_bone_wound_a1_blood_black_overlay_1x1": {
+    "x": 2800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:magic_sword_hilt_black_1x1": {
+    "x": 3000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rapier_a_01_1x1": {
+    "x": 3200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:refuse_pile_01_a1_1x1": {
+    "x": 3400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rod_of_seven_parts_part_1_a1_1x1": {
+    "x": 3600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:scimitar_a1_1x1": {
+    "x": 3800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shadow_path_a_20%": {
+    "x": 0,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sheath_dagger_leather_black_a_1x1": {
+    "x": 200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:animated_shield_a1_1x1": {
+    "x": 400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shortsword_a_01_1x1": {
+    "x": 600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sickle_a_01_1x1": {
+    "x": 800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_slash_wound_a10_blood_black_overlay_1x1": {
+    "x": 1000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_spear_wound_a1_blood_black_overlay_1x1": {
+    "x": 1200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bomb_metal_brass_a_1x1": {
+    "x": 1400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spiderweb_black_a10_1x1": {
+    "x": 1600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_blue_a10_1x1": {
+    "x": 1800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_stabbing_wound_a1_blood_black_overlay_1x1": {
+    "x": 2000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:staff_a_black_1x1": {
+    "x": 2200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_parasite_blue_a1_1x1": {
+    "x": 2400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_template_impact_b2_1x1": {
+    "x": 2600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fairy_lights_overlay": {
+    "x": 2800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shield_tilted_wood_ashen_a1_1x1": {
+    "x": 3000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:torment_cat_o_nine_tails_leather_black_a1_1x1": {
+    "x": 3200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:martial_arts_training_dummy_wood_ashen_a1_1x1": {
+    "x": 3400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:red_wizard_blade_a1_1x1": {
+    "x": 3600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_blue_dagger_a1_1x1": {
+    "x": 3800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:handaxe_standing_a_1x1": {
+    "x": 0,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:target_arrow_wood_ashen_b_1x1": {
+    "x": 200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_stand_wood_ashen_b1_1x1": {
+    "x": 400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arranged_armor_a2_1x1": {
+    "x": 600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_a_02_1x1": {
+    "x": 800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_axe_wound_a1_blood_blue_overlay_1x1": {
+    "x": 1000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:baton_wood_ashen_b1_1x1": {
+    "x": 1200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battering_ram_cap_metal_gray_b1_1x1": {
+    "x": 1400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battleaxe_a_01_bloody_1x1": {
+    "x": 1600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_bite_wound_a1_blood_blue_overlay_1x1": {
+    "x": 1800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_blade_wound_a1_blood_blue_overlay_1x1": {
+    "x": 2000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blast_mark_b3_1x1": {
+    "x": 2200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bloody_footprints_a2_1x1": {
+    "x": 2400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wound_a10_blood_blue_overlay_1x1": {
+    "x": 2600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_bolt_a_02_1x1": {
+    "x": 2800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_quiver_a_02_1x1": {
+    "x": 3000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_a2_1x1": {
+    "x": 3200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_magic_liquid_spill_blue_a2_1x1": {
+    "x": 3400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:broken_shield_wood_ashen_a2_1x1": {
+    "x": 3600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cannonball_metal_gray_b_1x1": {
+    "x": 3800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:catapult_ammo_rock_earthy_a1_1x1": {
+    "x": 0,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_arm_guard_metal_gray_a1_1x1": {
+    "x": 200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_claw_wound_a1_blood_blue_overlay_1x1": {
+    "x": 400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:club_a_01_bloody_1x1": {
+    "x": 600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cobweb_black_a2_1x1": {
+    "x": 800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_light_a_02_1x1": {
+    "x": 1000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremonial_dagger_a_blue_1x1": {
+    "x": 1200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:decayed_body_sitting_a_02_1x1": {
+    "x": 1400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:dummy_arm_wood_ashen_a2_1x1": {
+    "x": 1600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_skull_white_a2_1x1": {
+    "x": 1800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_01_a11_1x1": {
+    "x": 2000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_a11_1x1": {
+    "x": 2200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:flayed_body_b_02_1x1": {
+    "x": 2400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grid_square_b": {
+    "x": 2600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grunge_b": {
+    "x": 2800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:helmet_kettle_a1_bloody_1x1": {
+    "x": 3000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:hammer_metal_gray_black_b_1x1": {
+    "x": 3200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:handaxe_a_01_bloody_1x1": {
+    "x": 3400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_helmet_metal_black_a2_1x1": {
+    "x": 3600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_hole_wound_a1_blood_blue_overlay_1x1": {
+    "x": 3800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_leg_guard_metal_gray_a1_1x1": {
+    "x": 0,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_light_blue_a11_1x1": {
+    "x": 200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:lightning_black_a13_1x1": {
+    "x": 400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:mace_a_01_bloody_1x1": {
+    "x": 600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:wibbly_wobbly_line_a_path": {
+    "x": 800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:underdark_spider_corpse_leg_black_a11_1x1": {
+    "x": 1000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_line_a_path": {
+    "x": 1200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:brain_a_02_1x1": {
+    "x": 1400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_pile_01_a2_1x1": {
+    "x": 1600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:pistol_wood_ashen_b_1x1": {
+    "x": 1800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blood_pool_black_a11_1x1": {
+    "x": 2000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wrapped_cloth_black_b2_1x1": {
+    "x": 2200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_protruding_bone_wound_a1_blood_blue_overlay_1x1": {
+    "x": 2400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:magic_sword_hilt_bronze_1x1": {
+    "x": 2600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rapier_a_01_bloody_1x1": {
+    "x": 2800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:refuse_pile_01_a2_1x1": {
+    "x": 3000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rod_of_seven_parts_part_2_a1_1x1": {
+    "x": 3200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:scimitar_a_01_1x1": {
+    "x": 3400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shadow_path_a_40%": {
+    "x": 3600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sheath_dagger_leather_brown_a_1x1": {
+    "x": 3800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sentinel_shield_a1_1x1": {
+    "x": 0,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shortsword_a_01_bloody_1x1": {
+    "x": 200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sickle_a_01_bloody_1x1": {
+    "x": 400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_slash_wound_a10_blood_blue_overlay_1x1": {
+    "x": 600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_spear_wound_a1_blood_blue_overlay_1x1": {
+    "x": 800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bomb_metal_brass_b_1x1": {
+    "x": 1000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spiderweb_black_a11_1x1": {
+    "x": 1200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_blue_a11_1x1": {
+    "x": 1400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_stabbing_wound_a1_blood_blue_overlay_1x1": {
+    "x": 1600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:staff_a_copper_1x1": {
+    "x": 1800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_parasite_blue_a2_1x1": {
+    "x": 2000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_template_impact_b4_1x1": {
+    "x": 2200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:falling_snow_overlay_a": {
+    "x": 2400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shield_tilted_wood_dark_a1_1x1": {
+    "x": 2600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:torment_cat_o_nine_tails_leather_black_b1_1x1": {
+    "x": 2800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:martial_arts_training_dummy_wood_ashen_a2_1x1": {
+    "x": 3000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spindle_of_fate_a1_1x1": {
+    "x": 3200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_blue_dagger_b1_1x1": {
+    "x": 3400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:mace_standing_a_1x1": {
+    "x": 3600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:target_arrow_wood_dark_a_1x1": {
+    "x": 3800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_stand_wood_dark_a1_1x1": {
+    "x": 0,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arranged_armor_a3_1x1": {
+    "x": 200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_a_03_1x1": {
+    "x": 400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_axe_wound_a1_blood_green_overlay_1x1": {
+    "x": 600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:baton_wood_dark_a1_1x1": {
+    "x": 800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battering_ram_cap_metal_rusty_a1_1x1": {
+    "x": 1000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battleaxe_a_02_1x1": {
+    "x": 1200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_bite_wound_a1_blood_green_overlay_1x1": {
+    "x": 1400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_blade_wound_a1_blood_green_overlay_1x1": {
+    "x": 1600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blast_mark_debris_a3_1x1": {
+    "x": 1800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bloody_footprints_b1_1x1": {
+    "x": 2000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wound_a10_blood_green_overlay_1x1": {
+    "x": 2200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_bolt_a_03_1x1": {
+    "x": 2400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_quiver_a_03_1x1": {
+    "x": 2600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_a3_1x1": {
+    "x": 2800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_magic_liquid_spill_blue_a2_edge_1x1": {
+    "x": 3000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:broken_shield_wood_ashen_b1_1x1": {
+    "x": 3200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cannonball_metal_gray_c_1x1": {
+    "x": 3400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:catapult_ammo_rock_redrock_a1_1x1": {
+    "x": 3600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_arm_guard_metal_polished_a1_1x1": {
+    "x": 3800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_claw_wound_a1_blood_green_overlay_1x1": {
+    "x": 0,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:club_a_02_1x1": {
+    "x": 200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cobweb_black_a3_1x1": {
+    "x": 400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_light_a_03_1x1": {
+    "x": 600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremonial_dagger_a_green_1x1": {
+    "x": 800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:decayed_body_sitting_a_03_1x1": {
+    "x": 1000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:dummy_arm_wood_ashen_a3_1x1": {
+    "x": 1200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_skull_white_a3_1x1": {
+    "x": 1400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_01_a12_1x1": {
+    "x": 1600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_a12_1x1": {
+    "x": 1800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:flayed_body_b_03_1x1": {
+    "x": 2000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_bracer_leather_brown_dark_a1_1x1": {
+    "x": 2200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_skull_bowl_white_a2_1x1": {
+    "x": 2400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grid_square_c": {
+    "x": 2600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grunge_c": {
+    "x": 2800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:helmet_kettle_a2_1x1": {
+    "x": 3000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:hammer_metal_gray_black_c_1x1": {
+    "x": 3200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:handaxe_a_02_1x1": {
+    "x": 3400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_helmet_metal_black_a3_1x1": {
+    "x": 3600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_hole_wound_a1_blood_green_overlay_1x1": {
+    "x": 3800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_leg_guard_metal_polished_a1_1x1": {
+    "x": 0,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_light_blue_a12_1x1": {
+    "x": 200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:lightning_black_a14_1x1": {
+    "x": 400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:mace_a_02_1x1": {
+    "x": 600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:wibbly_wobbly_step_a_path": {
+    "x": 800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:underdark_spider_corpse_leg_black_a1_1x1": {
+    "x": 1000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_line_b_path": {
+    "x": 1200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:brain_a_03_1x1": {
+    "x": 1400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_pile_01_a3_1x1": {
+    "x": 1600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:pistol_wood_ashen_rusty_a_1x1": {
+    "x": 1800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blood_pool_black_a12_1x1": {
+    "x": 2000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wrapped_cloth_olive_b1_1x1": {
+    "x": 2200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_protruding_bone_wound_a1_blood_green_overlay_1x1": {
+    "x": 2400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:magic_sword_hilt_gold_1x1": {
+    "x": 2600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rapier_a_02_1x1": {
+    "x": 2800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:refuse_pile_01_a3_1x1": {
+    "x": 3000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rod_of_seven_parts_part_3_a1_1x1": {
+    "x": 3200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:scimitar_a_01_bloody_1x1": {
+    "x": 3400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shadow_path_a_60%": {
+    "x": 3600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sheath_dagger_leather_dark_a_1x1": {
+    "x": 3800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shield_metal_01_a1_1x1": {
+    "x": 0,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shortsword_a_02_1x1": {
+    "x": 200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sickle_a_02_1x1": {
+    "x": 400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_slash_wound_a10_blood_green_overlay_1x1": {
+    "x": 600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_spear_wound_a1_blood_green_overlay_1x1": {
+    "x": 800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bomb_metal_brass_c_1x1": {
+    "x": 1000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spiderweb_black_a12_1x1": {
+    "x": 1200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_blue_a12_1x1": {
+    "x": 1400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_stabbing_wound_a1_blood_green_overlay_1x1": {
+    "x": 1600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:staff_a_gold_1x1": {
+    "x": 1800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_parasite_blue_a3_1x1": {
+    "x": 2000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_template_impact_b5_1x1": {
+    "x": 2200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:hatching_patern_a": {
+    "x": 2400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shield_tilted_wood_light_a1_1x1": {
+    "x": 2600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:torment_cat_o_nine_tails_leather_brown_a1_1x1": {
+    "x": 2800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:martial_arts_training_dummy_wood_ashen_a3_1x1": {
+    "x": 3000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:wand_of_binding_a1_1x1": {
+    "x": 3200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_blue_sword_a1_1x1": {
+    "x": 3400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:mace_standing_b_1x1": {
+    "x": 3600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:target_arrow_wood_dark_b_1x1": {
+    "x": 3800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_stand_wood_dark_b1_1x1": {
+    "x": 0,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arranged_armor_a4_1x1": {
+    "x": 200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_a_04_1x1": {
+    "x": 400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_axe_wound_a1_blood_pale_overlay_1x1": {
+    "x": 600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:baton_wood_dark_b1_1x1": {
+    "x": 800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battering_ram_cap_metal_rusty_b1_1x1": {
+    "x": 1000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battleaxe_a_03_1x1": {
+    "x": 1200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_bite_wound_a1_blood_pale_overlay_1x1": {
+    "x": 1400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_blade_wound_a1_blood_pale_overlay_1x1": {
+    "x": 1600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blast_mark_debris_b3_1x1": {
+    "x": 1800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bloody_footprints_b2_1x1": {
+    "x": 2000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wound_a10_blood_pale_overlay_1x1": {
+    "x": 2200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_bolt_a_04_1x1": {
+    "x": 2400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_quiver_a_04_1x1": {
+    "x": 2600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_a4_1x1": {
+    "x": 2800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_magic_liquid_spill_blue_a4_1x1": {
+    "x": 3000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:broken_shield_wood_ashen_b2_1x1": {
+    "x": 3200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cannonball_metal_gray_d_1x1": {
+    "x": 3400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:catapult_ammo_rock_sandstone_a1_1x1": {
+    "x": 3600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_arm_guard_metal_rusty_a1_1x1": {
+    "x": 3800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_claw_wound_a1_blood_pale_overlay_1x1": {
+    "x": 0,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:club_a_03_1x1": {
+    "x": 200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cobweb_black_a4_1x1": {
+    "x": 400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_light_a_04_1x1": {
+    "x": 600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremonial_dagger_a_purple_1x1": {
+    "x": 800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:decayed_body_sitting_a_04_1x1": {
+    "x": 1000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:dummy_arm_wood_ashen_b1_1x1": {
+    "x": 1200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_skull_white_a4_1x1": {
+    "x": 1400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_01_a13_1x1": {
+    "x": 1600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_a13_1x1": {
+    "x": 1800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:flayed_body_b_04_1x1": {
+    "x": 2000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_bracer_leather_brown_light_a1_1x1": {
+    "x": 2200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_skull_bowl_white_a3_1x1": {
+    "x": 2400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grid_square_d": {
+    "x": 2600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grunge_d": {
+    "x": 2800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:helmet_kettle_a2_bloody_1x1": {
+    "x": 3000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:hammer_metal_gray_blue_a_1x1": {
+    "x": 3200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:handaxe_a_03_1x1": {
+    "x": 3400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_helmet_metal_black_b1_1x1": {
+    "x": 3600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_hole_wound_a1_blood_pale_overlay_1x1": {
+    "x": 3800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_leg_guard_metal_rusty_a1_1x1": {
+    "x": 0,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_light_blue_a13_1x1": {
+    "x": 200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:lightning_black_a15_1x1": {
+    "x": 400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:mace_a_03_1x1": {
+    "x": 600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:pistol_wood_ashen_rusty_b_1x1": {
+    "x": 800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blood_pool_black_a13_1x1": {
+    "x": 1000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wrapped_cloth_olive_b2_1x1": {
+    "x": 1200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_protruding_bone_wound_a1_blood_pale_overlay_1x1": {
+    "x": 1400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:magic_sword_hilt_silver_1x1": {
+    "x": 1600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rapier_a_03_1x1": {
+    "x": 1800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:refuse_pile_01_a4_1x1": {
+    "x": 2000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rod_of_seven_parts_part_4_a1_1x1": {
+    "x": 2200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:scimitar_a_02_1x1": {
+    "x": 2400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shadow_path_b_20%": {
+    "x": 2600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sheath_dagger_leather_tan_a_1x1": {
+    "x": 2800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shield_metal_01_a1_bloody_1x1": {
+    "x": 3000,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shortsword_a_03_1x1": {
+    "x": 3200,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sickle_a_03_1x1": {
+    "x": 3400,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_slash_wound_a10_blood_pale_overlay_1x1": {
+    "x": 3600,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_spear_wound_a1_blood_pale_overlay_1x1": {
+    "x": 3800,
+    "y": 2800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bomb_metal_brass_d_1x1": {
+    "x": 0,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spiderweb_black_a13_1x1": {
+    "x": 200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_blue_a13_1x1": {
+    "x": 400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_stabbing_wound_a1_blood_pale_overlay_1x1": {
+    "x": 600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:staff_a_silver_1x1": {
+    "x": 800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_parasite_blue_a4_1x1": {
+    "x": 1000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_template_sphere_5ft_a1_1x1": {
+    "x": 1200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:sandstorm_overlay_a": {
+    "x": 1400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shield_wood_light_a2_bloody_1x1": {
+    "x": 1600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:torment_cat_o_nine_tails_leather_brown_b1_1x1": {
+    "x": 1800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:martial_arts_training_dummy_wood_ashen_a4_1x1": {
+    "x": 2000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:wand_of_enemy_detection_a1_1x1": {
+    "x": 2200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_blue_sword_c1_1x1": {
+    "x": 2400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:pickaxe_standing_a_1x1": {
+    "x": 2600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:target_arrow_wood_light_a_1x1": {
+    "x": 2800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_stand_wood_light_a1_1x1": {
+    "x": 3000,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arranged_armor_a5_1x1": {
+    "x": 3200,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_a_broken_01_1x1": {
+    "x": 3400,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_axe_wound_a1_blood_red_overlay_1x1": {
+    "x": 3600,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:baton_wood_light_a1_1x1": {
+    "x": 3800,
+    "y": 3000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wound_a10_blood_red_overlay_1x1": {
+    "x": 0,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_bolt_broken_a_01_1x1": {
+    "x": 200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_quiver_b_1x1": {
+    "x": 400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_eaten_a1_1x1": {
+    "x": 600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_magic_liquid_spill_blue_a5_1x1": {
+    "x": 800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:broken_shield_wood_ashen_c1_1x1": {
+    "x": 1000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cannonball_metal_gray_e_1x1": {
+    "x": 1200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:catapult_ammo_rock_slate_a1_1x1": {
+    "x": 1400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_arm_guard_metal_silver_a1_1x1": {
+    "x": 1600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_claw_wound_a1_blood_red_overlay_1x1": {
+    "x": 1800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:club_a_04_1x1": {
+    "x": 2000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cobweb_black_a5_1x1": {
+    "x": 2200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:crossbow_wood_ashen_a_1x1": {
+    "x": 2400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremonial_dagger_a_red_1x1": {
+    "x": 2600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:decayed_body_sitting_a_05_1x1": {
+    "x": 2800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:dummy_arm_wood_ashen_b2_1x1": {
+    "x": 3000,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_skull_white_a5_1x1": {
+    "x": 3200,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_01_a2_1x1": {
+    "x": 3400,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_a14_1x1": {
+    "x": 3600,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:flayed_body_b_05_1x1": {
+    "x": 3800,
+    "y": 3200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_bracer_leather_dark_a1_1x1": {
+    "x": 0,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_skull_bowl_yellowed_a1_1x1": {
+    "x": 200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_hole_wound_a1_blood_red_overlay_1x1": {
+    "x": 400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_leg_guard_metal_silver_a1_1x1": {
+    "x": 600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_light_blue_a1_1x1": {
+    "x": 800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:lightning_black_a16_1x1": {
+    "x": 1000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:mace_a_04_1x1": {
+    "x": 1200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:underdark_spider_corpse_leg_black_a2_1x1": {
+    "x": 1400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_line_c_path": {
+    "x": 1600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:brain_b_01_1x1": {
+    "x": 1800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_pile_01_a4_1x1": {
+    "x": 2000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:pistol_wood_black_a_1x1": {
+    "x": 2200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:blood_pool_black_a14_1x1": {
+    "x": 2400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_wrapped_cloth_tan_b1_1x1": {
+    "x": 2600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_protruding_bone_wound_a1_blood_red_overlay_1x1": {
+    "x": 2800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:magic_sword_hilt_white_1x1": {
+    "x": 3000,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rapier_a_04_1x1": {
+    "x": 3200,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:refuse_pile_01_a5_1x1": {
+    "x": 3400,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:rod_of_seven_parts_part_5_a1_1x1": {
+    "x": 3600,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:scimitar_a_03_1x1": {
+    "x": 3800,
+    "y": 3400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:shadow_path_b_40%": {
+    "x": 0,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:bomb_metal_brass_e_1x1": {
+    "x": 200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spiderweb_black_a14_1x1": {
+    "x": 400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_blue_a1_1x1": {
+    "x": 600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_stabbing_wound_a1_blood_red_overlay_1x1": {
+    "x": 800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:staff_a_white_1x1": {
+    "x": 1000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_parasite_blue_a5_1x1": {
+    "x": 1200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_green_template_impact_b2_1x1": {
+    "x": 1400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_clouds_overlay_blue": {
+    "x": 1600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:target_arrow_wood_light_b_1x1": {
+    "x": 1800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_stand_wood_light_b1_1x1": {
+    "x": 2000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arranged_armor_a6_1x1": {
+    "x": 2200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:arrow_a_broken_02_1x1": {
+    "x": 2400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_axe_wound_a1_blood_yellow_overlay_1x1": {
+    "x": 2600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:baton_wood_light_b1_1x1": {
+    "x": 2800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:battleaxe_a_04_1x1": {
+    "x": 3000,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_bite_wound_a1_blood_red_overlay_1x1": {
+    "x": 3200,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_blade_wound_a1_blood_red_overlay_1x1": {
+    "x": 3400,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:broken_shield_wood_dark_a1_1x1": {
+    "x": 3600,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:cannonball_metal_gray_f_1x1": {
+    "x": 3800,
+    "y": 3600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:catapult_ammo_rock_volcanic_a1_1x1": {
+    "x": 0,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_chainmail_metal_black_a1_1x1": {
+    "x": 200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_claw_wound_a1_blood_yellow_overlay_1x1": {
+    "x": 400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:feces_01_a3_1x1": {
+    "x": 600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_a15_1x1": {
+    "x": 800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:flayed_body_c_01_1x1": {
+    "x": 1000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_bracer_leather_tan_a1_1x1": {
+    "x": 1200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:ceremorph_humanoid_brain_skull_bowl_yellowed_a2_1x1": {
+    "x": 1400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:grunge_e": {
+    "x": 1600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:helmet_kettle_a3_1x1": {
+    "x": 1800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:hammer_metal_gray_blue_b_1x1": {
+    "x": 2000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:handaxe_a_04_1x1": {
+    "x": 2200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:armor_helmet_metal_black_c1_1x1": {
+    "x": 2400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:body_hole_wound_a1_blood_yellow_overlay_1x1": {
+    "x": 2600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:boots_leather_black_a8_1x1": {
+    "x": 2800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:spore_cloud_light_blue_a2_1x1": {
+    "x": 3000,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:lightning_black_a17_1x1": {
+    "x": 3200,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:mace_metal_gray_black_a_1x1": {
+    "x": 3400,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:underdark_spider_corpse_leg_black_a3_1x1": {
+    "x": 3600,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-effects:fire_blue_template_line_a_path": {
+    "x": 3800,
+    "y": 3800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  }
+}
