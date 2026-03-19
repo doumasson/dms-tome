@@ -489,6 +489,49 @@
   font-weight: 700;
 }
 
+.hud-log-empty {
+  color: #4a3a28;
+  font-style: italic;
+}
+
+/* Chat message styles */
+.hud-chat-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 3px 0;
+}
+
+.hud-chat-dm {
+  text-align: left;
+}
+
+.hud-chat-player {
+  text-align: right;
+}
+
+.hud-chat-speaker {
+  font-family: var(--font-heading);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.hud-chat-dm .hud-chat-speaker { color: var(--gold-bright); }
+.hud-chat-player .hud-chat-speaker { color: #5ab0ee; }
+
+.hud-chat-text {
+  color: var(--text-log);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.hud-chat-dm .hud-chat-text {
+  color: var(--text-primary);
+  font-style: italic;
+}
+
 /* ApiKeyGate waiting pulse */
 @keyframes pulse {
   0%, 100% { opacity: 0.2; }
