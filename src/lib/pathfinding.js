@@ -112,6 +112,88 @@ export function findPath(collision, width, height, start, end) {
   return null
 }
 
+// Edge bit constants (must match wallEdgeExtractor.js)
+const EDGE_N = 0x1, EDGE_E = 0x2, EDGE_S = 0x4, EDGE_W = 0x8
+
+/**
+ * Check if movement from (fromX,fromY) to (toX,toY) is blocked by a wall edge.
+ */
+function isEdgeBlocked(wallEdges, width, fromX, fromY, toX, toY) {
+  const fromIdx = fromY * width + fromX
+  const dx = toX - fromX
+  const dy = toY - fromY
+  if (dy === -1) return !!(wallEdges[fromIdx] & EDGE_N)
+  if (dx === 1)  return !!(wallEdges[fromIdx] & EDGE_E)
+  if (dy === 1)  return !!(wallEdges[fromIdx] & EDGE_S)
+  if (dx === -1) return !!(wallEdges[fromIdx] & EDGE_W)
+  return false
+}
+
+/**
+ * A* pathfinding with edge-based wall collision + cell-based prop collision.
+ * @param {{ wallEdges: Uint8Array, cellBlocked: Uint8Array }} collisionData
+ * @param {number} width
+ * @param {number} height
+ * @param {{x,y}} start
+ * @param {{x,y}} end
+ * @returns {Array<{x,y}>|null}
+ */
+export function findPathEdge(collisionData, width, height, start, end) {
+  const { wallEdges, cellBlocked } = collisionData
+  if (cellBlocked[end.y * width + end.x] === 1) return null
+  if (start.x === end.x && start.y === end.y) return [start]
+
+  const size = width * height
+  const gScore = new Float32Array(size).fill(Infinity)
+  const cameFrom = new Int32Array(size).fill(-1)
+  const closed = new Uint8Array(size)
+
+  const idx = (x, y) => y * width + x
+  const heuristic = (x, y) => Math.abs(x - end.x) + Math.abs(y - end.y)
+
+  const startIdx = idx(start.x, start.y)
+  gScore[startIdx] = 0
+
+  const open = new MinHeap()
+  open.push({ x: start.x, y: start.y, f: heuristic(start.x, start.y), idx: startIdx })
+
+  while (open.size > 0) {
+    const curr = open.pop()
+    if (curr.x === end.x && curr.y === end.y) {
+      const path = []
+      let ci = curr.idx
+      while (ci !== -1) {
+        path.push({ x: ci % width, y: (ci / width) | 0 })
+        ci = cameFrom[ci]
+      }
+      return path.reverse()
+    }
+
+    if (closed[curr.idx]) continue
+    closed[curr.idx] = 1
+
+    for (const { dx, dy } of DIRS) {
+      const nx = curr.x + dx
+      const ny = curr.y + dy
+      if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
+
+      const ni = idx(nx, ny)
+      if (closed[ni]) continue
+      if (cellBlocked[ni] === 1) continue
+      if (isEdgeBlocked(wallEdges, width, curr.x, curr.y, nx, ny)) continue
+
+      const tentG = gScore[curr.idx] + 1
+      if (tentG < gScore[ni]) {
+        gScore[ni] = tentG
+        cameFrom[ni] = curr.idx
+        open.push({ x: nx, y: ny, f: tentG + heuristic(nx, ny), idx: ni })
+      }
+    }
+  }
+
+  return null
+}
+
 /**
  * Build collision Uint8Array from tile layers.
  * @param {object} layers — { walls: Uint16Array, props: Uint16Array }

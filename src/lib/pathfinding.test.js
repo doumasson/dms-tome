@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findPath, buildCollisionLayer, findPathLegacy, buildWalkabilityGrid } from './pathfinding.js'
+import { findPath, buildCollisionLayer, findPathLegacy, buildWalkabilityGrid, findPathEdge } from './pathfinding.js'
 
 describe('findPath (binary heap A*)', () => {
   it('finds path on large grid within 16ms', () => {
@@ -76,5 +76,57 @@ describe('findPathLegacy', () => {
     expect(path).not.toBeNull()
     expect(path[0]).toEqual({ x: 0, y: 0 })
     expect(path[path.length - 1]).toEqual({ x: 2, y: 2 })
+  })
+})
+
+describe('findPathEdge (edge-based collision)', () => {
+  const NORTH = 0x1, EAST = 0x2, SOUTH = 0x4, WEST = 0x8
+
+  it('finds path when no wall edges', () => {
+    const wallEdges = new Uint8Array(5 * 5)
+    const cellBlocked = new Uint8Array(5 * 5)
+    const path = findPathEdge({ wallEdges, cellBlocked }, 5, 5, { x: 0, y: 0 }, { x: 4, y: 4 })
+    expect(path).not.toBeNull()
+    expect(path[0]).toEqual({ x: 0, y: 0 })
+    expect(path[path.length - 1]).toEqual({ x: 4, y: 4 })
+    expect(path.length).toBe(9)
+  })
+
+  it('blocks movement across a wall edge', () => {
+    const wallEdges = new Uint8Array(3)
+    wallEdges[1] = EAST
+    const cellBlocked = new Uint8Array(3)
+    const path = findPathEdge({ wallEdges, cellBlocked }, 3, 1, { x: 0, y: 0 }, { x: 2, y: 0 })
+    expect(path).toBeNull()
+  })
+
+  it('wall edge blocks in both directions', () => {
+    const wallEdges = new Uint8Array(3)
+    wallEdges[1] = EAST
+    wallEdges[2] = WEST
+    const cellBlocked = new Uint8Array(3)
+    const path = findPathEdge({ wallEdges, cellBlocked }, 3, 1, { x: 2, y: 0 }, { x: 0, y: 0 })
+    expect(path).toBeNull()
+  })
+
+  it('respects cellBlocked for props', () => {
+    const wallEdges = new Uint8Array(5 * 5)
+    const cellBlocked = new Uint8Array(5 * 5)
+    cellBlocked[2 * 5 + 2] = 1
+    const path = findPathEdge({ wallEdges, cellBlocked }, 5, 5, { x: 0, y: 0 }, { x: 4, y: 4 })
+    expect(path).not.toBeNull()
+    expect(path.some(p => p.x === 2 && p.y === 2)).toBe(false)
+  })
+
+  it('finds path around wall edges', () => {
+    const wallEdges = new Uint8Array(5 * 5)
+    const cellBlocked = new Uint8Array(5 * 5)
+    for (let y = 0; y < 4; y++) {
+      wallEdges[y * 5 + 2] |= EAST
+      wallEdges[y * 5 + 3] |= WEST
+    }
+    const path = findPathEdge({ wallEdges, cellBlocked }, 5, 5, { x: 0, y: 0 }, { x: 4, y: 0 })
+    expect(path).not.toBeNull()
+    expect(path.some(p => p.y === 4)).toBe(true)
   })
 })
