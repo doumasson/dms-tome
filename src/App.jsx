@@ -216,6 +216,27 @@ export default function App() {
       }
     });
 
+    // Token move sync (any player → all others for V2 area map)
+    ch.on('broadcast', { event: 'token-move' }, ({ payload }) => {
+      const { playerId, position } = payload;
+      const currentAreaId = useStore.getState().currentAreaId;
+      if (currentAreaId) {
+        useStore.getState().setAreaTokenPosition(currentAreaId, playerId, position);
+      }
+    });
+
+    // Fog of war bitfield sync (host → players for V2 area map)
+    ch.on('broadcast', { event: 'fog-update' }, ({ payload }) => {
+      const { areaId, base64Bitfield } = payload;
+      useStore.getState().updateFogBitfield(areaId, base64Bitfield);
+    });
+
+    // Roof reveal state sync (host → players for V2 area map)
+    ch.on('broadcast', { event: 'roof-state' }, ({ payload }) => {
+      const { buildingId, revealed } = payload;
+      useStore.getState().setRoofState(buildingId, revealed);
+    });
+
     // Dice roll broadcast (any player → all others)
     ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
       // Only add entries from OTHER users — we already logged our own roll
