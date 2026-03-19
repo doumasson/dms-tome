@@ -6,7 +6,7 @@ import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens, isAnimating } from './TokenLayer'
 import { renderExits } from './ExitZone'
 
-export default function PixiApp({ zone, tokens, onTileClick, onExitClick }) {
+export default function PixiApp({ zone, tokens, onTileClick, onExitClick, inCombat }) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
   const stageLayersRef = useRef({})
@@ -99,7 +99,7 @@ export default function PixiApp({ zone, tokens, onTileClick, onExitClick }) {
     renderTilemap(walls, zone.layers.walls)
     renderTilemap(props, zone.layers.props)
     clearGrid(grid)
-    renderGrid(grid, zone.width, zone.height)
+    renderGrid(grid, zone.width, zone.height, inCombat ? 0xcc3333 : 0xc9a84c, inCombat ? 0.08 : 0.04)
     if (zone.exits?.length) {
       renderExits(stageLayersRef.current.exits, zone.exits, (exitData) => {
         onExitClickRef.current?.(exitData)
@@ -108,7 +108,7 @@ export default function PixiApp({ zone, tokens, onTileClick, onExitClick }) {
 
     // Scale the world to fit the viewport, centered
     scaleWorldToFit(zone)
-  }, [zone, ready])
+  }, [zone, ready, inCombat])
 
   // Re-scale on window resize
   useEffect(() => {

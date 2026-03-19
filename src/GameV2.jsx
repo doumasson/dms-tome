@@ -8,6 +8,7 @@ import { broadcastZoneTransition } from './lib/liveChannel'
 import { findPath, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
+import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
 import DiceTray from './components/DiceTray'
 import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
 import RestModal from './components/RestModal'
@@ -21,6 +22,9 @@ export default function GameV2() {
   const myCharacter = useStore(s => s.myCharacter)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
   const user = useStore(s => s.user)
+  const encounter = useStore(s => s.encounter)
+  const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
+  const inCombat = encounter.phase === 'combat'
 
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
   const [transitioning, setTransitioning] = useState(false)
@@ -149,6 +153,10 @@ export default function GameV2() {
     else if (tool === 'settings') console.log('Settings not yet wired in V2')
   }, [myCharacter])
 
+  const handleEndTurn = useCallback(() => {
+    nextEncounterTurn()
+  }, [nextEncounterTurn])
+
   const handleChat = useCallback((text) => {
     if (!text.trim()) return
     addNarratorMessage({
@@ -168,8 +176,8 @@ export default function GameV2() {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
-      <PixiApp zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} />
-      <GameHUD zone={zone} onTool={handleTool} onChat={handleChat} />
+      <PixiApp zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} inCombat={inCombat} />
+      <GameHUD zone={zone} onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn} />
       <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
       {sheetChar && (
         <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />

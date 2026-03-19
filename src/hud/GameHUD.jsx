@@ -1,17 +1,38 @@
 import BottomBar from './BottomBar'
 import ZoneLabel from './ZoneLabel'
 import NarratorFloat from './NarratorFloat'
+import InitiativeStrip from './InitiativeStrip'
+import EnemyInfoPanel from './EnemyInfoPanel'
+import useStore from '../store/useStore'
 import './hud.css'
 
-export default function GameHUD({ zone, onTool, onChat }) {
+export default function GameHUD({ zone, onTool, onChat, onEndTurn }) {
+  const inCombat = useStore(s => s.encounter.phase === 'combat')
+  const encounter = useStore(s => s.encounter)
+  const myCharacter = useStore(s => s.myCharacter)
+
+  const activeCombatant = inCombat ? encounter.combatants?.[encounter.currentTurn] : null
+  const isMyTurn = activeCombatant && myCharacter && (
+    activeCombatant.id === myCharacter.id || activeCombatant.name === myCharacter.name
+  )
+
   return (
     <div className="hud-v2" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
-      {/* Zone label — absolutely positioned top-left via CSS */}
-      <ZoneLabel zone={zone} />
-      {/* Narrator float — absolutely positioned bottom-center via CSS */}
+      {/* Zone label (exploration) or Turn banner (combat) */}
+      {inCombat ? (
+        <>
+          <div className="hud-turn-banner">
+            <div className="hud-turn-title">{isMyTurn ? 'Your Turn' : `${activeCombatant?.name || '...'}'s Turn`}</div>
+            <div className="hud-turn-sub">{activeCombatant?.name} · {activeCombatant?.class || 'Enemy'}</div>
+          </div>
+          <InitiativeStrip />
+          <EnemyInfoPanel />
+        </>
+      ) : (
+        <ZoneLabel zone={zone} />
+      )}
       <NarratorFloat />
-      {/* Bottom bar — absolutely positioned bottom via CSS */}
-      <BottomBar onTool={onTool} onChat={onChat} />
+      <BottomBar onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} />
     </div>
   )
 }
