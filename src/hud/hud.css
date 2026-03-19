@@ -866,3 +866,117 @@
   font-family: var(--font-heading);
   letter-spacing: 1px;
 }
+
+/* Journal Modal — Parchment Scroll */
+.journal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journal-modal {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  background: linear-gradient(180deg, #2a2010 0%, #1e180c 40%, #2a2010 100%);
+  border: 2px solid #4a3520;
+  padding: 28px 32px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(42, 32, 16, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.journal-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: #6a5a40;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  min-height: 0;
+}
+
+.journal-header { text-align: center; margin-bottom: 16px; }
+.journal-divider { display: block; margin: 0 auto; }
+
+.journal-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: #4a3520;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin: 6px 0;
+}
+
+.journal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.journal-empty {
+  color: #6a5a40;
+  font-style: italic;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 24px 0;
+}
+
+.journal-section { margin-bottom: 20px; }
+
+.journal-section-title {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  color: #8a6a40;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(74, 53, 32, 0.3);
+}
+
+.journal-entry {
+  margin-bottom: 12px;
+  padding-left: 10px;
+  border-left: 2px solid rgba(74, 53, 32, 0.2);
+}
+
+.journal-entry-critical { border-left-color: #c9a84c; }
+
+.journal-entry-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.journal-entry-npc {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  color: #aa8a50;
+  font-weight: 700;
+}
+
+.journal-entry-zone {
+  font-size: 9px;
+  color: #6a5a40;
+  font-style: italic;
+}
+
+.journal-entry-text {
+  font-size: 12px;
+  color: #8a7a60;
+  line-height: 1.6;
+  margin: 0;
+}

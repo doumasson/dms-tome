@@ -5,6 +5,7 @@ const TOOLS = [
   { icon: '🎲', label: 'DICE', key: 'dice' },
   { icon: '📜', label: 'CHAR', key: 'character' },
   { icon: '🎒', label: 'PACK', key: 'inventory' },
+  { icon: '📖', label: 'JOURNAL', key: 'journal' },
   { icon: '🏕', label: 'REST', key: 'rest' },
 ]
 

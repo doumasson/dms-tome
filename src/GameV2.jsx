@@ -21,6 +21,7 @@ import RestModal from './components/RestModal'
 import ApiKeySettings from './components/ApiKeySettings'
 import NpcDialog from './components/NpcDialog'
 import StoryCutscene from './components/StoryCutscene'
+import JournalModal from './components/JournalModal'
 import './hud/hud.css'
 
 const CLASS_COLORS = {
@@ -62,6 +63,7 @@ export default function GameV2({ onLeave }) {
   const [sheetChar, setSheetChar] = useState(null)
   const [restProposal, setRestProposal] = useState(null)
   const [showApiSettings, setShowApiSettings] = useState(false)
+  const [showJournal, setShowJournal] = useState(false)
   const [activeNpc, setActiveNpc] = useState(null)
   const [worldTransform, setWorldTransform] = useState(null)
   const dialogOpenRef = useRef(false)
@@ -332,6 +334,7 @@ export default function GameV2({ onLeave }) {
   const handleTool = useCallback((tool) => {
     if (tool === 'dice') setToolPanel('dice')
     else if (tool === 'character' || tool === 'inventory') setSheetChar(myCharacter)
+    else if (tool === 'journal') setShowJournal(true)
     else if (tool === 'rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
   }, [myCharacter])
 
@@ -541,6 +544,7 @@ export default function GameV2({ onLeave }) {
       {showApiSettings && (
         <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />
       )}
+      {showJournal && <JournalModal onClose={() => setShowJournal(false)} />}
       {restProposal && (
         <RestModal
           type={restProposal.type}
