@@ -55,3 +55,12 @@ export function broadcastNarratorMessage(msg) {
 export function broadcastAppendScenes(scenes, nextSceneIndex) {
   _channel?.send({ type: 'broadcast', event: 'append-scenes', payload: { scenes, nextSceneIndex } });
 }
+
+export function broadcastZoneTransition(targetZone, entryPoint) {
+  if (!_channel) return
+  _channel.send({
+    type: 'broadcast',
+    event: 'zone-transition',
+    payload: { targetZone, entryPoint },
+  })
+}
