@@ -15,6 +15,13 @@ import CharacterSheetModal from './components/characterSheet/CharacterSheetModal
 import RestModal from './components/RestModal'
 import './hud/hud.css'
 
+const CLASS_COLORS = {
+  Fighter: 0x4499dd, Barbarian: 0xcc5544, Paladin: 0xeedd44,
+  Ranger: 0x44aa66, Rogue: 0xcc7722, Monk: 0x88bbcc,
+  Wizard: 0x6644cc, Sorcerer: 0xaa55bb, Warlock: 0x885599,
+  Cleric: 0x44aa66, Druid: 0x558833, Bard: 0xcc7799,
+}
+
 export default function GameV2() {
   const currentZoneId = useStore(s => s.currentZoneId)
   const zones = useStore(s => s.campaign.zones)
@@ -52,6 +59,11 @@ export default function GameV2() {
         const world = buildWorldFromAiOutput(demoWorld)
         console.log('[GameV2] Built world:', world.title, Object.keys(world.zones).length, 'zones')
         loadZoneWorld(world)
+        const startZone = world.zones[world.startZone]
+        if (startZone) {
+          const entrance = startZone.exits?.[0]?.entryPoint || { x: Math.floor(startZone.width / 2), y: Math.floor(startZone.height / 2) }
+          setPlayerPos(entrance)
+        }
       } catch (e) {
         console.error('[GameV2] Failed to build world:', e)
       }
@@ -78,7 +90,7 @@ export default function GameV2() {
       x: playerPos.x,
       y: playerPos.y,
       color: 0x0c1828,
-      borderColor: 0x4499dd,
+      borderColor: CLASS_COLORS[myCharacter?.class] || 0x4499dd,
       isNpc: false,
     })
     if (zone.npcs) {
@@ -324,6 +336,7 @@ export default function GameV2() {
         <button
           onClick={() => {
             const { startEncounter } = useStore.getState()
+            const party = myCharacter ? [myCharacter] : []
             startEncounter([
               { name: 'Goblin', hp: 15, maxHp: 15, ac: 15, isEnemy: true, type: 'enemy',
                 attacks: [{ name: 'Scimitar', bonus: '+4', damage: '1d6+2' }],
@@ -331,7 +344,7 @@ export default function GameV2() {
               { name: 'Goblin Archer', hp: 12, maxHp: 12, ac: 13, isEnemy: true, type: 'enemy',
                 attacks: [{ name: 'Shortbow', bonus: '+4', damage: '1d6+2' }],
                 position: { x: 8, y: 3 }, speed: 30 },
-            ])
+            ], party)
           }}
           style={{
             position: 'fixed', top: 50, right: 10, zIndex: 100,
