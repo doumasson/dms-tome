@@ -4,6 +4,8 @@ import {
   resolvePositions, stampChunk, connectWithRoad,
   fillTerrain, buildUnifiedPalette, remapChunk,
 } from './mapGenerator.js'
+import { extractWallEdges } from './wallEdgeExtractor.js'
+import { getBlockingSet } from '../engine/tileAtlas'
 
 /* ── Theme constants ──────────────────────────────────────────── */
 
@@ -120,17 +122,24 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   const terrainIndices = terrainTiles.map(id => tileToIndex.get(id))
   fillTerrain(layers.floor, terrainIndices, width, height, seed)
 
-  // 8. Build collision layer (doors walkable, walls/props block)
-  const collision = new Uint8Array(size)
+  // 8. Extract wall edges (also backfills floor under wall cells)
+  const doorSet = new Set()
+  for (let i = 0; i < palette.length; i++) {
+    if (palette[i] && palette[i].includes('door')) doorSet.add(palette[i])
+  }
+  const { wallEdges } = extractWallEdges(layers.walls, layers.floor, palette, doorSet, width, height)
+
+  // 9. Build collision: cell-blocked from blocking props, edge-blocked from wallEdges
+  const blockingSet = getBlockingSet()
+  const cellBlocked = new Uint8Array(size)
   for (let i = 0; i < size; i++) {
-    const wallIdx = layers.walls[i]
-    if (wallIdx === 0) continue
-    const tileId = palette[wallIdx] || ''
-    if (tileId.includes('door')) continue
-    collision[i] = 1
+    const propIdx = layers.props[i]
+    if (propIdx === 0) continue
+    const tileId = palette[propIdx] || ''
+    if (blockingSet.has(tileId)) cellBlocked[i] = 1
   }
 
-  // 9. Place NPCs
+  // 10. Place NPCs
   const placedNpcs = []
   for (const npc of npcs) {
     const poiLabel = npc.position // POI label where NPC should be placed
@@ -211,7 +220,8 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     tileSize: 200,
     palette,
     layers,       // raw Uint16Arrays — encoded to base64 only when saving to Supabase
-    collision,    // Uint8Array — regenerated on load, not stored
+    wallEdges,        // Uint8Array — edge-based wall collision
+    cellBlocked,      // Uint8Array — cell-based prop collision
     playerStart,
     npcs: placedNpcs,
     buildings,
