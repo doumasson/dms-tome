@@ -198,6 +198,15 @@ export default function App() {
       if (payload?.text) useStore.getState().addNarratorMessage(payload);
     });
 
+    // Zone transition sync (host → players for V2 world map)
+    ch.on('broadcast', { event: 'zone-transition' }, ({ payload }) => {
+      if (!useStore.getState().isDM) {
+        const { targetZone } = payload;
+        const { setCurrentZone } = useStore.getState();
+        setCurrentZone(targetZone);
+      }
+    });
+
     // Dice roll broadcast (any player → all others)
     ch.on('broadcast', { event: 'dice-roll' }, ({ payload }) => {
       // Only add entries from OTHER users — we already logged our own roll
