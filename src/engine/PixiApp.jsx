@@ -4,6 +4,7 @@ import { loadTileAtlas } from './tileAtlas'
 import { renderTilemap, clearTilemap } from './TilemapRenderer'
 import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens } from './TokenLayer'
+import { renderExits } from './ExitZone'
 
 export default function PixiApp({ zone, tokens, onTileClick }) {
   const containerRef = useRef(null)
@@ -71,6 +72,10 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     renderTilemap(props, zone.layers.props)
     clearGrid(grid)
     renderGrid(grid, zone.width, zone.height)
+    // Render exits
+    if (zone.exits?.length) {
+      renderExits(stageLayersRef.current.exits, zone.exits)
+    }
   }, [zone])
 
   useEffect(() => {
