@@ -5,11 +5,20 @@ import GameHUD from './hud/GameHUD'
 import demoZone from './data/demoZone.json'
 import { findPath, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
+import DiceTray from './components/DiceTray'
+import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
+import RestModal from './components/RestModal'
 import './hud/hud.css'
 
 export default function GameV2() {
   const [zone] = useState(demoZone)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
+  const [toolPanel, setToolPanel] = useState(null)
+  const [sheetChar, setSheetChar] = useState(null)
+  const [restProposal, setRestProposal] = useState(null)
+  const myCharacter = useStore(s => s.myCharacter)
+  const addNarratorMessage = useStore(s => s.addNarratorMessage)
+  const user = useStore(s => s.user)
 
   // Build walkability grid from zone data
   const walkGrid = useMemo(() => {
@@ -58,17 +67,43 @@ export default function GameV2() {
   }, [walkGrid, playerPos])
 
   const handleTool = useCallback((tool) => {
-    console.log('Tool:', tool)
-  }, [])
+    if (tool === 'dice') setToolPanel('dice')
+    else if (tool === 'character' || tool === 'inventory') setSheetChar(myCharacter)
+    else if (tool === 'rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
+    else if (tool === 'settings') console.log('Settings not yet wired in V2')
+  }, [myCharacter])
 
   const handleChat = useCallback((text) => {
-    console.log('Chat:', text)
-  }, [])
+    if (!text.trim()) return
+    addNarratorMessage({
+      role: 'player',
+      speaker: myCharacter?.name || user?.email || 'Player',
+      text: text.trim(),
+    })
+  }, [addNarratorMessage, myCharacter, user])
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
       <PixiApp zone={zone} tokens={tokens} onTileClick={handleTileClick} />
       <GameHUD zone={zone} onTool={handleTool} onChat={handleChat} />
+      {/* V1 modals reused in V2 */}
+      <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
+      {sheetChar && (
+        <CharacterSheetModal
+          character={sheetChar}
+          onClose={() => setSheetChar(null)}
+        />
+      )}
+      {restProposal && (
+        <RestModal
+          type={restProposal.type}
+          proposedBy={restProposal.proposedBy}
+          partyMembers={[{ id: user?.id, name: myCharacter?.name || 'You' }]}
+          isHost={false}
+          onResolve={() => setRestProposal(null)}
+          onCancel={() => setRestProposal(null)}
+        />
+      )}
     </div>
   )
 }
