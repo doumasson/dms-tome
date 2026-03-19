@@ -69,3 +69,33 @@ export function broadcastZoneTransition(targetZone, entryPoint) {
     payload: { targetZone, entryPoint },
   })
 }
+
+// NPC dialog lock
+export function broadcastNpcDialogStart(npcName, playerId, playerName) {
+  _channel?.send({ type: 'broadcast', event: 'npc-dialog-start', payload: { npcName, playerId, playerName } })
+}
+
+export function broadcastNpcDialogEnd(npcName) {
+  _channel?.send({ type: 'broadcast', event: 'npc-dialog-end', payload: { npcName } })
+}
+
+// Critical story cutscene
+export function broadcastStoryCutsceneStart(npcName, initiatorId, criticalInfo) {
+  _channel?.send({ type: 'broadcast', event: 'story-cutscene-start', payload: { npcName, initiatorId, criticalInfo } })
+}
+
+export function broadcastStoryCutsceneEnd(npcName, storyFlag) {
+  _channel?.send({ type: 'broadcast', event: 'story-cutscene-end', payload: { npcName, storyFlag } })
+}
+
+export function broadcastCutsceneMessage(msg) {
+  _channel?.send({ type: 'broadcast', event: 'cutscene-message', payload: msg })
+}
+
+export function broadcastStoryFlag(flag) {
+  _channel?.send({ type: 'broadcast', event: 'story-flag', payload: { flag } })
+}
+
+export function broadcastJournalEntry(entry) {
+  _channel?.send({ type: 'broadcast', event: 'journal-entry', payload: entry })
+}

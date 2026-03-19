@@ -5,6 +5,7 @@ import { triggerEnemyTurn } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 import { computeAcFromEquipped } from '../data/equipment';
 import { CLASSES } from '../data/classes';
+import { createStorySlice } from './storySlice';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -1617,6 +1618,9 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
       questObjectives: world.questObjectives || [],
     },
   })),
+
+  // === Story Progression ===
+  ...createStorySlice(set, get),
 }));
 
 export default useStore;
