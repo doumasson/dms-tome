@@ -4,7 +4,8 @@ import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
 import demoWorld from './data/demoWorld.json'
 import { buildWorldFromAiOutput } from './lib/campaignGenerator'
-import { broadcastZoneTransition } from './lib/liveChannel'
+import { broadcastZoneTransition, broadcastNarratorMessage } from './lib/liveChannel'
+import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
 import { findPath, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
@@ -25,6 +26,10 @@ export default function GameV2() {
   const encounter = useStore(s => s.encounter)
   const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
   const inCombat = encounter.phase === 'combat'
+  const sessionApiKey = useStore(s => s.sessionApiKey)
+  const campaign = useStore(s => s.campaign)
+  const partyMembers = useStore(s => s.partyMembers)
+  const narrator = useStore(s => s.narrator)
 
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
   const [transitioning, setTransitioning] = useState(false)
@@ -33,6 +38,7 @@ export default function GameV2() {
   const [restProposal, setRestProposal] = useState(null)
   const playerPosRef = useRef(playerPos)
   playerPosRef.current = playerPos
+  const lastNpcTriggerRef = useRef(null)
 
   // Load demo world on mount if no zones exist
   useEffect(() => {
@@ -148,6 +154,7 @@ export default function GameV2() {
     broadcastZoneTransition(targetZone, entryPoint)
     setCurrentZone(targetZone)
     setPlayerPos(entryPoint || { x: 5, y: 5 })
+    lastNpcTriggerRef.current = null
     setTimeout(() => setTransitioning(false), 700)
   }, [transitioning, zones, setCurrentZone])
 
@@ -162,14 +169,82 @@ export default function GameV2() {
     nextEncounterTurn()
   }, [nextEncounterTurn])
 
-  const handleChat = useCallback((text) => {
+  const handleChat = useCallback(async (text) => {
     if (!text.trim()) return
-    addNarratorMessage({
-      role: 'player',
-      speaker: myCharacter?.name || user?.email || 'Player',
-      text: text.trim(),
-    })
-  }, [addNarratorMessage, myCharacter, user])
+    const apiKey = sessionApiKey || localStorage.getItem('claude_api_key')
+    if (!apiKey) {
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'No API key set. Go to Settings to add your Claude API key.' })
+      return
+    }
+
+    // Add player message
+    const playerMsg = { role: 'player', speaker: myCharacter?.name || user?.email || 'Player', text: text.trim() }
+    addNarratorMessage(playerMsg)
+    broadcastNarratorMessage(playerMsg)
+
+    try {
+      // Build conversation for AI
+      const history = narrator?.history || []
+      const recentMessages = history.slice(-14).map(m => ({
+        role: m.role === 'dm' ? 'assistant' : 'user',
+        content: m.text,
+      }))
+
+      const systemPrompt = buildSystemPrompt(campaign, partyMembers, zone, recentMessages.length)
+
+      const result = await callNarrator({
+        messages: recentMessages,
+        systemPrompt,
+        apiKey,
+      })
+
+      if (result?.narrative) {
+        const dmMsg = { role: 'dm', speaker: 'DM', text: result.narrative }
+        addNarratorMessage(dmMsg)
+        broadcastNarratorMessage(dmMsg)
+      }
+
+      // Handle combat trigger from AI
+      if (result?.startCombat && result?.enemies?.length) {
+        const { startEncounter } = useStore.getState()
+        const enemies = result.enemies.map(e => ({
+          ...e, isEnemy: true, type: 'enemy',
+          position: e.position || { x: Math.floor(Math.random() * (zone?.width || 10)), y: Math.floor(Math.random() * (zone?.height || 8)) },
+        }))
+        startEncounter(enemies)
+      }
+    } catch (err) {
+      console.error('[GameV2] Narrator error:', err)
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'The DM is momentarily distracted... (API error)' })
+    }
+  }, [sessionApiKey, myCharacter, user, campaign, partyMembers, zone, narrator, addNarratorMessage])
+
+  // NPC proximity interaction — check after player moves
+  useEffect(() => {
+    if (!zone?.npcs || inCombat) return
+    for (const npc of zone.npcs) {
+      if (!npc.position) continue
+      const dx = Math.abs(playerPos.x - npc.position.x)
+      const dy = Math.abs(playerPos.y - npc.position.y)
+      if (dx <= 2 && dy <= 2) {
+        // Only trigger once per NPC approach (use a ref to track)
+        const key = `${currentZoneId}:${npc.name}`
+        if (lastNpcTriggerRef.current === key) continue
+        lastNpcTriggerRef.current = key
+        const prompt = `You approach ${npc.name}. ${npc.personality || ''}`
+        // Trigger AI response as this NPC
+        handleChat(prompt)
+        return // only one NPC at a time
+      }
+    }
+    // Reset trigger if player moved away from all NPCs
+    if (zone.npcs.every(npc => {
+      if (!npc.position) return true
+      return Math.abs(playerPos.x - npc.position.x) > 3 || Math.abs(playerPos.y - npc.position.y) > 3
+    })) {
+      lastNpcTriggerRef.current = null
+    }
+  }, [playerPos, zone, currentZoneId, inCombat, handleChat])
 
   if (!zone) {
     return (
