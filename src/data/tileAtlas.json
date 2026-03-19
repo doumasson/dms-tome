@@ -1,0 +1,29 @@
+{
+  "tileSize": 32,
+  "sheetCols": 16,
+  "sheetPath": "/tilesets/tiles.png",
+  "emptyTile": -1,
+  "categories": {
+    "floors": {
+      "wood_planks": [1, 2, 3, 4],
+      "stone": [5, 6, 7, 8],
+      "dirt": [9, 10],
+      "grass": [11, 12, 13, 14]
+    },
+    "walls": {
+      "stone": {
+        "isolated": 17, "vertical": 18, "horizontal": 19, "cross": 20,
+        "corner_tl": 21, "corner_tr": 22, "corner_bl": 23, "corner_br": 24,
+        "t_up": 25, "t_down": 26, "t_left": 27, "t_right": 28,
+        "end_up": 29, "end_down": 30, "end_left": 31, "end_right": 32
+      }
+    },
+    "props": {
+      "table_round": 33, "table_rect": 34, "chair_l": 35, "chair_r": 36,
+      "barrel": 37, "crate": 38, "bookshelf": 39, "fireplace": 40,
+      "door_closed": 41, "door_open": 42, "stairs_up": 43, "stairs_down": 44,
+      "bar_counter": 45, "bottles": 46, "candle": 47, "rug": 48
+    }
+  },
+  "blocking": [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,37,38,39,41,45]
+}
