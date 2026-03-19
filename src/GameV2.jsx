@@ -8,6 +8,7 @@ import { broadcastZoneTransition, broadcastNarratorMessage, broadcastApiKeySync,
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
+import { handleInteract } from './lib/interactionController'
 import { findPath, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
@@ -57,6 +58,9 @@ export default function GameV2({ onLeave }) {
   const [sheetChar, setSheetChar] = useState(null)
   const [restProposal, setRestProposal] = useState(null)
   const [showApiSettings, setShowApiSettings] = useState(false)
+  const [activeNpc, setActiveNpc] = useState(null)
+  const dialogOpenRef = useRef(false)
+  const handleInteractRef = useRef(null)
   const playerPosRef = useRef(playerPos)
   playerPosRef.current = playerPos
   const lastNpcTriggerRef = useRef(null)
@@ -92,6 +96,10 @@ export default function GameV2({ onLeave }) {
       clearPendingEntryPoint()
     }
   }, [pendingEntryPoint, clearPendingEntryPoint])
+
+  useEffect(() => {
+    dialogOpenRef.current = !!activeNpc
+  }, [activeNpc])
 
   // Load API key from Supabase on mount
   useEffect(() => {
@@ -192,6 +200,17 @@ export default function GameV2({ onLeave }) {
     function handleKeyDown(e) {
       // Don't move if typing in an input
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+
+      // Block movement during NPC dialog
+      if (dialogOpenRef.current) return
+
+      // E key — interact with adjacent NPC or exit
+      if (e.key === 'e' || e.key === 'E') {
+        e.preventDefault()
+        handleInteractRef.current?.()
+        return
+      }
+
       const dir = dirs[e.key]
       if (!dir) return
       e.preventDefault()
@@ -242,6 +261,32 @@ export default function GameV2({ onLeave }) {
       setTimeout(() => setTransitioning(false), 100)
     }
   }, [transitioning, inCombat, zones, setCurrentZone])
+
+  const handleInteractFn = useCallback(() => {
+    if (isAnimating()) return
+    if (inCombat) return
+    const pos = playerPosRef.current
+    const result = handleInteract(pos, zone)
+    if (!result) return
+
+    if (result.type === 'npc') {
+      const npc = result.target
+      const busy = useStore.getState().npcBusy
+      if (busy && busy.npcName === npc.name) {
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: `${npc.name} is speaking with ${busy.playerName}.` })
+        return
+      }
+      if (npc.critical && !useStore.getState().hasStoryFlag(npc.criticalFlag)) {
+        setActiveNpc({ ...npc, isCutscene: true })
+      } else {
+        setActiveNpc({ ...npc, isCutscene: false })
+      }
+    } else if (result.type === 'exit') {
+      handleExitClick({ targetZone: result.target.targetZone, entryPoint: result.target.entryPoint })
+    }
+  }, [zone, inCombat, addNarratorMessage, handleExitClick])
+
+  handleInteractRef.current = handleInteractFn
 
   const handleTool = useCallback((tool) => {
     if (tool === 'dice') setToolPanel('dice')
@@ -365,38 +410,6 @@ export default function GameV2({ onLeave }) {
       chatInFlightRef.current = false
     }
   }, [sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage])
-
-  // Stable ref to handleChat so NPC proximity effect doesn't re-run on narrator changes
-  const handleChatRef = useRef(handleChat)
-  handleChatRef.current = handleChat
-
-  // NPC proximity interaction — check after player moves
-  // Deps: playerPos and zone only (NOT handleChat) to prevent infinite re-trigger loops
-  useEffect(() => {
-    if (!zone?.npcs || inCombat) return
-    if (chatInFlightRef.current) return // don't trigger while a chat is already in flight
-    for (const npc of zone.npcs) {
-      if (!npc.position) continue
-      const dx = Math.abs(playerPos.x - npc.position.x)
-      const dy = Math.abs(playerPos.y - npc.position.y)
-      if (dx <= 2 && dy <= 2) {
-        // Only trigger once per NPC approach
-        const key = `${currentZoneId}:${npc.name}`
-        if (lastNpcTriggerRef.current === key) continue
-        lastNpcTriggerRef.current = key
-        const prompt = `You approach ${npc.name}. ${npc.personality || ''}`
-        handleChatRef.current(prompt)
-        return // only one NPC at a time
-      }
-    }
-    // Reset trigger if player moved away from all NPCs
-    if (zone.npcs.every(npc => {
-      if (!npc.position) return true
-      return Math.abs(playerPos.x - npc.position.x) > 3 || Math.abs(playerPos.y - npc.position.y) > 3
-    })) {
-      lastNpcTriggerRef.current = null
-    }
-  }, [playerPos, zone, currentZoneId, inCombat])
 
   // Gate: no API key = no game
   if (apiKeyLoaded && !sessionApiKey) {
