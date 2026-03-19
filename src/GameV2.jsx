@@ -309,13 +309,18 @@ export default function GameV2({ onLeave }) {
     return () => clearTimeout(timer)
   }, [encounter.currentTurn, encounter.phase, inCombat, runEnemyTurn, sessionApiKey, nextEncounterTurn])
 
+  const chatInFlightRef = useRef(false)
+
   const handleChat = useCallback(async (text) => {
     if (!text.trim()) return
+    if (chatInFlightRef.current) return // prevent re-entrant calls (NPC proximity loop)
     const apiKey = sessionApiKey
     if (!apiKey) {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'No API key set. Go to Settings to add your Claude API key.' })
       return
     }
+
+    chatInFlightRef.current = true
 
     // Add player message
     const playerMsg = { role: 'player', speaker: myCharacter?.name || user?.email || 'Player', text: text.trim() }
@@ -323,8 +328,8 @@ export default function GameV2({ onLeave }) {
     broadcastNarratorMessage(playerMsg)
 
     try {
-      // Build conversation for AI
-      const history = narrator?.history || []
+      // Build conversation for AI — read narrator from store directly to avoid stale closure
+      const history = useStore.getState().narrator?.history || []
       const recentMessages = history.slice(-14).map(m => ({
         role: m.role === 'dm' ? 'assistant' : 'user',
         content: m.text,
@@ -356,24 +361,31 @@ export default function GameV2({ onLeave }) {
     } catch (err) {
       console.error('[GameV2] Narrator error:', err)
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'The DM is momentarily distracted... (API error)' })
+    } finally {
+      chatInFlightRef.current = false
     }
-  }, [sessionApiKey, myCharacter, user, campaign, partyMembers, zone, narrator, addNarratorMessage])
+  }, [sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage])
+
+  // Stable ref to handleChat so NPC proximity effect doesn't re-run on narrator changes
+  const handleChatRef = useRef(handleChat)
+  handleChatRef.current = handleChat
 
   // NPC proximity interaction — check after player moves
+  // Deps: playerPos and zone only (NOT handleChat) to prevent infinite re-trigger loops
   useEffect(() => {
     if (!zone?.npcs || inCombat) return
+    if (chatInFlightRef.current) return // don't trigger while a chat is already in flight
     for (const npc of zone.npcs) {
       if (!npc.position) continue
       const dx = Math.abs(playerPos.x - npc.position.x)
       const dy = Math.abs(playerPos.y - npc.position.y)
       if (dx <= 2 && dy <= 2) {
-        // Only trigger once per NPC approach (use a ref to track)
+        // Only trigger once per NPC approach
         const key = `${currentZoneId}:${npc.name}`
         if (lastNpcTriggerRef.current === key) continue
         lastNpcTriggerRef.current = key
         const prompt = `You approach ${npc.name}. ${npc.personality || ''}`
-        // Trigger AI response as this NPC
-        handleChat(prompt)
+        handleChatRef.current(prompt)
         return // only one NPC at a time
       }
     }
@@ -384,7 +396,7 @@ export default function GameV2({ onLeave }) {
     })) {
       lastNpcTriggerRef.current = null
     }
-  }, [playerPos, zone, currentZoneId, inCombat, handleChat])
+  }, [playerPos, zone, currentZoneId, inCombat])
 
   // Gate: no API key = no game
   if (apiKeyLoaded && !sessionApiKey) {
@@ -440,7 +452,7 @@ export default function GameV2({ onLeave }) {
                   attacks: [{ name: 'Shortbow', bonus: '+4', damage: '1d6+2' }],
                   position: { x: 8, y: 3 }, speed: 30,
                   stats: { str: 8, dex: 14, con: 10, int: 10, wis: 8, cha: 8 } },
-              ], [char])
+              ], [char], true) // autoRollInitiative = true
             } catch (err) {
               console.error('[GameV2] Test combat failed:', err)
               addNarratorMessage({ role: 'dm', speaker: 'System', text: `Combat test failed: ${err.message}` })
