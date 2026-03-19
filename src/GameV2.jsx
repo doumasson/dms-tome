@@ -4,7 +4,9 @@ import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
 import demoWorld from './data/demoWorld.json'
 import { buildWorldFromAiOutput } from './lib/campaignGenerator'
-import { broadcastZoneTransition, broadcastNarratorMessage } from './lib/liveChannel'
+import { broadcastZoneTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey } from './lib/liveChannel'
+import ApiKeyGate from './components/ApiKeyGate'
+import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
 import { findPath, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
@@ -24,7 +26,7 @@ const CLASS_COLORS = {
   Cleric: 0x44aa66, Druid: 0x558833, Bard: 0xcc7799,
 }
 
-export default function GameV2() {
+export default function GameV2({ onLeave }) {
   const currentZoneId = useStore(s => s.currentZoneId)
   const zones = useStore(s => s.campaign.zones)
   const loadZoneWorld = useStore(s => s.loadZoneWorld)
@@ -48,6 +50,7 @@ export default function GameV2() {
   const clearPendingEntryPoint = useStore(s => s.clearPendingEntryPoint)
 
   const pixiRef = useRef(null)
+  const [apiKeyLoaded, setApiKeyLoaded] = useState(false)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
   const [transitioning, setTransitioning] = useState(false)
   const [toolPanel, setToolPanel] = useState(null)
@@ -89,6 +92,35 @@ export default function GameV2() {
       clearPendingEntryPoint()
     }
   }, [pendingEntryPoint, clearPendingEntryPoint])
+
+  // Load API key from Supabase on mount
+  useEffect(() => {
+    const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
+    if (!campaignId || !user?.id) {
+      // No campaign context (e.g. ?v2 testing) — check sessionApiKey
+      if (sessionApiKey) setApiKeyLoaded(true)
+      return
+    }
+    if (isDM) {
+      loadApiKeyFromSupabase(campaignId, user.id).then(key => {
+        if (key) {
+          useStore.getState().setSessionApiKey(key)
+          broadcastApiKeySync(key)
+        }
+        setApiKeyLoaded(true)
+      }).catch(() => setApiKeyLoaded(true))
+    } else {
+      // Non-DM: request key from DM
+      broadcastRequestApiKey()
+      // Give DM 2s to respond, then show gate
+      const timer = setTimeout(() => setApiKeyLoaded(true), 2000)
+      // If key arrives via broadcast before timeout, mark loaded
+      const unsub = useStore.subscribe((state) => {
+        if (state.sessionApiKey) { clearTimeout(timer); setApiKeyLoaded(true) }
+      })
+      return () => { clearTimeout(timer); unsub() }
+    }
+  }, [campaign?.id, user?.id, isDM])
 
   const zone = zones?.[currentZoneId] || null
 
@@ -246,7 +278,7 @@ export default function GameV2() {
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: logEntry })
 
       // Fire-and-forget narration
-      const apiKey = sessionApiKey || localStorage.getItem('claude_api_key')
+      const apiKey = sessionApiKey
       if (apiKey) {
         narrateCombatAction(active.name, 'Attack', target.name, resultDesc, apiKey)
       }
@@ -265,7 +297,7 @@ export default function GameV2() {
     const active = encounter.combatants?.[encounter.currentTurn]
     if (!active || !active.isEnemy) return
 
-    const apiKey = sessionApiKey || localStorage.getItem('claude_api_key')
+    const apiKey = sessionApiKey
     const timer = setTimeout(() => {
       if (apiKey) {
         runEnemyTurn(apiKey)
@@ -280,7 +312,7 @@ export default function GameV2() {
 
   const handleChat = useCallback(async (text) => {
     if (!text.trim()) return
-    const apiKey = sessionApiKey || localStorage.getItem('claude_api_key')
+    const apiKey = sessionApiKey
     if (!apiKey) {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'No API key set. Go to Settings to add your Claude API key.' })
       return
@@ -354,6 +386,18 @@ export default function GameV2() {
       lastNpcTriggerRef.current = null
     }
   }, [playerPos, zone, currentZoneId, inCombat, handleChat])
+
+  // Gate: no API key = no game
+  if (apiKeyLoaded && !sessionApiKey) {
+    const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
+    return (
+      <ApiKeyGate
+        campaignId={campaignId}
+        userId={user?.id}
+        onKeyReady={() => setApiKeyLoaded(true)}
+      />
+    )
+  }
 
   if (!zone) {
     return (

@@ -87,6 +87,13 @@ const useStore = create((set, get) => ({
     set({ activeCampaign: campaign, isDM, dmMode: false });
   },
   clearActiveCampaign: () => set({ activeCampaign: null, isDM: false, dmMode: false, myCharacter: null, partyMembers: [] }),
+  resetCampaign: () => set({
+    campaign: {}, activeCampaign: null, currentZoneId: null, zones: null,
+    visitedZones: new Set(), zoneTokenPositions: {}, pendingEntryPoint: null,
+    encounter: { phase: 'idle', combatants: [], currentTurn: 0, round: 1, log: [], activeEffects: [] },
+    partyMembers: [], narrator: { history: [], open: false },
+    sessionApiKey: null, isDM: false, dmMode: false, myCharacter: null,
+  }),
   setIsDM: (value) => set({ isDM: value, dmMode: value }),
 
   // === DM Mode ===

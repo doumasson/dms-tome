@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from './lib/supabase';
-import { setLiveChannel } from './lib/liveChannel';
+import { setLiveChannel, broadcastApiKeySync } from './lib/liveChannel';
 import useStore from './store/useStore';
 import LoginPage from './components/LoginPage';
 import CampaignSelect from './components/CampaignSelect';
@@ -170,6 +170,14 @@ export default function App() {
     // DM broadcasts their API key → all players cache it for AI narrator use
     ch.on('broadcast', { event: 'api-key-sync' }, ({ payload }) => {
       if (payload.apiKey) useStore.getState().setSessionApiKey(payload.apiKey);
+    });
+
+    // Non-DM player requests API key → DM re-broadcasts it
+    ch.on('broadcast', { event: 'request-api-key' }, () => {
+      const state = useStore.getState()
+      if (state.isDM && state.sessionApiKey) {
+        broadcastApiKeySync(state.sessionApiKey)
+      }
     });
 
     // Fog of war sync
@@ -415,7 +423,7 @@ export default function App() {
 
   function handleLeaveCampaign() {
     localStorage.removeItem('activeCampaignId');
-    clearActiveCampaign();
+    useStore.getState().resetCampaign();
     setAppView('select');
   }
 
@@ -567,7 +575,7 @@ export default function App() {
 
   // V2: fullscreen game — no header, no V1 wrapper
   if (localStorage.getItem('useV2') === '1') {
-    return <GameV2 />;
+    return <GameV2 onLeave={handleLeaveCampaign} />;
   }
 
   return (

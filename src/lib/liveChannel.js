@@ -31,6 +31,11 @@ export function broadcastApiKeySync(apiKey) {
   _channel?.send({ type: 'broadcast', event: 'api-key-sync', payload: { apiKey } });
 }
 
+// Non-DM player requests the API key from DM on refresh/rejoin
+export function broadcastRequestApiKey() {
+  _channel?.send({ type: 'broadcast', event: 'request-api-key', payload: {} })
+}
+
 // Scene token position sync (free movement outside combat)
 export function broadcastSceneTokenMove(memberId, x, y, sceneKey) {
   _channel?.send({ type: 'broadcast', event: 'scene-token-move', payload: { memberId, x, y, sceneKey } });
