@@ -14,6 +14,7 @@ import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
 import { playZoneTransition } from './engine/ZoneTransition'
+import ChatBubble from './components/ChatBubble'
 import DiceTray from './components/DiceTray'
 import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
 import RestModal from './components/RestModal'
@@ -60,6 +61,7 @@ export default function GameV2({ onLeave }) {
   const [restProposal, setRestProposal] = useState(null)
   const [showApiSettings, setShowApiSettings] = useState(false)
   const [activeNpc, setActiveNpc] = useState(null)
+  const [worldTransform, setWorldTransform] = useState(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
   const playerPosRef = useRef(playerPos)
@@ -101,6 +103,17 @@ export default function GameV2({ onLeave }) {
   useEffect(() => {
     dialogOpenRef.current = !!activeNpc
   }, [activeNpc])
+
+  // Poll world transform from PixiApp to position chat bubbles
+  useEffect(() => {
+    function updateTransform() {
+      const t = pixiRef.current?.getWorldTransform?.()
+      if (t) setWorldTransform(t)
+    }
+    updateTransform()
+    const interval = setInterval(updateTransform, 200)
+    return () => clearInterval(interval)
+  }, [zone])
 
   // Load API key from Supabase on mount
   useEffect(() => {
@@ -171,6 +184,17 @@ export default function GameV2({ onLeave }) {
     }
     return t
   }, [playerPos, zone, myCharacter])
+
+  // Nearby NPCs for chat bubbles — within 3 tiles, outside combat and dialog
+  const nearbyNpcs = useMemo(() => {
+    if (!zone?.npcs || inCombat || activeNpc) return []
+    return zone.npcs.filter(npc => {
+      if (!npc.position) return false
+      const dx = Math.abs(playerPos.x - npc.position.x)
+      const dy = Math.abs(playerPos.y - npc.position.y)
+      return dx <= 3 && dy <= 3
+    })
+  }, [playerPos, zone, inCombat, activeNpc])
 
   // Click-to-move: pathfind and animate walk
   // Only update React state at the END — PixiJS handles the visual walk directly
@@ -449,6 +473,15 @@ export default function GameV2({ onLeave }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
       <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} onNpcClick={handleNpcClick} inCombat={inCombat} />
+      {/* NPC Chat Bubbles */}
+      {nearbyNpcs.map(npc => (
+        <ChatBubble
+          key={npc.name}
+          npc={npc}
+          tileSize={32}
+          worldTransform={worldTransform}
+        />
+      ))}
       <GameHUD
         zone={zone}
         onTool={handleTool}
