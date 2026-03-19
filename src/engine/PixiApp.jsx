@@ -192,6 +192,14 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     world.y = (playHeight - mapHeight * scale) / 2 + padding / 2
   }
 
+  // Fog of war — ensure fog container is positioned correctly (area mode only)
+  // Actual fog tile rendering will be driven by GameV2 passing fogData when area zones load
+  useEffect(() => {
+    if (!ready || !cameraRef.current || !stageLayersRef.current.fog) return
+    // Fog container exists and is in the right z-order above tokens.
+    // renderFog() will be called from the ticker or a callback once fog data is computed.
+  }, [ready])
+
   // Render tokens — skip if animation is playing (PixiJS moves sprites directly)
   useEffect(() => {
     if (!ready || !tokens?.length || !stageLayersRef.current.tokens) return

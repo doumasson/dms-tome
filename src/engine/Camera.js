@@ -51,6 +51,14 @@ class Camera {
     this._clampPosition();
   }
 
+  /**
+   * Lock camera within combat encounter bounds (or null to unlock).
+   * @param {{ x: number, y: number, width: number, height: number } | null} bounds — tile-space rect
+   */
+  setCombatBounds(bounds) {
+    this._combatBounds = bounds;
+  }
+
   // ---------------------------------------------------------------------------
   // Zoom
   // ---------------------------------------------------------------------------
@@ -97,6 +105,19 @@ class Camera {
       const maxY = Math.max(0, this.areaHeight - this.viewportHeight / this.zoom);
       this.x = Math.min(maxX, Math.max(0, this.x));
       this.y = Math.min(maxY, Math.max(0, this.y));
+    }
+
+    // Combat bounds — restrict camera to encounter area with buffer
+    if (this._combatBounds) {
+      const cb = this._combatBounds;
+      const tileSize = 200;
+      const buffer = 5 * tileSize;
+      const minX = cb.x * tileSize - buffer;
+      const maxX = (cb.x + cb.width) * tileSize + buffer - this.viewportWidth / this.zoom;
+      const minY = cb.y * tileSize - buffer;
+      const maxY = (cb.y + cb.height) * tileSize + buffer - this.viewportHeight / this.zoom;
+      this.x = Math.max(minX, Math.min(maxX, this.x));
+      this.y = Math.max(minY, Math.min(maxY, this.y));
     }
   }
 

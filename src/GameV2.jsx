@@ -13,6 +13,9 @@ import { findPathLegacy as findPath, buildWalkabilityGrid } from './lib/pathfind
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import Camera from './engine/Camera'
+import { buildFogTileStates, renderFog, updateExplored } from './engine/FogOfWar'
+import { computeVision, getCharacterVisionRange } from './lib/visionCalculator'
+import { RoofManager } from './engine/RoofLayer'
 import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
 import { playZoneTransition } from './engine/ZoneTransition'
 import ChatBubble from './components/ChatBubble'
@@ -137,6 +140,53 @@ export default function GameV2({ onLeave }) {
     canvas.addEventListener('wheel', onWheel, { passive: false })
     return () => canvas.removeEventListener('wheel', onWheel)
   }, [useAreaCamera])
+
+  // --- Fog of War refs (area camera mode only) ---
+  const exploredRef = useRef(new Set())
+  const fogDirtyRef = useRef(true)
+
+  // Mark fog dirty when tokens move in area mode
+  useEffect(() => {
+    if (!cameraRef.current || !pixiRef.current) return
+    fogDirtyRef.current = true
+  }, [playerPos, currentZoneId])
+
+  // --- Roof-lift manager (area camera mode only) ---
+  const roofManagerRef = useRef(new RoofManager())
+
+  // Update roof reveal states when tokens move
+  useEffect(() => {
+    if (!zone?.useCamera) return
+    const rm = roofManagerRef.current
+    const pos = playerPosRef.current
+    if (!pos) return
+    const positions = [pos] // party positions — expand when multiplayer token sync exists
+    const changes = rm.updateRevealStates(positions)
+    // Changes are tracked internally by RoofManager; rendering will read state when area mode renders
+  }, [playerPos, currentZoneId, zone])
+
+  // --- Combat camera lock (area camera mode only) ---
+  useEffect(() => {
+    const cam = cameraRef.current
+    if (!cam) return
+    if (inCombat && encounter.combatants?.length) {
+      // Compute tile-space bounds from combatant positions
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+      for (const c of encounter.combatants) {
+        if (c.position) {
+          minX = Math.min(minX, c.position.x)
+          minY = Math.min(minY, c.position.y)
+          maxX = Math.max(maxX, c.position.x)
+          maxY = Math.max(maxY, c.position.y)
+        }
+      }
+      if (minX !== Infinity) {
+        cam.setCombatBounds({ x: minX - 2, y: minY - 2, width: maxX - minX + 4, height: maxY - minY + 4 })
+      }
+    } else {
+      cam.setCombatBounds(null)
+    }
+  }, [inCombat, encounter.combatants])
 
   // Load zone world on mount — use campaign zones if available, else demo world
   useEffect(() => {
