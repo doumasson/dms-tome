@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import * as PIXI from 'pixi.js'
-import { loadTileAtlas } from './tileAtlas'
+import { loadTileAtlas, getTileSize } from './tileAtlas'
 import { renderTilemap, clearTilemap } from './TilemapRenderer'
 import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens } from './TokenLayer'
@@ -10,6 +10,7 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
   const stageLayersRef = useRef({})
+  const worldRef = useRef(null)
   const onTileClickRef = useRef(onTileClick)
   onTileClickRef.current = onTileClick
   const [ready, setReady] = useState(false)
@@ -24,7 +25,7 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
       await app.init({
         resizeTo: containerRef.current,
         background: 0x08060c,
-        antialias: false,
+        antialias: true,
         resolution: window.devicePixelRatio || 1,
         autoDensity: true,
       })
@@ -32,6 +33,11 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
       if (destroyed) return
 
       containerRef.current.appendChild(app.canvas)
+
+      // World container — all tile layers go inside, we scale this to fit viewport
+      const world = new PIXI.Container()
+      worldRef.current = world
+      app.stage.addChild(world)
 
       const layers = {
         floor: new PIXI.Container(),
@@ -41,24 +47,28 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
         tokens: new PIXI.Container(),
         exits: new PIXI.Container(),
       }
-      Object.values(layers).forEach(l => app.stage.addChild(l))
+      Object.values(layers).forEach(l => world.addChild(l))
       stageLayersRef.current = layers
 
       await loadTileAtlas()
       if (destroyed) return
 
+      // Click handler — convert screen coords to tile coords accounting for world scale/offset
       app.stage.eventMode = 'static'
       app.stage.hitArea = app.screen
       app.stage.on('pointerdown', (e) => {
-        if (!onTileClickRef.current) return
+        if (!onTileClickRef.current || !worldRef.current) return
         const pos = e.global
-        const tileSize = 32
-        const tx = Math.floor(pos.x / tileSize)
-        const ty = Math.floor(pos.y / tileSize)
+        const w = worldRef.current
+        const tileSize = getTileSize()
+        // Convert screen position to world position
+        const wx = (pos.x - w.x) / w.scale.x
+        const wy = (pos.y - w.y) / w.scale.y
+        const tx = Math.floor(wx / tileSize)
+        const ty = Math.floor(wy / tileSize)
         onTileClickRef.current({ x: tx, y: ty })
       })
 
-      // Signal that init + atlas load is complete
       setReady(true)
     }
 
@@ -75,10 +85,11 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     }
   }, [])
 
-  // Render zone tilemap AFTER atlas is loaded
+  // Render zone tilemap and scale to fit viewport
   useEffect(() => {
-    if (!ready || !zone || !stageLayersRef.current.floor) return
+    if (!ready || !zone || !stageLayersRef.current.floor || !worldRef.current) return
     const { floor, walls, props, grid } = stageLayersRef.current
+
     clearTilemap(floor)
     clearTilemap(walls)
     clearTilemap(props)
@@ -90,7 +101,41 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     if (zone.exits?.length) {
       renderExits(stageLayersRef.current.exits, zone.exits)
     }
+
+    // Scale the world to fit the viewport, centered
+    scaleWorldToFit(zone)
   }, [zone, ready])
+
+  // Re-scale on window resize
+  useEffect(() => {
+    if (!ready || !zone) return
+    const handleResize = () => scaleWorldToFit(zone)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [ready, zone])
+
+  function scaleWorldToFit(z) {
+    const world = worldRef.current
+    const container = containerRef.current
+    if (!world || !container) return
+
+    const tileSize = getTileSize()
+    const mapWidth = z.width * tileSize
+    const mapHeight = z.height * tileSize
+    const viewWidth = container.clientWidth
+    const viewHeight = container.clientHeight
+
+    // Scale to fit with some padding
+    const padding = 20
+    const scaleX = (viewWidth - padding * 2) / mapWidth
+    const scaleY = (viewHeight - padding * 2) / mapHeight
+    const scale = Math.min(scaleX, scaleY)
+
+    world.scale.set(scale)
+    // Center the map in the viewport
+    world.x = (viewWidth - mapWidth * scale) / 2
+    world.y = (viewHeight - mapHeight * scale) / 2
+  }
 
   // Render tokens
   useEffect(() => {
