@@ -1,0 +1,189 @@
+/* @import MUST be first in the file */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;700;900&display=swap');
+
+/* === V2 HUD Palette === */
+.hud-v2 {
+  --gold: #c9a84c;
+  --gold-bright: #eedd88;
+  --gold-muted: #8a7a52;
+  --bg-dark: #08060c;
+  --bg-bar: #14101c;
+  --bg-panel: rgba(10, 8, 14, 0.95);
+  --border-gold: rgba(201, 168, 76, 0.18);
+  --text-primary: #bba878;
+  --text-muted: #5a4a30;
+  --text-log: #8a7a60;
+  --danger: #cc3333;
+  --font-display: 'Cinzel Decorative', 'Cinzel', serif;
+  --font-heading: 'Cinzel', serif;
+  --font-log: 'Consolas', 'Monaco', monospace;
+}
+
+/* Bottom bar base */
+.hud-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 134px;
+  z-index: 20;
+  background: linear-gradient(180deg, #14101c 0%, #0a0810 100%);
+  display: flex;
+  padding: 14px 14px 10px;
+  gap: 8px;
+}
+
+/* Session log panel */
+.hud-log-panel {
+  flex: 1;
+  position: relative;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-gold);
+  box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.hud-log-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+  padding: 0 10px;
+}
+
+.hud-log-tab {
+  padding: 5px 18px;
+  font-size: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #4a3a28;
+  border-bottom: 2px solid transparent;
+}
+
+.hud-log-tab.active {
+  color: var(--gold-bright);
+  border-bottom-color: var(--gold);
+}
+
+.hud-log-entries {
+  padding: 5px 12px;
+  font-size: 11px;
+  line-height: 1.65;
+  overflow-y: auto;
+  max-height: 82px;
+  font-family: var(--font-log);
+}
+
+.hud-log-entry {
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.04);
+}
+
+.hud-log-time { color: var(--text-muted); font-size: 9px; }
+.hud-log-action { color: var(--text-log); }
+.hud-log-location { color: #bba060; }
+.hud-log-damage { color: var(--danger); }
+.hud-log-hit { color: #228844; font-weight: 700; }
+
+/* Tool buttons */
+.hud-tool-btn {
+  width: 40px;
+  height: 38px;
+  background: linear-gradient(180deg, #18141e, #0e0c14);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 0;
+  padding: 0;
+  min-height: 0;
+}
+
+/* Chat input */
+.hud-chat-input {
+  flex: 1;
+  background: var(--bg-panel);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  border-radius: 0;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hud-chat-input::placeholder { color: #6a5a40; }
+
+.hud-send-btn {
+  width: 36px;
+  background: linear-gradient(135deg, #d4b85c, #9a7a30);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  color: #08060c;
+  font-weight: 900;
+  border-radius: 0;
+  padding: 0;
+  min-height: 0;
+}
+
+/* Zone label */
+.hud-zone-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  background: rgba(8, 6, 12, 0.92);
+  padding: 10px 28px;
+}
+
+.hud-zone-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--gold-bright);
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(201, 168, 76, 0.3);
+}
+
+.hud-zone-sub {
+  font-size: 9px;
+  color: #8a7a50;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* Narrator float */
+.hud-narrator {
+  position: absolute;
+  z-index: 10;
+  background: rgba(8, 6, 12, 0.92);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  padding: 10px 28px;
+}
+
+.hud-narrator-text {
+  font-size: 12px;
+  color: #bba878;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.hud-narrator-name {
+  color: var(--gold-bright);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 1px;
+  font-family: var(--font-heading);
+}
