@@ -42,7 +42,7 @@ function cleanJsonText(str) {
 }
 
 function generatePrompt(fields) {
-  return `You are a D&D 5e campaign designer. Create a complete campaign outline with the following specifications:
+  return `You are a D&D 5e campaign designer. Create a complete campaign as a zone-based world graph with the following specifications:
 
 Campaign Name: ${fields.name}
 Tone: ${fields.tone}
@@ -57,65 +57,82 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
 
 {
   "title": "${fields.name}",
-  "scenes": [
+  "startZone": "zone-id-of-starting-location",
+  "questObjectives": [
+    { "id": "q1", "name": "Main quest objective description", "status": "active" }
+  ],
+  "zones": [
     {
-      "id": "scene-01",
-      "title": "Scene title",
-      "text": "Narrative description shown to players. Set the scene vividly.",
-      "dmNotes": "Secret DM information — NPC motivations, hidden clues, what happens if players do X.",
-      "choices": ["Option A players can pursue", "Option B players can pursue"],
-      "isEncounter": false,
-      "enemies": []
+      "id": "tavern-main",
+      "name": "The Rusty Flagon",
+      "type": "tavern_bar",
+      "tags": ["safe", "indoor"],
+      "npcs": [
+        { "name": "Barkeep Hilda", "role": "bartender", "personality": "gruff but kind, knows local rumors", "questRelevant": true }
+      ],
+      "exits": [
+        { "direction": "south", "targetZone": "town-square", "label": "Town Square" }
+      ],
+      "lighting": "warm",
+      "ambience": "tavern",
+      "dmNotes": "Secret DM info — hidden clues, what happens if players investigate."
     },
     {
-      "id": "scene-02",
-      "title": "Combat Scene title",
-      "text": "Narrative description of the encounter location.",
-      "dmNotes": "Tactical notes for the DM — terrain, monster tactics, escape routes.",
-      "choices": ["Fight", "Flee", "Negotiate"],
-      "isEncounter": true,
-      "enemies": [
-        {
-          "name": "Enemy Name",
-          "count": 2,
-          "hp": 15,
-          "ac": 13,
-          "speed": 30,
-          "stats": { "str": 12, "dex": 12, "con": 12, "int": 8, "wis": 10, "cha": 8 },
-          "attacks": [
-            { "name": "Weapon Name", "bonus": "+4", "damage": "1d8+2" }
-          ],
-          "cr": "1/2"
-        }
-      ]
-    }
-  ],
-  "characters": [
-    {
-      "id": "char-01",
-      "name": "NPC Name",
-      "stats": { "str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10 },
-      "skills": ["Perception", "Stealth"],
-      "weapons": [
-        { "name": "Longsword", "attackBonus": "+5", "damage": "1d8+3" }
+      "id": "dungeon-entrance",
+      "name": "Goblin Cave",
+      "type": "cave",
+      "tags": ["dangerous", "underground"],
+      "npcs": [],
+      "exits": [
+        { "direction": "south", "targetZone": "forest-path", "label": "Forest Path" },
+        { "direction": "east", "targetZone": "dungeon-throne", "label": "Deeper In..." }
       ],
-      "ac": 14,
-      "maxHp": 20,
-      "currentHp": 20,
-      "speed": 30,
-      "spellSlots": null
+      "lighting": "dark",
+      "ambience": "cave",
+      "dmNotes": "Tactical notes for combat encounters.",
+      "encounter": {
+        "enemies": [
+          {
+            "name": "Goblin",
+            "hp": 7, "ac": 15, "speed": 30,
+            "stats": { "str": 8, "dex": 14, "con": 10, "int": 10, "wis": 8, "cha": 8 },
+            "attacks": [{ "name": "Scimitar", "bonus": "+4", "damage": "1d6+2" }],
+            "cr": "1/4"
+          }
+        ]
+      }
     }
   ]
 }
 
+AVAILABLE ZONE TYPES (you MUST use only these):
+- tavern_bar — indoor tavern/bar room
+- tavern_kitchen — back kitchen of a tavern
+- town_square — outdoor town center
+- dungeon_room — stone dungeon chamber
+- dungeon_corridor — long narrow stone hallway
+- forest_clearing — outdoor wooded area
+- cave — underground cave chamber
+- throne_room — large boss/throne chamber
+
+NPC ROLES (used to place NPCs at predefined spawn points in each zone type):
+- tavern_bar: bartender, patron_1, patron_2
+- town_square: quest_giver, merchant, guard
+- dungeon_room: guard, prisoner, chest
+- dungeon_corridor: guard, ambush
+- forest_clearing: quest_giver, merchant, guard
+- cave: creature, nest
+- throne_room: boss, guard, advisor
+
 Requirements:
-- Include 6–10 scenes total; at least 3 should be isEncounter: true with real enemies
-- Non-combat scenes have isEncounter: false and enemies: []
-- Each combat scene should have 1–3 enemy groups appropriate for ${fields.level}
-- Enemy stats (hp, ac, attack bonus, damage) must match the challenge rating
-- Include 2–4 notable NPCs in the characters array (allies, villains, merchants)
-- For spellcasters, set spellSlots to: {"1st": 4, "2nd": 2} etc.
-- The villain (${fields.villain}) should appear in at least one combat encounter
+- Create 5–10 zones forming a connected graph (every zone reachable via exits)
+- Exits MUST be bidirectional: if zone A exits to zone B, zone B must exit back to zone A
+- At least 3 zones should have "encounter" with enemies appropriate for level ${fields.level}
+- Enemy stats must match the challenge rating (use real 5e SRD monster stats)
+- Include 3–6 NPCs spread across safe zones with distinct personalities
+- The villain (${fields.villain}) should appear in a combat zone
+- NPC "role" should match available roles for the zone type when possible
+- Set questRelevant: true on NPCs that advance the story
 - Tone: ${fields.tone}
 
 OUTPUT INSTRUCTIONS:
@@ -134,8 +151,10 @@ function validateCampaignJson(text) {
   try {
     const data = JSON.parse(cleaned);
     if (!data.title) throw new Error('Missing "title" field');
-    if (!Array.isArray(data.scenes)) throw new Error('Missing "scenes" array');
-    if (data.scenes.length === 0) throw new Error('"scenes" array is empty');
+    // Accept both V1 (scenes array) and V2 (zones array/object)
+    const hasScenes = Array.isArray(data.scenes) && data.scenes.length > 0;
+    const hasZones = (Array.isArray(data.zones) && data.zones.length > 0) || (data.zones && typeof data.zones === 'object' && Object.keys(data.zones).length > 0);
+    if (!hasScenes && !hasZones) throw new Error('Missing "zones" or "scenes" — campaign has no content');
     return { ok: true, data };
   } catch (e) {
     const hint = e instanceof SyntaxError

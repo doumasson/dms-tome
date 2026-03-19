@@ -56,12 +56,16 @@ export default function GameV2() {
   playerPosRef.current = playerPos
   const lastNpcTriggerRef = useRef(null)
 
-  // Load demo world on mount if no zones exist
+  // Load zone world on mount — use campaign zones if available, else demo world
   useEffect(() => {
     if (!zones) {
       try {
-        const world = buildWorldFromAiOutput(demoWorld)
-        console.log('[GameV2] Built world:', world.title, Object.keys(world.zones).length, 'zones')
+        // Check if campaign has zone data from AI generation
+        const campaignData = campaign
+        const hasZoneData = campaignData?.zones && (Array.isArray(campaignData.zones) ? campaignData.zones.length > 0 : Object.keys(campaignData.zones).length > 0)
+        const source = hasZoneData ? campaignData : demoWorld
+        const world = buildWorldFromAiOutput(source)
+        console.log('[GameV2] Built world:', world.title, Object.keys(world.zones).length, 'zones', hasZoneData ? '(from campaign)' : '(demo)')
         loadZoneWorld(world)
         const startZone = world.zones[world.startZone]
         if (startZone) {
@@ -72,7 +76,7 @@ export default function GameV2() {
         console.error('[GameV2] Failed to build world:', e)
       }
     }
-  }, [zones, loadZoneWorld])
+  }, [zones, loadZoneWorld, campaign])
 
   // Handle zone transitions received from multiplayer broadcast (non-DM clients)
   useEffect(() => {
