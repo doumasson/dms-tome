@@ -89,8 +89,7 @@ const useStore = create((set, get) => ({
   },
   clearActiveCampaign: () => set({ activeCampaign: null, isDM: false, dmMode: false, myCharacter: null, partyMembers: [] }),
   resetCampaign: () => set({
-    campaign: {}, activeCampaign: null, currentZoneId: null, zones: null,
-    visitedZones: new Set(), zoneTokenPositions: {}, pendingEntryPoint: null,
+    campaign: {}, activeCampaign: null,
     encounter: { phase: 'idle', combatants: [], currentTurn: 0, round: 1, log: [], activeEffects: [] },
     partyMembers: [], narrator: { history: [], open: false },
     sessionApiKey: null, isDM: false, dmMode: false, myCharacter: null,
@@ -208,7 +207,6 @@ const useStore = create((set, get) => ({
     currentSceneIndex: 0,
     notes: { dm: '', shared: '' },
     savedEncounters: [],
-    zones: null,
     questObjectives: [],
   },
   loadCampaign: (data) =>
@@ -1585,43 +1583,10 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
   clearNarratorHistory: () =>
     set((state) => ({ narrator: { ...state.narrator, history: [] } })),
 
-  // ── Zone Graph (V2) ──────────────────────────────────────────────────
-  currentZoneId: null,
-  visitedZones: new Set(),
-  zoneTokenPositions: {},
-
-  pendingEntryPoint: null,
-  setCurrentZone: (zoneId, entryPoint) => set(state => ({
-    currentZoneId: zoneId,
-    visitedZones: new Set([...state.visitedZones, zoneId]),
-    pendingEntryPoint: entryPoint || null,
-  })),
-  clearPendingEntryPoint: () => set({ pendingEntryPoint: null }),
-
-  setZoneTokenPosition: (zoneId, memberId, pos) => set(state => ({
-    zoneTokenPositions: {
-      ...state.zoneTokenPositions,
-      [zoneId]: {
-        ...(state.zoneTokenPositions[zoneId] || {}),
-        [memberId]: pos,
-      },
-    },
-  })),
-
-  loadZoneWorld: (world) => set(state => ({
-    currentZoneId: world.startZone,
-    visitedZones: new Set([world.startZone]),
-    campaign: {
-      ...state.campaign,
-      title: world.title || state.campaign.title,
-      zones: world.zones,
-      questObjectives: world.questObjectives || [],
-    },
-  })),
-
   // ── Area State (V2 procedural maps) ────────────────────────────────
   currentAreaId: null,
-  areas: {},                    // { areaId: areaMetadata }
+  areas: {},                    // { areaId: builtArea }
+  areaBriefs: {},               // { areaId: brief } — unbuilt area briefs
   areaLayers: null,             // decompressed layers for current area
   areaCollision: null,          // Uint8Array collision grid
   areaTilePalette: [],          // string tile ID lookup
@@ -1668,6 +1633,37 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
   loadArea: (areaId, areaData) => set(state => ({
     areas: { ...state.areas, [areaId]: areaData },
   })),
+
+  setAreaBriefs: (briefs) => set({ areaBriefs: briefs }),
+
+  loadAreaWorld: (world) => set(state => ({
+    currentAreaId: world.startArea,
+    areas: world.areas || {},
+    areaBriefs: world.areaBriefs || {},
+    campaign: {
+      ...state.campaign,
+      title: world.title || state.campaign.title,
+      questObjectives: world.questObjectives || [],
+    },
+  })),
+
+  buildAndLoadArea: (areaId, builtArea) => set(state => {
+    const newAreas = { ...state.areas, [areaId]: builtArea }
+    const newBriefs = { ...state.areaBriefs }
+    delete newBriefs[areaId]
+    return { areas: newAreas, areaBriefs: newBriefs }
+  }),
+
+  activateArea: (areaId) => set(state => {
+    const area = state.areas[areaId]
+    if (!area) return {}
+    return {
+      currentAreaId: areaId,
+      areaLayers: area.layers,
+      areaCollision: area.collision || null,
+      areaTilePalette: area.palette || [],
+    }
+  }),
 
   // === Story Progression ===
   ...createStorySlice(set, get),
