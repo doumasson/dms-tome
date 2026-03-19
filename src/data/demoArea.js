@@ -1,0 +1,39 @@
+import { buildAreaFromBrief } from '../lib/areaBuilder.js'
+
+/**
+ * Demo area brief — a small village with tavern, house, and clearing.
+ * This replaces demoWorld.json for the default game experience.
+ */
+const DEMO_BRIEF = {
+  id: 'area-village',
+  name: 'Millhaven Village',
+  width: 40,
+  height: 30,
+  theme: 'village',
+  pois: [
+    { type: 'tavern_main', position: 'center-west', label: 'The Weary Traveler' },
+    { type: 'house_small', position: 'center-east', label: "Elder's House" },
+    { type: 'clearing_grass', position: 'south-center', label: 'Town Square' },
+  ],
+  connections: [
+    { from: 'The Weary Traveler', to: 'Town Square' },
+    { from: "Elder's House", to: 'Town Square' },
+  ],
+  npcs: [
+    { name: 'Barkeep Hilda', position: 'The Weary Traveler', personality: 'Gruff but kind tavern owner who hears all the gossip', questRelevant: true },
+    { name: 'Elder Maren', position: "Elder's House", personality: 'Wise village elder who knows the old stories', questRelevant: true },
+  ],
+  exits: [
+    { edge: 'north', targetArea: 'area-forest', label: 'Forest Path' },
+  ],
+  playerStart: { x: 20, y: 20 },
+}
+
+/**
+ * Build the demo area. Call once at startup if no campaign is loaded.
+ */
+export function buildDemoArea() {
+  return buildAreaFromBrief(DEMO_BRIEF, 42)
+}
+
+export { DEMO_BRIEF }
