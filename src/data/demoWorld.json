@@ -1,0 +1,54 @@
+{
+  "title": "The Village of Millhaven",
+  "startZone": "town-square",
+  "questObjectives": [
+    { "id": "q1", "name": "Investigate the forest disappearances", "status": "active" }
+  ],
+  "zones": {
+    "town-square": {
+      "id": "town-square",
+      "name": "Millhaven Town Square",
+      "type": "town_square",
+      "tags": ["safe", "outdoor"],
+      "npcs": [
+        { "name": "Elder Maren", "role": "quest_giver", "personality": "worried elder, begs adventurers for help", "position": { "x": 8, "y": 7 }, "questRelevant": true },
+        { "name": "Guard Theron", "role": "guard", "personality": "stern but fair, warns about forest dangers", "position": { "x": 3, "y": 4 }, "questRelevant": false }
+      ],
+      "exits": [
+        { "position": { "x": 7, "y": 0 }, "width": 2, "direction": "north", "targetZone": "inn-bar", "entryPoint": { "x": 5, "y": 8 }, "label": "The Weary Traveler" }
+      ],
+      "lighting": "daylight",
+      "ambience": "town"
+    },
+    "inn-bar": {
+      "id": "inn-bar",
+      "name": "The Weary Traveler Inn",
+      "type": "tavern_bar",
+      "tags": ["safe", "indoor"],
+      "npcs": [
+        { "name": "Greta", "role": "bartender", "personality": "gruff but kind, knows about forest disappearances", "position": { "x": 6, "y": 2 }, "questRelevant": true },
+        { "name": "Old Durnan", "role": "patron", "personality": "drunk old soldier, mumbles about the old war", "position": { "x": 9, "y": 5 }, "questRelevant": false }
+      ],
+      "exits": [
+        { "position": { "x": 5, "y": 9 }, "width": 2, "direction": "south", "targetZone": "town-square", "entryPoint": { "x": 7, "y": 1 }, "label": "Town Square" },
+        { "position": { "x": 10, "y": 0 }, "width": 2, "direction": "north", "targetZone": "inn-kitchen", "entryPoint": { "x": 4, "y": 6 }, "label": "Kitchen" }
+      ],
+      "lighting": "warm",
+      "ambience": "tavern"
+    },
+    "inn-kitchen": {
+      "id": "inn-kitchen",
+      "name": "Tavern Kitchen",
+      "type": "tavern_kitchen",
+      "tags": ["safe", "indoor"],
+      "npcs": [
+        { "name": "Berta", "role": "cook", "personality": "loud, bossy, gossips about everyone in town", "position": { "x": 5, "y": 2 }, "questRelevant": false }
+      ],
+      "exits": [
+        { "position": { "x": 4, "y": 7 }, "width": 2, "direction": "south", "targetZone": "inn-bar", "entryPoint": { "x": 10, "y": 1 }, "label": "Bar Room" }
+      ],
+      "lighting": "warm",
+      "ambience": "tavern"
+    }
+  }
+}
