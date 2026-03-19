@@ -124,17 +124,19 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     const mapHeight = z.height * tileSize
     const viewWidth = container.clientWidth
     const viewHeight = container.clientHeight
+    const hudHeight = 134 // bottom bar height
 
-    // Scale to fit with some padding
-    const padding = 20
+    // Available play area (full width, height minus HUD overlap)
+    const playHeight = viewHeight - hudHeight
+    const padding = 30
     const scaleX = (viewWidth - padding * 2) / mapWidth
-    const scaleY = (viewHeight - padding * 2) / mapHeight
+    const scaleY = (playHeight - padding * 2) / mapHeight
     const scale = Math.min(scaleX, scaleY)
 
     world.scale.set(scale)
-    // Center the map in the viewport
+    // Center horizontally, vertically center in the play area (above HUD)
     world.x = (viewWidth - mapWidth * scale) / 2
-    world.y = (viewHeight - mapHeight * scale) / 2
+    world.y = (playHeight - mapHeight * scale) / 2 + padding / 2
   }
 
   // Render tokens
@@ -146,7 +148,7 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
   return (
     <div
       ref={containerRef}
-      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 134 }}
+      style={{ position: 'absolute', inset: 0, zIndex: 0 }}
     />
   )
 }
