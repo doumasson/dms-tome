@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findPath, buildWalkabilityGrid } from '../../src/lib/pathfinding.js'
+import { findPathLegacy as findPath, buildWalkabilityGrid } from '../../src/lib/pathfinding.js'
 
 describe('buildWalkabilityGrid', () => {
   it('marks blocking tiles as false', () => {
