@@ -37,10 +37,15 @@ export default function GameV2() {
   // Load demo world on mount if no zones exist
   useEffect(() => {
     if (!zones) {
-      const world = buildWorldFromAiOutput(demoWorld)
-      loadZoneWorld(world)
+      try {
+        const world = buildWorldFromAiOutput(demoWorld)
+        console.log('[GameV2] Built world:', world.title, Object.keys(world.zones).length, 'zones')
+        loadZoneWorld(world)
+      } catch (e) {
+        console.error('[GameV2] Failed to build world:', e)
+      }
     }
-  }, [])
+  }, [zones, loadZoneWorld])
 
   const zone = zones?.[currentZoneId] || null
 
