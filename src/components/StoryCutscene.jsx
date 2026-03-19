@@ -27,7 +27,7 @@ export default function StoryCutscene({ npc, pixiRef, onClose, isWatching }) {
       const entry = {
         type: 'critical',
         npcName: npc.name,
-        zoneName: useStore.getState().zones?.[useStore.getState().currentZoneId]?.name || 'Unknown',
+        zoneName: useStore.getState().areas?.[useStore.getState().currentAreaId]?.name || 'Unknown',
         text: npc.criticalInfo,
         flag: npc.criticalFlag,
       }

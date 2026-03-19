@@ -2,15 +2,16 @@ import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
-import demoWorld from './data/demoWorld.json'
-import { buildAreaWorld } from './lib/campaignGenerator'
 import { buildTestArea } from './data/testArea.js'
-import { broadcastZoneTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey } from './lib/liveChannel'
+import { buildDemoArea } from './data/demoArea.js'
+import { buildAreaFromBrief } from './lib/areaBuilder.js'
+import { saveArea } from './lib/areaStorage.js'
+import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
 import { handleInteract } from './lib/interactionController'
-import { findPath, findPathLegacy, buildWalkabilityGrid, buildCollisionLayer } from './lib/pathfinding'
+import { findPath, findPathLegacy, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import Camera from './engine/Camera'
@@ -37,10 +38,14 @@ const CLASS_COLORS = {
 }
 
 export default function GameV2({ onLeave }) {
-  const currentZoneId = useStore(s => s.currentZoneId)
-  const zones = useStore(s => s.campaign.zones)
-  const loadZoneWorld = useStore(s => s.loadZoneWorld)
-  const setCurrentZone = useStore(s => s.setCurrentZone)
+  const currentAreaId = useStore(s => s.currentAreaId)
+  const areas = useStore(s => s.areas)
+  const areaBriefs = useStore(s => s.areaBriefs)
+  const areaLayers = useStore(s => s.areaLayers)
+  const loadArea = useStore(s => s.loadArea)
+  const loadAreaWorld = useStore(s => s.loadAreaWorld)
+  const buildAndLoadArea = useStore(s => s.buildAndLoadArea)
+  const activateArea = useStore(s => s.activateArea)
   const myCharacter = useStore(s => s.myCharacter)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
   const user = useStore(s => s.user)
@@ -56,8 +61,6 @@ export default function GameV2({ onLeave }) {
   const campaign = useStore(s => s.campaign)
   const partyMembers = useStore(s => s.partyMembers)
   const narrator = useStore(s => s.narrator)
-  const pendingEntryPoint = useStore(s => s.pendingEntryPoint)
-  const clearPendingEntryPoint = useStore(s => s.clearPendingEntryPoint)
   const activeCutscene = useStore(s => s.activeCutscene)
 
   const pixiRef = useRef(null)
@@ -78,7 +81,9 @@ export default function GameV2({ onLeave }) {
   playerPosRef.current = playerPos
   const lastNpcTriggerRef = useRef(null)
 
-  const zone = zones?.[currentZoneId] || null
+  const area = areas[currentAreaId] || null
+  // Alias for backward compat — existing code reads `zone`
+  const zone = area
 
   // Area camera — instantiate when zone signals camera mode (e.g. large procedural maps)
   const useAreaCamera = zone?.useCamera || false
@@ -136,7 +141,7 @@ export default function GameV2({ onLeave }) {
   useEffect(() => {
     if (!cameraRef.current || !pixiRef.current) return
     fogDirtyRef.current = true
-  }, [playerPos, currentZoneId])
+  }, [playerPos, currentAreaId])
 
   // --- Roof-lift manager (area camera mode only) ---
   const roofManagerRef = useRef(new RoofManager())
@@ -150,7 +155,7 @@ export default function GameV2({ onLeave }) {
     const positions = [pos] // party positions — expand when multiplayer token sync exists
     const changes = rm.updateRevealStates(positions)
     // Changes are tracked internally by RoofManager; rendering will read state when area mode renders
-  }, [playerPos, currentZoneId, zone])
+  }, [playerPos, currentAreaId, zone])
 
   // --- Combat camera lock (area camera mode only) ---
   useEffect(() => {
@@ -175,75 +180,58 @@ export default function GameV2({ onLeave }) {
     }
   }, [inCombat, encounter.combatants])
 
-  // Load zone world on mount — test area or normal campaign/demo
-  const [testAreaData, setTestAreaData] = useState(null)
+  // Load area world on mount — test area or normal campaign/demo
   const worldLoadedRef = useRef(false)
   useEffect(() => {
     if (worldLoadedRef.current) return
-    if (zones) { worldLoadedRef.current = true; return }
+    worldLoadedRef.current = true
 
     const params = new URLSearchParams(window.location.search)
 
     if (params.has('testarea')) {
       try {
-        const area = buildTestArea()
-        setTestAreaData(area)
-        console.log('[GameV2] Test area loaded:', area.name, `${area.width}x${area.height}`, area.palette.length, 'palette entries')
-        loadZoneWorld({
-          title: area.name,
-          zones: {
-            'test-area': {
-              id: 'test-area',
-              title: area.name,
-              width: area.width,
-              height: area.height,
-              tileSize: area.tileSize,
-              useCamera: true,
-              exits: [],
-              npcs: area.npcs,
-              palette: area.palette,
-              layers: area.layers,
-              buildings: area.buildings,
-            },
-          },
-          startZone: 'test-area',
-        })
-        setPlayerPos(area.playerStart)
-        worldLoadedRef.current = true
-        console.log('[GameV2] Test area zone set, currentZoneId should be test-area')
+        const testArea = buildTestArea()
+        console.log('[GameV2] Test area loaded:', testArea.name, `${testArea.width}x${testArea.height}`, testArea.palette?.length, 'palette entries')
+        loadArea(testArea.id || 'test-area', testArea)
+        activateArea(testArea.id || 'test-area')
+        if (testArea.playerStart) setPlayerPos(testArea.playerStart)
       } catch (e) {
         console.error('[GameV2] Failed to build test area:', e)
       }
       return
     }
 
-    try {
-      const campaignData = campaign
-      const hasZoneData = campaignData?.zones && (Array.isArray(campaignData.zones) ? campaignData.zones.length > 0 : Object.keys(campaignData.zones).length > 0)
-      const source = hasZoneData ? campaignData : demoWorld
-      const world = buildAreaWorld(source)
-      console.log('[GameV2] Built world:', world.title, Object.keys(world.zones).length, 'zones', hasZoneData ? '(from campaign)' : '(demo)')
-      loadZoneWorld(world)
-      worldLoadedRef.current = true
-      const startZone = world.zones[world.startZone]
-      if (startZone) {
-        const entrance = startZone.exits?.[0]?.entryPoint || { x: Math.floor(startZone.width / 2), y: Math.floor(startZone.height / 2) }
-        setPlayerPos(entrance)
-      }
-    } catch (e) {
-      console.error('[GameV2] Failed to build world:', e)
+    // Check for campaign areas
+    const campaignData = campaign?.campaign_data || campaign
+    if (campaignData?.areas || campaignData?.areaBriefs) {
+      loadAreaWorld({
+        title: campaignData.title,
+        startArea: campaignData.startArea,
+        areas: campaignData.areas || {},
+        areaBriefs: campaignData.areaBriefs || {},
+        questObjectives: campaignData.questObjectives || [],
+      })
+      return
     }
-  }, [zones, loadZoneWorld, campaign])
 
-  // Handle zone transitions received from multiplayer broadcast (non-DM clients)
-  useEffect(() => {
-    if (pendingEntryPoint) {
-      setPlayerPos(pendingEntryPoint)
-      playerPosRef.current = pendingEntryPoint
-      lastNpcTriggerRef.current = null
-      clearPendingEntryPoint()
+    // Fallback — build demo area
+    try {
+      const demoArea = buildDemoArea()
+      console.log('[GameV2] Demo area built:', demoArea.name || demoArea.id, `${demoArea.width}x${demoArea.height}`)
+      loadArea(demoArea.id, demoArea)
+      activateArea(demoArea.id)
+      if (demoArea.playerStart) setPlayerPos(demoArea.playerStart)
+    } catch (e) {
+      console.error('[GameV2] Failed to build demo area:', e)
     }
-  }, [pendingEntryPoint, clearPendingEntryPoint])
+  }, [])
+
+  // Activate current area whenever currentAreaId changes (e.g. from multiplayer broadcast)
+  useEffect(() => {
+    if (currentAreaId && areas[currentAreaId] && !areaLayers) {
+      activateArea(currentAreaId)
+    }
+  }, [currentAreaId, areas, areaLayers])
 
   useEffect(() => {
     dialogOpenRef.current = !!activeNpc
@@ -446,32 +434,72 @@ export default function GameV2({ onLeave }) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [zone, isV2Zone])
 
-  // Zone transition via exit click — fade-to-black visual
-  const handleExitClick = useCallback(({ targetZone, entryPoint }) => {
-    if (transitioning || inCombat || !zones?.[targetZone]) return
+  // Exit-proximity pre-generation — build upcoming areas before the player arrives
+  useEffect(() => {
+    if (!area?.exits || !playerPos) return
+    const PRE_GEN_DISTANCE = 5
+
+    for (const exit of area.exits) {
+      const dist = Math.abs(playerPos.x - exit.x) + Math.abs(playerPos.y - exit.y)
+      if (dist > PRE_GEN_DISTANCE) continue
+      if (!exit.targetArea) continue
+      if (areas[exit.targetArea]) continue
+      const brief = areaBriefs[exit.targetArea]
+      if (!brief) continue
+
+      console.log(`[pre-gen] Building area "${exit.targetArea}" (player ${dist} tiles from exit)`)
+      const builtArea = buildAreaFromBrief(brief)
+      buildAndLoadArea(exit.targetArea, builtArea)
+      // Persist to Supabase in background
+      if (campaign?.id) {
+        saveArea(campaign.id, builtArea).catch(err =>
+          console.warn('[pre-gen] Failed to save:', err))
+      }
+    }
+  }, [playerPos, area?.exits, areas, areaBriefs])
+
+  // Area transition via exit click — fade-to-black visual
+  const handleAreaTransition = useCallback((exit) => {
+    if (transitioning || inCombat) return
+
+    const targetId = exit.targetArea || exit.targetZone
+    if (!targetId) return
+
+    // Build area on-demand if not yet generated
+    if (!areas[targetId]) {
+      const brief = areaBriefs[targetId]
+      if (!brief) {
+        console.error(`[transition] No area or brief for "${targetId}"`)
+        return
+      }
+      const builtArea = buildAreaFromBrief(brief)
+      buildAndLoadArea(targetId, builtArea)
+    }
+
     setTransitioning(true)
-    broadcastZoneTransition(targetZone, entryPoint)
+    const entry = exit.entryPoint || { x: 0, y: 0 }
+    broadcastAreaTransition(targetId, entry)
     lastNpcTriggerRef.current = null
 
     const app = pixiRef.current?.getApp()
     if (app) {
       playZoneTransition(app, () => {
-        // Midpoint (screen is black) — swap zone
-        setCurrentZone(targetZone)
-        setPlayerPos(entryPoint || { x: 5, y: 5 })
-        playerPosRef.current = entryPoint || { x: 5, y: 5 }
+        // Midpoint (screen is black) — swap area
+        activateArea(targetId)
+        setPlayerPos(entry)
+        playerPosRef.current = entry
       }, () => {
         // Complete — fade back in done
         setTransitioning(false)
       })
     } else {
       // Fallback if no PixiJS app
-      setCurrentZone(targetZone)
-      setPlayerPos(entryPoint || { x: 5, y: 5 })
-      playerPosRef.current = entryPoint || { x: 5, y: 5 }
+      activateArea(targetId)
+      setPlayerPos(entry)
+      playerPosRef.current = entry
       setTimeout(() => setTransitioning(false), 100)
     }
-  }, [transitioning, inCombat, zones, setCurrentZone])
+  }, [transitioning, inCombat, areas, areaBriefs, buildAndLoadArea, activateArea])
 
   const handleInteractFn = useCallback(() => {
     if (isAnimating()) return
@@ -493,9 +521,9 @@ export default function GameV2({ onLeave }) {
         setActiveNpc({ ...npc, isCutscene: false })
       }
     } else if (result.type === 'exit') {
-      handleExitClick({ targetZone: result.target.targetZone, entryPoint: result.target.entryPoint })
+      handleAreaTransition(result.target)
     }
-  }, [zone, inCombat, addNarratorMessage, handleExitClick])
+  }, [zone, inCombat, addNarratorMessage, handleAreaTransition])
 
   handleInteractRef.current = handleInteractFn
 
@@ -659,7 +687,7 @@ export default function GameV2({ onLeave }) {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
-      <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} />
+      <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} />
       {/* NPC Chat Bubbles */}
       {nearbyNpcs.map(npc => (
         <ChatBubble

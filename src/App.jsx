@@ -206,12 +206,13 @@ export default function App() {
       if (payload?.text) useStore.getState().addNarratorMessage(payload);
     });
 
-    // Zone transition sync (host → players for V2 world map)
-    ch.on('broadcast', { event: 'zone-transition' }, ({ payload }) => {
+    // Area transition sync (host → players for V2 world map)
+    ch.on('broadcast', { event: 'area-transition' }, ({ payload }) => {
       if (!useStore.getState().isDM) {
-        const { targetZone, entryPoint } = payload;
-        const { setCurrentZone } = useStore.getState();
-        setCurrentZone(targetZone, entryPoint);
+        const { areaId, entryPoint } = payload;
+        const { activateArea } = useStore.getState();
+        activateArea(areaId);
+        // entryPoint will be picked up by GameV2 via store change
       }
     });
 
