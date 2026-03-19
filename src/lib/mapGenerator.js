@@ -43,7 +43,7 @@ export function resolvePositions(pois, areaWidth, areaHeight, seed = Date.now())
     const y = Math.max(1, Math.min(areaHeight - chunkH - 1,
       baseY + Math.floor((cellH - chunkH) / 2) + jitterY))
 
-    result[poi.id] = { x, y }
+    result[poi.label || poi.id] = { x, y }
   }
 
   return result
@@ -108,4 +108,52 @@ export function fillTerrain(terrainLayer, variantIndices, width, height, seed = 
       terrainLayer[i] = variantIndices[Math.floor(rand() * variantIndices.length)]
     }
   }
+}
+
+/**
+ * Build a unified palette from multiple chunks, deduplicating tile IDs.
+ * Index 0 is always '' (empty).
+ * @param {Array} chunks — array of chunk objects with .palette arrays
+ * @param {string[]} extraTileIds — additional tile IDs to include (e.g., road, terrain)
+ * @returns {{ palette: string[], tileToIndex: Map<string, number> }}
+ */
+export function buildUnifiedPalette(chunks, extraTileIds = []) {
+  const palette = ['']
+  const tileToIndex = new Map([['', 0]])
+
+  for (const chunk of chunks) {
+    for (const tileId of chunk.palette) {
+      if (tileId && !tileToIndex.has(tileId)) {
+        tileToIndex.set(tileId, palette.length)
+        palette.push(tileId)
+      }
+    }
+  }
+
+  for (const tileId of extraTileIds) {
+    if (tileId && !tileToIndex.has(tileId)) {
+      tileToIndex.set(tileId, palette.length)
+      palette.push(tileId)
+    }
+  }
+
+  return { palette, tileToIndex }
+}
+
+/**
+ * Remap a chunk's layer indices from its local palette to a unified palette.
+ * @param {object} chunk — chunk with .palette and .layers
+ * @param {Map<string, number>} tileToIndex — unified palette lookup
+ * @returns {object} new chunk object with remapped layer data
+ */
+export function remapChunk(chunk, tileToIndex) {
+  const remapped = { ...chunk, layers: {} }
+  for (const [layerName, data] of Object.entries(chunk.layers)) {
+    remapped.layers[layerName] = data.map(localIdx => {
+      if (localIdx === 0) return 0
+      const tileId = chunk.palette[localIdx]
+      return tileToIndex.get(tileId) || 0
+    })
+  }
+  return remapped
 }
