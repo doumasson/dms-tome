@@ -1619,6 +1619,56 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     },
   })),
 
+  // ── Area State (V2 procedural maps) ────────────────────────────────
+  currentAreaId: null,
+  areas: {},                    // { areaId: areaMetadata }
+  areaLayers: null,             // decompressed layers for current area
+  areaCollision: null,          // Uint8Array collision grid
+  areaTilePalette: [],          // string tile ID lookup
+  cameraX: 0,
+  cameraY: 0,
+  cameraZoom: 0.5,
+  fogBitfields: {},             // { areaId: base64 string }
+  roofStates: {},               // { buildingId: boolean }
+  areaTokenPositions: {},       // { areaId: { playerId: {x,y} } }
+
+  setCurrentArea: (areaId) => set(state => ({
+    currentAreaId: areaId,
+    areaLayers: null,
+    areaCollision: null,
+  })),
+
+  setAreaLayers: (layers, collision, palette) => set({
+    areaLayers: layers,
+    areaCollision: collision,
+    areaTilePalette: palette,
+  }),
+
+  setCamera: (x, y) => set({ cameraX: x, cameraY: y }),
+  setCameraZoom: (zoom) => set({ cameraZoom: zoom }),
+
+  updateFogBitfield: (areaId, bitfield) => set(state => ({
+    fogBitfields: { ...state.fogBitfields, [areaId]: bitfield },
+  })),
+
+  setRoofState: (buildingId, revealed) => set(state => ({
+    roofStates: { ...state.roofStates, [buildingId]: revealed },
+  })),
+
+  setAreaTokenPosition: (areaId, playerId, pos) => set(state => ({
+    areaTokenPositions: {
+      ...state.areaTokenPositions,
+      [areaId]: {
+        ...(state.areaTokenPositions[areaId] || {}),
+        [playerId]: pos,
+      },
+    },
+  })),
+
+  loadArea: (areaId, areaData) => set(state => ({
+    areas: { ...state.areas, [areaId]: areaData },
+  })),
+
   // === Story Progression ===
   ...createStorySlice(set, get),
 }));
