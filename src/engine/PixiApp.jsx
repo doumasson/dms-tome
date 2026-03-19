@@ -6,7 +6,7 @@ import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens, isAnimating } from './TokenLayer'
 import { renderExits, clearExits } from './ExitZone'
 
-export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, inCombat }, ref) {
+export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, onNpcClick, inCombat }, ref) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
   const stageLayersRef = useRef({})
@@ -15,9 +15,20 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   onTileClickRef.current = onTileClick
   const onExitClickRef = useRef(onExitClick)
   onExitClickRef.current = onExitClick
+  const onNpcClickRef = useRef(onNpcClick)
+  onNpcClickRef.current = onNpcClick
+  const tokensRef = useRef(tokens)
+  tokensRef.current = tokens
   const [ready, setReady] = useState(false)
 
-  useImperativeHandle(ref, () => ({ getApp: () => appRef.current }), [])
+  useImperativeHandle(ref, () => ({
+    getApp: () => appRef.current,
+    getWorldTransform: () => {
+      const w = worldRef.current
+      if (!w) return null
+      return { x: w.x, y: w.y, scale: w.scale.x }
+    },
+  }), [])
 
   // Initialize PixiJS application
   useEffect(() => {
@@ -61,7 +72,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       app.stage.eventMode = 'static'
       app.stage.hitArea = app.screen
       app.stage.on('pointerdown', (e) => {
-        if (!onTileClickRef.current || !worldRef.current) return
+        if (!worldRef.current) return
         const pos = e.global
         const w = worldRef.current
         const tileSize = getTileSize()
@@ -70,7 +81,15 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         const wy = (pos.y - w.y) / w.scale.y
         const tx = Math.floor(wx / tileSize)
         const ty = Math.floor(wy / tileSize)
-        onTileClickRef.current({ x: tx, y: ty })
+        // Check if clicked on an NPC token
+        const clickedNpc = tokensRef.current?.find(t => t.isNpc && t.x === tx && t.y === ty)
+        if (clickedNpc && onNpcClickRef.current) {
+          onNpcClickRef.current(clickedNpc)
+          return
+        }
+        if (onTileClickRef.current) {
+          onTileClickRef.current({ x: tx, y: ty })
+        }
       })
 
       setReady(true)

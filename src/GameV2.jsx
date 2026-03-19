@@ -288,6 +288,20 @@ export default function GameV2({ onLeave }) {
 
   handleInteractRef.current = handleInteractFn
 
+  const handleNpcClick = useCallback((clickedToken) => {
+    if (inCombat || isAnimating()) return
+    const npc = zone?.npcs?.find(n => n.name === clickedToken.name || n.name === clickedToken.id)
+    if (!npc) return
+    const pos = playerPosRef.current
+    const dx = Math.abs(pos.x - npc.position.x)
+    const dy = Math.abs(pos.y - npc.position.y)
+    if (dx > 1 || dy > 1) {
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: `You need to move closer to ${npc.name}.` })
+      return
+    }
+    handleInteractRef.current?.()
+  }, [zone, inCombat, addNarratorMessage])
+
   const handleTool = useCallback((tool) => {
     if (tool === 'dice') setToolPanel('dice')
     else if (tool === 'character' || tool === 'inventory') setSheetChar(myCharacter)
@@ -433,7 +447,7 @@ export default function GameV2({ onLeave }) {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
-      <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} inCombat={inCombat} />
+      <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} onNpcClick={handleNpcClick} inCombat={inCombat} />
       <GameHUD
         zone={zone}
         onTool={handleTool}
