@@ -537,3 +537,101 @@
   0%, 100% { opacity: 0.2; }
   50% { opacity: 0.8; }
 }
+
+/* NPC Conversation (shared) */
+.npc-conv {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.npc-conv-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 16px;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.npc-conv-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.npc-conv-npc { text-align: left; }
+.npc-conv-player { text-align: right; }
+.npc-conv-system { text-align: center; font-style: italic; }
+
+.npc-conv-speaker {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.npc-conv-npc .npc-conv-speaker { color: var(--gold-bright); }
+.npc-conv-player .npc-conv-speaker { color: #5ab0ee; }
+.npc-conv-system .npc-conv-speaker { color: var(--gold-muted); }
+
+.npc-conv-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.npc-conv-npc .npc-conv-text {
+  color: var(--gold-bright);
+  font-style: italic;
+}
+
+.npc-conv-loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.npc-conv-input-row {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.npc-conv-input {
+  flex: 1;
+  background: rgba(10, 8, 14, 0.95);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: var(--font-heading);
+  outline: none;
+  border-radius: 0;
+}
+
+.npc-conv-input::placeholder { color: #5a4a30; }
+
+.npc-conv-send {
+  width: 42px;
+  background: linear-gradient(135deg, #d4b85c, #9a7a30);
+  border: none;
+  color: #08060c;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 0;
+  min-height: 0;
+  padding: 0;
+}
+
+.npc-conv-limited {
+  text-align: center;
+  padding: 12px;
+  color: var(--gold-muted);
+  font-style: italic;
+  font-size: 12px;
+  font-family: var(--font-heading);
+}

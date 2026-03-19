@@ -107,6 +107,37 @@ Rules for special fields:
 - enemies: ONLY populate when startCombat is true. Use the enemies listed in the scene, or invent appropriate opponents that fit the narrative. Each enemy: {"name":"Goblin","hp":7,"ac":15,"speed":30,"stats":{"str":8,"dex":14,"con":10,"int":10,"wis":8,"cha":8},"attacks":[{"name":"Scimitar","bonus":"+4","damage":"1d6+2"}],"count":1}`;
 }
 
+/**
+ * Build a system prompt for an NPC conversation.
+ * NPC stays in character, guides toward story/side quest.
+ */
+export function buildNpcSystemPrompt(npc, campaign, storyFlags, promptCount, isCritical) {
+  const flagsList = storyFlags.size > 0 ? Array.from(storyFlags).join(', ') : 'none'
+  const steerHint = isCritical && promptCount >= 5
+    ? '\nThe conversation has gone on long enough. Start wrapping up — hint that you have nothing more to say.'
+    : ''
+
+  return `You are ${npc.name}, a ${npc.role}. You are an NPC in a D&D 5e campaign called "${campaign?.title || 'an unnamed campaign'}".
+
+Personality: ${npc.personality}
+${npc.sideQuest ? `Side quest you can offer: ${npc.sideQuest}` : ''}
+${isCritical && npc.criticalInfo ? `Critical information to deliver: ${npc.criticalInfo}` : ''}
+
+Story progress flags: ${flagsList}
+
+Rules:
+- Stay in character at all times. You are ${npc.name}, not an AI.
+- Keep responses to 2-3 sentences. Be concise and natural.
+- Guide conversation toward information relevant to the campaign storyline.
+- If the player asks about something you would know, share it helpfully.
+- If they ask about something outside your knowledge, say so in character.
+${npc.sideQuest ? '- If appropriate, mention your side quest to interest the player.' : ''}
+${steerHint}
+
+Respond ONLY with a raw JSON object — no markdown, no code fences:
+{"narrative":"Your in-character response here."}`
+}
+
 // Generate 2-3 continuation scenes when a campaign concludes and players want to keep playing
 export async function generateContinuationScenes(campaignData, partyMembers, lastScene, apiKey) {
   const title = campaignData?.title || 'the campaign';
