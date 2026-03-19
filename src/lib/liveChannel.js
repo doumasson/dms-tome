@@ -99,3 +99,37 @@ export function broadcastStoryFlag(flag) {
 export function broadcastJournalEntry(entry) {
   _channel?.send({ type: 'broadcast', event: 'journal-entry', payload: entry })
 }
+
+/* ── Area broadcasts ──────────────────────────────────────────── */
+
+export function broadcastAreaTransition(areaId, entryPoint) {
+  _channel?.send({
+    type: 'broadcast',
+    event: 'area-transition',
+    payload: { areaId, entryPoint },
+  })
+}
+
+export function broadcastTokenMove(playerId, position) {
+  _channel?.send({
+    type: 'broadcast',
+    event: 'token-move',
+    payload: { playerId, position },
+  })
+}
+
+export function broadcastFogUpdate(areaId, base64Bitfield) {
+  _channel?.send({
+    type: 'broadcast',
+    event: 'fog-update',
+    payload: { areaId, base64Bitfield },
+  })
+}
+
+export function broadcastRoofState(buildingId, revealed) {
+  _channel?.send({
+    type: 'broadcast',
+    event: 'roof-state',
+    payload: { buildingId, revealed },
+  })
+}
