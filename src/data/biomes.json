@@ -1,0 +1,32 @@
+{
+  "grassland": {
+    "requiredAtlases": ["atlas-floors", "atlas-walls", "atlas-terrain", "atlas-props-furniture"],
+    "defaultTerrain": "floors:grass_01",
+    "terrainVariants": ["floors:grass_01", "floors:grass_02", "floors:grass_03"],
+    "edgeTiles": {
+      "water": "terrain:water_edge",
+      "cliff": "terrain:cliff"
+    }
+  },
+  "dungeon": {
+    "requiredAtlases": ["atlas-floors", "atlas-walls", "atlas-props-furniture", "atlas-effects"],
+    "defaultTerrain": "floors:stone_earthy_01",
+    "terrainVariants": ["floors:stone_earthy_01", "floors:stone_earthy_02"],
+    "edgeTiles": {}
+  },
+  "underdark": {
+    "requiredAtlases": ["atlas-floors", "atlas-walls", "atlas-terrain", "atlas-underdark"],
+    "defaultTerrain": "floors:cave_stone_01",
+    "terrainVariants": ["floors:cave_stone_01", "floors:cave_stone_02"],
+    "edgeTiles": {
+      "chasm": "terrain:chasm_edge",
+      "fungal": "terrain:mushroom"
+    }
+  },
+  "forest": {
+    "requiredAtlases": ["atlas-floors", "atlas-terrain", "atlas-props-decor"],
+    "defaultTerrain": "floors:grass_01",
+    "terrainVariants": ["floors:grass_01", "floors:dirt_01", "floors:grass_02"],
+    "edgeTiles": {}
+  }
+}
