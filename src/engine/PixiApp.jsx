@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js'
 import { loadTileAtlas } from './tileAtlas'
 import { renderTilemap, clearTilemap } from './TilemapRenderer'
 import { renderGrid, clearGrid } from './GridOverlay'
+import { renderTokens } from './TokenLayer'
 
 export default function PixiApp({ zone, tokens, onTileClick }) {
   const containerRef = useRef(null)
@@ -71,6 +72,11 @@ export default function PixiApp({ zone, tokens, onTileClick }) {
     clearGrid(grid)
     renderGrid(grid, zone.width, zone.height)
   }, [zone])
+
+  useEffect(() => {
+    if (!tokens?.length || !stageLayersRef.current.tokens) return
+    renderTokens(stageLayersRef.current.tokens, tokens)
+  }, [tokens])
 
   return (
     <div
