@@ -14,6 +14,7 @@ import { playZoneTransition } from './engine/ZoneTransition'
 import DiceTray from './components/DiceTray'
 import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
 import RestModal from './components/RestModal'
+import ApiKeySettings from './components/ApiKeySettings'
 import './hud/hud.css'
 
 const CLASS_COLORS = {
@@ -52,6 +53,7 @@ export default function GameV2() {
   const [toolPanel, setToolPanel] = useState(null)
   const [sheetChar, setSheetChar] = useState(null)
   const [restProposal, setRestProposal] = useState(null)
+  const [showApiSettings, setShowApiSettings] = useState(false)
   const playerPosRef = useRef(playerPos)
   playerPosRef.current = playerPos
   const lastNpcTriggerRef = useRef(null)
@@ -213,7 +215,7 @@ export default function GameV2() {
     if (tool === 'dice') setToolPanel('dice')
     else if (tool === 'character' || tool === 'inventory') setSheetChar(myCharacter)
     else if (tool === 'rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
-    else if (tool === 'settings') console.log('Settings not yet wired in V2')
+    else if (tool === 'settings') setShowApiSettings(true)
   }, [myCharacter])
 
   const handleEndTurn = useCallback(() => {
@@ -393,6 +395,9 @@ export default function GameV2() {
       <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
       {sheetChar && (
         <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />
+      )}
+      {showApiSettings && (
+        <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />
       )}
       {restProposal && (
         <RestModal
