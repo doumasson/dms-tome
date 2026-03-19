@@ -1,21 +1,158 @@
 /**
- * Build a walkability grid from zone tile layers.
- * @param {number[][]} walls - Wall layer tile indices
- * @param {number[][]} props - Props layer tile indices
- * @param {Set<number>} blocking - Set of blocking tile indices
- * @param {number} width - Grid width
- * @param {number} height - Grid height
- * @returns {boolean[][]} true = walkable
+ * Pathfinding — binary heap A* on Uint8Array collision grids.
+ * Includes legacy wrappers for V1 backward compatibility.
+ */
+
+/** Binary min-heap for A* open set */
+class MinHeap {
+  constructor() { this.data = [] }
+
+  push(item) {
+    this.data.push(item)
+    this._bubbleUp(this.data.length - 1)
+  }
+
+  pop() {
+    const top = this.data[0]
+    const last = this.data.pop()
+    if (this.data.length > 0) {
+      this.data[0] = last
+      this._sinkDown(0)
+    }
+    return top
+  }
+
+  get size() { return this.data.length }
+
+  _bubbleUp(i) {
+    while (i > 0) {
+      const parent = (i - 1) >> 1
+      if (this.data[i].f >= this.data[parent].f) break
+      ;[this.data[i], this.data[parent]] = [this.data[parent], this.data[i]]
+      i = parent
+    }
+  }
+
+  _sinkDown(i) {
+    const n = this.data.length
+    while (true) {
+      let smallest = i
+      const left = 2 * i + 1
+      const right = 2 * i + 2
+      if (left < n && this.data[left].f < this.data[smallest].f) smallest = left
+      if (right < n && this.data[right].f < this.data[smallest].f) smallest = right
+      if (smallest === i) break
+      ;[this.data[i], this.data[smallest]] = [this.data[smallest], this.data[i]]
+      i = smallest
+    }
+  }
+}
+
+const DIRS = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }]
+
+/**
+ * A* pathfinding on a Uint8Array collision grid.
+ * @param {Uint8Array} collision — flat array, 0=walkable, 1=blocked
+ * @param {number} width — grid width
+ * @param {number} height — grid height
+ * @param {{x,y}} start
+ * @param {{x,y}} end
+ * @returns {Array<{x,y}>|null} path including start and end, or null
+ */
+export function findPath(collision, width, height, start, end) {
+  if (collision[end.y * width + end.x] === 1) return null
+  if (start.x === end.x && start.y === end.y) return [start]
+
+  const size = width * height
+  const gScore = new Float32Array(size).fill(Infinity)
+  const cameFrom = new Int32Array(size).fill(-1)
+  const closed = new Uint8Array(size)
+
+  const idx = (x, y) => y * width + x
+  const heuristic = (x, y) => Math.abs(x - end.x) + Math.abs(y - end.y)
+
+  const startIdx = idx(start.x, start.y)
+  gScore[startIdx] = 0
+
+  const open = new MinHeap()
+  open.push({ x: start.x, y: start.y, f: heuristic(start.x, start.y), idx: startIdx })
+
+  while (open.size > 0) {
+    const curr = open.pop()
+    if (curr.x === end.x && curr.y === end.y) {
+      const path = []
+      let ci = curr.idx
+      while (ci !== -1) {
+        path.push({ x: ci % width, y: (ci / width) | 0 })
+        ci = cameFrom[ci]
+      }
+      return path.reverse()
+    }
+
+    if (closed[curr.idx]) continue
+    closed[curr.idx] = 1
+
+    for (const { dx, dy } of DIRS) {
+      const nx = curr.x + dx
+      const ny = curr.y + dy
+      if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
+
+      const ni = idx(nx, ny)
+      if (closed[ni] || collision[ni] === 1) continue
+
+      const tentG = gScore[curr.idx] + 1
+      if (tentG < gScore[ni]) {
+        gScore[ni] = tentG
+        cameFrom[ni] = curr.idx
+        open.push({ x: nx, y: ny, f: tentG + heuristic(nx, ny), idx: ni })
+      }
+    }
+  }
+
+  return null
+}
+
+/**
+ * Build collision Uint8Array from tile layers.
+ * @param {object} layers — { walls: Uint16Array, props: Uint16Array }
+ * @param {string[]} palette — tile ID lookup
+ * @param {object} blockingSet — { tileId: true } for blocking tiles
+ * @param {number} width
+ * @param {number} height
+ */
+export function buildCollisionLayer(layers, palette, blockingSet, width, height) {
+  const collision = new Uint8Array(width * height)
+
+  for (const layerName of ['walls', 'props']) {
+    const layer = layers[layerName]
+    if (!layer) continue
+
+    for (let i = 0; i < layer.length; i++) {
+      const tileIdx = layer[i]
+      if (tileIdx === 0) continue
+      const tileId = palette[tileIdx]
+      if (tileId && blockingSet[tileId]) {
+        collision[i] = 1
+      }
+    }
+  }
+
+  return collision
+}
+
+/**
+ * Legacy wrapper: build walkability grid (boolean[][]) from old tile layers.
+ * Preserved for V1 compatibility.
  */
 export function buildWalkabilityGrid(walls, props, blocking, width, height) {
   const grid = []
   for (let y = 0; y < height; y++) {
     const row = []
     for (let x = 0; x < width; x++) {
-      const wallTile = walls[y]?.[x] ?? 0
-      const propTile = props[y]?.[x] ?? 0
-      const walkable = !blocking.has(wallTile) && !blocking.has(propTile)
-      row.push(walkable)
+      const wallTile = walls?.[y]?.[x] ?? -1
+      const propTile = props?.[y]?.[x] ?? -1
+      const blocked = blocking.has(wallTile) || blocking.has(propTile)
+      row.push(!blocked)
     }
     grid.push(row)
   }
@@ -23,61 +160,17 @@ export function buildWalkabilityGrid(walls, props, blocking, width, height) {
 }
 
 /**
- * A* pathfinding on a 2D grid. 4-directional movement.
- * @param {boolean[][]} grid - Walkability grid
- * @param {{x:number, y:number}} start
- * @param {{x:number, y:number}} end
- * @returns {{x:number, y:number}[]|null} Path from start to end, or null
+ * Legacy wrapper: find path on boolean[][] grid.
+ * Preserved for V1 compatibility.
  */
-export function findPath(grid, start, end) {
+export function findPathLegacy(grid, start, end) {
   const height = grid.length
-  const width = grid[0]?.length ?? 0
-  if (!width || !height) return null
-
-  const key = (x, y) => `${x},${y}`
-  const heuristic = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y)
-
-  const open = [{ ...start, g: 0, f: heuristic(start, end) }]
-  const cameFrom = new Map()
-  const gScore = new Map()
-  gScore.set(key(start.x, start.y), 0)
-
-  const dirs = [{ x: 0, y: -1 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 1, y: 0 }]
-
-  while (open.length > 0) {
-    let bestIdx = 0
-    for (let i = 1; i < open.length; i++) {
-      if (open[i].f < open[bestIdx].f) bestIdx = i
-    }
-    const current = open.splice(bestIdx, 1)[0]
-
-    if (current.x === end.x && current.y === end.y) {
-      const path = [{ x: end.x, y: end.y }]
-      let k = key(end.x, end.y)
-      while (cameFrom.has(k)) {
-        const prev = cameFrom.get(k)
-        path.unshift(prev)
-        k = key(prev.x, prev.y)
-      }
-      return path
-    }
-
-    for (const dir of dirs) {
-      const nx = current.x + dir.x
-      const ny = current.y + dir.y
-      if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue
-      if (!grid[ny][nx]) continue
-
-      const tentativeG = current.g + 1
-      const nk = key(nx, ny)
-      if (tentativeG < (gScore.get(nk) ?? Infinity)) {
-        gScore.set(nk, tentativeG)
-        cameFrom.set(nk, { x: current.x, y: current.y })
-        const f = tentativeG + heuristic({ x: nx, y: ny }, end)
-        open.push({ x: nx, y: ny, g: tentativeG, f })
-      }
+  const width = grid[0]?.length || 0
+  const collision = new Uint8Array(width * height)
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (!grid[y][x]) collision[y * width + x] = 1
     }
   }
-
-  return null
+  return findPath(collision, width, height, start, end)
 }
