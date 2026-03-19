@@ -65,6 +65,7 @@ export function buildWorldFromAiOutput(aiWorld) {
     title: aiWorld.title,
     startZone: aiWorld.startZone,
     questObjectives: aiWorld.questObjectives || [],
+    storyMilestones: aiWorld.storyMilestones || [],
     zones: zonesMap,
   }
 }

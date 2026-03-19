@@ -11,8 +11,38 @@
       "type": "town_square",
       "tags": ["safe", "outdoor"],
       "npcs": [
-        { "name": "Elder Maren", "role": "quest_giver", "personality": "worried elder, begs adventurers for help", "position": { "x": 8, "y": 7 }, "questRelevant": true },
-        { "name": "Guard Theron", "role": "guard", "personality": "stern but fair, warns about forest dangers", "position": { "x": 3, "y": 4 }, "questRelevant": false }
+        {
+          "name": "Elder Maren",
+          "role": "quest_giver",
+          "personality": "worried elder, begs adventurers for help",
+          "position": { "x": 8, "y": 7 },
+          "questRelevant": true,
+          "critical": true,
+          "criticalInfo": "Three villagers have vanished in the brackenwood this moon. The old ruins there have awakened — something ancient stirs beneath the stones. You must investigate before more are lost.",
+          "criticalFlag": "critical_elder_maren_info",
+          "sideQuest": null,
+          "hints": [
+            { "after": null, "text": "Please, adventurers... we need help. People are vanishing from the brackenwood." },
+            { "after": "critical_elder_maren_info", "text": "The brackenwood awaits. Please hurry before another soul is taken." },
+            { "after": "cleared_brackenwood", "text": "You've done it! The village owes you everything. Millhaven will not forget you." }
+          ]
+        },
+        {
+          "name": "Guard Theron",
+          "role": "guard",
+          "personality": "stern but fair, warns about forest dangers",
+          "position": { "x": 3, "y": 4 },
+          "questRelevant": false,
+          "critical": false,
+          "criticalInfo": null,
+          "criticalFlag": null,
+          "sideQuest": "Guard Theron lost his family heirloom sword in the brackenwood during a patrol gone wrong. He'll reward anyone who retrieves it.",
+          "hints": [
+            { "after": null, "text": "The forest ain't safe. Stay on the road and keep your wits about you." },
+            { "after": "critical_elder_maren_info", "text": "So the Elder sent you into the brackenwood? Watch yourself out there. Something's not right in those trees." },
+            { "after": "cleared_brackenwood", "text": "You actually came back alive. I'm impressed — and relieved. If you found an old sword out there, that belonged to my grandfather." }
+          ]
+        }
       ],
       "exits": [
         { "position": { "x": 7, "y": 0 }, "width": 2, "direction": "north", "targetZone": "inn-bar", "entryPoint": { "x": 5, "y": 8 }, "label": "The Weary Traveler" }
@@ -26,8 +56,39 @@
       "type": "tavern_bar",
       "tags": ["safe", "indoor"],
       "npcs": [
-        { "name": "Greta", "role": "bartender", "personality": "gruff but kind, knows about forest disappearances", "position": { "x": 6, "y": 2 }, "questRelevant": true },
-        { "name": "Old Durnan", "role": "patron", "personality": "drunk old soldier, mumbles about the old war", "position": { "x": 9, "y": 5 }, "questRelevant": false }
+        {
+          "name": "Greta",
+          "role": "bartender",
+          "personality": "gruff but kind, knows about forest disappearances",
+          "position": { "x": 6, "y": 2 },
+          "questRelevant": true,
+          "critical": true,
+          "criticalInfo": "The first one to vanish was young Pip, the miller's boy. He was dared by his friends to spend a night near the old standing stones. Never came back. That was three weeks ago.",
+          "criticalFlag": "critical_greta_info",
+          "sideQuest": null,
+          "hints": [
+            { "after": null, "text": "Ale? Or are you here about the disappearances like everyone else lately?" },
+            { "after": "critical_elder_maren_info", "text": "The Elder finally asked for outside help. Smart. Those ruins have a dark history — old Durnan would know more." },
+            { "after": "critical_greta_info", "text": "The standing stones in the brackenwood. That's where it started. Be careful." },
+            { "after": "cleared_brackenwood", "text": "Drinks are on me tonight. You've given this village its life back." }
+          ]
+        },
+        {
+          "name": "Old Durnan",
+          "role": "patron",
+          "personality": "drunk old soldier, mumbles about the old war",
+          "position": { "x": 9, "y": 5 },
+          "questRelevant": false,
+          "critical": false,
+          "criticalInfo": null,
+          "criticalFlag": null,
+          "sideQuest": "Old Durnan claims he buried a chest of wartime loot near the brackenwood years ago. He can't remember where, but his old war medal is supposedly inside. He'd trade information about the ruins for help finding it.",
+          "hints": [
+            { "after": null, "text": "...the ruin-men came from below... we fought 'em back in the war... (trails off, staring into his cup)" },
+            { "after": "critical_elder_maren_info", "text": "The brackenwood ruins? Aye, I know 'em. We cleared that place out decades back. Whatever's stirring now — it's worse than what we faced." },
+            { "after": "cleared_brackenwood", "text": "Ha! Told 'em the ruins were bad news. Nobody listens to old Durnan... (raises his cup) To you, stranger." }
+          ]
+        }
       ],
       "exits": [
         { "position": { "x": 5, "y": 9 }, "width": 2, "direction": "south", "targetZone": "town-square", "entryPoint": { "x": 7, "y": 1 }, "label": "Town Square" },
@@ -42,7 +103,22 @@
       "type": "tavern_kitchen",
       "tags": ["safe", "indoor"],
       "npcs": [
-        { "name": "Berta", "role": "cook", "personality": "loud, bossy, gossips about everyone in town", "position": { "x": 5, "y": 2 }, "questRelevant": false }
+        {
+          "name": "Berta",
+          "role": "cook",
+          "personality": "loud, bossy, gossips about everyone in town",
+          "position": { "x": 5, "y": 2 },
+          "questRelevant": false,
+          "critical": false,
+          "criticalInfo": null,
+          "criticalFlag": null,
+          "sideQuest": "Berta's prize herb garden near the forest edge has been raided — she suspects it's connected to whatever is lurking in the brackenwood. She wants someone to check it out and recover her stolen herb bundles.",
+          "hints": [
+            { "after": null, "text": "Out of my kitchen! Unless you're here to help chop — then grab a knife and make yourself useful." },
+            { "after": "critical_elder_maren_info", "text": "The brackenwood? My herb garden sits right on that forest edge. Something knocked over my drying racks two nights ago. Left huge tracks in the mud." },
+            { "after": "cleared_brackenwood", "text": "Good. Now maybe I can tend my garden without looking over my shoulder every five minutes. Here — take some of my best herbs for the road." }
+          ]
+        }
       ],
       "exits": [
         { "position": { "x": 4, "y": 7 }, "width": 2, "direction": "south", "targetZone": "inn-bar", "entryPoint": { "x": 10, "y": 1 }, "label": "Bar Room" }
