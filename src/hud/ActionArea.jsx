@@ -2,11 +2,10 @@ import { useState } from 'react'
 import OrnateFrame from './OrnateFrame'
 
 const TOOLS = [
-  { icon: '🎲', title: 'Dice', key: 'dice' },
-  { icon: '📜', title: 'Character', key: 'character' },
-  { icon: '🎒', title: 'Inventory', key: 'inventory' },
-  { icon: '🏕', title: 'Rest', key: 'rest' },
-  { icon: '⚙', title: 'Settings', key: 'settings' },
+  { icon: '🎲', label: 'DICE', key: 'dice' },
+  { icon: '📜', label: 'CHAR', key: 'character' },
+  { icon: '🎒', label: 'PACK', key: 'inventory' },
+  { icon: '🏕', label: 'REST', key: 'rest' },
 ]
 
 export default function ActionArea({ onTool, onChat }) {
@@ -26,16 +25,17 @@ export default function ActionArea({ onTool, onChat }) {
         {TOOLS.map(tool => (
           <button
             key={tool.key}
-            className="hud-tool-btn"
-            title={tool.title}
+            className="hud-tool-btn hud-tool-btn-labeled"
+            title={tool.label}
             onClick={() => onTool?.(tool.key)}
           >
-            {tool.icon}
-            <svg style={{ position: 'absolute', inset: -2, pointerEvents: 'none' }} width="44" height="42" viewBox="0 0 44 42">
+            <span style={{ fontSize: 16 }}>{tool.icon}</span>
+            <span className="hud-tool-label">{tool.label}</span>
+            <svg style={{ position: 'absolute', inset: -2, pointerEvents: 'none' }} width="54" height="52" viewBox="0 0 54 52">
               <path d="M0,8 L0,3 Q0,0 3,0 L8,0" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
-              <path d="M36,0 L41,0 Q44,0 44,3 L44,8" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
-              <path d="M0,34 L0,39 Q0,42 3,42 L8,42" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
-              <path d="M36,42 L41,42 Q44,42 44,39 L44,34" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
+              <path d="M46,0 L51,0 Q54,0 54,3 L54,8" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
+              <path d="M0,44 L0,49 Q0,52 3,52 L8,52" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
+              <path d="M46,52 L51,52 Q54,52 54,49 L54,44" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
             </svg>
           </button>
         ))}

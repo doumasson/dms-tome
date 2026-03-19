@@ -247,7 +247,6 @@ export default function GameV2({ onLeave }) {
     if (tool === 'dice') setToolPanel('dice')
     else if (tool === 'character' || tool === 'inventory') setSheetChar(myCharacter)
     else if (tool === 'rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
-    else if (tool === 'settings') setShowApiSettings(true)
   }, [myCharacter])
 
   const handleEndTurn = useCallback(() => {
@@ -410,7 +409,15 @@ export default function GameV2({ onLeave }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
       <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} inCombat={inCombat} />
-      <GameHUD zone={zone} onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn} onAction={handleCombatAction} />
+      <GameHUD
+        zone={zone}
+        onTool={handleTool}
+        onChat={handleChat}
+        onEndTurn={handleEndTurn}
+        onAction={handleCombatAction}
+        onSettings={() => setShowApiSettings(true)}
+        onLeave={onLeave}
+      />
       {/* Debug: start test combat */}
       {!inCombat && (
         <button

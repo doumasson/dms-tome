@@ -3,10 +3,11 @@ import ZoneLabel from './ZoneLabel'
 import NarratorFloat from './NarratorFloat'
 import InitiativeStrip from './InitiativeStrip'
 import EnemyInfoPanel from './EnemyInfoPanel'
+import CampaignBar from './CampaignBar'
 import useStore from '../store/useStore'
 import './hud.css'
 
-export default function GameHUD({ zone, onTool, onChat, onEndTurn, onAction }) {
+export default function GameHUD({ zone, onTool, onChat, onEndTurn, onAction, onSettings, onLeave }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const encounter = useStore(s => s.encounter)
   const myCharacter = useStore(s => s.myCharacter)
@@ -18,6 +19,8 @@ export default function GameHUD({ zone, onTool, onChat, onEndTurn, onAction }) {
 
   return (
     <div className="hud-v2" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
+      {/* Campaign bar (top-right) — always visible */}
+      <CampaignBar onSettings={onSettings} onLeave={onLeave} />
       {/* Zone label (exploration) or Turn banner (combat) */}
       {inCombat ? (
         <>
