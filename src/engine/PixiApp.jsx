@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import * as PIXI from 'pixi.js'
-import { loadTileAtlas, getTileSize } from './tileAtlas'
-import { renderTilemap, clearTilemap } from './TilemapRenderer'
+import { loadTileAtlas } from './tileAtlas'
 import { renderV2Layer, clearV2Layer } from './TilemapRendererV2'
 import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens, isAnimating } from './TokenLayer'
@@ -32,9 +31,6 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   cameraRef.current = camera
   const tileAtlasV2Ref = useRef(null)
   const [ready, setReady] = useState(false)
-
-  // Is this a V2 palette-based zone?
-  const isV2 = Boolean(zone?.palette)
 
   useImperativeHandle(ref, () => ({
     getApp: () => appRef.current,
@@ -92,7 +88,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         if (!worldRef.current) return
         const pos = e.global
         const w = worldRef.current
-        const tileSize = tileAtlasV2Ref.current ? (zone?.tileSize || 200) : getTileSize()
+        const tileSize = tileAtlasV2Ref.current ? (zone?.tileSize || 200) : 64
         // Convert screen position to world position
         const wx = (pos.x - w.x) / w.scale.x
         const wy = (pos.y - w.y) / w.scale.y
@@ -127,7 +123,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
   // Load V2 atlas textures when a palette-based zone is active
   useEffect(() => {
-    if (!ready || !isV2) {
+    if (!ready) {
       tileAtlasV2Ref.current = null
       return
     }
@@ -177,45 +173,11 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     loadAtlases()
 
     return () => { cancelled = true }
-  }, [ready, isV2, zone?.palette])
-
-  // Render V1 zone tilemap (legacy 2D array layers)
-  useEffect(() => {
-    if (!ready || !zone || isV2 || !stageLayersRef.current.floor || !worldRef.current) return
-    const { floor, walls, props, grid } = stageLayersRef.current
-
-    clearTilemap(floor)
-    clearTilemap(walls)
-    clearTilemap(props)
-    renderTilemap(floor, zone.layers.floor)
-    renderTilemap(walls, zone.layers.walls)
-    renderTilemap(props, zone.layers.props)
-    clearGrid(grid)
-    renderGrid(grid, zone.width, zone.height, inCombat ? 0xcc3333 : 0xc9a84c, inCombat ? 0.08 : 0.04)
-    clearExits(stageLayersRef.current.exits)
-    if (zone.exits?.length && !inCombat) {
-      renderExits(stageLayersRef.current.exits, zone.exits, (exitData) => {
-        onExitClickRef.current?.(exitData)
-      })
-    }
-
-    // Scale the world to fit the viewport, centered (only in legacy mode — no camera)
-    if (!cameraRef.current) {
-      scaleWorldToFit(zone)
-    }
-  }, [zone, ready, inCombat, isV2])
-
-  // Re-scale on window resize (legacy mode only — camera handles its own resize)
-  useEffect(() => {
-    if (!ready || !zone || cameraRef.current) return
-    const handleResize = () => scaleWorldToFit(zone)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [ready, zone, camera])
+  }, [ready, zone?.palette])
 
   // V2 tile rendering + camera ticker — updates visible tiles each frame
   useEffect(() => {
-    if (!ready || !isV2 || !tileAtlasV2Ref.current) return
+    if (!ready || !tileAtlasV2Ref.current) return
     const app = appRef.current
     const world = worldRef.current
     if (!app || !world) return
@@ -223,11 +185,6 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     const tileSize = zone.tileSize || 200
     const tileAtlas = tileAtlasV2Ref.current
     const { floor, walls, props, grid } = stageLayersRef.current
-
-    // Clear any V1 leftovers
-    clearTilemap(floor)
-    clearTilemap(walls)
-    clearTilemap(props)
 
     // Initial grid
     clearGrid(grid)
@@ -265,52 +222,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       clearV2Layer(walls)
       clearV2Layer(props)
     }
-  }, [ready, isV2, tileAtlasV2Ref.current, inCombat])
-
-  // Camera-driven rendering for V1 zones with camera (non-V2)
-  useEffect(() => {
-    if (!ready || !camera || isV2) return
-    const app = appRef.current
-    const world = worldRef.current
-    if (!app || !world) return
-
-    const tickerFn = (ticker) => {
-      const cam = cameraRef.current
-      if (!cam) return
-      cam.update(ticker.deltaMS)
-      world.scale.set(cam.zoom)
-      world.x = -cam.x * cam.zoom
-      world.y = -cam.y * cam.zoom
-    }
-
-    app.ticker.add(tickerFn)
-    return () => app.ticker.remove(tickerFn)
-  }, [ready, camera, isV2])
-
-  function scaleWorldToFit(z) {
-    const world = worldRef.current
-    const container = containerRef.current
-    if (!world || !container) return
-
-    const tileSize = getTileSize()
-    const mapWidth = z.width * tileSize
-    const mapHeight = z.height * tileSize
-    const viewWidth = container.clientWidth
-    const viewHeight = container.clientHeight
-    const hudHeight = 134 // bottom bar height
-
-    // Available play area (full width, height minus HUD overlap)
-    const playHeight = viewHeight - hudHeight
-    const padding = 30
-    const scaleX = (viewWidth - padding * 2) / mapWidth
-    const scaleY = (playHeight - padding * 2) / mapHeight
-    const scale = Math.min(scaleX, scaleY)
-
-    world.scale.set(scale)
-    // Center horizontally, vertically center in the play area (above HUD)
-    world.x = (viewWidth - mapWidth * scale) / 2
-    world.y = (playHeight - mapHeight * scale) / 2 + padding / 2
-  }
+  }, [ready, tileAtlasV2Ref.current, inCombat])
 
   // Scroll wheel zoom (camera mode)
   useEffect(() => {
@@ -334,8 +246,8 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   useEffect(() => {
     if (!ready || !tokens?.length || !stageLayersRef.current.tokens) return
     if (isAnimating()) return // don't rebuild sprites mid-walk
-    renderTokens(stageLayersRef.current.tokens, tokens, isV2 ? (zone?.tileSize || 200) : undefined)
-  }, [tokens, ready, isV2])
+    renderTokens(stageLayersRef.current.tokens, tokens, zone?.tileSize || 200)
+  }, [tokens, ready])
 
   return (
     <div
