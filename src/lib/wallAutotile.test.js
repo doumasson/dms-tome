@@ -50,6 +50,19 @@ describe('resolveWallTile', () => {
     }
     expect(results.size).toBeGreaterThan(1) // at least 2 different variants
   })
+
+  it('WALL_STYLES has required keys for each theme', () => {
+    for (const [name, style] of Object.entries(WALL_STYLES)) {
+      expect(style.segmentPrefix, `${name}.segmentPrefix`).toBeTruthy()
+      expect(style.variants.length, `${name}.variants`).toBeGreaterThan(0)
+      expect(typeof style.rotateForVertical, `${name}.rotateForVertical`).toBe('boolean')
+    }
+  })
+
+  it('resolves dungeon horizontal with dwarven tiles', () => {
+    const tileId = resolveWallTile('dungeon', 'horizontal', 3, 2)
+    expect(tileId).toMatch(/^atlas-structures:dwarven_wall_stone_earthy_connector_\w+_1x1$/)
+  })
 })
 
 describe('resolveCornerTiles', () => {
