@@ -118,6 +118,19 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] resetCampaign store action (full state cleanup on leave)
 - [x] Non-DM refresh recovery (request-api-key broadcast)
 
+### NPC Interaction System ✅ COMPLETE
+- [x] E-key universal interaction (NPCs, exits)
+- [x] NPC click detection in PixiApp
+- [x] Interaction controller (adjacency, hint resolution)
+- [x] NPC chat bubbles (HTML overlays, story-flag-driven hints)
+- [x] NPC dialog box (ornate overlay, AI conversation)
+- [x] Critical story cutscene (full-screen, freezes party, silhouettes)
+- [x] Story flags system (Zustand slice, broadcast sync)
+- [x] Player journal (parchment scroll modal, auto-populated)
+- [x] Shared NPC conversation component (prompt counting, hard limits)
+- [x] Campaign generator + demo world updated with new NPC schema
+- [x] Multiplayer broadcast (dialog lock, cutscene sync, flag sync, journal sync)
+
 ### Phase 4: Polish
 - [ ] AI character portraits for PCs/NPCs
 - [ ] Ambient lighting on tilemap (torch glow, shadows)
@@ -145,3 +158,4 @@ _(Empty — add items as they come up)_
 - **2026-03-18:** Phase 1 V2 rebuild complete — PixiJS tilemap renderer + ornate HUD on branch `phase1/tilemap-renderer-hud`. V1 untouched, V2 opt-in via `?v2`.
 - **2026-03-18:** Phases 2 & 3 complete — zone transitions with fade, 8 room templates, zone-based campaign gen, combat UX, API key fix. Branch has 46 commits ahead of main.
 - **2026-03-18:** V2 Front Door complete — API key gate, campaign bar, sanitization, HUD labels, session log polish, combat fix. 6 new commits.
+- **2026-03-18:** NPC Interaction System complete — E-key interactions, chat bubbles, NPC dialog, story cutscenes, journal, story flags. 10 commits.

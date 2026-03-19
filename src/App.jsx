@@ -234,6 +234,33 @@ export default function App() {
       }
     });
 
+    // NPC dialog busy state
+    ch.on('broadcast', { event: 'npc-dialog-start' }, ({ payload }) => {
+      useStore.getState().setNpcBusy(payload)
+    })
+    ch.on('broadcast', { event: 'npc-dialog-end' }, () => {
+      useStore.getState().clearNpcBusy()
+    })
+
+    // Story cutscene — freeze all players
+    ch.on('broadcast', { event: 'story-cutscene-start' }, ({ payload }) => {
+      useStore.getState().setActiveCutscene(payload)
+    })
+    ch.on('broadcast', { event: 'story-cutscene-end' }, ({ payload }) => {
+      useStore.getState().clearActiveCutscene()
+      if (payload.storyFlag) useStore.getState().addStoryFlag(payload.storyFlag)
+    })
+
+    // Story flag sync
+    ch.on('broadcast', { event: 'story-flag' }, ({ payload }) => {
+      useStore.getState().addStoryFlag(payload.flag)
+    })
+
+    // Journal entry sync
+    ch.on('broadcast', { event: 'journal-entry' }, ({ payload }) => {
+      useStore.getState().addJournalEntry(payload)
+    })
+
     ch.subscribe(status => setLiveConnected(status === 'SUBSCRIBED'));
 
     setLiveChannel(ch);
