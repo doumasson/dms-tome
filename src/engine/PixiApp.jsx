@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js'
 import { loadTileAtlas, getTileSize } from './tileAtlas'
 import { renderTilemap, clearTilemap } from './TilemapRenderer'
 import { renderGrid, clearGrid } from './GridOverlay'
-import { renderTokens } from './TokenLayer'
+import { renderTokens, isAnimating } from './TokenLayer'
 import { renderExits } from './ExitZone'
 
 export default function PixiApp({ zone, tokens, onTileClick, onExitClick }) {
@@ -143,9 +143,10 @@ export default function PixiApp({ zone, tokens, onTileClick, onExitClick }) {
     world.y = (playHeight - mapHeight * scale) / 2 + padding / 2
   }
 
-  // Render tokens
+  // Render tokens — skip if animation is playing (PixiJS moves sprites directly)
   useEffect(() => {
     if (!ready || !tokens?.length || !stageLayersRef.current.tokens) return
+    if (isAnimating()) return // don't rebuild sprites mid-walk
     renderTokens(stageLayersRef.current.tokens, tokens)
   }, [tokens, ready])
 

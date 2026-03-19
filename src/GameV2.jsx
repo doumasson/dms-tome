@@ -80,6 +80,7 @@ export default function GameV2() {
   }, [playerPos, zone, myCharacter])
 
   // Click-to-move: pathfind and animate walk
+  // Only update React state at the END — PixiJS handles the visual walk directly
   const handleTileClick = useCallback(({ x, y }) => {
     if (isAnimating()) return
     const grid = walkGridRef.current
@@ -87,16 +88,11 @@ export default function GameV2() {
     if (!grid || !grid[y]?.[x]) return
     const path = findPath(grid, pos, { x, y })
     if (path && path.length > 1) {
-      animateTokenAlongPath('player', path,
-        (stepPos) => {
-          // Update position after each step (for collision/NPC proximity)
-          setPlayerPos({ x: stepPos.x, y: stepPos.y })
-        },
-        () => {
-          // Final position
-          setPlayerPos({ x, y })
-        }
-      )
+      // Update ref immediately so WASD knows the target position
+      playerPosRef.current = { x, y }
+      animateTokenAlongPath('player', path, null, () => {
+        setPlayerPos({ x, y })
+      })
     }
   }, [])
 
@@ -125,11 +121,11 @@ export default function GameV2() {
       if (!grid[ny][nx]) return
 
       // Animate one tile step
+      playerPosRef.current = { x: nx, y: ny }
       const path = [pos, { x: nx, y: ny }]
-      animateTokenAlongPath('player', path,
-        null,
-        () => setPlayerPos({ x: nx, y: ny })
-      )
+      animateTokenAlongPath('player', path, null, () => {
+        setPlayerPos({ x: nx, y: ny })
+      })
     }
 
     window.addEventListener('keydown', handleKeyDown)
