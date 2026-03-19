@@ -200,6 +200,8 @@ const useStore = create((set, get) => ({
     currentSceneIndex: 0,
     notes: { dm: '', shared: '' },
     savedEncounters: [],
+    zones: null,
+    questObjectives: [],
   },
   loadCampaign: (data) =>
     set({
@@ -1574,6 +1576,37 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     set((state) => ({ narrator: { ...state.narrator, open } })),
   clearNarratorHistory: () =>
     set((state) => ({ narrator: { ...state.narrator, history: [] } })),
+
+  // ── Zone Graph (V2) ──────────────────────────────────────────────────
+  currentZoneId: null,
+  visitedZones: new Set(),
+  zoneTokenPositions: {},
+
+  setCurrentZone: (zoneId) => set(state => ({
+    currentZoneId: zoneId,
+    visitedZones: new Set([...state.visitedZones, zoneId]),
+  })),
+
+  setZoneTokenPosition: (zoneId, memberId, pos) => set(state => ({
+    zoneTokenPositions: {
+      ...state.zoneTokenPositions,
+      [zoneId]: {
+        ...(state.zoneTokenPositions[zoneId] || {}),
+        [memberId]: pos,
+      },
+    },
+  })),
+
+  loadZoneWorld: (world) => set(state => ({
+    currentZoneId: world.startZone,
+    visitedZones: new Set([world.startZone]),
+    campaign: {
+      ...state.campaign,
+      title: world.title || state.campaign.title,
+      zones: world.zones,
+      questObjectives: world.questObjectives || [],
+    },
+  })),
 }));
 
 export default useStore;
