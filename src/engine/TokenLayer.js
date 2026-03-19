@@ -1,6 +1,10 @@
 import * as PIXI from 'pixi.js'
 import { getTileSize } from './tileAtlas'
 
+// Track token groups by ID for animation
+const tokenGroupMap = new Map()
+let activeAnimation = null
+
 /**
  * Render tokens (players + NPCs) onto a PIXI.Container.
  * @param {PIXI.Container} container - The tokens layer
@@ -8,12 +12,14 @@ import { getTileSize } from './tileAtlas'
  */
 export function renderTokens(container, tokens) {
   container.removeChildren()
+  tokenGroupMap.clear()
   const tileSize = getTileSize()
 
   for (const token of tokens) {
     const group = new PIXI.Container()
     group.x = token.x * tileSize + tileSize / 2
     group.y = token.y * tileSize + tileSize / 2
+    group.label = token.id // store ID for lookup
 
     // Circle background
     const bg = new PIXI.Graphics()
@@ -58,54 +64,70 @@ export function renderTokens(container, tokens) {
     group.addChild(nameLabel)
 
     container.addChild(group)
+    tokenGroupMap.set(token.id, group)
   }
 }
 
 /**
- * Move a specific token to a new grid position with animation.
- * @param {PIXI.Container} container - Tokens layer
+ * Smoothly animate a token along a path (tile-by-tile walking).
  * @param {string} tokenId - ID of token to move
- * @param {Array<{x:number,y:number}>} path - Array of grid positions to move through
- * @param {Function} onComplete - Called when movement finishes
+ * @param {Array<{x:number,y:number}>} path - Grid positions to walk through
+ * @param {Function} onStep - Called with {x, y} after each tile step completes
+ * @param {Function} onComplete - Called when entire path is walked
  */
-export function animateTokenAlongPath(container, tokenId, path, onComplete) {
-  const tileSize = getTileSize()
-  // Find the token group by checking children
-  const tokenGroup = container.children.find((child, i) => i === 0) // simplified: use first player token
-  // In practice, we'll match by a label or stored ID
-
-  if (!tokenGroup || path.length < 2) {
+export function animateTokenAlongPath(tokenId, path, onStep, onComplete) {
+  const group = tokenGroupMap.get(tokenId)
+  if (!group || path.length < 2) {
     onComplete?.()
     return
   }
 
+  // Cancel any active animation
+  if (activeAnimation) {
+    activeAnimation.cancelled = true
+  }
+
+  const tileSize = getTileSize()
+  const anim = { cancelled: false }
+  activeAnimation = anim
   let step = 1
-  const speed = 4 // pixels per frame
+  const speed = 3 // pixels per frame (~5 tiles/second at 60fps)
 
   function tick() {
-    if (step >= path.length) {
-      onComplete?.()
+    if (anim.cancelled || step >= path.length) {
+      if (!anim.cancelled) {
+        activeAnimation = null
+        onComplete?.()
+      }
       return
     }
 
     const target = path[step]
     const tx = target.x * tileSize + tileSize / 2
     const ty = target.y * tileSize + tileSize / 2
-    const dx = tx - tokenGroup.x
-    const dy = ty - tokenGroup.y
+    const dx = tx - group.x
+    const dy = ty - group.y
     const dist = Math.sqrt(dx * dx + dy * dy)
 
     if (dist < speed) {
-      tokenGroup.x = tx
-      tokenGroup.y = ty
+      group.x = tx
+      group.y = ty
+      onStep?.(target)
       step++
     } else {
-      tokenGroup.x += (dx / dist) * speed
-      tokenGroup.y += (dy / dist) * speed
+      group.x += (dx / dist) * speed
+      group.y += (dy / dist) * speed
     }
 
     requestAnimationFrame(tick)
   }
 
   requestAnimationFrame(tick)
+}
+
+/**
+ * Check if a walking animation is currently playing.
+ */
+export function isAnimating() {
+  return activeAnimation !== null && !activeAnimation.cancelled
 }

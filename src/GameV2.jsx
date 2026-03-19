@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
@@ -7,6 +7,7 @@ import { buildWorldFromAiOutput } from './lib/campaignGenerator'
 import { broadcastZoneTransition } from './lib/liveChannel'
 import { findPath, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
+import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import DiceTray from './components/DiceTray'
 import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
 import RestModal from './components/RestModal'
@@ -26,6 +27,8 @@ export default function GameV2() {
   const [toolPanel, setToolPanel] = useState(null)
   const [sheetChar, setSheetChar] = useState(null)
   const [restProposal, setRestProposal] = useState(null)
+  const playerPosRef = useRef(playerPos)
+  playerPosRef.current = playerPos
 
   // Load demo world on mount if no zones exist
   useEffect(() => {
@@ -42,8 +45,10 @@ export default function GameV2() {
     if (!zone?.layers) return null
     return buildWalkabilityGrid(zone.layers.walls, zone.layers.props, getBlockingSet(), zone.width, zone.height)
   }, [zone])
+  const walkGridRef = useRef(walkGrid)
+  walkGridRef.current = walkGrid
 
-  // Build token list
+  // Build token list — uses playerPos so tokens update as player walks
   const tokens = useMemo(() => {
     if (!zone) return []
     const t = []
@@ -74,14 +79,64 @@ export default function GameV2() {
     return t
   }, [playerPos, zone, myCharacter])
 
+  // Click-to-move: pathfind and animate walk
   const handleTileClick = useCallback(({ x, y }) => {
-    if (!walkGrid || !walkGrid[y]?.[x]) return
-    const path = findPath(walkGrid, playerPos, { x, y })
+    if (isAnimating()) return
+    const grid = walkGridRef.current
+    const pos = playerPosRef.current
+    if (!grid || !grid[y]?.[x]) return
+    const path = findPath(grid, pos, { x, y })
     if (path && path.length > 1) {
-      setPlayerPos({ x, y })
+      animateTokenAlongPath('player', path,
+        (stepPos) => {
+          // Update position after each step (for collision/NPC proximity)
+          setPlayerPos({ x: stepPos.x, y: stepPos.y })
+        },
+        () => {
+          // Final position
+          setPlayerPos({ x, y })
+        }
+      )
     }
-  }, [walkGrid, playerPos])
+  }, [])
 
+  // WASD keyboard movement — one tile at a time
+  useEffect(() => {
+    const dirs = {
+      w: { x: 0, y: -1 }, W: { x: 0, y: -1 }, ArrowUp: { x: 0, y: -1 },
+      s: { x: 0, y: 1 },  S: { x: 0, y: 1 },  ArrowDown: { x: 0, y: 1 },
+      a: { x: -1, y: 0 }, A: { x: -1, y: 0 }, ArrowLeft: { x: -1, y: 0 },
+      d: { x: 1, y: 0 },  D: { x: 1, y: 0 },  ArrowRight: { x: 1, y: 0 },
+    }
+
+    function handleKeyDown(e) {
+      // Don't move if typing in an input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+      const dir = dirs[e.key]
+      if (!dir) return
+      e.preventDefault()
+
+      if (isAnimating()) return
+      const grid = walkGridRef.current
+      const pos = playerPosRef.current
+      const nx = pos.x + dir.x
+      const ny = pos.y + dir.y
+      if (!grid || ny < 0 || nx < 0 || ny >= grid.length || nx >= grid[0]?.length) return
+      if (!grid[ny][nx]) return
+
+      // Animate one tile step
+      const path = [pos, { x: nx, y: ny }]
+      animateTokenAlongPath('player', path,
+        null,
+        () => setPlayerPos({ x: nx, y: ny })
+      )
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  // Zone transition via exit click
   const handleExitClick = useCallback(({ targetZone, entryPoint }) => {
     if (transitioning || !zones?.[targetZone]) return
     setTransitioning(true)
