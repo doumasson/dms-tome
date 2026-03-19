@@ -1,5 +1,7 @@
 import { rleEncode, rleDecode, rleToBlob, blobToRle } from './rleCodec.js'
 import { supabase } from './supabase'
+import { extractWallEdges } from './wallEdgeExtractor.js'
+import { getBlockingSet } from '../engine/tileAtlas'
 
 /* ── Layer Encoding ───────────────────────────────────────────── */
 
@@ -105,10 +107,30 @@ export async function loadArea(campaignId, areaId) {
   if (!area) return null
 
   const expectedLength = area.width * area.height
-  return {
-    ...area,
-    layers: decodeLayers(area.layers, expectedLength),
+  const layers = decodeLayers(area.layers, expectedLength)
+
+  // Re-derive wall edges from walls layer (not persisted to save storage)
+  const palette = area.palette || []
+  const doorSet = new Set()
+  for (let i = 0; i < palette.length; i++) {
+    if (palette[i] && palette[i].includes('door')) doorSet.add(palette[i])
   }
+  const { wallEdges, floor: backfilledFloor } = extractWallEdges(
+    layers.walls, layers.floor, palette, doorSet, area.width, area.height
+  )
+  layers.floor = backfilledFloor
+
+  // Build cellBlocked from blocking props
+  const blockingSet = getBlockingSet()
+  const cellBlocked = new Uint8Array(expectedLength)
+  for (let i = 0; i < expectedLength; i++) {
+    const propIdx = layers.props?.[i]
+    if (propIdx === 0 || !propIdx) continue
+    const tileId = palette[propIdx] || ''
+    if (blockingSet.has(tileId)) cellBlocked[i] = 1
+  }
+
+  return { ...area, layers, wallEdges, cellBlocked }
 }
 
 /**

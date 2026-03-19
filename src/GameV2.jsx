@@ -11,7 +11,7 @@ import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
 import { handleInteract } from './lib/interactionController'
-import { findPath, findPathLegacy, buildWalkabilityGrid } from './lib/pathfinding'
+import { findPath, findPathLegacy, buildWalkabilityGrid, findPathEdge } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import Camera from './engine/Camera'
@@ -297,9 +297,18 @@ export default function GameV2({ onLeave }) {
   const walkData = useMemo(() => {
     if (!zone?.layers) return null
     if (isV2Zone) {
-      // V2: build flat Uint8Array collision from palette + layers
-      // Walls layer = blocked unless the tile is a door (contains "door" in ID)
       const w = zone.width, h = zone.height
+      if (zone.wallEdges) {
+        // Edge-based collision (sub-grid walls)
+        return {
+          type: 'v2-edge',
+          wallEdges: zone.wallEdges,
+          cellBlocked: zone.cellBlocked || new Uint8Array(w * h),
+          width: w,
+          height: h,
+        }
+      }
+      // Fallback: cell-based collision (legacy V2 areas without wallEdges)
       const palette = zone.palette || []
       const collision = new Uint8Array(w * h)
       const wallLayer = zone.layers.walls
@@ -308,13 +317,12 @@ export default function GameV2({ onLeave }) {
           const idx = wallLayer[i]
           if (idx === 0) continue
           const tileId = palette[idx] || ''
-          if (tileId.includes('door')) continue // doors are walkable
+          if (tileId.includes('door')) continue
           collision[i] = 1
         }
       }
       return { type: 'v2', collision, width: w, height: h }
     }
-    // V1: legacy boolean[][] grid
     return { type: 'v1', grid: buildWalkabilityGrid(zone.layers.walls, zone.layers.props, getBlockingSet(), zone.width, zone.height) }
   }, [zone, isV2Zone])
   const walkDataRef = useRef(walkData)
@@ -371,8 +379,14 @@ export default function GameV2({ onLeave }) {
     if (!wd) return
 
     let path
-    if (wd.type === 'v2') {
-      if (wd.collision[y * wd.width + x] === 1) return // blocked
+    if (wd.type === 'v2-edge') {
+      if (wd.cellBlocked[y * wd.width + x] === 1) return
+      path = findPathEdge(
+        { wallEdges: wd.wallEdges, cellBlocked: wd.cellBlocked },
+        wd.width, wd.height, pos, { x, y }
+      )
+    } else if (wd.type === 'v2') {
+      if (wd.collision[y * wd.width + x] === 1) return
       path = findPath(wd.collision, wd.width, wd.height, pos, { x, y })
     } else {
       if (!wd.grid[y]?.[x]) return
@@ -425,7 +439,14 @@ export default function GameV2({ onLeave }) {
       const nx = pos.x + dir.x
       const ny = pos.y + dir.y
 
-      if (wd?.type === 'v2') {
+      if (wd?.type === 'v2-edge') {
+        if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
+        if (wd.cellBlocked[ny * wd.width + nx] === 1) return
+        // Check wall edge between current and target cell
+        const fromIdx = pos.y * wd.width + pos.x
+        const edgeBit = dir.y === -1 ? 0x1 : dir.x === 1 ? 0x2 : dir.y === 1 ? 0x4 : 0x8
+        if (wd.wallEdges[fromIdx] & edgeBit) return
+      } else if (wd?.type === 'v2') {
         if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
         if (wd.collision[ny * wd.width + nx] === 1) return
       } else if (wd?.type === 'v1') {
