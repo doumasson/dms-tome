@@ -190,3 +190,208 @@
   letter-spacing: 1px;
   font-family: var(--font-heading);
 }
+
+/* === Combat Mode === */
+.hud-combat-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.hud-combat-primary {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+}
+
+.hud-combat-btn {
+  flex: 1;
+  height: 40px;
+  background: #0c0a08;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 8px;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  letter-spacing: 2px;
+  border-radius: 0;
+  padding: 0;
+  min-height: 0;
+}
+
+.hud-combat-btn.attack { border: 1px solid #c9a84c; color: #c9a84c; }
+.hud-combat-btn.cast { border: 1px solid #6633aa; color: #9944aa; }
+.hud-combat-btn.move { border: 1px solid #226644; color: #44aa66; }
+
+.hud-combat-secondary {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.hud-combat-btn-sm {
+  flex: 1;
+  height: 28px;
+  background: #080608;
+  border: 1px solid #1a1614;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #554433;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  letter-spacing: 1px;
+  border-radius: 0;
+  padding: 0;
+  min-height: 0;
+}
+
+.hud-combat-btn-sm:hover { color: #998866; border-color: #2a2018; }
+
+.hud-end-turn {
+  height: 24px;
+  background: #1a0808;
+  border: 1px solid #cc3333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 8px;
+  color: #cc3333;
+  font-weight: 900;
+  font-family: var(--font-heading);
+  letter-spacing: 3px;
+  border-radius: 0;
+  padding: 0;
+  min-height: 0;
+}
+
+.hud-end-turn:hover { background: #2a0808; color: #ff4444; }
+
+.hud-economy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 4px;
+}
+
+.hud-economy-dot {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.hud-economy-dot span {
+  font-size: 6px;
+  color: #332a1e;
+  font-family: monospace;
+}
+
+/* Initiative strip */
+.hud-initiative {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  background: rgba(6,5,8,0.92);
+  border: 1px solid #2a1010;
+  padding: 4px 8px;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.hud-init-round {
+  font-size: 8px;
+  color: #cc3333;
+  font-weight: 900;
+  margin-right: 4px;
+  font-family: var(--font-heading);
+  letter-spacing: 2px;
+}
+
+.hud-init-token {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+.hud-init-token.active {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(68,170,255,0.3);
+}
+
+/* Turn banner */
+.hud-turn-banner {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 15;
+  background: rgba(6,5,8,0.92);
+  padding: 5px 14px;
+  border-left: 2px solid #4499dd;
+  pointer-events: auto;
+}
+
+.hud-turn-title {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  color: #4499dd;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.hud-turn-sub {
+  font-size: 8px;
+  color: #334455;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Timer */
+.hud-timer {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 15;
+  background: rgba(6,5,8,0.92);
+  padding: 4px 12px;
+  border: 1px solid #1a1614;
+  pointer-events: auto;
+}
+
+.hud-timer-text {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  color: #cccccc;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* Enemy info */
+.hud-enemy-info {
+  position: absolute;
+  top: 50px;
+  right: 6px;
+  width: 150px;
+  z-index: 15;
+  background: rgba(6,5,8,0.92);
+  border: 1px solid #331010;
+  border-left: 2px solid #cc3333;
+  padding: 8px;
+  pointer-events: auto;
+}
