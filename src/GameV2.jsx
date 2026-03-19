@@ -20,6 +20,7 @@ import CharacterSheetModal from './components/characterSheet/CharacterSheetModal
 import RestModal from './components/RestModal'
 import ApiKeySettings from './components/ApiKeySettings'
 import NpcDialog from './components/NpcDialog'
+import StoryCutscene from './components/StoryCutscene'
 import './hud/hud.css'
 
 const CLASS_COLORS = {
@@ -51,6 +52,7 @@ export default function GameV2({ onLeave }) {
   const narrator = useStore(s => s.narrator)
   const pendingEntryPoint = useStore(s => s.pendingEntryPoint)
   const clearPendingEntryPoint = useStore(s => s.clearPendingEntryPoint)
+  const activeCutscene = useStore(s => s.activeCutscene)
 
   const pixiRef = useRef(null)
   const [apiKeyLoaded, setApiKeyLoaded] = useState(false)
@@ -551,6 +553,19 @@ export default function GameV2({ onLeave }) {
       )}
       {activeNpc && !activeNpc.isCutscene && (
         <NpcDialog npc={activeNpc} onClose={() => setActiveNpc(null)} />
+      )}
+      {/* Story Cutscene — initiator */}
+      {activeNpc && activeNpc.isCutscene && (
+        <StoryCutscene npc={activeNpc} pixiRef={pixiRef} onClose={() => setActiveNpc(null)} isWatching={false} />
+      )}
+      {/* Story Cutscene — watching via broadcast */}
+      {!activeNpc && activeCutscene && activeCutscene.initiatorId !== user?.id && (
+        <StoryCutscene
+          npc={{ name: activeCutscene.npcName, criticalInfo: activeCutscene.criticalInfo, role: '' }}
+          pixiRef={pixiRef}
+          onClose={() => {}}
+          isWatching={true}
+        />
       )}
     </div>
   )
