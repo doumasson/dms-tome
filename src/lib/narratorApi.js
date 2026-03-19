@@ -1,3 +1,5 @@
+import { sanitizeInput, sanitizeOutput } from './sanitize'
+
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
@@ -161,6 +163,12 @@ Rules:
 }
 
 export async function callNarrator({ messages, systemPrompt, apiKey }) {
+  // Sanitize user messages before sending to API
+  const sanitizedMessages = messages.map(m => ({
+    ...m,
+    content: m.role === 'user' ? sanitizeInput(m.content) : m.content,
+  }))
+
   const response = await fetch(CLAUDE_API_URL, {
     method: 'POST',
     headers: {
@@ -173,7 +181,7 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
       model: NARRATOR_MODEL,
       max_tokens: 2048,
       system: systemPrompt,
-      messages,
+      messages: sanitizedMessages,
     }),
   });
 
@@ -201,14 +209,17 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
   try {
     const parsed = JSON.parse(text);
     // Ensure narrative is a plain string, not an object
-    if (parsed && typeof parsed.narrative === 'string') return parsed;
+    if (parsed && typeof parsed.narrative === 'string') {
+      parsed.narrative = sanitizeOutput(parsed.narrative)
+      return parsed
+    }
     return { narrative: String(parsed?.narrative || '(No response)'), rollRequest: null, stateHint: null, advanceScene: false };
   } catch {
     // Try to extract narrative value with a regex that handles escaped quotes
     const narrativeMatch = text.match(/"narrative"\s*:\s*"((?:[^"\\]|\\.)*)"/);
     if (narrativeMatch) {
       return {
-        narrative: narrativeMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"'),
+        narrative: sanitizeOutput(narrativeMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"')),
         rollRequest: null, stateHint: null, advanceScene: false,
       };
     }
