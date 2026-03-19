@@ -12,6 +12,7 @@ import { handleInteract } from './lib/interactionController'
 import { findPathLegacy as findPath, buildWalkabilityGrid } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
+import Camera from './engine/Camera'
 import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
 import { playZoneTransition } from './engine/ZoneTransition'
 import ChatBubble from './components/ChatBubble'
@@ -56,6 +57,7 @@ export default function GameV2({ onLeave }) {
   const activeCutscene = useStore(s => s.activeCutscene)
 
   const pixiRef = useRef(null)
+  const cameraRef = useRef(null)
   const [apiKeyLoaded, setApiKeyLoaded] = useState(false)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
   const [transitioning, setTransitioning] = useState(false)
@@ -71,6 +73,70 @@ export default function GameV2({ onLeave }) {
   const playerPosRef = useRef(playerPos)
   playerPosRef.current = playerPos
   const lastNpcTriggerRef = useRef(null)
+
+  // Area camera — instantiate when zone signals camera mode (e.g. large procedural maps)
+  const useAreaCamera = zone?.useCamera || false
+  useEffect(() => {
+    if (!useAreaCamera) {
+      cameraRef.current = null
+      return
+    }
+    const container = pixiRef.current?.getApp()?.canvas?.parentElement
+    const w = container?.clientWidth || window.innerWidth
+    const h = container?.clientHeight || window.innerHeight
+    const cam = new Camera(w, h)
+    const tileSize = 200 // procedural area tile size
+    cam.setAreaBounds(zone.width * tileSize, zone.height * tileSize)
+    // Center on player start
+    cam.centerOnImmediate(playerPosRef.current.x, playerPosRef.current.y, tileSize)
+    cameraRef.current = cam
+  }, [useAreaCamera, zone?.width, zone?.height])
+
+  // Camera keyboard controls — pan with WASD/arrows, spacebar to recenter
+  useEffect(() => {
+    const cam = cameraRef.current
+    if (!cam) return
+
+    const keyMap = {
+      ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
+      w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right',
+    }
+
+    const onKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+      if (keyMap[e.key]) { cam.startPan(keyMap[e.key]); e.preventDefault() }
+      if (e.key === ' ') {
+        const myPos = playerPosRef.current
+        if (myPos) cam.centerOn(myPos.x, myPos.y, 200)
+        e.preventDefault()
+      }
+    }
+    const onKeyUp = (e) => {
+      if (keyMap[e.key]) cam.stopPan(keyMap[e.key])
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('keyup', onKeyUp)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('keyup', onKeyUp)
+    }
+  }, [useAreaCamera])
+
+  // Camera scroll-wheel zoom
+  useEffect(() => {
+    const cam = cameraRef.current
+    if (!cam) return
+    const onWheel = (e) => {
+      e.preventDefault()
+      const delta = e.deltaY > 0 ? -0.05 : 0.05
+      cam.zoomAt(delta, e.clientX, e.clientY)
+    }
+    const canvas = pixiRef.current?.getApp()?.canvas
+    if (!canvas) return
+    canvas.addEventListener('wheel', onWheel, { passive: false })
+    return () => canvas.removeEventListener('wheel', onWheel)
+  }, [useAreaCamera])
 
   // Load zone world on mount — use campaign zones if available, else demo world
   useEffect(() => {
@@ -477,7 +543,7 @@ export default function GameV2({ onLeave }) {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
-      <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} onNpcClick={handleNpcClick} inCombat={inCombat} />
+      <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleExitClick} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} />
       {/* NPC Chat Bubbles */}
       {nearbyNpcs.map(npc => (
         <ChatBubble

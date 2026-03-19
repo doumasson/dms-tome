@@ -6,7 +6,7 @@ import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens, isAnimating } from './TokenLayer'
 import { renderExits, clearExits } from './ExitZone'
 
-export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, onNpcClick, inCombat }, ref) {
+export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, onNpcClick, inCombat, camera }, ref) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
   const stageLayersRef = useRef({})
@@ -19,6 +19,8 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   onNpcClickRef.current = onNpcClick
   const tokensRef = useRef(tokens)
   tokensRef.current = tokens
+  const cameraRef = useRef(camera)
+  cameraRef.current = camera
   const [ready, setReady] = useState(false)
 
   useImperativeHandle(ref, () => ({
@@ -28,6 +30,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       if (!w) return null
       return { x: w.x, y: w.y, scale: w.scale.x }
     },
+    getCamera: () => cameraRef.current,
   }), [])
 
   // Initialize PixiJS application
@@ -60,6 +63,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         props: new PIXI.Container(),
         grid: new PIXI.Container(),
         tokens: new PIXI.Container(),
+        fog: new PIXI.Container(),
         exits: new PIXI.Container(),
       }
       Object.values(layers).forEach(l => world.addChild(l))
@@ -129,17 +133,39 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       })
     }
 
-    // Scale the world to fit the viewport, centered
-    scaleWorldToFit(zone)
+    // Scale the world to fit the viewport, centered (only in legacy mode — no camera)
+    if (!cameraRef.current) {
+      scaleWorldToFit(zone)
+    }
   }, [zone, ready, inCombat])
 
-  // Re-scale on window resize
+  // Re-scale on window resize (legacy mode only — camera handles its own resize)
   useEffect(() => {
-    if (!ready || !zone) return
+    if (!ready || !zone || cameraRef.current) return
     const handleResize = () => scaleWorldToFit(zone)
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [ready, zone])
+  }, [ready, zone, camera])
+
+  // Camera-driven rendering — update world transform every frame
+  useEffect(() => {
+    if (!ready || !camera) return
+    const app = appRef.current
+    const world = worldRef.current
+    if (!app || !world) return
+
+    const tickerFn = (ticker) => {
+      const cam = cameraRef.current
+      if (!cam) return
+      cam.update(ticker.deltaMS)
+      world.scale.set(cam.zoom)
+      world.x = -cam.x * cam.zoom
+      world.y = -cam.y * cam.zoom
+    }
+
+    app.ticker.add(tickerFn)
+    return () => app.ticker.remove(tickerFn)
+  }, [ready, camera])
 
   function scaleWorldToFit(z) {
     const world = worldRef.current
