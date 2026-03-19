@@ -108,6 +108,16 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Combat action wiring (attack resolution, enemy AI turns)
 - [x] Grid tint shift (gold → red in combat)
 
+### V2 Front Door ✅ COMPLETE
+- [x] API key gate (full-screen blocker, encrypted DB storage via Web Crypto, no localStorage)
+- [x] Campaign bar (name, player count, invite link copy, settings, leave)
+- [x] Input/output sanitization for AI narrator (prompt injection + XSS)
+- [x] HUD button labels (DICE, CHAR, PACK, REST)
+- [x] Session log polish (chat-first, auto-scroll, DM/player message alignment)
+- [x] Test combat button fix (fallback character, error handling, ornate styling)
+- [x] resetCampaign store action (full state cleanup on leave)
+- [x] Non-DM refresh recovery (request-api-key broadcast)
+
 ### Phase 4: Polish
 - [ ] AI character portraits for PCs/NPCs
 - [ ] Ambient lighting on tilemap (torch glow, shadows)
@@ -134,3 +144,4 @@ _(Empty — add items as they come up)_
 
 - **2026-03-18:** Phase 1 V2 rebuild complete — PixiJS tilemap renderer + ornate HUD on branch `phase1/tilemap-renderer-hud`. V1 untouched, V2 opt-in via `?v2`.
 - **2026-03-18:** Phases 2 & 3 complete — zone transitions with fade, 8 room templates, zone-based campaign gen, combat UX, API key fix. Branch has 46 commits ahead of main.
+- **2026-03-18:** V2 Front Door complete — API key gate, campaign bar, sanitization, HUD labels, session log polish, combat fix. 6 new commits.
