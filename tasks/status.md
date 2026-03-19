@@ -149,16 +149,23 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Camera + Fog + Roof + Combat Camera wired into PixiApp/GameV2
 - 117 tests, all passing. 18 commits on branch.
 
-### Phase 5b: Procedural Maps — Integration (IN PROGRESS)
+### Phase 5b: Procedural Area System ✅ COMPLETE
 - [x] Run FA asset scanner on all 3 zip packs → 146,868 assets with author/license tracking
 - [x] Build sprite atlases from manifest → 8 atlases in `public/tilesets/` (3,200 starter tiles, ~22MB WebP)
 - [x] Create first curated chunks — tavern, house, clearing, road, dungeon room (`src/data/chunks/`)
-- [x] Build test area and load in dev mode — `?v2&testarea` renders 40x30 village with V1 placeholder tiles
-- [ ] Wire V2 atlas renderer into PixiApp (replace 32px placeholders with 200px FA tiles + camera)
-- [ ] Wire area loading from Supabase (layer blobs, area metadata)
-- [ ] AI layout generation (Claude describes POIs → mapGenerator assembles)
-- [ ] Campaign generator outputs area graph instead of zone graph
-- [ ] Multiplayer area sync (fog bitfields, token positions, roof states)
+- [x] Build test area and load in dev mode — `?testarea` renders 40x30 village with FA tiles + camera
+- [x] V2 atlas renderer wired into PixiApp (200px FA tiles, camera pan/zoom, viewport culling)
+- [x] V1 rendering path removed — all areas use V2 pipeline only
+- [x] `areaBuilder.js` — full `buildAreaFromBrief()` pipeline (chunk matching, palette remapping, collision, NPCs, exits)
+- [x] `areaStorage.js` — RLE + base64 encode/decode, Supabase save/load/removeBrief
+- [x] `campaignGenerator.js` rewritten — outputs area briefs instead of zone graph
+- [x] Zone state removed from Zustand store — replaced by area state (`areas`, `areaBriefs`, `activateArea`, etc.)
+- [x] `demoArea.js` replaces `demoWorld.json` — brief-based demo village
+- [x] Exit-proximity pre-generation — builds upcoming areas when player within 5 tiles, saves to Supabase
+- [x] Area transition handler — on-demand build from briefs, `broadcastAreaTransition`
+- [x] Multiplayer area sync — broadcast listeners for area transitions, token moves, fog, roof state
+- [x] Dead code cleanup — removed `demoWorld.json`, `roomTemplates/`, `broadcastZoneTransition`, V1 rendering
+- Spec: `docs/superpowers/specs/2026-03-19-phase5b-procedural-areas-design.md`
 
 ### Phase 6: Polish
 - [ ] AI character portraits for PCs/NPCs
@@ -188,3 +195,4 @@ _(Empty — add items as they come up)_
 - **2026-03-18:** NPC Interaction System complete — E-key interactions, chat bubbles, NPC dialog, story cutscenes, journal, story flags. 10 commits.
 - **2026-03-19:** Phase 5 Procedural Map System core modules complete — 18 tasks: asset pipeline, camera, tile atlas, pathfinding upgrade, chunks, generators, vision, fog, roofs, wiring. 117 tests, 18 commits.
 - **2026-03-19:** Phase 5b integration started — FA scanner with author/license tracking, 8 sprite atlases built (146K assets → 3,200 starter tiles), 5 curated chunks, test area visible at `?v2&testarea`.
+- **2026-03-19:** Phase 5b procedural area system complete — zones replaced by areas, areaBuilder pipeline, areaStorage, campaign generator rewrite, multiplayer sync, V1 removal, dead code cleanup. 12 tasks.
