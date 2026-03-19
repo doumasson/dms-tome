@@ -6,6 +6,7 @@ import { renderGrid, clearGrid } from './GridOverlay'
 import { renderTokens, isAnimating } from './TokenLayer'
 import { renderExits, clearExits } from './ExitZone'
 import { TileAtlasV2 } from './tileAtlasV2'
+import { WallRenderer } from './WallRenderer'
 
 // Atlas manifest files that ship with the build (JSON only — images loaded at runtime)
 const ATLAS_NAMES = [
@@ -30,6 +31,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   const cameraRef = useRef(camera)
   cameraRef.current = camera
   const tileAtlasV2Ref = useRef(null)
+  const wallRendererRef = useRef(null)
   const [ready, setReady] = useState(false)
 
   useImperativeHandle(ref, () => ({
@@ -211,7 +213,12 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
       // Render visible tiles for each layer
       renderV2Layer(floor, zone.layers.floor, zone.width, zone.height, tileSize, tileAtlas, bounds)
-      renderV2Layer(walls, zone.layers.walls, zone.width, zone.height, tileSize, tileAtlas, bounds)
+      // Wall edges rendered by WallRenderer (if available), otherwise fall back to solid fill
+      if (wallRendererRef.current) {
+        wallRendererRef.current.render(bounds)
+      } else {
+        renderV2Layer(walls, zone.layers.walls, zone.width, zone.height, tileSize, tileAtlas, bounds)
+      }
       renderV2Layer(props, zone.layers.props, zone.width, zone.height, tileSize, tileAtlas, bounds)
     }
 
@@ -223,6 +230,23 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       clearV2Layer(props)
     }
   }, [ready, tileAtlasV2Ref.current, inCombat])
+
+  // Initialize WallRenderer when wall edge data is available
+  useEffect(() => {
+    if (!ready || !tileAtlasV2Ref.current || !stageLayersRef.current.walls) return
+    if (!zone?.wallEdges) return
+
+    const wr = new WallRenderer(tileAtlasV2Ref.current, zone.tileSize || 200)
+    wr.setWallData(zone.wallEdges, zone.width, zone.height, zone.theme)
+    stageLayersRef.current.walls.addChild(wr.container)
+    wallRendererRef.current = wr
+
+    return () => {
+      wr.clear()
+      stageLayersRef.current.walls?.removeChild(wr.container)
+      wallRendererRef.current = null
+    }
+  }, [ready, tileAtlasV2Ref.current, zone?.wallEdges])
 
   // Scroll wheel zoom (camera mode)
   useEffect(() => {
