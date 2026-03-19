@@ -31,6 +31,7 @@
   display: flex;
   padding: 14px 14px 10px;
   gap: 8px;
+  pointer-events: auto;
 }
 
 /* Session log panel */
@@ -142,6 +143,7 @@
   z-index: 10;
   background: rgba(8, 6, 12, 0.92);
   padding: 10px 28px;
+  pointer-events: auto;
 }
 
 .hud-zone-name {
@@ -165,11 +167,12 @@
 
 /* Narrator float */
 .hud-narrator {
-  position: absolute;
+  position: relative;
   z-index: 10;
   background: rgba(8, 6, 12, 0.92);
   border: 1px solid rgba(201, 168, 76, 0.2);
   padding: 10px 28px;
+  pointer-events: auto;
 }
 
 .hud-narrator-text {

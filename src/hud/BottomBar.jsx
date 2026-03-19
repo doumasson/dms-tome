@@ -6,7 +6,7 @@ import FiligreeBar from './FiligreeBar'
 
 export default function BottomBar({ onTool, onChat }) {
   return (
-    <div className="hud-bottom-bar" style={{ position: 'relative' }}>
+    <div className="hud-bottom-bar">
       {/* Top filigree border */}
       <FiligreeBar />
 
