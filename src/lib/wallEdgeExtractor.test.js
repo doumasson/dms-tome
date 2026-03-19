@@ -81,6 +81,18 @@ describe('extractWallEdges', () => {
     expect(floor[2]).toBe(3)
   })
 
+  it('backfills floor through 2-deep walls', () => {
+    const { floor } = makeGrid([
+      'WWW',
+      'WWW',
+      'FFF',
+    ], palette, doorSet)
+    // Both wall rows should get backfilled
+    expect(floor[0]).toBe(3) // top-left
+    expect(floor[1]).toBe(3) // top-center
+    expect(floor[4]).toBe(3) // middle-center
+  })
+
   it('no backfill when wall cell already has floor', () => {
     const width = 3, height = 1
     const walls = new Uint16Array([1, 0, 0])

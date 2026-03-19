@@ -56,22 +56,19 @@ export function extractWallEdges(walls, floor, palette, doorSet, width, height) 
     }
   }
 
-  // Backfill floor under wall cells
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const idx = y * width + x
-      if (walls[idx] === 0) continue
-      if (floor[idx] !== 0) continue // already has floor
-
-      // Find nearest neighbor with a floor tile
-      for (const { dx, dy } of DIR_BITS) {
-        const nx = x + dx
-        const ny = y + dy
-        if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
-        const nFloor = floor[ny * width + nx]
-        if (nFloor !== 0) {
-          floor[idx] = nFloor
-          break
+  // Backfill floor under wall cells (multi-pass for thick walls)
+  let changed = true
+  while (changed) {
+    changed = false
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const idx = y * width + x
+        if (walls[idx] === 0 || floor[idx] !== 0) continue
+        for (const { dx, dy } of DIR_BITS) {
+          const nx = x + dx, ny = y + dy
+          if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
+          const nFloor = floor[ny * width + nx]
+          if (nFloor !== 0) { floor[idx] = nFloor; changed = true; break }
         }
       }
     }
