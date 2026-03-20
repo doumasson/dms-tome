@@ -8,6 +8,16 @@ import { extractWallEdges } from './wallEdgeExtractor.js'
 import { getBlockingSet } from '../engine/tileAtlas'
 import { resolveRoofTile } from './roofStyles.js'
 
+/* ── Area sizing ─────────────────────────────────────────────── */
+
+export function calculateAreaSize(brief) {
+  if (brief.width && brief.height) return { width: brief.width, height: brief.height }
+  const poiCount = brief.pois?.length || 3
+  const width = Math.min(120, Math.max(40, poiCount * 12))
+  const height = Math.round(width * 0.75)
+  return { width, height }
+}
+
 /* ── Theme constants ──────────────────────────────────────────── */
 
 export const THEME_TERRAIN = {
@@ -46,7 +56,10 @@ function getChunkLibrary() {
  * @returns {object} complete area object ready for rendering/storage
  */
 export function buildAreaFromBrief(brief, seed = Date.now()) {
-  const { id, name, width, height, theme = 'village', pois = [], connections = [], npcs = [], exits = [], enemies = [], encounterZones = [] } = brief
+  const { id, name, theme = 'village', pois = [], connections = [], npcs = [], exits = [], enemies = [], encounterZones = [] } = brief
+  const size = calculateAreaSize(brief)
+  const width = brief.width || size.width
+  const height = brief.height || size.height
   const lib = getChunkLibrary()
 
   // 1. Match chunks for each POI

@@ -26,12 +26,28 @@ export function resolvePositions(pois, areaWidth, areaHeight, seed = Date.now())
   const rand = seededRandom(seed)
   const cellW = Math.floor(areaWidth / 5)
   const cellH = Math.floor(areaHeight / 5)
+  const gridCols = 5
+  const gridRows = 5
   const result = {}
+  const occupied = new Set()
 
   for (const poi of pois) {
     const mapping = POSITION_MAP[poi.position] || { col: 2, row: 2 }
-    const baseX = mapping.col * cellW
-    const baseY = mapping.row * cellH
+    let gridX = mapping.col
+    let gridY = mapping.row
+
+    let key = `${gridX},${gridY}`
+    let attempts = 0
+    while (occupied.has(key) && attempts < 25) {
+      gridX = (gridX + 1) % gridCols
+      if (gridX === 0) gridY = (gridY + 1) % gridRows
+      key = `${gridX},${gridY}`
+      attempts++
+    }
+    occupied.add(key)
+
+    const baseX = gridX * cellW
+    const baseY = gridY * cellH
 
     const chunkW = poi.width || 10
     const chunkH = poi.height || 10
