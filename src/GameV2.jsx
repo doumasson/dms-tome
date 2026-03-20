@@ -155,11 +155,17 @@ export default function GameV2({ onLeave }) {
     fogDirtyRef.current = true
   }, [playerPos, currentAreaId])
 
-  // Reset explored set when area changes
+  // Reset explored set when area changes; DM restores from persisted bitfield if available
   const prevAreaIdRef = useRef(currentAreaId)
   useEffect(() => {
     if (currentAreaId !== prevAreaIdRef.current) {
-      exploredRef.current = new Set()
+      const storedFog = useStore.getState().fogBitfields[currentAreaId]
+      if (storedFog && zone?.width && zone?.height) {
+        const decoded = decodeExploredBitfield(storedFog, zone.width, zone.height)
+        exploredRef.current = decoded || new Set()
+      } else {
+        exploredRef.current = new Set()
+      }
       fogDirtyRef.current = true
       prevAreaIdRef.current = currentAreaId
     }
@@ -190,12 +196,15 @@ export default function GameV2({ onLeave }) {
     // Grow explored set (mutates in place, returns newly added keys)
     const newlyExplored = updateExplored(exploredRef.current, visionResult.active)
 
-    // Broadcast explored state (DM only, debounced 500ms)
+    // Broadcast explored state (DM only, debounced 500ms) and persist to store
     if (isDM && currentAreaId && newlyExplored.length > 0) {
       clearTimeout(fogBroadcastTimer.current)
       fogBroadcastTimer.current = setTimeout(() => {
         const bitfield = encodeExploredBitfield(exploredRef.current, zone.width, zone.height)
         broadcastFogUpdate(currentAreaId, bitfield)
+        const { updateFogBitfield, saveSessionStateToSupabase } = useStore.getState()
+        updateFogBitfield(currentAreaId, bitfield)
+        saveSessionStateToSupabase()
       }, 500)
     }
   }, [playerPos, currentAreaId, zone, myCharacter, isDM])
@@ -285,6 +294,14 @@ export default function GameV2({ onLeave }) {
       )
       rm.registerBuilding({ ...b, doors: buildingDoors })
     }
+
+    // Restore persisted roof states for this area
+    const storedRoofStates = useStore.getState().roofStates[currentAreaId]
+    if (storedRoofStates) {
+      for (const [buildingId, revealed] of Object.entries(storedRoofStates)) {
+        rm.setRevealed(buildingId, revealed)
+      }
+    }
   }, [zone?.buildings, currentAreaId])
 
   // Update roof reveal states when tokens move
@@ -296,9 +313,12 @@ export default function GameV2({ onLeave }) {
     const positions = [pos] // party positions — expand when multiplayer token sync exists
     const changes = rm.updateRevealStates(positions)
     if (changes.length > 0 && isDM) {
+      const { setRoofState, saveSessionStateToSupabase } = useStore.getState()
       for (const { buildingId, revealed } of changes) {
-        broadcastRoofReveal(buildingId, revealed)
+        broadcastRoofReveal(currentAreaId, buildingId, revealed)
+        setRoofState(currentAreaId, buildingId, revealed)
       }
+      saveSessionStateToSupabase()
     }
   }, [playerPos, currentAreaId, zone])
 
@@ -306,10 +326,11 @@ export default function GameV2({ onLeave }) {
   useEffect(() => {
     if (!roofStates || isDM) return
     const rm = roofManagerRef.current
-    for (const [buildingId, revealed] of Object.entries(roofStates)) {
+    const areaRoofStates = roofStates[currentAreaId] || {}
+    for (const [buildingId, revealed] of Object.entries(areaRoofStates)) {
       rm.setRevealed(buildingId, revealed)
     }
-  }, [roofStates])
+  }, [roofStates, currentAreaId])
 
   // --- Encounter zone proximity detection ---
   useEffect(() => {

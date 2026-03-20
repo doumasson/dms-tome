@@ -234,8 +234,9 @@ export default function App() {
 
     // Roof reveal state sync (host → players for V2 area map)
     ch.on('broadcast', { event: 'roof-state' }, ({ payload }) => {
-      const { buildingId, revealed } = payload;
-      useStore.getState().setRoofState(buildingId, revealed);
+      const { areaId, buildingId, revealed } = payload;
+      const resolvedAreaId = areaId || useStore.getState().currentAreaId;
+      useStore.getState().setRoofState(resolvedAreaId, buildingId, revealed);
     });
 
     // Dice roll broadcast (any player → all others)

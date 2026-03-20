@@ -244,6 +244,8 @@ const useStore = create((set, get) => ({
         },
         sceneImages: { ...state.sceneImages, ...sceneImageUpdates },
         sceneTokenPositions: settings?.sceneTokenPositions || state.sceneTokenPositions,
+        fogBitfields: settings?.fogBitfields || state.fogBitfields,
+        roofStates: settings?.roofStates || state.roofStates,
       };
     }),
   unloadCampaign: () =>
@@ -1392,7 +1394,7 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
   },
 
   saveSessionStateToSupabase: async () => {
-    const { activeCampaign, campaign, encounter, isDM } = get();
+    const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates } = get();
     if (!activeCampaign?.id || !isDM) return;
     try {
       const { data: cur } = await supabase
@@ -1404,6 +1406,8 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
             ...(cur?.settings || {}),
             currentSceneIndex: campaign.currentSceneIndex,
             encounterState: encounter.phase !== 'idle' ? encounter : null,
+            fogBitfields,
+            roofStates,
           },
         })
         .eq('id', activeCampaign.id);
@@ -1654,8 +1658,11 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     fogBitfields: { ...state.fogBitfields, [areaId]: bitfield },
   })),
 
-  setRoofState: (buildingId, revealed) => set(state => ({
-    roofStates: { ...state.roofStates, [buildingId]: revealed },
+  setRoofState: (areaId, buildingId, revealed) => set(state => ({
+    roofStates: {
+      ...state.roofStates,
+      [areaId]: { ...(state.roofStates[areaId] || {}), [buildingId]: revealed },
+    },
   })),
 
   setAreaTokenPosition: (areaId, playerId, pos) => set(state => ({
