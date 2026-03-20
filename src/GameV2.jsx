@@ -216,7 +216,19 @@ export default function GameV2({ onLeave }) {
           ...e, isEnemy: true, type: 'enemy',
           position: e.position || { x: pos.x + 2, y: pos.y },
         }))
-        startEncounter(combatEnemies, partyMembers || [], true)
+        // Include current player with live position so combat places them correctly
+        const myChar = useStore.getState().myCharacter
+        const combatParty = (partyMembers || []).map(p => ({
+          ...p,
+          position: (myChar && (p.id === myChar.id || p.name === myChar.name))
+            ? { ...playerPosRef.current }
+            : null,
+        }))
+        // Ensure host player is included even if not in partyMembers
+        if (myChar && !combatParty.some(p => p.id === myChar.id || p.name === myChar.name)) {
+          combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
+        }
+        startEncounter(combatEnemies, combatParty, true)
       }
     }
 

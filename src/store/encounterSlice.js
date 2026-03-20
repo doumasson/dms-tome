@@ -45,6 +45,7 @@ export function createEncounterSlice(set, get) {
             id: crypto.randomUUID(),
             name: label,
             type: 'enemy',
+            isEnemy: true,
             initiative: null,
             maxHp: Number(group.hp) || 10,
             currentHp: Number(group.hp) || 10,
@@ -58,7 +59,9 @@ export function createEncounterSlice(set, get) {
             spells: group.spells || [],
             conditions: [],
             concentration: null,
-            position: null,
+            position: group.position
+              ? { x: group.position.x + (i > 0 ? i : 0), y: group.position.y }
+              : null,
             deathSaves: { successes: 0, failures: 0, stable: false },
           });
         }
@@ -92,7 +95,7 @@ export function createEncounterSlice(set, get) {
           resourcesUsed: char.resourcesUsed || {},
           conditions: [],
           concentration: null,
-          position: null,
+          position: char.position || null,
           deathSaves: { successes: 0, failures: 0, stable: false },
           portrait: makePortraitUrl(char.name, char.race, char.class),
         });
@@ -110,7 +113,7 @@ export function createEncounterSlice(set, get) {
 
         // Place combatants — keep existing positions if they have them,
         // only auto-place those without positions (fallback for V1 scenes)
-        const hasPositions = sorted.some(c => c.position?.x > 0 || c.position?.y > 0)
+        const hasPositions = sorted.some(c => c.position != null && c.position.x != null)
         let placed
         if (hasPositions) {
           // V2 tilemap: combatants already have map positions from area generation

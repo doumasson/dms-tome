@@ -13,6 +13,7 @@ import {
 const GRID_COLS = 10;
 const GRID_ROWS = 7;
 const CELL_PX   = 36;
+const DRAG_THRESHOLD = 4; // px before drag activates (allows double-click)
 
 function itemKey(i) { return i.instanceId || i.name; }
 
@@ -127,9 +128,12 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
   const [hoveredId, setHoveredId] = useState(null);
   const gridRef      = useRef(null);
 
-  // Drag state
+  // Drag state — two phases:
+  //   1. pendingDrag (ref): mouseDown captured, waiting for threshold
+  //   2. drag (state): threshold exceeded, ghost visible, drop enabled
   const [drag, setDrag]         = useState(null);   // { item, w, h, offsetX, offsetY, origCol, origRow }
   const [cursorPx, setCursorPx] = useState(null);   // { x, y } relative to grid
+  const pendingDragRef = useRef(null); // { item, w, h, origCol, origRow, startClientX, startClientY }
 
   const inventoryRef = useRef(inventory);
   const placedRef    = useRef(placed);
@@ -139,17 +143,12 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
   function handleMouseDown(e, item) {
     if (!isOwn || e.button !== 0) return;
     e.preventDefault();
-    const rect     = e.currentTarget.getBoundingClientRect();
     const [w, h]   = getItemSize(item);
     const placed_  = placedRef.current.find(p => itemKey(p.item) === itemKey(item));
     const origCol  = placed_?.col ?? 0;
     const origRow  = placed_?.row ?? 0;
-    // Center the ghost under cursor — offset is half the item size
-    const offsetX = (w * CELL_PX) / 2;
-    const offsetY = (h * CELL_PX) / 2;
-    setDrag({ item, w, h, offsetX, offsetY, origCol, origRow });
-    const gRect = gridRef.current?.getBoundingClientRect();
-    if (gRect) setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
+    // Don't start drag yet — wait for threshold (allows double-click to work)
+    pendingDragRef.current = { item, w, h, origCol, origRow, startClientX: e.clientX, startClientY: e.clientY };
   }
 
   const commitDrop = useCallback((clientX, clientY) => {
@@ -188,16 +187,40 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
     // Invalid drop → no-op; item returns to original position (state unchanged)
   }, [drag, updateMyCharacter]);
 
+  // Global mouse listeners — handle both pending drag (threshold check) and active drag
   useEffect(() => {
-    if (!drag) return;
     function onMove(e) {
-      const gRect = gridRef.current?.getBoundingClientRect();
-      if (gRect) setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
+      // Phase 1: Check if pending drag should activate
+      const pending = pendingDragRef.current;
+      if (pending && !drag) {
+        const dx = e.clientX - pending.startClientX;
+        const dy = e.clientY - pending.startClientY;
+        if (Math.abs(dx) + Math.abs(dy) > DRAG_THRESHOLD) {
+          // Activate drag — compute offset from where user clicked relative to item top-left
+          const gRect = gridRef.current?.getBoundingClientRect();
+          if (!gRect) return;
+          const offsetX = pending.startClientX - gRect.left - pending.origCol * CELL_PX;
+          const offsetY = pending.startClientY - gRect.top  - pending.origRow * CELL_PX;
+          setDrag({ item: pending.item, w: pending.w, h: pending.h, offsetX, offsetY, origCol: pending.origCol, origRow: pending.origRow });
+          setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
+          pendingDragRef.current = null;
+        }
+        return;
+      }
+      // Phase 2: Active drag — update cursor position
+      if (drag) {
+        const gRect = gridRef.current?.getBoundingClientRect();
+        if (gRect) setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
+      }
     }
     function onUp(e) {
-      commitDrop(e.clientX, e.clientY);
-      setDrag(null);
-      setCursorPx(null);
+      if (drag) {
+        commitDrop(e.clientX, e.clientY);
+        setDrag(null);
+        setCursorPx(null);
+      }
+      // Clear pending drag without action (click/dblclick will fire normally)
+      pendingDragRef.current = null;
     }
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup',   onUp);
