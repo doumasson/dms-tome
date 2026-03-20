@@ -1202,7 +1202,7 @@ Expected: FAIL.
 In `src/lib/dungeonGenerator.js`, add `corridorWidth` to the options parameter. Update `connectRooms` to store `corridorWidth` on each corridor object so `dungeonBuilder` can carve them at the right width:
 
 ```js
-export function generateDungeon(width, height, { minRooms = 4, maxRooms = 10, corridorWidth = 2, seed = Date.now() } = {}) {
+export function generateDungeon(width, height, { minRooms = 4, maxRooms = 15, corridorWidth = 2, seed = Date.now() } = {}) {
   // ... existing BSP logic unchanged ...
   // In connectRooms, each corridor already has { x1, y1, x2, y2 }.
   // Add corridorWidth to each: corridor.width = corridorWidth
@@ -1231,7 +1231,7 @@ function getChunkLibrary() {
 
 export function buildDungeonArea(brief, seed = Date.now()) {
   const { id, name, width, height, theme = 'dungeon', dungeonConfig = {}, enemies = [], exits = [], npcs = [] } = brief
-  const { minRooms = 4, maxRooms = 8, corridorWidth = 2 } = dungeonConfig
+  const { minRooms = 4, maxRooms = 15, corridorWidth = 2 } = dungeonConfig
 
   // 1. Generate BSP layout
   const dungeon = generateDungeon(width, height, { minRooms, maxRooms, corridorWidth, seed })
