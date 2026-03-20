@@ -1,0 +1,649 @@
+[
+  {
+    "id": "longsword-plus-1",
+    "name": "+1 Longsword",
+    "baseName": "Longsword",
+    "rarity": "uncommon",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d8",
+    "damageType": "slashing",
+    "properties": ["versatile"],
+    "weight": 3,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 1 },
+      { "stat": "damageBonus", "value": 1 }
+    ]
+  },
+  {
+    "id": "longsword-plus-2",
+    "name": "+2 Longsword",
+    "baseName": "Longsword",
+    "rarity": "rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d8",
+    "damageType": "slashing",
+    "properties": ["versatile"],
+    "weight": 3,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 2 },
+      { "stat": "damageBonus", "value": 2 }
+    ]
+  },
+  {
+    "id": "longsword-plus-3",
+    "name": "+3 Longsword",
+    "baseName": "Longsword",
+    "rarity": "very_rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d8",
+    "damageType": "slashing",
+    "properties": ["versatile"],
+    "weight": 3,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 3 },
+      { "stat": "damageBonus", "value": 3 }
+    ]
+  },
+  {
+    "id": "shortbow-plus-1",
+    "name": "+1 Shortbow",
+    "baseName": "Shortbow",
+    "rarity": "uncommon",
+    "type": "weapon",
+    "sizeCategory": "weapon_ranged",
+    "damage": "1d6",
+    "damageType": "piercing",
+    "properties": ["ammunition", "two-handed"],
+    "weight": 2,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 1 },
+      { "stat": "damageBonus", "value": 1 }
+    ]
+  },
+  {
+    "id": "shortbow-plus-2",
+    "name": "+2 Shortbow",
+    "baseName": "Shortbow",
+    "rarity": "rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_ranged",
+    "damage": "1d6",
+    "damageType": "piercing",
+    "properties": ["ammunition", "two-handed"],
+    "weight": 2,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 2 },
+      { "stat": "damageBonus", "value": 2 }
+    ]
+  },
+  {
+    "id": "shortbow-plus-3",
+    "name": "+3 Shortbow",
+    "baseName": "Shortbow",
+    "rarity": "very_rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_ranged",
+    "damage": "1d6",
+    "damageType": "piercing",
+    "properties": ["ammunition", "two-handed"],
+    "weight": 2,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 3 },
+      { "stat": "damageBonus", "value": 3 }
+    ]
+  },
+  {
+    "id": "dagger-plus-1",
+    "name": "+1 Dagger",
+    "baseName": "Dagger",
+    "rarity": "uncommon",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d4",
+    "damageType": "piercing",
+    "properties": ["finesse", "light", "thrown"],
+    "weight": 1,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 1 },
+      { "stat": "damageBonus", "value": 1 }
+    ]
+  },
+  {
+    "id": "dagger-plus-2",
+    "name": "+2 Dagger",
+    "baseName": "Dagger",
+    "rarity": "rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d4",
+    "damageType": "piercing",
+    "properties": ["finesse", "light", "thrown"],
+    "weight": 1,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 2 },
+      { "stat": "damageBonus", "value": 2 }
+    ]
+  },
+  {
+    "id": "dagger-plus-3",
+    "name": "+3 Dagger",
+    "baseName": "Dagger",
+    "rarity": "very_rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d4",
+    "damageType": "piercing",
+    "properties": ["finesse", "light", "thrown"],
+    "weight": 1,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "attackBonus", "value": 3 },
+      { "stat": "damageBonus", "value": 3 }
+    ]
+  },
+  {
+    "id": "flame-tongue",
+    "name": "Flame Tongue",
+    "baseName": "Longsword",
+    "rarity": "rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d8",
+    "damageType": "slashing",
+    "properties": ["versatile"],
+    "weight": 3,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "damageDice", "value": "2d6", "damageType": "fire", "condition": "activated" }
+    ],
+    "activatable": true,
+    "activationDescription": "You can use a bonus action to speak a command word, causing flames to erupt from the blade. The flames shed bright light in a 40-foot radius and dim light for an additional 40 feet. While active, deal an extra 2d6 fire damage on a hit. The flames last until you use a bonus action to speak the command word again or until you drop or sheathe the sword."
+  },
+  {
+    "id": "frost-brand",
+    "name": "Frost Brand",
+    "baseName": "Longsword",
+    "rarity": "very_rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d8",
+    "damageType": "slashing",
+    "properties": ["versatile"],
+    "weight": 3,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "damageDice", "value": "1d6", "damageType": "cold" },
+      { "stat": "saveBonus", "savingThrow": "fire", "value": 0, "grantAdvantage": true }
+    ],
+    "activationDescription": "When you hit with an attack, the target takes an extra 1d6 cold damage. In freezing temperatures, the blade sheds bright light in a 10-foot radius and dim light for an additional 10 feet. When you draw this weapon, you can extinguish all nonmagical flames within 30 feet."
+  },
+  {
+    "id": "vicious-weapon",
+    "name": "Vicious Weapon",
+    "baseName": "Longsword",
+    "rarity": "rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_one_handed",
+    "damage": "1d8",
+    "damageType": "slashing",
+    "properties": ["versatile"],
+    "weight": 3,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "damageDice", "value": "2d6", "condition": "natural20" }
+    ],
+    "activationDescription": "When you roll a 20 on an attack roll with this magic weapon, the target takes an extra 2d6 damage of the weapon's type."
+  },
+  {
+    "id": "chain-mail-plus-1",
+    "name": "+1 Chain Mail",
+    "baseName": "Chain Mail",
+    "rarity": "rare",
+    "type": "armor",
+    "sizeCategory": "armor_heavy",
+    "baseAC": 16,
+    "addDex": false,
+    "maxDex": 0,
+    "stealthDisadvantage": true,
+    "strengthRequired": 13,
+    "weight": 55,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 1 }
+    ]
+  },
+  {
+    "id": "chain-mail-plus-2",
+    "name": "+2 Chain Mail",
+    "baseName": "Chain Mail",
+    "rarity": "very_rare",
+    "type": "armor",
+    "sizeCategory": "armor_heavy",
+    "baseAC": 16,
+    "addDex": false,
+    "maxDex": 0,
+    "stealthDisadvantage": true,
+    "strengthRequired": 13,
+    "weight": 55,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 2 }
+    ]
+  },
+  {
+    "id": "plate-plus-1",
+    "name": "+1 Plate Armor",
+    "baseName": "Plate",
+    "rarity": "rare",
+    "type": "armor",
+    "sizeCategory": "armor_heavy",
+    "baseAC": 18,
+    "addDex": false,
+    "maxDex": 0,
+    "stealthDisadvantage": true,
+    "strengthRequired": 15,
+    "weight": 65,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 1 }
+    ]
+  },
+  {
+    "id": "plate-plus-2",
+    "name": "+2 Plate Armor",
+    "baseName": "Plate",
+    "rarity": "very_rare",
+    "type": "armor",
+    "sizeCategory": "armor_heavy",
+    "baseAC": 18,
+    "addDex": false,
+    "maxDex": 0,
+    "stealthDisadvantage": true,
+    "strengthRequired": 15,
+    "weight": 65,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 2 }
+    ]
+  },
+  {
+    "id": "leather-plus-1",
+    "name": "+1 Leather Armor",
+    "baseName": "Leather Armor",
+    "rarity": "uncommon",
+    "type": "armor",
+    "sizeCategory": "armor_light",
+    "baseAC": 11,
+    "addDex": true,
+    "maxDex": null,
+    "stealthDisadvantage": false,
+    "strengthRequired": 0,
+    "weight": 10,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 1 }
+    ]
+  },
+  {
+    "id": "mithral-chain-mail",
+    "name": "Mithral Chain Mail",
+    "baseName": "Chain Mail",
+    "rarity": "uncommon",
+    "type": "armor",
+    "sizeCategory": "armor_heavy",
+    "baseAC": 16,
+    "addDex": false,
+    "maxDex": 0,
+    "stealthDisadvantage": false,
+    "strengthRequired": 0,
+    "weight": 55,
+    "requiresAttunement": false,
+    "modifiers": [],
+    "specialProperties": {
+      "noStrengthRequirement": true,
+      "noStealthDisadvantage": true
+    },
+    "description": "Mithral is a light, flexible metal. A mithral chain mail can be worn under normal clothes. If the armor normally imposes disadvantage on Stealth checks or has a Strength requirement, the mithral version doesn't."
+  },
+  {
+    "id": "shield-plus-1",
+    "name": "+1 Shield",
+    "baseName": "Shield",
+    "rarity": "uncommon",
+    "type": "armor",
+    "sizeCategory": "armor_shield",
+    "baseAC": 2,
+    "addDex": false,
+    "stealthDisadvantage": false,
+    "strengthRequired": 0,
+    "weight": 6,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 1 }
+    ]
+  },
+  {
+    "id": "shield-plus-2",
+    "name": "+2 Shield",
+    "baseName": "Shield",
+    "rarity": "rare",
+    "type": "armor",
+    "sizeCategory": "armor_shield",
+    "baseAC": 2,
+    "addDex": false,
+    "stealthDisadvantage": false,
+    "strengthRequired": 0,
+    "weight": 6,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 2 }
+    ]
+  },
+  {
+    "id": "shield-of-missile-attraction",
+    "name": "Shield of Missile Attraction",
+    "baseName": "Shield",
+    "rarity": "rare",
+    "type": "armor",
+    "sizeCategory": "armor_shield",
+    "baseAC": 2,
+    "addDex": false,
+    "stealthDisadvantage": false,
+    "strengthRequired": 0,
+    "weight": 6,
+    "requiresAttunement": true,
+    "cursed": true,
+    "curseEffect": "While attuned to this shield, you have disadvantage on saving throws against ranged weapon attacks. Ranged weapon attacks are made with advantage against you. The curse cannot be removed until a Remove Curse spell is cast on the shield.",
+    "modifiers": [],
+    "description": "A cursed shield that draws ranged attacks to its bearer."
+  },
+  {
+    "id": "ring-of-protection",
+    "name": "Ring of Protection",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "ring",
+    "sizeCategory": "accessory_ring",
+    "weight": 0,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 1 },
+      { "stat": "savingThrowBonus", "value": 1, "savingThrow": "all" }
+    ],
+    "description": "You gain a +1 bonus to AC and saving throws while wearing this ring."
+  },
+  {
+    "id": "ring-of-resistance",
+    "name": "Ring of Resistance",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "ring",
+    "sizeCategory": "accessory_ring",
+    "weight": 0,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "resistance", "damageType": "varies" }
+    ],
+    "description": "You have resistance to one damage type while wearing this ring. The type is chosen when the ring is created.",
+    "variants": ["acid", "cold", "fire", "force", "lightning", "necrotic", "poison", "psychic", "radiant", "thunder"]
+  },
+  {
+    "id": "amulet-of-health",
+    "name": "Amulet of Health",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "amulet",
+    "sizeCategory": "accessory_neck",
+    "weight": 0,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "constitutionScore", "value": 19, "minimum": true }
+    ],
+    "description": "Your Constitution score is 19 while you wear this amulet. It has no effect on you if your Constitution is already 19 or higher."
+  },
+  {
+    "id": "periapt-of-wound-closure",
+    "name": "Periapt of Wound Closure",
+    "baseName": null,
+    "rarity": "uncommon",
+    "type": "amulet",
+    "sizeCategory": "accessory_neck",
+    "weight": 0,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "deathSaveAdvantage", "value": true },
+      { "stat": "stabilizeOnNatural20", "value": true }
+    ],
+    "description": "While you wear this pendant, you stabilize whenever you are dying at the start of your turn. In addition, whenever you roll a Hit Die to regain hit points, double the number of hit points it restores."
+  },
+  {
+    "id": "cloak-of-protection",
+    "name": "Cloak of Protection",
+    "baseName": null,
+    "rarity": "uncommon",
+    "type": "cloak",
+    "sizeCategory": "accessory_back",
+    "weight": 0,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 1 },
+      { "stat": "savingThrowBonus", "value": 1, "savingThrow": "all" }
+    ],
+    "description": "You gain a +1 bonus to AC and saving throws while you wear this cloak."
+  },
+  {
+    "id": "cloak-of-displacement",
+    "name": "Cloak of Displacement",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "cloak",
+    "sizeCategory": "accessory_back",
+    "weight": 0,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "attackDisadvantageAgainstYou", "value": true, "condition": "notIncapacitated" }
+    ],
+    "description": "While you wear this cloak, it projects an illusion that makes you appear to be standing in a place near your actual location, causing any creature to have disadvantage on attack rolls against you. If you take damage, the property ceases to function until the start of your next turn."
+  },
+  {
+    "id": "boots-of-speed",
+    "name": "Boots of Speed",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "boots",
+    "sizeCategory": "accessory_feet",
+    "weight": 1,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "speedMultiplier", "value": 2, "condition": "activated" }
+    ],
+    "activatable": true,
+    "activationDescription": "You can use a bonus action and click your boots' heels together to double your walking speed. When you use this feature, creatures that make opportunity attacks against you have disadvantage. The boots work for up to 10 minutes (1 minute at a time, total 10 uses), recharging at dawn."
+  },
+  {
+    "id": "boots-of-elvenkind",
+    "name": "Boots of Elvenkind",
+    "baseName": null,
+    "rarity": "uncommon",
+    "type": "boots",
+    "sizeCategory": "accessory_feet",
+    "weight": 1,
+    "requiresAttunement": false,
+    "modifiers": [
+      { "stat": "skillAdvantage", "skill": "Stealth" }
+    ],
+    "description": "While you wear these boots, your steps make no sound, regardless of the surface you are moving across. You also have advantage on Dexterity (Stealth) checks that rely on moving silently."
+  },
+  {
+    "id": "gauntlets-of-ogre-power",
+    "name": "Gauntlets of Ogre Power",
+    "baseName": null,
+    "rarity": "uncommon",
+    "type": "gauntlets",
+    "sizeCategory": "accessory_hands",
+    "weight": 2,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "strengthScore", "value": 19, "minimum": true }
+    ],
+    "description": "Your Strength score is 19 while you wear these gauntlets. They have no effect on you if your Strength is already 19 or higher."
+  },
+  {
+    "id": "belt-of-hill-giant-strength",
+    "name": "Belt of Hill Giant Strength",
+    "baseName": null,
+    "rarity": "uncommon",
+    "type": "belt",
+    "sizeCategory": "accessory_waist",
+    "weight": 1,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "strengthScore", "value": 21, "minimum": true }
+    ],
+    "description": "While wearing this belt, your Strength score changes to 21. The item has no effect on you if your Strength is already equal to or greater than that score."
+  },
+  {
+    "id": "belt-of-fire-giant-strength",
+    "name": "Belt of Fire Giant Strength",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "belt",
+    "sizeCategory": "accessory_waist",
+    "weight": 1,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "strengthScore", "value": 25, "minimum": true }
+    ],
+    "description": "While wearing this belt, your Strength score changes to 25. The item has no effect on you if your Strength is already equal to or greater than that score."
+  },
+  {
+    "id": "belt-of-frost-giant-strength",
+    "name": "Belt of Frost Giant Strength",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "belt",
+    "sizeCategory": "accessory_waist",
+    "weight": 1,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "strengthScore", "value": 23, "minimum": true }
+    ],
+    "description": "While wearing this belt, your Strength score changes to 23. The item has no effect on you if your Strength is already equal to or greater than that score."
+  },
+  {
+    "id": "wand-of-fireballs",
+    "name": "Wand of Fireballs",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "wand",
+    "sizeCategory": "weapon_held",
+    "weight": 1,
+    "requiresAttunement": true,
+    "charges": { "current": 7, "max": 7, "recharge": "dawn", "rechargeAmount": "1d6+1" },
+    "modifiers": [],
+    "spellEffects": [
+      {
+        "spell": "Fireball",
+        "costPerUse": 1,
+        "saveDC": 15,
+        "description": "Expend 1 charge to cast Fireball (save DC 15). You can expend additional charges to cast at higher levels (1 charge per level above 3rd)."
+      }
+    ],
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 or more of its charges to cast the fireball spell (save DC 15) from it."
+  },
+  {
+    "id": "staff-of-healing",
+    "name": "Staff of Healing",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "staff",
+    "sizeCategory": "weapon_held",
+    "damage": "1d6",
+    "damageType": "bludgeoning",
+    "weight": 4,
+    "requiresAttunement": true,
+    "charges": { "current": 10, "max": 10, "recharge": "dawn", "rechargeAmount": "1d6+4" },
+    "modifiers": [],
+    "spellEffects": [
+      {
+        "spell": "Cure Wounds",
+        "costPerUse": 1,
+        "description": "Expend 1 or more charges to cast Cure Wounds (1 charge per spell level, up to 4th level)."
+      },
+      {
+        "spell": "Lesser Restoration",
+        "costPerUse": 2,
+        "description": "Expend 2 charges to cast Lesser Restoration."
+      },
+      {
+        "spell": "Mass Cure Wounds",
+        "costPerUse": 5,
+        "description": "Expend 5 charges to cast Mass Cure Wounds."
+      }
+    ],
+    "description": "This staff has 10 charges. While holding it, you can use an action to expend 1 or more charges to cast one of the following spells from it."
+  },
+  {
+    "id": "berserker-axe",
+    "name": "Berserker Axe",
+    "baseName": "Greataxe",
+    "rarity": "rare",
+    "type": "weapon",
+    "sizeCategory": "weapon_two_handed",
+    "damage": "1d12",
+    "damageType": "slashing",
+    "properties": ["heavy", "two-handed"],
+    "weight": 7,
+    "requiresAttunement": true,
+    "cursed": true,
+    "curseEffect": "Once you are attuned to the axe, you cannot willingly part with it. When you take damage from a hostile creature, you must succeed on a DC 15 Wisdom saving throw or go berserk, attacking the nearest creature (friend or foe) each turn until combat ends or you are incapacitated.",
+    "modifiers": [
+      { "stat": "attackBonus", "value": 1 },
+      { "stat": "damageBonus", "value": 1 },
+      { "stat": "maxHPBonus", "value": 1, "perLevel": true }
+    ],
+    "description": "A cursed greataxe that grants power at a terrible cost."
+  },
+  {
+    "id": "bag-of-holding",
+    "name": "Bag of Holding",
+    "baseName": null,
+    "rarity": "uncommon",
+    "type": "wondrous",
+    "sizeCategory": "misc",
+    "weight": 15,
+    "requiresAttunement": false,
+    "modifiers": [],
+    "specialProperties": {
+      "extraDimensionalStorage": true,
+      "capacityWeight": 500,
+      "capacityVolume": 64
+    },
+    "description": "This bag has an interior space considerably larger than its outside dimensions. The bag can hold up to 500 pounds, not exceeding a volume of 64 cubic feet. The bag weighs 15 pounds, regardless of its contents."
+  },
+  {
+    "id": "bracers-of-defense",
+    "name": "Bracers of Defense",
+    "baseName": null,
+    "rarity": "rare",
+    "type": "bracers",
+    "sizeCategory": "accessory_wrists",
+    "weight": 1,
+    "requiresAttunement": true,
+    "modifiers": [
+      { "stat": "armorBonus", "value": 2, "condition": "noArmorNoShield" }
+    ],
+    "description": "While wearing these bracers, you gain a +2 bonus to AC if you are wearing no armor and using no shield."
+  }
+]

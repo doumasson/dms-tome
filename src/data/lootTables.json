@@ -1,0 +1,70 @@
+{
+  "individual": {
+    "cr0-4": {
+      "gold": "2d6*5",
+      "magicChance": 0.05,
+      "maxRarity": "common"
+    },
+    "cr5-10": {
+      "gold": "4d6*10",
+      "magicChance": 0.2,
+      "maxRarity": "uncommon"
+    },
+    "cr11-16": {
+      "gold": "6d6*50",
+      "magicChance": 0.4,
+      "maxRarity": "rare"
+    },
+    "cr17+": {
+      "gold": "10d6*100",
+      "magicChance": 0.6,
+      "maxRarity": "very_rare"
+    }
+  },
+  "hoard": {
+    "cr0-4": {
+      "gold": "6d6*100",
+      "magicCount": "1d4",
+      "maxRarity": "uncommon"
+    },
+    "cr5-10": {
+      "gold": "10d6*100",
+      "magicCount": "1d6",
+      "maxRarity": "rare"
+    },
+    "cr11-16": {
+      "gold": "20d6*100",
+      "magicCount": "1d4",
+      "maxRarity": "very_rare"
+    },
+    "cr17+": {
+      "gold": "50d6*100",
+      "magicCount": "1d6",
+      "maxRarity": "legendary"
+    }
+  },
+  "rarityWeights": {
+    "common": {
+      "common": 1.0
+    },
+    "uncommon": {
+      "common": 0.6,
+      "uncommon": 0.4
+    },
+    "rare": {
+      "common": 0.3,
+      "uncommon": 0.4,
+      "rare": 0.3
+    },
+    "very_rare": {
+      "uncommon": 0.3,
+      "rare": 0.4,
+      "very_rare": 0.3
+    },
+    "legendary": {
+      "rare": 0.3,
+      "very_rare": 0.4,
+      "legendary": 0.3
+    }
+  }
+}

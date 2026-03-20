@@ -16,7 +16,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 2,
-    cost: "1 sp"
+    cost: "1 sp",
+    modifiers: []
   },
   {
     name: "Dagger",
@@ -27,7 +28,8 @@ export const WEAPONS = [
     versatile: null,
     range: { normal: 20, long: 60 },
     weight: 1,
-    cost: "2 gp"
+    cost: "2 gp",
+    modifiers: []
   },
   {
     name: "Greatclub",
@@ -38,7 +40,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 10,
-    cost: "2 sp"
+    cost: "2 sp",
+    modifiers: []
   },
   {
     name: "Handaxe",
@@ -49,7 +52,8 @@ export const WEAPONS = [
     versatile: null,
     range: { normal: 20, long: 60 },
     weight: 2,
-    cost: "5 gp"
+    cost: "5 gp",
+    modifiers: []
   },
   {
     name: "Javelin",
@@ -60,7 +64,8 @@ export const WEAPONS = [
     versatile: null,
     range: { normal: 30, long: 120 },
     weight: 2,
-    cost: "5 sp"
+    cost: "5 sp",
+    modifiers: []
   },
   {
     name: "Light Hammer",
@@ -71,7 +76,8 @@ export const WEAPONS = [
     versatile: null,
     range: { normal: 20, long: 60 },
     weight: 2,
-    cost: "2 gp"
+    cost: "2 gp",
+    modifiers: []
   },
   {
     name: "Mace",
@@ -82,7 +88,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 4,
-    cost: "5 gp"
+    cost: "5 gp",
+    modifiers: []
   },
   {
     name: "Quarterstaff",
@@ -93,7 +100,8 @@ export const WEAPONS = [
     versatile: "1d8",
     range: null,
     weight: 4,
-    cost: "2 sp"
+    cost: "2 sp",
+    modifiers: []
   },
   {
     name: "Sickle",
@@ -104,7 +112,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 2,
-    cost: "1 gp"
+    cost: "1 gp",
+    modifiers: []
   },
   {
     name: "Spear",
@@ -115,7 +124,8 @@ export const WEAPONS = [
     versatile: "1d8",
     range: { normal: 20, long: 60 },
     weight: 3,
-    cost: "1 gp"
+    cost: "1 gp",
+    modifiers: []
   },
   {
     name: "Unarmed Strike",
@@ -126,7 +136,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 0,
-    cost: "—"
+    cost: "—",
+    modifiers: []
   },
 
   // ── Simple Ranged Weapons ─────────────────────────────────────────────────
@@ -141,7 +152,8 @@ export const WEAPONS = [
     range: { normal: 80, long: 320 },
     weight: 5,
     cost: "25 gp",
-    ammunition: "Bolts"
+    ammunition: "Bolts",
+    modifiers: []
   },
   {
     name: "Dart",
@@ -152,7 +164,8 @@ export const WEAPONS = [
     versatile: null,
     range: { normal: 20, long: 60 },
     weight: 0.25,
-    cost: "5 cp"
+    cost: "5 cp",
+    modifiers: []
   },
   {
     name: "Shortbow",
@@ -164,7 +177,8 @@ export const WEAPONS = [
     range: { normal: 80, long: 320 },
     weight: 2,
     cost: "25 gp",
-    ammunition: "Arrows"
+    ammunition: "Arrows",
+    modifiers: []
   },
   {
     name: "Sling",
@@ -176,7 +190,8 @@ export const WEAPONS = [
     range: { normal: 30, long: 120 },
     weight: 0,
     cost: "1 sp",
-    ammunition: "Sling Bullets"
+    ammunition: "Sling Bullets",
+    modifiers: []
   },
 
   // ── Martial Melee Weapons ─────────────────────────────────────────────────
@@ -190,7 +205,8 @@ export const WEAPONS = [
     versatile: "1d10",
     range: null,
     weight: 4,
-    cost: "10 gp"
+    cost: "10 gp",
+    modifiers: []
   },
   {
     name: "Flail",
@@ -201,7 +217,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 2,
-    cost: "10 gp"
+    cost: "10 gp",
+    modifiers: []
   },
   {
     name: "Glaive",
@@ -212,7 +229,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 6,
-    cost: "20 gp"
+    cost: "20 gp",
+    modifiers: []
   },
   {
     name: "Greataxe",
@@ -223,7 +241,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 7,
-    cost: "30 gp"
+    cost: "30 gp",
+    modifiers: []
   },
   {
     name: "Greatsword",
@@ -234,7 +253,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 6,
-    cost: "50 gp"
+    cost: "50 gp",
+    modifiers: []
   },
   {
     name: "Halberd",
@@ -245,7 +265,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 6,
-    cost: "20 gp"
+    cost: "20 gp",
+    modifiers: []
   },
   {
     name: "Lance",
@@ -257,7 +278,8 @@ export const WEAPONS = [
     special: "Disadvantage on attack rolls against targets within 5 feet. Requires two hands to wield unless mounted.",
     range: null,
     weight: 6,
-    cost: "10 gp"
+    cost: "10 gp",
+    modifiers: []
   },
   {
     name: "Longsword",
@@ -268,7 +290,8 @@ export const WEAPONS = [
     versatile: "1d10",
     range: null,
     weight: 3,
-    cost: "15 gp"
+    cost: "15 gp",
+    modifiers: []
   },
   {
     name: "Maul",
@@ -279,7 +302,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 10,
-    cost: "10 gp"
+    cost: "10 gp",
+    modifiers: []
   },
   {
     name: "Morningstar",
@@ -290,7 +314,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 4,
-    cost: "15 gp"
+    cost: "15 gp",
+    modifiers: []
   },
   {
     name: "Pike",
@@ -301,7 +326,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 18,
-    cost: "5 gp"
+    cost: "5 gp",
+    modifiers: []
   },
   {
     name: "Rapier",
@@ -312,7 +338,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 2,
-    cost: "25 gp"
+    cost: "25 gp",
+    modifiers: []
   },
   {
     name: "Scimitar",
@@ -323,7 +350,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 3,
-    cost: "25 gp"
+    cost: "25 gp",
+    modifiers: []
   },
   {
     name: "Shortsword",
@@ -334,7 +362,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 2,
-    cost: "10 gp"
+    cost: "10 gp",
+    modifiers: []
   },
   {
     name: "Trident",
@@ -345,7 +374,8 @@ export const WEAPONS = [
     versatile: "1d8",
     range: { normal: 20, long: 60 },
     weight: 4,
-    cost: "5 gp"
+    cost: "5 gp",
+    modifiers: []
   },
   {
     name: "War Pick",
@@ -356,7 +386,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 2,
-    cost: "5 gp"
+    cost: "5 gp",
+    modifiers: []
   },
   {
     name: "Warhammer",
@@ -367,7 +398,8 @@ export const WEAPONS = [
     versatile: "1d10",
     range: null,
     weight: 2,
-    cost: "15 gp"
+    cost: "15 gp",
+    modifiers: []
   },
   {
     name: "Whip",
@@ -378,7 +410,8 @@ export const WEAPONS = [
     versatile: null,
     range: null,
     weight: 3,
-    cost: "2 gp"
+    cost: "2 gp",
+    modifiers: []
   },
 
   // ── Martial Ranged Weapons ─────────────────────────────────────────────────
@@ -393,7 +426,8 @@ export const WEAPONS = [
     range: { normal: 25, long: 100 },
     weight: 1,
     cost: "10 gp",
-    ammunition: "Blowgun Needles"
+    ammunition: "Blowgun Needles",
+    modifiers: []
   },
   {
     name: "Hand Crossbow",
@@ -405,7 +439,8 @@ export const WEAPONS = [
     range: { normal: 30, long: 120 },
     weight: 3,
     cost: "75 gp",
-    ammunition: "Bolts"
+    ammunition: "Bolts",
+    modifiers: []
   },
   {
     name: "Heavy Crossbow",
@@ -417,7 +452,8 @@ export const WEAPONS = [
     range: { normal: 100, long: 400 },
     weight: 18,
     cost: "50 gp",
-    ammunition: "Bolts"
+    ammunition: "Bolts",
+    modifiers: []
   },
   {
     name: "Longbow",
@@ -429,7 +465,8 @@ export const WEAPONS = [
     range: { normal: 150, long: 600 },
     weight: 2,
     cost: "50 gp",
-    ammunition: "Arrows"
+    ammunition: "Arrows",
+    modifiers: []
   },
   {
     name: "Net",
@@ -441,7 +478,8 @@ export const WEAPONS = [
     special: "A Large or smaller creature hit by a net is restrained until it is freed. A net has no effect on creatures that are formless or huge or larger. A creature can break free by spending its action to make a DC 10 STR check.",
     range: { normal: 5, long: 15 },
     weight: 3,
-    cost: "1 gp"
+    cost: "1 gp",
+    modifiers: []
   }
 ];
 
@@ -460,7 +498,8 @@ export const ARMOR = [
     stealthDisadvantage: true,
     strengthRequired: 0,
     weight: 8,
-    cost: "5 gp"
+    cost: "5 gp",
+    modifiers: []
   },
   {
     name: "Leather Armor",
@@ -471,7 +510,8 @@ export const ARMOR = [
     stealthDisadvantage: false,
     strengthRequired: 0,
     weight: 10,
-    cost: "10 gp"
+    cost: "10 gp",
+    modifiers: []
   },
   {
     name: "Studded Leather",
@@ -482,7 +522,8 @@ export const ARMOR = [
     stealthDisadvantage: false,
     strengthRequired: 0,
     weight: 13,
-    cost: "45 gp"
+    cost: "45 gp",
+    modifiers: []
   },
 
   // ── Medium Armor ──────────────────────────────────────────────────────────
@@ -496,7 +537,8 @@ export const ARMOR = [
     stealthDisadvantage: false,
     strengthRequired: 0,
     weight: 12,
-    cost: "10 gp"
+    cost: "10 gp",
+    modifiers: []
   },
   {
     name: "Chain Shirt",
@@ -507,7 +549,8 @@ export const ARMOR = [
     stealthDisadvantage: false,
     strengthRequired: 0,
     weight: 20,
-    cost: "50 gp"
+    cost: "50 gp",
+    modifiers: []
   },
   {
     name: "Scale Mail",
@@ -518,7 +561,8 @@ export const ARMOR = [
     stealthDisadvantage: true,
     strengthRequired: 0,
     weight: 45,
-    cost: "50 gp"
+    cost: "50 gp",
+    modifiers: []
   },
   {
     name: "Breastplate",
@@ -529,7 +573,8 @@ export const ARMOR = [
     stealthDisadvantage: false,
     strengthRequired: 0,
     weight: 20,
-    cost: "400 gp"
+    cost: "400 gp",
+    modifiers: []
   },
   {
     name: "Half Plate",
@@ -540,7 +585,8 @@ export const ARMOR = [
     stealthDisadvantage: true,
     strengthRequired: 0,
     weight: 40,
-    cost: "750 gp"
+    cost: "750 gp",
+    modifiers: []
   },
 
   // ── Heavy Armor ───────────────────────────────────────────────────────────
@@ -554,7 +600,8 @@ export const ARMOR = [
     stealthDisadvantage: true,
     strengthRequired: 0,
     weight: 40,
-    cost: "30 gp"
+    cost: "30 gp",
+    modifiers: []
   },
   {
     name: "Chain Mail",
@@ -565,7 +612,8 @@ export const ARMOR = [
     stealthDisadvantage: true,
     strengthRequired: 13,
     weight: 55,
-    cost: "75 gp"
+    cost: "75 gp",
+    modifiers: []
   },
   {
     name: "Splint",
@@ -576,7 +624,8 @@ export const ARMOR = [
     stealthDisadvantage: true,
     strengthRequired: 15,
     weight: 60,
-    cost: "200 gp"
+    cost: "200 gp",
+    modifiers: []
   },
   {
     name: "Plate",
@@ -587,7 +636,8 @@ export const ARMOR = [
     stealthDisadvantage: true,
     strengthRequired: 15,
     weight: 65,
-    cost: "1,500 gp"
+    cost: "1,500 gp",
+    modifiers: []
   },
 
   // ── Shield ────────────────────────────────────────────────────────────────
@@ -601,7 +651,8 @@ export const ARMOR = [
     stealthDisadvantage: false,
     strengthRequired: 0,
     weight: 6,
-    cost: "10 gp"
+    cost: "10 gp",
+    modifiers: []
   }
 ];
 
