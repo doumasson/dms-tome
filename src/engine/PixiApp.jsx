@@ -15,7 +15,7 @@ const ATLAS_NAMES = [
   'atlas-effects', 'atlas-walls',
 ]
 
-export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, onNpcClick, inCombat, camera }, ref) {
+export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, onNpcClick, inCombat, camera, roofManager }, ref) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
   const stageLayersRef = useRef({})
@@ -32,6 +32,10 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   cameraRef.current = camera
   const tileAtlasV2Ref = useRef(null)
   const wallRendererRef = useRef(null)
+  const roofManagerRef2 = useRef(roofManager)
+  roofManagerRef2.current = roofManager
+  const roofAlphaRef = useRef({})
+  const roofBuildingGridRef = useRef(null)
   const [ready, setReady] = useState(false)
   const [atlasReady, setAtlasReady] = useState(false)
 
@@ -226,6 +230,36 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       if (zone.layers?.roof) {
         renderV2Layer(roof, zone.layers.roof, zone.width, zone.height, tileSize, tileAtlas, bounds)
       }
+
+      // Animate roof alpha per building (400ms fade)
+      const rm = roofManagerRef2.current
+      if (rm && zone?.buildings) {
+        const FADE_SPEED = 1 / 400
+        for (const b of zone.buildings) {
+          const target = rm.isRevealed(b.id) ? 0 : 1
+          const current = roofAlphaRef.current[b.id] ?? 1
+          if (current !== target) {
+            const delta = FADE_SPEED * ticker.deltaMS
+            roofAlphaRef.current[b.id] = target < current
+              ? Math.max(target, current - delta)
+              : Math.min(target, current + delta)
+          }
+        }
+
+        // Apply alpha using pre-built spatial grid — O(1) per sprite
+        const roofContainer = stageLayersRef.current.roof
+        const grid = roofBuildingGridRef.current
+        if (grid) {
+          for (const child of roofContainer.children) {
+            const tx = Math.floor(child.x / tileSize)
+            const ty = Math.floor(child.y / tileSize)
+            const bi = grid[ty * zone.width + tx]
+            if (bi > 0) {
+              child.alpha = roofAlphaRef.current[zone.buildings[bi - 1].id] ?? 1
+            }
+          }
+        }
+      }
     }
 
     app.ticker.add(tickerFn)
@@ -235,6 +269,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       clearV2Layer(walls)
       clearV2Layer(props)
       clearV2Layer(roof)
+      roofAlphaRef.current = {}
     }
   }, [ready, atlasReady, inCombat])
 
@@ -254,6 +289,26 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       wallRendererRef.current = null
     }
   }, [ready, atlasReady, zone?.wallEdges])
+
+  // Pre-compute spatial grid mapping tile index → building index for roof fade
+  useEffect(() => {
+    if (!zone?.buildings || !zone?.width) {
+      roofBuildingGridRef.current = null
+      roofAlphaRef.current = {}
+      return
+    }
+    const grid = new Uint8Array(zone.width * zone.height)
+    for (let bi = 0; bi < zone.buildings.length; bi++) {
+      const b = zone.buildings[bi]
+      for (let y = b.y; y < b.y + b.height && y < zone.height; y++) {
+        for (let x = b.x; x < b.x + b.width && x < zone.width; x++) {
+          if (x >= 0 && y >= 0) grid[y * zone.width + x] = bi + 1
+        }
+      }
+    }
+    roofBuildingGridRef.current = grid
+    roofAlphaRef.current = {}
+  }, [zone?.buildings, zone?.width])
 
   // Scroll wheel zoom (camera mode)
   useEffect(() => {
