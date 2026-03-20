@@ -34,4 +34,10 @@ describe('resolveRoofTile', () => {
     const tile = resolveRoofTile(['unknown'], 0)
     expect(tile).toMatch(/^atlas-floors:roof_texture_hay_/)
   })
+
+  it('resolveRoofTile returns non-null for building tags', () => {
+    const tile = resolveRoofTile(['tavern', 'settlement', 'indoor'], 0)
+    expect(tile).toBeTruthy()
+    expect(tile).toMatch(/^atlas-floors:roof_texture_/)
+  })
 })

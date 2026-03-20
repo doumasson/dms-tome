@@ -6,6 +6,7 @@ import {
 } from './mapGenerator.js'
 import { extractWallEdges } from './wallEdgeExtractor.js'
 import { getBlockingSet } from '../engine/tileAtlas'
+import { resolveRoofTile } from './roofStyles.js'
 
 /* ── Theme constants ──────────────────────────────────────────── */
 
@@ -87,13 +88,30 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     stampChunk(layers, remapped, pos.x, pos.y, width)
 
     if (poi.chunk.type === 'building') {
+      const roofTileId = resolveRoofTile(poi.chunk.tags || [], buildings.length)
+      if (roofTileId) {
+        if (!tileToIndex.has(roofTileId)) {
+          tileToIndex.set(roofTileId, palette.length)
+          palette.push(roofTileId)
+        }
+        const roofTileIdx = tileToIndex.get(roofTileId)
+        // Fill roof layer over building bounds
+        for (let ry = pos.y; ry < pos.y + poi.chunk.height; ry++) {
+          for (let rx = pos.x; rx < pos.x + poi.chunk.width; rx++) {
+            if (rx >= 0 && ry >= 0 && rx < width && ry < height) {
+              layers.roof[ry * width + rx] = roofTileIdx
+            }
+          }
+        }
+      }
+
       buildings.push({
         id: poi.label || poi.id,
         x: pos.x,
         y: pos.y,
         width: poi.chunk.width,
         height: poi.chunk.height,
-        roofTile: 'atlas-floors:roof_texture_hay_01_a1',
+        roofTile: roofTileId,
       })
     }
   }
@@ -129,7 +147,32 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   }
   const { wallEdges } = extractWallEdges(layers.walls, layers.floor, palette, doorSet, width, height)
 
-  // 9. Build collision: cell-blocked from blocking props, edge-blocked from wallEdges
+  // 8b. Strip outer-facing wall edges for building cells so collision
+  // matches rendering (only inner wall line blocks movement)
+  for (const b of buildings) {
+    const cx = b.x + b.width / 2
+    const cy = b.y + b.height / 2
+    for (let by = b.y; by < b.y + b.height && by < height; by++) {
+      for (let bx = b.x; bx < b.x + b.width && bx < width; bx++) {
+        if (bx < 0 || by < 0) continue
+        const idx = by * width + bx
+        if (layers.walls[idx] === 0) continue
+        const bits = wallEdges[idx] & 0x0F
+        if (bits === 0) continue
+        let keep = 0
+        // Only keep edges that face toward building center (inner edges)
+        if ((bits & 0x1) && by > cy) keep |= 0x1   // NORTH, cell below center
+        if ((bits & 0x4) && by < cy) keep |= 0x4   // SOUTH, cell above center
+        if ((bits & 0x8) && bx > cx) keep |= 0x8   // WEST, cell right of center
+        if ((bits & 0x2) && bx < cx) keep |= 0x2   // EAST, cell left of center
+        // Preserve door bits (upper nibble)
+        wallEdges[idx] = keep | (wallEdges[idx] & 0xF0)
+      }
+    }
+  }
+
+  // 9. Build collision: edge-based walls handle wall blocking,
+  // cellBlocked only tracks blocking props (furniture, boulders, etc.)
   const blockingSet = getBlockingSet()
   const cellBlocked = new Uint8Array(size)
   for (let i = 0; i < size; i++) {
@@ -218,6 +261,7 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     width,
     height,
     tileSize: 200,
+    useCamera: true,
     palette,
     layers,       // raw Uint16Arrays — encoded to base64 only when saving to Supabase
     wallEdges,        // Uint8Array — edge-based wall collision
