@@ -71,7 +71,7 @@ export function useFogOfWar({ zone, playerPos, playerPosRef, currentAreaId, myCh
   useEffect(() => {
     if (!zone?.useCamera) return
     const app = pixiRef.current?.getApp?.()
-    if (!app) return
+    if (!app?.ticker) return
 
     const tickerFn = () => {
       const fogContainer = pixiRef.current?.getFogLayer?.()
