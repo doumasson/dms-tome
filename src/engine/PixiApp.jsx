@@ -8,6 +8,7 @@ import { renderExits, clearExits } from './ExitZone'
 import { TileAtlasV2 } from './tileAtlasV2'
 import { WallRenderer } from './WallRenderer'
 import { renderLighting, clearLighting } from './LightingLayer'
+import { updateWeather, clearWeather } from './WeatherRenderer.js'
 import { updateStatusEffects } from './StatusEffectRenderer.js'
 import { applyDayNightTint } from './DayNightFilter.js'
 import { getTimeOfDay } from '../lib/gameTime.js'
@@ -92,8 +93,13 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         roof: new PIXI.Container(),    // above tokens — hides interior + NPCs until revealed
         fog: new PIXI.Container(),
         exits: new PIXI.Container(),
+        weather: new PIXI.Container(),  // screen-space particles — rendered above world (on stage)
       }
-      Object.values(layers).forEach(l => world.addChild(l))
+      // All world layers go inside the scaled world container
+      const { weather: weatherLayer, ...worldLayers } = layers
+      Object.values(worldLayers).forEach(l => world.addChild(l))
+      // Weather is screen-space: not scaled with camera, sits above world on stage
+      app.stage.addChild(weatherLayer)
       layers.lighting.blendMode = 'add'
       stageLayersRef.current = layers
 
@@ -250,6 +256,16 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         updateStatusEffects(stageLayersRef.current.statusEffects, combatants, tileSize)
       }
 
+      // Weather particles — outdoor themes only
+      const INDOOR_THEMES = new Set(['dungeon', 'cave', 'crypt', 'sewer'])
+      if (!INDOOR_THEMES.has(zone.theme)) {
+        const weatherType = useStore.getState().weather?.current || 'clear'
+        const weatherLayer = stageLayersRef.current.weather
+        if (weatherLayer) {
+          updateWeather(weatherLayer, weatherType, app.screen.width, app.screen.height, ticker.deltaMS)
+        }
+      }
+
       if (zone.layers?.roof) {
         renderV2Layer(roof, zone.layers.roof, zone.width, zone.height, tileSize, tileAtlas, bounds)
       }
@@ -327,6 +343,9 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       clearV2Layer(props)
       clearV2Layer(roof)
       clearLighting(stageLayersRef.current.lighting)
+      if (stageLayersRef.current.weather) {
+        clearWeather(stageLayersRef.current.weather)
+      }
       roofAlphaRef.current = {}
     }
   }, [ready, atlasReady, inCombat])

@@ -23,9 +23,10 @@ const DIM_VISION = 8     // tiles in dim light without darkvision
  * @param {object} character — { race, darkvision (in feet), classFeatures? }
  * @param {string} lighting — 'bright' | 'dim' | 'darkness' | 'magical-darkness'
  * @param {Array} carriedLights — [{ type: 'torch' | 'lantern-hooded' | ... }]
+ * @param {number} weatherPenalty — tile reduction from weather (0 = none, from weather.js getVisionPenalty)
  * @returns {{ bright: number, dim: number, darkvision: number }} tile radii
  */
-export function getCharacterVisionRange(character, lighting, carriedLights = []) {
+export function getCharacterVisionRange(character, lighting, carriedLights = [], weatherPenalty = 0) {
   const darkvisionTiles = Math.floor((character.darkvision || 0) / 5)
 
   // Calculate best carried light
@@ -39,6 +40,8 @@ export function getCharacterVisionRange(character, lighting, carriedLights = [])
     }
   }
 
+  const applyPenalty = (val) => Math.max(1, val - weatherPenalty)
+
   if (lighting === 'magical-darkness') {
     const hasDevilsSight = character.classFeatures?.includes('devils-sight')
     return hasDevilsSight
@@ -48,24 +51,25 @@ export function getCharacterVisionRange(character, lighting, carriedLights = [])
 
   if (lighting === 'darkness') {
     return {
-      bright: lightBright,
-      dim: lightDim,
-      darkvision: Math.max(darkvisionTiles, lightDim),
+      bright: applyPenalty(lightBright),
+      dim: applyPenalty(lightDim),
+      darkvision: Math.max(darkvisionTiles, applyPenalty(lightDim)),
     }
   }
 
   if (lighting === 'dim') {
+    const base = darkvisionTiles > 0 ? BRIGHT_VISION : DIM_VISION
     return {
-      bright: darkvisionTiles > 0 ? BRIGHT_VISION : DIM_VISION,
-      dim: darkvisionTiles > 0 ? BRIGHT_VISION : DIM_VISION,
+      bright: applyPenalty(base),
+      dim: applyPenalty(base),
       darkvision: darkvisionTiles,
     }
   }
 
   // bright light
   return {
-    bright: BRIGHT_VISION,
-    dim: BRIGHT_VISION,
+    bright: applyPenalty(BRIGHT_VISION),
+    dim: applyPenalty(BRIGHT_VISION),
     darkvision: 0,
   }
 }

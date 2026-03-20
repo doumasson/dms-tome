@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase';
 import { broadcastEncounterAction } from '../lib/liveChannel';
 import { advanceTime } from '../lib/gameTime.js';
+import { rollWeatherChange } from '../lib/weather.js';
 
 /**
  * Game time slice — game clock, skill checks, fog of war, scene tokens,
@@ -10,10 +11,20 @@ export function createGameTimeSlice(set, get) {
   return {
     // === Game Time ===
     gameTime: { hour: 8, day: 1 },
+    weather: { current: 'clear', duration: 3 },
     advanceGameTime: (hours) => {
-      const { gameTime } = get();
+      const { gameTime, weather } = get();
       const newTime = advanceTime(gameTime, hours);
-      set({ gameTime: newTime });
+      let newWeather = weather;
+      const newDuration = weather.duration - 1;
+      if (newDuration <= 0) {
+        const next = rollWeatherChange(weather.current);
+        newWeather = { current: next, duration: 2 + Math.floor(Math.random() * 4) };
+        broadcastEncounterAction?.({ type: 'weather-change', weather: newWeather });
+      } else {
+        newWeather = { ...weather, duration: newDuration };
+      }
+      set({ gameTime: newTime, weather: newWeather });
       broadcastEncounterAction?.({ type: 'time-advance', gameTime: newTime });
     },
 
