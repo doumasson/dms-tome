@@ -12,6 +12,10 @@ export function createCampaignSlice(set, get) {
     user: null,
     setUser: (user) => set({ user }),
 
+    // === Formation ===
+    formation: { front: [], back: [] },
+    setFormation: (formation) => set({ formation }),
+
     // === Active Campaign (Supabase record) ===
     activeCampaign: null,
     isDM: false,
