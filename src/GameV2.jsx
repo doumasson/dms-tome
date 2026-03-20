@@ -36,6 +36,7 @@ import StoryCutscene from './components/StoryCutscene'
 import JournalModal from './components/JournalModal'
 import SkillCheckPanel from './components/SkillCheckPanel'
 import LootScreen from './components/LootScreen'
+import LevelUpModal, { levelFromXp } from './components/LevelUpModal'
 import './hud/hud.css'
 
 const CLASS_COLORS = {
@@ -74,6 +75,7 @@ export default function GameV2({ onLeave }) {
   const advanceGameTime = useStore(s => s.advanceGameTime)
   const pendingLoot = useStore(s => s.pendingLoot)
   const setPendingLoot = useStore(s => s.setPendingLoot)
+  const applyLevelUp = useStore(s => s.applyLevelUp)
 
   const pixiRef = useRef(null)
   const cameraRef = useRef(null)
@@ -89,6 +91,8 @@ export default function GameV2({ onLeave }) {
   const [worldTransform, setWorldTransform] = useState(null)
   const [targetingMode, setTargetingMode] = useState(null)
   const [pendingOA, setPendingOA] = useState(null)
+  const [showLevelUp, setShowLevelUp] = useState(false)
+  const dismissedLevelRef = useRef(null)
   const triggeredZonesRef = useRef(new Set())
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -216,6 +220,17 @@ export default function GameV2({ onLeave }) {
       }, 500)
     }
   }, [playerPos, currentAreaId, zone, myCharacter, isDM])
+
+  // ── Watch for XP crossing a level threshold ───────────────────────────────
+  useEffect(() => {
+    if (!myCharacter) return
+    const xp = myCharacter.xp || 0
+    const currentLevel = myCharacter.level || 1
+    const earnedLevel = levelFromXp(xp)
+    if (earnedLevel > currentLevel && currentLevel < 20 && dismissedLevelRef.current !== currentLevel) {
+      setShowLevelUp(true)
+    }
+  }, [myCharacter?.xp])
 
   // Render fog every frame via PixiJS ticker (camera panning needs continuous updates)
   useEffect(() => {
@@ -1405,6 +1420,21 @@ export default function GameV2({ onLeave }) {
           pixiRef={pixiRef}
           onClose={() => {}}
           isWatching={true}
+        />
+      )}
+      {/* Level-up modal */}
+      {showLevelUp && myCharacter && (
+        <LevelUpModal
+          character={myCharacter}
+          onConfirm={(updates) => {
+            applyLevelUp(updates)
+            dismissedLevelRef.current = myCharacter.level
+            setShowLevelUp(false)
+          }}
+          onCancel={() => {
+            dismissedLevelRef.current = myCharacter.level
+            setShowLevelUp(false)
+          }}
         />
       )}
       {/* Post-combat loot screen */}
