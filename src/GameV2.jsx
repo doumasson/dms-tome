@@ -15,6 +15,7 @@ import OAConfirmModal from './components/v2/OAConfirmModal'
 import TestCombatButton from './components/v2/TestCombatButton'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
+import { useAmbientAudio } from './hooks/useAmbientAudio'
 import { useFogOfWar } from './hooks/useFogOfWar'
 import { useRoofManager } from './hooks/useRoofManager'
 import { useCombatActions } from './hooks/useCombatActions'
@@ -22,6 +23,10 @@ import { useAreaTransition } from './hooks/useAreaTransition'
 import { useWorldMovement } from './hooks/useWorldMovement'
 import { useNarratorChat } from './hooks/useNarratorChat'
 import { useWorldLoader } from './hooks/useWorldLoader'
+import { getNpcMovements } from './lib/npcScheduler.js'
+import { getTimeOfDay } from './lib/gameTime.js'
+import { findPathEdge } from './lib/pathfinding'
+import { animateTokenAlongPath } from './engine/TokenLayer'
 import './hud/hud.css'
 
 const DiceTray            = lazy(() => import('./components/DiceTray'))
@@ -32,6 +37,8 @@ const StoryCutscene       = lazy(() => import('./components/StoryCutscene'))
 const JournalModal        = lazy(() => import('./components/JournalModal'))
 const LootScreen          = lazy(() => import('./components/LootScreen'))
 const LevelUpModal        = lazy(() => import('./components/LevelUpModal'))
+const ShopPanel           = lazy(() => import('./components/ShopPanel'))
+const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 
 // ─── D&D 5e XP thresholds (inlined from LevelUpModal to avoid static import) ──
 const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000]
@@ -70,6 +77,7 @@ export default function GameV2({ onLeave }) {
   const partyMembers = useStore(s => s.partyMembers)
   const activeCutscene = useStore(s => s.activeCutscene)
   const advanceGameTime = useStore(s => s.advanceGameTime)
+  const gameTime = useStore(s => s.gameTime)
   const pendingLoot = useStore(s => s.pendingLoot)
   const setPendingLoot = useStore(s => s.setPendingLoot)
   const applyLevelUp = useStore(s => s.applyLevelUp)
@@ -83,7 +91,9 @@ export default function GameV2({ onLeave }) {
   const [showApiSettings, setShowApiSettings] = useState(false)
   const [showJournal, setShowJournal] = useState(false)
   const [activeNpc, setActiveNpc] = useState(null)
+  const [activeShop, setActiveShop] = useState(null)
   const [worldTransform, setWorldTransform] = useState(null)
+  const [showFormation, setShowFormation] = useState(false)
   const [showLevelUp, setShowLevelUp] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
@@ -97,6 +107,7 @@ export default function GameV2({ onLeave }) {
 
   // --- Extracted hooks ---
   const { cameraRef } = useAreaCamera({ zone, playerPosRef })
+  useAmbientAudio({ theme: zone?.theme, inCombat })
 
   useFogOfWar({ zone, playerPos, playerPosRef, currentAreaId, myCharacter, isDM, pixiRef, cameraRef })
 
@@ -159,6 +170,33 @@ export default function GameV2({ onLeave }) {
     const prompt = buildEncounterPrompt(triggered, '')
     addNarratorMessage({ role: 'user', speaker: 'System', text: prompt })
   }, [playerPos, zone, inCombat, isDM, addNarratorMessage])
+
+  // --- NPC schedule movement on time-of-day changes ---
+  useEffect(() => {
+    if (!zone?.npcs?.length || !gameTime) return
+    const poiPositions = zone.poiPositions
+    if (!poiPositions) return
+    const timeOfDay = getTimeOfDay(gameTime.hour)
+    const movements = getNpcMovements(zone.npcs, timeOfDay, poiPositions)
+    const wallEdges = zone.wallEdges
+    const cellBlocked = zone.cellBlocked
+    const w = zone.width
+    const h = zone.height
+    if (!wallEdges) return
+
+    for (const { npc, targetPosition } of movements) {
+      if (!npc.position) continue
+      const path = findPathEdge(
+        { wallEdges, cellBlocked: cellBlocked || new Uint8Array(w * h) },
+        w, h, npc.position, targetPosition
+      )
+      if (!path || path.length < 2) continue
+      const npcId = npc.name
+      animateTokenAlongPath(npcId, path, null, () => {
+        npc.position = { ...targetPosition }
+      }, zone.tileSize || 200)
+    }
+  }, [gameTime?.hour, zone?.npcs])
 
   // --- Load area world on mount ---
   useWorldLoader({ campaign, setPlayerPos })
@@ -278,7 +316,9 @@ export default function GameV2({ onLeave }) {
         addNarratorMessage({ role: 'dm', speaker: 'System', text: `${npc.name} is speaking with ${busy.playerName}.` })
         return
       }
-      if (npc.critical && !useStore.getState().hasStoryFlag(npc.criticalFlag)) {
+      if (npc.shopType) {
+        setActiveShop({ npc, shopType: npc.shopType })
+      } else if (npc.critical && !useStore.getState().hasStoryFlag(npc.criticalFlag)) {
         setActiveNpc({ ...npc, isCutscene: true })
       } else {
         setActiveNpc({ ...npc, isCutscene: false })
@@ -401,6 +441,15 @@ export default function GameV2({ onLeave }) {
         onConfirm={() => { executeMoveWithOA(pendingOA); setPendingOA(null) }}
         onCancel={() => setPendingOA(null)}
       />
+      {activeShop && (
+        <Suspense fallback={null}>
+          <ShopPanel
+            npc={activeShop.npc}
+            shopType={activeShop.shopType}
+            onClose={() => setActiveShop(null)}
+          />
+        </Suspense>
+      )}
     </div>
   )
 }
