@@ -980,3 +980,50 @@
   line-height: 1.6;
   margin: 0;
 }
+
+/* ── Tablet (768–1024px) ── */
+@media (max-width: 1024px) {
+  .hud-bottom-bar { height: 110px; padding: 10px 10px 8px; }
+  .hud-combat-bar { width: 180px; }
+  .hud-action-area { width: 180px; }
+  .hud-portrait { width: 40px; height: 50px; }
+  .hud-portrait-name { font-size: 7px; max-width: 40px; overflow: hidden; text-overflow: ellipsis; }
+  .hud-log-entries { font-size: 10px; }
+  .hud-combat-btn { height: 36px; font-size: 7px; }
+  .hud-combat-btn-sm { height: 24px; font-size: 7px; }
+  .hud-tool-btn { width: 34px; height: 32px; font-size: 7px; }
+}
+
+/* ── Phone (<768px) ── */
+@media (max-width: 767px) {
+  .hud-bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: auto; max-height: 60vh;
+    transform: translateY(calc(100% - 32px));
+    transition: transform 0.3s ease;
+    z-index: 100;
+  }
+  .hud-bottom-bar.drawer-open { transform: translateY(0); }
+  .hud-drawer-handle {
+    display: flex !important;
+    width: 100%; height: 32px;
+    align-items: center; justify-content: center;
+    cursor: pointer; background: #14101c;
+    border-bottom: 1px solid #2a2018;
+  }
+  .hud-drawer-handle-bar {
+    width: 40px; height: 4px; border-radius: 2px; background: #554433;
+  }
+  .hud-bottom-bar-content {
+    display: flex; flex-direction: column; gap: 8px; padding: 8px;
+    overflow-y: auto; max-height: calc(60vh - 32px);
+  }
+  .hud-portrait { width: 32px; height: 32px; border-radius: 50%; }
+  .hud-portrait-name { display: none; }
+  .hud-combat-btn { min-height: 48px; }
+  .hud-combat-btn-sm { min-height: 44px; }
+  .hud-tool-btn { min-height: 44px; min-width: 44px; }
+}
+
+/* Hidden by default, shown on phone */
+.hud-drawer-handle { display: none; }
