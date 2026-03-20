@@ -98,6 +98,7 @@ export default function GameV2({ onLeave }) {
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
+  const handleChatRef = useRef(null)
   const playerPosRef = useRef(playerPos)
   playerPosRef.current = playerPos
 
@@ -169,7 +170,16 @@ export default function GameV2({ onLeave }) {
 
     const prompt = buildEncounterPrompt(triggered, '')
     addNarratorMessage({ role: 'user', speaker: 'System', text: prompt })
-  }, [playerPos, zone, inCombat, isDM, addNarratorMessage])
+
+    // Auto-call AI DM with the encounter prompt so it can narrate and/or start combat
+    if (sessionApiKey) {
+      // Use setTimeout to ensure handleChat is available (defined later in component)
+      setTimeout(() => {
+        const chat = handleChatRef.current
+        if (chat) chat(prompt)
+      }, 100)
+    }
+  }, [playerPos, zone, inCombat, isDM, addNarratorMessage, sessionApiKey])
 
   // --- NPC schedule movement on time-of-day changes ---
   useEffect(() => {
@@ -359,6 +369,7 @@ export default function GameV2({ onLeave }) {
 
   // --- Chat handler ---
   const { handleChat } = useNarratorChat({ sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage, playerPosRef })
+  handleChatRef.current = handleChat
 
   // --- Early returns ---
   if (apiKeyLoaded && !sessionApiKey) {
