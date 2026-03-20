@@ -337,6 +337,10 @@
   box-shadow: 0 0 6px rgba(68,170,255,0.3);
 }
 
+.hud-init-token.dying { animation: pulse-red 1s infinite; }
+@keyframes pulse-red { 0%,100% { box-shadow: 0 0 4px #cc3333; } 50% { box-shadow: 0 0 12px #cc3333; } }
+.hud-init-token.dead { opacity: 0.3; filter: grayscale(100%); }
+
 /* Turn banner */
 .hud-turn-banner {
   position: absolute;

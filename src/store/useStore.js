@@ -577,17 +577,26 @@ const useStore = create((set, get) => ({
   },
 
   applyEncounterHeal: (targetId, amount) =>
-    set((state) => ({
-      encounter: {
-        ...state.encounter,
-        combatants: state.encounter.combatants.map((c) => {
-          if (c.id !== targetId) return c;
-          const newHp = Math.min(c.maxHp, c.currentHp + amount);
-          // Healing resets death saves
-          return { ...c, currentHp: newHp, deathSaves: { successes: 0, failures: 0, stable: false } };
-        }),
-      },
-    })),
+    set((state) => {
+      let revivalLog = null;
+      const combatants = state.encounter.combatants.map((c) => {
+        if (c.id !== targetId) return c;
+        const wasDying = (c.currentHp ?? 0) <= 0 && (c.deathSaves?.failures ?? 0) < 3;
+        const newHp = Math.min(c.maxHp, c.currentHp + amount);
+        if (wasDying) revivalLog = `${c.name} is healed for ${amount} HP and rejoins the fight!`;
+        // Healing resets death saves
+        return { ...c, currentHp: newHp, deathSaves: { successes: 0, failures: 0, stable: false } };
+      });
+      return {
+        encounter: {
+          ...state.encounter,
+          combatants,
+          log: revivalLog
+            ? [revivalLog, ...state.encounter.log].slice(0, 30)
+            : state.encounter.log,
+        },
+      };
+    }),
 
   // Apply a pre-computed death save result (used for multiplayer sync — caller rolls d20)
   applyDeathSaveResult: (id, roll) =>

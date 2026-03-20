@@ -20,6 +20,8 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
     && !conditions.has('Unconscious')
   const isProne = conditions.has('Prone')
 
+  const isDying = active && (active.currentHp ?? 0) <= 0 && (active.deathSaves?.failures ?? 0) < 3
+
   function handleAction(type) {
     if (type === 'dash') {
       dashAction()
@@ -32,6 +34,38 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
       return
     }
     onAction?.(type)
+  }
+
+  if (isDying) {
+    return (
+      <div className="hud-combat-bar">
+        <div style={{ textAlign: 'center', color: '#cc3333', fontSize: 12, fontWeight: 700, marginBottom: 8 }}>
+          ☠ DEATH SAVES
+        </div>
+        <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginBottom: 8 }}>
+          {[0,1,2].map(i => (
+            <div key={`s${i}`} style={{ width: 12, height: 12, borderRadius: '50%',
+              background: i < (active.deathSaves?.successes || 0) ? '#2ecc71' : '#1a1520',
+              border: '1px solid #2ecc71' }} />
+          ))}
+          <div style={{ width: 8 }} />
+          {[0,1,2].map(i => (
+            <div key={`f${i}`} style={{ width: 12, height: 12, borderRadius: '50%',
+              background: i < (active.deathSaves?.failures || 0) ? '#cc3333' : '#1a1520',
+              border: '1px solid #cc3333' }} />
+          ))}
+        </div>
+        <button className="hud-combat-btn" onClick={() => onAction?.('death-save')}
+          style={{ background: '#2a0a0a', borderColor: '#cc3333', color: '#cc3333' }}>
+          🎲 Roll Death Save
+        </button>
+        <button className="hud-combat-btn-sm" onClick={() => onAction?.('stabilize')}
+          style={{ marginTop: 4 }}>
+          ✚ Stabilize
+        </button>
+        <button className="hud-end-turn" onClick={onEndTurn} style={{ marginTop: 4 }}>END TURN</button>
+      </div>
+    )
   }
 
   return (

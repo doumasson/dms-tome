@@ -20,17 +20,20 @@ export default function InitiativeStrip() {
         const isActive = i === currentTurn
         const isEnemy = c.isEnemy || c.type === 'enemy'
         const color = isEnemy ? '#cc3333' : (CLASS_COLORS[c.class] || '#4499dd')
+        const isDead = (c.deathSaves?.failures ?? 0) >= 3
+        const isDying = !isDead && (c.currentHp ?? 0) <= 0 && (c.deathSaves?.failures ?? 0) < 3
+        const statusClass = isDead ? 'dead' : isDying ? 'dying' : ''
         return (
           <div
             key={c.id || c.name + i}
-            className={`hud-init-token ${isActive ? 'active' : ''}`}
+            className={`hud-init-token ${isActive ? 'active' : ''} ${statusClass}`}
             style={{
               background: `${color}22`,
               border: `2px solid ${isActive ? color : color + '66'}`,
               width: isActive ? 32 : 26,
               height: isActive ? 32 : 26,
             }}
-            title={`${c.name} (Init: ${c.initiative || '?'})`}
+            title={`${c.name} (Init: ${c.initiative || '?'})${isDying ? ' — DYING' : isDead ? ' — DEAD' : ''}`}
           >
             {isEnemy ? '👹' : '⚔'}
           </div>
