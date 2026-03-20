@@ -1,31 +1,13 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import useStore from './store/useStore'
-import { rollDamage } from './lib/dice'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
-import { buildTestArea } from './data/testArea.js'
-import { buildDemoArea } from './data/demoArea.js'
-import { buildAreaFromBrief } from './lib/areaBuilder.js'
-import { saveArea } from './lib/areaStorage.js'
-import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey, broadcastRoofReveal, broadcastEncounterAction, broadcastFogUpdate, broadcastTokenMove } from './lib/liveChannel'
+import { broadcastApiKeySync, broadcastRequestApiKey, broadcastEncounterAction } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
-import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
 import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZones'
 import { handleInteract } from './lib/interactionController'
-import { findPath, findPathLegacy, buildWalkabilityGrid, findPathEdge, getReachableTilesEdge } from './lib/pathfinding'
-import { getBlockingSet } from './engine/tileAtlas'
-import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
-import Camera from './engine/Camera'
-import { buildFogTileStates, renderFog, updateExplored } from './engine/FogOfWar'
-import { computeVision, getCharacterVisionRange, encodeExploredBitfield, decodeExploredBitfield } from './lib/visionCalculator'
-import * as PIXI from 'pixi.js'
-import { RoofManager } from './engine/RoofLayer'
-import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
-import { getTilesInSphere, getTilesInCone, getTilesInLine, getTilesInCube, renderAoEPreview, clearAoEPreview } from './engine/AoEOverlay'
-import { findOATriggers, resolveOA } from './lib/opportunityAttack.js'
-import { calculateCover, COVER_BONUS, buildPropCoverSet } from './lib/cover.js'
-import { playZoneTransition } from './engine/ZoneTransition'
+import { isAnimating } from './engine/TokenLayer'
 import ChatBubble from './components/ChatBubble'
 import DiceTray from './components/DiceTray'
 import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
@@ -37,6 +19,16 @@ import JournalModal from './components/JournalModal'
 import SkillCheckPanel from './components/SkillCheckPanel'
 import LootScreen from './components/LootScreen'
 import LevelUpModal, { levelFromXp } from './components/LevelUpModal'
+import OAConfirmModal from './components/v2/OAConfirmModal'
+import TestCombatButton from './components/v2/TestCombatButton'
+import { useAreaCamera } from './hooks/useAreaCamera'
+import { useFogOfWar } from './hooks/useFogOfWar'
+import { useRoofManager } from './hooks/useRoofManager'
+import { useCombatActions } from './hooks/useCombatActions'
+import { useAreaTransition } from './hooks/useAreaTransition'
+import { useWorldMovement } from './hooks/useWorldMovement'
+import { useNarratorChat } from './hooks/useNarratorChat'
+import { useWorldLoader } from './hooks/useWorldLoader'
 import './hud/hud.css'
 
 const CLASS_COLORS = {
@@ -51,9 +43,6 @@ export default function GameV2({ onLeave }) {
   const areas = useStore(s => s.areas)
   const areaBriefs = useStore(s => s.areaBriefs)
   const areaLayers = useStore(s => s.areaLayers)
-  const loadArea = useStore(s => s.loadArea)
-  const loadAreaWorld = useStore(s => s.loadAreaWorld)
-  const buildAndLoadArea = useStore(s => s.buildAndLoadArea)
   const activateArea = useStore(s => s.activateArea)
   const myCharacter = useStore(s => s.myCharacter)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
@@ -63,25 +52,18 @@ export default function GameV2({ onLeave }) {
   const inCombat = encounter.phase === 'combat'
   const sessionApiKey = useStore(s => s.sessionApiKey)
   const isDM = useStore(s => s.isDM)
-  const runEnemyTurn = useStore(s => s.runEnemyTurn)
-  const applyEncounterDamage = useStore(s => s.applyEncounterDamage)
-  const useAction = useStore(s => s.useAction)
   const narrateCombatAction = useStore(s => s.narrateCombatAction)
   const campaign = useStore(s => s.campaign)
   const partyMembers = useStore(s => s.partyMembers)
-  const narrator = useStore(s => s.narrator)
   const activeCutscene = useStore(s => s.activeCutscene)
-  const roofStates = useStore(s => s.roofStates)
   const advanceGameTime = useStore(s => s.advanceGameTime)
   const pendingLoot = useStore(s => s.pendingLoot)
   const setPendingLoot = useStore(s => s.setPendingLoot)
   const applyLevelUp = useStore(s => s.applyLevelUp)
 
   const pixiRef = useRef(null)
-  const cameraRef = useRef(null)
   const [apiKeyLoaded, setApiKeyLoaded] = useState(false)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
-  const [transitioning, setTransitioning] = useState(false)
   const [toolPanel, setToolPanel] = useState(null)
   const [sheetChar, setSheetChar] = useState(null)
   const [restProposal, setRestProposal] = useState(null)
@@ -89,139 +71,49 @@ export default function GameV2({ onLeave }) {
   const [showJournal, setShowJournal] = useState(false)
   const [activeNpc, setActiveNpc] = useState(null)
   const [worldTransform, setWorldTransform] = useState(null)
-  const [targetingMode, setTargetingMode] = useState(null)
-  const [pendingOA, setPendingOA] = useState(null)
   const [showLevelUp, setShowLevelUp] = useState(false)
   const dismissedLevelRef = useRef(null)
-  const triggeredZonesRef = useRef(new Set())
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
   const playerPosRef = useRef(playerPos)
   playerPosRef.current = playerPos
-  const lastNpcTriggerRef = useRef(null)
-  const reachableTilesRef = useRef(new Set())
-  const propCoverRef = useRef(new Set())
 
   const area = areas[currentAreaId] || null
-  // Alias for backward compat — existing code reads `zone`
   const zone = area
+  const isV2Zone = Boolean(zone?.palette)
 
-  // Area camera — instantiate when zone signals camera mode (e.g. large procedural maps)
-  const useAreaCamera = Boolean(zone?.palette) || zone?.useCamera || false
-  useEffect(() => {
-    if (!useAreaCamera) {
-      cameraRef.current = null
-      return
-    }
-    const w = window.innerWidth
-    const h = window.innerHeight
-    const cam = new Camera(w, h)
-    const tileSize = zone?.tileSize || 200
-    cam.setAreaBounds((zone?.width || 40) * tileSize, (zone?.height || 30) * tileSize)
-    // Center on player start
-    cam.centerOnImmediate(playerPosRef.current.x, playerPosRef.current.y, tileSize)
-    cameraRef.current = cam
-  }, [useAreaCamera, zone?.width, zone?.height])
+  // --- Extracted hooks ---
+  const { cameraRef } = useAreaCamera({ zone, playerPosRef })
 
-  // Camera keyboard controls — arrow keys pan camera, spacebar recenters on player
-  // (WASD reserved for token movement in V2 mode)
-  useEffect(() => {
-    if (!useAreaCamera) return
+  useFogOfWar({ zone, playerPos, playerPosRef, currentAreaId, myCharacter, isDM, pixiRef, cameraRef })
 
-    const keyMap = {
-      ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
-    }
+  const { roofManagerRef, triggeredZonesRef } = useRoofManager({ zone, playerPos, playerPosRef, currentAreaId, isDM })
 
-    const onKeyDown = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
-      const cam = cameraRef.current
-      if (!cam) return
-      if (keyMap[e.key]) { cam.startPan(keyMap[e.key]); e.preventDefault() }
-      if (e.key === ' ') {
-        const myPos = playerPosRef.current
-        if (myPos) cam.centerOn(myPos.x, myPos.y, zone?.tileSize || 200)
-        e.preventDefault()
-      }
-    }
-    const onKeyUp = (e) => {
-      const cam = cameraRef.current
-      if (!cam) return
-      if (keyMap[e.key]) cam.stopPan(keyMap[e.key])
-    }
+  const {
+    targetingMode, pendingOA, setPendingOA,
+    handleCombatTileClick, handleCombatAction, executeMoveWithOA,
+  } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat })
 
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('keyup', onKeyUp)
-    return () => {
-      window.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('keyup', onKeyUp)
-    }
-  }, [useAreaCamera])
+  const { handleAreaTransition } = useAreaTransition({
+    area, areas, areaBriefs, inCombat, campaign, pixiRef,
+    setPlayerPos, playerPosRef, advanceGameTime, playerPos,
+  })
 
-  // --- Fog of War refs (area camera mode only) ---
-  const exploredRef = useRef(new Set())
-  const fogDirtyRef = useRef(true)
+  const { handleWorldTileClick } = useWorldMovement({
+    zone, isV2Zone, playerPos, setPlayerPos, playerPosRef,
+    cameraRef, dialogOpenRef, handleInteractRef, user,
+  })
 
-  // Mark fog dirty when tokens move in area mode
-  useEffect(() => {
-    if (!cameraRef.current || !pixiRef.current) return
-    fogDirtyRef.current = true
-  }, [playerPos, currentAreaId])
+  // --- Combined tile click handler ---
+  const handleTileClick = useCallback(({ x, y }) => {
+    if (isAnimating()) return
+    // Combat logic gets first pass
+    if (handleCombatTileClick({ x, y })) return
+    // Non-combat world movement
+    handleWorldTileClick({ x, y })
+  }, [handleCombatTileClick, handleWorldTileClick])
 
-  // Reset explored set when area changes; DM restores from persisted bitfield if available
-  const prevAreaIdRef = useRef(currentAreaId)
-  useEffect(() => {
-    if (currentAreaId !== prevAreaIdRef.current) {
-      const storedFog = useStore.getState().fogBitfields[currentAreaId]
-      if (storedFog && zone?.width && zone?.height) {
-        const decoded = decodeExploredBitfield(storedFog, zone.width, zone.height)
-        exploredRef.current = decoded || new Set()
-      } else {
-        exploredRef.current = new Set()
-      }
-      fogDirtyRef.current = true
-      prevAreaIdRef.current = currentAreaId
-    }
-  }, [currentAreaId])
-
-  // Fog broadcast debounce
-  const fogBroadcastTimer = useRef(null)
-
-  // Update explored set + broadcast when player moves (no rendering — ticker handles that)
-  useEffect(() => {
-    if (!zone?.useCamera) return
-
-    const pos = playerPosRef.current
-    if (!pos) return
-
-    // Build party vision data
-    const areaLighting = zone.lighting || 'bright'
-    const charVision = getCharacterVisionRange(myCharacter || {}, areaLighting)
-    const partyVisions = [{
-      position: pos,
-      brightRadius: charVision.bright,
-      dimRadius: charVision.dim,
-      darkvisionRadius: charVision.darkvision,
-    }]
-
-    const visionResult = computeVision(partyVisions, zone.width, zone.height)
-
-    // Grow explored set (mutates in place, returns newly added keys)
-    const newlyExplored = updateExplored(exploredRef.current, visionResult.active)
-
-    // Broadcast explored state (DM only, debounced 500ms) and persist to store
-    if (isDM && currentAreaId && newlyExplored.length > 0) {
-      clearTimeout(fogBroadcastTimer.current)
-      fogBroadcastTimer.current = setTimeout(() => {
-        const bitfield = encodeExploredBitfield(exploredRef.current, zone.width, zone.height)
-        broadcastFogUpdate(currentAreaId, bitfield)
-        const { updateFogBitfield, saveSessionStateToSupabase } = useStore.getState()
-        updateFogBitfield(currentAreaId, bitfield)
-        saveSessionStateToSupabase()
-      }, 500)
-    }
-  }, [playerPos, currentAreaId, zone, myCharacter, isDM])
-
-  // ── Watch for XP crossing a level threshold ───────────────────────────────
+  // --- Watch for XP crossing a level threshold ---
   useEffect(() => {
     if (!myCharacter) return
     const xp = myCharacter.xp || 0
@@ -232,129 +124,6 @@ export default function GameV2({ onLeave }) {
     }
   }, [myCharacter?.xp])
 
-  // Render fog every frame via PixiJS ticker (camera panning needs continuous updates)
-  useEffect(() => {
-    if (!zone?.useCamera) return
-    const app = pixiRef.current?.getApp?.()
-    if (!app) return
-
-    const tickerFn = () => {
-      const fogContainer = pixiRef.current?.getFogLayer?.()
-      if (!fogContainer) return
-      const cam = cameraRef.current
-      if (!cam) return
-      const tileSize = zone.tileSize || 200
-      const viewW = window.innerWidth
-      const viewH = window.innerHeight
-      const bounds = {
-        startX: Math.floor(cam.x / tileSize),
-        startY: Math.floor(cam.y / tileSize),
-        endX: Math.ceil((cam.x + viewW / cam.zoom) / tileSize),
-        endY: Math.ceil((cam.y + viewH / cam.zoom) / tileSize),
-      }
-      const pos = playerPosRef.current
-      if (!pos) return
-      const areaLighting = zone.lighting || 'bright'
-      const charVision = getCharacterVisionRange(myCharacter || {}, areaLighting)
-      const partyVisions = [{
-        position: pos,
-        brightRadius: charVision.bright,
-        dimRadius: charVision.dim,
-        darkvisionRadius: charVision.darkvision,
-      }]
-      const visionResult = computeVision(partyVisions, zone.width, zone.height)
-      const states = buildFogTileStates(visionResult.active, exploredRef.current, zone.width, zone.height)
-      renderFog(fogContainer, states, bounds, tileSize, PIXI)
-    }
-
-    app.ticker.add(tickerFn)
-    return () => app.ticker.remove(tickerFn)
-  }, [zone, myCharacter])
-
-  // Receive fog broadcasts (non-DM clients) — decode bitfield into explored set
-  const fogBitfields = useStore(s => s.fogBitfields)
-  useEffect(() => {
-    if (isDM) return
-    if (!currentAreaId || !fogBitfields?.[currentAreaId]) return
-    if (!zone?.width || !zone?.height) return
-    const decoded = decodeExploredBitfield(fogBitfields[currentAreaId], zone.width, zone.height)
-    if (decoded) {
-      exploredRef.current = decoded
-      fogDirtyRef.current = true
-    }
-  }, [fogBitfields, currentAreaId, isDM, zone?.width, zone?.height])
-
-  // --- Roof-lift manager (area camera mode only) ---
-  const roofManagerRef = useRef(new RoofManager())
-
-  // Register buildings into RoofManager when zone loads
-  useEffect(() => {
-    if (!zone?.useCamera || !zone?.buildings) return
-    roofManagerRef.current = new RoofManager()
-    triggeredZonesRef.current = new Set()
-    const rm = roofManagerRef.current
-    rm.buildings.clear()
-    rm.revealed.clear()
-    rm._doorSet.clear()
-
-    // Detect door cells from walls layer
-    const doors = []
-    if (zone.layers?.walls && zone.palette) {
-      const w = zone.width
-      for (let i = 0; i < zone.layers.walls.length; i++) {
-        const pIdx = zone.layers.walls[i]
-        if (pIdx === 0) continue
-        const tileId = zone.palette[pIdx] || ''
-        if (tileId.includes('door')) {
-          doors.push({ x: i % w, y: Math.floor(i / w) })
-        }
-      }
-    }
-
-    for (const b of zone.buildings) {
-      const buildingDoors = doors.filter(d =>
-        d.x >= b.x && d.x < b.x + b.width && d.y >= b.y && d.y < b.y + b.height
-      )
-      rm.registerBuilding({ ...b, doors: buildingDoors })
-    }
-
-    // Restore persisted roof states for this area
-    const storedRoofStates = useStore.getState().roofStates[currentAreaId]
-    if (storedRoofStates) {
-      for (const [buildingId, revealed] of Object.entries(storedRoofStates)) {
-        rm.setRevealed(buildingId, revealed)
-      }
-    }
-  }, [zone?.buildings, currentAreaId])
-
-  // Update roof reveal states when tokens move
-  useEffect(() => {
-    if (!zone?.useCamera) return
-    const rm = roofManagerRef.current
-    const pos = playerPosRef.current
-    if (!pos) return
-    const positions = [pos] // party positions — expand when multiplayer token sync exists
-    const changes = rm.updateRevealStates(positions)
-    if (changes.length > 0 && isDM) {
-      const { setRoofState, saveSessionStateToSupabase } = useStore.getState()
-      for (const { buildingId, revealed } of changes) {
-        broadcastRoofReveal(currentAreaId, buildingId, revealed)
-        setRoofState(currentAreaId, buildingId, revealed)
-      }
-      saveSessionStateToSupabase()
-    }
-  }, [playerPos, currentAreaId, zone])
-
-  // Apply incoming roof reveal broadcasts (non-DM clients) to local RoofManager
-  useEffect(() => {
-    if (!roofStates || isDM) return
-    const rm = roofManagerRef.current
-    const areaRoofStates = roofStates[currentAreaId] || {}
-    for (const [buildingId, revealed] of Object.entries(areaRoofStates)) {
-      rm.setRevealed(buildingId, revealed)
-    }
-  }, [roofStates, currentAreaId])
-
   // --- Encounter zone proximity detection ---
   useEffect(() => {
     if (!zone?.encounterZones?.length || !playerPos || inCombat) return
@@ -363,18 +132,13 @@ export default function GameV2({ onLeave }) {
 
     const zones = zone.encounterZones.map(ez => {
       const center = ez.center || ez.position || { x: Math.floor((zone.width || 40) / 2), y: Math.floor((zone.height || 30) / 2) }
-      return {
-        ...ez,
-        center,
-        triggered: triggeredZonesRef.current.has(ez.id),
-      }
+      return { ...ez, center, triggered: triggeredZonesRef.current.has(ez.id) }
     })
 
     const triggered = checkEncounterProximity(pos, zones)
     if (!triggered) return
 
     triggeredZonesRef.current.add(triggered.id)
-
     if (isDM) {
       broadcastEncounterAction({ type: 'encounter-zone-triggered', zoneId: triggered.id })
     }
@@ -383,105 +147,10 @@ export default function GameV2({ onLeave }) {
     addNarratorMessage({ role: 'user', speaker: 'System', text: prompt })
   }, [playerPos, zone, inCombat, isDM, addNarratorMessage])
 
-  // --- Escape to cancel targeting mode ---
-  useEffect(() => {
-    if (!targetingMode) return
-    const onKey = (e) => {
-      if (e.key === 'Escape') {
-        setTargetingMode(null)
-        const layer = pixiRef.current?.getMovementRangeLayer?.()
-        if (layer) clearAoEPreview(layer)
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [targetingMode])
+  // --- Load area world on mount ---
+  useWorldLoader({ campaign, setPlayerPos })
 
-  // --- Combat camera lock (area camera mode only) ---
-  useEffect(() => {
-    const cam = cameraRef.current
-    if (!cam) return
-    if (inCombat && encounter.combatants?.length) {
-      // Compute tile-space bounds from combatant positions
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
-      for (const c of encounter.combatants) {
-        if (c.position) {
-          minX = Math.min(minX, c.position.x)
-          minY = Math.min(minY, c.position.y)
-          maxX = Math.max(maxX, c.position.x)
-          maxY = Math.max(maxY, c.position.y)
-        }
-      }
-      if (minX !== Infinity) {
-        cam.setCombatBounds({ x: minX - 2, y: minY - 2, width: maxX - minX + 4, height: maxY - minY + 4 })
-      }
-    } else {
-      cam.setCombatBounds(null)
-    }
-  }, [inCombat, encounter.combatants])
-
-  // Load area world on mount — test area or normal campaign/demo
-  const worldLoadedRef = useRef(false)
-  useEffect(() => {
-    if (worldLoadedRef.current) return
-    worldLoadedRef.current = true
-
-    const params = new URLSearchParams(window.location.search)
-
-    if (params.has('testarea')) {
-      try {
-        const testArea = buildTestArea()
-        console.log('[GameV2] Test area loaded:', testArea.name, `${testArea.width}x${testArea.height}`, testArea.palette?.length, 'palette entries')
-        loadArea(testArea.id || 'test-area', testArea)
-        activateArea(testArea.id || 'test-area')
-        if (testArea.playerStart) setPlayerPos(testArea.playerStart)
-      } catch (e) {
-        console.error('[GameV2] Failed to build test area:', e)
-      }
-      return
-    }
-
-    // Check for campaign areas
-    const campaignData = campaign?.campaign_data || campaign
-    if (campaignData?.areas || campaignData?.areaBriefs) {
-      const areas = campaignData.areas || {}
-      const briefs = { ...(campaignData.areaBriefs || {}) }
-      const startId = campaignData.startArea
-
-      // Build starting area from brief if not already built
-      if (startId && !areas[startId] && briefs[startId]) {
-        try {
-          areas[startId] = buildAreaFromBrief(briefs[startId], 42)
-          delete briefs[startId]
-          console.log('[GameV2] Built starting area from brief:', startId)
-        } catch (e) {
-          console.error('[GameV2] Failed to build starting area:', e)
-        }
-      }
-
-      loadAreaWorld({
-        title: campaignData.title,
-        startArea: startId,
-        areas,
-        areaBriefs: briefs,
-        questObjectives: campaignData.questObjectives || [],
-      })
-      return
-    }
-
-    // Fallback — build demo area
-    try {
-      const demoArea = buildDemoArea()
-      console.log('[GameV2] Demo area built:', demoArea.name || demoArea.id, `${demoArea.width}x${demoArea.height}`)
-      loadArea(demoArea.id, demoArea)
-      activateArea(demoArea.id)
-      if (demoArea.playerStart) setPlayerPos(demoArea.playerStart)
-    } catch (e) {
-      console.error('[GameV2] Failed to build demo area:', e)
-    }
-  }, [])
-
-  // Activate current area whenever currentAreaId changes (e.g. from multiplayer broadcast)
+  // Activate current area whenever currentAreaId changes
   useEffect(() => {
     if (currentAreaId && areas[currentAreaId] && !areaLayers) {
       activateArea(currentAreaId)
@@ -492,7 +161,7 @@ export default function GameV2({ onLeave }) {
     dialogOpenRef.current = !!activeNpc
   }, [activeNpc])
 
-  // Sync world transform from PixiApp to position chat bubbles (every frame for smooth tracking)
+  // Sync world transform from PixiApp for chat bubble positioning
   useEffect(() => {
     let rafId
     function updateTransform() {
@@ -510,7 +179,6 @@ export default function GameV2({ onLeave }) {
   useEffect(() => {
     const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
     if (!campaignId || !user?.id) {
-      // No campaign context (e.g. ?v2 testing) — check sessionApiKey
       if (sessionApiKey) setApiKeyLoaded(true)
       return
     }
@@ -523,11 +191,8 @@ export default function GameV2({ onLeave }) {
         setApiKeyLoaded(true)
       }).catch(() => setApiKeyLoaded(true))
     } else {
-      // Non-DM: request key from DM
       broadcastRequestApiKey()
-      // Give DM 2s to respond, then show gate
       const timer = setTimeout(() => setApiKeyLoaded(true), 2000)
-      // If key arrives via broadcast before timeout, mark loaded
       const unsub = useStore.subscribe((state) => {
         if (state.sessionApiKey) { clearTimeout(timer); setApiKeyLoaded(true) }
       })
@@ -535,51 +200,14 @@ export default function GameV2({ onLeave }) {
     }
   }, [campaign?.id, user?.id, isDM])
 
-  // Build walkability data from zone — V2 uses flat collision array, V1 uses boolean[][] grid
-  const isV2Zone = Boolean(zone?.palette)
-  const walkData = useMemo(() => {
-    if (!zone?.layers) return null
-    if (isV2Zone) {
-      const w = zone.width, h = zone.height
-      if (zone.wallEdges) {
-        // Edge-based collision (sub-grid walls)
-        return {
-          type: 'v2-edge',
-          wallEdges: zone.wallEdges,
-          cellBlocked: zone.cellBlocked || new Uint8Array(w * h),
-          width: w,
-          height: h,
-        }
-      }
-      // Fallback: cell-based collision (legacy V2 areas without wallEdges)
-      const palette = zone.palette || []
-      const collision = new Uint8Array(w * h)
-      const wallLayer = zone.layers.walls
-      if (wallLayer) {
-        for (let i = 0; i < wallLayer.length; i++) {
-          const idx = wallLayer[i]
-          if (idx === 0) continue
-          const tileId = palette[idx] || ''
-          if (tileId.includes('door')) continue
-          collision[i] = 1
-        }
-      }
-      return { type: 'v2', collision, width: w, height: h }
-    }
-    return { type: 'v1', grid: buildWalkabilityGrid(zone.layers.walls, zone.layers.props, getBlockingSet(), zone.width, zone.height) }
-  }, [zone, isV2Zone])
-  const walkDataRef = useRef(walkData)
-  walkDataRef.current = walkData
-
-  // Build token list — uses playerPos so tokens update as player walks
+  // --- Token list ---
   const tokens = useMemo(() => {
     if (!zone) return []
     const t = []
     t.push({
       id: 'player',
       name: myCharacter?.name || 'Hero',
-      x: playerPos.x,
-      y: playerPos.y,
+      x: playerPos.x, y: playerPos.y,
       color: 0x0c1828,
       borderColor: CLASS_COLORS[myCharacter?.class] || 0x4499dd,
       isNpc: false,
@@ -588,14 +216,11 @@ export default function GameV2({ onLeave }) {
       zone.npcs.forEach(npc => {
         if (!npc.position) return
         t.push({
-          id: npc.name,
-          name: npc.name,
-          x: npc.position.x,
-          y: npc.position.y,
+          id: npc.name, name: npc.name,
+          x: npc.position.x, y: npc.position.y,
           color: 0x1a1208,
           borderColor: npc.questRelevant ? 0xc9a84c : 0x8a7a52,
-          isNpc: true,
-          questRelevant: npc.questRelevant,
+          isNpc: true, questRelevant: npc.questRelevant,
         })
       })
     }
@@ -603,24 +228,18 @@ export default function GameV2({ onLeave }) {
       zone.enemies.forEach(e => {
         if (!e.position) return
         t.push({
-          id: e.id,
-          name: e.name,
-          x: e.position.x,
-          y: e.position.y,
-          color: 0x8b0000,
-          borderColor: 0xff3333,
-          isEnemy: true,
-          isNpc: false,
-          showHpBar: inCombat,
-          currentHp: e.currentHp,
-          maxHp: e.maxHp,
+          id: e.id, name: e.name,
+          x: e.position.x, y: e.position.y,
+          color: 0x8b0000, borderColor: 0xff3333,
+          isEnemy: true, isNpc: false,
+          showHpBar: inCombat, currentHp: e.currentHp, maxHp: e.maxHp,
         })
       })
     }
     return t
   }, [playerPos, zone, myCharacter, inCombat])
 
-  // Nearby NPCs for chat bubbles — within 3 tiles, outside combat and dialog
+  // Nearby NPCs for chat bubbles
   const nearbyNpcs = useMemo(() => {
     if (!zone?.npcs || inCombat || activeNpc) return []
     return zone.npcs.filter(npc => {
@@ -631,371 +250,7 @@ export default function GameV2({ onLeave }) {
     })
   }, [playerPos, zone, inCombat, activeNpc])
 
-  // Click-to-move: pathfind and animate walk
-  // Only update React state at the END — PixiJS handles the visual walk directly
-  const handleTileClick = useCallback(({ x, y }) => {
-    if (isAnimating()) return
-
-    // Attack targeting — resolve attack on clicked enemy
-    if (targetingMode === 'attack' && inCombat) {
-      const target = encounter.combatants.find(c =>
-        c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position?.x === x && c.position?.y === y
-      )
-      if (!target) return // Clicked empty tile — ignore
-
-      const active = encounter.combatants[encounter.currentTurn]
-      if (!active || !active.position) return
-
-      // Chebyshev distance for adjacency
-      const dist = Math.max(Math.abs(active.position.x - x), Math.abs(active.position.y - y))
-      const weapon = active.attacks?.[0] || { name: 'Unarmed Strike', bonus: '+0', damage: '1' }
-      const isRanged = weapon.range != null
-      const maxRange = isRanged ? Math.floor((weapon.range || 80) / 5) : 1
-
-      if (dist > maxRange) {
-        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Target out of range.' })
-        return
-      }
-
-      // Cover calculation
-      const coverType = calculateCover(active.position, { x, y }, zone.wallEdges, propCoverRef.current, zone.width)
-      const coverBonus = COVER_BONUS[coverType] || 0
-      const effectiveAC = (target.ac || 10) + coverBonus
-
-      // Roll attack
-      const bonus = parseInt(weapon.bonus) || 0
-      const d20 = Math.floor(Math.random() * 20) + 1
-      const total = d20 + bonus
-      const isCrit = d20 === 20
-      const hit = isCrit || total >= effectiveAC
-
-      // Roll damage
-      let damage = 0
-      if (hit) {
-        const dmgResult = rollDamage(weapon.damage || '1')
-        damage = isCrit ? dmgResult.total * 2 : dmgResult.total
-      }
-
-      if (hit && damage > 0) {
-        const { applyEncounterDamage: applyDmg } = useStore.getState()
-        applyDmg(target.id || target.name, damage)
-      }
-
-      const { useAction: consumeAction } = useStore.getState()
-      consumeAction(active.id)
-      setTargetingMode(null)
-
-      const coverNote = coverBonus > 0 ? ` (${coverType} cover +${coverBonus})` : ''
-      const entry = hit
-        ? `${active.name} → ${target.name}: HIT! d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}. ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}.`
-        : `${active.name} → ${target.name}: MISS. d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}.`
-      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
-      broadcastEncounterAction({ type: 'attack-result', attackerId: active.id, targetId: target.id, hit, damage, log: entry })
-
-      // Fire-and-forget narration
-      const apiKey = sessionApiKey
-      if (apiKey) {
-        const resultDesc = hit ? `Hit! ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}` : 'Miss!'
-        narrateCombatAction(active.name, 'Attack', target.name, resultDesc, apiKey)
-      }
-      return
-    }
-
-    // Spell AoE targeting — resolve area damage with saving throws
-    if (targetingMode?.type === 'spell' && inCombat) {
-      const spell = targetingMode.spell
-      const active = encounter.combatants[encounter.currentTurn]
-      if (!active?.position) return
-
-      // Check range (Chebyshev distance in tiles)
-      const dist = Math.max(Math.abs(active.position.x - x), Math.abs(active.position.y - y))
-      const maxRange = Math.floor((spell.range || 60) / 5)
-      if (dist > maxRange) {
-        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Out of range.' })
-        return
-      }
-
-      // Get affected tiles based on area type
-      const radiusTiles = Math.floor((spell.areaSize || 10) / 5)
-      let affectedTiles
-      if (spell.areaType === 'sphere') {
-        affectedTiles = getTilesInSphere({ x, y }, radiusTiles)
-      } else if (spell.areaType === 'cube') {
-        affectedTiles = getTilesInCube({ x, y }, radiusTiles * 2 + 1)
-      } else if (spell.areaType === 'line') {
-        // Determine direction from caster to target
-        const dx2 = x - active.position.x
-        const dy2 = y - active.position.y
-        const dir = Math.abs(dx2) >= Math.abs(dy2) ? (dx2 > 0 ? 'E' : 'W') : (dy2 > 0 ? 'S' : 'N')
-        affectedTiles = getTilesInLine(active.position, dir, radiusTiles)
-      } else if (spell.areaType === 'cone') {
-        const dx2 = x - active.position.x
-        const dy2 = y - active.position.y
-        const dir = Math.abs(dx2) >= Math.abs(dy2) ? (dx2 > 0 ? 'E' : 'W') : (dy2 > 0 ? 'S' : 'N')
-        affectedTiles = getTilesInCone(active.position, dir, radiusTiles)
-      } else {
-        affectedTiles = getTilesInSphere({ x, y }, radiusTiles) // fallback
-      }
-
-      // Show final AoE highlight briefly
-      const layer = pixiRef.current?.getMovementRangeLayer?.()
-      if (layer) renderAoEPreview(layer, affectedTiles, zone?.tileSize || 200)
-
-      // Find affected combatants
-      const affected = encounter.combatants.filter(c =>
-        (c.currentHp ?? c.hp) > 0 && c.position &&
-        affectedTiles.some(t => t.x === c.position.x && t.y === c.position.y)
-      )
-
-      // Compute spell save DC: 8 + proficiency + casting ability modifier
-      const prof = Math.floor(((active.level || 1) - 1) / 4) + 2
-      const castAbility = spell.castingAbility || 'int'
-      const castMod = Math.floor(((active.stats?.[castAbility] || 10) - 10) / 2)
-      const saveDC = 8 + prof + castMod
-
-      // Roll base damage once (all targets take same base)
-      const baseDmg = rollDamage(spell.damage || '1d6').total
-
-      // Resolve saves for each affected target
-      const spellOrigin = { x, y }
-      const saveAbility = spell.saveAbility || 'dex'
-      for (const target of affected) {
-        const coverType = calculateCover(spellOrigin, target.position, zone.wallEdges, propCoverRef.current, zone.width)
-        const coverSaveBonus = COVER_BONUS[coverType] || 0
-        const saveMod = Math.floor(((target.stats?.[saveAbility] || 10) - 10) / 2)
-        const saveRoll = Math.floor(Math.random() * 20) + 1 + saveMod + coverSaveBonus
-        const saved = saveRoll >= saveDC
-        const dmg = saved && spell.halfOnSave ? Math.floor(baseDmg / 2) : saved ? 0 : baseDmg
-
-        if (dmg > 0) {
-          const { applyEncounterDamage: applyDmg } = useStore.getState()
-          applyDmg(target.id, dmg)
-        }
-
-        const coverNote = coverSaveBonus > 0 ? ` (${coverType} cover +${coverSaveBonus})` : ''
-        const entry = `${target.name}: ${saveAbility.toUpperCase()} save ${saveRoll} vs DC ${saveDC}${coverNote} — ${saved ? 'SAVE' : 'FAIL'} (${dmg} ${spell.name} damage)`
-        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
-      }
-
-      // Consume action and broadcast
-      const { useAction: consumeAction } = useStore.getState()
-      consumeAction(active.id)
-      broadcastEncounterAction({ type: 'aoe-resolve', spellName: spell.name, casterId: active.id, affectedTiles, saveDC })
-
-      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} casts ${spell.name}!` })
-
-      // Clear targeting after a brief delay so players see the highlight
-      setTimeout(() => {
-        setTargetingMode(null)
-        if (layer) clearAoEPreview(layer)
-      }, 1500)
-      return
-    }
-
-    // Combat movement — click within reachable range to move active combatant
-    if (inCombat && zone?.wallEdges) {
-      const active = encounter.combatants?.[encounter.currentTurn]
-      if (!active || active.isEnemy || !active.position) return
-      if (!reachableTilesRef.current.has(`${x},${y}`)) return
-
-      const collisionData = {
-        wallEdges: zone.wallEdges,
-        cellBlocked: zone.cellBlocked || new Uint8Array(zone.width * zone.height),
-      }
-      const path = findPathEdge(collisionData, zone.width, zone.height, active.position, { x, y })
-      if (!path || path.length < 2) return
-
-      // OA pre-scan — warn player if path provokes attacks of opportunity
-      const aliveEnemies = encounter.combatants.filter(c =>
-        c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position
-      )
-      const oaTriggers = findOATriggers(path, aliveEnemies, active.disengaged)
-      if (oaTriggers.length > 0) {
-        const names = [...new Set(oaTriggers.map(t => t.enemy.name))].join(', ')
-        setPendingOA({ triggers: oaTriggers, path, active, x, y, names })
-        return
-      }
-
-      const cost = path.length - 1
-      const { moveToken } = useStore.getState()
-      moveToken(active.id, x, y, cost)
-      const tileSize = zone.tileSize || 200
-      animateTokenAlongPath(active.id, path, null, () => {
-        if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
-      }, tileSize)
-      broadcastEncounterAction({ type: 'move-token', id: active.id, position: { x, y }, cost })
-      return
-    }
-
-    const wd = walkDataRef.current
-    const pos = playerPosRef.current
-    if (!wd) return
-
-    let path
-    if (wd.type === 'v2-edge') {
-      if (wd.cellBlocked[y * wd.width + x] === 1) return
-      path = findPathEdge(
-        { wallEdges: wd.wallEdges, cellBlocked: wd.cellBlocked },
-        wd.width, wd.height, pos, { x, y }
-      )
-    } else if (wd.type === 'v2') {
-      if (wd.collision[y * wd.width + x] === 1) return
-      path = findPath(wd.collision, wd.width, wd.height, pos, { x, y })
-    } else {
-      if (!wd.grid[y]?.[x]) return
-      path = findPathLegacy(wd.grid, pos, { x, y })
-    }
-
-    if (path && path.length > 1) {
-      playerPosRef.current = { x, y }
-      const tileSize = zone?.tileSize || 32
-      animateTokenAlongPath('player', path, null, () => {
-        setPlayerPos({ x, y })
-        // Auto-follow camera
-        if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
-      }, isV2Zone ? tileSize : undefined)
-      broadcastTokenMove(user?.id, { x, y }, path)
-    }
-  }, [zone, isV2Zone, inCombat, encounter, targetingMode, addNarratorMessage, sessionApiKey, narrateCombatAction])
-
-  // WASD keyboard movement — one tile at a time
-  useEffect(() => {
-    const wasdDirs = {
-      w: { x: 0, y: -1 }, W: { x: 0, y: -1 },
-      s: { x: 0, y: 1 },  S: { x: 0, y: 1 },
-      a: { x: -1, y: 0 }, A: { x: -1, y: 0 },
-      d: { x: 1, y: 0 },  D: { x: 1, y: 0 },
-    }
-    const arrowDirs = {
-      ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 },
-      ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 },
-    }
-
-    function handleKeyDown(e) {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
-      if (dialogOpenRef.current) return
-
-      // E key — interact with adjacent NPC or exit
-      if (e.key === 'e' || e.key === 'E') {
-        e.preventDefault()
-        handleInteractRef.current?.()
-        return
-      }
-
-      // Arrow keys: move token only when no camera (V1 zones); camera handler handles panning
-      let dir = wasdDirs[e.key]
-      if (!dir && !cameraRef.current) dir = arrowDirs[e.key]
-      if (!dir) return
-      e.preventDefault()
-
-      if (isAnimating()) return
-      const wd = walkDataRef.current
-      const pos = playerPosRef.current
-      const nx = pos.x + dir.x
-      const ny = pos.y + dir.y
-
-      if (wd?.type === 'v2-edge') {
-        if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
-        if (wd.cellBlocked[ny * wd.width + nx] === 1) return
-        // Check wall edge on BOTH sides — source exit edge and target entry edge
-        const fromIdx = pos.y * wd.width + pos.x
-        const toIdx = ny * wd.width + nx
-        const exitBit = dir.y === -1 ? 0x1 : dir.x === 1 ? 0x2 : dir.y === 1 ? 0x4 : 0x8
-        const entryBit = dir.y === -1 ? 0x4 : dir.x === 1 ? 0x8 : dir.y === 1 ? 0x1 : 0x2
-        if ((wd.wallEdges[fromIdx] & exitBit) || (wd.wallEdges[toIdx] & entryBit)) return
-      } else if (wd?.type === 'v2') {
-        if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
-        if (wd.collision[ny * wd.width + nx] === 1) return
-      } else if (wd?.type === 'v1') {
-        if (!wd.grid || ny < 0 || nx < 0 || ny >= wd.grid.length || nx >= wd.grid[0]?.length) return
-        if (!wd.grid[ny][nx]) return
-      } else {
-        return
-      }
-
-      const tileSize = zone?.tileSize || 32
-      playerPosRef.current = { x: nx, y: ny }
-      const path = [pos, { x: nx, y: ny }]
-      animateTokenAlongPath('player', path, null, () => {
-        setPlayerPos({ x: nx, y: ny })
-        // Auto-follow camera
-        if (cameraRef.current) cameraRef.current.centerOn(nx, ny, tileSize)
-      }, isV2Zone ? tileSize : undefined)
-      broadcastTokenMove(useStore.getState().user?.id, { x: nx, y: ny }, path)
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [zone, isV2Zone])
-
-  // Exit-proximity pre-generation — build upcoming areas before the player arrives
-  useEffect(() => {
-    if (!area?.exits || !playerPos) return
-    const PRE_GEN_DISTANCE = 5
-
-    for (const exit of area.exits) {
-      const dist = Math.abs(playerPos.x - exit.x) + Math.abs(playerPos.y - exit.y)
-      if (dist > PRE_GEN_DISTANCE) continue
-      if (!exit.targetArea) continue
-      if (areas[exit.targetArea]) continue
-      const brief = areaBriefs[exit.targetArea]
-      if (!brief) continue
-
-      console.log(`[pre-gen] Building area "${exit.targetArea}" (player ${dist} tiles from exit)`)
-      const builtArea = buildAreaFromBrief(brief)
-      buildAndLoadArea(exit.targetArea, builtArea)
-      // Persist to Supabase in background
-      if (campaign?.id) {
-        saveArea(campaign.id, builtArea).catch(err =>
-          console.warn('[pre-gen] Failed to save:', err))
-      }
-    }
-  }, [playerPos, area?.exits, areas, areaBriefs])
-
-  // Area transition via exit click — fade-to-black visual
-  const handleAreaTransition = useCallback((exit) => {
-    if (transitioning || inCombat) return
-
-    const targetId = exit.targetArea || exit.targetZone
-    if (!targetId) return
-
-    // Build area on-demand if not yet generated
-    if (!areas[targetId]) {
-      const brief = areaBriefs[targetId]
-      if (!brief) {
-        console.error(`[transition] No area or brief for "${targetId}"`)
-        return
-      }
-      const builtArea = buildAreaFromBrief(brief)
-      buildAndLoadArea(targetId, builtArea)
-    }
-
-    setTransitioning(true)
-    const entry = exit.entryPoint || { x: 0, y: 0 }
-    broadcastAreaTransition(targetId, entry)
-    lastNpcTriggerRef.current = null
-    advanceGameTime(1)
-
-    const app = pixiRef.current?.getApp()
-    if (app) {
-      playZoneTransition(app, () => {
-        // Midpoint (screen is black) — swap area
-        activateArea(targetId)
-        setPlayerPos(entry)
-        playerPosRef.current = entry
-      }, () => {
-        // Complete — fade back in done
-        setTransitioning(false)
-      })
-    } else {
-      // Fallback if no PixiJS app
-      activateArea(targetId)
-      setPlayerPos(entry)
-      playerPosRef.current = entry
-      setTimeout(() => setTransitioning(false), 100)
-    }
-  }, [transitioning, inCombat, areas, areaBriefs, buildAndLoadArea, activateArea, advanceGameTime])
-
+  // --- Interaction handlers ---
   const handleInteractFn = useCallback(() => {
     if (isAnimating()) return
     if (inCombat) return
@@ -1048,269 +303,13 @@ export default function GameV2({ onLeave }) {
     nextEncounterTurn()
   }, [nextEncounterTurn])
 
-  const handleCombatAction = useCallback((type) => {
-    if (type === 'death-save') {
-      const { rollDeathSave } = useStore.getState()
-      const active = encounter.combatants?.[encounter.currentTurn]
-      if (!active) return
-      rollDeathSave(active.id)
-      const updated = useStore.getState().encounter.combatants.find(c => c.id === active.id)
-      if (updated) {
-        if (updated.currentHp > 0) {
-          addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} rolls a natural 20 — revived with 1 HP!` })
-        } else if ((updated.deathSaves?.failures ?? 0) >= 3) {
-          addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} has failed 3 death saves — they are dead.` })
-        }
-      }
-      broadcastEncounterAction({ type: 'death-save', id: active.id })
-      return
-    } else if (type === 'stabilize') {
-      const { stabilizeCombatant } = useStore.getState()
-      const active = encounter.combatants?.[encounter.currentTurn]
-      if (!active) return
-      stabilizeCombatant(active.id)
-      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} is stabilized.` })
-      broadcastEncounterAction({ type: 'stabilize', id: active.id })
-      return
-    } else if (type === 'attack') {
-      setTargetingMode('attack')
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select a target to attack. Press Escape to cancel.' })
-      return
-    } else if (type === 'cast') {
-      // Hardcoded test spell — full spell selection UI comes later
-      const testSpell = {
-        name: 'Fireball',
-        areaType: 'sphere',
-        areaSize: 20, // feet
-        range: 150,   // feet
-        damage: '8d6',
-        saveAbility: 'dex',
-        halfOnSave: true,
-        castingAbility: 'int',
-      }
-      setTargetingMode({ type: 'spell', spell: testSpell })
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: `Targeting ${testSpell.name}. Click to place. Press Escape to cancel.` })
-      return
-    } else if (type === 'move') {
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Click a tile to move during combat.' })
-    } else if (type === 'say') {
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Type your message in the chat and press enter.' })
-    } else if (type === 'disengage') {
-      const { useAction: consumeAction } = useStore.getState()
-      const active = encounter.combatants?.[encounter.currentTurn]
-      if (!active) return
-      consumeAction(active.id)
-      useStore.setState(state => ({
-        encounter: {
-          ...state.encounter,
-          combatants: state.encounter.combatants.map(c =>
-            c.id === active.id ? { ...c, disengaged: true } : c
-          ),
-        },
-      }))
-      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} takes the Disengage action.` })
-      broadcastEncounterAction({ type: 'disengage', id: active.id })
-    }
-  }, [addNarratorMessage, encounter])
+  // --- Chat handler ---
+  const { handleChat } = useNarratorChat({ sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage, playerPosRef })
 
-  // Execute movement after OA confirmation — resolves each OA trigger along the path
-  const executeMoveWithOA = useCallback(({ triggers, path, active, x, y }) => {
-    const tileSize = zone?.tileSize || 200
-    const cost = path.length - 1
-    const { moveToken, applyEncounterDamage: applyDmg } = useStore.getState()
-
-    // Mark reacting enemies' reactions used
-    triggers.forEach(({ enemy }) => {
-      useStore.setState(state => ({
-        encounter: {
-          ...state.encounter,
-          combatants: state.encounter.combatants.map(c =>
-            c.id === enemy.id ? { ...c, reactionUsed: true } : c
-          ),
-        },
-      }))
-    })
-
-    // Resolve each OA — apply damage, log, broadcast
-    let playerDied = false
-    triggers.forEach(({ enemy }) => {
-      const result = resolveOA(enemy, active)
-      const hitStr = result.hit
-        ? `hits for ${result.damage} damage${result.isCrit ? ' (CRIT!)' : ''}`
-        : 'misses'
-      addNarratorMessage({
-        role: 'dm',
-        speaker: 'Combat',
-        text: `Opportunity Attack: ${enemy.name} attacks ${active.name} — ${hitStr} (d20: ${result.d20}, total: ${result.total})`,
-      })
-      broadcastEncounterAction({ type: 'oa-resolve', attackerId: enemy.id, targetId: active.id, result })
-      if (result.hit && result.damage > 0) {
-        applyDmg(active.id, result.damage)
-        const currentHp = (active.currentHp ?? active.hp) - result.damage
-        if (currentHp <= 0) playerDied = true
-      }
-    })
-
-    if (playerDied) {
-      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} drops to 0 HP!` })
-      return
-    }
-
-    // Proceed with movement
-    moveToken(active.id, x, y, cost)
-    animateTokenAlongPath(active.id, path, null, () => {
-      if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
-    }, tileSize)
-    broadcastEncounterAction({ type: 'move-token', id: active.id, position: { x, y }, cost })
-  }, [zone, addNarratorMessage, cameraRef])
-
-  // Auto-run enemy turns (host only)
-  useEffect(() => {
-    if (!inCombat) return
-    const active = encounter.combatants?.[encounter.currentTurn]
-    if (!active || !active.isEnemy) return
-
-    const apiKey = sessionApiKey
-    const timer = setTimeout(() => {
-      if (apiKey) {
-        runEnemyTurn(apiKey)
-      } else {
-        // No API key — just skip enemy turn
-        nextEncounterTurn()
-      }
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [encounter.currentTurn, encounter.phase, inCombat, runEnemyTurn, sessionApiKey, nextEncounterTurn])
-
-  // Show movement range during the active player's combat turn
-  useEffect(() => {
-    const mrLayer = pixiRef.current?.getMovementRangeLayer?.()
-    if (!mrLayer) return
-
-    if (!inCombat || !zone?.wallEdges) {
-      clearMovementRange(mrLayer)
-      reachableTilesRef.current = new Set()
-      return
-    }
-
-    const active = encounter.combatants?.[encounter.currentTurn]
-    if (!active || active.isEnemy || !active.position) {
-      clearMovementRange(mrLayer)
-      reachableTilesRef.current = new Set()
-      return
-    }
-
-    // Build set of enemy-occupied tiles to block movement through them
-    const enemyTiles = new Set(
-      encounter.combatants
-        .filter(c => c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position)
-        .map(c => `${c.position.x},${c.position.y}`)
-    )
-
-    const maxMove = active.remainingMove ?? Math.floor((active.speed || 30) / 5)
-    const reachable = getReachableTilesEdge(
-      { wallEdges: zone.wallEdges, cellBlocked: zone.cellBlocked || new Uint8Array(zone.width * zone.height) },
-      zone.width, zone.height,
-      active.position,
-      maxMove,
-      null,
-      enemyTiles
-    )
-    reachableTilesRef.current = reachable
-
-    const tileSize = zone.tileSize || 200
-    renderMovementRange(mrLayer, reachable, 0x44cc66, 0.15, tileSize)
-
-    return () => {
-      clearMovementRange(mrLayer)
-      reachableTilesRef.current = new Set()
-    }
-  }, [encounter.currentTurn, encounter.phase, encounter.combatants, inCombat, zone])
-
-  // Build prop cover set when combat starts so cover checks can use it
-  useEffect(() => {
-    if (inCombat && zone?.layers?.props && zone?.palette) {
-      propCoverRef.current = buildPropCoverSet(zone.layers.props, zone.palette, zone.width, zone.height)
-    } else {
-      propCoverRef.current = new Set()
-    }
-  }, [inCombat, zone])
-
-  const chatInFlightRef = useRef(false)
-
-  const handleChat = useCallback(async (text) => {
-    if (!text.trim()) return
-    if (chatInFlightRef.current) return // prevent re-entrant calls (NPC proximity loop)
-    const apiKey = sessionApiKey
-    if (!apiKey) {
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'No API key set. Go to Settings to add your Claude API key.' })
-      return
-    }
-
-    chatInFlightRef.current = true
-
-    // Add player message
-    const playerMsg = { role: 'player', speaker: myCharacter?.name || user?.email || 'Player', text: text.trim() }
-    addNarratorMessage(playerMsg)
-    broadcastNarratorMessage(playerMsg)
-
-    try {
-      // Build conversation for AI — read narrator from store directly to avoid stale closure
-      const history = useStore.getState().narrator?.history || []
-      const recentMessages = history.slice(-14).map(m => ({
-        role: m.role === 'dm' ? 'assistant' : 'user',
-        content: m.text,
-      }))
-
-      const sceneWithPos = { ...zone, playerPosition: playerPosRef.current }
-      const systemPrompt = buildSystemPrompt(campaign, partyMembers, sceneWithPos, recentMessages.length, useStore.getState().gameTime)
-
-      const result = await callNarrator({
-        messages: recentMessages,
-        systemPrompt,
-        apiKey,
-      })
-
-      if (result?.narrative) {
-        const dmMsg = { role: 'dm', speaker: 'DM', text: result.narrative }
-        addNarratorMessage(dmMsg)
-        broadcastNarratorMessage(dmMsg)
-      }
-
-      // Handle skill check request from AI
-      if (result?.rollRequest) {
-        const { setPendingSkillCheck } = useStore.getState()
-        setPendingSkillCheck(result.rollRequest)
-      }
-
-      // Handle combat trigger from AI
-      if (result?.startCombat && result?.enemies?.length) {
-        const { startEncounter } = useStore.getState()
-        const enemies = result.enemies.map(e => ({
-          ...e, isEnemy: true, type: 'enemy',
-          position: e.position || { x: Math.floor(Math.random() * (zone?.width || 10)), y: Math.floor(Math.random() * (zone?.height || 8)) },
-        }))
-        startEncounter(enemies)
-      }
-    } catch (err) {
-      console.error('[GameV2] Narrator error:', err)
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'The DM is momentarily distracted... (API error)' })
-    } finally {
-      chatInFlightRef.current = false
-    }
-  }, [sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage])
-
-  // Gate: no API key = no game
+  // --- Early returns ---
   if (apiKeyLoaded && !sessionApiKey) {
     const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
-    return (
-      <ApiKeyGate
-        campaignId={campaignId}
-        userId={user?.id}
-        onKeyReady={() => setApiKeyLoaded(true)}
-      />
-    )
+    return <ApiKeyGate campaignId={campaignId} userId={user?.id} onKeyReady={() => setApiKeyLoaded(true)} />
   }
 
   if (!zone) {
@@ -1324,148 +323,50 @@ export default function GameV2({ onLeave }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
       <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
-      {/* NPC Chat Bubbles */}
       {nearbyNpcs.map(npc => (
-        <ChatBubble
-          key={npc.name}
-          npc={npc}
-          tileSize={zone?.tileSize || 32}
-          worldTransform={worldTransform}
-        />
+        <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
       ))}
       <GameHUD
-        zone={zone}
-        areaTheme={zone?.theme}
-        onTool={handleTool}
-        onChat={handleChat}
-        onEndTurn={handleEndTurn}
-        onAction={handleCombatAction}
-        onSettings={() => setShowApiSettings(true)}
-        onLeave={onLeave}
+        zone={zone} areaTheme={zone?.theme}
+        onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn}
+        onAction={handleCombatAction} onSettings={() => setShowApiSettings(true)} onLeave={onLeave}
       />
-      {/* Debug: start test combat */}
-      {!inCombat && (
-        <button
-          onClick={() => {
-            try {
-              const { startEncounter } = useStore.getState()
-              const char = myCharacter || {
-                id: 'test-hero', name: 'Test Hero', hp: 20, maxHp: 20, ac: 15,
-                class: 'Fighter', level: 3, speed: 30, type: 'player',
-                attackBonus: 5, damageMod: 3,
-                stats: { str: 16, dex: 14, con: 14, int: 10, wis: 12, cha: 8 },
-                attacks: [{ name: 'Longsword', bonus: '+5', damage: '1d8+3' }],
-              }
-              startEncounter([
-                { name: 'Goblin', hp: 15, maxHp: 15, ac: 15, isEnemy: true, type: 'enemy',
-                  attacks: [{ name: 'Scimitar', bonus: '+4', damage: '1d6+2' }],
-                  position: { x: 6, y: 4 }, speed: 30,
-                  stats: { str: 8, dex: 14, con: 10, int: 10, wis: 8, cha: 8 } },
-                { name: 'Goblin Archer', hp: 12, maxHp: 12, ac: 13, isEnemy: true, type: 'enemy',
-                  attacks: [{ name: 'Shortbow', bonus: '+4', damage: '1d6+2' }],
-                  position: { x: 8, y: 3 }, speed: 30,
-                  stats: { str: 8, dex: 14, con: 10, int: 10, wis: 8, cha: 8 } },
-              ], [char], true) // autoRollInitiative = true
-            } catch (err) {
-              console.error('[GameV2] Test combat failed:', err)
-              addNarratorMessage({ role: 'dm', speaker: 'System', text: `Combat test failed: ${err.message}` })
-            }
-          }}
-          className="hud-campaign-btn"
-          style={{
-            position: 'fixed', top: 50, right: 10, zIndex: 100,
-            flexDirection: 'row', gap: 6, padding: '6px 14px',
-            borderColor: 'rgba(204,51,51,0.4)',
-          }}
-        >
-          <span>⚔</span>
-          <span style={{ fontFamily: "'Cinzel', serif", fontSize: 9, color: '#cc3333', fontWeight: 900, letterSpacing: 2 }}>
-            TEST COMBAT
-          </span>
-        </button>
-      )}
+      {!inCombat && <TestCombatButton myCharacter={myCharacter} addNarratorMessage={addNarratorMessage} />}
       <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
       <SkillCheckPanel />
-      {sheetChar && (
-        <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />
-      )}
-      {showApiSettings && (
-        <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />
-      )}
+      {sheetChar && <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />}
+      {showApiSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />}
       {showJournal && <JournalModal onClose={() => setShowJournal(false)} />}
       {restProposal && (
         <RestModal
-          type={restProposal.type}
-          proposedBy={restProposal.proposedBy}
+          type={restProposal.type} proposedBy={restProposal.proposedBy}
           partyMembers={[{ id: user?.id, name: myCharacter?.name || 'You' }]}
           isHost={false}
-          onResolve={() => {
-            advanceGameTime(restProposal.type === 'long' ? 8 : 1)
-            setRestProposal(null)
-          }}
+          onResolve={() => { advanceGameTime(restProposal.type === 'long' ? 8 : 1); setRestProposal(null) }}
           onCancel={() => setRestProposal(null)}
         />
       )}
-      {activeNpc && !activeNpc.isCutscene && (
-        <NpcDialog npc={activeNpc} onClose={() => setActiveNpc(null)} />
-      )}
-      {/* Story Cutscene — initiator */}
-      {activeNpc && activeNpc.isCutscene && (
-        <StoryCutscene npc={activeNpc} pixiRef={pixiRef} onClose={() => setActiveNpc(null)} isWatching={false} />
-      )}
-      {/* Story Cutscene — watching via broadcast */}
+      {activeNpc && !activeNpc.isCutscene && <NpcDialog npc={activeNpc} onClose={() => setActiveNpc(null)} />}
+      {activeNpc && activeNpc.isCutscene && <StoryCutscene npc={activeNpc} pixiRef={pixiRef} onClose={() => setActiveNpc(null)} isWatching={false} />}
       {!activeNpc && activeCutscene && activeCutscene.initiatorId !== user?.id && (
         <StoryCutscene
           npc={{ name: activeCutscene.npcName, criticalInfo: activeCutscene.criticalInfo, role: '' }}
-          pixiRef={pixiRef}
-          onClose={() => {}}
-          isWatching={true}
+          pixiRef={pixiRef} onClose={() => {}} isWatching={true}
         />
       )}
-      {/* Level-up modal */}
       {showLevelUp && myCharacter && (
         <LevelUpModal
           character={myCharacter}
-          onConfirm={(updates) => {
-            applyLevelUp(updates)
-            dismissedLevelRef.current = myCharacter.level
-            setShowLevelUp(false)
-          }}
-          onCancel={() => {
-            dismissedLevelRef.current = myCharacter.level
-            setShowLevelUp(false)
-          }}
+          onConfirm={(updates) => { applyLevelUp(updates); dismissedLevelRef.current = myCharacter.level; setShowLevelUp(false) }}
+          onCancel={() => { dismissedLevelRef.current = myCharacter.level; setShowLevelUp(false) }}
         />
       )}
-      {/* Post-combat loot screen */}
-      {pendingLoot && (
-        <LootScreen
-          enemies={pendingLoot.enemies}
-          partySize={pendingLoot.partySize}
-          onDone={() => setPendingLoot(null)}
-        />
-      )}
-      {/* Opportunity Attack confirmation modal */}
-      {pendingOA && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.7)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: '#0e0b14', border: '2px solid #d4af37', borderRadius: 8,
-            padding: 24, maxWidth: 400, textAlign: 'center' }}>
-            <div style={{ fontSize: 20, marginBottom: 8 }}>&#x2694;</div>
-            <div style={{ color: '#e0d0b8', marginBottom: 16 }}>
-              This path provokes attacks of opportunity from <strong style={{ color: '#cc3333' }}>{pendingOA.names}</strong>
-            </div>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-              <button onClick={() => { executeMoveWithOA(pendingOA); setPendingOA(null) }}
-                style={{ padding: '8px 20px', background: '#3a1a0a', border: '1px solid #cc3333',
-                  color: '#e0d0b8', borderRadius: 4, cursor: 'pointer' }}>Move Anyway</button>
-              <button onClick={() => setPendingOA(null)}
-                style={{ padding: '8px 20px', background: '#1a1520', border: '1px solid #333',
-                  color: '#888', borderRadius: 4, cursor: 'pointer' }}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {pendingLoot && <LootScreen enemies={pendingLoot.enemies} partySize={pendingLoot.partySize} onDone={() => setPendingLoot(null)} />}
+      <OAConfirmModal
+        pendingOA={pendingOA}
+        onConfirm={() => { executeMoveWithOA(pendingOA); setPendingOA(null) }}
+        onCancel={() => setPendingOA(null)}
+      />
     </div>
   )
 }
