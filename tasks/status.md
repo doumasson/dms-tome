@@ -235,6 +235,20 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Bundle size reduced 41% via lazy loading (1,671→980 kB)
 - 196 tests, 0 failures. Build 458ms.
 
+### Phase 10: Living World ✅ COMPLETE
+- [x] Shop/merchant system — template stock + AI specials, buy/sell at 50%, gold-based economy
+- [x] Minimap — HTML5 Canvas overlay, fog-aware, token dots, click-to-pan
+- [x] Status effect visuals — condition tint dots + concentration rings on combat tokens
+- [x] Ambient sound — theme-based audio, combat crossfade, mute toggle
+- [x] NPC schedules — time-of-day animated pathfinding movement between POIs
+- [x] Trap system — 5 trap types, passive detection, auto-placed in dungeons, revealed trap rendering
+- [x] Weather system — rain/snow/fog/storm particles, vision range reduction, Markov transitions
+- [x] Party formation — front/back marching order, drag-to-configure panel
+- [x] Quest tracker — journal integration, objective checklists, AI DM quest awareness, HUD indicator
+- [ ] Pitched roof visuals (BLOCKED: pending slope/edge FA assets)
+- 252 tests, 0 failures, 15 commits.
+- Spec: `docs/superpowers/specs/2026-03-20-phase10-living-world-design.md`
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -261,3 +275,5 @@ _(Empty — add items as they come up)_
 - **2026-03-19:** Phase 5b procedural area system complete — zones replaced by areas, areaBuilder pipeline, areaStorage, campaign generator rewrite, multiplayer sync, V1 removal, dead code cleanup. 12 tasks.
 - **2026-03-19:** Phase 8 Polish — portrait picker, mobile responsive, opportunity attacks, cover mechanics, multi-floor buildings, larger areas (22 chunks), dungeon generation. 175 tests, 16 commits.
 - **2026-03-20:** Phase 9 Gameplay Systems — inventory rewrite (Dark & Darker style grid), 38 magic items with attunement/charges/curses, derived stats, loot roll-off, death saves V2, rest system overhaul, gold persistence fix, day/night cycle, 14 new chunks (36 total). 197 tests, 13 commits.
+- **2026-03-20:** Bug fixes + tech debt — LootScreen/LevelUpModal wired in V2, 6 broadcast handlers, useStore split (1784→20 lines), GameV2 split (1430→372 lines), bundle -41%.
+- **2026-03-20:** Phase 10 Living World — shop/merchant, minimap, status effects, ambient sound, NPC schedules, traps, weather, party formation, quest tracker. 252 tests, 15 commits.
