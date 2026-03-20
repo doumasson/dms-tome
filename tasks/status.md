@@ -167,10 +167,47 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Dead code cleanup — removed `demoWorld.json`, `roomTemplates/`, `broadcastZoneTransition`, V1 rendering
 - Spec: `docs/superpowers/specs/2026-03-19-phase5b-procedural-areas-design.md`
 
-### Phase 6: Polish
-- [ ] AI character portraits for PCs/NPCs
-- [ ] Ambient lighting on tilemap (torch glow, shadows)
-- [ ] Mobile/tablet responsive breakpoints
+### Phase 5c: Wall Rendering + Roof-Lift ✅ COMPLETE
+- [x] Inner-edge-only FA connector walls (3 sprites per edge, no gaps)
+- [x] Edge-based collision (walk up to wall line, not blocked by full cell)
+- [x] Door positioning on inner wall boundary
+- [x] Per-building consistent texture variants via regionMap
+- [x] Roof-lift buildings with tag-based tiles (hay/slate/tile)
+- [x] 400ms roof fade animation, door-triggered reveal
+- [x] Multiplayer roof broadcast + session persistence
+
+### Phase 6: Combat System V2 ✅ COMPLETE
+- [x] Enemy placement in areaBuilder pipeline
+- [x] Enemy tokens on tilemap (red tint, HP bars in combat)
+- [x] Encounter zone proximity detection + AI DM prompt
+- [x] `getReachableTilesEdge` with terrain cost + enemy blocking
+- [x] Combat movement on tilemap with speed limits
+- [x] Click-to-target attack resolution (melee + ranged, Chebyshev distance)
+- [x] AoE spell targeting (sphere/cone/line/cube) with save resolution
+- [x] Skill check panel with modifier toggles (Guidance, Bardic Inspiration)
+- [x] Condition enforcement gating action bar (Stunned, Paralyzed, etc.)
+- [x] Grunt enemy AI (pathfinding) + boss Claude API tactical decisions
+- Spec: `docs/superpowers/specs/2026-03-19-combat-system-v2-design.md`
+
+### Phase 7: Polish + Infrastructure ✅ COMPLETE
+- [x] Fog of war wired with vision calculation + broadcast
+- [x] Session persistence — fog explored + roof reveal state survive page refresh
+- [x] AI DM map awareness — player position + buildings in system prompt
+- [x] Multiplayer token animation (path broadcast, smooth movement)
+- [x] 6 new curated chunks (blacksmith, temple, shop, market stall, guard tower, well — 11 total)
+- [x] Ambient lighting with warm glow around fire sources
+
+### Phase 8: Polish ✅ MOSTLY COMPLETE
+- [x] Character portrait selection UI — manifest-based picker modal, race+archetype filtering, DiceBear fallback
+- [x] Mobile/tablet responsive breakpoints — drawer pattern on phone, shrink on tablet
+- [x] Opportunity attacks — path pre-scan, styled confirm popup, disengage action, reaction tracking
+- [x] Cover mechanics — Bresenham ray-cast, wall edge + prop cover, furniture = difficult terrain in combat
+- [x] Brief-driven area sizing — POI count determines area dimensions (40x30 to 120x90)
+- [x] Multi-floor buildings — stair exits linking area briefs, campaign generator updated
+- [x] Larger area generation — 11 new curated chunks (22 total), scatter fill, edge padding, overlap detection
+- [x] Dungeon area generation — BSP + chunk matching + procedural fill hybrid, 4 theme variants
+- [ ] Pitched roof visuals (BLOCKED: pending slope/edge FA assets)
+- Spec: `docs/superpowers/specs/2026-03-19-phase8-polish-design.md`
 
 ---
 
@@ -196,3 +233,4 @@ _(Empty — add items as they come up)_
 - **2026-03-19:** Phase 5 Procedural Map System core modules complete — 18 tasks: asset pipeline, camera, tile atlas, pathfinding upgrade, chunks, generators, vision, fog, roofs, wiring. 117 tests, 18 commits.
 - **2026-03-19:** Phase 5b integration started — FA scanner with author/license tracking, 8 sprite atlases built (146K assets → 3,200 starter tiles), 5 curated chunks, test area visible at `?v2&testarea`.
 - **2026-03-19:** Phase 5b procedural area system complete — zones replaced by areas, areaBuilder pipeline, areaStorage, campaign generator rewrite, multiplayer sync, V1 removal, dead code cleanup. 12 tasks.
+- **2026-03-19:** Phase 8 Polish — portrait picker, mobile responsive, opportunity attacks, cover mechanics, multi-floor buildings, larger areas (22 chunks), dungeon generation. 175 tests, 16 commits.
