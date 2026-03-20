@@ -23,6 +23,7 @@ import * as PIXI from 'pixi.js'
 import { RoofManager } from './engine/RoofLayer'
 import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
 import { getTilesInSphere, getTilesInCone, getTilesInLine, getTilesInCube, renderAoEPreview, clearAoEPreview } from './engine/AoEOverlay'
+import { findOATriggers, resolveOA } from './lib/opportunityAttack.js'
 import { playZoneTransition } from './engine/ZoneTransition'
 import ChatBubble from './components/ChatBubble'
 import DiceTray from './components/DiceTray'
@@ -82,6 +83,7 @@ export default function GameV2({ onLeave }) {
   const [activeNpc, setActiveNpc] = useState(null)
   const [worldTransform, setWorldTransform] = useState(null)
   const [targetingMode, setTargetingMode] = useState(null)
+  const [pendingOA, setPendingOA] = useState(null)
   const triggeredZonesRef = useRef(new Set())
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -772,6 +774,17 @@ export default function GameV2({ onLeave }) {
       const path = findPathEdge(collisionData, zone.width, zone.height, active.position, { x, y })
       if (!path || path.length < 2) return
 
+      // OA pre-scan — warn player if path provokes attacks of opportunity
+      const aliveEnemies = encounter.combatants.filter(c =>
+        c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position
+      )
+      const oaTriggers = findOATriggers(path, aliveEnemies, active.disengaged)
+      if (oaTriggers.length > 0) {
+        const names = [...new Set(oaTriggers.map(t => t.enemy.name))].join(', ')
+        setPendingOA({ triggers: oaTriggers, path, active, x, y, names })
+        return
+      }
+
       const cost = path.length - 1
       const { moveToken } = useStore.getState()
       moveToken(active.id, x, y, cost)
@@ -1026,8 +1039,74 @@ export default function GameV2({ onLeave }) {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Click a tile to move during combat.' })
     } else if (type === 'say') {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Type your message in the chat and press enter.' })
+    } else if (type === 'disengage') {
+      const { useAction: consumeAction } = useStore.getState()
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active) return
+      consumeAction(active.id)
+      useStore.setState(state => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === active.id ? { ...c, disengaged: true } : c
+          ),
+        },
+      }))
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} takes the Disengage action.` })
+      broadcastEncounterAction({ type: 'disengage', id: active.id })
     }
-  }, [addNarratorMessage])
+  }, [addNarratorMessage, encounter])
+
+  // Execute movement after OA confirmation — resolves each OA trigger along the path
+  const executeMoveWithOA = useCallback(({ triggers, path, active, x, y }) => {
+    const tileSize = zone?.tileSize || 200
+    const cost = path.length - 1
+    const { moveToken, applyEncounterDamage: applyDmg } = useStore.getState()
+
+    // Mark reacting enemies' reactions used
+    triggers.forEach(({ enemy }) => {
+      useStore.setState(state => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === enemy.id ? { ...c, reactionUsed: true } : c
+          ),
+        },
+      }))
+    })
+
+    // Resolve each OA — apply damage, log, broadcast
+    let playerDied = false
+    triggers.forEach(({ enemy }) => {
+      const result = resolveOA(enemy, active)
+      const hitStr = result.hit
+        ? `hits for ${result.damage} damage${result.isCrit ? ' (CRIT!)' : ''}`
+        : 'misses'
+      addNarratorMessage({
+        role: 'dm',
+        speaker: 'Combat',
+        text: `Opportunity Attack: ${enemy.name} attacks ${active.name} — ${hitStr} (d20: ${result.d20}, total: ${result.total})`,
+      })
+      broadcastEncounterAction({ type: 'oa-resolve', attackerId: enemy.id, targetId: active.id, result })
+      if (result.hit && result.damage > 0) {
+        applyDmg(active.id, result.damage)
+        const currentHp = (active.currentHp ?? active.hp) - result.damage
+        if (currentHp <= 0) playerDied = true
+      }
+    })
+
+    if (playerDied) {
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} drops to 0 HP!` })
+      return
+    }
+
+    // Proceed with movement
+    moveToken(active.id, x, y, cost)
+    animateTokenAlongPath(active.id, path, null, () => {
+      if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
+    }, tileSize)
+    broadcastEncounterAction({ type: 'move-token', id: active.id, position: { x, y }, cost })
+  }, [zone, addNarratorMessage, cameraRef])
 
   // Auto-run enemy turns (host only)
   useEffect(() => {
@@ -1273,6 +1352,27 @@ export default function GameV2({ onLeave }) {
           onClose={() => {}}
           isWatching={true}
         />
+      )}
+      {/* Opportunity Attack confirmation modal */}
+      {pendingOA && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.7)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#0e0b14', border: '2px solid #d4af37', borderRadius: 8,
+            padding: 24, maxWidth: 400, textAlign: 'center' }}>
+            <div style={{ fontSize: 20, marginBottom: 8 }}>&#x2694;</div>
+            <div style={{ color: '#e0d0b8', marginBottom: 16 }}>
+              This path provokes attacks of opportunity from <strong style={{ color: '#cc3333' }}>{pendingOA.names}</strong>
+            </div>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+              <button onClick={() => { executeMoveWithOA(pendingOA); setPendingOA(null) }}
+                style={{ padding: '8px 20px', background: '#3a1a0a', border: '1px solid #cc3333',
+                  color: '#e0d0b8', borderRadius: 4, cursor: 'pointer' }}>Move Anyway</button>
+              <button onClick={() => setPendingOA(null)}
+                style={{ padding: '8px 20px', background: '#1a1520', border: '1px solid #333',
+                  color: '#888', borderRadius: 4, cursor: 'pointer' }}>Cancel</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

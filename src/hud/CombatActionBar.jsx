@@ -83,6 +83,9 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
           style={{ opacity: (!canAct || !actionsLeft) ? 0.4 : 1 }}
           onClick={() => handleAction('hide')}
         >HIDE</button>
+        <button className="hud-combat-btn-sm" disabled={!canMove || !actionsLeft}
+          style={{ opacity: (!canMove || !actionsLeft) ? 0.4 : 1 }}
+          onClick={() => handleAction('disengage')}>DISENGAGE</button>
         <button className="hud-combat-btn-sm" onClick={() => handleAction('say')}>SAY</button>
         {isProne && (
           <button

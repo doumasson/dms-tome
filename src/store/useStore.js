@@ -506,6 +506,8 @@ const useStore = create((set, get) => ({
           remainingMove: Math.floor((c.speed || 30) / 5),
           actionsUsed: 0,
           bonusActionsUsed: 0,
+          reactionUsed: false,
+          disengaged: false,
         } : c
       );
       return {
