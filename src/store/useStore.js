@@ -1,7 +1,7 @@
 import { create } from 'zustand/react';
 import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
-import { triggerEnemyTurn } from '../lib/enemyAi';
+import { triggerEnemyTurn, computeGruntAction } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 import { computeAcFromEquipped } from '../data/equipment';
 import { CLASSES } from '../data/classes';
@@ -790,7 +790,7 @@ const useStore = create((set, get) => ({
 
   // === AI Enemy Turns ===
   runEnemyTurn: async (apiKey) => {
-    const { encounter, campaign } = get();
+    const { encounter } = get();
     const active = encounter.combatants[encounter.currentTurn];
     if (!active || active.type !== 'enemy' || active.currentHp <= 0) {
       get().nextEncounterTurn();
@@ -799,17 +799,48 @@ const useStore = create((set, get) => ({
 
     get().addEncounterLog(`⚔ ${active.name} is acting...`);
 
-    try {
-      const result = await triggerEnemyTurn(active, encounter, apiKey);
+    // Determine grunt vs boss: boss flag or CR >= 5 uses Claude API; everything else is grunt
+    const isBoss = active.isBoss || (active.cr != null && Number(active.cr) >= 5);
 
-      // Move token if AI decided to move — deduct movement cost
-      if (result.moveToPosition && typeof result.moveToPosition.x === 'number') {
-        const { x, y } = result.moveToPosition;
+    try {
+      let result;
+
+      if (isBoss) {
+        // Boss path: use Claude API for rich tactical decisions
+        result = await triggerEnemyTurn(active, encounter, apiKey);
+      } else {
+        // Grunt path: local pathfinding AI — fast, free, deterministic
+        const currentAreaId = get().currentAreaId;
+        const area = get().areas?.[currentAreaId] || null;
+        let collisionData = null;
+        let areaWidth = 20;
+        let areaHeight = 20;
+        if (area?.wallEdges) {
+          collisionData = {
+            wallEdges: area.wallEdges,
+            cellBlocked: area.cellBlocked || new Uint8Array((area.width || 20) * (area.height || 20)),
+          };
+          areaWidth = area.width || 20;
+          areaHeight = area.height || 20;
+        }
+        result = computeGruntAction(active, encounter.combatants, collisionData, areaWidth, areaHeight);
+      }
+
+      // Apply move — grunt result uses moveTo, legacy AI uses moveToPosition
+      const moveDest = result.moveTo || result.moveToPosition;
+      if (moveDest && typeof moveDest.x === 'number') {
+        const { x, y } = moveDest;
         const occupied = encounter.combatants.some(c => c.id !== active.id && c.position?.x === x && c.position?.y === y);
         if (!occupied) {
           const from = active.position;
-          const cost = from ? Math.max(Math.abs(x - from.x), Math.abs(y - from.y)) : 1;
+          const cost = result.moveCost ?? (from ? Math.max(Math.abs(x - from.x), Math.abs(y - from.y)) : 1);
           get().moveToken(active.id, x, y, cost);
+          broadcastEncounterAction({
+            type: 'move',
+            id: active.id,
+            x, y, cost,
+            userId: get().user?.id || 'system',
+          });
         }
       }
 
@@ -817,9 +848,10 @@ const useStore = create((set, get) => ({
       if (result.targetId && typeof result.damage === 'number' && result.damage > 0) {
         get().applyEncounterDamage(result.targetId, result.damage);
         const target = encounter.combatants.find(c => c.id === result.targetId);
+        const hitDesc = result.isCrit ? `CRIT for ${result.damage} damage` : `HIT for ${result.damage} ${result.damageType || ''} damage`;
         get().addEncounterLog(
           `⚔ ${active.name} attacks ${target?.name || '?'}: ` +
-          `${result.hit ? `HIT for ${result.damage} ${result.damageType || ''} damage` : 'MISS'}`
+          `${result.hit ? hitDesc : 'MISS'}`
         );
         broadcastEncounterAction({
           type: 'damage',
@@ -827,6 +859,8 @@ const useStore = create((set, get) => ({
           amount: result.damage,
           userId: get().user?.id || 'system',
         });
+      } else if (result.action === 'wait' || result.action === 'move') {
+        get().addEncounterLog(`⚔ ${active.name}: ${result.action}`);
       }
 
       // Apply conditions — broadcast so all clients apply them
@@ -861,7 +895,6 @@ const useStore = create((set, get) => ({
         c => c.type !== 'enemy' || c.currentHp <= 0
       );
       if (allEnemiesDead) {
-        // Collect dead enemies for loot calculation
         const deadEnemies = afterEncounter.combatants.filter(c => c.type === 'enemy');
         const partySize = afterEncounter.combatants.filter(c => c.type === 'player').length || 1;
         if (deadEnemies.length > 0 && !get().pendingLoot) {

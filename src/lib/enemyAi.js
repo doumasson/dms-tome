@@ -1,3 +1,6 @@
+import { findPathEdge } from './pathfinding.js'
+import { rollDamage } from './dice.js'
+
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
@@ -91,6 +94,92 @@ Rules:
 - If no attack this turn, set targetId to null and damage to 0.
 - moveToPosition: choose a valid grid cell to move to (within movement range), or omit if not moving.
 - narrative: write as the DM narrating to players — present tense, immersive, 1-2 sentences.`;
+}
+
+/**
+ * Compute grunt enemy action — move toward nearest target, attack if adjacent.
+ * Uses edge-based pathfinding for collision-aware movement.
+ */
+export function computeGruntAction(enemy, combatants, collisionData, width, height) {
+  const targets = combatants.filter(c => !c.isEnemy && c.type !== 'enemy' && c.currentHp > 0 && c.position)
+  if (!targets.length) return { action: 'wait', narrative: `${enemy.name} waits.` }
+
+  // Find nearest target (Chebyshev distance)
+  let nearest = null, minDist = Infinity
+  for (const t of targets) {
+    const dx = Math.abs(t.position.x - enemy.position.x)
+    const dy = Math.abs(t.position.y - enemy.position.y)
+    const dist = Math.max(dx, dy)
+    if (dist < minDist) { minDist = dist; nearest = t }
+  }
+
+  if (!nearest) return { action: 'wait', narrative: `${enemy.name} waits.` }
+
+  const weapon = enemy.attacks?.[0] || { name: 'Attack', bonus: '+3', damage: '1d6+1' }
+  const bonus = parseInt(weapon.bonus) || 0
+
+  // Adjacent? Attack immediately.
+  if (minDist <= 1) {
+    const d20 = Math.floor(Math.random() * 20) + 1
+    const total = d20 + bonus
+    const isCrit = d20 === 20
+    const hit = isCrit || total >= (nearest.ac || 10)
+    const damage = hit ? (isCrit ? rollDamage(weapon.damage).total * 2 : rollDamage(weapon.damage).total) : 0
+    return {
+      action: 'attack',
+      targetId: nearest.id,
+      targetName: nearest.name,
+      hit, damage, d20, bonus, total, isCrit,
+      weapon: weapon.name,
+      narrative: hit
+        ? `${enemy.name} strikes ${nearest.name} with ${weapon.name} for ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}!`
+        : `${enemy.name} swings at ${nearest.name} with ${weapon.name} but misses!`,
+    }
+  }
+
+  // Not adjacent — pathfind toward target
+  const maxTiles = Math.floor((enemy.speed || 30) / 5)
+  const path = collisionData
+    ? findPathEdge(collisionData, width, height, enemy.position, nearest.position)
+    : null
+  if (!path || path.length <= 1) {
+    return { action: 'wait', narrative: `${enemy.name} cannot reach any target.` }
+  }
+
+  // Move as far as speed allows
+  const moveIdx = Math.min(maxTiles, path.length - 1)
+  const moveEnd = path[moveIdx]
+  const movePath = path.slice(0, moveIdx + 1)
+  const moveCost = moveIdx
+
+  // Check if adjacent after moving
+  const distAfterMove = Math.max(
+    Math.abs(moveEnd.x - nearest.position.x),
+    Math.abs(moveEnd.y - nearest.position.y)
+  )
+
+  if (distAfterMove <= 1) {
+    // Move + attack
+    const d20 = Math.floor(Math.random() * 20) + 1
+    const total = d20 + bonus
+    const isCrit = d20 === 20
+    const hit = isCrit || total >= (nearest.ac || 10)
+    const damage = hit ? (isCrit ? rollDamage(weapon.damage).total * 2 : rollDamage(weapon.damage).total) : 0
+    return {
+      action: 'move-attack',
+      moveTo: moveEnd, movePath, moveCost,
+      targetId: nearest.id, targetName: nearest.name,
+      hit, damage, d20, bonus, total, isCrit,
+      weapon: weapon.name,
+      narrative: `${enemy.name} charges toward ${nearest.name}! ${hit ? `${damage} damage${isCrit ? ' (CRITICAL!)' : ''}!` : 'But misses!'}`,
+    }
+  }
+
+  return {
+    action: 'move',
+    moveTo: moveEnd, movePath, moveCost,
+    narrative: `${enemy.name} advances toward the party.`,
+  }
 }
 
 export async function triggerEnemyTurn(enemy, encounter, apiKey) {
