@@ -7,7 +7,7 @@ import CampaignBar from './CampaignBar'
 import useStore from '../store/useStore'
 import './hud.css'
 
-export default function GameHUD({ zone, onTool, onChat, onEndTurn, onAction, onSettings, onLeave }) {
+export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const encounter = useStore(s => s.encounter)
   const myCharacter = useStore(s => s.myCharacter)
@@ -35,7 +35,7 @@ export default function GameHUD({ zone, onTool, onChat, onEndTurn, onAction, onS
         <ZoneLabel zone={zone} />
       )}
       <NarratorFloat />
-      <BottomBar onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} />
+      <BottomBar areaTheme={areaTheme} onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} />
     </div>
   )
 }

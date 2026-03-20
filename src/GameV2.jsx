@@ -1020,7 +1020,8 @@ export default function GameV2({ onLeave }) {
     if (tool === 'dice') setToolPanel('dice')
     else if (tool === 'character' || tool === 'inventory') setSheetChar(myCharacter)
     else if (tool === 'journal') setShowJournal(true)
-    else if (tool === 'rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
+    else if (tool === 'short-rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
+    else if (tool === 'long-rest') setRestProposal({ type: 'long', proposedBy: myCharacter?.name || 'Someone' })
   }, [myCharacter])
 
   const handleEndTurn = useCallback(() => {
@@ -1028,7 +1029,30 @@ export default function GameV2({ onLeave }) {
   }, [nextEncounterTurn])
 
   const handleCombatAction = useCallback((type) => {
-    if (type === 'attack') {
+    if (type === 'death-save') {
+      const { rollDeathSave } = useStore.getState()
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active) return
+      rollDeathSave(active.id)
+      const updated = useStore.getState().encounter.combatants.find(c => c.id === active.id)
+      if (updated) {
+        if (updated.currentHp > 0) {
+          addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} rolls a natural 20 — revived with 1 HP!` })
+        } else if ((updated.deathSaves?.failures ?? 0) >= 3) {
+          addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} has failed 3 death saves — they are dead.` })
+        }
+      }
+      broadcastEncounterAction({ type: 'death-save', id: active.id })
+      return
+    } else if (type === 'stabilize') {
+      const { stabilizeCombatant } = useStore.getState()
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active) return
+      stabilizeCombatant(active.id)
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} is stabilized.` })
+      broadcastEncounterAction({ type: 'stabilize', id: active.id })
+      return
+    } else if (type === 'attack') {
       setTargetingMode('attack')
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select a target to attack. Press Escape to cancel.' })
       return
@@ -1291,6 +1315,7 @@ export default function GameV2({ onLeave }) {
       ))}
       <GameHUD
         zone={zone}
+        areaTheme={zone?.theme}
         onTool={handleTool}
         onChat={handleChat}
         onEndTurn={handleEndTurn}

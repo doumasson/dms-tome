@@ -231,6 +231,7 @@ export default function RestModal({ type, proposedBy, partyMembers, onResolve, o
           const conMod = Math.floor(((myCharacter.stats?.con || 10) - 10) / 2);
           const remaining = myCharacter.hitDiceRemaining ?? myCharacter.level ?? 1;
           const totalHpGained = hitDiceLog.reduce((s, r) => s + r.healed, 0);
+          const canFinish = hitDiceLog.length > 0 || remaining <= 0;
           return (
             <div style={{ marginTop: 16, borderTop: '1px solid rgba(212,175,55,0.15)', paddingTop: 14 }}>
               <div style={{ fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.78rem', color: '#d4af37', fontWeight: 700, marginBottom: 10, textAlign: 'center' }}>
@@ -276,13 +277,16 @@ export default function RestModal({ type, proposedBy, partyMembers, onResolve, o
                 </button>
                 <button
                   onClick={finishShortRest}
+                  disabled={!canFinish}
                   style={{
-                    flex: 1, padding: '9px 0', borderRadius: 6, cursor: 'pointer',
+                    flex: 1, padding: '9px 0', borderRadius: 6,
+                    cursor: canFinish ? 'pointer' : 'not-allowed',
                     fontWeight: 700, fontSize: '0.85rem',
-                    background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)', color: '#2ecc71',
+                    background: 'rgba(39,174,96,0.15)', border: '1px solid rgba(39,174,96,0.4)',
+                    color: '#2ecc71', opacity: canFinish ? 1 : 0.4,
                   }}
                 >
-                  ✓ Done Resting
+                  {remaining <= 0 ? '✓ No Dice Remaining' : '✓ Done Resting'}
                 </button>
               </div>
             </div>

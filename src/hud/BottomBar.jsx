@@ -7,7 +7,7 @@ import CombatActionBar from './CombatActionBar'
 import OrnateDivider from './OrnateDivider'
 import FiligreeBar from './FiligreeBar'
 
-export default function BottomBar({ onTool, onChat, onEndTurn, onAction }) {
+export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onAction }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -26,7 +26,7 @@ export default function BottomBar({ onTool, onChat, onEndTurn, onAction }) {
         {inCombat ? (
           <CombatActionBar onEndTurn={onEndTurn} onAction={onAction} />
         ) : (
-          <ActionArea onTool={onTool} onChat={onChat} />
+          <ActionArea areaTheme={areaTheme} onTool={onTool} onChat={onChat} />
         )}
       </div>
       {/* Bottom ornament */}
