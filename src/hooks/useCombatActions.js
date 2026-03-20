@@ -38,26 +38,34 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
   }, [targetingMode])
 
   // --- Combat camera lock (area camera mode only) ---
+  // Compute bounds ONCE when combat starts, not on every combatant change.
+  // This prevents camera snapping when combatants move or take actions.
+  const combatBoundsRef = useRef(null)
   useEffect(() => {
     const cam = cameraRef.current
     if (!cam) return
     if (inCombat && encounter.combatants?.length) {
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
-      for (const c of encounter.combatants) {
-        if (c.position) {
-          minX = Math.min(minX, c.position.x)
-          minY = Math.min(minY, c.position.y)
-          maxX = Math.max(maxX, c.position.x)
-          maxY = Math.max(maxY, c.position.y)
+      // Only compute bounds once at combat start
+      if (!combatBoundsRef.current) {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+        for (const c of encounter.combatants) {
+          if (c.position) {
+            minX = Math.min(minX, c.position.x)
+            minY = Math.min(minY, c.position.y)
+            maxX = Math.max(maxX, c.position.x)
+            maxY = Math.max(maxY, c.position.y)
+          }
+        }
+        if (minX !== Infinity) {
+          combatBoundsRef.current = { x: minX - 2, y: minY - 2, width: maxX - minX + 4, height: maxY - minY + 4 }
+          cam.setCombatBounds(combatBoundsRef.current)
         }
       }
-      if (minX !== Infinity) {
-        cam.setCombatBounds({ x: minX - 2, y: minY - 2, width: maxX - minX + 4, height: maxY - minY + 4 })
-      }
     } else {
+      combatBoundsRef.current = null
       cam.setCombatBounds(null)
     }
-  }, [inCombat, encounter.combatants])
+  }, [inCombat])
 
   // --- Show movement range during the active player's combat turn ---
   useEffect(() => {
@@ -133,6 +141,13 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
   // --- Handle combat tile click (attack, spell, movement) ---
   // Returns true if click was handled by combat logic, false otherwise
   const handleCombatTileClick = useCallback(({ x, y }) => {
+    // Block all combat tile clicks when it's not the player's turn
+    if (inCombat) {
+      const active = encounter.combatants?.[encounter.currentTurn]
+      const myChar = useStore.getState().myCharacter
+      if (!active || active.type === 'enemy' || active.id !== myChar?.id) return true // consume click but do nothing
+    }
+
     // Attack targeting — resolve attack on clicked enemy
     if (targetingMode === 'attack' && inCombat) {
       const target = encounter.combatants.find(c =>

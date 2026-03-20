@@ -2,10 +2,25 @@ import useStore from '../store/useStore'
 
 export default function CombatActionBar({ onEndTurn, onAction }) {
   const encounter = useStore(s => s.encounter)
+  const myCharacter = useStore(s => s.myCharacter)
   const useAction = useStore(s => s.useAction)
   const dashAction = useStore(s => s.dashAction)
   const { combatants, currentTurn } = encounter
   const active = combatants?.[currentTurn]
+
+  // Check if the active combatant is the current player
+  const isMyTurn = active && active.type === 'player' && active.id === myCharacter?.id
+
+  // If it's not the player's turn, show a waiting message
+  if (!isMyTurn) {
+    return (
+      <div className="hud-combat-bar">
+        <div style={{ textAlign: 'center', color: '#8a7a52', fontSize: 12, fontStyle: 'italic', padding: '12px 0' }}>
+          Waiting for {active?.name || 'next combatant'}'s turn...
+        </div>
+      </div>
+    )
+  }
 
   const actionsLeft = active ? !active.actionsUsed : true
   const bonusLeft = active ? !active.bonusActionsUsed : false

@@ -146,6 +146,10 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
       if (!dir) return
       e.preventDefault()
 
+      // Block world movement during combat
+      const { encounter: enc } = useStore.getState()
+      if (enc?.phase === 'combat') return
+
       if (isAnimating()) return
       const wd = walkDataRef.current
       const pos = playerPosRef.current

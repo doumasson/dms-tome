@@ -138,6 +138,37 @@ export default function GameV2({ onLeave }) {
     handleWorldTileClick({ x, y })
   }, [handleCombatTileClick, handleWorldTileClick])
 
+  // --- Teleport player into combat zone if outside bounds ---
+  const prevInCombatRef = useRef(false)
+  useEffect(() => {
+    if (inCombat && !prevInCombatRef.current && encounter.combatants?.length) {
+      // Combat just started — compute bounds from all combatant positions
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+      for (const c of encounter.combatants) {
+        if (c.position) {
+          minX = Math.min(minX, c.position.x)
+          minY = Math.min(minY, c.position.y)
+          maxX = Math.max(maxX, c.position.x)
+          maxY = Math.max(maxY, c.position.y)
+        }
+      }
+      if (minX !== Infinity) {
+        const pad = 2
+        const bx0 = minX - pad, by0 = minY - pad, bx1 = maxX + pad, by1 = maxY + pad
+        const pos = playerPosRef.current
+        if (pos.x < bx0 || pos.x > bx1 || pos.y < by0 || pos.y > by1) {
+          // Clamp to nearest edge of combat zone
+          const nx = Math.max(bx0, Math.min(bx1, pos.x))
+          const ny = Math.max(by0, Math.min(by1, pos.y))
+          setPlayerPos({ x: nx, y: ny })
+          playerPosRef.current = { x: nx, y: ny }
+          if (cameraRef.current) cameraRef.current.centerOn(nx, ny, zone?.tileSize || 200)
+        }
+      }
+    }
+    prevInCombatRef.current = inCombat
+  }, [inCombat])
+
   // --- Watch for XP crossing a level threshold ---
   useEffect(() => {
     if (!myCharacter) return
