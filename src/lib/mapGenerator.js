@@ -157,6 +157,43 @@ export function buildUnifiedPalette(chunks, extraTileIds = []) {
 }
 
 /**
+ * Scatter prop tiles randomly across empty prop cells.
+ */
+export function scatterProps(propsLayer, scatterTileIndices, width, height, density = 0.03, seed = 42) {
+  let rng = seed
+  const next = () => { rng = (rng * 16807) % 2147483647; return (rng - 1) / 2147483646 }
+  for (let y = 2; y < height - 2; y++) {
+    for (let x = 2; x < width - 2; x++) {
+      const idx = y * width + x
+      // Only scatter in empty prop cells that have floor underneath
+      if (propsLayer[idx] === 0 && next() < density) {
+        propsLayer[idx] = scatterTileIndices[Math.floor(next() * scatterTileIndices.length)]
+      }
+    }
+  }
+}
+
+/**
+ * Apply border terrain variants near map edges for natural boundary framing.
+ */
+export function edgePadding(terrainLayer, borderTileIndices, width, height, depth = 3, seed = 42) {
+  let rng = seed + 7
+  const next = () => { rng = (rng * 16807) % 2147483647; return (rng - 1) / 2147483646 }
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const distToEdge = Math.min(x, y, width - 1 - x, height - 1 - y)
+      if (distToEdge < depth && next() < 0.7) {
+        const idx = y * width + x
+        // Only overwrite terrain tiles (non-zero), not buildings/empty
+        if (terrainLayer[idx] > 0) {
+          terrainLayer[idx] = borderTileIndices[Math.floor(next() * borderTileIndices.length)]
+        }
+      }
+    }
+  }
+}
+
+/**
  * Remap a chunk's layer indices from its local palette to a unified palette.
  * @param {object} chunk — chunk with .palette and .layers
  * @param {Map<string, number>} tileToIndex — unified palette lookup

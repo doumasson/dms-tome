@@ -3,6 +3,7 @@ import allChunks from '../data/chunks/index.js'
 import {
   resolvePositions, stampChunk, connectWithRoad,
   fillTerrain, buildUnifiedPalette, remapChunk,
+  scatterProps, edgePadding,
 } from './mapGenerator.js'
 import { extractWallEdges } from './wallEdgeExtractor.js'
 import { getBlockingSet } from '../engine/tileAtlas'
@@ -152,6 +153,11 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   // 7. Fill terrain
   const terrainIndices = terrainTiles.map(id => tileToIndex.get(id))
   fillTerrain(layers.floor, terrainIndices, width, height, seed)
+
+  // 7b. Apply edge padding — darken/vary border cells for natural framing
+  if (terrainIndices.length > 0) {
+    edgePadding(layers.floor, terrainIndices, width, height, 3, seed + 1)
+  }
 
   // 8. Extract wall edges (also backfills floor under wall cells)
   const doorSet = new Set()
