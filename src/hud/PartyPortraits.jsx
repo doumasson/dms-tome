@@ -14,7 +14,7 @@ function getHpColor(ratio) {
   return '#cc3333'
 }
 
-export default function PartyPortraits() {
+export default function PartyPortraits({ onPortraitClick }) {
   const myCharacter = useStore(s => s.myCharacter)
   const partyMembers = useStore(s => s.partyMembers)
 
@@ -41,7 +41,8 @@ export default function PartyPortraits() {
         const isActive = member.isMe
 
         return (
-          <div key={member.name || i} style={{ position: 'relative' }}>
+          <div key={member.name || i} style={{ position: 'relative', cursor: 'pointer' }}
+            onClick={() => onPortraitClick?.(member)}>
             <div style={{
               width: 58, height: 72, background: '#08060c', overflow: 'hidden', position: 'relative',
             }}>

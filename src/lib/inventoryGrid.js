@@ -106,7 +106,34 @@ export class GridPacker {
  * @returns {[number, number]}
  */
 export function getItemSize(item) {
-  const key = item?.category ?? item?.type
-  const entry = key ? itemSizes[key] : undefined
-  return entry ?? itemSizes['default'] ?? [1, 1]
+  if (!item) return itemSizes['default'] || [1, 1]
+
+  // Direct sizeCategory match (magic items, shop items)
+  if (item.sizeCategory && itemSizes[item.sizeCategory]) return itemSizes[item.sizeCategory]
+
+  // Derive from item properties
+  if (item.baseAC !== undefined || item.armorType) {
+    if (item.armorType === 'shield') return itemSizes['shield'] || [2, 2]
+    const aType = (item.armorType || '').toLowerCase()
+    if (aType === 'heavy') return itemSizes['armor_heavy'] || [2, 3]
+    if (aType === 'medium') return itemSizes['armor_medium'] || [2, 3]
+    if (aType === 'light') return itemSizes['armor_light'] || [2, 2]
+    return itemSizes['armor_medium'] || [2, 3]
+  }
+
+  if (item.damage || item.category?.includes('weapon') || item.category?.includes('melee') || item.category?.includes('ranged')) {
+    const props = item.properties || []
+    if (props.includes('light')) return itemSizes['weapon_light'] || [1, 2]
+    if (props.includes('two-handed') || props.includes('heavy')) return itemSizes['weapon_two_handed'] || [2, 3]
+    if (item.range || item.category?.includes('ranged')) return itemSizes['weapon_ranged'] || [1, 3]
+    return itemSizes['weapon_one_handed'] || [1, 3]
+  }
+
+  if (item.type === 'consumable' || item.effect) return itemSizes['potion'] || [1, 1]
+
+  // Category/type direct lookup
+  const key = item.category ?? item.type
+  if (key && itemSizes[key]) return itemSizes[key]
+
+  return itemSizes['default'] || [1, 1]
 }

@@ -9,7 +9,7 @@ import SoundControl from './SoundControl'
 import useStore from '../store/useStore'
 import './hud.css'
 
-export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef }) {
+export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef, onPortraitClick }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const encounter = useStore(s => s.encounter)
   const myCharacter = useStore(s => s.myCharacter)
@@ -58,7 +58,7 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
         </div>
       )}
       <NarratorFloat />
-      <BottomBar areaTheme={areaTheme} onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} />
+      <BottomBar areaTheme={areaTheme} onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} onPortraitClick={onPortraitClick} />
     </div>
   )
 }

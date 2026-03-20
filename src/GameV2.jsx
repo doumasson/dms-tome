@@ -169,17 +169,40 @@ export default function GameV2({ onLeave }) {
     }
 
     const prompt = buildEncounterPrompt(triggered, '')
-    addNarratorMessage({ role: 'user', speaker: 'System', text: prompt })
 
-    // Auto-call AI DM with the encounter prompt so it can narrate and/or start combat
-    if (sessionApiKey) {
-      // Use setTimeout to ensure handleChat is available (defined later in component)
-      setTimeout(() => {
-        const chat = handleChatRef.current
-        if (chat) chat(prompt)
-      }, 100)
+    // Call AI DM for narrative flavor, then auto-start combat with zone enemies
+    const startCombatWithZoneEnemies = () => {
+      const { startEncounter } = useStore.getState()
+      // Get enemies from the zone data that match this encounter
+      const zoneEnemies = (zone.enemies || []).filter(e => {
+        const enemyNames = triggered.enemies || []
+        return enemyNames.some(name => e.name?.includes(name) || e.id?.includes(name))
+      })
+      // Fall back to all zone enemies if no match
+      const enemies = zoneEnemies.length > 0 ? zoneEnemies : (zone.enemies || [])
+      if (enemies.length > 0) {
+        const combatEnemies = enemies.map(e => ({
+          ...e, isEnemy: true, type: 'enemy',
+          position: e.position || { x: pos.x + 2, y: pos.y },
+        }))
+        startEncounter(combatEnemies, partyMembers || [], true)
+      }
     }
-  }, [playerPos, zone, inCombat, isDM, addNarratorMessage, sessionApiKey])
+
+    if (sessionApiKey) {
+      // AI narrates first, then combat starts
+      setTimeout(async () => {
+        const chat = handleChatRef.current
+        if (chat) await chat(prompt)
+        // Start combat after AI response (slight delay for the narrative to display)
+        setTimeout(startCombatWithZoneEnemies, 500)
+      }, 100)
+    } else {
+      // No API key — just start combat directly
+      addNarratorMessage({ role: 'dm', speaker: 'DM', text: triggered.dmPrompt || 'Combat begins!' })
+      startCombatWithZoneEnemies()
+    }
+  }, [playerPos, zone, inCombat, isDM, addNarratorMessage, sessionApiKey, partyMembers])
 
   // --- NPC schedule movement on time-of-day changes ---
   useEffect(() => {
@@ -396,6 +419,7 @@ export default function GameV2({ onLeave }) {
         onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn}
         onAction={handleCombatAction} onSettings={() => setShowApiSettings(true)} onLeave={onLeave}
         playerPos={playerPos} tokens={tokens} cameraRef={cameraRef}
+        onPortraitClick={(member) => setSheetChar(member)}
       />
       {/* TestCombatButton removed — combat initiates via encounter zones */}
       <Suspense fallback={null}>

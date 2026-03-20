@@ -7,7 +7,7 @@ import CombatActionBar from './CombatActionBar'
 import OrnateDivider from './OrnateDivider'
 import FiligreeBar from './FiligreeBar'
 
-export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onAction }) {
+export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onAction, onPortraitClick }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -19,7 +19,7 @@ export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onActi
       </div>
       <FiligreeBar color={inCombat ? '#cc3333' : '#c9a84c'} />
       <div className="hud-bottom-bar-content">
-        <PartyPortraits />
+        <PartyPortraits onPortraitClick={onPortraitClick} />
         <OrnateDivider color={inCombat ? '#cc3333' : '#c9a84c'} />
         <SessionLog />
         <OrnateDivider color={inCombat ? '#cc3333' : '#c9a84c'} />
