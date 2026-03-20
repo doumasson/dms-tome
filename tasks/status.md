@@ -222,8 +222,18 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Day/night cycle — game clock, PixiJS tint filter (dawn/day/dusk/night), HUD clock, AI DM time awareness
 - [x] 14 new curated chunks — cave rooms, sewers, crypts, wilderness, town buildings, multi-room inns (36 total)
 - [ ] Pitched roof visuals (BLOCKED: pending slope/edge FA assets)
-- 197 tests passing, 13 commits.
+- 196 tests passing (0 failures), 13 commits.
 - Spec: `docs/superpowers/specs/2026-03-19-phase9-gameplay-systems-design.md`
+
+### Bug Fixes & Technical Debt ✅ COMPLETE
+- [x] LootScreen wired into V2 — combat rewards now display
+- [x] 6 missing broadcast handlers added — multiplayer combat fully synced
+- [x] LevelUpModal wired into V2 — level progression works
+- [x] 7 stale test failures removed (old zone/campaign tests deleted)
+- [x] useStore.js split into 6 domain slices (1,784→20 lines orchestrator)
+- [x] GameV2.jsx split into 8 hooks + 2 components (1,430→372 lines)
+- [x] Bundle size reduced 41% via lazy loading (1,671→980 kB)
+- 196 tests, 0 failures. Build 458ms.
 
 ---
 
