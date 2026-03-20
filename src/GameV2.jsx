@@ -407,8 +407,26 @@ export default function GameV2({ onLeave }) {
         })
       })
     }
+    if (zone.enemies) {
+      zone.enemies.forEach(e => {
+        if (!e.position) return
+        t.push({
+          id: e.id,
+          name: e.name,
+          x: e.position.x,
+          y: e.position.y,
+          color: 0x8b0000,
+          borderColor: 0xff3333,
+          isEnemy: true,
+          isNpc: false,
+          showHpBar: inCombat,
+          currentHp: e.currentHp,
+          maxHp: e.maxHp,
+        })
+      })
+    }
     return t
-  }, [playerPos, zone, myCharacter])
+  }, [playerPos, zone, myCharacter, inCombat])
 
   // Nearby NPCs for chat bubbles — within 3 tiles, outside combat and dialog
   const nearbyNpcs = useMemo(() => {

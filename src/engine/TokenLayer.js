@@ -66,6 +66,18 @@ export function renderTokens(container, tokens, tileSizeOverride) {
     nameLabel.y = radius + 4
     group.addChild(nameLabel)
 
+    // HP bar for enemies/combatants in combat
+    if (token.showHpBar && token.currentHp != null && token.maxHp != null) {
+      const barWidth = radius * 1.6
+      const barHeight = 4
+      const hpPct = Math.max(0, token.currentHp / token.maxHp)
+      const hpBar = new PIXI.Graphics()
+      hpBar.rect(-barWidth / 2, -radius - 8, barWidth, barHeight).fill(0x3a0000)
+      const hpColor = hpPct > 0.5 ? 0x44aa44 : hpPct > 0.25 ? 0xcc8800 : 0xcc2222
+      hpBar.rect(-barWidth / 2, -radius - 8, barWidth * hpPct, barHeight).fill(hpColor)
+      group.addChild(hpBar)
+    }
+
     container.addChild(group)
     tokenGroupMap.set(token.id, group)
   }
