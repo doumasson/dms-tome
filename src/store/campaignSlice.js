@@ -1,0 +1,324 @@
+import { supabase } from '../lib/supabase';
+import { getClassResources } from '../lib/classResources';
+import { computeAcFromEquipped } from '../data/equipment';
+
+/**
+ * Campaign slice — campaign data, scenes, campaign-owned characters, notes, saving/loading.
+ */
+export function createCampaignSlice(set, get) {
+  return {
+    // === Auth ===
+    user: null,
+    setUser: (user) => set({ user }),
+
+    // === Active Campaign (Supabase record) ===
+    activeCampaign: null,
+    isDM: false,
+    setActiveCampaign: (campaign) => {
+      const user = get().user;
+      const isDM = !!(campaign && user && campaign.dm_user_id === user.id);
+      // Host starts with dmMode OFF — AI DM runs automatically via isDM;
+      // dmMode is only for manual host override tools
+      set({ activeCampaign: campaign, isDM, dmMode: false });
+    },
+    clearActiveCampaign: () => set({ activeCampaign: null, isDM: false, dmMode: false, myCharacter: null, partyMembers: [] }),
+    resetCampaign: () => set({
+      campaign: {}, activeCampaign: null,
+      encounter: { phase: 'idle', combatants: [], currentTurn: 0, round: 1, log: [], activeEffects: [] },
+      partyMembers: [], narrator: { history: [], open: false },
+      sessionApiKey: null, isDM: false, dmMode: false, myCharacter: null,
+    }),
+    setIsDM: (value) => set({ isDM: value, dmMode: value }),
+
+    // === DM Mode ===
+    dmMode: false,
+    toggleDmMode: () => set((state) => ({ dmMode: !state.dmMode })),
+
+    // === Campaign ===
+    campaign: {
+      title: '',
+      scenes: [],
+      characters: [],
+      loaded: false,
+      currentSceneIndex: 0,
+      notes: { dm: '', shared: '' },
+      savedEncounters: [],
+      questObjectives: [],
+    },
+    loadCampaign: (data) =>
+      set({
+        campaign: {
+          title: data.title || 'Untitled Campaign',
+          scenes: data.scenes || [],
+          characters: (data.characters || []).map(c => ({ resourcesUsed: {}, ...c })),
+          loaded: true,
+          currentSceneIndex: 0,
+          notes: { dm: '', shared: '' },
+          savedEncounters: [],
+        },
+      }),
+    loadCampaignSettings: (settings) =>
+      set((state) => {
+        // Restore pre-generated scene image URLs if available
+        const sceneImageUpdates = {};
+        const campaignId = state.activeCampaign?.id;
+        if (settings?.sceneImageUrls && campaignId) {
+          Object.entries(settings.sceneImageUrls).forEach(([idx, url]) => {
+            sceneImageUpdates[`${campaignId}:${idx}`] = url;
+          });
+        }
+        return {
+          campaign: {
+            ...state.campaign,
+            notes: settings?.notes || { dm: '', shared: '' },
+            savedEncounters: settings?.savedEncounters || [],
+          },
+          sceneImages: { ...state.sceneImages, ...sceneImageUpdates },
+          sceneTokenPositions: settings?.sceneTokenPositions || state.sceneTokenPositions,
+          fogBitfields: settings?.fogBitfields || state.fogBitfields,
+          roofStates: settings?.roofStates || state.roofStates,
+        };
+      }),
+    unloadCampaign: () =>
+      set({
+        campaign: {
+          title: '',
+          scenes: [],
+          characters: [],
+          loaded: false,
+          currentSceneIndex: 0,
+          notes: { dm: '', shared: '' },
+          savedEncounters: [],
+        },
+      }),
+    addCharacter: (char) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          characters: [
+            ...state.campaign.characters,
+            {
+              id: crypto.randomUUID(),
+              name: char.name || 'New Character',
+              race: char.race || '',
+              class: char.class || '',
+              level: Number(char.level) || 1,
+              stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+              skills: char.skills || [],
+              weapons: char.weapons || [],
+              maxHp: Number(char.maxHp) || 10,
+              currentHp: Number(char.maxHp) || 10,
+              ac: Number(char.ac) || 10,
+              spellSlots: char.spellSlots || null,
+              resourcesUsed: char.resourcesUsed || {},
+            },
+          ],
+        },
+      })),
+    updateCharacter: (id, updates) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          characters: state.campaign.characters.map((c) =>
+            c.id === id ? { ...c, ...updates } : c
+          ),
+        },
+      })),
+    deleteCharacter: (id) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          characters: state.campaign.characters.filter((c) => c.id !== id),
+        },
+      })),
+    setCurrentScene: (index) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          currentSceneIndex: index,
+        },
+      })),
+
+    // Append AI-generated continuation scenes to the campaign
+    appendScenes: (newScenes) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          scenes: [...(state.campaign.scenes || []), ...newScenes],
+        },
+      })),
+
+    // Campaign completion state — shown when last scene concludes
+    campaignComplete: false,
+    setCampaignComplete: (val) => set({ campaignComplete: val }),
+
+    // === Class Resources ===
+    spendResource: (charId, resourceName) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          characters: state.campaign.characters.map((c) => {
+            if (c.id !== charId) return c;
+            const defs = getClassResources(c.class, c.level, c.stats);
+            const def = defs.find(r => r.name === resourceName);
+            if (!def) return c;
+            const used = c.resourcesUsed?.[resourceName] ?? 0;
+            if (used >= def.max) return c;
+            return { ...c, resourcesUsed: { ...c.resourcesUsed, [resourceName]: used + 1 } };
+          }),
+        },
+      })),
+
+    gainResource: (charId, resourceName, amount = 1) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          characters: state.campaign.characters.map((c) => {
+            if (c.id !== charId) return c;
+            const used = Math.max(0, (c.resourcesUsed?.[resourceName] ?? 0) - amount);
+            return { ...c, resourcesUsed: { ...c.resourcesUsed, [resourceName]: used } };
+          }),
+        },
+      })),
+
+    // Spell slot management
+    castSpell: (charId, slotLevel) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          characters: state.campaign.characters.map((c) => {
+            if (c.id !== charId) return c;
+            const slots = { ...(c.spellSlots || {}) };
+            const lvl = slots[slotLevel];
+            if (!lvl || lvl.used >= lvl.total) return c;
+            slots[slotLevel] = { ...lvl, used: lvl.used + 1 };
+            return { ...c, spellSlots: slots };
+          }),
+        },
+      })),
+
+    recoverSpellSlot: (charId, slotLevel) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          characters: state.campaign.characters.map((c) => {
+            if (c.id !== charId) return c;
+            const slots = { ...(c.spellSlots || {}) };
+            const lvl = slots[slotLevel];
+            if (!lvl || lvl.used <= 0) return c;
+            slots[slotLevel] = { ...lvl, used: lvl.used - 1 };
+            return { ...c, spellSlots: slots };
+          }),
+        },
+      })),
+
+    // === Notes ===
+    setNote: (type, value) =>
+      set((state) => ({
+        campaign: {
+          ...state.campaign,
+          notes: { ...state.campaign.notes, [type]: value },
+        },
+      })),
+
+    // === Saved Encounters ===
+    saveEncounterGroup: (name, enemies) =>
+      set((state) => {
+        const entry = { id: crypto.randomUUID(), name, enemies, savedAt: Date.now() };
+        const savedEncounters = [entry, ...state.campaign.savedEncounters].slice(0, 20);
+        get().saveSettingsToSupabase({ ...state.campaign, savedEncounters });
+        return { campaign: { ...state.campaign, savedEncounters } };
+      }),
+    deleteEncounterGroup: (id) =>
+      set((state) => {
+        const savedEncounters = state.campaign.savedEncounters.filter(e => e.id !== id);
+        get().saveSettingsToSupabase({ ...state.campaign, savedEncounters });
+        return { campaign: { ...state.campaign, savedEncounters } };
+      }),
+
+    // === Supabase Persistence ===
+    saveSettingsToSupabase: async (campaignState) => {
+      const { activeCampaign } = get();
+      if (!activeCampaign?.id) return;
+      const c = campaignState || get().campaign;
+      try {
+        const { data: cur } = await supabase
+          .from('campaigns').select('settings').eq('id', activeCampaign.id).maybeSingle();
+        await supabase
+          .from('campaigns')
+          .update({ settings: { ...(cur?.settings || {}), notes: c.notes, savedEncounters: c.savedEncounters } })
+          .eq('id', activeCampaign.id);
+      } catch { /* non-critical */ }
+    },
+
+    saveSessionStateToSupabase: async () => {
+      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates } = get();
+      if (!activeCampaign?.id || !isDM) return;
+      try {
+        const { data: cur } = await supabase
+          .from('campaigns').select('settings').eq('id', activeCampaign.id).maybeSingle();
+        await supabase
+          .from('campaigns')
+          .update({
+            settings: {
+              ...(cur?.settings || {}),
+              currentSceneIndex: campaign.currentSceneIndex,
+              encounterState: encounter.phase !== 'idle' ? encounter : null,
+              fogBitfields,
+              roofStates,
+            },
+          })
+          .eq('id', activeCampaign.id);
+      } catch { /* non-critical */ }
+    },
+
+    saveCampaignToSupabase: async () => {
+      const { activeCampaign, campaign } = get();
+      if (!activeCampaign?.id) return;
+      const merged = {
+        ...(activeCampaign.campaign_data || {}),
+        characters: campaign.characters,
+      };
+      await supabase
+        .from('campaigns')
+        .update({ campaign_data: merged })
+        .eq('id', activeCampaign.id);
+    },
+
+    // === Scene Images (cache) ===
+    sceneImages: {}, // { [campaignId:sceneIndex]: imageUrl }
+    setSceneImage: (key, url) =>
+      set((state) => {
+        const next = { ...state.sceneImages };
+        if (url == null) { delete next[key]; } else { next[key] = url; }
+        return { sceneImages: next };
+      }),
+    clearSceneImages: () => set({ sceneImages: {} }),
+
+    npcPortraits: {}, // { [campaignId:sceneIndex:npcName]: portraitUrl }
+    setNpcPortrait: (key, url) =>
+      set((state) => ({ npcPortraits: { ...state.npcPortraits, [key]: url } })),
+
+    // Pre-populate scene image URLs at import time so they're ready immediately.
+    preGenerateSceneImages: async (campaignId, scenes) => {
+      const { buildPollinationsUrl } = await import('../lib/dalleApi');
+      const urlMap = {};
+      (scenes || []).forEach((scene, idx) => {
+        const key = `${campaignId || 'local'}:${idx}`;
+        const url = buildPollinationsUrl(scene.title);
+        get().setSceneImage(key, url);
+        urlMap[String(idx)] = url;
+      });
+      // Persist to Supabase so URLs survive page refresh
+      const activeCampaign = get().activeCampaign;
+      if (activeCampaign?.id) {
+        try {
+          const { data: cur } = await supabase.from('campaigns').select('settings').eq('id', activeCampaign.id).single();
+          await supabase.from('campaigns').update({
+            settings: { ...(cur?.settings || {}), sceneImageUrls: urlMap },
+          }).eq('id', activeCampaign.id);
+        } catch { /* non-critical */ }
+      }
+    },
+  };
+}
