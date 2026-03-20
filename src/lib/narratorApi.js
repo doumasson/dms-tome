@@ -83,6 +83,19 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
     ? `\nEncounter zones:\n${encounterZoneList}`
     : ''
 
+  // Player position context
+  const playerContext = currentScene?.playerPosition
+    ? `\nThe party is currently at tile position (${currentScene.playerPosition.x}, ${currentScene.playerPosition.y}) on a ${currentScene.width}x${currentScene.height} map.`
+    : ''
+
+  // Building context
+  const buildingList = (currentScene?.buildings || [])
+    .map(b => `- ${b.id} (${b.width}x${b.height} at position ${b.x},${b.y})`)
+    .join('\n')
+  const buildingContext = buildingList
+    ? `\nBuildings in this area:\n${buildingList}`
+    : ''
+
   const npcList = (currentScene?.npcs || [])
     .map(n => `  - ${n.name}: ${n.personality || 'a local inhabitant'}`)
     .join('\n');
@@ -91,9 +104,9 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
     : '';
   // V2 zone path takes priority; fall back to V1 scene text
   const sceneText = sceneBlock
-    ? sceneBlock
+    ? `${sceneBlock}${playerContext}${buildingContext}`
     : currentScene
-      ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}${encounterContext}${npcBlock}`
+      ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}${encounterContext}${npcBlock}${playerContext}${buildingContext}`
       : 'The party is between scenes.';
 
   // After 4+ exchanges in a scene, allow the AI to conclude it

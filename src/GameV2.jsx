@@ -1117,7 +1117,8 @@ export default function GameV2({ onLeave }) {
         content: m.text,
       }))
 
-      const systemPrompt = buildSystemPrompt(campaign, partyMembers, zone, recentMessages.length)
+      const sceneWithPos = { ...zone, playerPosition: playerPosRef.current }
+      const systemPrompt = buildSystemPrompt(campaign, partyMembers, sceneWithPos, recentMessages.length)
 
       const result = await callNarrator({
         messages: recentMessages,
