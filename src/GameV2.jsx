@@ -7,7 +7,7 @@ import { buildTestArea } from './data/testArea.js'
 import { buildDemoArea } from './data/demoArea.js'
 import { buildAreaFromBrief } from './lib/areaBuilder.js'
 import { saveArea } from './lib/areaStorage.js'
-import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey, broadcastRoofReveal, broadcastEncounterAction, broadcastFogUpdate } from './lib/liveChannel'
+import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey, broadcastRoofReveal, broadcastEncounterAction, broadcastFogUpdate, broadcastTokenMove } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
@@ -810,6 +810,7 @@ export default function GameV2({ onLeave }) {
         // Auto-follow camera
         if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
       }, isV2Zone ? tileSize : undefined)
+      broadcastTokenMove(user?.id, { x, y }, path)
     }
   }, [zone, isV2Zone, inCombat, encounter, targetingMode, addNarratorMessage, sessionApiKey, narrateCombatAction])
 
@@ -876,6 +877,7 @@ export default function GameV2({ onLeave }) {
         // Auto-follow camera
         if (cameraRef.current) cameraRef.current.centerOn(nx, ny, tileSize)
       }, isV2Zone ? tileSize : undefined)
+      broadcastTokenMove(useStore.getState().user?.id, { x: nx, y: ny }, path)
     }
 
     window.addEventListener('keydown', handleKeyDown)

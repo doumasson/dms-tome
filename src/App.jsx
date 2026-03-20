@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from './lib/supabase';
 import { setLiveChannel, broadcastApiKeySync } from './lib/liveChannel';
 import useStore from './store/useStore';
+import { animateTokenAlongPath } from './engine/TokenLayer';
 import LoginPage from './components/LoginPage';
 import CampaignSelect from './components/CampaignSelect';
 import CreateCampaign from './components/CreateCampaign';
@@ -219,10 +220,16 @@ export default function App() {
 
     // Token move sync (any player → all others for V2 area map)
     ch.on('broadcast', { event: 'token-move' }, ({ payload }) => {
-      const { playerId, position } = payload;
+      const { playerId, position, path } = payload;
       const currentAreaId = useStore.getState().currentAreaId;
       if (currentAreaId) {
         useStore.getState().setAreaTokenPosition(currentAreaId, playerId, position);
+        // If path provided, animate the token movement instead of teleporting
+        if (path && path.length > 1) {
+          const area = useStore.getState().areas?.[currentAreaId];
+          const tileSize = area?.tileSize || 200;
+          animateTokenAlongPath(playerId, path, null, null, tileSize);
+        }
       }
     });
 

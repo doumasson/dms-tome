@@ -101,11 +101,11 @@ export function broadcastAreaTransition(areaId, entryPoint) {
   })
 }
 
-export function broadcastTokenMove(playerId, position) {
+export function broadcastTokenMove(playerId, position, path = null) {
   _channel?.send({
     type: 'broadcast',
     event: 'token-move',
-    payload: { playerId, position },
+    payload: { playerId, position, path },
   })
 }
 
