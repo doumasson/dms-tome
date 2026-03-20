@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
 import { computeAcFromEquipped } from '../data/equipment';
+import { buildPollinationsUrl } from '../lib/dalleApi';
 
 /**
  * Campaign slice — campaign data, scenes, campaign-owned characters, notes, saving/loading.
@@ -301,7 +302,7 @@ export function createCampaignSlice(set, get) {
 
     // Pre-populate scene image URLs at import time so they're ready immediately.
     preGenerateSceneImages: async (campaignId, scenes) => {
-      const { buildPollinationsUrl } = await import('../lib/dalleApi');
+      // buildPollinationsUrl is statically imported at top of file
       const urlMap = {};
       (scenes || []).forEach((scene, idx) => {
         const key = `${campaignId || 'local'}:${idx}`;

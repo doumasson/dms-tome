@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef, lazy, Suspense } from 'react'
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
@@ -9,18 +9,11 @@ import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZo
 import { handleInteract } from './lib/interactionController'
 import { isAnimating } from './engine/TokenLayer'
 import ChatBubble from './components/ChatBubble'
-import DiceTray from './components/DiceTray'
-import CharacterSheetModal from './components/characterSheet/CharacterSheetModal'
-import RestModal from './components/RestModal'
 import ApiKeySettings from './components/ApiKeySettings'
-import NpcDialog from './components/NpcDialog'
-import StoryCutscene from './components/StoryCutscene'
-import JournalModal from './components/JournalModal'
 import SkillCheckPanel from './components/SkillCheckPanel'
-import LootScreen from './components/LootScreen'
-import LevelUpModal, { levelFromXp } from './components/LevelUpModal'
 import OAConfirmModal from './components/v2/OAConfirmModal'
 import TestCombatButton from './components/v2/TestCombatButton'
+
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useFogOfWar } from './hooks/useFogOfWar'
 import { useRoofManager } from './hooks/useRoofManager'
@@ -30,6 +23,26 @@ import { useWorldMovement } from './hooks/useWorldMovement'
 import { useNarratorChat } from './hooks/useNarratorChat'
 import { useWorldLoader } from './hooks/useWorldLoader'
 import './hud/hud.css'
+
+const DiceTray            = lazy(() => import('./components/DiceTray'))
+const CharacterSheetModal = lazy(() => import('./components/characterSheet/CharacterSheetModal'))
+const RestModal           = lazy(() => import('./components/RestModal'))
+const NpcDialog           = lazy(() => import('./components/NpcDialog'))
+const StoryCutscene       = lazy(() => import('./components/StoryCutscene'))
+const JournalModal        = lazy(() => import('./components/JournalModal'))
+const LootScreen          = lazy(() => import('./components/LootScreen'))
+const LevelUpModal        = lazy(() => import('./components/LevelUpModal'))
+
+// ─── D&D 5e XP thresholds (inlined from LevelUpModal to avoid static import) ──
+const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000]
+function levelFromXp(xp) {
+  let level = 1
+  for (let l = 1; l <= 20; l++) {
+    if (xp >= XP_THRESHOLDS[l - 1]) level = l
+    else break
+  }
+  return Math.min(level, 20)
+}
 
 const CLASS_COLORS = {
   Fighter: 0x4499dd, Barbarian: 0xcc5544, Paladin: 0xeedd44,
@@ -332,36 +345,56 @@ export default function GameV2({ onLeave }) {
         onAction={handleCombatAction} onSettings={() => setShowApiSettings(true)} onLeave={onLeave}
       />
       {!inCombat && <TestCombatButton myCharacter={myCharacter} addNarratorMessage={addNarratorMessage} />}
-      <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
+      <Suspense fallback={null}>
+        <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
+      </Suspense>
       <SkillCheckPanel />
-      {sheetChar && <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />}
+      {sheetChar && (
+        <Suspense fallback={null}>
+          <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />
+        </Suspense>
+      )}
       {showApiSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />}
-      {showJournal && <JournalModal onClose={() => setShowJournal(false)} />}
+      {showJournal && (
+        <Suspense fallback={null}>
+          <JournalModal onClose={() => setShowJournal(false)} />
+        </Suspense>
+      )}
       {restProposal && (
-        <RestModal
-          type={restProposal.type} proposedBy={restProposal.proposedBy}
-          partyMembers={[{ id: user?.id, name: myCharacter?.name || 'You' }]}
-          isHost={false}
-          onResolve={() => { advanceGameTime(restProposal.type === 'long' ? 8 : 1); setRestProposal(null) }}
-          onCancel={() => setRestProposal(null)}
-        />
+        <Suspense fallback={null}>
+          <RestModal
+            type={restProposal.type} proposedBy={restProposal.proposedBy}
+            partyMembers={[{ id: user?.id, name: myCharacter?.name || 'You' }]}
+            isHost={false}
+            onResolve={() => { advanceGameTime(restProposal.type === 'long' ? 8 : 1); setRestProposal(null) }}
+            onCancel={() => setRestProposal(null)}
+          />
+        </Suspense>
       )}
-      {activeNpc && !activeNpc.isCutscene && <NpcDialog npc={activeNpc} onClose={() => setActiveNpc(null)} />}
-      {activeNpc && activeNpc.isCutscene && <StoryCutscene npc={activeNpc} pixiRef={pixiRef} onClose={() => setActiveNpc(null)} isWatching={false} />}
-      {!activeNpc && activeCutscene && activeCutscene.initiatorId !== user?.id && (
-        <StoryCutscene
-          npc={{ name: activeCutscene.npcName, criticalInfo: activeCutscene.criticalInfo, role: '' }}
-          pixiRef={pixiRef} onClose={() => {}} isWatching={true}
-        />
-      )}
+      <Suspense fallback={null}>
+        {activeNpc && !activeNpc.isCutscene && <NpcDialog npc={activeNpc} onClose={() => setActiveNpc(null)} />}
+        {activeNpc && activeNpc.isCutscene && <StoryCutscene npc={activeNpc} pixiRef={pixiRef} onClose={() => setActiveNpc(null)} isWatching={false} />}
+        {!activeNpc && activeCutscene && activeCutscene.initiatorId !== user?.id && (
+          <StoryCutscene
+            npc={{ name: activeCutscene.npcName, criticalInfo: activeCutscene.criticalInfo, role: '' }}
+            pixiRef={pixiRef} onClose={() => {}} isWatching={true}
+          />
+        )}
+      </Suspense>
       {showLevelUp && myCharacter && (
-        <LevelUpModal
-          character={myCharacter}
-          onConfirm={(updates) => { applyLevelUp(updates); dismissedLevelRef.current = myCharacter.level; setShowLevelUp(false) }}
-          onCancel={() => { dismissedLevelRef.current = myCharacter.level; setShowLevelUp(false) }}
-        />
+        <Suspense fallback={null}>
+          <LevelUpModal
+            character={myCharacter}
+            onConfirm={(updates) => { applyLevelUp(updates); dismissedLevelRef.current = myCharacter.level; setShowLevelUp(false) }}
+            onCancel={() => { dismissedLevelRef.current = myCharacter.level; setShowLevelUp(false) }}
+          />
+        </Suspense>
       )}
-      {pendingLoot && <LootScreen enemies={pendingLoot.enemies} partySize={pendingLoot.partySize} onDone={() => setPendingLoot(null)} />}
+      {pendingLoot && (
+        <Suspense fallback={null}>
+          <LootScreen enemies={pendingLoot.enemies} partySize={pendingLoot.partySize} onDone={() => setPendingLoot(null)} />
+        </Suspense>
+      )}
       <OAConfirmModal
         pendingOA={pendingOA}
         onConfirm={() => { executeMoveWithOA(pendingOA); setPendingOA(null) }}

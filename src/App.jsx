@@ -1,19 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { supabase } from './lib/supabase';
 import { setLiveChannel, broadcastApiKeySync } from './lib/liveChannel';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
 import LoginPage from './components/LoginPage';
 import CampaignSelect from './components/CampaignSelect';
-import CreateCampaign from './components/CreateCampaign';
-import CharacterCreate from './components/CharacterCreate';
-import CharacterSelect from './components/CharacterSelect';
-import CharacterProfile from './components/CharacterProfile';
-import CampaignEndModal from './components/CampaignEndModal';
 import ApiKeySettings from './components/ApiKeySettings';
-import CampaignManager from './components/CampaignManager';
-import GameLayout from './components/GameLayout';
 import GameV2 from './GameV2';
+
+const CreateCampaign   = lazy(() => import('./components/CreateCampaign'));
+const CharacterCreate  = lazy(() => import('./components/CharacterCreate'));
+const CharacterSelect  = lazy(() => import('./components/CharacterSelect'));
+const CharacterProfile = lazy(() => import('./components/CharacterProfile'));
+const CampaignEndModal = lazy(() => import('./components/CampaignEndModal'));
+const CampaignManager  = lazy(() => import('./components/CampaignManager'));
+const GameLayout       = lazy(() => import('./components/GameLayout'));
 
 function D20Icon() {
   return (
@@ -562,24 +563,27 @@ export default function App() {
   // ── Create Campaign ──────────────────────────────────────────────────────────
   if (appView === 'create') {
     return (
-      <CreateCampaign
-        user={user}
-        draftCampaign={draftCampaign}
-        onDone={(campaign) => {
-          setDraftCampaign(null);
-          handleSelectCampaign(campaign);
-        }}
-        onBack={() => {
-          setDraftCampaign(null);
-          setAppView('select');
-        }}
-      />
+      <Suspense fallback={<div style={styles.loadingScreen}><D20Icon /><span style={styles.loadingText}>Loading...</span></div>}>
+        <CreateCampaign
+          user={user}
+          draftCampaign={draftCampaign}
+          onDone={(campaign) => {
+            setDraftCampaign(null);
+            handleSelectCampaign(campaign);
+          }}
+          onBack={() => {
+            setDraftCampaign(null);
+            setAppView('select');
+          }}
+        />
+      </Suspense>
     );
   }
 
   // ── Character Select (portable characters) ───────────────────────────────────
   if (appView === 'character-select') {
     return (
+      <Suspense fallback={<div style={styles.loadingScreen}><D20Icon /><span style={styles.loadingText}>Loading...</span></div>}>
       <div style={styles.app}>
         <header style={styles.header}>
           <div style={styles.headerLeft}>
@@ -615,12 +619,14 @@ export default function App() {
           onCreateNew={() => setAppView('character-create')}
         />
       </div>
+      </Suspense>
     );
   }
 
   // ── Character Creation ───────────────────────────────────────────────────────
   if (appView === 'character-create') {
     return (
+      <Suspense fallback={<div style={styles.loadingScreen}><D20Icon /><span style={styles.loadingText}>Loading...</span></div>}>
       <div style={styles.app}>
         <header style={styles.header}>
           <div style={styles.headerLeft}>
@@ -657,12 +663,17 @@ export default function App() {
           }}
         />
       </div>
+      </Suspense>
     );
   }
 
   // ── Character Profile ─────────────────────────────────────────────────────────
   if (appView === 'character-profile') {
-    return <CharacterProfile onClose={() => setAppView('game')} campaignId={activeCampaign?.id} onCreateNew={() => setAppView('character-create')} />;
+    return (
+      <Suspense fallback={<div style={styles.loadingScreen}><D20Icon /><span style={styles.loadingText}>Loading...</span></div>}>
+        <CharacterProfile onClose={() => setAppView('game')} campaignId={activeCampaign?.id} onCreateNew={() => setAppView('character-create')} />
+      </Suspense>
+    );
   }
 
   // ── Main Game UI ─────────────────────────────────────────────────────────────
