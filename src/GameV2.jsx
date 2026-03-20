@@ -117,7 +117,7 @@ export default function GameV2({ onLeave }) {
   const {
     targetingMode, pendingOA, setPendingOA,
     handleCombatTileClick, handleCombatAction, executeMoveWithOA,
-  } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat })
+  } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM })
 
   const { handleAreaTransition } = useAreaTransition({
     area, areas, areaBriefs, inCombat, campaign, pixiRef,

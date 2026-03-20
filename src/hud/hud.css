@@ -25,7 +25,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 134px;
+  height: 160px;
   z-index: 20;
   background: linear-gradient(180deg, #14101c 0%, #0a0810 100%);
   display: flex;
@@ -64,7 +64,7 @@
 
 .hud-log-tab {
   padding: 5px 18px;
-  font-size: 8px;
+  font-size: 11px;
   font-family: var(--font-heading);
   font-weight: 700;
   letter-spacing: 2px;
@@ -81,7 +81,7 @@
 
 .hud-log-entries {
   padding: 5px 12px;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.65;
   overflow-y: auto;
   flex: 1;
@@ -102,8 +102,8 @@
 
 /* Tool buttons */
 .hud-tool-btn {
-  width: 40px;
-  height: 38px;
+  width: 46px;
+  height: 44px;
   background: linear-gradient(180deg, #18141e, #0e0c14);
   border: 1px solid rgba(201, 168, 76, 0.25);
   display: flex;
@@ -123,7 +123,7 @@
   background: var(--bg-panel);
   border: 1px solid rgba(201, 168, 76, 0.15);
   padding: 8px 12px;
-  font-size: 11px;
+  font-size: 14px;
   color: var(--text-primary);
   font-family: var(--font-heading);
   border-radius: 0;
@@ -228,7 +228,7 @@
   justify-content: center;
   gap: 4px;
   cursor: pointer;
-  font-size: 8px;
+  font-size: 11px;
   font-family: var(--font-heading);
   font-weight: 900;
   letter-spacing: 2px;
@@ -255,7 +255,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
+  font-size: 10px;
   color: #554433;
   cursor: pointer;
   font-family: var(--font-heading);
@@ -275,7 +275,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 8px;
+  font-size: 10px;
   color: #cc3333;
   font-weight: 900;
   font-family: var(--font-heading);
@@ -489,15 +489,15 @@
 }
 
 .hud-tool-btn-labeled {
-  width: 50px;
-  height: 48px;
+  width: 54px;
+  height: 52px;
   flex-direction: column;
   gap: 1px;
 }
 
 .hud-tool-label {
   font-family: var(--font-heading);
-  font-size: 7px;
+  font-size: 9px;
   color: var(--gold-muted);
   letter-spacing: 1px;
   font-weight: 700;
@@ -526,7 +526,7 @@
 
 .hud-chat-speaker {
   font-family: var(--font-heading);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -537,7 +537,7 @@
 
 .hud-chat-text {
   color: var(--text-log);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
 }
 

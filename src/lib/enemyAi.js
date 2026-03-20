@@ -101,6 +101,7 @@ Rules:
  * Uses edge-based pathfinding for collision-aware movement.
  */
 export function computeGruntAction(enemy, combatants, collisionData, width, height) {
+  if (!enemy.position) return { action: 'wait', narrative: `${enemy.name} waits.` }
   const targets = combatants.filter(c => !c.isEnemy && c.type !== 'enemy' && c.currentHp > 0 && c.position)
   if (!targets.length) return { action: 'wait', narrative: `${enemy.name} waits.` }
 

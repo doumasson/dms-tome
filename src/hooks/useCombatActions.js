@@ -14,7 +14,7 @@ import { broadcastEncounterAction } from '../lib/liveChannel'
  * combat movement (with opportunity attacks), movement range rendering,
  * cover calculation, enemy auto-turns, and combat camera lock.
  */
-export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat }) {
+export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM }) {
   const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
   const runEnemyTurn = useStore(s => s.runEnemyTurn)
 
@@ -120,23 +120,26 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
   }, [inCombat, zone])
 
-  // --- Auto-run enemy turns (host only) ---
+  // --- Auto-run enemy turns (host/DM only) ---
   useEffect(() => {
-    if (!inCombat) return
+    if (!inCombat || !isDM) return
     const active = encounter.combatants?.[encounter.currentTurn]
     if (!active || !active.isEnemy) return
 
     const apiKey = sessionApiKey
     const timer = setTimeout(() => {
       if (apiKey) {
-        runEnemyTurn(apiKey)
+        runEnemyTurn(apiKey).catch(() => {
+          // Safety net: always advance turn even if AI completely fails
+          nextEncounterTurn()
+        })
       } else {
         nextEncounterTurn()
       }
     }, 1000)
 
     return () => clearTimeout(timer)
-  }, [encounter.currentTurn, encounter.phase, inCombat, runEnemyTurn, sessionApiKey, nextEncounterTurn])
+  }, [encounter.currentTurn, encounter.phase, inCombat, isDM, runEnemyTurn, sessionApiKey, nextEncounterTurn])
 
   // --- Handle combat tile click (attack, spell, movement) ---
   // Returns true if click was handled by combat logic, false otherwise
