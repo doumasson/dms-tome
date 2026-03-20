@@ -48,11 +48,11 @@ function getRoom(node) {
   return null
 }
 
-function connectRooms(node, corridors) {
+function connectRooms(node, corridors, cw = 2) {
   if (!node.left || !node.right) return
 
-  connectRooms(node.left, corridors)
-  connectRooms(node.right, corridors)
+  connectRooms(node.left, corridors, cw)
+  connectRooms(node.right, corridors, cw)
 
   const roomA = getRoom(node.left)
   const roomB = getRoom(node.right)
@@ -63,14 +63,14 @@ function connectRooms(node, corridors) {
   const bx = Math.floor(roomB.x + roomB.width / 2)
   const by = Math.floor(roomB.y + roomB.height / 2)
 
-  corridors.push({ x1: ax, y1: ay, x2: bx, y2: by })
+  corridors.push({ x1: ax, y1: ay, x2: bx, y2: by, width: cw })
 }
 
 /**
  * Generate a dungeon layout using BSP.
  * @returns {{ rooms: Array<{x,y,width,height}>, corridors: Array<{x1,y1,x2,y2}>, doors: Array<{x,y}> }}
  */
-export function generateDungeon(width, height, { minRooms = 4, maxRooms = 10, seed = Date.now() } = {}) {
+export function generateDungeon(width, height, { minRooms = 4, maxRooms = 10, corridorWidth = 2, seed = Date.now() } = {}) {
   const rand = seededRandom(seed)
   const root = new BSPNode(0, 0, width, height)
 
@@ -83,7 +83,7 @@ export function generateDungeon(width, height, { minRooms = 4, maxRooms = 10, se
   while (rooms.length > maxRooms) rooms.pop()
 
   const corridors = []
-  connectRooms(root, corridors)
+  connectRooms(root, corridors, corridorWidth)
 
   // Find doors at corridor-room intersections
   const doors = []

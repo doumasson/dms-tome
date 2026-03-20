@@ -58,9 +58,9 @@ function getChunkLibrary() {
  */
 export function buildAreaFromBrief(brief, seed = Date.now()) {
   const { id, name, theme = 'village', pois = [], connections = [], npcs = [], exits = [], enemies = [], encounterZones = [] } = brief
-  const size = calculateAreaSize(brief)
-  const width = brief.width || size.width
-  const height = brief.height || size.height
+  const areaSize = calculateAreaSize(brief)
+  const width = brief.width || areaSize.width
+  const height = brief.height || areaSize.height
   const lib = getChunkLibrary()
 
   // 1. Match chunks for each POI
