@@ -164,6 +164,7 @@ export default function App() {
         case 'clear-concentration': store.clearConcentration(payload.id); break;
         case 'add-effect':          store.applyEncounterEffect(payload.effect); break;
         case 'remove-effect':       store.applyRemoveEffect(payload.effectId); break;
+        case 'move-token':          store.moveToken(payload.id, payload.position.x, payload.position.y, payload.cost || 0); break;
       }
     });
 
@@ -623,9 +624,8 @@ export default function App() {
   // ── Main Game UI ─────────────────────────────────────────────────────────────
 
   // V2: fullscreen game — no header, no V1 wrapper
-  if (localStorage.getItem('useV2') === '1') {
-    return <GameV2 onLeave={handleLeaveCampaign} />;
-  }
+  // Always use V2 — V1 rendering path has been removed
+  return <GameV2 onLeave={handleLeaveCampaign} />;
 
   return (
     <div style={styles.app}>

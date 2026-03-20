@@ -43,9 +43,9 @@ export function getReachableTiles(walkGrid, start, maxTiles) {
  * @param {number} color - Highlight color (default blue)
  * @param {number} alpha - Highlight alpha
  */
-export function renderMovementRange(container, reachable, color = 0x4499dd, alpha = 0.12) {
+export function renderMovementRange(container, reachable, color = 0x4499dd, alpha = 0.12, tileSizeOverride) {
   container.removeChildren()
-  const tileSize = getTileSize()
+  const tileSize = tileSizeOverride || getTileSize()
   const g = new PIXI.Graphics()
 
   for (const key of reachable) {

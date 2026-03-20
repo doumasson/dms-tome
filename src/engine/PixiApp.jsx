@@ -47,6 +47,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       return { x: w.x, y: w.y, scale: w.scale.x }
     },
     getCamera: () => cameraRef.current,
+    getMovementRangeLayer: () => stageLayersRef.current.movementRange || null,
   }), [])
 
   // Initialize PixiJS application
@@ -77,9 +78,10 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         floor: new PIXI.Container(),
         walls: new PIXI.Container(),
         props: new PIXI.Container(),
-        roof: new PIXI.Container(),    // above props, below grid/tokens
         grid: new PIXI.Container(),
+        movementRange: new PIXI.Container(),  // combat reachable-tile highlights
         tokens: new PIXI.Container(),
+        roof: new PIXI.Container(),    // above tokens — hides interior + NPCs until revealed
         fog: new PIXI.Container(),
         exits: new PIXI.Container(),
       }
@@ -246,16 +248,50 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
           }
         }
 
-        // Apply alpha using pre-built spatial grid — O(1) per sprite
+        // Apply alpha + pitch tinting using pre-built spatial grid
         const roofContainer = stageLayersRef.current.roof
         const grid = roofBuildingGridRef.current
         if (grid) {
           for (const child of roofContainer.children) {
+            if (child._isRoofDecor) {
+              // Decorations (backing, ridge, shadow) — just apply building alpha
+              // Find which building by checking center of the graphic
+              const bounds = child.getBounds()
+              const cx = Math.floor((bounds.x + bounds.width / 2) / tileSize)
+              const cy = Math.floor((bounds.y + bounds.height / 2) / tileSize)
+              const dbi = grid[cy * zone.width + cx]
+              if (dbi > 0) {
+                child.alpha = roofAlphaRef.current[zone.buildings[dbi - 1].id] ?? 1
+              }
+              continue
+            }
+
             const tx = Math.floor(child.x / tileSize)
             const ty = Math.floor(child.y / tileSize)
             const bi = grid[ty * zone.width + tx]
             if (bi > 0) {
-              child.alpha = roofAlphaRef.current[zone.buildings[bi - 1].id] ?? 1
+              const b = zone.buildings[bi - 1]
+              const buildingAlpha = roofAlphaRef.current[b.id] ?? 1
+              child.alpha = buildingAlpha
+
+              // Pitch tinting: darken tiles near edges, brighten near ridge
+              const isWide = b.width >= b.height
+              let distFromRidge
+              if (isWide) {
+                // Ridge runs horizontally — distance is vertical from center
+                const centerY = b.y + b.height / 2
+                const maxDist = (b.height - 2) / 2
+                distFromRidge = maxDist > 0 ? Math.abs(ty - centerY) / maxDist : 0
+              } else {
+                // Ridge runs vertically — distance is horizontal from center
+                const centerX = b.x + b.width / 2
+                const maxDist = (b.width - 2) / 2
+                distFromRidge = maxDist > 0 ? Math.abs(tx - centerX) / maxDist : 0
+              }
+              // Tint: ridge = full brightness (0xffffff), edges = darker (0x888888)
+              const brightness = Math.round(255 - distFromRidge * 80)
+              const clamped = Math.max(140, Math.min(255, brightness))
+              child.tint = (clamped << 16) | (clamped << 8) | clamped
             }
           }
         }
@@ -308,6 +344,117 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     }
     roofBuildingGridRef.current = grid
     roofAlphaRef.current = {}
+
+    // Build pitched roof shape per building
+    const roofContainer = stageLayersRef.current?.roof
+    const ts = zone?.tileSize || 200
+    const OVERHANG = 0.5 // 50% of a tile past walls
+    if (roofContainer) {
+      // Remove old roof decorations
+      for (let i = roofContainer.children.length - 1; i >= 0; i--) {
+        if (roofContainer.children[i]._isRoofDecor) {
+          roofContainer.children[i].destroy()
+          roofContainer.removeChildAt(i)
+        }
+      }
+
+      for (const b of zone.buildings) {
+        if (!b.roofTile) continue
+        const isWide = b.width >= b.height
+        // Roof bounds: interior (inset 1 from walls) + overhang
+        const oh = OVERHANG * ts
+        const ix = (b.x + 1) * ts - oh
+        const iy = (b.y + 1) * ts - oh
+        const iw = (b.width - 2) * ts + oh * 2
+        const ih = (b.height - 2) * ts + oh * 2
+        // Ridge inset from gable ends
+        const gableInset = ts * 0.4
+
+        // Dark backing — pitched shape (hexagonal)
+        const backing = new PIXI.Graphics()
+        if (isWide) {
+          // Ridge runs horizontally, gable peaks at left and right ends
+          const midY = iy + ih / 2
+          const peakInset = ts * 0.15 // how much the peak narrows
+          backing.moveTo(ix + gableInset, iy)                  // top-left after gable
+          backing.lineTo(ix + iw - gableInset, iy)             // top-right before gable
+          backing.lineTo(ix + iw, midY)                         // right gable peak
+          backing.lineTo(ix + iw - gableInset, iy + ih)        // bottom-right before gable
+          backing.lineTo(ix + gableInset, iy + ih)             // bottom-left after gable
+          backing.lineTo(ix, midY)                              // left gable peak
+          backing.closePath()
+          backing.fill(0x1a1210)
+        } else {
+          // Ridge runs vertically, gable peaks at top and bottom
+          const midX = ix + iw / 2
+          backing.moveTo(ix, iy + gableInset)                  // top-left after gable
+          backing.lineTo(midX, iy)                              // top gable peak
+          backing.lineTo(ix + iw, iy + gableInset)             // top-right after gable
+          backing.lineTo(ix + iw, iy + ih - gableInset)        // bottom-right before gable
+          backing.lineTo(midX, iy + ih)                         // bottom gable peak
+          backing.lineTo(ix, iy + ih - gableInset)             // bottom-left before gable
+          backing.closePath()
+          backing.fill(0x1a1210)
+        }
+        backing._isRoofDecor = true
+        roofContainer.addChildAt(backing, 0)
+
+        // Ridge line — thick visible line along the peak
+        const ridge = new PIXI.Graphics()
+        if (isWide) {
+          const midY = iy + ih / 2
+          ridge.moveTo(ix, midY)
+          ridge.lineTo(ix + iw, midY)
+          ridge.stroke({ width: 4, color: 0x5a4a38, alpha: 0.7 })
+        } else {
+          const midX = ix + iw / 2
+          ridge.moveTo(midX, iy)
+          ridge.lineTo(midX, iy + ih)
+          ridge.stroke({ width: 4, color: 0x5a4a38, alpha: 0.7 })
+        }
+        ridge._isRoofDecor = true
+        roofContainer.addChild(ridge)
+
+        // Eave shadow — darker strip along the outer edges
+        const shadow = new PIXI.Graphics()
+        const sw = ts * 0.2 // shadow strip width
+        if (isWide) {
+          const midY = iy + ih / 2
+          // Top slope shadow
+          shadow.moveTo(ix + gableInset, iy)
+          shadow.lineTo(ix + iw - gableInset, iy)
+          shadow.lineTo(ix + iw - gableInset, iy + sw)
+          shadow.lineTo(ix + gableInset, iy + sw)
+          shadow.closePath()
+          shadow.fill({ color: 0x000000, alpha: 0.35 })
+          // Bottom slope shadow
+          shadow.moveTo(ix + gableInset, iy + ih - sw)
+          shadow.lineTo(ix + iw - gableInset, iy + ih - sw)
+          shadow.lineTo(ix + iw - gableInset, iy + ih)
+          shadow.lineTo(ix + gableInset, iy + ih)
+          shadow.closePath()
+          shadow.fill({ color: 0x000000, alpha: 0.35 })
+        } else {
+          const midX = ix + iw / 2
+          // Left slope shadow
+          shadow.moveTo(ix, iy + gableInset)
+          shadow.lineTo(ix + sw, iy + gableInset)
+          shadow.lineTo(ix + sw, iy + ih - gableInset)
+          shadow.lineTo(ix, iy + ih - gableInset)
+          shadow.closePath()
+          shadow.fill({ color: 0x000000, alpha: 0.35 })
+          // Right slope shadow
+          shadow.moveTo(ix + iw - sw, iy + gableInset)
+          shadow.lineTo(ix + iw, iy + gableInset)
+          shadow.lineTo(ix + iw, iy + ih - gableInset)
+          shadow.lineTo(ix + iw - sw, iy + ih - gableInset)
+          shadow.closePath()
+          shadow.fill({ color: 0x000000, alpha: 0.35 })
+        }
+        shadow._isRoofDecor = true
+        roofContainer.addChild(shadow)
+      }
+    }
   }, [zone?.buildings, zone?.width])
 
   // Scroll wheel zoom (camera mode)

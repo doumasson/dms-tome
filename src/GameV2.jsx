@@ -12,7 +12,7 @@ import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
 import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZones'
 import { handleInteract } from './lib/interactionController'
-import { findPath, findPathLegacy, buildWalkabilityGrid, findPathEdge } from './lib/pathfinding'
+import { findPath, findPathLegacy, buildWalkabilityGrid, findPathEdge, getReachableTilesEdge } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import Camera from './engine/Camera'
@@ -83,6 +83,7 @@ export default function GameV2({ onLeave }) {
   const playerPosRef = useRef(playerPos)
   playerPosRef.current = playerPos
   const lastNpcTriggerRef = useRef(null)
+  const reachableTilesRef = useRef(new Set())
 
   const area = areas[currentAreaId] || null
   // Alias for backward compat — existing code reads `zone`
@@ -474,6 +475,31 @@ export default function GameV2({ onLeave }) {
   // Only update React state at the END — PixiJS handles the visual walk directly
   const handleTileClick = useCallback(({ x, y }) => {
     if (isAnimating()) return
+
+    // Combat movement — click within reachable range to move active combatant
+    if (inCombat && zone?.wallEdges) {
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active || active.isEnemy || !active.position) return
+      if (!reachableTilesRef.current.has(`${x},${y}`)) return
+
+      const collisionData = {
+        wallEdges: zone.wallEdges,
+        cellBlocked: zone.cellBlocked || new Uint8Array(zone.width * zone.height),
+      }
+      const path = findPathEdge(collisionData, zone.width, zone.height, active.position, { x, y })
+      if (!path || path.length < 2) return
+
+      const cost = path.length - 1
+      const { moveToken } = useStore.getState()
+      moveToken(active.id, x, y, cost)
+      const tileSize = zone.tileSize || 200
+      animateTokenAlongPath(active.id, path, null, () => {
+        if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
+      }, tileSize)
+      broadcastEncounterAction({ type: 'move-token', id: active.id, position: { x, y }, cost })
+      return
+    }
+
     const wd = walkDataRef.current
     const pos = playerPosRef.current
     if (!wd) return
@@ -502,7 +528,7 @@ export default function GameV2({ onLeave }) {
         if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
       }, isV2Zone ? tileSize : undefined)
     }
-  }, [zone, isV2Zone])
+  }, [zone, isV2Zone, inCombat, encounter])
 
   // WASD keyboard movement — one tile at a time
   useEffect(() => {
@@ -746,6 +772,51 @@ export default function GameV2({ onLeave }) {
 
     return () => clearTimeout(timer)
   }, [encounter.currentTurn, encounter.phase, inCombat, runEnemyTurn, sessionApiKey, nextEncounterTurn])
+
+  // Show movement range during the active player's combat turn
+  useEffect(() => {
+    const mrLayer = pixiRef.current?.getMovementRangeLayer?.()
+    if (!mrLayer) return
+
+    if (!inCombat || !zone?.wallEdges) {
+      clearMovementRange(mrLayer)
+      reachableTilesRef.current = new Set()
+      return
+    }
+
+    const active = encounter.combatants?.[encounter.currentTurn]
+    if (!active || active.isEnemy || !active.position) {
+      clearMovementRange(mrLayer)
+      reachableTilesRef.current = new Set()
+      return
+    }
+
+    // Build set of enemy-occupied tiles to block movement through them
+    const enemyTiles = new Set(
+      encounter.combatants
+        .filter(c => c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position)
+        .map(c => `${c.position.x},${c.position.y}`)
+    )
+
+    const maxMove = active.remainingMove ?? Math.floor((active.speed || 30) / 5)
+    const reachable = getReachableTilesEdge(
+      { wallEdges: zone.wallEdges, cellBlocked: zone.cellBlocked || new Uint8Array(zone.width * zone.height) },
+      zone.width, zone.height,
+      active.position,
+      maxMove,
+      null,
+      enemyTiles
+    )
+    reachableTilesRef.current = reachable
+
+    const tileSize = zone.tileSize || 200
+    renderMovementRange(mrLayer, reachable, 0x44cc66, 0.15, tileSize)
+
+    return () => {
+      clearMovementRange(mrLayer)
+      reachableTilesRef.current = new Set()
+    }
+  }, [encounter.currentTurn, encounter.phase, encounter.combatants, inCombat, zone])
 
   const chatInFlightRef = useRef(false)
 
