@@ -33,6 +33,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   const tileAtlasV2Ref = useRef(null)
   const wallRendererRef = useRef(null)
   const [ready, setReady] = useState(false)
+  const [atlasReady, setAtlasReady] = useState(false)
 
   useImperativeHandle(ref, () => ({
     getApp: () => appRef.current,
@@ -72,6 +73,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         floor: new PIXI.Container(),
         walls: new PIXI.Container(),
         props: new PIXI.Container(),
+        roof: new PIXI.Container(),    // above props, below grid/tokens
         grid: new PIXI.Container(),
         tokens: new PIXI.Container(),
         fog: new PIXI.Container(),
@@ -166,6 +168,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       // Set the zone palette
       atlas.setPalette(zone.palette)
       tileAtlasV2Ref.current = atlas
+      setAtlasReady(true)
 
       const loaded = Object.keys(atlas.atlases).length
       const texLoaded = Object.keys(atlas.textures).length
@@ -174,7 +177,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
     loadAtlases()
 
-    return () => { cancelled = true }
+    return () => { cancelled = true; setAtlasReady(false) }
   }, [ready, zone?.palette])
 
   // V2 tile rendering + camera ticker — updates visible tiles each frame
@@ -186,7 +189,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
     const tileSize = zone.tileSize || 200
     const tileAtlas = tileAtlasV2Ref.current
-    const { floor, walls, props, grid } = stageLayersRef.current
+    const { floor, walls, props, roof, grid } = stageLayersRef.current
 
     // Initial grid
     clearGrid(grid)
@@ -220,6 +223,9 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         renderV2Layer(walls, zone.layers.walls, zone.width, zone.height, tileSize, tileAtlas, bounds)
       }
       renderV2Layer(props, zone.layers.props, zone.width, zone.height, tileSize, tileAtlas, bounds)
+      if (zone.layers?.roof) {
+        renderV2Layer(roof, zone.layers.roof, zone.width, zone.height, tileSize, tileAtlas, bounds)
+      }
     }
 
     app.ticker.add(tickerFn)
@@ -228,16 +234,17 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       clearV2Layer(floor)
       clearV2Layer(walls)
       clearV2Layer(props)
+      clearV2Layer(roof)
     }
-  }, [ready, tileAtlasV2Ref.current, inCombat])
+  }, [ready, atlasReady, inCombat])
 
   // Initialize WallRenderer when wall edge data is available
   useEffect(() => {
-    if (!ready || !tileAtlasV2Ref.current || !stageLayersRef.current.walls) return
+    if (!ready || !atlasReady || !tileAtlasV2Ref.current || !stageLayersRef.current.walls) return
     if (!zone?.wallEdges) return
 
     const wr = new WallRenderer(tileAtlasV2Ref.current, zone.tileSize || 200)
-    wr.setWallData(zone.wallEdges, zone.width, zone.height, zone.theme)
+    wr.setWallData(zone.wallEdges, zone.layers?.walls, zone.palette, zone.width, zone.height, zone.theme, zone.buildings)
     stageLayersRef.current.walls.addChild(wr.container)
     wallRendererRef.current = wr
 
@@ -246,7 +253,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       stageLayersRef.current.walls?.removeChild(wr.container)
       wallRendererRef.current = null
     }
-  }, [ready, tileAtlasV2Ref.current, zone?.wallEdges])
+  }, [ready, atlasReady, zone?.wallEdges])
 
   // Scroll wheel zoom (camera mode)
   useEffect(() => {
