@@ -17,10 +17,10 @@ const DRAG_THRESHOLD = 4; // px before drag activates (allows double-click)
 
 function itemKey(i) { return i.instanceId || i.name; }
 
-/** Convert client cursor coords to a grid cell, accounting for offset and item size. */
-function cursorToCell(clientX, clientY, gRect, offsetX, offsetY, w, h) {
-  const col = Math.max(0, Math.min(Math.floor((clientX - gRect.left - offsetX) / CELL_PX), GRID_COLS - w));
-  const row = Math.max(0, Math.min(Math.floor((clientY - gRect.top  - offsetY) / CELL_PX), GRID_ROWS - h));
+/** Convert pixel coords (relative to grid top-left) to a grid cell. */
+function pxToCell(px, py, offsetX, offsetY, w, h) {
+  const col = Math.max(0, Math.min(Math.floor((px - offsetX) / CELL_PX), GRID_COLS - w));
+  const row = Math.max(0, Math.min(Math.floor((py - offsetY) / CELL_PX), GRID_ROWS - h));
   return { col, row };
 }
 
@@ -40,7 +40,6 @@ function packItems(items) {
   const placed   = [];
   const overflow = [];
 
-  // Saved-position items first (top-left → bottom-right)
   const hasGridPos = i => i._gridCol != null && i._gridRow != null
     && Number.isFinite(i._gridCol) && Number.isFinite(i._gridRow);
   const preferred = items
@@ -65,7 +64,6 @@ function packItems(items) {
     }
   }
 
-  // Auto-pack remaining items (no valid saved position)
   for (const item of items.filter(i => !hasGridPos(i))) {
     const [w, h] = getItemSize(item);
     const slot   = packer.findSlot(w, h);
@@ -125,100 +123,74 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
 
   const { placed, overflow } = useMemo(() => packItems(inventory), [inventory]);
 
-  // Persist grid positions for any items that don't have them yet.
-  // This prevents items from shifting when inventory changes (equip/unequip/loot).
-  const hasUnsavedPositions = useRef(false);
-  useEffect(() => {
-    if (!isOwn || !placed.length) return;
-    const needsSave = inventory.some(i => i._gridCol == null || i._gridRow == null);
-    if (needsSave && !hasUnsavedPositions.current) {
-      hasUnsavedPositions.current = true;
-      const posMap = new Map();
-      for (const p of placed) posMap.set(itemKey(p.item), { col: p.col, row: p.row });
-      updateMyCharacter({
-        inventory: inventory.map(i => {
-          const pos = posMap.get(itemKey(i));
-          if (pos) return { ...i, _gridCol: pos.col, _gridRow: pos.row };
-          return i;
-        }),
-      });
-    } else if (!needsSave) {
-      hasUnsavedPositions.current = false;
-    }
-  }, [placed, isOwn]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const [hoveredId, setHoveredId] = useState(null);
   const gridRef      = useRef(null);
 
   // Drag state — two phases:
   //   1. pendingDrag (ref): mouseDown captured, waiting for threshold
   //   2. drag (state): threshold exceeded, ghost visible, drop enabled
-  const [drag, setDrag]         = useState(null);   // { item, w, h, offsetX, offsetY, origCol, origRow }
+  const [drag, setDrag]         = useState(null);
   const [cursorPx, setCursorPx] = useState(null);   // { x, y } relative to grid
-  const pendingDragRef = useRef(null); // { item, w, h, origCol, origRow, startClientX, startClientY }
-
-  const inventoryRef = useRef(inventory);
-  const placedRef    = useRef(placed);
-  useEffect(() => { inventoryRef.current = inventory; }, [inventory]);
-  useEffect(() => { placedRef.current    = placed;    }, [placed]);
+  const pendingDragRef = useRef(null);
 
   function handleMouseDown(e, item) {
     if (!isOwn || e.button !== 0) return;
     e.preventDefault();
     const [w, h]   = getItemSize(item);
-    const placed_  = placedRef.current.find(p => itemKey(p.item) === itemKey(item));
+    const placed_  = placed.find(p => itemKey(p.item) === itemKey(item));
     const origCol  = placed_?.col ?? 0;
     const origRow  = placed_?.row ?? 0;
-    // Don't start drag yet — wait for threshold (allows double-click to work)
     pendingDragRef.current = { item, w, h, origCol, origRow, startClientX: e.clientX, startClientY: e.clientY };
   }
 
-  const commitDrop = useCallback((clientX, clientY) => {
-    const gRect = gridRef.current?.getBoundingClientRect();
-    const d     = drag;
-    if (!gRect || !d) return;
+  // commitDrop reads FRESH state from the store — no stale refs.
+  const commitDrop = useCallback((pxInGrid, pyInGrid) => {
+    const d = drag;
+    if (!d) return;
     const { w, h, offsetX, offsetY, item } = d;
 
-    const { col: targetCol, row: targetRow } = cursorToCell(clientX, clientY, gRect, offsetX, offsetY, w, h);
+    const { col: targetCol, row: targetRow } = pxToCell(pxInGrid, pyInGrid, offsetX, offsetY, w, h);
+
+    // Read LATEST inventory from the store (not a stale ref)
+    const currentInventory = useStore.getState().myCharacter?.inventory || [];
+
+    // Compute FRESH layout from current inventory
+    const { placed: freshPlaced } = packItems(currentInventory);
 
     // Build a packer without the dragged item to check vacancy
     const packer = new GridPacker(GRID_COLS, GRID_ROWS);
-    for (const p of placedRef.current) {
+    for (const p of freshPlaced) {
       if (itemKey(p.item) === itemKey(item)) continue;
       packer.place(itemKey(p.item), p.col, p.row, p.w, p.h);
     }
 
     if (packer.canPlace(targetCol, targetRow, w, h)) {
-      // Build a position map from currently placed items so auto-packed items
-      // get their positions persisted (prevents them from shifting around).
+      // Persist ALL item positions (prevents any shifting)
       const posMap = new Map();
-      for (const p of placedRef.current) {
+      for (const p of freshPlaced) {
         if (itemKey(p.item) === itemKey(item)) continue;
         posMap.set(itemKey(p.item), { col: p.col, row: p.row });
       }
       posMap.set(itemKey(item), { col: targetCol, row: targetRow });
 
       updateMyCharacter({
-        inventory: inventoryRef.current.map(i => {
+        inventory: currentInventory.map(i => {
           const pos = posMap.get(itemKey(i));
           if (pos) return { ...i, _gridCol: pos.col, _gridRow: pos.row };
           return i;
         }),
       });
     }
-    // Invalid drop → no-op; item returns to original position (state unchanged)
   }, [drag, updateMyCharacter]);
 
-  // Global mouse listeners — handle both pending drag (threshold check) and active drag
+  // Global mouse listeners
   useEffect(() => {
     function onMove(e) {
-      // Phase 1: Check if pending drag should activate
       const pending = pendingDragRef.current;
       if (pending && !drag) {
         const dx = e.clientX - pending.startClientX;
         const dy = e.clientY - pending.startClientY;
         if (Math.abs(dx) + Math.abs(dy) > DRAG_THRESHOLD) {
-          // Activate drag — compute offset from where user clicked relative to item top-left
           const gRect = gridRef.current?.getBoundingClientRect();
           if (!gRect) return;
           const offsetX = pending.startClientX - gRect.left - pending.origCol * CELL_PX;
@@ -229,7 +201,6 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
         }
         return;
       }
-      // Phase 2: Active drag — update cursor position
       if (drag) {
         const gRect = gridRef.current?.getBoundingClientRect();
         if (gRect) setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
@@ -237,11 +208,13 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
     }
     function onUp(e) {
       if (drag) {
-        commitDrop(e.clientX, e.clientY);
+        const gRect = gridRef.current?.getBoundingClientRect();
+        if (gRect) {
+          commitDrop(e.clientX - gRect.left, e.clientY - gRect.top);
+        }
         setDrag(null);
         setCursorPx(null);
       }
-      // Clear pending drag without action (click/dblclick will fire normally)
       pendingDragRef.current = null;
     }
     window.addEventListener('mousemove', onMove);
@@ -252,14 +225,11 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
     };
   }, [drag, commitDrop]);
 
-  // Ghost snapped position and validity highlight
-  // cursorPx is already relative to grid, so pass a zero-origin rect
-  const _zeroRect = { left: 0, top: 0 };
+  // Ghost cell — uses same pxToCell as commitDrop for consistency
   const ghostCell = (drag && cursorPx)
-    ? cursorToCell(cursorPx.x, cursorPx.y, _zeroRect, drag.offsetX, drag.offsetY, drag.w, drag.h)
+    ? pxToCell(cursorPx.x, cursorPx.y, drag.offsetX, drag.offsetY, drag.w, drag.h)
     : null;
 
-  // Check if ghost position is valid (cells free, excluding dragged item)
   const ghostValid = useMemo(() => {
     if (!ghostCell || !drag) return false;
     const packer = new GridPacker(GRID_COLS, GRID_ROWS);
@@ -287,7 +257,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           <span style={weightNum}>{totalWeight.toFixed(1)} / {carryCapacity} lb</span>
           {isOwn && (
             <button onClick={resetLayout} title="Reset item layout"
-              style={{ background: 'none', border: 'none', color: 'rgba(212,175,55,0.4)', fontSize: '0.7rem', cursor: 'pointer', padding: 0 }}>
+              style={{ background: 'none', border: 'none', color: 'rgba(212,175,55,0.6)', fontSize: '0.8rem', cursor: 'pointer', padding: '2px 6px' }}>
               ⟳ Reset
             </button>
           )}
@@ -360,12 +330,12 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           );
         })}
 
-        {/* Drag ghost */}
-        {drag && cursorPx && (
+        {/* Drag ghost — snapped to grid */}
+        {drag && ghostCell && (
           <div style={{
             position: 'absolute',
-            left: cursorPx.x - drag.offsetX,
-            top:  cursorPx.y - drag.offsetY,
+            left: ghostCell.col * CELL_PX,
+            top:  ghostCell.row * CELL_PX,
             width:  drag.w * CELL_PX - 2,
             height: drag.h * CELL_PX - 2,
             ...itemCard,
@@ -374,7 +344,6 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
             pointerEvents: 'none',
             zIndex: 500,
             boxShadow: '0 6px 24px rgba(0,0,0,0.7)',
-            transform: 'scale(1.06)',
           }}>
             <div style={itemIconStyle}>{itemIcon(drag.item)}</div>
             {drag.w > 1 && drag.h > 1 && <div style={itemNameStyle}>{drag.item.name}</div>}
@@ -382,7 +351,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           </div>
         )}
 
-        {/* Tooltip rendered at grid level to avoid clip by item overflow:hidden */}
+        {/* Tooltip */}
         {hoveredPlaced && (() => {
           const { item, col, row, w, h } = hoveredPlaced;
           const slot     = getSlotType(item);

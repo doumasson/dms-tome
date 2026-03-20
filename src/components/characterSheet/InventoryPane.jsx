@@ -42,8 +42,8 @@ export default function InventoryPane({ character, readOnly, inCombat }) {
   const [goldInput, setGoldInput]     = useState('');
 
   const isOwn       = !readOnly && myCharacter?.id === character.id;
-  // Only the DM can manually adjust gold (anti-cheat)
-  const canEditGold = isDM && isOwn;
+  // Gold is managed by the game (loot, shops) — no manual editing
+  const canEditGold = false;
   const inventory = character.inventory || [];
   const gold      = character.gold || 0;
 
