@@ -7,7 +7,7 @@ import { buildTestArea } from './data/testArea.js'
 import { buildDemoArea } from './data/demoArea.js'
 import { buildAreaFromBrief } from './lib/areaBuilder.js'
 import { saveArea } from './lib/areaStorage.js'
-import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey, broadcastRoofReveal, broadcastEncounterAction } from './lib/liveChannel'
+import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey, broadcastRoofReveal, broadcastEncounterAction, broadcastFogUpdate } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
@@ -18,7 +18,8 @@ import { getBlockingSet } from './engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from './engine/TokenLayer'
 import Camera from './engine/Camera'
 import { buildFogTileStates, renderFog, updateExplored } from './engine/FogOfWar'
-import { computeVision, getCharacterVisionRange } from './lib/visionCalculator'
+import { computeVision, getCharacterVisionRange, encodeExploredBitfield, decodeExploredBitfield } from './lib/visionCalculator'
+import * as PIXI from 'pixi.js'
 import { RoofManager } from './engine/RoofLayer'
 import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
 import { getTilesInSphere, getTilesInCone, getTilesInLine, getTilesInCube, renderAoEPreview, clearAoEPreview } from './engine/AoEOverlay'
@@ -153,6 +154,103 @@ export default function GameV2({ onLeave }) {
     if (!cameraRef.current || !pixiRef.current) return
     fogDirtyRef.current = true
   }, [playerPos, currentAreaId])
+
+  // Reset explored set when area changes
+  const prevAreaIdRef = useRef(currentAreaId)
+  useEffect(() => {
+    if (currentAreaId !== prevAreaIdRef.current) {
+      exploredRef.current = new Set()
+      fogDirtyRef.current = true
+      prevAreaIdRef.current = currentAreaId
+    }
+  }, [currentAreaId])
+
+  // Fog broadcast debounce
+  const fogBroadcastTimer = useRef(null)
+
+  // Update explored set + broadcast when player moves (no rendering — ticker handles that)
+  useEffect(() => {
+    if (!zone?.useCamera) return
+
+    const pos = playerPosRef.current
+    if (!pos) return
+
+    // Build party vision data
+    const areaLighting = zone.lighting || 'bright'
+    const charVision = getCharacterVisionRange(myCharacter || {}, areaLighting)
+    const partyVisions = [{
+      position: pos,
+      brightRadius: charVision.bright,
+      dimRadius: charVision.dim,
+      darkvisionRadius: charVision.darkvision,
+    }]
+
+    const visionResult = computeVision(partyVisions, zone.width, zone.height)
+
+    // Grow explored set (mutates in place, returns newly added keys)
+    const newlyExplored = updateExplored(exploredRef.current, visionResult.active)
+
+    // Broadcast explored state (DM only, debounced 500ms)
+    if (isDM && currentAreaId && newlyExplored.length > 0) {
+      clearTimeout(fogBroadcastTimer.current)
+      fogBroadcastTimer.current = setTimeout(() => {
+        const bitfield = encodeExploredBitfield(exploredRef.current, zone.width, zone.height)
+        broadcastFogUpdate(currentAreaId, bitfield)
+      }, 500)
+    }
+  }, [playerPos, currentAreaId, zone, myCharacter, isDM])
+
+  // Render fog every frame via PixiJS ticker (camera panning needs continuous updates)
+  useEffect(() => {
+    if (!zone?.useCamera) return
+    const app = pixiRef.current?.getApp?.()
+    if (!app) return
+
+    const tickerFn = () => {
+      const fogContainer = pixiRef.current?.getFogLayer?.()
+      if (!fogContainer) return
+      const cam = cameraRef.current
+      if (!cam) return
+      const tileSize = zone.tileSize || 200
+      const viewW = window.innerWidth
+      const viewH = window.innerHeight
+      const bounds = {
+        startX: Math.floor(cam.x / tileSize),
+        startY: Math.floor(cam.y / tileSize),
+        endX: Math.ceil((cam.x + viewW / cam.zoom) / tileSize),
+        endY: Math.ceil((cam.y + viewH / cam.zoom) / tileSize),
+      }
+      const pos = playerPosRef.current
+      if (!pos) return
+      const areaLighting = zone.lighting || 'bright'
+      const charVision = getCharacterVisionRange(myCharacter || {}, areaLighting)
+      const partyVisions = [{
+        position: pos,
+        brightRadius: charVision.bright,
+        dimRadius: charVision.dim,
+        darkvisionRadius: charVision.darkvision,
+      }]
+      const visionResult = computeVision(partyVisions, zone.width, zone.height)
+      const states = buildFogTileStates(visionResult.active, exploredRef.current, zone.width, zone.height)
+      renderFog(fogContainer, states, bounds, tileSize, PIXI)
+    }
+
+    app.ticker.add(tickerFn)
+    return () => app.ticker.remove(tickerFn)
+  }, [zone, myCharacter])
+
+  // Receive fog broadcasts (non-DM clients) — decode bitfield into explored set
+  const fogBitfields = useStore(s => s.fogBitfields)
+  useEffect(() => {
+    if (isDM) return
+    if (!currentAreaId || !fogBitfields?.[currentAreaId]) return
+    if (!zone?.width || !zone?.height) return
+    const decoded = decodeExploredBitfield(fogBitfields[currentAreaId], zone.width, zone.height)
+    if (decoded) {
+      exploredRef.current = decoded
+      fogDirtyRef.current = true
+    }
+  }, [fogBitfields, currentAreaId, isDM, zone?.width, zone?.height])
 
   // --- Roof-lift manager (area camera mode only) ---
   const roofManagerRef = useRef(new RoofManager())

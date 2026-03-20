@@ -48,6 +48,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     },
     getCamera: () => cameraRef.current,
     getMovementRangeLayer: () => stageLayersRef.current.movementRange || null,
+    getFogLayer: () => stageLayersRef.current.fog || null,
   }), [])
 
   // Initialize PixiJS application
