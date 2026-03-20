@@ -21,6 +21,7 @@ import { buildFogTileStates, renderFog, updateExplored } from './engine/FogOfWar
 import { computeVision, getCharacterVisionRange } from './lib/visionCalculator'
 import { RoofManager } from './engine/RoofLayer'
 import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
+import { getTilesInSphere, getTilesInCone, getTilesInLine, getTilesInCube, renderAoEPreview, clearAoEPreview } from './engine/AoEOverlay'
 import { playZoneTransition } from './engine/ZoneTransition'
 import ChatBubble from './components/ChatBubble'
 import DiceTray from './components/DiceTray'
@@ -242,7 +243,13 @@ export default function GameV2({ onLeave }) {
   // --- Escape to cancel targeting mode ---
   useEffect(() => {
     if (!targetingMode) return
-    const onKey = (e) => { if (e.key === 'Escape') setTargetingMode(null) }
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setTargetingMode(null)
+        const layer = pixiRef.current?.getMovementRangeLayer?.()
+        if (layer) clearAoEPreview(layer)
+      }
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [targetingMode])
@@ -545,6 +552,93 @@ export default function GameV2({ onLeave }) {
       return
     }
 
+    // Spell AoE targeting — resolve area damage with saving throws
+    if (targetingMode?.type === 'spell' && inCombat) {
+      const spell = targetingMode.spell
+      const active = encounter.combatants[encounter.currentTurn]
+      if (!active?.position) return
+
+      // Check range (Chebyshev distance in tiles)
+      const dist = Math.max(Math.abs(active.position.x - x), Math.abs(active.position.y - y))
+      const maxRange = Math.floor((spell.range || 60) / 5)
+      if (dist > maxRange) {
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Out of range.' })
+        return
+      }
+
+      // Get affected tiles based on area type
+      const radiusTiles = Math.floor((spell.areaSize || 10) / 5)
+      let affectedTiles
+      if (spell.areaType === 'sphere') {
+        affectedTiles = getTilesInSphere({ x, y }, radiusTiles)
+      } else if (spell.areaType === 'cube') {
+        affectedTiles = getTilesInCube({ x, y }, radiusTiles * 2 + 1)
+      } else if (spell.areaType === 'line') {
+        // Determine direction from caster to target
+        const dx2 = x - active.position.x
+        const dy2 = y - active.position.y
+        const dir = Math.abs(dx2) >= Math.abs(dy2) ? (dx2 > 0 ? 'E' : 'W') : (dy2 > 0 ? 'S' : 'N')
+        affectedTiles = getTilesInLine(active.position, dir, radiusTiles)
+      } else if (spell.areaType === 'cone') {
+        const dx2 = x - active.position.x
+        const dy2 = y - active.position.y
+        const dir = Math.abs(dx2) >= Math.abs(dy2) ? (dx2 > 0 ? 'E' : 'W') : (dy2 > 0 ? 'S' : 'N')
+        affectedTiles = getTilesInCone(active.position, dir, radiusTiles)
+      } else {
+        affectedTiles = getTilesInSphere({ x, y }, radiusTiles) // fallback
+      }
+
+      // Show final AoE highlight briefly
+      const layer = pixiRef.current?.getMovementRangeLayer?.()
+      if (layer) renderAoEPreview(layer, affectedTiles, zone?.tileSize || 200)
+
+      // Find affected combatants
+      const affected = encounter.combatants.filter(c =>
+        (c.currentHp ?? c.hp) > 0 && c.position &&
+        affectedTiles.some(t => t.x === c.position.x && t.y === c.position.y)
+      )
+
+      // Compute spell save DC: 8 + proficiency + casting ability modifier
+      const prof = Math.floor(((active.level || 1) - 1) / 4) + 2
+      const castAbility = spell.castingAbility || 'int'
+      const castMod = Math.floor(((active.stats?.[castAbility] || 10) - 10) / 2)
+      const saveDC = 8 + prof + castMod
+
+      // Roll base damage once (all targets take same base)
+      const baseDmg = rollDamage(spell.damage || '1d6').total
+
+      // Resolve saves for each affected target
+      const saveAbility = spell.saveAbility || 'dex'
+      for (const target of affected) {
+        const saveMod = Math.floor(((target.stats?.[saveAbility] || 10) - 10) / 2)
+        const saveRoll = Math.floor(Math.random() * 20) + 1 + saveMod
+        const saved = saveRoll >= saveDC
+        const dmg = saved && spell.halfOnSave ? Math.floor(baseDmg / 2) : saved ? 0 : baseDmg
+
+        if (dmg > 0) {
+          const { applyEncounterDamage: applyDmg } = useStore.getState()
+          applyDmg(target.id, dmg)
+        }
+
+        const entry = `${target.name}: ${saveAbility.toUpperCase()} save ${saveRoll} vs DC ${saveDC} — ${saved ? 'SAVE' : 'FAIL'} (${dmg} ${spell.name} damage)`
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
+      }
+
+      // Consume action and broadcast
+      const { useAction: consumeAction } = useStore.getState()
+      consumeAction(active.id)
+      broadcastEncounterAction({ type: 'aoe-resolve', spellName: spell.name, casterId: active.id, affectedTiles, saveDC })
+
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} casts ${spell.name}!` })
+
+      // Clear targeting after a brief delay so players see the highlight
+      setTimeout(() => {
+        setTargetingMode(null)
+        if (layer) clearAoEPreview(layer)
+      }, 1500)
+      return
+    }
+
     // Combat movement — click within reachable range to move active combatant
     if (inCombat && zone?.wallEdges) {
       const active = encounter.combatants?.[encounter.currentTurn]
@@ -792,7 +886,20 @@ export default function GameV2({ onLeave }) {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select a target to attack. Press Escape to cancel.' })
       return
     } else if (type === 'cast') {
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Spell casting UI coming soon — use the dice roller for manual rolls.' })
+      // Hardcoded test spell — full spell selection UI comes later
+      const testSpell = {
+        name: 'Fireball',
+        areaType: 'sphere',
+        areaSize: 20, // feet
+        range: 150,   // feet
+        damage: '8d6',
+        saveAbility: 'dex',
+        halfOnSave: true,
+        castingAbility: 'int',
+      }
+      setTargetingMode({ type: 'spell', spell: testSpell })
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: `Targeting ${testSpell.name}. Click to place. Press Escape to cancel.` })
+      return
     } else if (type === 'move') {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Click a tile to move during combat.' })
     } else if (type === 'say') {
