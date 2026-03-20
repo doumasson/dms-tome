@@ -43,6 +43,10 @@ const DEMO_BRIEF = {
   exits: [
     { edge: 'north', targetArea: 'area-forest', label: 'Forest Path' },
   ],
+  lightSources: [
+    { position: { x: 15, y: 12 }, type: 'fireplace' },
+    { position: { x: 8, y: 8 }, type: 'torch' },
+  ],
   playerStart: { x: 20, y: 20 },
 }
 

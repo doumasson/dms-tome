@@ -7,6 +7,7 @@ import { renderTokens, isAnimating } from './TokenLayer'
 import { renderExits, clearExits } from './ExitZone'
 import { TileAtlasV2 } from './tileAtlasV2'
 import { WallRenderer } from './WallRenderer'
+import { renderLighting, clearLighting } from './LightingLayer'
 
 // Atlas manifest files that ship with the build (JSON only — images loaded at runtime)
 const ATLAS_NAMES = [
@@ -79,6 +80,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         floor: new PIXI.Container(),
         walls: new PIXI.Container(),
         props: new PIXI.Container(),
+        lighting: new PIXI.Container(),  // warm glow around fire sources
         grid: new PIXI.Container(),
         movementRange: new PIXI.Container(),  // combat reachable-tile highlights
         tokens: new PIXI.Container(),
@@ -87,6 +89,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         exits: new PIXI.Container(),
       }
       Object.values(layers).forEach(l => world.addChild(l))
+      layers.lighting.blendMode = 'add'
       stageLayersRef.current = layers
 
       await loadTileAtlas()
@@ -230,6 +233,12 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         renderV2Layer(walls, zone.layers.walls, zone.width, zone.height, tileSize, tileAtlas, bounds)
       }
       renderV2Layer(props, zone.layers.props, zone.width, zone.height, tileSize, tileAtlas, bounds)
+
+      // Ambient lighting glow around fire sources
+      if (zone.lightSources?.length) {
+        renderLighting(stageLayersRef.current.lighting, zone.lightSources, tileSize, bounds)
+      }
+
       if (zone.layers?.roof) {
         renderV2Layer(roof, zone.layers.roof, zone.width, zone.height, tileSize, tileAtlas, bounds)
       }
@@ -306,6 +315,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       clearV2Layer(walls)
       clearV2Layer(props)
       clearV2Layer(roof)
+      clearLighting(stageLayersRef.current.lighting)
       roofAlphaRef.current = {}
     }
   }, [ready, atlasReady, inCombat])

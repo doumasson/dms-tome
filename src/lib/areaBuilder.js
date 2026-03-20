@@ -171,6 +171,25 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     }
   }
 
+  // 8c. Auto-detect light sources from fire-related prop tiles
+  const autoLights = []
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const propIdx = layers.props[y * width + x]
+      if (propIdx === 0) continue
+      const tileId = palette[propIdx] || ''
+      if (tileId.match(/fire|torch|candle|lantern|brazier|campfire/i)) {
+        const type = tileId.includes('candle') ? 'candle'
+          : tileId.includes('torch') ? 'torch'
+          : tileId.includes('lantern') ? 'lantern'
+          : tileId.includes('brazier') ? 'campfire'
+          : 'fireplace'
+        autoLights.push({ position: { x, y }, type })
+      }
+    }
+  }
+  const allLightSources = [...(brief.lightSources || []), ...autoLights]
+
   // 9. Build collision: edge-based walls handle wall blocking,
   // cellBlocked only tracks blocking props (furniture, boulders, etc.)
   const blockingSet = getBlockingSet()
@@ -296,6 +315,7 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     enemies: placedEnemies,
     encounterZones,
     buildings,
+    lightSources: allLightSources,
     exits: placedExits,
     theme,
     generated: true,
