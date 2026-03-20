@@ -120,12 +120,14 @@ const EDGE_N = 0x1, EDGE_E = 0x2, EDGE_S = 0x4, EDGE_W = 0x8
  */
 function isEdgeBlocked(wallEdges, width, fromX, fromY, toX, toY) {
   const fromIdx = fromY * width + fromX
+  const toIdx = toY * width + toX
   const dx = toX - fromX
   const dy = toY - fromY
-  if (dy === -1) return !!(wallEdges[fromIdx] & EDGE_N)
-  if (dx === 1)  return !!(wallEdges[fromIdx] & EDGE_E)
-  if (dy === 1)  return !!(wallEdges[fromIdx] & EDGE_S)
-  if (dx === -1) return !!(wallEdges[fromIdx] & EDGE_W)
+  // Check BOTH sides: source cell's exit edge AND target cell's entry edge
+  if (dy === -1) return !!(wallEdges[fromIdx] & EDGE_N) || !!(wallEdges[toIdx] & EDGE_S)
+  if (dx === 1)  return !!(wallEdges[fromIdx] & EDGE_E) || !!(wallEdges[toIdx] & EDGE_W)
+  if (dy === 1)  return !!(wallEdges[fromIdx] & EDGE_S) || !!(wallEdges[toIdx] & EDGE_N)
+  if (dx === -1) return !!(wallEdges[fromIdx] & EDGE_W) || !!(wallEdges[toIdx] & EDGE_E)
   return false
 }
 
@@ -220,6 +222,60 @@ export function buildCollisionLayer(layers, palette, blockingSet, width, height)
   }
 
   return collision
+}
+
+/**
+ * Flood-fill reachable tiles using edge-based collision + terrain cost.
+ * @param {{ wallEdges: Uint8Array, cellBlocked: Uint8Array }} collisionData
+ * @param {number} width
+ * @param {number} height
+ * @param {{ x: number, y: number }} start
+ * @param {number} maxCost — max movement in tiles (e.g., speed/5 = 6 for 30ft)
+ * @param {Uint8Array|null} terrainCost — per-tile cost (0/1 = normal, 2 = difficult)
+ * @param {Set<string>} blockedTiles — enemy-occupied tiles (impassable)
+ * @returns {Set<string>} reachable tile keys "x,y"
+ */
+export function getReachableTilesEdge(collisionData, width, height, start, maxCost, terrainCost, blockedTiles) {
+  const { wallEdges, cellBlocked } = collisionData
+  const reachable = new Set()
+  const costs = new Float32Array(width * height).fill(Infinity)
+  const startIdx = start.y * width + start.x
+  costs[startIdx] = 0
+  reachable.add(`${start.x},${start.y}`)
+
+  const queue = [{ x: start.x, y: start.y, cost: 0 }]
+  const dirs = [
+    { dx: 0, dy: -1 },
+    { dx: 1, dy: 0 },
+    { dx: 0, dy: 1 },
+    { dx: -1, dy: 0 },
+  ]
+
+  while (queue.length > 0) {
+    queue.sort((a, b) => a.cost - b.cost)
+    const { x, y, cost } = queue.shift()
+    if (cost > costs[y * width + x]) continue
+
+    for (const { dx, dy } of dirs) {
+      const nx = x + dx, ny = y + dy
+      if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
+      const ni = ny * width + nx
+      if (cellBlocked[ni] === 1) continue
+      if (blockedTiles.has(`${nx},${ny}`)) continue
+      if (isEdgeBlocked(wallEdges, width, x, y, nx, ny)) continue
+
+      const tileCost = (terrainCost && terrainCost[ni] >= 2) ? 2 : 1
+      const newCost = cost + tileCost
+      if (newCost > maxCost) continue
+      if (newCost >= costs[ni]) continue
+
+      costs[ni] = newCost
+      reachable.add(`${nx},${ny}`)
+      queue.push({ x: nx, y: ny, cost: newCost })
+    }
+  }
+
+  return reachable
 }
 
 /**

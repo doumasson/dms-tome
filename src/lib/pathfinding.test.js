@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findPath, buildCollisionLayer, findPathLegacy, buildWalkabilityGrid, findPathEdge } from './pathfinding.js'
+import { findPath, buildCollisionLayer, findPathLegacy, buildWalkabilityGrid, findPathEdge, getReachableTilesEdge } from './pathfinding.js'
 
 describe('findPath (binary heap A*)', () => {
   it('finds path on large grid within 16ms', () => {
@@ -128,5 +128,61 @@ describe('findPathEdge (edge-based collision)', () => {
     const path = findPathEdge({ wallEdges, cellBlocked }, 5, 5, { x: 0, y: 0 }, { x: 4, y: 0 })
     expect(path).not.toBeNull()
     expect(path.some(p => p.y === 4)).toBe(true)
+  })
+})
+
+describe('getReachableTilesEdge', () => {
+  it('returns tiles within movement range', () => {
+    const width = 10, height = 10
+    const wallEdges = new Uint8Array(width * height)
+    const cellBlocked = new Uint8Array(width * height)
+    const result = getReachableTilesEdge(
+      { wallEdges, cellBlocked }, width, height,
+      { x: 5, y: 5 }, 3, null, new Set()
+    )
+    expect(result.has('5,5')).toBe(true)
+    expect(result.has('5,2')).toBe(true)  // 3 tiles north
+    expect(result.has('5,1')).toBe(false) // 4 tiles — out of range
+  })
+
+  it('respects wall edges', () => {
+    // Use a 1-wide corridor (width=1) so (0,4) can only be reached from (0,5)
+    const width = 1, height = 10
+    const wallEdges = new Uint8Array(width * height)
+    const cellBlocked = new Uint8Array(width * height)
+    wallEdges[5 * width + 0] |= 0x1 // EDGE_N on cell (0,5) — blocks moving north
+    const result = getReachableTilesEdge(
+      { wallEdges, cellBlocked }, width, height,
+      { x: 0, y: 5 }, 3, null, new Set()
+    )
+    expect(result.has('0,4')).toBe(false) // Blocked by wall north
+    expect(result.has('0,6')).toBe(true)  // South is fine
+  })
+
+  it('doubles cost for difficult terrain', () => {
+    const width = 10, height = 10
+    const wallEdges = new Uint8Array(width * height)
+    const cellBlocked = new Uint8Array(width * height)
+    const terrainCost = new Uint8Array(width * height)
+    terrainCost[4 * width + 5] = 2 // Cell (5,4) is difficult terrain
+    const result = getReachableTilesEdge(
+      { wallEdges, cellBlocked }, width, height,
+      { x: 5, y: 5 }, 2, terrainCost, new Set()
+    )
+    expect(result.has('5,4')).toBe(true)  // Costs 2, budget is 2
+    expect(result.has('5,3')).toBe(false) // Would need 3+ total
+  })
+
+  it('blocks enemy-occupied tiles', () => {
+    const width = 10, height = 10
+    const wallEdges = new Uint8Array(width * height)
+    const cellBlocked = new Uint8Array(width * height)
+    const enemyTiles = new Set(['5,4'])
+    const result = getReachableTilesEdge(
+      { wallEdges, cellBlocked }, width, height,
+      { x: 5, y: 5 }, 3, null, enemyTiles
+    )
+    expect(result.has('5,4')).toBe(false) // Blocked by enemy
+    expect(result.has('5,3')).toBe(false) // Can't path through enemy
   })
 })
