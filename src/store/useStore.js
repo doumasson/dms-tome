@@ -4,6 +4,7 @@ import { getClassResources } from '../lib/classResources';
 import { triggerEnemyTurn, computeGruntAction } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 import { computeAcFromEquipped } from '../data/equipment';
+import { computeDerivedStats } from '../lib/derivedStats.js';
 import { CLASSES } from '../data/classes';
 import { createStorySlice } from './storySlice';
 
@@ -1128,7 +1129,18 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
         const restored = Math.max(1, Math.floor(totalHitDice / 2));
         const current = c.hitDiceRemaining ?? totalHitDice;
         const hitDiceRemaining = Math.min(totalHitDice, current + restored);
-        return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots, hitDiceRemaining };
+        // Recharge magic item charges on long rest (dawn recharge)
+        const recharged = { ...(c.equippedItems || {}) };
+        for (const [slot, item] of Object.entries(recharged)) {
+          if (item?.charges?.recharge === 'dawn') {
+            const roll = Math.floor(Math.random() * 6) + 1 + 1; // 1d6+1
+            recharged[slot] = {
+              ...item,
+              charges: { ...item.charges, current: Math.min(item.charges.max, item.charges.current + roll) },
+            };
+          }
+        }
+        return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots, hitDiceRemaining, equippedItems: recharged };
       });
       // Also restore HP for player combatants in an active encounter
       const updatedCombatants = state.encounter.combatants.map((c) => {
@@ -1279,12 +1291,10 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     const idx = inventory.findIndex(i => i.instanceId === item.instanceId);
     if (idx !== -1) inventory.splice(idx, 1);
     equippedItems[slotName] = item;
-    // Recalc AC whenever chest/offHand changes
-    let updates = { equippedItems, inventory };
-    if (slotName === 'chest' || slotName === 'offHand') {
-      // computeAcFromEquipped imported at top
-      updates.ac = computeAcFromEquipped(equippedItems, myCharacter.stats);
-    }
+    // Recompute all derived stats (AC, initiative, etc.) after equip
+    const updatedCharacterEquip = { ...myCharacter, equippedItems, inventory };
+    const derivedEquip = computeDerivedStats(updatedCharacterEquip);
+    const updates = { equippedItems, inventory, ac: derivedEquip.ac, derivedStats: derivedEquip };
     get().updateMyCharacter(updates);
   },
 
@@ -1297,12 +1307,38 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     if (!item) return;
     const inventory = [...(myCharacter.inventory || []), { ...item, instanceId: crypto.randomUUID() }];
     equippedItems[slotName] = null;
-    let updates = { equippedItems, inventory };
-    if (slotName === 'chest' || slotName === 'offHand') {
-      // computeAcFromEquipped imported at top
-      updates.ac = computeAcFromEquipped(equippedItems, myCharacter.stats);
-    }
+    // Recompute all derived stats (AC, initiative, etc.) after unequip
+    const updatedCharacterUnequip = { ...myCharacter, equippedItems, inventory };
+    const derivedUnequip = computeDerivedStats(updatedCharacterUnequip);
+    const updates = { equippedItems, inventory, ac: derivedUnequip.ac, derivedStats: derivedUnequip };
     get().updateMyCharacter(updates);
+  },
+
+  // Attune to a magic item (max 3 attuned items at once)
+  attuneItem: (instanceId) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    const attuned = myCharacter.attunedItems || [];
+    if (attuned.length >= 3) return; // max 3
+    const item = Object.values(myCharacter.equippedItems || {}).find(i => i?.instanceId === instanceId);
+    if (!item?.requiresAttunement) return;
+    if (attuned.includes(instanceId)) return;
+    const newAttuned = [...attuned, instanceId];
+    const updated = { ...myCharacter, attunedItems: newAttuned };
+    const derived = computeDerivedStats(updated);
+    get().updateMyCharacter({ attunedItems: newAttuned, ac: derived.ac, derivedStats: derived });
+  },
+
+  // Remove attunement from a magic item (blocked if cursed)
+  unattuneItem: (instanceId) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    const item = Object.values(myCharacter.equippedItems || {}).find(i => i?.instanceId === instanceId);
+    if (item?.cursed) return; // can't un-attune cursed items
+    const newAttuned = (myCharacter.attunedItems || []).filter(id => id !== instanceId);
+    const updated = { ...myCharacter, attunedItems: newAttuned };
+    const derived = computeDerivedStats(updated);
+    get().updateMyCharacter({ attunedItems: newAttuned, ac: derived.ac, derivedStats: derived });
   },
 
   // Add an item to myCharacter's inventory
@@ -1388,6 +1424,16 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     if (!myCharacter) return;
     const newGold = (myCharacter.gold || 0) + amount;
     get().updateMyCharacter({ gold: newGold });
+  },
+
+  // Claim post-combat rewards: XP + gold in a single atomic write to avoid race conditions
+  claimCombatRewards: (xpAmount, goldAmount) => {
+    const { myCharacter } = get();
+    if (!myCharacter) return;
+    get().updateMyCharacter({
+      xp: (myCharacter.xp || 0) + xpAmount,
+      gold: (myCharacter.gold || 0) + goldAmount,
+    });
   },
 
   saveSettingsToSupabase: async (campaignState) => {
