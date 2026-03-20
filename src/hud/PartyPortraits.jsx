@@ -50,11 +50,18 @@ export default function PartyPortraits() {
                 position: 'absolute', inset: 2,
                 background: `linear-gradient(180deg, ${color}33, ${color}11)`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 26,
+                fontSize: 26, overflow: 'hidden',
               }}>
-                {member.class === 'Fighter' ? '⚔' : member.class === 'Sorcerer' ? '🔥' :
-                 member.class === 'Cleric' ? '🛡' : member.class === 'Rogue' ? '🗡' :
-                 member.class === 'Wizard' ? '🔮' : '⚔'}
+                {member.portrait ? (
+                  <img src={member.portrait} alt={member.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 4 }} />
+                ) : (
+                  <span style={{ fontSize: 22 }}>
+                    {member.class === 'Fighter' ? '⚔' : member.class === 'Sorcerer' ? '🔥' :
+                     member.class === 'Cleric' ? '🛡' : member.class === 'Rogue' ? '🗡' :
+                     member.class === 'Wizard' ? '🔮' : '⚔'}
+                  </span>
+                )}
               </div>
               {/* HP bar */}
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 5, background: '#0a0004' }}>
