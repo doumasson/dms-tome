@@ -135,11 +135,11 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
     const placed_  = placedRef.current.find(p => itemKey(p.item) === itemKey(item));
     const origCol  = placed_?.col ?? 0;
     const origRow  = placed_?.row ?? 0;
-    // Offset from grid origin to click point within the item (for centering ghost under cursor)
-    const gRect = gridRef.current?.getBoundingClientRect();
-    const offsetX = e.clientX - (gRect?.left || 0) - origCol * CELL_PX;
-    const offsetY = e.clientY - (gRect?.top || 0) - origRow * CELL_PX;
+    // Center the ghost under cursor — offset is half the item size
+    const offsetX = (w * CELL_PX) / 2;
+    const offsetY = (h * CELL_PX) / 2;
     setDrag({ item, w, h, offsetX, offsetY, origCol, origRow });
+    const gRect = gridRef.current?.getBoundingClientRect();
     if (gRect) setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
   }
 

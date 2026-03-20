@@ -79,6 +79,9 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
 
   // Click-to-move: pathfind and animate walk (non-combat only)
   const handleWorldTileClick = useCallback(({ x, y }) => {
+    // Block world movement during combat
+    const { encounter } = useStore.getState()
+    if (encounter?.phase === 'combat') return false
     if (isAnimating()) return false
 
     const wd = walkDataRef.current

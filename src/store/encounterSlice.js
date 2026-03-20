@@ -108,17 +108,33 @@ export function createEncounterSlice(set, get) {
         const sorted = [...combatants].sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
         const initLog = sorted.map(c => `${c.name}: ${c.initiative}`).join(', ');
 
-        // Auto-place: players left side (x 0-2), enemies right side (x 7-9)
-        const players = sorted.filter(c => c.type !== 'enemy');
-        const enemyList = sorted.filter(c => c.type === 'enemy');
-        const place = (list, startX) =>
-          list.map((c, i) => ({
+        // Place combatants — keep existing positions if they have them,
+        // only auto-place those without positions (fallback for V1 scenes)
+        const hasPositions = sorted.some(c => c.position?.x > 0 || c.position?.y > 0)
+        let placed
+        if (hasPositions) {
+          // V2 tilemap: combatants already have map positions from area generation
+          // Just ensure all have a position (players get placed near first enemy if missing)
+          const firstEnemy = sorted.find(c => c.type === 'enemy' && c.position)
+          const fallbackPos = firstEnemy?.position || { x: 5, y: 5 }
+          placed = sorted.map((c, i) => ({
             ...c,
-            position: { x: Math.min(startX + (i % 3), 9), y: Math.min(Math.floor(i / 3) * 2, 7) },
+            position: c.position || { x: fallbackPos.x - 2 + (i % 3), y: fallbackPos.y - 1 + Math.floor(i / 3) },
             remainingMove: Math.floor((c.speed || 30) / 5),
-          }));
-        const placed = [...place(players, 0), ...place(enemyList, 7)]
-          .sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
+          }))
+        } else {
+          // V1 fallback: auto-place in a small grid
+          const players = sorted.filter(c => c.type !== 'enemy');
+          const enemyList = sorted.filter(c => c.type === 'enemy');
+          const autoPlace = (list, startX) =>
+            list.map((c, i) => ({
+              ...c,
+              position: { x: Math.min(startX + (i % 3), 9), y: Math.min(Math.floor(i / 3) * 2, 7) },
+              remainingMove: Math.floor((c.speed || 30) / 5),
+            }));
+          placed = [...autoPlace(players, 0), ...autoPlace(enemyList, 7)]
+            .sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
+        }
 
         set({
           encounter: {
