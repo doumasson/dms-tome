@@ -100,6 +100,11 @@ const useStore = create((set, get) => ({
   dmMode: false,
   toggleDmMode: () => set((state) => ({ dmMode: !state.dmMode })),
 
+  // === Skill Checks ===
+  pendingSkillCheck: null,
+  setPendingSkillCheck: (check) => set({ pendingSkillCheck: check }),
+  clearPendingSkillCheck: () => set({ pendingSkillCheck: null }),
+
   // === Combat ===
   combat: {
     combatants: [],

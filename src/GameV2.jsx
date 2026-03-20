@@ -31,6 +31,7 @@ import ApiKeySettings from './components/ApiKeySettings'
 import NpcDialog from './components/NpcDialog'
 import StoryCutscene from './components/StoryCutscene'
 import JournalModal from './components/JournalModal'
+import SkillCheckPanel from './components/SkillCheckPanel'
 import './hud/hud.css'
 
 const CLASS_COLORS = {
@@ -1011,6 +1012,12 @@ export default function GameV2({ onLeave }) {
         broadcastNarratorMessage(dmMsg)
       }
 
+      // Handle skill check request from AI
+      if (result?.rollRequest) {
+        const { setPendingSkillCheck } = useStore.getState()
+        setPendingSkillCheck(result.rollRequest)
+      }
+
       // Handle combat trigger from AI
       if (result?.startCombat && result?.enemies?.length) {
         const { startEncounter } = useStore.getState()
@@ -1111,6 +1118,7 @@ export default function GameV2({ onLeave }) {
         </button>
       )}
       <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
+      <SkillCheckPanel />
       {sheetChar && (
         <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />
       )}
