@@ -209,6 +209,22 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [ ] Pitched roof visuals (BLOCKED: pending slope/edge FA assets)
 - Spec: `docs/superpowers/specs/2026-03-19-phase8-polish-design.md`
 
+### Phase 9: Gameplay Systems ✅ COMPLETE
+- [x] Inventory grid rewrite — spatial bitmap packing, clean drag-drop (no swap), weight/encumbrance enforcement
+- [x] Magic item system — 38 items, modifiers, attunement (3 slots max), cursed items, charges with dawn recharge
+- [x] Derived stats — AC/attack/damage/saves computed from base + equipment + attunement (never stored flat)
+- [x] Loot tables — CR-based gold/magic item tables, data-driven JSON (swappable for custom universes)
+- [x] Post-combat loot overhaul — gold auto-split, magic item roll-off with proficiency eligibility filter
+- [x] Attunement UI — diamond slots, attune/un-attune buttons, cursed lock, charge counters
+- [x] Death save UI in V2 — dying portrait pulse, death save panel, stabilize, heal revival (full HP)
+- [x] Rest system — short/long popover, mandatory hit dice spending, long rest blocked in dungeons/caves
+- [x] Gold persistence fix — atomic claimCombatRewards action eliminates race condition
+- [x] Day/night cycle — game clock, PixiJS tint filter (dawn/day/dusk/night), HUD clock, AI DM time awareness
+- [x] 14 new curated chunks — cave rooms, sewers, crypts, wilderness, town buildings, multi-room inns (36 total)
+- [ ] Pitched roof visuals (BLOCKED: pending slope/edge FA assets)
+- 197 tests passing, 13 commits.
+- Spec: `docs/superpowers/specs/2026-03-19-phase9-gameplay-systems-design.md`
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -234,3 +250,4 @@ _(Empty — add items as they come up)_
 - **2026-03-19:** Phase 5b integration started — FA scanner with author/license tracking, 8 sprite atlases built (146K assets → 3,200 starter tiles), 5 curated chunks, test area visible at `?v2&testarea`.
 - **2026-03-19:** Phase 5b procedural area system complete — zones replaced by areas, areaBuilder pipeline, areaStorage, campaign generator rewrite, multiplayer sync, V1 removal, dead code cleanup. 12 tasks.
 - **2026-03-19:** Phase 8 Polish — portrait picker, mobile responsive, opportunity attacks, cover mechanics, multi-floor buildings, larger areas (22 chunks), dungeon generation. 175 tests, 16 commits.
+- **2026-03-20:** Phase 9 Gameplay Systems — inventory rewrite (Dark & Darker style grid), 38 magic items with attunement/charges/curses, derived stats, loot roll-off, death saves V2, rest system overhaul, gold persistence fix, day/night cycle, 14 new chunks (36 total). 197 tests, 13 commits.
