@@ -23,6 +23,23 @@ const DEMO_BRIEF = {
     { name: 'Barkeep Hilda', position: 'The Weary Traveler', personality: 'Gruff but kind tavern owner who hears all the gossip', questRelevant: true },
     { name: 'Elder Maren', position: "Elder's House", personality: 'Wise village elder who knows the old stories', questRelevant: true },
   ],
+  enemies: [
+    {
+      name: 'Goblin Scout',
+      position: 'Town Square',
+      count: 3,
+      stats: { hp: 7, ac: 15, speed: 30, cr: '1/4' },
+      attacks: [{ name: 'Scimitar', bonus: '+4', damage: '1d6+2' }],
+    },
+  ],
+  encounterZones: [
+    {
+      id: 'goblin_ambush',
+      triggerRadius: 5,
+      enemies: ['Goblin Scout'],
+      dmPrompt: 'Goblin scouts emerge from hiding and attack the party near the town square',
+    },
+  ],
   exits: [
     { edge: 'north', targetArea: 'area-forest', label: 'Forest Path' },
   ],

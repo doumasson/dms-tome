@@ -81,6 +81,8 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
       "npcs": [
         { "name": "Barkeep Hilda", "position": "The Rusty Flagon", "personality": "Gruff but kind tavern owner, knows local rumors", "questRelevant": true }
       ],
+      "enemies": [],
+      "encounterZones": [],
       "exits": [
         { "edge": "north", "targetArea": "area-forest", "label": "Forest Path" }
       ]
@@ -100,6 +102,12 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
       ],
       "npcs": [
         { "name": "Old Marren", "position": "Hermit's Hut", "personality": "Paranoid hermit who knows about the curse" }
+      ],
+      "enemies": [
+        { "name": "Goblin Scout", "position": "Clearing", "count": 3, "stats": { "hp": 7, "ac": 15, "speed": 30, "cr": "1/4" }, "attacks": [{ "name": "Scimitar", "bonus": "+4", "damage": "1d6+2" }] }
+      ],
+      "encounterZones": [
+        { "id": "goblin_ambush", "triggerRadius": 5, "enemies": ["Goblin Scout"], "dmPrompt": "Goblin scouts ambush the party as they cross the clearing" }
       ],
       "exits": [
         { "edge": "south", "targetArea": "area-village", "label": "Back to Village" },

@@ -46,7 +46,7 @@ function getChunkLibrary() {
  * @returns {object} complete area object ready for rendering/storage
  */
 export function buildAreaFromBrief(brief, seed = Date.now()) {
-  const { id, name, width, height, theme = 'village', pois = [], connections = [], npcs = [], exits = [] } = brief
+  const { id, name, width, height, theme = 'village', pois = [], connections = [], npcs = [], exits = [], enemies = [], encounterZones = [] } = brief
   const lib = getChunkLibrary()
 
   // 1. Match chunks for each POI
@@ -95,9 +95,9 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
           palette.push(roofTileId)
         }
         const roofTileIdx = tileToIndex.get(roofTileId)
-        // Fill roof layer over building bounds
-        for (let ry = pos.y; ry < pos.y + poi.chunk.height; ry++) {
-          for (let rx = pos.x; rx < pos.x + poi.chunk.width; rx++) {
+        // Fill roof layer over building interior (inset 1 tile from walls)
+        for (let ry = pos.y + 1; ry < pos.y + poi.chunk.height - 1; ry++) {
+          for (let rx = pos.x + 1; rx < pos.x + poi.chunk.width - 1; rx++) {
             if (rx >= 0 && ry >= 0 && rx < width && ry < height) {
               layers.roof[ry * width + rx] = roofTileIdx
             }
@@ -213,7 +213,32 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     })
   }
 
-  // 10. Place exits
+  // 11. Place enemies
+  const placedEnemies = []
+  for (const enemy of (enemies || [])) {
+    const poiLabel = enemy.position
+    const pos = positions[poiLabel]
+    const matchedPoi = matchedPois.find(p => (p.label || p.id) === poiLabel)
+    const chunkW = matchedPoi?.chunk.width || 6
+    const chunkH = matchedPoi?.chunk.height || 6
+    const baseX = pos ? pos.x + Math.floor(chunkW / 2) : Math.floor(width / 2)
+    const baseY = pos ? pos.y + Math.floor(chunkH / 2) : Math.floor(height / 2)
+
+    for (let i = 0; i < (enemy.count || 1); i++) {
+      const offsetX = i === 0 ? 0 : ((i % 2 === 0 ? 1 : -1) * Math.ceil(i / 2))
+      const offsetY = i === 0 ? 0 : ((i % 3 === 0 ? 1 : 0))
+      placedEnemies.push({
+        id: `${enemy.name.toLowerCase().replace(/\s+/g, '_')}_${i}`,
+        name: i > 0 ? `${enemy.name} ${i + 1}` : enemy.name,
+        position: { x: baseX + offsetX, y: baseY + offsetY },
+        stats: enemy.stats || { hp: 10, ac: 12, speed: 30 },
+        attacks: enemy.attacks || [{ name: 'Attack', bonus: '+3', damage: '1d6+1' }],
+        isEnemy: true,
+      })
+    }
+  }
+
+  // 12. Place exits
   const placedExits = []
   for (const exit of exits) {
     const exitW = exit.width || 3
@@ -248,7 +273,7 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     })
   }
 
-  // 11. Determine player start — first exit entry point or center
+  // 13. Determine player start — first exit entry point or center
   const playerStart = brief.playerStart || (placedExits.length > 0
     ? { x: placedExits[0].x, y: placedExits[0].y === 0 ? 1 : placedExits[0].y }
     : { x: Math.floor(width / 2), y: Math.floor(height / 2) })
@@ -268,6 +293,8 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     cellBlocked,      // Uint8Array — cell-based prop collision
     playerStart,
     npcs: placedNpcs,
+    enemies: placedEnemies,
+    encounterZones,
     buildings,
     exits: placedExits,
     theme,
