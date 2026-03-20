@@ -273,6 +273,23 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   // 12. Place exits
   const placedExits = []
   for (const exit of exits) {
+    // Stair/ladder exits are interior POI-anchored, not edge-anchored
+    if (exit.type === 'stairs_up' || exit.type === 'stairs_down' || exit.type === 'ladder') {
+      const poiPos = positions[exit.spawnAt || exit.label]
+      if (poiPos) {
+        placedExits.push({
+          x: poiPos.x + 1, y: poiPos.y + 1, width: 1, height: 1,
+          targetArea: exit.targetArea,
+          label: exit.label || '',
+          type: exit.type,
+          entryPoint: exit.entryPoint,
+        })
+      } else {
+        console.warn(`[areaBuilder] Stair exit "${exit.label}" has no matching POI position (spawnAt: "${exit.spawnAt}"), skipping`)
+      }
+      continue
+    }
+
     const exitW = exit.width || 3
     const exitH = exit.height || 3
     let x, y, ew, eh, entryPoint

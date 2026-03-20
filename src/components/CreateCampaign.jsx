@@ -135,6 +135,18 @@ POSITION VALUES (where to place the POI on the map):
 center, north, south, east, west, north-east, north-west, south-east, south-west, center-north, center-south, center-east, center-west
 
 EXIT EDGES: north, south, east, west
+EXIT TYPES (optional field): stairs_up, stairs_down, ladder
+  - Stair/ladder exits are anchored to a POI position, not a map edge
+  - Use "spawnAt" (POI label) to indicate which POI the stairs appear at
+  - Example: { "type": "stairs_up", "spawnAt": "Tavern Common Room", "targetArea": "area-tavern-floor2", "label": "Upstairs" }
+
+MULTI-FLOOR BUILDINGS:
+When a building warrants multiple floors (taverns, inns, castles, dungeons, caves), generate separate area briefs for each floor linked by stair exits:
+- Use exits with type "stairs_up" or "stairs_down" to connect floor briefs
+- Add "parentArea" field linking interior floors to the outdoor area they belong to
+- Add "floorLevel" field (1 = ground floor, 2+ = upper floors, -1 = basement/cellar)
+- Dungeons should always have at least 2 levels
+- Small buildings (shops, small houses) stay single-floor
 
 Requirements:
 - Create 3–6 areas forming a connected graph (every area reachable via exits)
