@@ -16,6 +16,13 @@ const CELL_PX   = 36;
 
 function itemKey(i) { return i.instanceId || i.name; }
 
+/** Convert client cursor coords to a grid cell, accounting for offset and item size. */
+function cursorToCell(clientX, clientY, gRect, offsetX, offsetY, w, h) {
+  const col = Math.max(0, Math.min(Math.floor((clientX - gRect.left - offsetX) / CELL_PX), GRID_COLS - w));
+  const row = Math.max(0, Math.min(Math.floor((clientY - gRect.top  - offsetY) / CELL_PX), GRID_ROWS - h));
+  return { col, row };
+}
+
 function itemIcon(item) {
   if (item.icon) return item.icon;
   if (item.type === 'consumable') return '🧪';
@@ -33,8 +40,10 @@ function packItems(items) {
   const overflow = [];
 
   // Saved-position items first (top-left → bottom-right)
+  const hasGridPos = i => i._gridCol != null && i._gridRow != null
+    && Number.isFinite(i._gridCol) && Number.isFinite(i._gridRow);
   const preferred = items
-    .filter(i => i._gridCol !== undefined)
+    .filter(hasGridPos)
     .sort((a, b) => a._gridRow !== b._gridRow ? a._gridRow - b._gridRow : a._gridCol - b._gridCol);
 
   for (const item of preferred) {
@@ -55,8 +64,8 @@ function packItems(items) {
     }
   }
 
-  // Auto-pack remaining items
-  for (const item of items.filter(i => i._gridCol === undefined)) {
+  // Auto-pack remaining items (no valid saved position)
+  for (const item of items.filter(i => !hasGridPos(i))) {
     const [w, h] = getItemSize(item);
     const slot   = packer.findSlot(w, h);
     if (slot) {
@@ -147,10 +156,9 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
     const gRect = gridRef.current?.getBoundingClientRect();
     const d     = drag;
     if (!gRect || !d) return;
-    const { w, h, offsetX, offsetY, item, origCol, origRow } = d;
+    const { w, h, offsetX, offsetY, item } = d;
 
-    const targetCol = Math.max(0, Math.min(Math.round((clientX - gRect.left - offsetX) / CELL_PX), GRID_COLS - w));
-    const targetRow = Math.max(0, Math.min(Math.round((clientY - gRect.top  - offsetY) / CELL_PX), GRID_ROWS - h));
+    const { col: targetCol, row: targetRow } = cursorToCell(clientX, clientY, gRect, offsetX, offsetY, w, h);
 
     // Build a packer without the dragged item to check vacancy
     const packer = new GridPacker(GRID_COLS, GRID_ROWS);
@@ -160,10 +168,21 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
     }
 
     if (packer.canPlace(targetCol, targetRow, w, h)) {
+      // Build a position map from currently placed items so auto-packed items
+      // get their positions persisted (prevents them from shifting around).
+      const posMap = new Map();
+      for (const p of placedRef.current) {
+        if (itemKey(p.item) === itemKey(item)) continue;
+        posMap.set(itemKey(p.item), { col: p.col, row: p.row });
+      }
+      posMap.set(itemKey(item), { col: targetCol, row: targetRow });
+
       updateMyCharacter({
-        inventory: inventoryRef.current.map(i =>
-          itemKey(i) === itemKey(item) ? { ...i, _gridCol: targetCol, _gridRow: targetRow } : i
-        ),
+        inventory: inventoryRef.current.map(i => {
+          const pos = posMap.get(itemKey(i));
+          if (pos) return { ...i, _gridCol: pos.col, _gridRow: pos.row };
+          return i;
+        }),
       });
     }
     // Invalid drop → no-op; item returns to original position (state unchanged)
@@ -189,10 +208,11 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
   }, [drag, commitDrop]);
 
   // Ghost snapped position and validity highlight
-  const ghostCell = (drag && cursorPx) ? {
-    col:   Math.max(0, Math.min(Math.round((cursorPx.x - drag.offsetX) / CELL_PX), GRID_COLS - drag.w)),
-    row:   Math.max(0, Math.min(Math.round((cursorPx.y - drag.offsetY) / CELL_PX), GRID_ROWS - drag.h)),
-  } : null;
+  // cursorPx is already relative to grid, so pass a zero-origin rect
+  const _zeroRect = { left: 0, top: 0 };
+  const ghostCell = (drag && cursorPx)
+    ? cursorToCell(cursorPx.x, cursorPx.y, _zeroRect, drag.offsetX, drag.offsetY, drag.w, drag.h)
+    : null;
 
   // Check if ghost position is valid (cells free, excluding dragged item)
   const ghostValid = useMemo(() => {
