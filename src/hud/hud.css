@@ -1031,3 +1031,21 @@
 
 /* Hidden by default, shown on phone */
 .hud-drawer-handle { display: none; }
+
+/* Minimap (top-right, below campaign bar) */
+.hud-minimap {
+  position: absolute;
+  top: 60px;
+  right: 8px;
+  z-index: 14;
+  width: 160px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .hud-minimap { display: none; }
+}

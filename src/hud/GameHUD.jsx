@@ -4,10 +4,11 @@ import NarratorFloat from './NarratorFloat'
 import InitiativeStrip from './InitiativeStrip'
 import EnemyInfoPanel from './EnemyInfoPanel'
 import CampaignBar from './CampaignBar'
+import Minimap from './Minimap'
 import useStore from '../store/useStore'
 import './hud.css'
 
-export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave }) {
+export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const encounter = useStore(s => s.encounter)
   const myCharacter = useStore(s => s.myCharacter)
@@ -21,6 +22,8 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
     <div className="hud-v2" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
       {/* Campaign bar (top-right) — always visible */}
       <CampaignBar onSettings={onSettings} onLeave={onLeave} />
+      {/* Minimap — below campaign bar, top-right */}
+      <Minimap playerPos={playerPos} tokens={tokens} cameraRef={cameraRef} />
       {/* Zone label (exploration) or Turn banner (combat) */}
       {inCombat ? (
         <>

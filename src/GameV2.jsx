@@ -343,6 +343,7 @@ export default function GameV2({ onLeave }) {
         zone={zone} areaTheme={zone?.theme}
         onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn}
         onAction={handleCombatAction} onSettings={() => setShowApiSettings(true)} onLeave={onLeave}
+        playerPos={playerPos} tokens={tokens} cameraRef={cameraRef}
       />
       {!inCombat && <TestCombatButton myCharacter={myCharacter} addNarratorMessage={addNarratorMessage} />}
       <Suspense fallback={null}>
