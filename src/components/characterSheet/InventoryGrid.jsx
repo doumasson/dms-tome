@@ -142,8 +142,10 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
 
   // Drag: { item, w, h, key } — NO offset. Cursor = item top-left.
   const [drag, setDrag]         = useState(null);
-  const [ghostCell, setGhostCell] = useState(null); // { col, row } — THE truth for where item goes
-  const pendingRef = useRef(null); // { item, w, h, startX, startY }
+  const [ghostCell, setGhostCell] = useState(null); // { col, row } for rendering
+  const ghostCellRef = useRef(null);  // always-current ghost cell (no stale closures)
+  const dragRef = useRef(null);       // always-current drag state
+  const pendingRef = useRef(null);
 
   function handleMouseDown(e, item) {
     if (!isOwn || e.button !== 0) return;
@@ -152,6 +154,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
     pendingRef.current = { item, w, h, startX: e.clientX, startY: e.clientY };
   }
 
+  // Single stable effect — listeners never churn. Refs ensure latest values.
   useEffect(() => {
     function getGridPx(e) {
       const r = gridRef.current?.getBoundingClientRect();
@@ -160,23 +163,39 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
 
     function onMove(e) {
       const p = pendingRef.current;
-      if (p && !drag) {
+      const d = dragRef.current;
+      if (p && !d) {
         if (Math.abs(e.clientX - p.startX) + Math.abs(e.clientY - p.startY) > DRAG_THRESHOLD) {
-          setDrag({ item: p.item, w: p.w, h: p.h, key: itemKey(p.item) });
+          const newDrag = { item: p.item, w: p.w, h: p.h, key: itemKey(p.item) };
+          dragRef.current = newDrag;
+          setDrag(newDrag);
           const gp = getGridPx(e);
-          if (gp) setGhostCell(cursorToCell(gp.x, gp.y, p.w, p.h));
+          if (gp) {
+            const cell = cursorToCell(gp.x, gp.y, p.w, p.h);
+            ghostCellRef.current = cell;
+            setGhostCell(cell);
+          }
           pendingRef.current = null;
         }
         return;
       }
-      if (drag) {
+      if (d) {
         const gp = getGridPx(e);
-        if (gp) setGhostCell(cursorToCell(gp.x, gp.y, drag.w, drag.h));
+        if (gp) {
+          const cell = cursorToCell(gp.x, gp.y, d.w, d.h);
+          ghostCellRef.current = cell;
+          // Only trigger re-render if cell actually changed
+          setGhostCell(prev =>
+            prev && prev.col === cell.col && prev.row === cell.row ? prev : cell
+          );
+        }
       }
     }
 
     function onUp() {
-      if (drag && ghostCell) {
+      const d = dragRef.current;
+      const gc = ghostCellRef.current;
+      if (d && gc) {
         // Read FRESH inventory from store
         const inv = useStore.getState().myCharacter?.inventory || [];
         const { placed: fresh } = packItems(inv);
@@ -184,18 +203,17 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
         // Check vacancy (exclude dragged item)
         const packer = new GridPacker(GRID_COLS, GRID_ROWS);
         for (const p of fresh) {
-          if (itemKey(p.item) === drag.key) continue;
+          if (itemKey(p.item) === d.key) continue;
           packer.place(itemKey(p.item), p.col, p.row, p.w, p.h);
         }
 
-        if (packer.canPlace(ghostCell.col, ghostCell.row, drag.w, drag.h)) {
-          // Save ALL positions: others keep current, dragged gets ghost position
+        if (packer.canPlace(gc.col, gc.row, d.w, d.h)) {
           const posMap = new Map();
           for (const p of fresh) {
-            if (itemKey(p.item) === drag.key) continue;
+            if (itemKey(p.item) === d.key) continue;
             posMap.set(itemKey(p.item), { col: p.col, row: p.row });
           }
-          posMap.set(drag.key, { col: ghostCell.col, row: ghostCell.row });
+          posMap.set(d.key, { col: gc.col, row: gc.row });
 
           updateMyCharacter({
             inventory: inv.map(i => {
@@ -204,10 +222,11 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
             }),
           });
         }
-
-        setDrag(null);
-        setGhostCell(null);
       }
+      dragRef.current = null;
+      ghostCellRef.current = null;
+      setDrag(null);
+      setGhostCell(null);
       pendingRef.current = null;
     }
 
@@ -217,7 +236,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
     };
-  }, [drag, ghostCell, updateMyCharacter]);
+  }, [updateMyCharacter]);  // stable deps — NO drag/ghostCell, uses refs
 
   // Ghost validity
   const ghostValid = useMemo(() => {
