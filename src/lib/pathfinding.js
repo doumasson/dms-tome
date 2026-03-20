@@ -118,7 +118,7 @@ const EDGE_N = 0x1, EDGE_E = 0x2, EDGE_S = 0x4, EDGE_W = 0x8
 /**
  * Check if movement from (fromX,fromY) to (toX,toY) is blocked by a wall edge.
  */
-function isEdgeBlocked(wallEdges, width, fromX, fromY, toX, toY) {
+export function isEdgeBlocked(wallEdges, width, fromX, fromY, toX, toY) {
   const fromIdx = fromY * width + fromX
   const toIdx = toY * width + toX
   const dx = toX - fromX
