@@ -1,0 +1,7 @@
+[
+  { "type": "pressure_plate", "dc": 12, "effect": { "damage": "1d6", "damageType": "piercing", "save": "DEX", "saveDC": 13 }, "description": "A hidden pressure plate triggers a volley of darts!" },
+  { "type": "tripwire", "dc": 14, "effect": { "condition": "Restrained", "duration": "1 minute", "save": "DEX", "saveDC": 12 }, "description": "A thin wire snaps, releasing a weighted net!" },
+  { "type": "poison_needle", "dc": 16, "effect": { "damage": "1d4", "damageType": "poison", "condition": "Poisoned", "save": "CON", "saveDC": 14 }, "description": "A needle springs from the mechanism, glistening with poison!" },
+  { "type": "magic_glyph", "dc": 18, "effect": { "damage": "5d8", "damageType": "fire", "save": "DEX", "saveDC": 15 }, "description": "A glowing rune erupts in a burst of flame!" },
+  { "type": "collapsing_floor", "dc": 15, "effect": { "damage": "2d6", "damageType": "bludgeoning", "save": "DEX", "saveDC": 13 }, "description": "The floor gives way beneath your feet!" }
+]
