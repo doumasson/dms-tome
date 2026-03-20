@@ -40,15 +40,15 @@ describe('resolveWallTile', () => {
     expect(a).toEqual(b)
   })
 
-  it('different positions produce different variants', () => {
-    // With 11 village variants, nearby positions should sometimes differ
+  it('different regionIds produce different variants', () => {
+    // Different buildings (regionIds) should use different variants
     const results = new Set()
-    for (let x = 0; x < 20; x++) {
-      const r = resolveWallTile('village', 'horizontal', x, 5)
+    for (let regionId = 0; regionId < 10; regionId++) {
+      const r = resolveWallTile('village', 'horizontal', 5, 5, regionId)
       const id = typeof r === 'string' ? r : r.tileId
       results.add(id)
     }
-    expect(results.size).toBeGreaterThan(1) // at least 2 different variants
+    expect(results.size).toBeGreaterThan(1) // at least 2 different variants across buildings
   })
 
   it('WALL_STYLES has required keys for each theme', () => {

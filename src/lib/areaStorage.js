@@ -120,6 +120,28 @@ export async function loadArea(campaignId, areaId) {
   )
   layers.floor = backfilledFloor
 
+  // Strip outer-facing wall edges for building cells
+  const buildings = area.buildings || []
+  for (const b of buildings) {
+    const cx = b.x + b.width / 2
+    const cy = b.y + b.height / 2
+    for (let by = b.y; by < b.y + b.height && by < area.height; by++) {
+      for (let bx = b.x; bx < b.x + b.width && bx < area.width; bx++) {
+        if (bx < 0 || by < 0) continue
+        const idx = by * area.width + bx
+        if (layers.walls[idx] === 0) continue
+        const bits = wallEdges[idx] & 0x0F
+        if (bits === 0) continue
+        let keep = 0
+        if ((bits & 0x1) && by > cy) keep |= 0x1
+        if ((bits & 0x4) && by < cy) keep |= 0x4
+        if ((bits & 0x8) && bx > cx) keep |= 0x8
+        if ((bits & 0x2) && bx < cx) keep |= 0x2
+        wallEdges[idx] = keep | (wallEdges[idx] & 0xF0)
+      }
+    }
+  }
+
   // Build cellBlocked from blocking props
   const blockingSet = getBlockingSet()
   const cellBlocked = new Uint8Array(expectedLength)
@@ -130,7 +152,7 @@ export async function loadArea(campaignId, areaId) {
     if (blockingSet.has(tileId)) cellBlocked[i] = 1
   }
 
-  return { ...area, layers, wallEdges, cellBlocked }
+  return { ...area, layers, wallEdges, cellBlocked, useCamera: true }
 }
 
 /**

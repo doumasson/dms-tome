@@ -60,22 +60,32 @@ describe('RoofManager', () => {
     expect(mgr.allOutside('inn', allOut)).toBe(true)
   })
 
-  it('updates reveal states based on party positions', () => {
+  it('reveals only when party steps on a door, closes when all leave', () => {
     const mgr = new RoofManager()
     mgr.registerBuilding({
       id: 'inn',
       position: { x: 10, y: 10 },
       width: 12,
       height: 10,
-      doors: [],
+      doors: [{ x: 15, y: 19 }],
     })
 
-    // Party member inside
+    // Party inside building but NOT on door — no reveal
     let changes = mgr.updateRevealStates([{ x: 12, y: 15 }])
+    expect(changes).toEqual([])
+    expect(mgr.isRevealed('inn')).toBe(false)
+
+    // Party steps on door — reveal
+    changes = mgr.updateRevealStates([{ x: 15, y: 19 }])
     expect(changes).toEqual([{ buildingId: 'inn', revealed: true }])
     expect(mgr.isRevealed('inn')).toBe(true)
 
-    // Party leaves
+    // Party moves inside (off door) — stays revealed
+    changes = mgr.updateRevealStates([{ x: 12, y: 15 }])
+    expect(changes).toEqual([])
+    expect(mgr.isRevealed('inn')).toBe(true)
+
+    // Party leaves building — closes
     changes = mgr.updateRevealStates([{ x: 5, y: 5 }])
     expect(changes).toEqual([{ buildingId: 'inn', revealed: false }])
     expect(mgr.isRevealed('inn')).toBe(false)

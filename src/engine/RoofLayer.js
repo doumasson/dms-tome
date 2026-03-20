@@ -59,19 +59,29 @@ export class RoofManager {
 
   /**
    * Check all buildings and update reveal state based on party positions.
+   * Reveal triggers ONLY when someone steps on a door cell.
+   * Close triggers when everyone is outside the building bounds.
    * Returns list of { buildingId, revealed } changes.
    */
   updateRevealStates(partyPositions) {
     const changes = []
     for (const [id, b] of this.buildings) {
+      const wasRevealed = this.revealed.get(id)
+      const anyOnDoor = partyPositions.some(p => {
+        // Check if this position is a door belonging to this building
+        if (!this._doorSet.has(`${p.x},${p.y}`)) return false
+        return p.x >= b.minX && p.x < b.maxX && p.y >= b.minY && p.y < b.maxY
+      })
       const anyInside = partyPositions.some(
         p => p.x >= b.minX && p.x < b.maxX && p.y >= b.minY && p.y < b.maxY
       )
-      const wasRevealed = this.revealed.get(id)
-      if (anyInside && !wasRevealed) {
+
+      if (anyOnDoor && !wasRevealed) {
+        // Reveal only on door entry
         this.revealed.set(id, true)
         changes.push({ buildingId: id, revealed: true })
       } else if (!anyInside && wasRevealed) {
+        // Close when everyone leaves building bounds
         this.revealed.set(id, false)
         changes.push({ buildingId: id, revealed: false })
       }
