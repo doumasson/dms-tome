@@ -8,6 +8,7 @@ import { renderExits, clearExits } from './ExitZone'
 import { TileAtlasV2 } from './tileAtlasV2'
 import { WallRenderer } from './WallRenderer'
 import { renderLighting, clearLighting } from './LightingLayer'
+import { updateStatusEffects } from './StatusEffectRenderer.js'
 import { applyDayNightTint } from './DayNightFilter.js'
 import { getTimeOfDay } from '../lib/gameTime.js'
 import useStore from '../store/useStore.js'
@@ -87,6 +88,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         grid: new PIXI.Container(),
         movementRange: new PIXI.Container(),  // combat reachable-tile highlights
         tokens: new PIXI.Container(),
+        statusEffects: new PIXI.Container(),  // condition tints/rings — above tokens, below roof
         roof: new PIXI.Container(),    // above tokens — hides interior + NPCs until revealed
         fog: new PIXI.Container(),
         exits: new PIXI.Container(),
@@ -240,6 +242,12 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       // Ambient lighting glow around fire sources
       if (zone.lightSources?.length) {
         renderLighting(stageLayersRef.current.lighting, zone.lightSources, tileSize, bounds)
+      }
+
+      // Status effect visuals — condition dots and concentration rings above tokens
+      if (inCombat) {
+        const combatants = useStore.getState().encounter?.combatants || []
+        updateStatusEffects(stageLayersRef.current.statusEffects, combatants, tileSize)
       }
 
       if (zone.layers?.roof) {
