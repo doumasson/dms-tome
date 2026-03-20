@@ -350,6 +350,7 @@ export default function GameV2({ onLeave }) {
     else if (tool === 'journal') setShowJournal(true)
     else if (tool === 'short-rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
     else if (tool === 'long-rest') setRestProposal({ type: 'long', proposedBy: myCharacter?.name || 'Someone' })
+    else if (tool === 'formation') setShowFormation(true)
   }, [myCharacter])
 
   const handleEndTurn = useCallback(() => {
