@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import useStore from './store/useStore'
+import { rollDamage } from './lib/dice'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
 import { buildTestArea } from './data/testArea.js'
@@ -77,6 +78,7 @@ export default function GameV2({ onLeave }) {
   const [showJournal, setShowJournal] = useState(false)
   const [activeNpc, setActiveNpc] = useState(null)
   const [worldTransform, setWorldTransform] = useState(null)
+  const [targetingMode, setTargetingMode] = useState(null)
   const triggeredZonesRef = useRef(new Set())
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -236,6 +238,14 @@ export default function GameV2({ onLeave }) {
     const prompt = buildEncounterPrompt(triggered, '')
     addNarratorMessage({ role: 'user', speaker: 'System', text: prompt })
   }, [playerPos, zone, inCombat, isDM, addNarratorMessage])
+
+  // --- Escape to cancel targeting mode ---
+  useEffect(() => {
+    if (!targetingMode) return
+    const onKey = (e) => { if (e.key === 'Escape') setTargetingMode(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [targetingMode])
 
   // --- Combat camera lock (area camera mode only) ---
   useEffect(() => {
@@ -476,6 +486,65 @@ export default function GameV2({ onLeave }) {
   const handleTileClick = useCallback(({ x, y }) => {
     if (isAnimating()) return
 
+    // Attack targeting — resolve attack on clicked enemy
+    if (targetingMode === 'attack' && inCombat) {
+      const target = encounter.combatants.find(c =>
+        c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position?.x === x && c.position?.y === y
+      )
+      if (!target) return // Clicked empty tile — ignore
+
+      const active = encounter.combatants[encounter.currentTurn]
+      if (!active || !active.position) return
+
+      // Chebyshev distance for adjacency
+      const dist = Math.max(Math.abs(active.position.x - x), Math.abs(active.position.y - y))
+      const weapon = active.attacks?.[0] || { name: 'Unarmed Strike', bonus: '+0', damage: '1' }
+      const isRanged = weapon.range != null
+      const maxRange = isRanged ? Math.floor((weapon.range || 80) / 5) : 1
+
+      if (dist > maxRange) {
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Target out of range.' })
+        return
+      }
+
+      // Roll attack
+      const bonus = parseInt(weapon.bonus) || 0
+      const d20 = Math.floor(Math.random() * 20) + 1
+      const total = d20 + bonus
+      const isCrit = d20 === 20
+      const hit = isCrit || total >= (target.ac || 10)
+
+      // Roll damage
+      let damage = 0
+      if (hit) {
+        const dmgResult = rollDamage(weapon.damage || '1')
+        damage = isCrit ? dmgResult.total * 2 : dmgResult.total
+      }
+
+      if (hit && damage > 0) {
+        const { applyEncounterDamage: applyDmg } = useStore.getState()
+        applyDmg(target.id || target.name, damage)
+      }
+
+      const { useAction: consumeAction } = useStore.getState()
+      consumeAction(active.id)
+      setTargetingMode(null)
+
+      const entry = hit
+        ? `${active.name} → ${target.name}: HIT! d20(${d20})+${bonus}=${total} vs AC ${target.ac}. ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}.`
+        : `${active.name} → ${target.name}: MISS. d20(${d20})+${bonus}=${total} vs AC ${target.ac}.`
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
+      broadcastEncounterAction({ type: 'attack-result', attackerId: active.id, targetId: target.id, hit, damage, log: entry })
+
+      // Fire-and-forget narration
+      const apiKey = sessionApiKey
+      if (apiKey) {
+        const resultDesc = hit ? `Hit! ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}` : 'Miss!'
+        narrateCombatAction(active.name, 'Attack', target.name, resultDesc, apiKey)
+      }
+      return
+    }
+
     // Combat movement — click within reachable range to move active combatant
     if (inCombat && zone?.wallEdges) {
       const active = encounter.combatants?.[encounter.currentTurn]
@@ -528,7 +597,7 @@ export default function GameV2({ onLeave }) {
         if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
       }, isV2Zone ? tileSize : undefined)
     }
-  }, [zone, isV2Zone, inCombat, encounter])
+  }, [zone, isV2Zone, inCombat, encounter, targetingMode, addNarratorMessage, sessionApiKey, narrateCombatAction])
 
   // WASD keyboard movement — one tile at a time
   useEffect(() => {
@@ -719,32 +788,9 @@ export default function GameV2({ onLeave }) {
 
   const handleCombatAction = useCallback((type) => {
     if (type === 'attack') {
-      // Auto-attack the first living enemy (simplified — full target selection comes later)
-      const enemies = encounter.combatants?.filter(c => c.isEnemy && c.hp > 0)
-      const active = encounter.combatants?.[encounter.currentTurn]
-      if (!enemies?.length || !active) return
-
-      const target = enemies[0]
-      const bonus = active.attackBonus || 0
-      const d20 = Math.floor(Math.random() * 20) + 1
-      const total = d20 + bonus
-      const hit = d20 === 20 || total >= (target.ac || 10)
-      const damage = hit ? Math.floor(Math.random() * 8) + 1 + (active.damageMod || 0) : 0
-
-      if (hit && damage > 0) {
-        applyEncounterDamage(target.id || target.name, damage)
-      }
-      useAction()
-
-      const resultDesc = hit ? `Hit! ${damage} damage` : 'Miss!'
-      const logEntry = `${active.name} attacks ${target.name}: d20=${d20}+${bonus}=${total} vs AC ${target.ac} — ${resultDesc}`
-      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: logEntry })
-
-      // Fire-and-forget narration
-      const apiKey = sessionApiKey
-      if (apiKey) {
-        narrateCombatAction(active.name, 'Attack', target.name, resultDesc, apiKey)
-      }
+      setTargetingMode('attack')
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select a target to attack. Press Escape to cancel.' })
+      return
     } else if (type === 'cast') {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Spell casting UI coming soon — use the dice roller for manual rolls.' })
     } else if (type === 'move') {
@@ -752,7 +798,7 @@ export default function GameV2({ onLeave }) {
     } else if (type === 'say') {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Type your message in the chat and press enter.' })
     }
-  }, [encounter, applyEncounterDamage, useAction, addNarratorMessage, sessionApiKey, narrateCombatAction])
+  }, [addNarratorMessage])
 
   // Auto-run enemy turns (host only)
   useEffect(() => {
