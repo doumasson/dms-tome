@@ -1,5 +1,6 @@
 import { ChunkLibrary } from './chunkLibrary.js'
 import allChunks from '../data/chunks/index.js'
+import { buildDungeonArea } from './dungeonBuilder.js'
 import {
   resolvePositions, stampChunk, connectWithRoad,
   fillTerrain, buildUnifiedPalette, remapChunk,
@@ -27,6 +28,8 @@ export const THEME_TERRAIN = {
   dungeon: ['atlas-floors:brick_floor_03_d1', 'atlas-floors:brick_floor_03_d2', 'atlas-floors:brick_floor_04_d1'],
   cave:    ['atlas-floors:brick_floor_03_d3', 'atlas-floors:brick_floor_03_d4'],
   town:    ['atlas-floors:brick_floor_01_d1', 'atlas-floors:brick_floor_01_d2'],
+  crypt:   ['atlas-floors:brick_floor_03_d1', 'atlas-floors:brick_floor_03_d2'],
+  sewer:   ['atlas-floors:brick_floor_04_d1', 'atlas-floors:brick_floor_04_d2'],
 }
 
 export const THEME_ROAD = {
@@ -35,7 +38,11 @@ export const THEME_ROAD = {
   dungeon: 'atlas-floors:brick_floor_03_d1',
   cave:    'atlas-floors:brick_floor_04_d1',
   town:    'atlas-floors:brick_floor_01_d3',
+  crypt:   'atlas-floors:brick_floor_03_d1',
+  sewer:   'atlas-floors:brick_floor_04_d1',
 }
+
+const DUNGEON_THEMES = new Set(['dungeon', 'cave', 'crypt', 'sewer'])
 
 /* ── Shared chunk library singleton ──────────────────────────── */
 
@@ -57,6 +64,10 @@ function getChunkLibrary() {
  * @returns {object} complete area object ready for rendering/storage
  */
 export function buildAreaFromBrief(brief, seed = Date.now()) {
+  if (brief.dungeonConfig || DUNGEON_THEMES.has(brief.theme)) {
+    return buildDungeonArea(brief, seed)
+  }
+
   const { id, name, theme = 'village', pois = [], connections = [], npcs = [], exits = [], enemies = [], encounterZones = [] } = brief
   const areaSize = calculateAreaSize(brief)
   const width = brief.width || areaSize.width

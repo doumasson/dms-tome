@@ -15,7 +15,7 @@ export const WALL_STYLES = {
   village: {
     segmentPrefix: 'atlas-structures:wall_stone_earthy_',
     segmentSuffix: '_connector_a_1x1',
-    variants: ['a', 'b1', 'c', 'd', 'e', 'f', 'g', 'h', 'i1', 'j1', 'k1'],
+    variants: ['a', 'c', 'e'],
     rotateForVertical: true,
     cornerTiles: {
       NE: 'atlas-structures:wall_corner_stone_earthy_l1_1x1',
@@ -27,14 +27,14 @@ export const WALL_STYLES = {
   forest: {
     segmentPrefix: 'atlas-structures:wall_wood_ashen_',
     segmentSuffix: '_connector_a_1x1',
-    variants: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    variants: ['a', 'c'],
     rotateForVertical: true,
     cornerTiles: null,
   },
   dungeon: {
     segmentPrefix: 'atlas-structures:dwarven_wall_stone_earthy_connector_',
     segmentSuffix: '_1x1',
-    variants: ['a1', 'b1', 'c1', 'd1', 'e1', 'f1'],
+    variants: ['a1', 'c1'],
     rotateForVertical: true,
     cornerTiles: {
       NE: 'atlas-structures:dwarven_wall_stone_earthy_corner_a1_1x1',
@@ -47,8 +47,8 @@ export const WALL_STYLES = {
     segmentPrefix: 'atlas-walls:flesh_black_wall_connector_',
     horizontalSuffix: '1_1x1',
     verticalSuffix: '2_1x1',
-    variants: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'],
-    missingVertical: new Set(['f', 'k']),
+    variants: ['a', 'c'],
+    missingVertical: new Set(),
     rotateForVertical: false,
     cornerTiles: {
       NE: 'atlas-walls:flesh_black_wall_corner_a1_1x1',
@@ -61,8 +61,27 @@ export const WALL_STYLES = {
     segmentPrefix: 'atlas-structures:wall_brick_earthy_',
     horizontalSuffix: '_connector_a_1x1',
     verticalSuffix: '_connector_b_1x1',
-    variants: ['a', 'b', 'c'],
+    variants: ['a', 'b'],
     rotateForVertical: false,
+    cornerTiles: null,
+  },
+  crypt: {
+    segmentPrefix: 'atlas-structures:dwarven_wall_stone_earthy_connector_',
+    segmentSuffix: '_1x1',
+    variants: ['a1', 'c1'],
+    rotateForVertical: true,
+    cornerTiles: {
+      NE: 'atlas-structures:dwarven_wall_stone_earthy_corner_a1_1x1',
+      NW: 'atlas-structures:dwarven_wall_stone_earthy_corner_c1_1x1',
+      SE: 'atlas-structures:dwarven_wall_stone_earthy_corner_d2_1x1',
+      SW: 'atlas-structures:dwarven_wall_stone_earthy_corner_e1_1x1',
+    },
+  },
+  sewer: {
+    segmentPrefix: 'atlas-structures:dwarven_wall_stone_earthy_connector_',
+    segmentSuffix: '_1x1',
+    variants: ['a1', 'c1'],
+    rotateForVertical: true,
     cornerTiles: null,
   },
 }
@@ -78,12 +97,12 @@ function tileHash(x, y, dirIndex) {
  * @param {'horizontal'|'vertical'} direction
  * @param {number} x — tile x
  * @param {number} y — tile y
+ * @param {number} [regionId=0] — building/region index for consistent variant within a structure
  * @returns {string | { tileId: string, rotate: boolean }}
  */
-export function resolveWallTile(theme, direction, x, y) {
+export function resolveWallTile(theme, direction, x, y, regionId = 0) {
   const style = WALL_STYLES[theme] || WALL_STYLES.village
   const isVertical = direction === 'vertical'
-  const dirIdx = isVertical ? 1 : 0
 
   let variants = style.variants
   // Filter out missing vertical variants for cave-style themes
@@ -91,8 +110,8 @@ export function resolveWallTile(theme, direction, x, y) {
     variants = variants.filter(v => !style.missingVertical.has(v))
   }
 
-  const hash = tileHash(x, y, dirIdx)
-  const variant = variants[hash % variants.length]
+  // Use regionId (building index) for variant — all walls in same building get same variant
+  const variant = variants[regionId % variants.length]
 
   if (style.rotateForVertical) {
     // Only has horizontal tiles — rotate for vertical
