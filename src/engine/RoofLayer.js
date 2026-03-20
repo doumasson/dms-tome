@@ -11,12 +11,14 @@ export class RoofManager {
   }
 
   registerBuilding(building) {
+    const posX = building.x ?? building.position?.x ?? 0
+    const posY = building.y ?? building.position?.y ?? 0
     const b = {
       ...building,
-      minX: building.position.x,
-      minY: building.position.y,
-      maxX: building.position.x + building.width,
-      maxY: building.position.y + building.height,
+      minX: posX,
+      minY: posY,
+      maxX: posX + building.width,
+      maxY: posY + building.height,
     }
     this.buildings.set(building.id, b)
     this.revealed.set(building.id, false)

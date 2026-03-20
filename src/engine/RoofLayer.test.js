@@ -81,6 +81,13 @@ describe('RoofManager', () => {
     expect(mgr.isRevealed('inn')).toBe(false)
   })
 
+  it('accepts flat x/y format from areaBuilder', () => {
+    const mgr = new RoofManager()
+    mgr.registerBuilding({ id: 'shop', x: 5, y: 10, width: 8, height: 6, doors: [] })
+    expect(mgr.getBuildingAt(8, 13)).toBe('shop')
+    expect(mgr.getBuildingAt(0, 0)).toBeNull()
+  })
+
   it('returns correct roof alpha', () => {
     const mgr = new RoofManager()
     mgr.registerBuilding({ id: 'inn', position: { x: 0, y: 0 }, width: 10, height: 10, doors: [] })

@@ -86,7 +86,7 @@ export default function GameV2({ onLeave }) {
   const zone = area
 
   // Area camera — instantiate when zone signals camera mode (e.g. large procedural maps)
-  const useAreaCamera = zone?.useCamera || false
+  const useAreaCamera = Boolean(zone?.palette) || zone?.useCamera || false
   useEffect(() => {
     if (!useAreaCamera) {
       cameraRef.current = null
@@ -105,8 +105,7 @@ export default function GameV2({ onLeave }) {
   // Camera keyboard controls — arrow keys pan camera, spacebar recenters on player
   // (WASD reserved for token movement in V2 mode)
   useEffect(() => {
-    const cam = cameraRef.current
-    if (!cam) return
+    if (!useAreaCamera) return
 
     const keyMap = {
       ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
@@ -114,6 +113,8 @@ export default function GameV2({ onLeave }) {
 
     const onKeyDown = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+      const cam = cameraRef.current
+      if (!cam) return
       if (keyMap[e.key]) { cam.startPan(keyMap[e.key]); e.preventDefault() }
       if (e.key === ' ') {
         const myPos = playerPosRef.current
@@ -122,6 +123,8 @@ export default function GameV2({ onLeave }) {
       }
     }
     const onKeyUp = (e) => {
+      const cam = cameraRef.current
+      if (!cam) return
       if (keyMap[e.key]) cam.stopPan(keyMap[e.key])
     }
 
@@ -145,6 +148,36 @@ export default function GameV2({ onLeave }) {
 
   // --- Roof-lift manager (area camera mode only) ---
   const roofManagerRef = useRef(new RoofManager())
+
+  // Register buildings into RoofManager when zone loads
+  useEffect(() => {
+    if (!zone?.useCamera || !zone?.buildings) return
+    const rm = roofManagerRef.current
+    rm.buildings.clear()
+    rm.revealed.clear()
+    rm._doorSet.clear()
+
+    // Detect door cells from walls layer
+    const doors = []
+    if (zone.layers?.walls && zone.palette) {
+      const w = zone.width
+      for (let i = 0; i < zone.layers.walls.length; i++) {
+        const pIdx = zone.layers.walls[i]
+        if (pIdx === 0) continue
+        const tileId = zone.palette[pIdx] || ''
+        if (tileId.includes('door')) {
+          doors.push({ x: i % w, y: Math.floor(i / w) })
+        }
+      }
+    }
+
+    for (const b of zone.buildings) {
+      const buildingDoors = doors.filter(d =>
+        d.x >= b.x && d.x < b.x + b.width && d.y >= b.y && d.y < b.y + b.height
+      )
+      rm.registerBuilding({ ...b, doors: buildingDoors })
+    }
+  }, [zone?.buildings, currentAreaId])
 
   // Update roof reveal states when tokens move
   useEffect(() => {
@@ -252,15 +285,18 @@ export default function GameV2({ onLeave }) {
     dialogOpenRef.current = !!activeNpc
   }, [activeNpc])
 
-  // Poll world transform from PixiApp to position chat bubbles
+  // Sync world transform from PixiApp to position chat bubbles (every frame for smooth tracking)
   useEffect(() => {
+    let rafId
     function updateTransform() {
       const t = pixiRef.current?.getWorldTransform?.()
-      if (t) setWorldTransform(t)
+      if (t) setWorldTransform(prev =>
+        prev && prev.x === t.x && prev.y === t.y && prev.scale === t.scale ? prev : t
+      )
+      rafId = requestAnimationFrame(updateTransform)
     }
-    updateTransform()
-    const interval = setInterval(updateTransform, 200)
-    return () => clearInterval(interval)
+    rafId = requestAnimationFrame(updateTransform)
+    return () => cancelAnimationFrame(rafId)
   }, [zone])
 
   // Load API key from Supabase on mount
@@ -406,16 +442,15 @@ export default function GameV2({ onLeave }) {
 
   // WASD keyboard movement — one tile at a time
   useEffect(() => {
-    // WASD always moves token; arrows move token only when no camera (V1 zones)
-    const dirs = {
+    const wasdDirs = {
       w: { x: 0, y: -1 }, W: { x: 0, y: -1 },
       s: { x: 0, y: 1 },  S: { x: 0, y: 1 },
       a: { x: -1, y: 0 }, A: { x: -1, y: 0 },
       d: { x: 1, y: 0 },  D: { x: 1, y: 0 },
-      ...(!cameraRef.current ? {
-        ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 },
-        ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 },
-      } : {}),
+    }
+    const arrowDirs = {
+      ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 },
+      ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 },
     }
 
     function handleKeyDown(e) {
@@ -429,7 +464,9 @@ export default function GameV2({ onLeave }) {
         return
       }
 
-      const dir = dirs[e.key]
+      // Arrow keys: move token only when no camera (V1 zones); camera handler handles panning
+      let dir = wasdDirs[e.key]
+      if (!dir && !cameraRef.current) dir = arrowDirs[e.key]
       if (!dir) return
       e.preventDefault()
 
@@ -442,10 +479,12 @@ export default function GameV2({ onLeave }) {
       if (wd?.type === 'v2-edge') {
         if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
         if (wd.cellBlocked[ny * wd.width + nx] === 1) return
-        // Check wall edge between current and target cell
+        // Check wall edge on BOTH sides — source exit edge and target entry edge
         const fromIdx = pos.y * wd.width + pos.x
-        const edgeBit = dir.y === -1 ? 0x1 : dir.x === 1 ? 0x2 : dir.y === 1 ? 0x4 : 0x8
-        if (wd.wallEdges[fromIdx] & edgeBit) return
+        const toIdx = ny * wd.width + nx
+        const exitBit = dir.y === -1 ? 0x1 : dir.x === 1 ? 0x2 : dir.y === 1 ? 0x4 : 0x8
+        const entryBit = dir.y === -1 ? 0x4 : dir.x === 1 ? 0x8 : dir.y === 1 ? 0x1 : 0x2
+        if ((wd.wallEdges[fromIdx] & exitBit) || (wd.wallEdges[toIdx] & entryBit)) return
       } else if (wd?.type === 'v2') {
         if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
         if (wd.collision[ny * wd.width + nx] === 1) return
