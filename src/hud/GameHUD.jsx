@@ -5,6 +5,7 @@ import InitiativeStrip from './InitiativeStrip'
 import EnemyInfoPanel from './EnemyInfoPanel'
 import CampaignBar from './CampaignBar'
 import Minimap from './Minimap'
+import SoundControl from './SoundControl'
 import useStore from '../store/useStore'
 import './hud.css'
 
@@ -22,6 +23,10 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
     <div className="hud-v2" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
       {/* Campaign bar (top-right) — always visible */}
       <CampaignBar onSettings={onSettings} onLeave={onLeave} />
+      {/* Sound mute toggle — top-right near campaign bar */}
+      <div style={{ position: 'absolute', top: 8, right: 220, pointerEvents: 'all' }}>
+        <SoundControl />
+      </div>
       {/* Minimap — below campaign bar, top-right */}
       <Minimap playerPos={playerPos} tokens={tokens} cameraRef={cameraRef} />
       {/* Zone label (exploration) or Turn banner (combat) */}

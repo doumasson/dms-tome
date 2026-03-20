@@ -451,6 +451,11 @@ export default function GameV2({ onLeave }) {
           />
         </Suspense>
       )}
+      {showFormation && (
+        <Suspense fallback={null}>
+          <FormationPanel onClose={() => setShowFormation(false)} />
+        </Suspense>
+      )}
     </div>
   )
 }
