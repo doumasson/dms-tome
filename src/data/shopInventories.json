@@ -1,0 +1,63 @@
+{
+  "weapon_shop": {
+    "name": "The Iron Anvil",
+    "items": [
+      { "id": "dagger",       "name": "Dagger",        "price": 2,   "type": "weapon_light",       "stats": { "damage": "1d4",  "damageType": "piercing" }, "weight": 1,  "sizeCategory": "small" },
+      { "id": "shortsword",   "name": "Shortsword",    "price": 10,  "type": "weapon_light",       "stats": { "damage": "1d6",  "damageType": "piercing" }, "weight": 2,  "sizeCategory": "small" },
+      { "id": "longsword",    "name": "Longsword",     "price": 15,  "type": "weapon_one_handed",  "stats": { "damage": "1d8",  "damageType": "slashing" }, "weight": 3,  "sizeCategory": "medium" },
+      { "id": "battleaxe",    "name": "Battleaxe",     "price": 10,  "type": "weapon_one_handed",  "stats": { "damage": "1d8",  "damageType": "slashing" }, "weight": 4,  "sizeCategory": "medium" },
+      { "id": "greatsword",   "name": "Greatsword",    "price": 50,  "type": "weapon_two_handed",  "stats": { "damage": "2d6",  "damageType": "slashing" }, "weight": 6,  "sizeCategory": "large" },
+      { "id": "handaxe",      "name": "Handaxe",       "price": 5,   "type": "weapon_light",       "stats": { "damage": "1d6",  "damageType": "slashing" }, "weight": 2,  "sizeCategory": "small" },
+      { "id": "shortbow",     "name": "Shortbow",      "price": 25,  "type": "weapon_ranged",      "stats": { "damage": "1d6",  "damageType": "piercing", "range": "80/320" }, "weight": 2, "sizeCategory": "medium" },
+      { "id": "longbow",      "name": "Longbow",       "price": 50,  "type": "weapon_ranged",      "stats": { "damage": "1d8",  "damageType": "piercing", "range": "150/600" }, "weight": 2, "sizeCategory": "large" }
+    ]
+  },
+  "armor_shop": {
+    "name": "Shield & Scale",
+    "items": [
+      { "id": "leather_armor",     "name": "Leather Armor",      "price": 10,  "type": "armor_light",   "stats": { "ac": 11 },             "weight": 10, "sizeCategory": "medium" },
+      { "id": "studded_leather",   "name": "Studded Leather",    "price": 45,  "type": "armor_light",   "stats": { "ac": 12 },             "weight": 13, "sizeCategory": "medium" },
+      { "id": "chain_shirt",       "name": "Chain Shirt",        "price": 50,  "type": "armor_medium",  "stats": { "ac": 13 },             "weight": 20, "sizeCategory": "medium" },
+      { "id": "scale_mail",        "name": "Scale Mail",         "price": 50,  "type": "armor_medium",  "stats": { "ac": 14, "stealthDis": true }, "weight": 45, "sizeCategory": "large" },
+      { "id": "chain_mail",        "name": "Chain Mail",         "price": 75,  "type": "armor_heavy",   "stats": { "ac": 16, "stealthDis": true }, "weight": 55, "sizeCategory": "large" },
+      { "id": "shield",            "name": "Shield",             "price": 10,  "type": "shield",        "stats": { "acBonus": 2 },         "weight": 6,  "sizeCategory": "medium" },
+      { "id": "half_plate",        "name": "Half Plate",         "price": 750, "type": "armor_heavy",   "stats": { "ac": 15, "stealthDis": true }, "weight": 40, "sizeCategory": "large" }
+    ]
+  },
+  "potion_shop": {
+    "name": "The Alchemist's Corner",
+    "items": [
+      { "id": "potion_healing",        "name": "Potion of Healing",          "price": 50,  "type": "potion", "stats": { "healDice": "2d4+2" },    "weight": 0.5, "sizeCategory": "tiny" },
+      { "id": "potion_greater_healing","name": "Potion of Greater Healing",  "price": 150, "type": "potion", "stats": { "healDice": "4d4+4" },    "weight": 0.5, "sizeCategory": "tiny" },
+      { "id": "potion_fire_breath",    "name": "Potion of Fire Breath",      "price": 200, "type": "potion", "stats": { "damage": "4d6", "damageType": "fire" }, "weight": 0.5, "sizeCategory": "tiny" },
+      { "id": "antitoxin",             "name": "Antitoxin",                  "price": 50,  "type": "potion", "stats": { "effect": "advantage on saves vs poison" }, "weight": 0.5, "sizeCategory": "tiny" },
+      { "id": "potion_climbing",       "name": "Potion of Climbing",         "price": 75,  "type": "potion", "stats": { "effect": "climbing speed equals walking speed, advantage on Str (Athletics) checks" }, "weight": 0.5, "sizeCategory": "tiny" },
+      { "id": "potion_water_breathing","name": "Potion of Water Breathing",  "price": 180, "type": "potion", "stats": { "effect": "breathe underwater for 1 hour" }, "weight": 0.5, "sizeCategory": "tiny" }
+    ]
+  },
+  "general_store": {
+    "name": "Bramwick's Sundries",
+    "items": [
+      { "id": "torch",           "name": "Torch",            "price": 1,   "type": "default",  "stats": { "light": "20ft bright, 20ft dim", "duration": "1 hour" }, "weight": 1,  "sizeCategory": "small" },
+      { "id": "rope_hemp",       "name": "Rope, Hemp (50ft)","price": 1,   "type": "default",  "stats": { "length": "50ft" },  "weight": 10, "sizeCategory": "medium" },
+      { "id": "rations",         "name": "Rations (1 day)",  "price": 5,   "type": "default",  "stats": { "days": 1 },         "weight": 2,  "sizeCategory": "small" },
+      { "id": "backpack",        "name": "Backpack",         "price": 2,   "type": "default",  "stats": { "capacity": "30lbs or 1 cubic foot" }, "weight": 5, "sizeCategory": "medium" },
+      { "id": "waterskin",       "name": "Waterskin",        "price": 2,   "type": "default",  "stats": { "capacity": "4 pints" }, "weight": 5, "sizeCategory": "small" },
+      { "id": "tinderbox",       "name": "Tinderbox",        "price": 5,   "type": "default",  "stats": { "effect": "light a torch or small fire" }, "weight": 1, "sizeCategory": "tiny" },
+      { "id": "crowbar",         "name": "Crowbar",          "price": 2,   "type": "default",  "stats": { "effect": "advantage on Str checks when applicable" }, "weight": 5, "sizeCategory": "small" },
+      { "id": "lantern_hooded",  "name": "Lantern, Hooded",  "price": 5,   "type": "default",  "stats": { "light": "30ft bright, 30ft dim", "duration": "6 hours/pint" }, "weight": 2, "sizeCategory": "small" }
+    ]
+  },
+  "magic_shop": {
+    "name": "Arcana & Wonders",
+    "items": [
+      { "id": "wand_magic_missiles", "name": "Wand of Magic Missiles",  "price": 500,  "type": "wand",    "stats": { "charges": 7, "recharge": "1d6+1 daily", "spell": "magic missile" }, "weight": 1, "sizeCategory": "small" },
+      { "id": "cloak_protection",    "name": "Cloak of Protection",     "price": 750,  "type": "cloak",   "stats": { "acBonus": 1, "savingThrowBonus": 1 }, "weight": 1, "sizeCategory": "medium" },
+      { "id": "ring_protection",     "name": "Ring of Protection",      "price": 1000, "type": "ring",    "stats": { "acBonus": 1, "savingThrowBonus": 1 }, "weight": 0, "sizeCategory": "tiny" },
+      { "id": "boots_elvenkind",     "name": "Boots of Elvenkind",      "price": 400,  "type": "boots",   "stats": { "effect": "advantage on Dex (Stealth) checks" }, "weight": 1, "sizeCategory": "small" },
+      { "id": "bag_holding",         "name": "Bag of Holding",          "price": 4000, "type": "default", "stats": { "capacity": "500lbs / 64 cubic feet", "weight": 15 }, "weight": 15, "sizeCategory": "medium" },
+      { "id": "amulet_health",       "name": "Amulet of Health",        "price": 3000, "type": "amulet",  "stats": { "effect": "Constitution score is 19 while attuned" }, "weight": 0, "sizeCategory": "tiny" },
+      { "id": "staff_healing",       "name": "Staff of Healing",        "price": 6000, "type": "staff",   "stats": { "charges": 10, "recharge": "1d6+4 daily", "spells": ["cure wounds", "lesser restoration", "mass cure wounds"] }, "weight": 4, "sizeCategory": "large" }
+    ]
+  }
+}
