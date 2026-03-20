@@ -40,7 +40,7 @@ export function getCharacterVisionRange(character, lighting, carriedLights = [],
     }
   }
 
-  const applyPenalty = (val) => Math.max(1, val - weatherPenalty)
+  const applyPenalty = (val) => Math.max(0, val - weatherPenalty)
 
   if (lighting === 'magical-darkness') {
     const hasDevilsSight = character.classFeatures?.includes('devils-sight')
