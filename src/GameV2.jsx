@@ -6,7 +6,7 @@ import { buildTestArea } from './data/testArea.js'
 import { buildDemoArea } from './data/demoArea.js'
 import { buildAreaFromBrief } from './lib/areaBuilder.js'
 import { saveArea } from './lib/areaStorage.js'
-import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey } from './lib/liveChannel'
+import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey, broadcastRoofReveal } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
@@ -62,6 +62,7 @@ export default function GameV2({ onLeave }) {
   const partyMembers = useStore(s => s.partyMembers)
   const narrator = useStore(s => s.narrator)
   const activeCutscene = useStore(s => s.activeCutscene)
+  const roofStates = useStore(s => s.roofStates)
 
   const pixiRef = useRef(null)
   const cameraRef = useRef(null)
@@ -152,6 +153,7 @@ export default function GameV2({ onLeave }) {
   // Register buildings into RoofManager when zone loads
   useEffect(() => {
     if (!zone?.useCamera || !zone?.buildings) return
+    roofManagerRef.current = new RoofManager()
     const rm = roofManagerRef.current
     rm.buildings.clear()
     rm.revealed.clear()
@@ -187,8 +189,21 @@ export default function GameV2({ onLeave }) {
     if (!pos) return
     const positions = [pos] // party positions — expand when multiplayer token sync exists
     const changes = rm.updateRevealStates(positions)
-    // Changes are tracked internally by RoofManager; rendering will read state when area mode renders
+    if (changes.length > 0 && isDM) {
+      for (const { buildingId, revealed } of changes) {
+        broadcastRoofReveal(buildingId, revealed)
+      }
+    }
   }, [playerPos, currentAreaId, zone])
+
+  // Apply incoming roof reveal broadcasts (non-DM clients) to local RoofManager
+  useEffect(() => {
+    if (!roofStates || isDM) return
+    const rm = roofManagerRef.current
+    for (const [buildingId, revealed] of Object.entries(roofStates)) {
+      rm.setRevealed(buildingId, revealed)
+    }
+  }, [roofStates])
 
   // --- Combat camera lock (area camera mode only) ---
   useEffect(() => {

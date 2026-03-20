@@ -124,3 +124,11 @@ export function broadcastRoofState(buildingId, revealed) {
     payload: { buildingId, revealed },
   })
 }
+
+export function broadcastRoofReveal(buildingId, revealed) {
+  _channel?.send({
+    type: 'broadcast',
+    event: 'roof-state',
+    payload: { buildingId, revealed },
+  })
+}
