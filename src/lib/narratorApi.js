@@ -39,7 +39,7 @@ ${srdContext ? `\n## Relevant SRD Reference\n${srdContext}` : ''}`;
   return data.content[0].text.trim();
 }
 
-export function buildSystemPrompt(campaignData, partyMembers, currentScene, exchangeCount, gameTime) {
+export function buildSystemPrompt(campaignData, partyMembers, currentScene, exchangeCount, gameTime, quests) {
   const title = campaignData?.title || 'an unnamed campaign';
 
   const partyLines = (partyMembers || [])
@@ -118,6 +118,11 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
   const resolvedGameTime = gameTime || { hour: 8, day: 1 }
   const timeStr = `Current time: ${formatTime(resolvedGameTime)}, ${getTimeOfDay(resolvedGameTime.hour)}`
 
+  const activeQuests = (quests || []).filter(q => q.status === 'active')
+  const questContext = activeQuests.length > 0
+    ? `\n\nActive quests:\n${activeQuests.map(q => `- ${q.title}: ${(q.objectives || []).filter(o => !o.completed).map(o => o.text).join(', ')}`).join('\n')}`
+    : ''
+
   return `You are the Dungeon Master for a D&D 5e campaign called "${title}".
 
 ${sceneText}
@@ -125,7 +130,7 @@ ${sceneText}
 ${timeStr}
 
 Party Members:
-${partyLines || 'No characters loaded yet.'}
+${partyLines || 'No characters loaded yet.'}${questContext}
 
 You are narrating this live session. When players describe their actions or speak to NPCs, respond as the DM:
 - Be vivid but concise — 2 to 4 sentences per response

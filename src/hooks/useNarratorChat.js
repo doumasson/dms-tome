@@ -32,7 +32,7 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
       }))
 
       const sceneWithPos = { ...zone, playerPosition: playerPosRef.current }
-      const systemPrompt = buildSystemPrompt(campaign, partyMembers, sceneWithPos, recentMessages.length, useStore.getState().gameTime)
+      const systemPrompt = buildSystemPrompt(campaign, partyMembers, sceneWithPos, recentMessages.length, useStore.getState().gameTime, useStore.getState().quests)
 
       const result = await callNarrator({ messages: recentMessages, systemPrompt, apiKey })
 
