@@ -166,6 +166,7 @@ export default function App() {
         case 'add-effect':          store.applyEncounterEffect(payload.effect); break;
         case 'remove-effect':       store.applyRemoveEffect(payload.effectId); break;
         case 'move-token':          store.moveToken(payload.id, payload.position.x, payload.position.y, payload.cost || 0); break;
+        case 'time-advance':        if (payload.gameTime) useStore.setState({ gameTime: payload.gameTime }); break;
       }
     });
 

@@ -8,6 +8,9 @@ import { renderExits, clearExits } from './ExitZone'
 import { TileAtlasV2 } from './tileAtlasV2'
 import { WallRenderer } from './WallRenderer'
 import { renderLighting, clearLighting } from './LightingLayer'
+import { applyDayNightTint } from './DayNightFilter.js'
+import { getTimeOfDay } from '../lib/gameTime.js'
+import useStore from '../store/useStore.js'
 
 // Atlas manifest files that ship with the build (JSON only — images loaded at runtime)
 const ATLAS_NAMES = [
@@ -467,6 +470,15 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       }
     }
   }, [zone?.buildings, zone?.width])
+
+  // Day/night tint — applied whenever gameTime or zone changes
+  const gameTime = useStore(s => s.gameTime)
+  useEffect(() => {
+    if (!worldRef.current) return
+    const isIndoor = ['dungeon', 'cave', 'crypt', 'sewer'].includes(zone?.theme)
+    const timeOfDay = isIndoor ? 'day' : getTimeOfDay(gameTime?.hour ?? 8)
+    applyDayNightTint(worldRef.current, timeOfDay)
+  }, [gameTime, zone?.theme, ready])
 
   // Scroll wheel zoom (camera mode)
   useEffect(() => {

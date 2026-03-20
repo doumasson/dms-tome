@@ -1,4 +1,5 @@
 import { sanitizeInput, sanitizeOutput } from './sanitize'
+import { formatTime, getTimeOfDay } from './gameTime'
 
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
@@ -38,7 +39,7 @@ ${srdContext ? `\n## Relevant SRD Reference\n${srdContext}` : ''}`;
   return data.content[0].text.trim();
 }
 
-export function buildSystemPrompt(campaignData, partyMembers, currentScene, exchangeCount) {
+export function buildSystemPrompt(campaignData, partyMembers, currentScene, exchangeCount, gameTime) {
   const title = campaignData?.title || 'an unnamed campaign';
 
   const partyLines = (partyMembers || [])
@@ -114,9 +115,14 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
     ? `\n- After ${exchangeCount} exchanges the scene energy is building — if the players have taken a meaningful action and it is narratively satisfying, set advanceScene to true to move the story forward.`
     : '';
 
+  const resolvedGameTime = gameTime || { hour: 8, day: 1 }
+  const timeStr = `Current time: ${formatTime(resolvedGameTime)}, ${getTimeOfDay(resolvedGameTime.hour)}`
+
   return `You are the Dungeon Master for a D&D 5e campaign called "${title}".
 
 ${sceneText}
+
+${timeStr}
 
 Party Members:
 ${partyLines || 'No characters loaded yet.'}

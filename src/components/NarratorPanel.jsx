@@ -338,6 +338,7 @@ export default function NarratorPanel() {
         partyMembers,
         currentScene,
         exchangeCountRef.current,
+        useStore.getState().gameTime,
       );
       const messages = [
         ...buildConversationMessages(),

@@ -70,6 +70,7 @@ export default function GameV2({ onLeave }) {
   const narrator = useStore(s => s.narrator)
   const activeCutscene = useStore(s => s.activeCutscene)
   const roofStates = useStore(s => s.roofStates)
+  const advanceGameTime = useStore(s => s.advanceGameTime)
 
   const pixiRef = useRef(null)
   const cameraRef = useRef(null)
@@ -955,6 +956,7 @@ export default function GameV2({ onLeave }) {
     const entry = exit.entryPoint || { x: 0, y: 0 }
     broadcastAreaTransition(targetId, entry)
     lastNpcTriggerRef.current = null
+    advanceGameTime(1)
 
     const app = pixiRef.current?.getApp()
     if (app) {
@@ -974,7 +976,7 @@ export default function GameV2({ onLeave }) {
       playerPosRef.current = entry
       setTimeout(() => setTransitioning(false), 100)
     }
-  }, [transitioning, inCombat, areas, areaBriefs, buildAndLoadArea, activateArea])
+  }, [transitioning, inCombat, areas, areaBriefs, buildAndLoadArea, activateArea, advanceGameTime])
 
   const handleInteractFn = useCallback(() => {
     if (isAnimating()) return
@@ -1244,7 +1246,7 @@ export default function GameV2({ onLeave }) {
       }))
 
       const sceneWithPos = { ...zone, playerPosition: playerPosRef.current }
-      const systemPrompt = buildSystemPrompt(campaign, partyMembers, sceneWithPos, recentMessages.length)
+      const systemPrompt = buildSystemPrompt(campaign, partyMembers, sceneWithPos, recentMessages.length, useStore.getState().gameTime)
 
       const result = await callNarrator({
         messages: recentMessages,
@@ -1379,7 +1381,10 @@ export default function GameV2({ onLeave }) {
           proposedBy={restProposal.proposedBy}
           partyMembers={[{ id: user?.id, name: myCharacter?.name || 'You' }]}
           isHost={false}
-          onResolve={() => setRestProposal(null)}
+          onResolve={() => {
+            advanceGameTime(restProposal.type === 'long' ? 8 : 1)
+            setRestProposal(null)
+          }}
           onCancel={() => setRestProposal(null)}
         />
       )}
