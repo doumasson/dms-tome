@@ -1,133 +1,253 @@
 import { useState, useMemo } from 'react';
 import useStore from '../store/useStore';
-import { CONSUMABLES } from '../data/equipment';
 import { crToXp } from '../lib/xpTable';
+import { generateLoot, isEligibleForItem } from '../lib/lootGenerator';
+import { rollDie, getPortraitUrl } from '../lib/dice';
 
-// CR-based gold drop table (average gold pieces by CR)
-function goldForCr(cr) {
-  const table = {
-    '0': 2, '1/8': 5, '1/4': 10, '1/2': 20,
-    1: 50, 2: 100, 3: 150, 4: 250, 5: 400,
-    6: 600, 7: 900, 8: 1300, 9: 1800, 10: 2500,
-  };
-  const base = table[String(cr)] ?? 100;
-  // Roll with some variance (75% to 125%)
-  return Math.floor(base * (0.75 + Math.random() * 0.5));
-}
+const RARITY_COLOR = {
+  common:    '#888888',
+  uncommon:  '#2ecc71',
+  rare:      '#3498db',
+  very_rare: '#9b59b6',
+  legendary: '#f39c12',
+};
 
-// Generate 1-2 item drops based on highest enemy CR
-function generateItemDrops(enemies) {
-  const lootPool = CONSUMABLES.filter(c => ['healing-potion', 'greater-healing-potion', 'antitoxin', 'potion-of-speed'].includes(c.id));
-  const highestCr = enemies.reduce((best, e) => {
-    const crNum = parseFloat(e.cr) || 0;
-    return crNum > best ? crNum : best;
-  }, 0);
-  const count = highestCr >= 5 ? 2 : highestCr >= 2 ? 1 : (Math.random() > 0.5 ? 1 : 0);
-  const drops = [];
-  for (let i = 0; i < count; i++) {
-    const pool = highestCr >= 4 ? lootPool : lootPool.filter(c => c.id !== 'potion-of-speed');
-    drops.push({ ...pool[Math.floor(Math.random() * pool.length)], instanceId: crypto.randomUUID(), quantity: 1 });
-  }
-  return drops;
-}
+const RARITY_LABEL = {
+  common:    'Common',
+  uncommon:  'Uncommon',
+  rare:      'Rare',
+  very_rare: 'Very Rare',
+  legendary: 'Legendary',
+};
 
-export default function LootScreen({ enemies, partySize, onDone }) {
-  const myCharacter        = useStore(s => s.myCharacter);
-  const claimCombatRewards = useStore(s => s.claimCombatRewards);
+// ── Roll-off panel for a single magic item ───────────────────────────────────
+function ItemRollOff({ item, partyMembers, onWinner }) {
   const addItemToInventory = useStore(s => s.addItemToInventory);
+  const myCharacter        = useStore(s => s.myCharacter);
 
-  const totalXp   = useMemo(() => enemies.reduce((sum, e) => sum + crToXp(e.cr), 0), [enemies]);
-  const totalGold = useMemo(() => enemies.reduce((sum, e) => sum + goldForCr(e.cr), 0), [enemies]);
-  const xpEach    = Math.floor(totalXp / Math.max(partySize, 1));
-  const goldEach  = Math.floor(totalGold / Math.max(partySize, 1));
-  const itemDrops = useMemo(() => generateItemDrops(enemies), [enemies]);
+  // rolls: { [characterId]: number }
+  const [rolls, setRolls] = useState({});
+  const [winner, setWinner] = useState(null);
+  const [tiedIds, setTiedIds] = useState(null); // null = no tie yet
 
-  const [claimed, setClaimed]       = useState({}); // instanceId → true
-  const [xpApplied, setXpApplied]   = useState(false);
-  const [goldApplied, setGoldApplied] = useState(false);
+  const eligible = useMemo(
+    () => partyMembers.filter(c => isEligibleForItem(c, item)),
+    [partyMembers, item],
+  );
 
-  function handleClaimItem(item) {
-    if (claimed[item.instanceId]) return;
-    addItemToInventory(item);
-    setClaimed(prev => ({ ...prev, [item.instanceId]: true }));
+  function charKey(c) { return c.id || c.name; }
+
+  function handleRoll(character) {
+    const key = charKey(character);
+    if (rolls[key] !== undefined) return; // already rolled
+    // Only allow rolling for own character
+    if (myCharacter && charKey(myCharacter) !== key) return;
+    setRolls(prev => ({ ...prev, [key]: rollDie(20) }));
   }
 
-  function handleTakeRewards() {
-    if (xpApplied && goldApplied) return;
-    claimCombatRewards(
-      xpApplied ? 0 : xpEach,
-      goldApplied ? 0 : goldEach,
-    );
-    setXpApplied(true);
-    setGoldApplied(true);
+  // Determine if all eligible players have rolled
+  const allRolled = eligible.length > 0 && eligible.every(c => rolls[charKey(c)] !== undefined);
+
+  // After all rolled, compute winner / tie
+  useMemo(() => {
+    if (!allRolled || winner) return;
+    const activePlayers = tiedIds
+      ? eligible.filter(c => tiedIds.includes(charKey(c)))
+      : eligible;
+    const allRolledForActive = activePlayers.every(c => rolls[charKey(c)] !== undefined);
+    if (!allRolledForActive) return;
+
+    const maxRoll = Math.max(...activePlayers.map(c => rolls[charKey(c)]));
+    const tied = activePlayers.filter(c => rolls[charKey(c)] === maxRoll);
+    if (tied.length === 1) {
+      setWinner(tied[0]);
+      addItemToInventory(item);
+      onWinner?.(tied[0], item);
+    } else {
+      setTiedIds(tied.map(charKey));
+    }
+  }, [allRolled, rolls]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function handleReroll() {
+    // Clear rolls for tied players only
+    const newRolls = { ...rolls };
+    tiedIds.forEach(id => delete newRolls[id]);
+    setRolls(newRolls);
+    setTiedIds(null);
   }
 
-  const rewardsTaken = xpApplied && goldApplied;
-  const allClaimed = itemDrops.every(i => claimed[i.instanceId]);
+  const rarityColor = RARITY_COLOR[item.rarity] || '#888';
+  const activeTied  = tiedIds ?? [];
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <div style={styles.header}>
-          <div style={styles.trophy}>⚔</div>
-          <h2 style={styles.title}>Victory!</h2>
-          <p style={styles.subtitle}>The enemies are defeated. Claim your rewards.</p>
+    <div style={s.rollOffCard}>
+      {/* Item header */}
+      <div style={s.itemHeader}>
+        <div style={s.itemName}>{item.name}</div>
+        <span style={{ ...s.rarityBadge, background: rarityColor + '22', color: rarityColor, borderColor: rarityColor + '55' }}>
+          {RARITY_LABEL[item.rarity] || item.rarity}
+        </span>
+      </div>
+      {item.description && (
+        <div style={s.itemDesc}>{item.description}</div>
+      )}
+      {item.requiresAttunement && (
+        <div style={s.attunementNote}>Requires Attunement</div>
+      )}
+
+      {/* Winner banner */}
+      {winner && (
+        <div style={s.winnerBanner}>
+          {winner.name} wins {item.name}!
+        </div>
+      )}
+
+      {/* Tie banner */}
+      {!winner && tiedIds && (
+        <div style={s.tieBanner}>
+          Tie! {tiedIds.map(id => partyMembers.find(c => charKey(c) === id)?.name).join(' & ')} must re-roll.
+          {myCharacter && tiedIds.includes(charKey(myCharacter)) && (
+            <button style={s.rerollBtn} onClick={handleReroll}>Re-roll</button>
+          )}
+        </div>
+      )}
+
+      {/* Character roll rows */}
+      {!winner && (
+        <div style={s.rollList}>
+          {partyMembers.map(character => {
+            const key      = charKey(character);
+            const isElig   = isEligibleForItem(character, item);
+            const rolled   = rolls[key];
+            const isMe     = myCharacter && charKey(myCharacter) === key;
+            const isTied   = activeTied.includes(key);
+            const canRoll  = isElig && isMe && rolled === undefined && (!tiedIds || isTied);
+            const dimmed   = !isElig || (tiedIds && !isTied);
+
+            return (
+              <div
+                key={key}
+                style={{ ...s.rollRow, opacity: dimmed ? 0.35 : 1 }}
+                title={!isElig ? 'Not proficient' : undefined}
+              >
+                <img
+                  src={getPortraitUrl(character.name, character.race, character.class)}
+                  alt={character.name}
+                  style={s.portrait}
+                />
+                <span style={s.charName}>{character.name}</span>
+                <div style={s.rollResult}>
+                  {rolled !== undefined ? (
+                    <span style={{ ...s.dieValue, color: rolled === 20 ? '#f39c12' : rolled === 1 ? '#e74c3c' : '#e8dcc8' }}>
+                      {rolled}
+                    </span>
+                  ) : canRoll ? (
+                    <button style={s.rollBtn} onClick={() => handleRoll(character)}>
+                      Roll d20
+                    </button>
+                  ) : (
+                    <span style={s.waiting}>{isElig ? '—' : 'N/A'}</span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main LootScreen ──────────────────────────────────────────────────────────
+export default function LootScreen({ enemies, partySize, onDone }) {
+  const myCharacter        = useStore(s => s.myCharacter);
+  const partyMembers       = useStore(s => s.partyMembers);
+  const claimCombatRewards = useStore(s => s.claimCombatRewards);
+
+  const totalXp = useMemo(() => enemies.reduce((sum, e) => sum + crToXp(e.cr), 0), [enemies]);
+  const xpEach  = Math.floor(totalXp / Math.max(partySize, 1));
+
+  const { totalGold, goldPerPlayer, items } = useMemo(
+    () => generateLoot(enemies, partySize),
+    [enemies, partySize], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
+  const [rewardsClaimed, setRewardsClaimed] = useState(false);
+  const [itemWinners, setItemWinners]       = useState({}); // instanceId → characterName
+
+  // Use partyMembers from store; fall back to myCharacter alone if store empty
+  const members = useMemo(() => {
+    if (partyMembers && partyMembers.length > 0) return partyMembers;
+    if (myCharacter) return [myCharacter];
+    return [];
+  }, [partyMembers, myCharacter]);
+
+  function handleClaimRewards() {
+    if (rewardsClaimed) return;
+    claimCombatRewards(xpEach, goldPerPlayer);
+    setRewardsClaimed(true);
+  }
+
+  function handleItemWinner(character, item) {
+    setItemWinners(prev => ({ ...prev, [item.instanceId]: character.name }));
+  }
+
+  return (
+    <div style={s.overlay}>
+      <div style={s.modal}>
+        {/* Header */}
+        <div style={s.header}>
+          <div style={s.trophy}>⚔</div>
+          <h2 style={s.title}>Victory!</h2>
+          <p style={s.subtitle}>The enemies are defeated. Claim your rewards.</p>
         </div>
 
-        {/* XP & Gold */}
-        <div style={styles.rewardRow}>
-          <div style={styles.rewardCard}>
-            <div style={styles.rewardIcon}>✦</div>
-            <div style={styles.rewardAmount}>{xpEach.toLocaleString()}</div>
-            <div style={styles.rewardLabel}>XP each</div>
-            <div style={styles.rewardTotal}>({totalXp.toLocaleString()} total ÷ {partySize})</div>
+        {/* XP + Gold summary */}
+        <div style={s.rewardRow}>
+          <div style={s.rewardCard}>
+            <div style={s.rewardIcon}>✦</div>
+            <div style={s.rewardAmount}>{xpEach.toLocaleString()}</div>
+            <div style={s.rewardLabel}>XP each</div>
+            <div style={s.rewardTotal}>({totalXp.toLocaleString()} total ÷ {partySize})</div>
           </div>
-          <div style={styles.rewardCard}>
-            <div style={styles.rewardIcon}>🪙</div>
-            <div style={styles.rewardAmount}>{goldEach}</div>
-            <div style={styles.rewardLabel}>Gold each</div>
-            <div style={styles.rewardTotal}>({totalGold} total ÷ {partySize})</div>
+          <div style={s.rewardCard}>
+            <div style={s.rewardIcon}>🪙</div>
+            <div style={s.rewardAmount}>{goldPerPlayer}</div>
+            <div style={s.rewardLabel}>Gold each</div>
+            <div style={s.rewardTotal}>({totalGold} total ÷ {partySize})</div>
           </div>
         </div>
 
-        {/* Take XP + Gold button */}
+        {/* Claim XP + Gold */}
         {myCharacter && (
           <button
-            style={{ ...styles.takeBtn, ...(rewardsTaken ? styles.takeBtnDone : {}) }}
-            onClick={handleTakeRewards}
-            disabled={rewardsTaken}
+            style={{ ...s.takeBtn, ...(rewardsClaimed ? s.takeBtnDone : {}) }}
+            onClick={handleClaimRewards}
+            disabled={rewardsClaimed}
           >
-            {rewardsTaken ? `✓ Rewards claimed by ${myCharacter.name}` : `Claim XP & Gold as ${myCharacter.name}`}
+            {rewardsClaimed
+              ? `✓ Rewards claimed by ${myCharacter.name}`
+              : `Claim XP & Gold as ${myCharacter.name}`}
           </button>
         )}
 
-        {/* Item drops */}
-        {itemDrops.length > 0 && (
-          <div style={styles.itemSection}>
-            <div style={styles.itemSectionTitle}>Item Drops</div>
-            <div style={styles.itemList}>
-              {itemDrops.map(item => (
-                <div key={item.instanceId} style={styles.itemCard}>
-                  <span style={styles.itemIcon}>{item.icon || '📦'}</span>
-                  <div style={styles.itemInfo}>
-                    <div style={styles.itemName}>{item.name}</div>
-                    <div style={styles.itemDesc}>{item.description}</div>
-                  </div>
-                  <button
-                    style={{ ...styles.claimBtn, ...(claimed[item.instanceId] ? styles.claimBtnDone : {}) }}
-                    onClick={() => handleClaimItem(item)}
-                    disabled={!!claimed[item.instanceId]}
-                  >
-                    {claimed[item.instanceId] ? '✓ Claimed' : 'Claim'}
-                  </button>
-                </div>
-              ))}
-            </div>
+        {/* Magic item roll-offs */}
+        {items.length > 0 && (
+          <div style={s.magicSection}>
+            <div style={s.sectionTitle}>Magic Items</div>
+            {items.map(item => (
+              <ItemRollOff
+                key={item.instanceId}
+                item={item}
+                partyMembers={members}
+                onWinner={handleItemWinner}
+              />
+            ))}
           </div>
         )}
 
         {/* Continue */}
-        <button style={styles.continueBtn} onClick={onDone}>
+        <button style={s.continueBtn} onClick={onDone}>
           Continue Adventure →
         </button>
       </div>
@@ -135,7 +255,8 @@ export default function LootScreen({ enemies, partySize, onDone }) {
   );
 }
 
-const styles = {
+// ── Styles ───────────────────────────────────────────────────────────────────
+const s = {
   overlay: {
     position: 'fixed', inset: 0, zIndex: 8000,
     background: 'rgba(0,0,0,0.88)',
@@ -143,7 +264,7 @@ const styles = {
     padding: 20,
   },
   modal: {
-    width: '100%', maxWidth: 520,
+    width: '100%', maxWidth: 540,
     background: 'linear-gradient(180deg, #1a0f05 0%, #110a03 100%)',
     border: '1px solid rgba(212,175,55,0.35)',
     borderRadius: 14, padding: '28px 24px',
@@ -161,10 +282,10 @@ const styles = {
     background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)',
     borderRadius: 10,
   },
-  rewardIcon: { fontSize: '1.4rem', marginBottom: 4 },
+  rewardIcon:   { fontSize: '1.4rem', marginBottom: 4 },
   rewardAmount: { fontFamily: "'Cinzel', Georgia, serif", fontSize: '1.8rem', fontWeight: 700, color: '#d4af37', lineHeight: 1 },
-  rewardLabel: { fontSize: '0.72rem', color: 'rgba(200,180,140,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: 4, fontFamily: "'Cinzel', Georgia, serif" },
-  rewardTotal: { fontSize: '0.68rem', color: 'rgba(200,180,140,0.35)', marginTop: 2 },
+  rewardLabel:  { fontSize: '0.72rem', color: 'rgba(200,180,140,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: 4, fontFamily: "'Cinzel', Georgia, serif" },
+  rewardTotal:  { fontSize: '0.68rem', color: 'rgba(200,180,140,0.35)', marginTop: 2 },
   takeBtn: {
     background: 'linear-gradient(135deg, #f0c868, #d4af37, #a8841f)',
     color: '#1a0e00', border: 'none', borderRadius: 8,
@@ -172,15 +293,59 @@ const styles = {
     fontFamily: "'Cinzel', Georgia, serif", cursor: 'pointer', width: '100%',
   },
   takeBtnDone: { background: 'rgba(46,204,113,0.15)', border: '1px solid rgba(46,204,113,0.4)', color: '#2ecc71', cursor: 'default' },
-  itemSection: { display: 'flex', flexDirection: 'column', gap: 8 },
-  itemSectionTitle: { fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.72rem', color: 'rgba(212,175,55,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase' },
-  itemList: { display: 'flex', flexDirection: 'column', gap: 8 },
-  itemCard: { display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 8, padding: '10px 14px' },
-  itemIcon: { fontSize: '1.4rem', flexShrink: 0 },
-  itemInfo: { flex: 1 },
-  itemName: { fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.9rem', color: '#e8dcc8', fontWeight: 700 },
-  itemDesc: { fontSize: '0.72rem', color: 'rgba(200,180,140,0.5)', marginTop: 2 },
-  claimBtn: { background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)', color: '#d4af37', borderRadius: 6, padding: '6px 14px', fontSize: '0.78rem', cursor: 'pointer', fontFamily: "'Cinzel', Georgia, serif", flexShrink: 0 },
-  claimBtnDone: { background: 'rgba(46,204,113,0.1)', border: '1px solid rgba(46,204,113,0.3)', color: '#2ecc71', cursor: 'default' },
-  continueBtn: { background: 'transparent', border: '1px solid rgba(212,175,55,0.25)', color: 'rgba(200,180,140,0.6)', borderRadius: 8, padding: '10px 20px', fontSize: '0.85rem', cursor: 'pointer', fontFamily: "'Cinzel', Georgia, serif", width: '100%', textAlign: 'center' },
+  magicSection: { display: 'flex', flexDirection: 'column', gap: 12 },
+  sectionTitle: { fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.72rem', color: 'rgba(212,175,55,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase' },
+
+  // ItemRollOff
+  rollOffCard: {
+    background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.09)',
+    borderRadius: 10, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10,
+  },
+  itemHeader: { display: 'flex', alignItems: 'center', gap: 10 },
+  itemName:   { fontFamily: "'Cinzel', Georgia, serif", fontSize: '1rem', color: '#e8dcc8', fontWeight: 700, flex: 1 },
+  rarityBadge: {
+    fontSize: '0.68rem', fontFamily: "'Cinzel', Georgia, serif",
+    padding: '2px 8px', borderRadius: 4, border: '1px solid',
+    textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0,
+  },
+  itemDesc:       { fontSize: '0.78rem', color: 'rgba(200,180,140,0.55)', lineHeight: 1.4 },
+  attunementNote: { fontSize: '0.68rem', color: 'rgba(180,130,200,0.6)', fontStyle: 'italic' },
+  winnerBanner: {
+    background: 'rgba(46,204,113,0.12)', border: '1px solid rgba(46,204,113,0.35)',
+    borderRadius: 6, padding: '8px 12px', color: '#2ecc71',
+    fontSize: '0.85rem', fontFamily: "'Cinzel', Georgia, serif", textAlign: 'center',
+  },
+  tieBanner: {
+    background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.3)',
+    borderRadius: 6, padding: '8px 12px', color: '#d4af37',
+    fontSize: '0.82rem', fontFamily: "'Cinzel', Georgia, serif",
+    display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+  },
+  rerollBtn: {
+    background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.45)',
+    color: '#d4af37', borderRadius: 5, padding: '4px 12px',
+    fontSize: '0.78rem', cursor: 'pointer', fontFamily: "'Cinzel', Georgia, serif",
+  },
+  rollList: { display: 'flex', flexDirection: 'column', gap: 6 },
+  rollRow: {
+    display: 'flex', alignItems: 'center', gap: 10,
+    background: 'rgba(255,255,255,0.03)', borderRadius: 6, padding: '6px 10px',
+  },
+  portrait: { width: 32, height: 32, borderRadius: '50%', border: '1px solid rgba(212,175,55,0.25)', flexShrink: 0, background: '#111' },
+  charName: { flex: 1, fontSize: '0.85rem', color: '#c8b88a', fontFamily: "'Cinzel', Georgia, serif" },
+  rollResult: { flexShrink: 0, minWidth: 72, textAlign: 'right' },
+  dieValue:  { fontFamily: "'Cinzel', Georgia, serif", fontSize: '1.1rem', fontWeight: 700 },
+  rollBtn: {
+    background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.4)',
+    color: '#d4af37', borderRadius: 5, padding: '4px 10px',
+    fontSize: '0.75rem', cursor: 'pointer', fontFamily: "'Cinzel', Georgia, serif",
+  },
+  waiting: { fontSize: '0.78rem', color: 'rgba(200,180,140,0.3)' },
+
+  continueBtn: {
+    background: 'transparent', border: '1px solid rgba(212,175,55,0.25)',
+    color: 'rgba(200,180,140,0.6)', borderRadius: 8, padding: '10px 20px',
+    fontSize: '0.85rem', cursor: 'pointer', fontFamily: "'Cinzel', Georgia, serif",
+    width: '100%', textAlign: 'center',
+  },
 };
