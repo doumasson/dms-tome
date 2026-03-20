@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useEffect, useCallback } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import useStore from '../../store/useStore';
 import { getSlotType } from '../../data/equipment';
 import { GridPacker, getItemSize } from '../../lib/inventoryGrid';
@@ -13,16 +13,9 @@ import {
 const GRID_COLS = 10;
 const GRID_ROWS = 7;
 const CELL_PX   = 36;
-const DRAG_THRESHOLD = 4; // px before drag activates (allows double-click)
+const DRAG_THRESHOLD = 4;
 
 function itemKey(i) { return i.instanceId || i.name; }
-
-/** Convert pixel coords (relative to grid top-left) to a grid cell. */
-function pxToCell(px, py, offsetX, offsetY, w, h) {
-  const col = Math.max(0, Math.min(Math.floor((px - offsetX) / CELL_PX), GRID_COLS - w));
-  const row = Math.max(0, Math.min(Math.floor((py - offsetY) / CELL_PX), GRID_ROWS - h));
-  return { col, row };
-}
 
 function itemIcon(item) {
   if (item.icon) return item.icon;
@@ -33,6 +26,14 @@ function itemIcon(item) {
   if (item.damage !== undefined || item.type === 'weapon') return '⚔';
   if (item.type === 'gear') return '🔧';
   return '📦';
+}
+
+/** Cursor pixel position (relative to grid) → grid cell for an item of size w×h */
+function cursorToCell(px, py, w, h) {
+  return {
+    col: Math.max(0, Math.min(Math.floor(px / CELL_PX), GRID_COLS - w)),
+    row: Math.max(0, Math.min(Math.floor(py / CELL_PX), GRID_ROWS - h)),
+  };
 }
 
 function packItems(items) {
@@ -58,9 +59,7 @@ function packItems(items) {
       if (slot) {
         packer.place(itemKey(item), slot.col, slot.row, w, h);
         placed.push({ item, col: slot.col, row: slot.row, w, h });
-      } else {
-        overflow.push(item);
-      }
+      } else overflow.push(item);
     }
   }
 
@@ -70,9 +69,7 @@ function packItems(items) {
     if (slot) {
       packer.place(itemKey(item), slot.col, slot.row, w, h);
       placed.push({ item, col: slot.col, row: slot.row, w, h });
-    } else {
-      overflow.push(item);
-    }
+    } else overflow.push(item);
   }
 
   return { placed, overflow };
@@ -123,124 +120,118 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
 
   const { placed, overflow } = useMemo(() => packItems(inventory), [inventory]);
 
-  const [hoveredId, setHoveredId] = useState(null);
-  const gridRef      = useRef(null);
+  // Persist positions for items that lack them (runs once, guard prevents loops)
+  const didSaveRef = useRef(false);
+  useEffect(() => {
+    if (!isOwn || !placed.length || didSaveRef.current) return;
+    const needsSave = inventory.some(i => i._gridCol == null || i._gridRow == null);
+    if (!needsSave) return;
+    didSaveRef.current = true;
+    const posMap = new Map();
+    for (const p of placed) posMap.set(itemKey(p.item), { col: p.col, row: p.row });
+    updateMyCharacter({
+      inventory: inventory.map(i => {
+        const pos = posMap.get(itemKey(i));
+        return pos ? { ...i, _gridCol: pos.col, _gridRow: pos.row } : i;
+      }),
+    });
+  }, [placed]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Drag state — two phases:
-  //   1. pendingDrag (ref): mouseDown captured, waiting for threshold
-  //   2. drag (state): threshold exceeded, ghost visible, drop enabled
+  const [hoveredId, setHoveredId] = useState(null);
+  const gridRef = useRef(null);
+
+  // Drag: { item, w, h, key } — NO offset. Cursor = item top-left.
   const [drag, setDrag]         = useState(null);
-  const [cursorPx, setCursorPx] = useState(null);   // { x, y } relative to grid
-  const pendingDragRef = useRef(null);
+  const [ghostCell, setGhostCell] = useState(null); // { col, row } — THE truth for where item goes
+  const pendingRef = useRef(null); // { item, w, h, startX, startY }
 
   function handleMouseDown(e, item) {
     if (!isOwn || e.button !== 0) return;
     e.preventDefault();
-    const [w, h]   = getItemSize(item);
-    const placed_  = placed.find(p => itemKey(p.item) === itemKey(item));
-    const origCol  = placed_?.col ?? 0;
-    const origRow  = placed_?.row ?? 0;
-    pendingDragRef.current = { item, w, h, origCol, origRow, startClientX: e.clientX, startClientY: e.clientY };
+    const [w, h] = getItemSize(item);
+    pendingRef.current = { item, w, h, startX: e.clientX, startY: e.clientY };
   }
 
-  // commitDrop reads FRESH state from the store — no stale refs.
-  const commitDrop = useCallback((pxInGrid, pyInGrid) => {
-    const d = drag;
-    if (!d) return;
-    const { w, h, offsetX, offsetY, item } = d;
-
-    const { col: targetCol, row: targetRow } = pxToCell(pxInGrid, pyInGrid, offsetX, offsetY, w, h);
-
-    // Read LATEST inventory from the store (not a stale ref)
-    const currentInventory = useStore.getState().myCharacter?.inventory || [];
-
-    // Compute FRESH layout from current inventory
-    const { placed: freshPlaced } = packItems(currentInventory);
-
-    // Build a packer without the dragged item to check vacancy
-    const packer = new GridPacker(GRID_COLS, GRID_ROWS);
-    for (const p of freshPlaced) {
-      if (itemKey(p.item) === itemKey(item)) continue;
-      packer.place(itemKey(p.item), p.col, p.row, p.w, p.h);
-    }
-
-    if (packer.canPlace(targetCol, targetRow, w, h)) {
-      // Persist ALL item positions (prevents any shifting)
-      const posMap = new Map();
-      for (const p of freshPlaced) {
-        if (itemKey(p.item) === itemKey(item)) continue;
-        posMap.set(itemKey(p.item), { col: p.col, row: p.row });
-      }
-      posMap.set(itemKey(item), { col: targetCol, row: targetRow });
-
-      updateMyCharacter({
-        inventory: currentInventory.map(i => {
-          const pos = posMap.get(itemKey(i));
-          if (pos) return { ...i, _gridCol: pos.col, _gridRow: pos.row };
-          return i;
-        }),
-      });
-    }
-  }, [drag, updateMyCharacter]);
-
-  // Global mouse listeners
   useEffect(() => {
+    function getGridPx(e) {
+      const r = gridRef.current?.getBoundingClientRect();
+      return r ? { x: e.clientX - r.left, y: e.clientY - r.top } : null;
+    }
+
     function onMove(e) {
-      const pending = pendingDragRef.current;
-      if (pending && !drag) {
-        const dx = e.clientX - pending.startClientX;
-        const dy = e.clientY - pending.startClientY;
-        if (Math.abs(dx) + Math.abs(dy) > DRAG_THRESHOLD) {
-          const gRect = gridRef.current?.getBoundingClientRect();
-          if (!gRect) return;
-          const offsetX = pending.startClientX - gRect.left - pending.origCol * CELL_PX;
-          const offsetY = pending.startClientY - gRect.top  - pending.origRow * CELL_PX;
-          setDrag({ item: pending.item, w: pending.w, h: pending.h, offsetX, offsetY, origCol: pending.origCol, origRow: pending.origRow });
-          setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
-          pendingDragRef.current = null;
+      const p = pendingRef.current;
+      if (p && !drag) {
+        if (Math.abs(e.clientX - p.startX) + Math.abs(e.clientY - p.startY) > DRAG_THRESHOLD) {
+          setDrag({ item: p.item, w: p.w, h: p.h, key: itemKey(p.item) });
+          const gp = getGridPx(e);
+          if (gp) setGhostCell(cursorToCell(gp.x, gp.y, p.w, p.h));
+          pendingRef.current = null;
         }
         return;
       }
       if (drag) {
-        const gRect = gridRef.current?.getBoundingClientRect();
-        if (gRect) setCursorPx({ x: e.clientX - gRect.left, y: e.clientY - gRect.top });
+        const gp = getGridPx(e);
+        if (gp) setGhostCell(cursorToCell(gp.x, gp.y, drag.w, drag.h));
       }
     }
-    function onUp(e) {
-      if (drag) {
-        const gRect = gridRef.current?.getBoundingClientRect();
-        if (gRect) {
-          commitDrop(e.clientX - gRect.left, e.clientY - gRect.top);
+
+    function onUp() {
+      if (drag && ghostCell) {
+        // Read FRESH inventory from store
+        const inv = useStore.getState().myCharacter?.inventory || [];
+        const { placed: fresh } = packItems(inv);
+
+        // Check vacancy (exclude dragged item)
+        const packer = new GridPacker(GRID_COLS, GRID_ROWS);
+        for (const p of fresh) {
+          if (itemKey(p.item) === drag.key) continue;
+          packer.place(itemKey(p.item), p.col, p.row, p.w, p.h);
         }
+
+        if (packer.canPlace(ghostCell.col, ghostCell.row, drag.w, drag.h)) {
+          // Save ALL positions: others keep current, dragged gets ghost position
+          const posMap = new Map();
+          for (const p of fresh) {
+            if (itemKey(p.item) === drag.key) continue;
+            posMap.set(itemKey(p.item), { col: p.col, row: p.row });
+          }
+          posMap.set(drag.key, { col: ghostCell.col, row: ghostCell.row });
+
+          updateMyCharacter({
+            inventory: inv.map(i => {
+              const pos = posMap.get(itemKey(i));
+              return pos ? { ...i, _gridCol: pos.col, _gridRow: pos.row } : i;
+            }),
+          });
+        }
+
         setDrag(null);
-        setCursorPx(null);
+        setGhostCell(null);
       }
-      pendingDragRef.current = null;
+      pendingRef.current = null;
     }
+
     window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup',   onUp);
+    window.addEventListener('mouseup', onUp);
     return () => {
       window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup',   onUp);
+      window.removeEventListener('mouseup', onUp);
     };
-  }, [drag, commitDrop]);
+  }, [drag, ghostCell, updateMyCharacter]);
 
-  // Ghost cell — uses same pxToCell as commitDrop for consistency
-  const ghostCell = (drag && cursorPx)
-    ? pxToCell(cursorPx.x, cursorPx.y, drag.offsetX, drag.offsetY, drag.w, drag.h)
-    : null;
-
+  // Ghost validity
   const ghostValid = useMemo(() => {
     if (!ghostCell || !drag) return false;
     const packer = new GridPacker(GRID_COLS, GRID_ROWS);
     for (const p of placed) {
-      if (itemKey(p.item) === itemKey(drag.item)) continue;
+      if (itemKey(p.item) === drag.key) continue;
       packer.place(itemKey(p.item), p.col, p.row, p.w, p.h);
     }
     return packer.canPlace(ghostCell.col, ghostCell.row, drag.w, drag.h);
   }, [ghostCell, drag, placed]);
 
   function resetLayout() {
+    didSaveRef.current = false;
     updateMyCharacter({ inventory: inventory.map(({ _gridCol, _gridRow, ...rest }) => rest) });
   }
 
@@ -248,7 +239,6 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
 
   return (
     <div style={container}>
-      {/* Weight bar */}
       <div style={weightRow}>
         <span style={weightLabel}>
           {encumbered ? (heavilyEnc ? '🐢 Heavily Encumbered' : '⚠ Encumbered') : '🎒 Carry Weight'}
@@ -257,8 +247,8 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           <span style={weightNum}>{totalWeight.toFixed(1)} / {carryCapacity} lb</span>
           {isOwn && (
             <button onClick={resetLayout} title="Reset item layout"
-              style={{ background: 'none', border: 'none', color: 'rgba(212,175,55,0.6)', fontSize: '0.8rem', cursor: 'pointer', padding: '2px 6px' }}>
-              ⟳ Reset
+              style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)', color: '#d4af37', fontSize: '0.75rem', cursor: 'pointer', padding: '2px 8px', borderRadius: 3 }}>
+              Reset
             </button>
           )}
         </span>
@@ -267,40 +257,36 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
         <div style={{ ...weightBarFill, width: `${weightPct}%`, background: weightColor }} />
       </div>
 
-      {/* 10×7 grid */}
       <div ref={gridRef} style={{ position: 'relative', width: GRID_COLS * CELL_PX, height: GRID_ROWS * CELL_PX, flexShrink: 0, userSelect: 'none' }}>
 
-        {/* Background cells */}
         {Array.from({ length: GRID_ROWS * GRID_COLS }, (_, i) => {
           const col = i % GRID_COLS;
           const row = Math.floor(i / GRID_COLS);
           const inGhost = ghostCell && drag &&
             col >= ghostCell.col && col < ghostCell.col + drag.w &&
             row >= ghostCell.row && row < ghostCell.row + drag.h;
-          const highlightColor = inGhost
+          const hl = inGhost
             ? ghostValid ? 'rgba(212,175,55,0.18)' : 'rgba(192,57,43,0.18)'
             : 'rgba(255,255,255,0.02)';
-          const borderColor = inGhost
+          const bc = inGhost
             ? ghostValid ? 'rgba(212,175,55,0.6)' : 'rgba(192,57,43,0.5)'
             : 'rgba(255,255,255,0.05)';
           return (
             <div key={i} style={{
               position: 'absolute', left: col * CELL_PX, top: row * CELL_PX,
               width: CELL_PX - 1, height: CELL_PX - 1,
-              background: highlightColor,
-              border: `1px solid ${borderColor}`,
+              background: hl, border: `1px solid ${bc}`,
               borderRadius: 2, boxSizing: 'border-box',
             }} />
           );
         })}
 
-        {/* Placed items */}
         {placed.map(({ item, col, row, w, h }) => {
           const slot       = getSlotType(item);
           const canEquip   = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
           const canUse     = isOwn && item.type === 'consumable';
           const key        = itemKey(item);
-          const isDragging = drag && itemKey(drag.item) === key;
+          const isDragging = drag && drag.key === key;
           const isHov      = hoveredId === key && !drag;
           return (
             <div
@@ -314,8 +300,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                 position: 'absolute',
                 left: col * CELL_PX + 1, top: row * CELL_PX + 1,
                 width: w * CELL_PX - 2, height: h * CELL_PX - 2,
-                ...itemCard,
-                overflow: 'hidden',
+                ...itemCard, overflow: 'hidden',
                 opacity:  isDragging ? 0.25 : 1,
                 border:   isHov ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(212,175,55,0.25)',
                 cursor:   isOwn ? (isDragging ? 'grabbing' : 'grab') : 'default',
@@ -330,7 +315,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           );
         })}
 
-        {/* Drag ghost — snapped to grid */}
+        {/* Ghost — snapped to grid, same position as drop target */}
         {drag && ghostCell && (
           <div style={{
             position: 'absolute',
@@ -338,12 +323,10 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
             top:  ghostCell.row * CELL_PX,
             width:  drag.w * CELL_PX - 2,
             height: drag.h * CELL_PX - 2,
-            ...itemCard,
-            overflow: 'hidden',
-            opacity: 0.85,
-            pointerEvents: 'none',
-            zIndex: 500,
-            boxShadow: '0 6px 24px rgba(0,0,0,0.7)',
+            ...itemCard, overflow: 'hidden',
+            opacity: 0.7, pointerEvents: 'none', zIndex: 500,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
+            border: ghostValid ? '2px solid rgba(212,175,55,0.8)' : '2px solid rgba(192,57,43,0.8)',
           }}>
             <div style={itemIconStyle}>{itemIcon(drag.item)}</div>
             {drag.w > 1 && drag.h > 1 && <div style={itemNameStyle}>{drag.item.name}</div>}
@@ -351,8 +334,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           </div>
         )}
 
-        {/* Tooltip */}
-        {hoveredPlaced && (() => {
+        {hoveredPlaced && !drag && (() => {
           const { item, col, row, w, h } = hoveredPlaced;
           const slot     = getSlotType(item);
           const canEquip = isOwn && slot && slot !== 'consumable' && slot !== 'misc';
@@ -372,7 +354,6 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
         })()}
       </div>
 
-      {/* Overflow */}
       {overflow.length > 0 && (
         <div style={overflowSection}>
           <div style={overflowLabel}>Overflow — {overflow.length} items don't fit</div>
