@@ -76,6 +76,13 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
   const enemyList = sceneEnemies.length > 0
     ? `\nEnemies available for combat: ${sceneEnemies.map(e => `${e.name} (HP ${e.hp}, AC ${e.ac})`).join(', ')}`
     : '';
+  const encounterZoneList = (currentScene?.encounterZones || [])
+    .map(ez => `- ${ez.id}: ${ez.dmPrompt || 'hostile area'} (trigger radius: ${ez.triggerRadius} tiles)`)
+    .join('\n')
+  const encounterContext = encounterZoneList
+    ? `\nEncounter zones:\n${encounterZoneList}`
+    : ''
+
   const npcList = (currentScene?.npcs || [])
     .map(n => `  - ${n.name}: ${n.personality || 'a local inhabitant'}`)
     .join('\n');
@@ -86,7 +93,7 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
   const sceneText = sceneBlock
     ? sceneBlock
     : currentScene
-      ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}${npcBlock}`
+      ? `Current Scene: "${currentScene.title}"\n${currentScene.text || ''}${enemyList}${encounterContext}${npcBlock}`
       : 'The party is between scenes.';
 
   // After 4+ exchanges in a scene, allow the AI to conclude it

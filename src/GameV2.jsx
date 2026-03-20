@@ -6,10 +6,11 @@ import { buildTestArea } from './data/testArea.js'
 import { buildDemoArea } from './data/demoArea.js'
 import { buildAreaFromBrief } from './lib/areaBuilder.js'
 import { saveArea } from './lib/areaStorage.js'
-import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey, broadcastRoofReveal } from './lib/liveChannel'
+import { broadcastAreaTransition, broadcastNarratorMessage, broadcastApiKeySync, broadcastRequestApiKey, broadcastRoofReveal, broadcastEncounterAction } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { buildSystemPrompt, callNarrator } from './lib/narratorApi'
+import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZones'
 import { handleInteract } from './lib/interactionController'
 import { findPath, findPathLegacy, buildWalkabilityGrid, findPathEdge } from './lib/pathfinding'
 import { getBlockingSet } from './engine/tileAtlas'
@@ -76,6 +77,7 @@ export default function GameV2({ onLeave }) {
   const [showJournal, setShowJournal] = useState(false)
   const [activeNpc, setActiveNpc] = useState(null)
   const [worldTransform, setWorldTransform] = useState(null)
+  const triggeredZonesRef = useRef(new Set())
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
   const playerPosRef = useRef(playerPos)
@@ -154,6 +156,7 @@ export default function GameV2({ onLeave }) {
   useEffect(() => {
     if (!zone?.useCamera || !zone?.buildings) return
     roofManagerRef.current = new RoofManager()
+    triggeredZonesRef.current = new Set()
     const rm = roofManagerRef.current
     rm.buildings.clear()
     rm.revealed.clear()
@@ -204,6 +207,34 @@ export default function GameV2({ onLeave }) {
       rm.setRevealed(buildingId, revealed)
     }
   }, [roofStates])
+
+  // --- Encounter zone proximity detection ---
+  useEffect(() => {
+    if (!zone?.encounterZones?.length || !playerPos || inCombat) return
+    const pos = playerPosRef.current
+    if (!pos) return
+
+    const zones = zone.encounterZones.map(ez => {
+      const center = ez.center || ez.position || { x: Math.floor((zone.width || 40) / 2), y: Math.floor((zone.height || 30) / 2) }
+      return {
+        ...ez,
+        center,
+        triggered: triggeredZonesRef.current.has(ez.id),
+      }
+    })
+
+    const triggered = checkEncounterProximity(pos, zones)
+    if (!triggered) return
+
+    triggeredZonesRef.current.add(triggered.id)
+
+    if (isDM) {
+      broadcastEncounterAction({ type: 'encounter-zone-triggered', zoneId: triggered.id })
+    }
+
+    const prompt = buildEncounterPrompt(triggered, '')
+    addNarratorMessage({ role: 'user', speaker: 'System', text: prompt })
+  }, [playerPos, zone, inCombat, isDM, addNarratorMessage])
 
   // --- Combat camera lock (area camera mode only) ---
   useEffect(() => {
