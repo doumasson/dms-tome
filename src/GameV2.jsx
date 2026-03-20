@@ -35,6 +35,7 @@ import NpcDialog from './components/NpcDialog'
 import StoryCutscene from './components/StoryCutscene'
 import JournalModal from './components/JournalModal'
 import SkillCheckPanel from './components/SkillCheckPanel'
+import LootScreen from './components/LootScreen'
 import './hud/hud.css'
 
 const CLASS_COLORS = {
@@ -71,6 +72,8 @@ export default function GameV2({ onLeave }) {
   const activeCutscene = useStore(s => s.activeCutscene)
   const roofStates = useStore(s => s.roofStates)
   const advanceGameTime = useStore(s => s.advanceGameTime)
+  const pendingLoot = useStore(s => s.pendingLoot)
+  const setPendingLoot = useStore(s => s.setPendingLoot)
 
   const pixiRef = useRef(null)
   const cameraRef = useRef(null)
@@ -1402,6 +1405,14 @@ export default function GameV2({ onLeave }) {
           pixiRef={pixiRef}
           onClose={() => {}}
           isWatching={true}
+        />
+      )}
+      {/* Post-combat loot screen */}
+      {pendingLoot && (
+        <LootScreen
+          enemies={pendingLoot.enemies}
+          partySize={pendingLoot.partySize}
+          onDone={() => setPendingLoot(null)}
         />
       )}
       {/* Opportunity Attack confirmation modal */}
