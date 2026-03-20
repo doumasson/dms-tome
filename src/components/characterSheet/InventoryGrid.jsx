@@ -125,6 +125,28 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
 
   const { placed, overflow } = useMemo(() => packItems(inventory), [inventory]);
 
+  // Persist grid positions for any items that don't have them yet.
+  // This prevents items from shifting when inventory changes (equip/unequip/loot).
+  const hasUnsavedPositions = useRef(false);
+  useEffect(() => {
+    if (!isOwn || !placed.length) return;
+    const needsSave = inventory.some(i => i._gridCol == null || i._gridRow == null);
+    if (needsSave && !hasUnsavedPositions.current) {
+      hasUnsavedPositions.current = true;
+      const posMap = new Map();
+      for (const p of placed) posMap.set(itemKey(p.item), { col: p.col, row: p.row });
+      updateMyCharacter({
+        inventory: inventory.map(i => {
+          const pos = posMap.get(itemKey(i));
+          if (pos) return { ...i, _gridCol: pos.col, _gridRow: pos.row };
+          return i;
+        }),
+      });
+    } else if (!needsSave) {
+      hasUnsavedPositions.current = false;
+    }
+  }, [placed, isOwn]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const [hoveredId, setHoveredId] = useState(null);
   const gridRef      = useRef(null);
 

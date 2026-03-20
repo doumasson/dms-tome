@@ -120,9 +120,9 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
   }, [inCombat, zone])
 
-  // --- Auto-run enemy turns (host/DM only) ---
+  // --- Auto-run enemy turns ---
   useEffect(() => {
-    if (!inCombat || !isDM) return
+    if (!inCombat) return
     const active = encounter.combatants?.[encounter.currentTurn]
     if (!active || !active.isEnemy) return
 
@@ -139,7 +139,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }, 1000)
 
     return () => clearTimeout(timer)
-  }, [encounter.currentTurn, encounter.phase, inCombat, isDM, runEnemyTurn, sessionApiKey, nextEncounterTurn])
+  }, [encounter.currentTurn, encounter.phase, inCombat, runEnemyTurn, sessionApiKey, nextEncounterTurn])
 
   // --- Handle combat tile click (attack, spell, movement) ---
   // Returns true if click was handled by combat logic, false otherwise
