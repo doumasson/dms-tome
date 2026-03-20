@@ -4,6 +4,7 @@ import allChunks from '../data/chunks/index.js'
 import { buildUnifiedPalette, remapChunk, stampChunk } from './mapGenerator.js'
 import { THEME_TERRAIN } from './areaBuilder.js'
 import { seededRandom } from './seededRandom.js'
+import trapTemplates from '../data/trapTemplates.json'
 
 // Edge bit constants (matches wallEdgeExtractor.js)
 const NORTH = 0x1
@@ -247,7 +248,21 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     }
   }
 
-  // 8. Place corridor light sources (one torch per corridor midpoint)
+  // 8. Place 1-3 traps in corridors
+  const traps = []
+  const trapCount = 1 + Math.floor(rand() * 3)
+  for (let i = 0; i < trapCount && corridors.length > 0; i++) {
+    const corr = corridors[i % corridors.length]
+    const template = trapTemplates[Math.floor(rand() * trapTemplates.length)]
+    traps.push({
+      ...template,
+      position: { x: Math.round((corr.x1 + corr.x2) / 2), y: Math.round((corr.y1 + corr.y2) / 2) + i },
+      revealed: false,
+      triggered: false,
+    })
+  }
+
+  // 9. Place corridor light sources (one torch per corridor midpoint)
   const lightSources = []
   for (const corridor of corridors) {
     lightSources.push({
@@ -259,7 +274,7 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     })
   }
 
-  // 9. Determine player start — first room center
+  // 10. Determine player start — first room center
   const firstRoom = rooms[0] || { x: 1, y: 1, width: 4, height: 4 }
   const playerStart = brief.playerStart || {
     x: firstRoom.x + Math.floor(firstRoom.width / 2),
@@ -283,6 +298,7 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     doors,
     npcs: [],
     enemies: placedEnemies,
+    traps,
     buildings: [],
     lightSources,
     exits,

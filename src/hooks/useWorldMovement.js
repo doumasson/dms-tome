@@ -1,4 +1,5 @@
 import { useMemo, useEffect, useRef, useCallback } from 'react'
+import { checkTrapTrigger, canDetectTrap, getPassivePerception, resolveTrapEffect } from '../lib/trapSystem.js'
 import useStore from '../store/useStore'
 import { findPath, findPathLegacy, buildWalkabilityGrid, findPathEdge } from '../lib/pathfinding'
 import { getBlockingSet } from '../engine/tileAtlas'
@@ -41,8 +42,40 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
     return { type: 'v1', grid: buildWalkabilityGrid(zone.layers.walls, zone.layers.props, getBlockingSet(), zone.width, zone.height) }
   }, [zone, isV2Zone])
 
+  const zoneRef = useRef(zone)
+  zoneRef.current = zone
   const walkDataRef = useRef(walkData)
   walkDataRef.current = walkData
+  // Trap check helper — called after each movement completes
+  const checkTrapsAtPosition = useCallback((newPos) => {
+    const { zone: _z, myCharacter: _c, addNarratorMessage: _a, updateMyCharacter: _u } = {
+      zone: zoneRef.current,
+      myCharacter: useStore.getState().myCharacter,
+      addNarratorMessage: useStore.getState().addNarratorMessage,
+      updateMyCharacter: useStore.getState().updateMyCharacter,
+    }
+    const traps = _z?.traps || []
+    for (const trap of traps) {
+      if (trap.triggered || trap.revealed) continue
+      const dist = Math.max(Math.abs(newPos.x - trap.position.x), Math.abs(newPos.y - trap.position.y))
+      const pp = getPassivePerception(_c)
+      if (dist <= 2 && canDetectTrap(pp, trap.dc)) {
+        trap.revealed = true
+        _a({ role: 'dm', speaker: 'DM', text: `You notice a ${trap.type.replace(/_/g, ' ')} ahead!` })
+        continue
+      }
+      const result = checkTrapTrigger(trap, newPos)
+      if (result.triggered) {
+        trap.triggered = true
+        const effect = resolveTrapEffect(trap, _c)
+        _a({ role: 'dm', speaker: 'DM', text: effect.description })
+        if (effect.damage > 0 && _c) {
+          const currentHp = _c.currentHp ?? _c.hp ?? 0
+          _u({ currentHp: Math.max(0, currentHp - effect.damage) })
+        }
+      }
+    }
+  }, [])
 
   // Click-to-move: pathfind and animate walk (non-combat only)
   const handleWorldTileClick = useCallback(({ x, y }) => {
@@ -73,6 +106,7 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
       animateTokenAlongPath('player', path, null, () => {
         setPlayerPos({ x, y })
         if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
+        checkTrapsAtPosition({ x, y })
       }, isV2Zone ? tileSize : undefined)
       broadcastTokenMove(user?.id, { x, y }, path)
     }
@@ -139,6 +173,7 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
       animateTokenAlongPath('player', path, null, () => {
         setPlayerPos({ x: nx, y: ny })
         if (cameraRef.current) cameraRef.current.centerOn(nx, ny, tileSize)
+        checkTrapsAtPosition({ x: nx, y: ny })
       }, isV2Zone ? tileSize : undefined)
       broadcastTokenMove(useStore.getState().user?.id, { x: nx, y: ny }, path)
     }

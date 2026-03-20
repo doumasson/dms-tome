@@ -367,6 +367,36 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     }
   }, [ready, atlasReady, zone?.wallEdges])
 
+  // Draw orange-outlined tiles for revealed (detected but not-yet-triggered) traps
+  useEffect(() => {
+    if (!ready || !stageLayersRef.current.grid) return
+    const gridLayer = stageLayersRef.current.grid
+    const tileSize = zone?.tileSize || 200
+    const traps = zone?.traps || []
+
+    // Remove any old trap markers
+    for (let i = gridLayer.children.length - 1; i >= 0; i--) {
+      if (gridLayer.children[i]._isTrapMarker) {
+        gridLayer.children[i].destroy()
+        gridLayer.removeChildAt(i)
+      }
+    }
+
+    // Add a marker for each revealed trap
+    for (const trap of traps) {
+      if (!trap.revealed || trap.triggered) continue
+      const marker = new PIXI.Graphics()
+      const px = trap.position.x * tileSize
+      const py = trap.position.y * tileSize
+      marker.rect(px + 4, py + 4, tileSize - 8, tileSize - 8)
+      marker.stroke({ width: 4, color: 0xff7700, alpha: 0.85 })
+      marker.rect(px + 10, py + 10, tileSize - 20, tileSize - 20)
+      marker.stroke({ width: 2, color: 0xffaa00, alpha: 0.5 })
+      marker._isTrapMarker = true
+      gridLayer.addChild(marker)
+    }
+  }, [ready, zone?.traps])
+
   // Pre-compute spatial grid mapping tile index → building index for roof fade
   useEffect(() => {
     if (!zone?.buildings || !zone?.width) {
