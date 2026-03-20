@@ -49,6 +49,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
   const [backstory,   setBackstory]   = useState('');
   const [selectedSpells, setSelectedSpells] = useState([]);
   const [gearChoices, setGearChoices] = useState({ method: 'equipment', selections: {}, gold: 0 });
+  const [portrait,    setPortrait]    = useState('');
 
   const isSpellcaster = cls && SPELLCASTING_CLASSES.has(cls);
 
@@ -138,7 +139,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       equippedItems,
       gold: gearChoices.method === 'gold' ? gearChoices.gold : 0,
       proficiencyBonus: pb,
-      portrait: avatarUrl(name.trim(), race, cls),
+      portrait: portrait || avatarUrl(name.trim(), race, cls),
       userId: user.id,
       userName: user.name,
     };
@@ -176,7 +177,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     Background: <StepBackground key="bg"        background={background} setBackground={setBackground} skills={skills} setSkills={setSkills} cls={cls} />,
     Spells:     <StepSpells     key="spells"    cls={cls}               selectedSpells={selectedSpells} setSelectedSpells={setSelectedSpells} />,
     Abilities:  <StepAbilities  key="abilities" race={race}             baseStats={baseStats} setBaseStats={setBaseStats} method={method} setMethod={setMethod} flexChoices={flexChoices} setFlexChoices={setFlexChoices} />,
-    Identity:   <StepIdentity   key="identity"  name={name}             setName={setName} alignment={alignment} setAlignment={setAlignment} appearance={appearance} setAppearance={setAppearance} backstory={backstory} setBackstory={setBackstory} race={race} cls={cls} />,
+    Identity:   <StepIdentity   key="identity"  name={name}             setName={setName} alignment={alignment} setAlignment={setAlignment} appearance={appearance} setAppearance={setAppearance} backstory={backstory} setBackstory={setBackstory} race={race} cls={cls} portrait={portrait} setPortrait={setPortrait} />,
     Gear:       <StepGear       key="gear"      cls={cls}               background={background} gearChoices={gearChoices} setGearChoices={setGearChoices} />,
   };
 

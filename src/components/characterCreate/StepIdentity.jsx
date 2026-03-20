@@ -1,14 +1,46 @@
+import { useState } from 'react';
 import { ALIGNMENT_OPTIONS, avatarUrl } from '../../lib/charBuilder';
 import { s } from './charCreateStyles';
+import PortraitPickerModal from '../PortraitPickerModal';
 
-export default function StepIdentity({ name, setName, alignment, setAlignment, appearance, setAppearance, backstory, setBackstory, race, cls }) {
+export default function StepIdentity({ name, setName, alignment, setAlignment, appearance, setAppearance, backstory, setBackstory, race, cls, portrait, setPortrait }) {
+  const [showPicker, setShowPicker] = useState(false);
   const seed   = name.trim() || `${race} ${cls}`;
   const avatar = avatarUrl(seed, race, cls);
+  const imgSrc = portrait || avatar;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {showPicker && (
+        <PortraitPickerModal
+          race={race}
+          cls={cls}
+          currentPortrait={portrait}
+          onSelect={url => { setPortrait(url); setShowPicker(false); }}
+          onClose={() => setShowPicker(false)}
+        />
+      )}
       <div style={s.identityRow}>
-        <img src={avatar} alt="Avatar" style={s.avatarPreview} />
+        <div
+          onClick={() => setShowPicker(true)}
+          style={{ position: 'relative', cursor: 'pointer', flexShrink: 0 }}
+          title="Choose Portrait"
+        >
+          <img src={imgSrc} alt="Avatar" style={s.avatarPreview} />
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            background: 'rgba(0,0,0,0.65)',
+            color: '#d4af37',
+            fontSize: 10,
+            textAlign: 'center',
+            padding: '3px 0',
+            letterSpacing: '0.05em',
+            borderBottomLeftRadius: s.avatarPreview?.borderRadius,
+            borderBottomRightRadius: s.avatarPreview?.borderRadius,
+          }}>
+            Choose Portrait
+          </div>
+        </div>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div>
             <label style={s.fieldLabel}>Character Name *</label>
