@@ -218,7 +218,14 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
       }
     }
   }
-  const allLightSources = [...(brief.lightSources || []), ...autoLights]
+  // Only use auto-detected light sources from actual prop tiles.
+  // Brief-level lightSources are only used if they match a prop tile position.
+  const briefLights = (brief.lightSources || []).filter(ls => {
+    const idx = ls.position.y * width + ls.position.x
+    const propIdx = layers.props[idx]
+    return propIdx > 0 // only include if there's a prop at this position
+  })
+  const allLightSources = [...briefLights, ...autoLights]
 
   // 9. Build collision: edge-based walls handle wall blocking,
   // cellBlocked only tracks blocking props (furniture, boulders, etc.)

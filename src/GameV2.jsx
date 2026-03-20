@@ -397,7 +397,7 @@ export default function GameV2({ onLeave }) {
         onAction={handleCombatAction} onSettings={() => setShowApiSettings(true)} onLeave={onLeave}
         playerPos={playerPos} tokens={tokens} cameraRef={cameraRef}
       />
-      {!inCombat && <TestCombatButton myCharacter={myCharacter} addNarratorMessage={addNarratorMessage} />}
+      {/* TestCombatButton removed — combat initiates via encounter zones */}
       <Suspense fallback={null}>
         <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
       </Suspense>

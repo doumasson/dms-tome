@@ -29,9 +29,19 @@
   z-index: 20;
   background: linear-gradient(180deg, #14101c 0%, #0a0810 100%);
   display: flex;
+  flex-direction: column;
   padding: 14px 14px 10px;
-  gap: 8px;
+  gap: 0;
   pointer-events: auto;
+}
+
+.hud-bottom-bar-content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 8px;
+  min-height: 0;
+  align-items: stretch;
 }
 
 /* Session log panel */

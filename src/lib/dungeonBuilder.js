@@ -263,15 +263,21 @@ export function buildDungeonArea(brief, seed = Date.now()) {
   }
 
   // 9. Place corridor light sources (one torch per corridor midpoint)
+  // Also place a torch prop tile so the light has a visible source
+  const torchTileId = 'atlas-props-decor:torch_01'
+  let torchPaletteIdx = palette.indexOf(torchTileId)
+  if (torchPaletteIdx < 0) {
+    palette.push(torchTileId)
+    torchPaletteIdx = palette.length - 1
+  }
   const lightSources = []
   for (const corridor of corridors) {
-    lightSources.push({
-      position: {
-        x: Math.floor((corridor.x1 + corridor.x2) / 2),
-        y: Math.floor((corridor.y1 + corridor.y2) / 2),
-      },
-      type: 'torch',
-    })
+    const tx = Math.floor((corridor.x1 + corridor.x2) / 2)
+    const ty = Math.floor((corridor.y1 + corridor.y2) / 2)
+    if (tx >= 0 && tx < width && ty >= 0 && ty < height) {
+      layers.props[ty * width + tx] = torchPaletteIdx
+      lightSources.push({ position: { x: tx, y: ty }, type: 'torch' })
+    }
   }
 
   // 10. Determine player start — first room center
