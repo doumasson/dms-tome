@@ -143,7 +143,6 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
   // Drag: { item, w, h, key } — NO offset. Cursor = item top-left.
   const [drag, setDrag]         = useState(null);
   const [ghostCell, setGhostCell] = useState(null); // { col, row } for rendering
-  const [debugInfo, setDebugInfo] = useState(null); // TEMPORARY diagnostic
   const ghostCellRef = useRef(null);  // always-current ghost cell (no stale closures)
   const dragRef = useRef(null);       // always-current drag state
   const pendingRef = useRef(null);
@@ -188,16 +187,6 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           setGhostCell(prev =>
             prev && prev.col === cell.col && prev.row === cell.row ? prev : cell
           );
-          // DIAGNOSTIC — will remove after debugging
-          const r = gridRef.current?.getBoundingClientRect();
-          setDebugInfo({
-            clientY: Math.round(e.clientY),
-            gridTop: Math.round(r?.top || 0),
-            gridPxY: Math.round(gp.y),
-            cellRow: cell.row,
-            cellPx: CELL_PX,
-            ghostTopPx: cell.row * CELL_PX,
-          });
         }
       }
     }
@@ -330,7 +319,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                 left: col * CELL_PX + 1, top: row * CELL_PX + 1,
                 width: w * CELL_PX - 2, height: h * CELL_PX - 2,
                 ...itemCard, overflow: 'hidden',
-                opacity:  isDragging ? 0 : 1,  // fully hidden during drag
+                opacity:  isDragging ? 0.25 : 1,
                 border:   isHov ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(212,175,55,0.25)',
                 cursor:   isOwn ? (isDragging ? 'grabbing' : 'grab') : 'default',
                 zIndex:   isHov ? 10 : 1,
@@ -353,10 +342,9 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
             width:  drag.w * CELL_PX - 2,
             height: drag.h * CELL_PX - 2,
             ...itemCard, overflow: 'hidden',
-            opacity: 1, pointerEvents: 'none', zIndex: 500,
-            boxShadow: '0 4px 16px rgba(255,0,0,0.8)',
-            border: '3px solid #ff0000',
-            background: 'rgba(255,0,0,0.3)',
+            opacity: 0.85, pointerEvents: 'none', zIndex: 500,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
+            border: ghostValid ? '2px solid rgba(212,175,55,0.8)' : '2px solid rgba(192,57,43,0.8)',
           }}>
             <div style={itemIconStyle}>{itemIcon(drag.item)}</div>
             {drag.w > 1 && drag.h > 1 && <div style={itemNameStyle}>{drag.item.name}</div>}
@@ -383,13 +371,6 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
           );
         })()}
       </div>
-
-      {/* DIAGNOSTIC — remove after debugging */}
-      {debugInfo && (
-        <div style={{ fontSize: 11, color: '#ff0', background: 'rgba(0,0,0,0.8)', padding: '4px 8px', fontFamily: 'monospace', whiteSpace: 'pre' }}>
-          {`clientY=${debugInfo.clientY} gridTop=${debugInfo.gridTop} gridPxY=${debugInfo.gridPxY} → row=${debugInfo.cellRow} ghost=${ghostCell ? `(${ghostCell.col},${ghostCell.row})` : 'null'}`}
-        </div>
-      )}
 
       {overflow.length > 0 && (
         <div style={overflowSection}>
