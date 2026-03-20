@@ -167,6 +167,41 @@ export default function App() {
         case 'remove-effect':       store.applyRemoveEffect(payload.effectId); break;
         case 'move-token':          store.moveToken(payload.id, payload.position.x, payload.position.y, payload.cost || 0); break;
         case 'time-advance':        if (payload.gameTime) useStore.setState({ gameTime: payload.gameTime }); break;
+        case 'attack-result':
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })
+          if (payload.hit && payload.damage > 0) {
+            store.applyEncounterDamage(payload.targetId, payload.damage)
+          }
+          break
+        case 'aoe-resolve':
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })
+          for (const r of payload.results || []) {
+            if (r.damage > 0) store.applyEncounterDamage(r.targetId, r.damage)
+          }
+          break
+        case 'disengage':
+          useStore.setState(state => ({
+            encounter: {
+              ...state.encounter,
+              combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, disengaged: true } : c
+              ),
+            },
+          }))
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${payload.name || 'A combatant'} takes the Disengage action.` })
+          break
+        case 'opportunity-attack':
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })
+          if (payload.hit && payload.damage > 0) {
+            store.applyEncounterDamage(payload.targetId, payload.damage)
+          }
+          break
+        case 'encounter-zone-triggered':
+          store.addNarratorMessage({ role: 'dm', speaker: 'DM', text: payload.log || 'Enemies spotted!' })
+          break
+        case 'skill-check-result':
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })
+          break
       }
     });
 
