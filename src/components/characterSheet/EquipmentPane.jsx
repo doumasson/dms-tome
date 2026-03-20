@@ -80,6 +80,17 @@ export default function EquipmentPane({ character, readOnly, onDropOnSlot }) {
       {/* Equipment slots */}
       <div style={s.section}>
         <div style={s.sectionTitle}>Equipped</div>
+
+        {/* Attunement slots */}
+        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 8, alignItems: 'center' }}>
+          <span style={{ color: '#d4af37', fontSize: 10, marginRight: 4 }}>Attunement:</span>
+          {[0, 1, 2].map(i => (
+            <span key={i} style={{ fontSize: 14, color: i < (character.attunedItems?.length || 0) ? '#d4af37' : '#333' }}>
+              ◆
+            </span>
+          ))}
+        </div>
+
         <div
           style={s.slotGrid}
           onDragOver={e => e.preventDefault()}
@@ -95,6 +106,13 @@ export default function EquipmentPane({ character, readOnly, onDropOnSlot }) {
         >
           {SLOT_DEFS.map(({ key, icon, label }) => {
             const item = equipped[key];
+            const attunedItems = character.attunedItems || [];
+            const isAttuned = item && attunedItems.includes(item.instanceId);
+            const requiresAttunement = item?.requiresAttunement;
+            const isCursed = item?.cursed;
+            const attuneSlotsFull = attunedItems.length >= 3;
+            const hasCharges = item?.charges != null;
+
             return (
               <div
                 key={key}
@@ -115,12 +133,49 @@ export default function EquipmentPane({ character, readOnly, onDropOnSlot }) {
                 <span style={s.slotIcon}>{icon}</span>
                 <span style={s.slotLabel}>{label}</span>
                 {item ? (
-                  <>
-                    <span style={s.slotItem}>{item.name}</span>
-                    {!readOnly && (
-                      <button style={s.slotUnequipBtn} onClick={() => unequipItem(key)} title="Unequip">×</button>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+                      <span style={s.slotItem}>{item.name}</span>
+                      {isAttuned && isCursed && (
+                        <span style={{ fontSize: 9, color: '#e74c3c', background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.4)', borderRadius: 3, padding: '1px 4px' }}>
+                          Cursed 🔒
+                        </span>
+                      )}
+                      {isAttuned && !isCursed && (
+                        <span style={{ fontSize: 9, color: '#d4af37', background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 3, padding: '1px 4px' }}>
+                          Attuned ✓
+                        </span>
+                      )}
+                      {!readOnly && (
+                        <button style={s.slotUnequipBtn} onClick={() => unequipItem(key)} title="Unequip">×</button>
+                      )}
+                    </div>
+                    {hasCharges && (
+                      <div style={{ fontSize: 9, color: '#d4af37', marginTop: 2 }}>
+                        ⚡ {item.charges.current}/{item.charges.max}
+                      </div>
                     )}
-                  </>
+                    {requiresAttunement && !isAttuned && !readOnly && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                        <span style={{ fontSize: 9, color: 'rgba(200,180,140,0.6)', fontStyle: 'italic' }}>Requires Attunement</span>
+                        <button
+                          style={{ fontSize: 9, color: '#d4af37', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)', borderRadius: 3, padding: '1px 5px', cursor: attuneSlotsFull ? 'not-allowed' : 'pointer', opacity: attuneSlotsFull ? 0.4 : 1 }}
+                          disabled={attuneSlotsFull}
+                          onClick={() => useStore.getState().attuneItem(item.instanceId)}
+                        >
+                          Attune
+                        </button>
+                      </div>
+                    )}
+                    {isAttuned && !isCursed && !readOnly && (
+                      <button
+                        style={{ fontSize: 9, color: 'rgba(200,180,140,0.5)', background: 'transparent', border: '1px solid rgba(200,180,140,0.2)', borderRadius: 3, padding: '1px 5px', cursor: 'pointer', marginTop: 2 }}
+                        onClick={() => useStore.getState().unattuneItem(item.instanceId)}
+                      >
+                        Un-attune
+                      </button>
+                    )}
+                  </div>
                 ) : (
                   <span style={s.slotEmpty}>— empty —</span>
                 )}
