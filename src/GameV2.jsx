@@ -24,6 +24,7 @@ import { RoofManager } from './engine/RoofLayer'
 import { getReachableTiles, renderMovementRange, clearMovementRange } from './engine/MovementRange'
 import { getTilesInSphere, getTilesInCone, getTilesInLine, getTilesInCube, renderAoEPreview, clearAoEPreview } from './engine/AoEOverlay'
 import { findOATriggers, resolveOA } from './lib/opportunityAttack.js'
+import { calculateCover, COVER_BONUS, buildPropCoverSet } from './lib/cover.js'
 import { playZoneTransition } from './engine/ZoneTransition'
 import ChatBubble from './components/ChatBubble'
 import DiceTray from './components/DiceTray'
@@ -91,6 +92,7 @@ export default function GameV2({ onLeave }) {
   playerPosRef.current = playerPos
   const lastNpcTriggerRef = useRef(null)
   const reachableTilesRef = useRef(new Set())
+  const propCoverRef = useRef(new Set())
 
   const area = areas[currentAreaId] || null
   // Alias for backward compat — existing code reads `zone`
@@ -636,12 +638,17 @@ export default function GameV2({ onLeave }) {
         return
       }
 
+      // Cover calculation
+      const coverType = calculateCover(active.position, { x, y }, zone.wallEdges, propCoverRef.current, zone.width)
+      const coverBonus = COVER_BONUS[coverType] || 0
+      const effectiveAC = (target.ac || 10) + coverBonus
+
       // Roll attack
       const bonus = parseInt(weapon.bonus) || 0
       const d20 = Math.floor(Math.random() * 20) + 1
       const total = d20 + bonus
       const isCrit = d20 === 20
-      const hit = isCrit || total >= (target.ac || 10)
+      const hit = isCrit || total >= effectiveAC
 
       // Roll damage
       let damage = 0
@@ -659,9 +666,10 @@ export default function GameV2({ onLeave }) {
       consumeAction(active.id)
       setTargetingMode(null)
 
+      const coverNote = coverBonus > 0 ? ` (${coverType} cover +${coverBonus})` : ''
       const entry = hit
-        ? `${active.name} → ${target.name}: HIT! d20(${d20})+${bonus}=${total} vs AC ${target.ac}. ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}.`
-        : `${active.name} → ${target.name}: MISS. d20(${d20})+${bonus}=${total} vs AC ${target.ac}.`
+        ? `${active.name} → ${target.name}: HIT! d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}. ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}.`
+        : `${active.name} → ${target.name}: MISS. d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}.`
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
       broadcastEncounterAction({ type: 'attack-result', attackerId: active.id, targetId: target.id, hit, damage, log: entry })
 
@@ -730,10 +738,13 @@ export default function GameV2({ onLeave }) {
       const baseDmg = rollDamage(spell.damage || '1d6').total
 
       // Resolve saves for each affected target
+      const spellOrigin = { x, y }
       const saveAbility = spell.saveAbility || 'dex'
       for (const target of affected) {
+        const coverType = calculateCover(spellOrigin, target.position, zone.wallEdges, propCoverRef.current, zone.width)
+        const coverSaveBonus = COVER_BONUS[coverType] || 0
         const saveMod = Math.floor(((target.stats?.[saveAbility] || 10) - 10) / 2)
-        const saveRoll = Math.floor(Math.random() * 20) + 1 + saveMod
+        const saveRoll = Math.floor(Math.random() * 20) + 1 + saveMod + coverSaveBonus
         const saved = saveRoll >= saveDC
         const dmg = saved && spell.halfOnSave ? Math.floor(baseDmg / 2) : saved ? 0 : baseDmg
 
@@ -742,7 +753,8 @@ export default function GameV2({ onLeave }) {
           applyDmg(target.id, dmg)
         }
 
-        const entry = `${target.name}: ${saveAbility.toUpperCase()} save ${saveRoll} vs DC ${saveDC} — ${saved ? 'SAVE' : 'FAIL'} (${dmg} ${spell.name} damage)`
+        const coverNote = coverSaveBonus > 0 ? ` (${coverType} cover +${coverSaveBonus})` : ''
+        const entry = `${target.name}: ${saveAbility.toUpperCase()} save ${saveRoll} vs DC ${saveDC}${coverNote} — ${saved ? 'SAVE' : 'FAIL'} (${dmg} ${spell.name} damage)`
         addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
       }
 
@@ -1171,6 +1183,15 @@ export default function GameV2({ onLeave }) {
       reachableTilesRef.current = new Set()
     }
   }, [encounter.currentTurn, encounter.phase, encounter.combatants, inCombat, zone])
+
+  // Build prop cover set when combat starts so cover checks can use it
+  useEffect(() => {
+    if (inCombat && zone?.layers?.props && zone?.palette) {
+      propCoverRef.current = buildPropCoverSet(zone.layers.props, zone.palette, zone.width, zone.height)
+    } else {
+      propCoverRef.current = new Set()
+    }
+  }, [inCombat, zone])
 
   const chatInFlightRef = useRef(false)
 
