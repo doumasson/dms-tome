@@ -330,7 +330,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
                 left: col * CELL_PX + 1, top: row * CELL_PX + 1,
                 width: w * CELL_PX - 2, height: h * CELL_PX - 2,
                 ...itemCard, overflow: 'hidden',
-                opacity:  isDragging ? 0.25 : 1,
+                opacity:  isDragging ? 0 : 1,  // fully hidden during drag
                 border:   isHov ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(212,175,55,0.25)',
                 cursor:   isOwn ? (isDragging ? 'grabbing' : 'grab') : 'default',
                 zIndex:   isHov ? 10 : 1,
@@ -353,9 +353,10 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
             width:  drag.w * CELL_PX - 2,
             height: drag.h * CELL_PX - 2,
             ...itemCard, overflow: 'hidden',
-            opacity: 0.7, pointerEvents: 'none', zIndex: 500,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
-            border: ghostValid ? '2px solid rgba(212,175,55,0.8)' : '2px solid rgba(192,57,43,0.8)',
+            opacity: 1, pointerEvents: 'none', zIndex: 500,
+            boxShadow: '0 4px 16px rgba(255,0,0,0.8)',
+            border: '3px solid #ff0000',
+            background: 'rgba(255,0,0,0.3)',
           }}>
             <div style={itemIconStyle}>{itemIcon(drag.item)}</div>
             {drag.w > 1 && drag.h > 1 && <div style={itemNameStyle}>{drag.item.name}</div>}
@@ -386,7 +387,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
       {/* DIAGNOSTIC — remove after debugging */}
       {debugInfo && (
         <div style={{ fontSize: 11, color: '#ff0', background: 'rgba(0,0,0,0.8)', padding: '4px 8px', fontFamily: 'monospace', whiteSpace: 'pre' }}>
-          {`clientY=${debugInfo.clientY} gridTop=${debugInfo.gridTop} gridPxY=${debugInfo.gridPxY} → row=${debugInfo.cellRow} (ghostTop=${debugInfo.ghostTopPx}px)`}
+          {`clientY=${debugInfo.clientY} gridTop=${debugInfo.gridTop} gridPxY=${debugInfo.gridPxY} → row=${debugInfo.cellRow} ghost=${ghostCell ? `(${ghostCell.col},${ghostCell.row})` : 'null'}`}
         </div>
       )}
 
