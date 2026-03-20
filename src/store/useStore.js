@@ -7,6 +7,7 @@ import { computeAcFromEquipped } from '../data/equipment';
 import { computeDerivedStats } from '../lib/derivedStats.js';
 import { CLASSES } from '../data/classes';
 import { createStorySlice } from './storySlice';
+import { advanceTime } from '../lib/gameTime.js';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -100,6 +101,15 @@ const useStore = create((set, get) => ({
   // === DM Mode ===
   dmMode: false,
   toggleDmMode: () => set((state) => ({ dmMode: !state.dmMode })),
+
+  // === Game Time ===
+  gameTime: { hour: 8, day: 1 },
+  advanceGameTime: (hours) => {
+    const { gameTime } = get()
+    const newTime = advanceTime(gameTime, hours)
+    set({ gameTime: newTime })
+    broadcastEncounterAction?.({ type: 'time-advance', gameTime: newTime })
+  },
 
   // === Skill Checks ===
   pendingSkillCheck: null,

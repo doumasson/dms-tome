@@ -32,9 +32,8 @@ function generateItemDrops(enemies) {
 }
 
 export default function LootScreen({ enemies, partySize, onDone }) {
-  const myCharacter   = useStore(s => s.myCharacter);
-  const addXp         = useStore(s => s.addXp);
-  const addGold       = useStore(s => s.addGold);
+  const myCharacter        = useStore(s => s.myCharacter);
+  const claimCombatRewards = useStore(s => s.claimCombatRewards);
   const addItemToInventory = useStore(s => s.addItemToInventory);
 
   const totalXp   = useMemo(() => enemies.reduce((sum, e) => sum + crToXp(e.cr), 0), [enemies]);
@@ -54,14 +53,13 @@ export default function LootScreen({ enemies, partySize, onDone }) {
   }
 
   function handleTakeRewards() {
-    if (!xpApplied) {
-      addXp(xpEach);
-      setXpApplied(true);
-    }
-    if (!goldApplied) {
-      addGold(goldEach);
-      setGoldApplied(true);
-    }
+    if (xpApplied && goldApplied) return;
+    claimCombatRewards(
+      xpApplied ? 0 : xpEach,
+      goldApplied ? 0 : goldEach,
+    );
+    setXpApplied(true);
+    setGoldApplied(true);
   }
 
   const rewardsTaken = xpApplied && goldApplied;
