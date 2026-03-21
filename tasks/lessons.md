@@ -37,3 +37,15 @@ useEffect(() => { ... }, [inCombat]); // safe
 ```
 
 **Detection:** Run `npm run build` and search the bundle for the minified variable name used in dep arrays before its `let`/`const` declaration. Or just keep declarations at the top of the component before all hooks.
+
+## Enemy AI Must Pathfind to Adjacent Tiles, Not Target Tile
+
+**Pattern:** `computeGruntAction` pathfinds to the player's tile, then `runEnemyTurn` blocks the move because the tile is occupied. Enemy "attacks" from max range without moving.
+
+**Rule:** Always pathfind to an unoccupied tile adjacent to the target. Build an occupied-tile set from all living combatants. Try all 8 adjacent tiles sorted by distance to the enemy. Multiple enemies surrounding a target must each find their own adjacent tile.
+
+## Dead Tokens Should Give Visual Feedback
+
+**Pattern:** Killed enemy token stays at full opacity with 0 HP bar. Player can't tell visually that it's dead.
+
+**Rule:** Set `group.alpha = 0.25` on tokens with `currentHp <= 0`. The HP bar disappearing is not enough visual feedback.

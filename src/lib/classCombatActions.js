@@ -24,8 +24,11 @@ export function getClassCombatActions(className, level) {
   // Class-specific abilities
   switch (className) {
     case 'Monk':
+      // Martial Arts (L1): bonus action unarmed strike after Attack action (free, no Ki)
+      actions.push({ name: 'Martial Arts', icon: '👊', actionType: 'bonus_action', handler: 'martialArts' })
       if (level >= 2) {
-        actions.push({ name: 'Flurry of Blows',  icon: '👊', actionType: 'bonus_action', resourceName: 'Ki Points', resourceCost: 1 })
+        // Flurry replaces Martial Arts: TWO unarmed strikes for 1 Ki
+        actions.push({ name: 'Flurry of Blows',  icon: '👊👊', actionType: 'bonus_action', resourceName: 'Ki Points', resourceCost: 1 })
         actions.push({ name: 'Patient Defense',   icon: '🛡', actionType: 'bonus_action', resourceName: 'Ki Points', resourceCost: 1 })
         actions.push({ name: 'Step of the Wind',  icon: '💨', actionType: 'bonus_action', resourceName: 'Ki Points', resourceCost: 1 })
       }

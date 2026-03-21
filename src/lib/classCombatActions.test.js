@@ -3,9 +3,16 @@ import { describe, it, expect } from 'vitest'
 import { getClassCombatActions } from './classCombatActions'
 
 describe('getClassCombatActions', () => {
+  it('returns Martial Arts at level 1', () => {
+    const actions = getClassCombatActions('Monk', 1)
+    expect(actions.map(a => a.name)).toContain('Martial Arts')
+    expect(actions.map(a => a.name)).not.toContain('Flurry of Blows') // level 2+
+  })
+
   it('returns Monk Ki abilities at level 2+', () => {
     const actions = getClassCombatActions('Monk', 2)
     const names = actions.map(a => a.name)
+    expect(names).toContain('Martial Arts')
     expect(names).toContain('Flurry of Blows')
     expect(names).toContain('Patient Defense')
     expect(names).toContain('Step of the Wind')

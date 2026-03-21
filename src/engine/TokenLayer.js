@@ -76,6 +76,11 @@ export function renderTokens(container, tokens, tileSizeOverride) {
       const hpColor = hpPct > 0.5 ? 0x44aa44 : hpPct > 0.25 ? 0xcc8800 : 0xcc2222
       hpBar.rect(-barWidth / 2, -radius - 8, barWidth * hpPct, barHeight).fill(hpColor)
       group.addChild(hpBar)
+
+      // Dead token: fade to 25% opacity
+      if (token.currentHp <= 0) {
+        group.alpha = 0.25
+      }
     }
 
     container.addChild(group)
