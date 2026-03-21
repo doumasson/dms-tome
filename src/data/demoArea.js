@@ -27,7 +27,7 @@ const DEMO_BRIEF = {
     {
       name: 'Goblin Scout',
       position: 'Town Square',
-      count: 3,
+      count: 1,
       stats: { hp: 7, ac: 15, speed: 30, cr: '1/4' },
       attacks: [{ name: 'Scimitar', bonus: '+4', damage: '1d6+2' }],
     },

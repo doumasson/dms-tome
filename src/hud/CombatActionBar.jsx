@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import useStore from '../store/useStore'
 import { getClassCombatActions } from '../lib/classCombatActions'
 import { getClassResources } from '../lib/classResources'
@@ -66,35 +67,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   }
 
   if (isDying) {
-    return (
-      <div className="hud-combat-bar">
-        <div style={{ textAlign: 'center', color: '#cc3333', fontSize: 12, fontWeight: 700, marginBottom: 8 }}>
-          ☠ DEATH SAVES
-        </div>
-        <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginBottom: 8 }}>
-          {[0,1,2].map(i => (
-            <div key={`s${i}`} style={{ width: 12, height: 12, borderRadius: '50%',
-              background: i < (active.deathSaves?.successes || 0) ? '#2ecc71' : '#1a1520',
-              border: '1px solid #2ecc71' }} />
-          ))}
-          <div style={{ width: 8 }} />
-          {[0,1,2].map(i => (
-            <div key={`f${i}`} style={{ width: 12, height: 12, borderRadius: '50%',
-              background: i < (active.deathSaves?.failures || 0) ? '#cc3333' : '#1a1520',
-              border: '1px solid #cc3333' }} />
-          ))}
-        </div>
-        <button className="hud-combat-btn" onClick={() => onAction?.('death-save')}
-          style={{ background: '#2a0a0a', borderColor: '#cc3333', color: '#cc3333' }}>
-          🎲 Roll Death Save
-        </button>
-        <button className="hud-combat-btn-sm" onClick={() => onAction?.('stabilize')}
-          style={{ marginTop: 4 }}>
-          ✚ Stabilize
-        </button>
-        <button className="hud-end-turn" onClick={onEndTurn} style={{ marginTop: 4 }}>END TURN</button>
-      </div>
-    )
+    return <DeathSaveUI active={active} onAction={onAction} onEndTurn={onEndTurn} />
   }
 
   // Class-specific actions
@@ -221,5 +194,75 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
       {/* End turn */}
       <button className="hud-end-turn" onClick={onEndTurn}>END TURN</button>
     </div>
+  )
+}
+
+/** Centered death save popup — must roll before ending turn */
+function DeathSaveUI({ active, onAction, onEndTurn }) {
+  const [rolled, setRolled] = useState(false)
+
+  // Reset rolled state when turn changes
+  useEffect(() => { setRolled(false) }, [active?.id])
+
+  const successes = active?.deathSaves?.successes || 0
+  const failures = active?.deathSaves?.failures || 0
+
+  function handleRoll() {
+    setRolled(true)
+    onAction?.('death-save')
+  }
+
+  return (
+    <>
+      {/* Centered death save popup */}
+      {!rolled && (
+        <div style={{
+          position: 'absolute', bottom: '52%', left: '50%', transform: 'translateX(-50%)',
+          background: 'rgba(20,12,12,0.97)', border: '2px solid #cc3333',
+          borderRadius: 8, padding: '20px 32px', minWidth: 300, zIndex: 100,
+          fontFamily: 'Cinzel, serif', color: '#e8dcc8', textAlign: 'center',
+        }}>
+          <div style={{ fontSize: 18, color: '#cc3333', marginBottom: 12, fontWeight: 700 }}>
+            ☠ DEATH SAVING THROW
+          </div>
+          <div style={{ color: '#8a7a52', fontSize: 12, marginBottom: 16 }}>
+            You are dying. Roll a d20 to cling to life.
+          </div>
+          {/* Pips */}
+          <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 16 }}>
+            <span style={{ color: '#666', fontSize: 10, marginRight: 4 }}>SAVES</span>
+            {[0,1,2].map(i => (
+              <div key={`s${i}`} style={{ width: 16, height: 16, borderRadius: '50%',
+                background: i < successes ? '#2ecc71' : '#1a1520',
+                border: '2px solid #2ecc71' }} />
+            ))}
+            <div style={{ width: 16 }} />
+            <span style={{ color: '#666', fontSize: 10, marginRight: 4 }}>FAILS</span>
+            {[0,1,2].map(i => (
+              <div key={`f${i}`} style={{ width: 16, height: 16, borderRadius: '50%',
+                background: i < failures ? '#cc3333' : '#1a1520',
+                border: '2px solid #cc3333' }} />
+            ))}
+          </div>
+          <button onClick={handleRoll} style={{
+            width: '100%', padding: '12px 0', background: '#cc3333', color: '#1a1614',
+            border: 'none', borderRadius: 4, cursor: 'pointer', fontFamily: 'Cinzel, serif',
+            fontSize: 16, fontWeight: 'bold', letterSpacing: 1,
+          }}>
+            🎲 ROLL DEATH SAVE
+          </button>
+        </div>
+      )}
+      {/* Bottom bar — END TURN only after rolling */}
+      <div className="hud-combat-bar">
+        <div style={{ textAlign: 'center', color: '#cc3333', fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+          ☠ {rolled ? 'Death save rolled' : 'You must roll a death save'}
+        </div>
+        <button className="hud-end-turn" onClick={onEndTurn} disabled={!rolled}
+          style={{ opacity: rolled ? 1 : 0.3, cursor: rolled ? 'pointer' : 'not-allowed' }}>
+          END TURN
+        </button>
+      </div>
+    </>
   )
 }
