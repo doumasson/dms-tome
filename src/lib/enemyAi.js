@@ -140,35 +140,65 @@ export function computeGruntAction(enemy, combatants, collisionData, width, heig
 
   // Not adjacent — pathfind toward target
   const maxTiles = Math.floor((enemy.speed || 30) / 5)
-  const path = collisionData
-    ? findPathEdge(collisionData, width, height, enemy.position, nearest.position)
-    : null
-  if (!path || path.length <= 1) {
-    // No pathfinding data — use simple step-toward fallback
-    const fallback = stepTowards(enemy.position, nearest.position, maxTiles, combatants)
-    if (!fallback) return { action: 'wait', narrative: `${enemy.name} cannot reach any target.` }
-    const fbDist = Math.max(Math.abs(fallback.x - nearest.position.x), Math.abs(fallback.y - nearest.position.y))
-    if (fbDist <= 1) {
-      const d20 = Math.floor(Math.random() * 20) + 1
-      const total = d20 + bonus
-      const isCrit = d20 === 20
-      const hit = isCrit || total >= (nearest.ac || 10)
-      const damage = hit ? (isCrit ? rollDamage(weapon.damage).total * 2 : rollDamage(weapon.damage).total) : 0
-      return {
-        action: 'move-attack', moveTo: fallback, moveCost: Math.max(Math.abs(fallback.x - enemy.position.x), Math.abs(fallback.y - enemy.position.y)),
-        targetId: nearest.id, targetName: nearest.name, hit, damage, d20, bonus, total, isCrit, weapon: weapon.name,
-        narrative: `${enemy.name} charges toward ${nearest.name}! ${hit ? `${damage} damage${isCrit ? ' (CRITICAL!)' : ''}!` : 'But misses!'}`,
+
+  // Build set of tiles occupied by other combatants (alive only)
+  const occupied = new Set(
+    combatants.filter(c => c.id !== enemy.id && (c.currentHp ?? 0) > 0 && c.position)
+      .map(c => `${c.position.x},${c.position.y}`)
+  )
+  const isOccupied = (x, y) => occupied.has(`${x},${y}`)
+
+  // Find an unoccupied tile adjacent to the target
+  const tp = nearest.position
+  const adjacentTiles = [
+    { x: tp.x, y: tp.y - 1 }, { x: tp.x, y: tp.y + 1 },
+    { x: tp.x - 1, y: tp.y }, { x: tp.x + 1, y: tp.y },
+    { x: tp.x - 1, y: tp.y - 1 }, { x: tp.x + 1, y: tp.y - 1 },
+    { x: tp.x - 1, y: tp.y + 1 }, { x: tp.x + 1, y: tp.y + 1 },
+  ].filter(t => !isOccupied(t.x, t.y) && t.x >= 0 && t.y >= 0 && t.x < (width || 40) && t.y < (height || 30))
+
+  // Sort adjacent tiles by distance to enemy (prefer closest approach)
+  adjacentTiles.sort((a, b) => {
+    const da = Math.max(Math.abs(a.x - enemy.position.x), Math.abs(a.y - enemy.position.y))
+    const db = Math.max(Math.abs(b.x - enemy.position.x), Math.abs(b.y - enemy.position.y))
+    return da - db
+  })
+
+  // Try pathfinding to each adjacent tile until we find a reachable one
+  let bestMove = null
+  for (const adjTile of adjacentTiles) {
+    const path = collisionData
+      ? findPathEdge(collisionData, width, height, enemy.position, adjTile)
+      : null
+    if (path && path.length >= 2) {
+      const moveIdx = Math.min(maxTiles, path.length - 1)
+      let moveEnd = path[moveIdx]
+      // If the final tile is occupied, step back along the path
+      while (moveIdx > 0 && isOccupied(moveEnd.x, moveEnd.y)) {
+        const idx = path.indexOf(moveEnd)
+        if (idx <= 0) break
+        moveEnd = path[idx - 1]
+      }
+      if (!isOccupied(moveEnd.x, moveEnd.y) && (moveEnd.x !== enemy.position.x || moveEnd.y !== enemy.position.y)) {
+        const cost = path.indexOf(moveEnd)
+        bestMove = { moveEnd, movePath: path.slice(0, cost + 1), moveCost: cost }
+        break
       }
     }
-    return { action: 'move', moveTo: fallback, moveCost: Math.max(Math.abs(fallback.x - enemy.position.x), Math.abs(fallback.y - enemy.position.y)), narrative: `${enemy.name} advances toward the party.` }
   }
 
-  // Stop one tile short of the target (don't land on their tile)
-  const maxPathIdx = path.length >= 2 ? path.length - 2 : path.length - 1
-  const moveIdx = Math.min(maxTiles, maxPathIdx)
-  const moveEnd = path[moveIdx]
-  const movePath = path.slice(0, moveIdx + 1)
-  const moveCost = moveIdx
+  // Fallback: use simple step-toward if pathfinding fails
+  if (!bestMove) {
+    const fallback = stepTowards(enemy.position, nearest.position, maxTiles, combatants)
+    if (fallback && !isOccupied(fallback.x, fallback.y)) {
+      const cost = Math.max(Math.abs(fallback.x - enemy.position.x), Math.abs(fallback.y - enemy.position.y))
+      bestMove = { moveEnd: fallback, moveCost: cost }
+    }
+  }
+
+  if (!bestMove) return { action: 'wait', narrative: `${enemy.name} cannot reach any target.` }
+
+  const { moveEnd, movePath, moveCost } = bestMove
 
   // Check if adjacent after moving
   const distAfterMove = Math.max(
