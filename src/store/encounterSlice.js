@@ -32,7 +32,7 @@ export function createEncounterSlice(set, get) {
       activeEffects: [],   // Persistent spell area overlays: [{ id, spellName, casterId, concentration, areaType, ...geometry }]
     },
 
-    startEncounter: (enemies, partyMembers, autoRollInitiative = false) => {
+    startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false } = {}) => {
       const combatants = [];
 
       // Expand enemy groups by count
@@ -111,9 +111,18 @@ export function createEncounterSlice(set, get) {
         combatants.forEach(c => {
           const dexMod = Math.floor(((c.stats?.dex || 10) - 10) / 2);
           c.initiative = Math.floor(Math.random() * 20) + 1 + dexMod;
+          // Surprise: enemies are surprised — they skip their first turn
+          if (surprise && c.type === 'enemy') {
+            c.conditions = [...(c.conditions || []), 'Surprised'];
+          }
         });
-        // Sort descending and start combat immediately
-        const sorted = [...combatants].sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
+        // Sort descending; on surprise, players go before enemies at equal initiative
+        const sorted = [...combatants].sort((a, b) => {
+          const diff = (b.initiative || 0) - (a.initiative || 0);
+          if (diff !== 0) return diff;
+          if (surprise) return a.type === 'enemy' ? 1 : -1;
+          return 0;
+        });
         const initLog = sorted.map(c => `${c.name}: ${c.initiative}`).join(', ');
 
         // Place combatants — keep existing positions if they have them,
@@ -560,6 +569,18 @@ export function createEncounterSlice(set, get) {
       if (!active || active.type !== 'enemy' || active.currentHp <= 0) {
         console.log('[runEnemyTurn] Early return — advancing turn')
         get().nextEncounterTurn();
+        return;
+      }
+
+      // Surprised enemies skip their first turn (5e: surprised ends at end of your turn)
+      if (active.conditions?.includes('Surprised')) {
+        get().removeEncounterCondition(active.id, 'Surprised');
+        get().addEncounterLog(`${active.name} is surprised and loses their turn!`);
+        broadcastEncounterAction({ type: 'remove-condition', id: active.id, condition: 'Surprised', userId: get().user?.id || 'system' });
+        setTimeout(() => {
+          get().nextEncounterTurn();
+          broadcastEncounterAction({ type: 'next-turn', userId: get().user?.id || 'system' });
+        }, 1000);
         return;
       }
 

@@ -33,6 +33,22 @@ export function createGameTimeSlice(set, get) {
     setPendingSkillCheck: (check) => set({ pendingSkillCheck: check }),
     clearPendingSkillCheck: () => set({ pendingSkillCheck: null }),
 
+    // === Last Skill Check Result (for stealth flow) ===
+    lastSkillCheckResult: null,  // { skill, total, pass, timestamp }
+    setLastSkillCheckResult: (result) => set({ lastSkillCheckResult: result }),
+    clearLastSkillCheckResult: () => set({ lastSkillCheckResult: null }),
+
+    // === Stealth Mode ===
+    // null when not sneaking; object when active
+    stealthMode: null,  // { active, stealthResult, enemyPositions, zoneEnemies, zoneData }
+    setStealthMode: (data) => set({ stealthMode: data }),
+    clearStealthMode: () => set({ stealthMode: null }),
+
+    // === Pending Encounter Data (deferred combat start for stealth) ===
+    pendingEncounterData: null,  // stores encounter zone data while waiting for stealth roll
+    setPendingEncounterData: (data) => set({ pendingEncounterData: data }),
+    clearPendingEncounterData: () => set({ pendingEncounterData: null }),
+
     // === Session-wide API key (broadcast from DM to all players) ===
     sessionApiKey: null,
     setSessionApiKey: (key) => set({ sessionApiKey: key }),

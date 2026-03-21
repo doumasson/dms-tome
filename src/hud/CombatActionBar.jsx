@@ -1,19 +1,47 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import useStore from '../store/useStore'
 import { getClassCombatActions } from '../lib/classCombatActions'
 import { getClassResources } from '../lib/classResources'
 import ClassResourceBar from './ClassResourceBar'
+
+const TURN_TIMER_SECONDS = 60
 
 export default function CombatActionBar({ onEndTurn, onAction }) {
   const encounter = useStore(s => s.encounter)
   const myCharacter = useStore(s => s.myCharacter)
   const useAction = useStore(s => s.useAction)
   const dashAction = useStore(s => s.dashAction)
-  const { combatants, currentTurn } = encounter
+  const { combatants, currentTurn, round } = encounter
   const active = combatants?.[currentTurn]
 
   // Check if the active combatant is the current player
   const isMyTurn = active && active.type === 'player' && active.id === myCharacter?.id
+
+  // --- 60-second turn timer ---
+  const [timeLeft, setTimeLeft] = useState(TURN_TIMER_SECONDS)
+  const timerRef = useRef(null)
+  const endTurnRef = useRef(onEndTurn)
+  endTurnRef.current = onEndTurn
+
+  useEffect(() => {
+    // Reset timer whenever turn or round changes
+    setTimeLeft(TURN_TIMER_SECONDS)
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (!isMyTurn) return
+    timerRef.current = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current)
+          timerRef.current = null
+          // Auto-end turn
+          setTimeout(() => endTurnRef.current?.(), 0)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => { if (timerRef.current) clearInterval(timerRef.current) }
+  }, [currentTurn, round, isMyTurn])
 
   // If it's not the player's turn, show a waiting message
   if (!isMyTurn) {
@@ -191,8 +219,18 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
           ))}
         </div>
       )}
-      {/* End turn */}
-      <button className="hud-end-turn" onClick={onEndTurn}>END TURN</button>
+      {/* End turn + timer */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
+        <div style={{
+          fontFamily: 'Cinzel, serif', fontSize: 18, fontWeight: 700,
+          color: timeLeft <= 10 ? '#cc3333' : timeLeft <= 20 ? '#cc8822' : '#d4af37',
+          minWidth: 36, textAlign: 'center',
+          animation: timeLeft <= 10 ? 'pulse 1s infinite' : 'none',
+        }}>
+          {timeLeft}s
+        </div>
+        <button className="hud-end-turn" style={{ flex: 1 }} onClick={onEndTurn}>END TURN</button>
+      </div>
     </div>
   )
 }

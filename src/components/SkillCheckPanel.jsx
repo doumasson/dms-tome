@@ -58,6 +58,10 @@ export default function SkillCheckPanel() {
     addNarratorMessage({ role: 'user', speaker: charName, text: entry })
     broadcastEncounterAction({ type: 'skill-check-result', characterName: charName, skill, total, pass })
 
+    // Store result for stealth flow before clearing
+    const { setLastSkillCheckResult } = useStore.getState()
+    setLastSkillCheckResult({ skill, total, pass, timestamp: Date.now() })
+
     setResult({ d20, total, pass })
     setTimeout(() => { clearCheck(); setResult(null); setUseGuidance(false); setUseBardic(false) }, 2500)
   }

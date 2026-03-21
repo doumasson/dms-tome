@@ -23,6 +23,7 @@ import { useRoofManager } from './hooks/useRoofManager'
 import { useCombatActions } from './hooks/useCombatActions'
 import { useAreaTransition } from './hooks/useAreaTransition'
 import { useWorldMovement } from './hooks/useWorldMovement'
+import { useStealthMode } from './hooks/useStealthMode'
 import { useNarratorChat } from './hooks/useNarratorChat'
 import { useWorldLoader } from './hooks/useWorldLoader'
 import { getNpcMovements } from './lib/npcScheduler.js'
@@ -85,6 +86,8 @@ export default function GameV2({ onLeave }) {
   const pendingLoot = useStore(s => s.pendingLoot)
   const setPendingLoot = useStore(s => s.setPendingLoot)
   const applyLevelUp = useStore(s => s.applyLevelUp)
+  const setPendingEncounterData = useStore(s => s.setPendingEncounterData)
+  const clearPendingEncounterData = useStore(s => s.clearPendingEncounterData)
 
   const pixiRef = useRef(null)
   const [apiKeyLoaded, setApiKeyLoaded] = useState(false)
@@ -136,6 +139,9 @@ export default function GameV2({ onLeave }) {
     zone, isV2Zone, playerPos, setPlayerPos, playerPosRef,
     cameraRef, dialogOpenRef, handleInteractRef, user,
   })
+
+  // --- Stealth approach system ---
+  const { stealthMode } = useStealthMode({ playerPos, playerPosRef, partyMembers, zone })
 
   // --- Combined tile click handler ---
   const handleTileClick = useCallback(({ x, y }) => {
@@ -204,6 +210,7 @@ export default function GameV2({ onLeave }) {
   useEffect(() => {
     if (!zone?.encounterZones?.length || !playerPos || inCombat) return
     if (!hasMovedRef.current) return // Don't trigger on spawn
+    if (stealthMode?.active) return // Already sneaking — don't trigger new encounters
     const pos = playerPosRef.current
     if (!pos) return
 
@@ -254,12 +261,24 @@ export default function GameV2({ onLeave }) {
     }
 
     if (sessionApiKey) {
-      // AI narrates first, then combat starts
+      // AI narrates first — store encounter data so stealth check can defer combat
+      const encounterPayload = { startCombatWithZoneEnemies, triggered, enemyPositions: (zone.enemies || []).filter(e => e.position).map(e => ({ ...e.position, name: e.name, wis: e.stats?.wis ?? 10 })) }
+      setPendingEncounterData(encounterPayload)
       setTimeout(async () => {
         const chat = handleChatRef.current
         if (chat) await chat(prompt)
-        // Start combat after AI response (slight delay for the narrative to display)
-        setTimeout(startCombatWithZoneEnemies, 500)
+        // After AI responds, check if a skill check was requested (stealth).
+        // If yes, the lastSkillCheckResult watcher will handle combat start.
+        // If no skill check was requested, start combat after a brief delay.
+        setTimeout(() => {
+          const { pendingSkillCheck, pendingEncounterData: ped } = useStore.getState()
+          if (!pendingSkillCheck && ped) {
+            // No stealth check requested — start combat immediately
+            clearPendingEncounterData()
+            startCombatWithZoneEnemies()
+          }
+          // If pendingSkillCheck exists, the stealth result watcher handles it
+        }, 600)
       }, 100)
     } else {
       // No API key — just start combat directly
@@ -526,6 +545,18 @@ export default function GameV2({ onLeave }) {
         <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
       </Suspense>
       <SkillCheckPanel />
+      {stealthMode?.active && (
+        <div style={{
+          position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)',
+          background: 'rgba(10,10,10,0.9)', border: '1px solid #44aa66',
+          borderRadius: 6, padding: '6px 18px', zIndex: 90,
+          fontFamily: 'Cinzel, serif', color: '#44aa66', fontSize: 13,
+          letterSpacing: 1, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 8,
+        }}>
+          <span style={{ fontSize: 16 }}>👁</span>
+          SNEAKING — Stealth: {stealthMode.stealthResult}
+        </div>
+      )}
       {sheetChar && (
         <Suspense fallback={null}>
           <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />
