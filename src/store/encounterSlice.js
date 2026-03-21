@@ -38,27 +38,32 @@ export function createEncounterSlice(set, get) {
       // Expand enemy groups by count
       enemies?.forEach((group, gi) => {
         const count = group.count || 1;
-        const spd = Number(group.speed) || 30;
+        // Stats may be nested in group.stats (area builder) or top-level (legacy)
+        const stats = group.stats || {};
+        const hp = Number(group.hp) || Number(stats.hp) || 10;
+        const ac = Number(group.ac) || Number(stats.ac) || 10;
+        const spd = Number(group.speed) || Number(stats.speed) || 30;
         for (let i = 0; i < count; i++) {
           const label = count > 1 ? `${group.name} ${i + 1}` : group.name;
           combatants.push({
-            id: crypto.randomUUID(),
+            id: group.id || crypto.randomUUID(),
             name: label,
             type: 'enemy',
             isEnemy: true,
             initiative: null,
-            maxHp: Number(group.hp) || 10,
-            currentHp: Number(group.hp) || 10,
-            ac: Number(group.ac) || 10,
+            maxHp: hp,
+            currentHp: hp,
+            ac: ac,
             speed: spd,
             remainingMove: Math.floor(spd / 5),
             actionsUsed: 0,
             bonusActionsUsed: 0,
-            stats: group.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+            stats: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10, ...stats },
             attacks: group.attacks || [],
             spells: group.spells || [],
             conditions: [],
             concentration: null,
+            cr: group.cr || stats.cr || null,
             position: group.position
               ? { x: group.position.x + (i > 0 ? i : 0), y: group.position.y }
               : null,
@@ -525,7 +530,9 @@ export function createEncounterSlice(set, get) {
     runEnemyTurn: async (apiKey) => {
       const { encounter } = get();
       const active = encounter.combatants[encounter.currentTurn];
+      console.log('[runEnemyTurn] Start:', active?.name, 'type:', active?.type, 'hp:', active?.currentHp, 'turn:', encounter.currentTurn)
       if (!active || active.type !== 'enemy' || active.currentHp <= 0) {
+        console.log('[runEnemyTurn] Early return — advancing turn')
         get().nextEncounterTurn();
         return;
       }
@@ -534,6 +541,7 @@ export function createEncounterSlice(set, get) {
 
       // Determine grunt vs boss: boss flag or CR >= 5 uses Claude API; everything else is grunt
       const isBoss = active.isBoss || (active.cr != null && Number(active.cr) >= 5);
+      console.log('[runEnemyTurn] isBoss:', isBoss, 'cr:', active.cr)
 
       try {
         let result;
@@ -545,6 +553,7 @@ export function createEncounterSlice(set, get) {
           // Grunt path: local pathfinding AI — fast, free, deterministic
           const currentAreaId = get().currentAreaId;
           const area = get().areas?.[currentAreaId] || null;
+          console.log('[runEnemyTurn] Grunt path — area:', currentAreaId, 'wallEdges:', !!area?.wallEdges, 'size:', area?.width, 'x', area?.height)
           let collisionData = null;
           let areaWidth = 20;
           let areaHeight = 20;
@@ -558,6 +567,8 @@ export function createEncounterSlice(set, get) {
           }
           result = computeGruntAction(active, encounter.combatants, collisionData, areaWidth, areaHeight);
         }
+
+        console.log('[runEnemyTurn] AI result:', result.action, 'moveTo:', result.moveTo, 'target:', result.targetName, 'damage:', result.damage, 'narrative:', result.narrative?.slice(0, 60))
 
         // Apply move — grunt result uses moveTo, legacy AI uses moveToPosition
         const moveDest = result.moveTo || result.moveToPosition;

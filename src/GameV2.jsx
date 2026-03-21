@@ -39,6 +39,7 @@ const LootScreen          = lazy(() => import('./components/LootScreen'))
 const LevelUpModal        = lazy(() => import('./components/LevelUpModal'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
+const CombatDebugOverlay  = lazy(() => import('./hud/CombatDebugOverlay'))
 
 // ─── D&D 5e XP thresholds (inlined from LevelUpModal to avoid static import) ──
 const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000]
@@ -72,6 +73,7 @@ export default function GameV2({ onLeave }) {
   const inCombat = encounter.phase === 'combat'
   const sessionApiKey = useStore(s => s.sessionApiKey)
   const isDM = useStore(s => s.isDM)
+  const activeCampaign = useStore(s => s.activeCampaign)
   const narrateCombatAction = useStore(s => s.narrateCombatAction)
   const campaign = useStore(s => s.campaign)
   const partyMembers = useStore(s => s.partyMembers)
@@ -105,6 +107,7 @@ export default function GameV2({ onLeave }) {
   const area = areas[currentAreaId] || null
   const zone = area
   const isV2Zone = Boolean(zone?.palette)
+  const showDebug = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('debug')
 
   // --- Extracted hooks ---
   const { cameraRef } = useAreaCamera({ zone, playerPosRef })
@@ -181,8 +184,21 @@ export default function GameV2({ onLeave }) {
   }, [myCharacter?.xp])
 
   // --- Encounter zone proximity detection ---
+  // --- Encounter zone proximity detection ---
+  // Requires player to MOVE into the zone (not spawn inside it).
+  // Track that player has moved at least once before allowing triggers.
+  const hasMovedRef = useRef(false)
+  const prevPlayerPosRef = useRef(null)
+  useEffect(() => {
+    if (prevPlayerPosRef.current && (prevPlayerPosRef.current.x !== playerPos.x || prevPlayerPosRef.current.y !== playerPos.y)) {
+      hasMovedRef.current = true
+    }
+    prevPlayerPosRef.current = playerPos
+  }, [playerPos])
+
   useEffect(() => {
     if (!zone?.encounterZones?.length || !playerPos || inCombat) return
+    if (!hasMovedRef.current) return // Don't trigger on spawn
     const pos = playerPosRef.current
     if (!pos) return
 
@@ -195,7 +211,7 @@ export default function GameV2({ onLeave }) {
     if (!triggered) return
 
     triggeredZonesRef.current.add(triggered.id)
-    if (isDM) {
+    if (isDM || !activeCampaign) {
       broadcastEncounterAction({ type: 'encounter-zone-triggered', zoneId: triggered.id })
     }
 
@@ -331,15 +347,62 @@ export default function GameV2({ onLeave }) {
   const tokens = useMemo(() => {
     if (!zone) return []
     const t = []
-    t.push({
-      id: 'player',
-      name: myCharacter?.name || 'Hero',
-      x: playerPos.x, y: playerPos.y,
-      color: 0x0c1828,
-      borderColor: CLASS_COLORS[myCharacter?.class] || 0x4499dd,
-      isNpc: false,
-    })
-    if (zone.npcs) {
+
+    // During combat, render tokens from encounter.combatants (live positions + HP)
+    if (inCombat && encounter.combatants?.length) {
+      encounter.combatants.forEach(c => {
+        if (!c.position) return
+        const isEnemy = c.type === 'enemy'
+        const isDead = (c.currentHp ?? 0) <= 0
+        t.push({
+          id: c.id, name: c.name,
+          x: c.position.x, y: c.position.y,
+          color: isEnemy ? 0x8b0000 : 0x0c1828,
+          borderColor: isEnemy ? 0xff3333 : (CLASS_COLORS[c.class] || 0x4499dd),
+          isEnemy, isNpc: false,
+          showHpBar: true,
+          currentHp: c.currentHp ?? c.maxHp,
+          maxHp: c.maxHp ?? 10,
+          opacity: isDead ? 0.3 : 1,
+        })
+      })
+    } else {
+      // Exploration mode — player + NPCs + area enemies
+      t.push({
+        id: 'player',
+        name: myCharacter?.name || 'Hero',
+        x: playerPos.x, y: playerPos.y,
+        color: 0x0c1828,
+        borderColor: CLASS_COLORS[myCharacter?.class] || 0x4499dd,
+        isNpc: false,
+      })
+      if (zone.npcs) {
+        zone.npcs.forEach(npc => {
+          if (!npc.position) return
+          t.push({
+            id: npc.name, name: npc.name,
+            x: npc.position.x, y: npc.position.y,
+            color: 0x1a1208,
+            borderColor: npc.questRelevant ? 0xc9a84c : 0x8a7a52,
+            isNpc: true, questRelevant: npc.questRelevant,
+          })
+        })
+      }
+      if (zone.enemies) {
+        zone.enemies.forEach(e => {
+          if (!e.position) return
+          t.push({
+            id: e.id, name: e.name,
+            x: e.position.x, y: e.position.y,
+            color: 0x8b0000, borderColor: 0xff3333,
+            isEnemy: true, isNpc: false,
+          })
+        })
+      }
+    }
+
+    // Always include NPCs during combat for visual context
+    if (inCombat && zone.npcs) {
       zone.npcs.forEach(npc => {
         if (!npc.position) return
         t.push({
@@ -351,20 +414,8 @@ export default function GameV2({ onLeave }) {
         })
       })
     }
-    if (zone.enemies) {
-      zone.enemies.forEach(e => {
-        if (!e.position) return
-        t.push({
-          id: e.id, name: e.name,
-          x: e.position.x, y: e.position.y,
-          color: 0x8b0000, borderColor: 0xff3333,
-          isEnemy: true, isNpc: false,
-          showHpBar: inCombat, currentHp: e.currentHp, maxHp: e.maxHp,
-        })
-      })
-    }
     return t
-  }, [playerPos, zone, myCharacter, inCombat])
+  }, [playerPos, zone, myCharacter, inCombat, encounter.combatants, encounter.currentTurn])
 
   // Nearby NPCs for chat bubbles
   const nearbyNpcs = useMemo(() => {
@@ -431,7 +482,8 @@ export default function GameV2({ onLeave }) {
 
   const handleEndTurn = useCallback(() => {
     nextEncounterTurn()
-  }, [nextEncounterTurn])
+    broadcastEncounterAction({ type: 'next-turn', userId: user?.id || 'system' })
+  }, [nextEncounterTurn, user])
 
   // --- Chat handler ---
   const { handleChat } = useNarratorChat({ sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage, playerPosRef })
@@ -532,6 +584,11 @@ export default function GameV2({ onLeave }) {
       {showFormation && (
         <Suspense fallback={null}>
           <FormationPanel onClose={() => setShowFormation(false)} />
+        </Suspense>
+      )}
+      {showDebug && (
+        <Suspense fallback={null}>
+          <CombatDebugOverlay />
         </Suspense>
       )}
     </div>

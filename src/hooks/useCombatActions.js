@@ -17,6 +17,10 @@ import { broadcastEncounterAction } from '../lib/liveChannel'
 export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM }) {
   const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
   const runEnemyTurn = useStore(s => s.runEnemyTurn)
+  const activeCampaign = useStore(s => s.activeCampaign)
+  // In solo/demo mode (no Supabase campaign), this client runs enemy AI.
+  // In multiplayer, only the DM/host runs it.
+  const shouldRunEnemyAI = isDM || !activeCampaign
 
   const [targetingMode, setTargetingMode] = useState(null)
   const [pendingOA, setPendingOA] = useState(null)
@@ -120,26 +124,47 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
   }, [inCombat, zone])
 
-  // --- Auto-run enemy turns ---
+  // --- Auto-run enemy turns (DM/host only to prevent duplicate execution) ---
   useEffect(() => {
-    if (!inCombat) return
+    console.log('[CombatAI] useEffect fired:', { inCombat, shouldRunEnemyAI, currentTurn: encounter.currentTurn, phase: encounter.phase })
+    if (!inCombat || !shouldRunEnemyAI) {
+      console.log('[CombatAI] Skipped — inCombat:', inCombat, 'shouldRunAI:', shouldRunEnemyAI)
+      return
+    }
     const active = encounter.combatants?.[encounter.currentTurn]
-    if (!active || !active.isEnemy) return
+    if (!active || !active.isEnemy) {
+      console.log('[CombatAI] Not enemy turn:', active?.name, active?.type)
+      return
+    }
+
+    console.log('[CombatAI] Enemy turn detected:', active.name, 'HP:', active.currentHp, 'Pos:', active.position)
+
+    // Skip dead enemies — advance turn immediately
+    if ((active.currentHp ?? 0) <= 0) {
+      console.log('[CombatAI] Dead enemy, skipping:', active.name)
+      const t = setTimeout(() => {
+        nextEncounterTurn()
+        broadcastEncounterAction({ type: 'next-turn', userId: 'system' })
+      }, 600)
+      return () => clearTimeout(t)
+    }
 
     const apiKey = sessionApiKey
     const timer = setTimeout(() => {
-      if (apiKey) {
-        runEnemyTurn(apiKey).catch(() => {
-          // Safety net: always advance turn even if AI completely fails
-          nextEncounterTurn()
-        })
-      } else {
+      console.log('[CombatAI] Running enemy turn for:', active.name, 'apiKey:', !!apiKey)
+      const runAI = apiKey ? runEnemyTurn(apiKey) : runEnemyTurn('')
+      runAI.then(() => {
+        console.log('[CombatAI] Enemy turn completed:', active.name)
+      }).catch((err) => {
+        console.error('[CombatAI] Enemy turn FAILED:', active.name, err)
+        // Safety net: always advance turn even if AI completely fails
         nextEncounterTurn()
-      }
+        broadcastEncounterAction({ type: 'next-turn', userId: 'system' })
+      })
     }, 1000)
 
     return () => clearTimeout(timer)
-  }, [encounter.currentTurn, encounter.phase, inCombat, runEnemyTurn, sessionApiKey, nextEncounterTurn])
+  }, [encounter.currentTurn, encounter.phase, inCombat, shouldRunEnemyAI, runEnemyTurn, sessionApiKey, nextEncounterTurn])
 
   // --- Handle combat tile click (attack, spell, movement) ---
   // Returns true if click was handled by combat logic, false otherwise

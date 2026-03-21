@@ -1,5 +1,22 @@
 # Lessons Learned
 
+## Combat Token Rendering Must Use Encounter State (Not Area Data)
+**Pattern:** `useMemo` for token list reads from `zone.enemies` (static area data) instead of `encounter.combatants` (live combat state). Tokens never visually update during combat.
+
+**Rule:** During combat (`inCombat === true`), ALL token positions and HP must come from `encounter.combatants`. Area enemy data is only for exploration mode. The `encounter` object must be in the `useMemo` dependency array.
+
+**Corollary:** When adding a new data source (encounter system), audit all consumers of the old data source (area enemies) to ensure they switch during the appropriate mode.
+
+## startEncounter Must Extract Nested Enemy Stats
+**Pattern:** Area builder puts enemy HP/AC/speed inside `stats: { hp, ac, speed }` but `startEncounter` reads top-level `group.hp`, `group.ac`. Enemies silently get wrong defaults (10 HP, 10 AC).
+
+**Rule:** Always check both `group.field` and `group.stats.field` when mapping enemy data into combatants. The area builder and campaign generator use different schemas.
+
+## Enemy AI Must Run On Host Only
+**Pattern:** Removing `isDM` gate from enemy turn execution causes all clients to independently run AI, broadcast conflicting moves/damage, and double-advance turns.
+
+**Rule:** `runEnemyTurn` must only execute on the DM/host client. Other clients receive results via broadcast. Re-adding the gate was the correct fix.
+
 ## Production TDZ Bug (Rollup/Vite)
 **Pattern:** `const`/`let` declared in a component body AFTER a `useEffect` (or other hook) that references it in the **dependency array**.
 
