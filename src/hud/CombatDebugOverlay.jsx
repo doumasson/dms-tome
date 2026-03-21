@@ -131,11 +131,11 @@ export default function CombatDebugOverlay() {
               </div>
             )}
 
-            {/* Last 5 combat log entries */}
+            {/* Last 10 combat log entries */}
             {encounter.log?.length > 0 && (
-              <div style={{ borderTop: '1px solid #332a1e', paddingTop: 4, marginTop: 4, fontSize: 10, color: '#8a7a52' }}>
-                {encounter.log.slice(0, 5).map((entry, i) => (
-                  <div key={i} style={{ opacity: 1 - i * 0.15 }}>{entry}</div>
+              <div style={{ borderTop: '1px solid #332a1e', paddingTop: 4, marginTop: 4, fontSize: 10, color: '#8a7a52', maxHeight: 120, overflowY: 'auto' }}>
+                {encounter.log.slice(0, 10).map((entry, i) => (
+                  <div key={i} style={{ opacity: 1 - i * 0.08 }}>{entry}</div>
                 ))}
               </div>
             )}

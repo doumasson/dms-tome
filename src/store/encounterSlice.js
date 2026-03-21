@@ -594,10 +594,12 @@ export function createEncounterSlice(set, get) {
         if (result.targetId && typeof result.damage === 'number' && result.damage > 0) {
           get().applyEncounterDamage(result.targetId, result.damage);
           const target = encounter.combatants.find(c => c.id === result.targetId);
-          const hitDesc = result.isCrit ? `CRIT for ${result.damage} damage` : `HIT for ${result.damage} ${result.damageType || ''} damage`;
+          const rollDetail = result.d20 != null ? ` (d20:${result.d20}+${result.bonus}=${result.total} vs AC ${target?.ac || '?'})` : '';
+          const hitDesc = result.isCrit
+            ? `CRIT! ${result.damage} dmg${rollDetail}`
+            : `HIT ${result.damage} dmg${rollDetail}`;
           get().addEncounterLog(
-            `\u2694 ${active.name} attacks ${target?.name || '?'}: ` +
-            `${result.hit ? hitDesc : 'MISS'}`
+            `⚔ ${active.name} → ${target?.name || '?'}: ${hitDesc}`
           );
           broadcastEncounterAction({
             type: 'damage',
@@ -605,8 +607,15 @@ export function createEncounterSlice(set, get) {
             amount: result.damage,
             userId: get().user?.id || 'system',
           });
-        } else if (result.action === 'wait' || result.action === 'move') {
-          get().addEncounterLog(`\u2694 ${active.name}: ${result.action}`);
+        } else if (result.hit === false && result.targetId) {
+          const target = encounter.combatants.find(c => c.id === result.targetId);
+          const rollDetail = result.d20 != null ? ` (d20:${result.d20}+${result.bonus}=${result.total} vs AC ${target?.ac || '?'})` : '';
+          get().addEncounterLog(`⚔ ${active.name} → ${target?.name || '?'}: MISS${rollDetail}`);
+        } else if (result.action === 'wait') {
+          get().addEncounterLog(`⚔ ${active.name}: waits (no targets)`);
+        } else if (result.action === 'move') {
+          const dest = result.moveTo;
+          get().addEncounterLog(`⚔ ${active.name}: moves to (${dest?.x},${dest?.y})`);
         }
 
         // Apply conditions — broadcast so all clients apply them
