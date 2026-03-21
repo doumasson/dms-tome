@@ -351,3 +351,68 @@ CombatActionBar (reads class, renders buttons)
 - **File size limit: ~400 lines per component.** SpellPickerModal and WeaponPickerModal are separate files. CombatActionBar stays thin — delegates to modals and hooks.
 - All class ability definitions come from `src/data/classes.js` — no hardcoded class logic in components.
 - Spell data comes from `src/data/spells.js` — no hardcoded spell objects anywhere.
+- Extract spell resolution from `useCombatActions.js` into `useSpellCasting.js` to keep files under 400 lines.
+
+## 8. Critical Data Notes
+
+### Casting Ability Lookup
+Spell save DC and spell attack bonus come from the **class**, not the spell object. Spells in `spells.js` do not have a `castingAbility` field. Resolution must use:
+```javascript
+import { CLASSES } from '../data/classes'
+const spellAbility = CLASSES[character.class].spellAbility // 'int', 'wis', 'cha'
+const spellMod = Math.floor((character.stats[spellAbility] - 10) / 2)
+const spellSaveDC = 8 + profBonus + spellMod
+const spellAttackBonus = profBonus + spellMod
+```
+
+### Spell Damage Data Shape
+Spell damage in `spells.js` is a nested object, not a flat string:
+```javascript
+spell.damage = { dice: "8d6", type: "fire", scalingDicePerLevel: "1d6" }
+```
+Use `spell.damage.dice` for `rollDamage()`, `spell.damage.type` for narration.
+
+### Weapon Picker Data Source
+The weapon picker reads from `combatant.attacks[]` (already populated by `encounterSlice.startEncounter`), not `character.equippedItems`. The attacks array contains `{ name, bonus, damage }` objects ready for use.
+
+### Touch Spells
+`range: -1` in spell data means "touch" — mapped to adjacency (1 tile) for targeting.
+
+### Ranged Spell Attacks
+Ranged spell attacks (Fire Bolt, Eldritch Blast) use the same targeting flow as weapon attacks, substituting `spellAttackBonus` for the weapon attack bonus. Cover calculations apply equally.
+
+## 9. 5e Rules Enforcement
+
+### Bonus Action Spell Rule (PHB p.202)
+If a spell is cast as a bonus action, the only other spell that can be cast on the same turn is a cantrip with a casting time of 1 action. Enforcement:
+- If `bonusActionUsed` is true AND the bonus action was a spell → Spell Picker only shows cantrips for the action
+- If a leveled spell was cast as an action → bonus action spells are disabled
+
+### Concentration Replacement
+When selecting a concentration spell while already concentrating:
+- Show confirmation: "Replace concentration on [current] with [new]?"
+- On confirm: drop old concentration, apply new spell
+- On cancel: return to spell picker
+
+### Reaction Spells (Phase 2)
+Reaction spells (Shield, Counterspell, Absorb Elements) cannot be cast proactively. They are:
+- Filtered out of the Spell Picker (shown greyed with "reaction" label)
+- Triggered via a prompt when conditions are met (e.g., "You were hit! Cast Shield? +5 AC [L1 slot]")
+- Implementation deferred to Phase 2 — Phase 1 focuses on action/bonus action spells
+
+### Upcasting
+When clicking a leveled spell with higher-level slots available:
+- Show slot-level selector: "Cast at: [1st] [2nd] [3rd]"
+- Damage scales: `baseDice + (castLevel - spellLevel) × scalingDicePerLevel`
+- Slot consumed at selected level
+
+### Cone/Line Directions
+Support 8-direction snapping (N/NE/E/SE/S/SW/W/NW) since `AoEOverlay.js` already computes these.
+
+## 10. Out of Scope
+
+- **Multiclass characters:** Current system assumes single class per character. Multiclass support deferred.
+- **Subclass features:** Specific subclass mechanics (e.g., Evocation Wizard's Sculpt Spells) deferred.
+- **Metamagic (Sorcerer):** Individual metamagic options deferred.
+- **Eldritch Invocations (Warlock):** Individual invocation mechanics deferred.
+- **Wild Shape (Druid):** Beast form transformation deferred — button present as placeholder.
