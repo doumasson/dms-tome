@@ -24,14 +24,19 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
   const [targetingMode, setTargetingMode] = useState(null)
   const [pendingOA, setPendingOA] = useState(null)
+  const [showWeaponPicker, setShowWeaponPicker] = useState(false)
+  const [showSpellPicker, setShowSpellPicker] = useState(false)
+  const [selectedWeapon, setSelectedWeapon] = useState(null)
   const reachableTilesRef = useRef(new Set())
   const propCoverRef = useRef(new Set())
 
-  // --- Escape to cancel targeting mode ---
+  // --- Escape to cancel targeting mode or close pickers ---
   useEffect(() => {
-    if (!targetingMode) return
+    if (!targetingMode && !showWeaponPicker && !showSpellPicker) return
     const onKey = (e) => {
       if (e.key === 'Escape') {
+        if (showWeaponPicker) { setShowWeaponPicker(false); return }
+        if (showSpellPicker) { setShowSpellPicker(false); return }
         setTargetingMode(null)
         const layer = pixiRef.current?.getMovementRangeLayer?.()
         if (layer) clearAoEPreview(layer)
@@ -39,7 +44,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [targetingMode])
+  }, [targetingMode, showWeaponPicker, showSpellPicker])
 
   // --- Combat camera lock (area camera mode only) ---
   // Compute bounds ONCE when combat starts, not on every combatant change.
@@ -367,7 +372,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
   }, [zone, inCombat, encounter, targetingMode, addNarratorMessage, sessionApiKey, narrateCombatAction])
 
   // --- Handle combat action buttons (attack, cast, disengage, etc.) ---
-  const handleCombatAction = useCallback((type) => {
+  const handleCombatAction = useCallback((type, payload) => {
     // Allow death-save and stabilize for dying players, block everything else
     const activeCheck = encounter.combatants?.[encounter.currentTurn]
     if (activeCheck && (activeCheck.currentHp ?? 0) <= 0 && type !== 'death-save' && type !== 'stabilize') return
@@ -399,19 +404,22 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       setTargetingMode('attack')
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select a target to attack. Press Escape to cancel.' })
       return
-    } else if (type === 'cast') {
-      const testSpell = {
-        name: 'Fireball',
-        areaType: 'sphere',
-        areaSize: 20,
-        range: 150,
-        damage: '8d6',
-        saveAbility: 'dex',
-        halfOnSave: true,
-        castingAbility: 'int',
+    } else if (type === 'spell-pick') {
+      setShowSpellPicker(true)
+      return
+    } else if (type === 'attack-pick') {
+      setShowWeaponPicker(true)
+      return
+    } else if (type === 'class-ability') {
+      // payload is { name, resourceName, resourceCost }
+      if (payload?.resourceName && payload?.resourceCost) {
+        const { useClassResource } = useStore.getState()
+        const active = encounter.combatants?.[encounter.currentTurn]
+        if (active) {
+          useClassResource(active.id, payload.resourceName, payload.resourceCost)
+          addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses ${payload.name}!` })
+        }
       }
-      setTargetingMode({ type: 'spell', spell: testSpell })
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: `Targeting ${testSpell.name}. Click to place. Press Escape to cancel.` })
       return
     } else if (type === 'move') {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Click a tile to move during combat.' })
@@ -483,6 +491,45 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     broadcastEncounterAction({ type: 'move-token', id: active.id, position: { x, y }, cost })
   }, [zone, addNarratorMessage, cameraRef])
 
+  // --- Spell selection handler ---
+  const handleSpellSelected = useCallback((spell, castLevel) => {
+    setShowSpellPicker(false)
+    const active = encounter.combatants?.[encounter.currentTurn]
+    if (!active) return
+
+    // Enter targeting based on spell type
+    if (spell.areaType) {
+      // AoE spell — use existing spell targeting mode
+      setTargetingMode({ type: 'spell', spell: {
+        ...spell,
+        damage: spell.damage?.dice || '1d6',
+        saveAbility: (spell.save || 'dex').toLowerCase(),
+        halfOnSave: spell.save != null,
+        castingAbility: null,
+      }, castLevel })
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: `Targeting ${spell.name}. Click to place. Press Escape to cancel.` })
+    } else if (spell.attack) {
+      // Ranged/melee spell attack — same as weapon attack targeting
+      setTargetingMode('attack')
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: `Cast ${spell.name}. Click a target. Press Escape to cancel.` })
+    } else {
+      // Self/utility spell — cast immediately, consume slot
+      if (castLevel > 0) {
+        const { useSpellSlot } = useStore.getState()
+        useSpellSlot(active.id, castLevel)
+      }
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} casts ${spell.name}!` })
+    }
+  }, [encounter, addNarratorMessage])
+
+  // --- Weapon selection handler ---
+  const handleWeaponSelected = useCallback((weapon) => {
+    setShowWeaponPicker(false)
+    setSelectedWeapon(weapon)
+    setTargetingMode('attack')
+    addNarratorMessage({ role: 'dm', speaker: 'System', text: `Attack with ${weapon.name}. Click a target. Press Escape to cancel.` })
+  }, [addNarratorMessage])
+
   return {
     targetingMode,
     setTargetingMode,
@@ -493,5 +540,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     executeMoveWithOA,
     reachableTilesRef,
     propCoverRef,
+    showWeaponPicker, setShowWeaponPicker,
+    showSpellPicker, setShowSpellPicker,
+    handleSpellSelected,
+    handleWeaponSelected,
+    selectedWeapon,
   }
 }

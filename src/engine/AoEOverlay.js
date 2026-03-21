@@ -83,3 +83,27 @@ export function clearAoEPreview(container) {
     }
   }
 }
+
+/** Render a range overlay (Chebyshev distance) around caster position */
+export function renderRangeOverlay(container, casterPos, rangeTiles, tileSize, color = 0x4466ff) {
+  clearRangeOverlay(container)
+  for (let dx = -rangeTiles; dx <= rangeTiles; dx++) {
+    for (let dy = -rangeTiles; dy <= rangeTiles; dy++) {
+      if (Math.max(Math.abs(dx), Math.abs(dy)) > rangeTiles) continue
+      const g = new PIXI.Graphics()
+      g.rect((casterPos.x + dx) * tileSize, (casterPos.y + dy) * tileSize, tileSize, tileSize)
+      g.fill({ color, alpha: 0.08 })
+      g._isRange = true
+      container.addChild(g)
+    }
+  }
+}
+
+export function clearRangeOverlay(container) {
+  for (let i = container.children.length - 1; i >= 0; i--) {
+    if (container.children[i]._isRange) {
+      container.children[i].destroy()
+      container.removeChildAt(i)
+    }
+  }
+}
