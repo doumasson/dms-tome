@@ -144,11 +144,28 @@ export function computeGruntAction(enemy, combatants, collisionData, width, heig
     ? findPathEdge(collisionData, width, height, enemy.position, nearest.position)
     : null
   if (!path || path.length <= 1) {
-    return { action: 'wait', narrative: `${enemy.name} cannot reach any target.` }
+    // No pathfinding data — use simple step-toward fallback
+    const fallback = stepTowards(enemy.position, nearest.position, maxTiles, combatants)
+    if (!fallback) return { action: 'wait', narrative: `${enemy.name} cannot reach any target.` }
+    const fbDist = Math.max(Math.abs(fallback.x - nearest.position.x), Math.abs(fallback.y - nearest.position.y))
+    if (fbDist <= 1) {
+      const d20 = Math.floor(Math.random() * 20) + 1
+      const total = d20 + bonus
+      const isCrit = d20 === 20
+      const hit = isCrit || total >= (nearest.ac || 10)
+      const damage = hit ? (isCrit ? rollDamage(weapon.damage).total * 2 : rollDamage(weapon.damage).total) : 0
+      return {
+        action: 'move-attack', moveTo: fallback, moveCost: Math.max(Math.abs(fallback.x - enemy.position.x), Math.abs(fallback.y - enemy.position.y)),
+        targetId: nearest.id, targetName: nearest.name, hit, damage, d20, bonus, total, isCrit, weapon: weapon.name,
+        narrative: `${enemy.name} charges toward ${nearest.name}! ${hit ? `${damage} damage${isCrit ? ' (CRITICAL!)' : ''}!` : 'But misses!'}`,
+      }
+    }
+    return { action: 'move', moveTo: fallback, moveCost: Math.max(Math.abs(fallback.x - enemy.position.x), Math.abs(fallback.y - enemy.position.y)), narrative: `${enemy.name} advances toward the party.` }
   }
 
-  // Move as far as speed allows
-  const moveIdx = Math.min(maxTiles, path.length - 1)
+  // Stop one tile short of the target (don't land on their tile)
+  const maxPathIdx = path.length >= 2 ? path.length - 2 : path.length - 1
+  const moveIdx = Math.min(maxTiles, maxPathIdx)
   const moveEnd = path[moveIdx]
   const movePath = path.slice(0, moveIdx + 1)
   const moveCost = moveIdx
