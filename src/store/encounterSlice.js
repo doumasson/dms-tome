@@ -118,16 +118,18 @@ export function createEncounterSlice(set, get) {
 
         // Place combatants — keep existing positions if they have them,
         // only auto-place those without positions (fallback for V1 scenes)
-        const hasPositions = sorted.some(c => c.position != null && c.position.x != null)
+        // A position is "valid" if it exists and isn't at the default origin (0,0)
+        const isValidPos = (pos) => pos != null && pos.x != null && !(pos.x === 0 && pos.y === 0)
+        const hasPositions = sorted.some(c => isValidPos(c.position))
         let placed
         if (hasPositions) {
           // V2 tilemap: combatants already have map positions from area generation
           // Just ensure all have a position (players get placed near first enemy if missing)
-          const firstEnemy = sorted.find(c => c.type === 'enemy' && c.position)
+          const firstEnemy = sorted.find(c => c.type === 'enemy' && isValidPos(c.position))
           const fallbackPos = firstEnemy?.position || { x: 5, y: 5 }
           placed = sorted.map((c, i) => ({
             ...c,
-            position: c.position || { x: fallbackPos.x - 2 + (i % 3), y: fallbackPos.y - 1 + Math.floor(i / 3) },
+            position: isValidPos(c.position) ? c.position : { x: fallbackPos.x - 2 + (i % 3), y: fallbackPos.y - 1 + Math.floor(i / 3) },
             remainingMove: Math.floor((c.speed || 30) / 5),
           }))
         } else {

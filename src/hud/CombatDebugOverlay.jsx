@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import useStore from '../store/useStore'
+import { broadcastEncounterAction } from '../lib/liveChannel'
 
 /**
  * Combat debug overlay — toggled with ?debug URL param or Ctrl+D.
@@ -14,6 +15,9 @@ export default function CombatDebugOverlay() {
   const currentAreaId = useStore(s => s.currentAreaId)
   const areas = useStore(s => s.areas)
   const myCharacter = useStore(s => s.myCharacter)
+  const endEncounter = useStore(s => s.endEncounter)
+  const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
+  const runEnemyTurn = useStore(s => s.runEnemyTurn)
 
   const [expanded, setExpanded] = useState(true)
 
@@ -22,6 +26,12 @@ export default function CombatDebugOverlay() {
   const active = combatants?.[currentTurn]
   const inCombat = phase === 'combat'
   const shouldRunAI = isDM || !activeCampaign
+
+  const btnStyle = {
+    background: 'rgba(0,0,0,0.6)', border: '1px solid #c9a84c', borderRadius: 3,
+    color: '#e8d5a3', fontSize: 10, padding: '3px 8px', cursor: 'pointer',
+    fontFamily: 'monospace',
+  }
 
   const pill = (val, trueColor = '#2ecc71', falseColor = '#cc3333') => (
     <span style={{
@@ -127,6 +137,24 @@ export default function CombatDebugOverlay() {
                 {encounter.log.slice(0, 5).map((entry, i) => (
                   <div key={i} style={{ opacity: 1 - i * 0.15 }}>{entry}</div>
                 ))}
+              </div>
+            )}
+
+            {/* Debug action buttons */}
+            {inCombat && (
+              <div style={{ borderTop: '1px solid #332a1e', paddingTop: 6, marginTop: 6, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                <button onClick={() => {
+                  nextEncounterTurn()
+                  broadcastEncounterAction({ type: 'next-turn', userId: 'debug' })
+                }} style={btnStyle}>Force Next Turn</button>
+                <button onClick={() => {
+                  console.log('[DEBUG] Force-running enemy turn')
+                  runEnemyTurn(sessionApiKey || '')
+                }} style={btnStyle}>Force Enemy AI</button>
+                <button onClick={() => {
+                  endEncounter()
+                  broadcastEncounterAction({ type: 'end-encounter', userId: 'debug' })
+                }} style={{ ...btnStyle, borderColor: '#cc3333', color: '#ff6666' }}>End Combat</button>
               </div>
             )}
           </div>

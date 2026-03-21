@@ -150,17 +150,27 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
 
     const apiKey = sessionApiKey
+    console.log('[CombatAI] Setting 1s timeout for:', active.name)
     const timer = setTimeout(() => {
-      console.log('[CombatAI] Running enemy turn for:', active.name, 'apiKey:', !!apiKey)
-      const runAI = apiKey ? runEnemyTurn(apiKey) : runEnemyTurn('')
-      runAI.then(() => {
-        console.log('[CombatAI] Enemy turn completed:', active.name)
-      }).catch((err) => {
-        console.error('[CombatAI] Enemy turn FAILED:', active.name, err)
-        // Safety net: always advance turn even if AI completely fails
+      console.log('[CombatAI] Timeout fired — running enemy turn for:', active.name, 'apiKey:', !!apiKey)
+      try {
+        const result = runEnemyTurn(apiKey || '')
+        if (result && typeof result.then === 'function') {
+          result.then(() => {
+            console.log('[CombatAI] Enemy turn completed:', active.name)
+          }).catch((err) => {
+            console.error('[CombatAI] Enemy turn FAILED:', active.name, err)
+            nextEncounterTurn()
+            broadcastEncounterAction({ type: 'next-turn', userId: 'system' })
+          })
+        } else {
+          console.warn('[CombatAI] runEnemyTurn did not return a promise')
+        }
+      } catch (err) {
+        console.error('[CombatAI] runEnemyTurn threw synchronously:', err)
         nextEncounterTurn()
         broadcastEncounterAction({ type: 'next-turn', userId: 'system' })
-      })
+      }
     }, 1000)
 
     return () => clearTimeout(timer)
