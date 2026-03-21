@@ -1,4 +1,7 @@
 import useStore from '../store/useStore'
+import { getClassCombatActions } from '../lib/classCombatActions'
+import { getClassResources } from '../lib/classResources'
+import ClassResourceBar from './ClassResourceBar'
 
 export default function CombatActionBar({ onEndTurn, onAction }) {
   const encounter = useStore(s => s.encounter)
@@ -50,18 +53,16 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
     )
   }
 
-  function handleAction(type) {
+  function handleAction(type, payload) {
     if (type === 'dash') {
       dashAction()
       return
     }
     if (type === 'dodge') {
       useAction()
-      // Dodge gives disadvantage on attacks against you until next turn
-      // For now just consume the action
       return
     }
-    onAction?.(type)
+    onAction?.(type, payload)
   }
 
   if (isDying) {
@@ -96,26 +97,59 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
     )
   }
 
+  // Class-specific actions
+  const classActions = getClassCombatActions(active.class, active.level || 1)
+  const classResources = getClassResources(active.class, active.level || 1, active.stats)
+
+  function isAbilityDisabled(action) {
+    if (action.actionType === 'action' && !actionsLeft) return true
+    if (action.actionType === 'bonus_action' && active.bonusActionsUsed) return true
+    if (action.resourceName) {
+      const res = classResources.find(r => r.name === action.resourceName)
+      if (res) {
+        const used = active.resourcesUsed?.[action.resourceName] || 0
+        if (used >= res.max) return true
+      }
+    }
+    return false
+  }
+
   return (
     <div className="hud-combat-bar">
+      {/* Class resource bar */}
+      <ClassResourceBar combatant={active} />
       {/* Primary actions */}
       <div className="hud-combat-primary">
         <button
           className="hud-combat-btn attack"
           disabled={!canAttack || !actionsLeft}
           style={{ opacity: (!canAttack || !actionsLeft) ? 0.4 : 1 }}
-          onClick={() => handleAction('attack')}
+          onClick={() => handleAction('attack-pick')}
         >
           <span style={{ fontSize: 13 }}>⚔</span> ATTACK
         </button>
-        <button
-          className="hud-combat-btn cast"
-          disabled={!canAct || !actionsLeft}
-          style={{ opacity: (!canAct || !actionsLeft) ? 0.4 : 1 }}
-          onClick={() => handleAction('cast')}
-        >
-          <span style={{ fontSize: 13 }}>✨</span> CAST
-        </button>
+        {classActions.map(action => {
+          const isSpell = action.handler === 'openSpellPicker'
+          const disabled = !canAct || isAbilityDisabled(action)
+          return (
+            <button
+              key={action.name}
+              className={`hud-combat-btn ${isSpell ? 'cast' : ''}`}
+              disabled={disabled}
+              style={{ opacity: disabled ? 0.4 : 1 }}
+              onClick={() => isSpell
+                ? handleAction('spell-pick')
+                : handleAction('class-ability', {
+                    name: action.name,
+                    resourceName: action.resourceName,
+                    resourceCost: action.resourceCost,
+                  })
+              }
+            >
+              <span style={{ fontSize: 13 }}>{action.icon}</span> {action.name.toUpperCase()}
+            </button>
+          )
+        })}
         <button
           className="hud-combat-btn move"
           disabled={!canMove || moveLeft <= 0}
