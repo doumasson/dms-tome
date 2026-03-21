@@ -13,6 +13,8 @@ import ApiKeySettings from './components/ApiKeySettings'
 import SkillCheckPanel from './components/SkillCheckPanel'
 import OAConfirmModal from './components/v2/OAConfirmModal'
 import TestCombatButton from './components/v2/TestCombatButton'
+import WeaponPickerModal from './hud/WeaponPickerModal'
+import SpellPickerModal from './hud/SpellPickerModal'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -120,6 +122,9 @@ export default function GameV2({ onLeave }) {
   const {
     targetingMode, pendingOA, setPendingOA,
     handleCombatTileClick, handleCombatAction, executeMoveWithOA,
+    showWeaponPicker, setShowWeaponPicker,
+    showSpellPicker, setShowSpellPicker,
+    handleSpellSelected, handleWeaponSelected, selectedWeapon,
   } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM })
 
   const { handleAreaTransition } = useAreaTransition({
@@ -572,6 +577,22 @@ export default function GameV2({ onLeave }) {
         onConfirm={() => { executeMoveWithOA(pendingOA); setPendingOA(null) }}
         onCancel={() => setPendingOA(null)}
       />
+      {showWeaponPicker && inCombat && encounter.combatants?.[encounter.currentTurn] && (
+        <WeaponPickerModal
+          attacks={encounter.combatants[encounter.currentTurn].attacks || []}
+          character={encounter.combatants[encounter.currentTurn]}
+          onSelect={handleWeaponSelected}
+          onClose={() => setShowWeaponPicker(false)}
+        />
+      )}
+      {showSpellPicker && inCombat && encounter.combatants?.[encounter.currentTurn] && (
+        <SpellPickerModal
+          character={encounter.combatants[encounter.currentTurn]}
+          spellSlots={encounter.combatants[encounter.currentTurn].spellSlots || {}}
+          onSelect={handleSpellSelected}
+          onClose={() => setShowSpellPicker(false)}
+        />
+      )}
       {activeShop && (
         <Suspense fallback={null}>
           <ShopPanel

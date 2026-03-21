@@ -512,6 +512,30 @@ export function createEncounterSlice(set, get) {
         },
       })),
 
+    useSpellSlot: (combatantId, slotLevel) =>
+      set((state) => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === combatantId && c.spellSlots?.[slotLevel]
+              ? { ...c, spellSlots: { ...c.spellSlots, [slotLevel]: { ...c.spellSlots[slotLevel], used: c.spellSlots[slotLevel].used + 1 } } }
+              : c
+          ),
+        },
+      })),
+
+    useClassResource: (combatantId, resourceName, cost = 1) =>
+      set((state) => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === combatantId
+              ? { ...c, resourcesUsed: { ...(c.resourcesUsed || {}), [resourceName]: ((c.resourcesUsed || {})[resourceName] || 0) + cost } }
+              : c
+          ),
+        },
+      })),
+
     // Dash: spend 1 action, double remaining movement
     dashAction: (id) =>
       set((state) => ({
