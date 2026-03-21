@@ -83,7 +83,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
 
     const active = encounter.combatants?.[encounter.currentTurn]
-    if (!active || active.isEnemy || !active.position) {
+    if (!active || active.isEnemy || !active.position || (active.currentHp ?? 0) <= 0) {
       clearMovementRange(mrLayer)
       reachableTilesRef.current = new Set()
       return
@@ -179,11 +179,13 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
   // --- Handle combat tile click (attack, spell, movement) ---
   // Returns true if click was handled by combat logic, false otherwise
   const handleCombatTileClick = useCallback(({ x, y }) => {
-    // Block all combat tile clicks when it's not the player's turn
+    // Block all combat tile clicks when it's not the player's turn or player is dead
     if (inCombat) {
       const active = encounter.combatants?.[encounter.currentTurn]
       const myChar = useStore.getState().myCharacter
       if (!active || active.type === 'enemy' || active.id !== myChar?.id) return true // consume click but do nothing
+      // Block all actions when player is dead/dying (0 HP)
+      if ((active.currentHp ?? 0) <= 0) return true
     }
 
     // Attack targeting — resolve attack on clicked enemy
@@ -366,6 +368,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
   // --- Handle combat action buttons (attack, cast, disengage, etc.) ---
   const handleCombatAction = useCallback((type) => {
+    // Allow death-save and stabilize for dying players, block everything else
+    const activeCheck = encounter.combatants?.[encounter.currentTurn]
+    if (activeCheck && (activeCheck.currentHp ?? 0) <= 0 && type !== 'death-save' && type !== 'stabilize') return
+
     if (type === 'death-save') {
       const { rollDeathSave } = useStore.getState()
       const active = encounter.combatants?.[encounter.currentTurn]

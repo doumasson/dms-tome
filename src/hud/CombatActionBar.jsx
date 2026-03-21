@@ -35,7 +35,20 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
     && !conditions.has('Unconscious')
   const isProne = conditions.has('Prone')
 
-  const isDying = active && (active.currentHp ?? 0) <= 0 && (active.deathSaves?.failures ?? 0) < 3
+  const isDead = active && (active.currentHp ?? 0) <= 0
+  const isDying = isDead && (active.deathSaves?.failures ?? 0) < 3
+
+  // Dead players can only do death saves — block all other actions
+  if (isDead && !isDying) {
+    return (
+      <div className="hud-combat-bar">
+        <div style={{ textAlign: 'center', color: '#cc3333', fontSize: 12, fontWeight: 700, padding: '12px 0' }}>
+          ☠ DEAD
+        </div>
+        <button className="hud-end-turn" onClick={onEndTurn}>END TURN</button>
+      </div>
+    )
+  }
 
   function handleAction(type) {
     if (type === 'dash') {
