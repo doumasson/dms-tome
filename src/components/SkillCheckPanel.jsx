@@ -7,6 +7,8 @@ export default function SkillCheckPanel() {
   const clearCheck = useStore(s => s.clearPendingSkillCheck)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
   const myCharacter = useStore(s => s.myCharacter)
+  const partyMembers = useStore(s => s.partyMembers)
+  const encounter = useStore(s => s.encounter)
 
   const [useGuidance, setUseGuidance] = useState(false)
   const [useBardic, setUseBardic] = useState(false)
@@ -16,6 +18,22 @@ export default function SkillCheckPanel() {
 
   const skill = check.skill || 'Ability Check'
   const modifier = getSkillModifier(myCharacter, skill)
+
+  // Only show Guidance/Bardic if a party member can actually provide them
+  const myConditions = new Set(myCharacter?.conditions || [])
+  const combatant = encounter.combatants?.find(c => c.id === myCharacter?.id || c.name === myCharacter?.name)
+  const combatConditions = new Set(combatant?.conditions || [])
+  const hasGuidanceBuff = myConditions.has('Guidance') || combatConditions.has('Guidance')
+  const hasBardicBuff = myConditions.has('Bardic Inspiration') || combatConditions.has('Bardic Inspiration')
+  // Also check if any party member is a Cleric/Druid (Guidance) or Bard (Bardic Inspiration)
+  const partyHasGuidanceCaster = (partyMembers || []).some(p =>
+    p.id !== myCharacter?.id && ['Cleric', 'Druid', 'Artificer'].includes(p.class)
+  )
+  const partyHasBard = (partyMembers || []).some(p =>
+    p.id !== myCharacter?.id && p.class === 'Bard'
+  )
+  const showGuidance = hasGuidanceBuff || partyHasGuidanceCaster
+  const showBardic = hasBardicBuff || partyHasBard
 
   function handleRoll() {
     let d20 = Math.floor(Math.random() * 20) + 1
@@ -57,14 +75,20 @@ export default function SkillCheckPanel() {
         Modifier: <span style={{ color: '#d4af37' }}>{modifier >= 0 ? '+' : ''}{modifier}</span>
       </div>
 
-      <div style={{ marginBottom: 14, fontSize: 12, textAlign: 'left' }}>
-        <label style={{ display: 'block', marginBottom: 4, cursor: 'pointer' }}>
-          <input type="checkbox" checked={useGuidance} onChange={e => setUseGuidance(e.target.checked)} /> Guidance (+1d4)
-        </label>
-        <label style={{ display: 'block', cursor: 'pointer' }}>
-          <input type="checkbox" checked={useBardic} onChange={e => setUseBardic(e.target.checked)} /> Bardic Inspiration (+1d8)
-        </label>
-      </div>
+      {(showGuidance || showBardic) && (
+        <div style={{ marginBottom: 14, fontSize: 12, textAlign: 'left' }}>
+          {showGuidance && (
+            <label style={{ display: 'block', marginBottom: 4, cursor: 'pointer' }}>
+              <input type="checkbox" checked={useGuidance} onChange={e => setUseGuidance(e.target.checked)} /> Guidance (+1d4)
+            </label>
+          )}
+          {showBardic && (
+            <label style={{ display: 'block', cursor: 'pointer' }}>
+              <input type="checkbox" checked={useBardic} onChange={e => setUseBardic(e.target.checked)} /> Bardic Inspiration (+1d8)
+            </label>
+          )}
+        </div>
+      )}
 
       {result ? (
         <div style={{ fontSize: 24, fontWeight: 'bold', color: result.pass ? '#44aa44' : '#cc3333', padding: '8px 0' }}>
