@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import BottomBar from './BottomBar'
-import NarratorFloat from './NarratorFloat'
+// NarratorFloat removed — narration is in the chat log
 import InitiativeStrip from './InitiativeStrip'
 import EnemyInfoPanel from './EnemyInfoPanel'
 import Minimap from './Minimap'
@@ -108,7 +108,6 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
           <EnemyInfoPanel />
         </>
       )}
-      <NarratorFloat />
       <BottomBar areaTheme={areaTheme} onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} onPortraitClick={onPortraitClick} />
     </div>
   )
