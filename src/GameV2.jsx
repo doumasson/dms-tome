@@ -15,7 +15,6 @@ import OAConfirmModal from './components/v2/OAConfirmModal'
 import TestCombatButton from './components/v2/TestCombatButton'
 import WeaponPickerModal from './hud/WeaponPickerModal'
 import SpellPickerModal from './hud/SpellPickerModal'
-import ModeScreen from './hud/ModeScreen'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -44,6 +43,7 @@ const LevelUpModal        = lazy(() => import('./components/LevelUpModal'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const CombatDebugOverlay  = lazy(() => import('./hud/CombatDebugOverlay'))
+const WorldMap            = lazy(() => import('./hud/WorldMap'))
 
 // ─── D&D 5e XP thresholds (inlined from LevelUpModal to avoid static import) ──
 const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000]
@@ -588,11 +588,9 @@ export default function GameV2({ onLeave }) {
         </Suspense>
       )}
       {activeMode === 'map' && (
-        <ModeScreen open={true} onClose={() => setActiveMode(null)} title="World Map">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#8a7a52', fontFamily: "'Cinzel', serif", fontSize: 16, letterSpacing: 1 }}>
-            Coming Soon
-          </div>
-        </ModeScreen>
+        <Suspense fallback={null}>
+          <WorldMap open={true} onClose={() => setActiveMode(null)} />
+        </Suspense>
       )}
       {showApiSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />}
       {showJournal && (

@@ -1,0 +1,134 @@
+.world-map-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.world-map-parchment {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* PLACEHOLDER: replace with real parchment texture */
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(140,120,70,0.015) 4px, rgba(140,120,70,0.015) 8px),
+    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(120,100,60,0.01) 4px, rgba(120,100,60,0.01) 8px),
+    radial-gradient(ellipse at center, #1a1610 0%, #12100a 60%, #0a0806 100%);
+  border: 1px solid rgba(140,120,70,0.15);
+  overflow: hidden;
+}
+
+.world-map-title {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  color: #c9a84c;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  white-space: nowrap;
+}
+
+.world-map-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  color: #8a7a52;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.world-map-connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.world-map-line {
+  stroke: rgba(120,100,60,0.3);
+  stroke-width: 0.3;
+}
+
+.world-map-location {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  cursor: default;
+  transition: transform 0.2s;
+}
+
+.world-map-location.visited {
+  cursor: pointer;
+}
+
+.world-map-location.visited:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.world-map-location.unvisited {
+  opacity: 0.4;
+  filter: grayscale(0.6);
+}
+
+.world-map-icon {
+  font-size: 28px;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.world-map-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  color: #bba878;
+  margin-top: 4px;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  letter-spacing: 0.5px;
+}
+
+.world-map-location.current .world-map-label {
+  color: #e8d44d;
+  font-weight: bold;
+}
+
+.world-map-you-marker {
+  font-size: 8px;
+  color: #e8d44d;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+  animation: youPulse 2s infinite;
+  margin-top: 2px;
+}
+
+@keyframes youPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.world-map-compass {
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+  text-align: center;
+  color: rgba(160,140,80,0.4);
+  font-family: 'Cinzel', serif;
+}
+
+.compass-n {
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.compass-body {
+  font-size: 24px;
+  line-height: 1;
+}
