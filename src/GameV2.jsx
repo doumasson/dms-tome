@@ -360,11 +360,14 @@ export default function GameV2({ onLeave }) {
       }).catch(() => setApiKeyLoaded(true))
     } else {
       broadcastRequestApiKey()
-      const timer = setTimeout(() => setApiKeyLoaded(true), 2000)
+      const warningTimer = setTimeout(() => {
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Waiting for DM to share API key...' })
+      }, 5000)
+      const timer = setTimeout(() => setApiKeyLoaded(true), 15000)
       const unsub = useStore.subscribe((state) => {
-        if (state.sessionApiKey) { clearTimeout(timer); setApiKeyLoaded(true) }
+        if (state.sessionApiKey) { clearTimeout(warningTimer); clearTimeout(timer); setApiKeyLoaded(true) }
       })
-      return () => { clearTimeout(timer); unsub() }
+      return () => { clearTimeout(warningTimer); clearTimeout(timer); unsub() }
     }
   }, [campaign?.id, user?.id, isDM])
 

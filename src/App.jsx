@@ -75,6 +75,11 @@ export default function App() {
       localStorage.setItem('useV2', '1')
     }
 
+    // Persist testarea flag before OAuth redirect strips URL params
+    if (params.has('testarea')) {
+      localStorage.setItem('pendingTestArea', '1')
+    }
+
     const urlInvite = params.get('invite');
     if (urlInvite) {
       pendingInviteRef.current = urlInvite;

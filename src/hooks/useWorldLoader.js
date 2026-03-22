@@ -19,8 +19,10 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
     worldLoadedRef.current = true
 
     const params = new URLSearchParams(window.location.search)
+    const pendingTestArea = localStorage.getItem('pendingTestArea')
 
-    if (params.has('testarea')) {
+    if (params.has('testarea') || pendingTestArea) {
+      localStorage.removeItem('pendingTestArea')
       try {
         const testArea = buildTestArea()
         console.log('[GameV2] Test area loaded:', testArea.name, `${testArea.width}x${testArea.height}`, testArea.palette?.length, 'palette entries')

@@ -53,6 +53,10 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
       }
       const builtArea = buildAreaFromBrief(brief)
       buildAndLoadArea(targetId, builtArea)
+      if (campaign?.id) {
+        saveArea(campaign.id, builtArea).catch(err =>
+          console.warn('[transition] Failed to save area:', err))
+      }
     }
 
     setTransitioning(true)
