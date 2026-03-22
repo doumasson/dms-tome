@@ -1,5 +1,17 @@
 const DALLE_URL = 'https://api.openai.com/v1/images/generations';
 
+// ── Pollinations.ai rate limiter (free tier: 1 request per 15s) ─────────────
+let _lastImageRequest = 0;
+const IMAGE_RATE_LIMIT_MS = 15500; // 15.5s between requests (free tier: 1/15s)
+
+async function rateLimitedFetch(url, options) {
+  const now = Date.now();
+  const wait = IMAGE_RATE_LIMIT_MS - (now - _lastImageRequest);
+  if (wait > 0) await new Promise(r => setTimeout(r, wait));
+  _lastImageRequest = Date.now();
+  return fetch(url, options);
+}
+
 // Deterministic Pollinations URL for a scene title — same title always gives same image
 export function buildPollinationsUrl(title) {
   const safeTitle = (title || 'fantasy scene').slice(0, 60).replace(/[^\w\s,'-]/g, '').trim();
@@ -20,8 +32,8 @@ export async function generateSceneImageFree(title, signal) {
   const safeTitle = (title || 'fantasy scene').slice(0, 60).replace(/[^\w\s,'-]/g, '').trim();
   const seed = Math.floor(Math.random() * 99999);
 
-  // Try flux first (better quality), fall back to turbo
-  const models = ['flux', 'turbo'];
+  // Try turbo first (best free-tier model), fall back to sana
+  const models = ['turbo', 'sana'];
 
   for (const model of models) {
     const prompt = `dark fantasy RPG, ${safeTitle}, atmospheric, cinematic, digital art`;
@@ -39,7 +51,7 @@ export async function generateSceneImageFree(title, signal) {
         const onAbort = () => controller.abort();
         signal?.addEventListener('abort', onAbort);
 
-        const res = await fetch(url, { signal: controller.signal });
+        const res = await rateLimitedFetch(url, { signal: controller.signal });
         clearTimeout(timer);
         signal?.removeEventListener('abort', onAbort);
 
@@ -49,11 +61,14 @@ export async function generateSceneImageFree(title, signal) {
         const blob = await res.blob();
         if (blob.size < 8000) throw new Error('Response too small');
         return URL.createObjectURL(blob);
-      } catch {
+      } catch (err) {
+        console.warn(`[Pollinations] Scene image attempt ${attempt + 1}/3 failed (model=${model}):`, err?.message || err);
         if (signal?.aborted) return null;
       }
     }
+    console.warn(`[Pollinations] All attempts exhausted for model=${model}, trying next fallback...`);
   }
+  console.warn('[Pollinations] Scene image generation failed — all models exhausted');
   return null; // all attempts exhausted
 }
 
@@ -65,15 +80,23 @@ export async function generateNpcPortrait(npcName, personality) {
   const desc = (personality || '').slice(0, 80);
   const prompt = `fantasy D&D character portrait, ${npcName}, ${desc}, face closeup, dark fantasy digital painting, dramatic lighting, no background text`;
   const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=256&height=256&nologo=true&seed=${seed}&model=turbo`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    const contentType = res.headers.get('content-type') || '';
-    if (!contentType.startsWith('image/')) return null;
-    const blob = await res.blob();
-    if (blob.size < 3000) return null;
-    return URL.createObjectURL(blob);
-  } catch { return null; }
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    if (attempt > 0) await new Promise(r => setTimeout(r, 4000));
+    try {
+      const res = await rateLimitedFetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.startsWith('image/')) throw new Error('Not an image');
+      const blob = await res.blob();
+      if (blob.size < 3000) throw new Error('Response too small');
+      return URL.createObjectURL(blob);
+    } catch (err) {
+      console.warn(`[Pollinations] NPC portrait "${npcName}" attempt ${attempt + 1}/2 failed:`, err?.message || err);
+    }
+  }
+  console.warn(`[Pollinations] NPC portrait generation failed for "${npcName}"`);
+  return null;
 }
 
 export function getOpenAiKey(userId) {
