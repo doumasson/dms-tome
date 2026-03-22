@@ -39,29 +39,43 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
 
     const campaignData = campaign?.campaign_data || campaign
     if (campaignData?.areas || campaignData?.areaBriefs) {
-      const areas = campaignData.areas || {}
+      const areas = { ...(campaignData.areas || {}) }
       const briefs = { ...(campaignData.areaBriefs || {}) }
-      const startId = campaignData.startArea
 
+      // If startArea is undefined/null, pick the first areaBrief or area key
+      let startId = campaignData.startArea
+      if (!startId) {
+        startId = Object.keys(briefs)[0] || Object.keys(areas)[0]
+        console.log('[GameV2] startArea was undefined, using:', startId)
+      }
+
+      // Build start area from brief if not already built
       if (startId && !areas[startId] && briefs[startId]) {
         try {
           areas[startId] = buildAreaFromBrief(briefs[startId], 42)
           delete briefs[startId]
           console.log('[GameV2] Built starting area from brief:', startId)
         } catch (e) {
-          console.error('[GameV2] Failed to build starting area:', e)
-          addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })
+          console.error('[GameV2] Failed to build starting area from brief:', e)
+          // Fall through to demo area below
         }
       }
 
-      loadAreaWorld({
-        title: campaignData.title,
-        startArea: startId,
-        areas,
-        areaBriefs: briefs,
-        questObjectives: campaignData.questObjectives || [],
-      })
-      return
+      // If we have at least one built area, load the world
+      if (startId && areas[startId]) {
+        loadAreaWorld({
+          title: campaignData.title,
+          startArea: startId,
+          areas,
+          areaBriefs: briefs,
+          questObjectives: campaignData.questObjectives || [],
+        })
+        activateArea(startId)
+        return
+      }
+
+      // If we get here, building failed — fall through to demo area
+      console.warn('[GameV2] No built areas available, falling back to demo area')
     }
 
     try {

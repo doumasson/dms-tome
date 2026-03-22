@@ -178,7 +178,7 @@ export function createGameTimeSlice(set, get) {
     setAreaBriefs: (briefs) => set({ areaBriefs: briefs }),
 
     loadAreaWorld: (world) => set(state => ({
-      currentAreaId: world.startArea,
+      currentAreaId: world.startArea || Object.keys(world.areas || {})[0] || state.currentAreaId,
       areas: world.areas || {},
       areaBriefs: world.areaBriefs || {},
       campaign: {
