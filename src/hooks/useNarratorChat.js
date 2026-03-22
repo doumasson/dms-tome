@@ -48,12 +48,17 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
       }
 
       if (result?.startCombat && result?.enemies?.length) {
-        const { startEncounter } = useStore.getState()
-        const enemies = result.enemies.map(e => ({
-          ...e, isEnemy: true, type: 'enemy',
-          position: e.position || { x: Math.floor(Math.random() * (zone?.width || 10)), y: Math.floor(Math.random() * (zone?.height || 8)) },
-        }))
-        startEncounter(enemies)
+        // Only auto-start combat from narrator if there's NO pending encounter data
+        // (i.e., this is a DM-initiated combat from conversation, not an encounter zone trigger)
+        const { pendingEncounterData, startEncounter: se } = useStore.getState()
+        if (!pendingEncounterData) {
+          const enemies = result.enemies.map(e => ({
+            ...e, isEnemy: true, type: 'enemy',
+            position: e.position || { x: Math.floor(Math.random() * (zone?.width || 10)), y: Math.floor(Math.random() * (zone?.height || 8)) },
+          }))
+          se(enemies)
+        }
+        // If pendingEncounterData exists, GameV2's encounter flow handles it
       }
     } catch (err) {
       console.error('[GameV2] Narrator error:', err)

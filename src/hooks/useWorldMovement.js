@@ -46,6 +46,8 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
   zoneRef.current = zone
   const walkDataRef = useRef(walkData)
   walkDataRef.current = walkData
+  // Step counter — advance ~1 minute of game time per 10 tiles walked
+  const stepCountRef = useRef(0)
   // Trap check helper — called after each movement completes
   const checkTrapsAtPosition = useCallback((newPos) => {
     const { zone: _z, myCharacter: _c, addNarratorMessage: _a, updateMyCharacter: _u } = {
@@ -105,6 +107,12 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
 
     if (path && path.length > 1) {
       playerPosRef.current = { x, y }
+      // Track steps for time advancement (~1 minute per 10 tiles)
+      stepCountRef.current += path.length - 1
+      if (stepCountRef.current >= 10) {
+        stepCountRef.current = 0
+        useStore.getState().advanceGameTime(1 / 60) // 1 minute
+      }
       const tileSize = zone?.tileSize || 32
       animateTokenAlongPath('player', path, null, () => {
         setPlayerPos({ x, y })
@@ -174,6 +182,12 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
         return
       }
 
+      // Track steps for time advancement (~1 minute per 10 tiles)
+      stepCountRef.current += 1
+      if (stepCountRef.current >= 10) {
+        stepCountRef.current = 0
+        useStore.getState().advanceGameTime(1 / 60) // 1 minute
+      }
       const tileSize = zone?.tileSize || 32
       playerPosRef.current = { x: nx, y: ny }
       setPlayerPos({ x: nx, y: ny }) // Update state immediately for fog/encounter/NPC proximity

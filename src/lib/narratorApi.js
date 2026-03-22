@@ -145,7 +145,7 @@ Respond ONLY with a raw JSON object — no markdown, no code fences, no extra te
 
 Rules for special fields:
 - advanceScene: true ONLY when the scene has clearly concluded and the story must move to the next scene. Default false.
-- startCombat: true ONLY when the players are clearly initiating combat (charging, attacking, drawing weapons aggressively). This triggers the battle map. Default false. Do NOT combine startCombat and advanceScene in the same response.
+- startCombat: false by default. Only set to true when players explicitly attack or charge enemies, or the narrative situation makes combat unavoidable (ambush, hostile creature attacks first). Do NOT set startCombat to true when describing a scene and giving players options, when there is an opportunity for stealth/diplomacy/avoidance, or when asking "what do you do?". Do NOT combine startCombat and advanceScene in the same response.
 - enemies: ONLY populate when startCombat is true. Use the enemies listed in the scene, or invent appropriate opponents that fit the narrative. Each enemy: {"name":"Goblin","hp":7,"ac":15,"speed":30,"stats":{"str":8,"dex":14,"con":10,"int":10,"wis":8,"cha":8},"attacks":[{"name":"Scimitar","bonus":"+4","damage":"1d6+2"}],"count":1}`;
 }
 

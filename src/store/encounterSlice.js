@@ -285,6 +285,10 @@ export function createEncounterSlice(set, get) {
       } while (isDead(combatants[nextTurn]) && attempts < combatants.length);
 
       const roundChanged = nextRound !== round;
+      if (roundChanged) {
+        // Each combat round is 6 seconds in D&D 5e
+        get().advanceGameTime(6 / 3600);
+      }
       const log = roundChanged
         ? [`Round ${nextRound} begins.`, ...state.encounter.log]
         : state.encounter.log;

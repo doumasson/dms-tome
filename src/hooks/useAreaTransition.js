@@ -66,7 +66,7 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
     const entry = targetArea?.playerStart || exit.entryPoint || { x: 0, y: 0 }
     broadcastAreaTransition(targetId, entry)
     lastNpcTriggerRef.current = null
-    advanceGameTime(1)
+    advanceGameTime(10 / 60) // 10 minutes per area transition
 
     const app = pixiRef.current?.getApp()
     if (app) {
