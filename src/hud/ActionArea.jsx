@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import OrnateFrame from './OrnateFrame'
 
 const TOOLS = [
   { icon: '🎲', label: 'DICE', key: 'dice' },
@@ -32,23 +31,17 @@ export default function ActionArea({ onTool, onChat, areaTheme }) {
 
   return (
     <div style={{ width: 240, display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0 }}>
-      {/* Tool buttons */}
-      <div style={{ display: 'flex', gap: 4, justifyContent: 'center' }}>
+      {/* Tool buttons — circular medallion style */}
+      <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
         {TOOLS.map(tool => (
           <div key={tool.key} style={{ position: 'relative' }}>
             <button
-              className="hud-tool-btn hud-tool-btn-labeled"
+              className="medallion-btn"
               title={tool.label}
               onClick={() => handleToolClick(tool.key)}
             >
               <span style={{ fontSize: 16 }}>{tool.icon}</span>
-              <span className="hud-tool-label">{tool.label}</span>
-              <svg style={{ position: 'absolute', inset: -2, pointerEvents: 'none' }} width="54" height="52" viewBox="0 0 54 52">
-                <path d="M0,8 L0,3 Q0,0 3,0 L8,0" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
-                <path d="M46,0 L51,0 Q54,0 54,3 L54,8" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
-                <path d="M0,44 L0,49 Q0,52 3,52 L8,52" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
-                <path d="M46,52 L51,52 Q54,52 54,49 L54,44" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.4"/>
-              </svg>
+              <span className="medallion-label">{tool.label}</span>
             </button>
             {/* Rest picker popover — only for the REST button */}
             {tool.key === 'rest' && showRestPicker && (

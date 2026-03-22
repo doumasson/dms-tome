@@ -119,15 +119,15 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
     <div className="hud-combat-bar">
       {/* Class resource bar */}
       <ClassResourceBar combatant={active} />
-      {/* Primary actions */}
-      <div className="hud-combat-primary">
+      {/* Primary actions — circular medallion buttons */}
+      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
         <button
-          className="hud-combat-btn attack"
+          className={`medallion-btn large attack${(!canAttack || !actionsLeft) ? ' disabled' : ''}`}
           disabled={!canAttack || !actionsLeft}
-          style={{ opacity: (!canAttack || !actionsLeft) ? 0.4 : 1 }}
           onClick={() => handleAction('attack-pick')}
         >
-          <span style={{ fontSize: 13 }}>⚔</span> ATTACK
+          <span style={{ fontSize: 16 }}>⚔</span>
+          <span className="medallion-label">ATTACK</span>
         </button>
         {classActions.map(action => {
           const isSpell = action.handler === 'openSpellPicker'
@@ -135,9 +135,8 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
           return (
             <button
               key={action.name}
-              className={`hud-combat-btn ${isSpell ? 'cast' : ''}`}
+              className={`medallion-btn large${isSpell ? ' cast' : ''}${disabled ? ' disabled' : ''}`}
               disabled={disabled}
-              style={{ opacity: disabled ? 0.4 : 1 }}
               onClick={() => isSpell
                 ? handleAction('spell-pick')
                 : handleAction('class-ability', {
@@ -147,50 +146,71 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
                   })
               }
             >
-              <span style={{ fontSize: 13 }}>{action.icon}</span> {action.name.toUpperCase()}
+              <span style={{ fontSize: 16 }}>{action.icon}</span>
+              <span className="medallion-label">{action.name.toUpperCase()}</span>
             </button>
           )
         })}
         <button
-          className="hud-combat-btn move"
+          className={`medallion-btn large move${(!canMove || moveLeft <= 0) ? ' disabled' : ''}`}
           disabled={!canMove || moveLeft <= 0}
-          style={{ opacity: (!canMove || moveLeft <= 0) ? 0.4 : 1 }}
           onClick={() => handleAction('move')}
         >
-          <span style={{ fontSize: 13 }}>🏃</span> MOVE
+          <span style={{ fontSize: 16 }}>🏃</span>
+          <span className="medallion-label">MOVE</span>
         </button>
       </div>
-      {/* Secondary actions + economy */}
-      <div className="hud-combat-secondary">
+      {/* Secondary actions — small medallions + economy */}
+      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center', marginTop: 4 }}>
         <button
-          className="hud-combat-btn-sm"
+          className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
           disabled={!canAct || !actionsLeft}
-          style={{ opacity: (!canAct || !actionsLeft) ? 0.4 : 1 }}
           onClick={() => handleAction('dodge')}
-        >DODGE</button>
+          title="Dodge"
+        >
+          <span className="medallion-label">DGE</span>
+        </button>
         <button
-          className="hud-combat-btn-sm"
+          className={`medallion-btn small${(!canMove || !actionsLeft) ? ' disabled' : ''}`}
           disabled={!canMove || !actionsLeft}
-          style={{ opacity: (!canMove || !actionsLeft) ? 0.4 : 1 }}
           onClick={() => handleAction('dash')}
-        >DASH</button>
+          title="Dash"
+        >
+          <span className="medallion-label">DSH</span>
+        </button>
         <button
-          className="hud-combat-btn-sm"
+          className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
           disabled={!canAct || !actionsLeft}
-          style={{ opacity: (!canAct || !actionsLeft) ? 0.4 : 1 }}
           onClick={() => handleAction('hide')}
-        >HIDE</button>
-        <button className="hud-combat-btn-sm" disabled={!canMove || !actionsLeft}
-          style={{ opacity: (!canMove || !actionsLeft) ? 0.4 : 1 }}
-          onClick={() => handleAction('disengage')}>DISENGAGE</button>
-        <button className="hud-combat-btn-sm" onClick={() => handleAction('say')}>SAY</button>
+          title="Hide"
+        >
+          <span className="medallion-label">HDE</span>
+        </button>
+        <button
+          className={`medallion-btn small${(!canMove || !actionsLeft) ? ' disabled' : ''}`}
+          disabled={!canMove || !actionsLeft}
+          onClick={() => handleAction('disengage')}
+          title="Disengage"
+        >
+          <span className="medallion-label">DIS</span>
+        </button>
+        <button
+          className="medallion-btn small"
+          onClick={() => handleAction('say')}
+          title="Say"
+        >
+          <span className="medallion-label">SAY</span>
+        </button>
         {isProne && (
           <button
-            className="hud-combat-btn-sm"
+            className={`medallion-btn small${!actionsLeft ? ' disabled' : ''}`}
             disabled={!actionsLeft}
-            style={{ opacity: !actionsLeft ? 0.4 : 1, borderColor: '#cc8822', color: '#cc8822' }}
+            style={{ color: '#cc8822' }}
             onClick={() => handleAction('standup')}
-          >STAND UP</button>
+            title="Stand Up"
+          >
+            <span className="medallion-label">UP</span>
+          </button>
         )}
         <div className="hud-economy">
           <div className="hud-economy-dot">
@@ -219,8 +239,8 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
           ))}
         </div>
       )}
-      {/* End turn + timer */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
+      {/* End turn (danger medallion) + timer */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, justifyContent: 'center' }}>
         <div style={{
           fontFamily: 'Cinzel, serif', fontSize: 18, fontWeight: 700,
           color: timeLeft <= 10 ? '#cc3333' : timeLeft <= 20 ? '#cc8822' : '#d4af37',
@@ -229,7 +249,10 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
         }}>
           {timeLeft}s
         </div>
-        <button className="hud-end-turn" style={{ flex: 1 }} onClick={onEndTurn}>END TURN</button>
+        <button className="medallion-btn large danger" onClick={onEndTurn}>
+          <span style={{ fontSize: 14 }}>⏹</span>
+          <span className="medallion-label">END</span>
+        </button>
       </div>
     </div>
   )
