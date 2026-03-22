@@ -1,0 +1,171 @@
+.mode-screen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Dark backdrop with slight warm tint */
+  background: rgba(8, 6, 4, 0.92);
+  animation: modeScreenFadeIn 0.25s ease-out;
+}
+
+@keyframes modeScreenFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mode-screen-panel {
+  /* PLACEHOLDER: replace with stone/parchment texture asset */
+  width: calc(100vw - 80px);
+  height: calc(100vh - 60px);
+  max-width: 1200px;
+  max-height: 900px;
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(80,70,55,0.03) 2px, rgba(80,70,55,0.03) 4px),
+    repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(60,50,40,0.03) 2px, rgba(60,50,40,0.03) 4px),
+    linear-gradient(180deg, #1a1510 0%, #12100a 40%, #0e0c07 100%);
+  border: 2px solid;
+  border-color: rgba(180,155,90,0.4) rgba(120,100,60,0.3) rgba(80,65,35,0.4) rgba(150,130,75,0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(180,160,120,0.1),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 40px rgba(0,0,0,0.8),
+    0 0 80px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modeScreenSlideIn 0.3s ease-out;
+}
+
+@keyframes modeScreenSlideIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.mode-screen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px 12px;
+  border-bottom: 1px solid rgba(140,120,70,0.2);
+  /* PLACEHOLDER: metal header bar texture */
+  background:
+    linear-gradient(180deg, rgba(40,35,25,0.6) 0%, rgba(20,18,12,0.3) 100%);
+}
+
+.mode-screen-title {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  color: #c9a84c;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.mode-screen-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(20,15,10,0.6);
+  border: 1px solid rgba(140,120,70,0.3);
+  color: #8a7a52;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.mode-screen-close:hover {
+  color: #cc3333;
+  border-color: rgba(200,60,60,0.4);
+  background: rgba(60,20,20,0.4);
+}
+
+.mode-screen-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+/* Left mode button strip (BG2 vertical icons) */
+.mode-button-strip {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 6px;
+  /* PLACEHOLDER: stone strip texture */
+  background:
+    linear-gradient(90deg, #1a1510 0%, #12100a 100%);
+  border-right: 1px solid rgba(140,120,70,0.2);
+  border-radius: 0 4px 4px 0;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.5);
+}
+
+.mode-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  /* PLACEHOLDER: medallion button */
+  background: radial-gradient(circle at 35% 35%, #2a2218 0%, #1a1610 60%, #0d0a06 100%);
+  border: 2px solid rgba(140,120,70,0.3);
+  color: #c9a84c;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  box-shadow:
+    inset 0 1px 2px rgba(200,180,120,0.1),
+    0 2px 4px rgba(0,0,0,0.4);
+}
+
+.mode-btn:hover {
+  border-color: rgba(200,170,80,0.5);
+  box-shadow:
+    inset 0 1px 2px rgba(200,180,120,0.2),
+    0 0 8px rgba(200,170,80,0.15);
+}
+
+.mode-btn.active {
+  border-color: rgba(220,190,100,0.6);
+  background: radial-gradient(circle at 35% 35%, #3a3228 0%, #2a2620 60%, #1d1a16 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(200,180,120,0.25),
+    0 0 12px rgba(200,170,80,0.2);
+}
+
+.mode-btn-tooltip {
+  position: absolute;
+  left: 56px;
+  background: rgba(10, 8, 5, 0.95);
+  border: 1px solid rgba(140, 120, 70, 0.3);
+  color: #c9a84c;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  white-space: nowrap;
+  pointer-events: none;
+  border-radius: 3px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mode-screen-panel {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+  }
+  .mode-button-strip { display: none; }
+}
