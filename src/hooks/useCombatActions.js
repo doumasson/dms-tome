@@ -200,6 +200,12 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       const active = encounter.combatants[encounter.currentTurn]
       if (!active || !active.position) return true
 
+      // Guard: action already used this turn (prevent double-attack race condition)
+      if (active.actionsUsed) {
+        setTargetingMode(null)
+        return true
+      }
+
       const dist = Math.max(Math.abs(active.position.x - x), Math.abs(active.position.y - y))
       const weapon = active.attacks?.[0] || { name: 'Unarmed Strike', bonus: '+0', damage: '1' }
       const isRanged = weapon.range != null
@@ -416,6 +422,9 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       setShowSpellPicker(true)
       return
     } else if (type === 'attack-pick') {
+      // Double-check action economy before opening picker
+      const curr = useStore.getState().encounter?.combatants?.[useStore.getState().encounter?.currentTurn]
+      if (curr?.actionsUsed) return
       setShowWeaponPicker(true)
       return
     } else if (type === 'class-ability') {
