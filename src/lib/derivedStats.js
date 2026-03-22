@@ -2,13 +2,14 @@
 // Computes character derived stats from base stats + equipped item modifiers.
 
 import { computeAcFromEquipped } from '../data/equipment.js'
+import { CLASSES } from '../data/classes.js'
 
 /**
  * Returns the numeric modifier for a D&D ability score.
  * @param {number} score
  * @returns {number}
  */
-function abilityMod(score) {
+export function abilityMod(score) {
   return Math.floor((score - 10) / 2)
 }
 
@@ -17,8 +18,68 @@ function abilityMod(score) {
  * @param {number} level
  * @returns {number}
  */
-function profBonus(level) {
+export function profBonus(level) {
   return Math.ceil(level / 4) + 1
+}
+
+/**
+ * Skill → ability mapping (5e SRD).
+ */
+export const SKILL_ABILITIES = {
+  'Athletics': 'str',
+  'Acrobatics': 'dex', 'Sleight of Hand': 'dex', 'Stealth': 'dex',
+  'Arcana': 'int', 'History': 'int', 'Investigation': 'int', 'Nature': 'int', 'Religion': 'int',
+  'Animal Handling': 'wis', 'Insight': 'wis', 'Medicine': 'wis', 'Perception': 'wis', 'Survival': 'wis',
+  'Deception': 'cha', 'Intimidation': 'cha', 'Performance': 'cha', 'Persuasion': 'cha',
+}
+
+/**
+ * Returns the saving throw proficiencies for a class as lowercase ability keys.
+ * e.g. Fighter → ['str', 'con']
+ * @param {string} className
+ * @returns {string[]}
+ */
+export function getSaveProficiencies(className) {
+  const cls = CLASSES[className]
+  if (!cls?.savingThrows) return []
+  return cls.savingThrows.map(s => s.toLowerCase())
+}
+
+/**
+ * Computes saving throw bonuses for all 6 abilities, applying proficiency where the class grants it.
+ * @param {{ str: number, dex: number, con: number, int: number, wis: number, cha: number }} stats - effective ability scores
+ * @param {string} className
+ * @param {number} level
+ * @returns {{ str: number, dex: number, con: number, int: number, wis: number, cha: number }}
+ */
+export function getSaveBonuses(stats, className, level) {
+  const prof = profBonus(level)
+  const saveProfs = getSaveProficiencies(className)
+  const bonuses = {}
+  for (const key of ['str', 'dex', 'con', 'int', 'wis', 'cha']) {
+    const mod = abilityMod(stats[key] || 10)
+    bonuses[key] = mod + (saveProfs.includes(key) ? prof : 0)
+  }
+  return bonuses
+}
+
+/**
+ * Computes the bonus for a skill check, accounting for proficiency and expertise.
+ * @param {{ str: number, dex: number, con: number, int: number, wis: number, cha: number }} stats
+ * @param {string} skillName - e.g. 'Stealth'
+ * @param {string[]} proficientSkills - skills the character is proficient in
+ * @param {string[]} expertiseSkills - skills the character has expertise in (double proficiency)
+ * @param {number} level
+ * @returns {{ bonus: number, proficient: boolean, expertise: boolean }}
+ */
+export function getSkillBonus(stats, skillName, proficientSkills = [], expertiseSkills = [], level = 1) {
+  const ability = SKILL_ABILITIES[skillName] || 'str'
+  const mod = abilityMod(stats[ability] || 10)
+  const prof = profBonus(level)
+  const hasExpertise = expertiseSkills.includes(skillName)
+  const hasProficiency = hasExpertise || proficientSkills.includes(skillName)
+  const bonus = mod + (hasExpertise ? prof * 2 : hasProficiency ? prof : 0)
+  return { bonus, proficient: hasProficiency, expertise: hasExpertise }
 }
 
 /**

@@ -1,5 +1,6 @@
 // src/lib/trapSystem.js
 import { rollDamage, getAbilityModifier } from './dice.js'
+import { getSaveProficiencies, profBonus } from './derivedStats.js'
 
 /**
  * Returns true when the passive perception meets or exceeds the trap's detection DC.
@@ -61,9 +62,18 @@ export function resolveTrapEffect(trap, target) {
   const abilityScore = target?.stats?.[saveAbility] ?? 10
   const modifier = getAbilityModifier(abilityScore)
 
+  // Add proficiency bonus if target is proficient in this save
+  let saveProfBonus = 0
+  if (target?.class) {
+    const saveProfs = getSaveProficiencies(target.class)
+    if (saveProfs.includes(saveAbility)) {
+      saveProfBonus = profBonus(target.level || 1)
+    }
+  }
+
   // Roll d20 + modifier for saving throw
   const d20 = rollDamage('1d20')
-  const saveRoll = d20.total + modifier
+  const saveRoll = d20.total + modifier + saveProfBonus
   const saved = saveRoll >= effect.saveDC
 
   if (saved) {

@@ -1,5 +1,6 @@
 import { triggerEnemyTurn, computeGruntAction } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
+import { getSaveProficiencies, profBonus as getProfBonus } from '../lib/derivedStats.js';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -268,7 +269,10 @@ export function createEncounterSlice(set, get) {
           const dc = Math.max(10, Math.floor(amount / 2));
           const roll = Math.floor(Math.random() * 20) + 1;
           const conMod = Math.floor(((target.stats?.con || 10) - 10) / 2);
-          const total = roll + conMod;
+          // Add proficiency bonus if character is proficient in CON saves
+          const saveProfs = target.class ? getSaveProficiencies(target.class) : [];
+          const conSaveBonus = conMod + (saveProfs.includes('con') ? getProfBonus(target.level || 1) : 0);
+          const total = roll + conSaveBonus;
           const pass = total >= dc;
           if (!pass) concentrationBroke = true;
           extraLog.push(

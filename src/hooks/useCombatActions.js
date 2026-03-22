@@ -8,6 +8,7 @@ import { renderMovementRange, clearMovementRange } from '../engine/MovementRange
 import { findPathEdge, getReachableTilesEdge } from '../lib/pathfinding'
 import { animateTokenAlongPath, isAnimating } from '../engine/TokenLayer'
 import { broadcastEncounterAction } from '../lib/liveChannel'
+import { getSaveProficiencies, profBonus as getProfBonus, abilityMod } from '../lib/derivedStats.js'
 
 /**
  * Encapsulates all combat-specific logic: attack targeting, spell AoE,
@@ -304,7 +305,11 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       for (const target of affected) {
         const coverType = calculateCover(spellOrigin, target.position, zone.wallEdges, propCoverRef.current, zone.width)
         const coverSaveBonus = COVER_BONUS[coverType] || 0
-        const saveMod = Math.floor(((target.stats?.[saveAbility] || 10) - 10) / 2)
+        const baseSaveMod = Math.floor(((target.stats?.[saveAbility] || 10) - 10) / 2)
+        // Add proficiency bonus if target is proficient in this save
+        const targetSaveProfs = target.class ? getSaveProficiencies(target.class) : []
+        const saveProfBonus = targetSaveProfs.includes(saveAbility) ? getProfBonus(target.level || 1) : 0
+        const saveMod = baseSaveMod + saveProfBonus
         const saveRoll = Math.floor(Math.random() * 20) + 1 + saveMod + coverSaveBonus
         const saved = saveRoll >= saveDC
         const dmg = saved && spell.halfOnSave ? Math.floor(baseDmg / 2) : saved ? 0 : baseDmg
