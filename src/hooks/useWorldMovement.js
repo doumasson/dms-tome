@@ -114,9 +114,13 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
         useStore.getState().advanceGameTime(1 / 60) // 1 minute
       }
       const tileSize = zone?.tileSize || 32
-      animateTokenAlongPath('player', path, null, () => {
+      animateTokenAlongPath('player', path, (stepPos) => {
+        // Camera follows player during click-to-move walk
+        if (cameraRef.current) cameraRef.current.centerOn(stepPos.x, stepPos.y, tileSize)
+        playerPosRef.current = stepPos
+        setPlayerPos(stepPos) // Update fog/encounters each step
+      }, () => {
         setPlayerPos({ x, y })
-        if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
         checkTrapsAtPosition({ x, y })
       }, isV2Zone ? tileSize : undefined)
       broadcastTokenMove(user?.id, { x, y }, path)

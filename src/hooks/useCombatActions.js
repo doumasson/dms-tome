@@ -374,7 +374,9 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       const { moveToken } = useStore.getState()
       moveToken(active.id, x, y, cost)
       const tileSize = zone.tileSize || 200
-      animateTokenAlongPath(active.id, path, null, () => {
+      animateTokenAlongPath(active.id, path, (stepPos) => {
+        if (cameraRef.current) cameraRef.current.centerOn(stepPos.x, stepPos.y, tileSize)
+      }, () => {
         if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
       }, tileSize)
       broadcastEncounterAction({ type: 'move-token', id: active.id, position: { x, y }, cost })
@@ -504,7 +506,9 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
 
     moveToken(active.id, x, y, cost)
-    animateTokenAlongPath(active.id, path, null, () => {
+    animateTokenAlongPath(active.id, path, (stepPos) => {
+      if (cameraRef.current) cameraRef.current.centerOn(stepPos.x, stepPos.y, tileSize)
+    }, () => {
       if (cameraRef.current) cameraRef.current.centerOn(x, y, tileSize)
     }, tileSize)
     broadcastEncounterAction({ type: 'move-token', id: active.id, position: { x, y }, cost })
