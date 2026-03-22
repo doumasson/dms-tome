@@ -1,15 +1,23 @@
 import { useState } from 'react'
 import { getAvailableSpells, canCastSpell, getAvailableSlotLevels } from '../lib/spellCasting'
 
-export default function SpellPickerModal({ character, spellSlots, onSelect, onClose }) {
+export default function SpellPickerModal({ character, spellSlots, onSelect, onClose, cantripsOnly }) {
   const [upcastSpell, setUpcastSpell] = useState(null)
-  const spells = getAvailableSpells(character)
+  // PHB p.202: If a leveled spell was already cast this turn, only cantrips are available
+  const allSpells = getAvailableSpells(character)
+  const spells = cantripsOnly ? allSpells.filter(s => s.level === 0) : allSpells
 
   if (spells.length === 0) {
     return (
       <div style={modalStyle}>
-        <div style={{ fontSize: 16, color: '#d4af37', marginBottom: 12 }}>✨ No Spells Available</div>
-        <div style={{ color: '#8a7a52', fontSize: 12 }}>This character has no prepared spells.</div>
+        <div style={{ fontSize: 16, color: '#d4af37', marginBottom: 12 }}>
+          {cantripsOnly ? 'Cantrips Only' : 'No Spells Available'}
+        </div>
+        <div style={{ color: '#8a7a52', fontSize: 12 }}>
+          {cantripsOnly
+            ? 'A leveled spell was already cast this turn. Only cantrips may be cast (PHB p.202).'
+            : 'This character has no prepared spells.'}
+        </div>
         <div style={{ marginTop: 10, fontSize: 10, color: '#666' }}>Press Escape to close</div>
       </div>
     )
@@ -49,7 +57,14 @@ export default function SpellPickerModal({ character, spellSlots, onSelect, onCl
 
   return (
     <div style={modalStyle}>
-      <div style={{ fontSize: 16, color: '#d4af37', marginBottom: 6 }}>✨ Prepared Spells</div>
+      <div style={{ fontSize: 16, color: '#d4af37', marginBottom: 6 }}>
+        {cantripsOnly ? 'Cantrips Only' : 'Prepared Spells'}
+      </div>
+      {cantripsOnly && (
+        <div style={{ color: '#c0392b', fontSize: 10, marginBottom: 4, textAlign: 'center' }}>
+          A leveled spell was already cast this turn (PHB p.202)
+        </div>
+      )}
       <div style={{ color: '#8a7a52', fontSize: 10, marginBottom: 10, textAlign: 'center' }}>
         {Object.entries(spellSlots || {}).filter(([, v]) => v.total > 0).map(([lvl, v]) => (
           <span key={lvl} style={{ marginRight: 8 }}>

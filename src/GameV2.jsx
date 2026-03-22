@@ -652,6 +652,7 @@ export default function GameV2({ onLeave }) {
           spellSlots={encounter.combatants[encounter.currentTurn].spellSlots || {}}
           onSelect={handleSpellSelected}
           onClose={() => setShowSpellPicker(false)}
+          cantripsOnly={!!encounter.combatants[encounter.currentTurn].leveledSpellCastThisTurn}
         />
       )}
       {activeShop && (

@@ -244,6 +244,7 @@ export function createEncounterSlice(set, get) {
             bonusActionsUsed: 0,
             reactionUsed: false,
             disengaged: false,
+            leveledSpellCastThisTurn: false,
           } : c
         );
         return {

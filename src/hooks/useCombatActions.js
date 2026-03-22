@@ -493,6 +493,20 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     const active = encounter.combatants?.[encounter.currentTurn]
     if (!active) return
 
+    // PHB p.202: If you cast a leveled spell as a bonus action, you can only
+    // cast a cantrip with your action this turn (and vice versa).
+    // Mark the flag so SpellPickerModal can filter to cantrips only.
+    if (castLevel > 0) {
+      useStore.setState(state => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === active.id ? { ...c, leveledSpellCastThisTurn: true } : c
+          ),
+        },
+      }))
+    }
+
     // Enter targeting based on spell type
     if (spell.areaType) {
       // AoE spell — use existing spell targeting mode
