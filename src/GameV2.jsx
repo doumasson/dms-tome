@@ -268,17 +268,16 @@ export default function GameV2({ onLeave }) {
         const chat = handleChatRef.current
         if (chat) await chat(prompt)
         // After AI responds, check if a skill check was requested (stealth).
-        // If yes, the lastSkillCheckResult watcher will handle combat start.
-        // If no skill check was requested, start combat after a brief delay.
-        setTimeout(() => {
-          const { pendingSkillCheck, pendingEncounterData: ped } = useStore.getState()
-          if (!pendingSkillCheck && ped) {
-            // No stealth check requested — start combat immediately
-            clearPendingEncounterData()
-            startCombatWithZoneEnemies()
-          }
-          // If pendingSkillCheck exists, the stealth result watcher handles it
-        }, 600)
+        // setPendingSkillCheck is called synchronously in useNarratorChat after
+        // chat() resolves, so we can check immediately with a microtask delay.
+        await new Promise(r => setTimeout(r, 50))
+        const { pendingSkillCheck, pendingEncounterData: ped } = useStore.getState()
+        if (!pendingSkillCheck && ped) {
+          // No stealth check requested — start combat immediately
+          clearPendingEncounterData()
+          startCombatWithZoneEnemies()
+        }
+        // If pendingSkillCheck exists, the stealth result watcher handles it
       }, 100)
     } else {
       // No API key — just start combat directly

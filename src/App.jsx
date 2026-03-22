@@ -204,6 +204,13 @@ export default function App() {
         case 'skill-check-result':
           store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })
           break
+        case 'stealth-mode':
+          if (payload.active) {
+            store.setStealthMode({ active: true, stealthResult: payload.stealthResult, enemyPositions: [], zoneEnemies: [] })
+          } else {
+            store.clearStealthMode()
+          }
+          break
       }
     });
 

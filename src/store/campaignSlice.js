@@ -2,6 +2,7 @@ import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
 import { computeAcFromEquipped } from '../data/equipment';
 import { buildPollinationsUrl } from '../lib/dalleApi';
+import { normalizeCampaignData } from '../lib/campaignSchema';
 
 /**
  * Campaign slice — campaign data, scenes, campaign-owned characters, notes, saving/loading.
@@ -50,18 +51,22 @@ export function createCampaignSlice(set, get) {
       savedEncounters: [],
       questObjectives: [],
     },
-    loadCampaign: (data) =>
-      set({
+    loadCampaign: (data) => {
+      const normalized = normalizeCampaignData(data);
+      return set({
         campaign: {
-          title: data.title || 'Untitled Campaign',
-          scenes: data.scenes || [],
-          characters: (data.characters || []).map(c => ({ resourcesUsed: {}, ...c })),
+          ...normalized,
+          title: normalized.title,
+          scenes: normalized.scenes || [],
+          characters: (normalized.characters || []).map(c => ({ resourcesUsed: {}, ...c })),
           loaded: true,
           currentSceneIndex: 0,
           notes: { dm: '', shared: '' },
           savedEncounters: [],
+          questObjectives: normalized.questObjectives || [],
         },
-      }),
+      });
+    },
     loadCampaignSettings: (settings) =>
       set((state) => {
         // Restore pre-generated scene image URLs if available
@@ -282,6 +287,8 @@ export function createCampaignSlice(set, get) {
       if (!activeCampaign?.id) return;
       const merged = {
         ...(activeCampaign.campaign_data || {}),
+        meta: campaign.meta,
+        questObjectives: campaign.questObjectives,
         characters: campaign.characters,
       };
       await supabase

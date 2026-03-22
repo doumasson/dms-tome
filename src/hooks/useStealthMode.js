@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import useStore from '../store/useStore'
 
 /**
@@ -18,6 +18,29 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
   const pendingEncounterData = useStore(s => s.pendingEncounterData)
   const clearPendingEncounterData = useStore(s => s.clearPendingEncounterData)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
+  const broadcastEncounterAction = useStore(s => s.broadcastEncounterAction)
+
+  // Stable callback to start surprise combat from stealth
+  const startSurpriseCombat = useCallback((stealthData) => {
+    const pos = playerPosRef.current
+    const { startEncounter } = useStore.getState()
+    const enemies = (stealthData.zoneEnemies || []).map(e => ({
+      ...e, isEnemy: true, type: 'enemy',
+      position: e.position || { x: pos.x + 2, y: pos.y },
+    }))
+    const myChar = useStore.getState().myCharacter
+    const currentParty = useStore.getState().partyMembers || partyMembers || []
+    const combatParty = currentParty.map(p => ({
+      ...p,
+      position: (myChar && (p.id === myChar.id || p.name === myChar.name))
+        ? { ...pos }
+        : null,
+    }))
+    if (myChar && !combatParty.some(p => p.id === myChar.id || p.name === myChar.name)) {
+      combatParty.push({ ...myChar, position: { ...pos } })
+    }
+    startEncounter(enemies, combatParty, true, { surprise: true })
+  }, [partyMembers, playerPosRef])
 
   // --- Stealth check result watcher ---
   useEffect(() => {
@@ -42,12 +65,13 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
     } else {
       // Stealth succeeded — enter stealth mode
       const { enemyPositions, triggered } = pendingEncounterData
-      const zoneEnemies = (zone?.enemies || []).filter(e => {
+      const currentZone = useStore.getState().zone || zone
+      const zoneEnemies = (currentZone?.enemies || []).filter(e => {
         const names = triggered?.enemies || []
         return names.some(n => e.name?.includes(n) || e.id?.includes(n))
       })
-      const enemies = zoneEnemies.length > 0 ? zoneEnemies : (zone?.enemies || [])
-      setStealthMode({
+      const enemies = zoneEnemies.length > 0 ? zoneEnemies : (currentZone?.enemies || [])
+      const stealthData = {
         active: true,
         stealthResult: total,
         enemyPositions: enemyPositions.length > 0
@@ -57,11 +81,16 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
             })),
         zoneEnemies: enemies,
         startCombatFn: pendingEncounterData.startCombatWithZoneEnemies,
-      })
+      }
+      setStealthMode(stealthData)
       clearPendingEncounterData()
       addNarratorMessage({ role: 'dm', speaker: 'DM', text: `You blend into the shadows... (Stealth: ${total})` })
+      // Broadcast stealth state to other players
+      broadcastEncounterAction?.({ type: 'stealth-mode', active: true, stealthResult: total })
     }
-  }, [lastSkillCheckResult, pendingEncounterData])
+  }, [lastSkillCheckResult, pendingEncounterData, zone, addNarratorMessage,
+      clearLastSkillCheckResult, clearPendingEncounterData, setStealthMode,
+      broadcastEncounterAction])
 
   // --- Stealth proximity checker ---
   useEffect(() => {
@@ -87,22 +116,8 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
       // Adjacent to enemy — surprise attack!
       clearStealthMode()
       addNarratorMessage({ role: 'dm', speaker: 'DM', text: 'You reach striking distance undetected! The enemies are caught off guard!' })
-      const { startEncounter } = useStore.getState()
-      const enemies = (stealthMode.zoneEnemies || []).map(e => ({
-        ...e, isEnemy: true, type: 'enemy',
-        position: e.position || { x: pos.x + 2, y: pos.y },
-      }))
-      const myChar = useStore.getState().myCharacter
-      const combatParty = (partyMembers || []).map(p => ({
-        ...p,
-        position: (myChar && (p.id === myChar.id || p.name === myChar.name))
-          ? { ...playerPosRef.current }
-          : null,
-      }))
-      if (myChar && !combatParty.some(p => p.id === myChar.id || p.name === myChar.name)) {
-        combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
-      }
-      startEncounter(enemies, combatParty, true, { surprise: true })
+      broadcastEncounterAction?.({ type: 'stealth-mode', active: false })
+      startSurpriseCombat(stealthMode)
       return
     }
 
@@ -114,12 +129,14 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
         // Detected!
         clearStealthMode()
         addNarratorMessage({ role: 'dm', speaker: 'DM', text: `${nearestEnemy.name || 'An enemy'} notices movement! You've been spotted!` })
+        broadcastEncounterAction?.({ type: 'stealth-mode', active: false })
         if (stealthMode.startCombatFn) {
           stealthMode.startCombatFn()
         }
       }
     }
-  }, [playerPos, stealthMode])
+  }, [playerPos, stealthMode, clearStealthMode, addNarratorMessage,
+      broadcastEncounterAction, startSurpriseCombat])
 
   return { stealthMode }
 }
