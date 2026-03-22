@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import useStore from '../store/useStore'
 import { playParchmentRustle } from '../lib/uiSounds'
 
+
 /** Map log entry type/icon to a CSS color class */
 function getLogColorClass(entry) {
   const t = (entry.type || '').toLowerCase()
@@ -66,10 +67,23 @@ export default function SessionLog({ onChat, tab, setTab }) {
   }
 
   return (
-    <div className={`hud-log-panel${expanded ? ' hud-log-expanded' : ''}`}>
-      {/* Parchment background — image asset */}
-      <img src="/ui/log-bg.png" className="hud-log-bg-img" alt="" draggable={false} />
-      {/* Expand/retract toggle button */}
+    <div className={`hud-log-outer${expanded ? ' hud-log-expanded' : ''}`}>
+      {/* Tabs + expand sit OUTSIDE the panel so overflow:hidden doesn't clip them */}
+      <div className="hud-log-tab-strip-wrap">
+        <img
+          src={tab === 'chat' ? '/ui/log-tab1.png' : '/ui/log-tab2.png'}
+          alt="" draggable={false}
+          className="hud-log-tab-strip-img"
+        />
+        <button
+          className={`hud-log-tab-zone left${tab === 'chat' ? ' active' : ''}`}
+          onClick={() => { playParchmentRustle(); setTab('chat') }}
+        >CHAT</button>
+        <button
+          className={`hud-log-tab-zone right${tab === 'log' ? ' active' : ''}`}
+          onClick={() => { playParchmentRustle(); setTab('log') }}
+        >LOG</button>
+      </div>
       <button
         className="hud-log-expand-btn"
         onClick={() => setExpanded(prev => !prev)}
@@ -81,55 +95,54 @@ export default function SessionLog({ onChat, tab, setTab }) {
           draggable={false}
         />
       </button>
-      {/* Tabs moved to top bar — see GameHUD.jsx */}
-      {/* Entries */}
-      <div className="hud-log-entries" ref={scrollRef}>
-        {tab === 'log' ? (
-          sessionLog.length > 0 ? sessionLog.map((entry, i) => {
-            const colorClass = getLogColorClass(entry)
-            return (
-            <div key={entry.id || i} className="hud-log-entry">
-              <span className="hud-log-time">
-                {entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-              </span>{' '}
-              <span className={`hud-log-action ${colorClass}`}>{entry.icon} {entry.title}</span>
-              {entry.detail && <span className={`hud-log-action ${colorClass}`}> — {entry.detail}</span>}
-            </div>)
-          }) : (
-            <div className="hud-log-entry hud-log-empty">No events yet...</div>
-          )
-        ) : (
-          narratorHistory.length > 0 ? narratorHistory.map((msg, i) => (
-            <div
-              key={msg.id || i}
-              className={`hud-log-entry hud-chat-msg ${msg.role === 'dm' ? 'hud-chat-dm' : 'hud-chat-player'}`}
-            >
-              <span className="hud-chat-speaker">
-                {msg.speaker || (msg.role === 'dm' ? 'DM' : 'You')}
-              </span>
-              <span className="hud-chat-text">{msg.text}</span>
-            </div>
-          )) : (
-            <div className="hud-log-entry hud-log-empty">No messages yet...</div>
-          )
+      {/* Panel with overflow:hidden for content clipping */}
+      <div className="hud-log-panel">
+        <img src="/ui/log-bg.png" className="hud-log-bg-img" alt="" draggable={false} />
+        <div className="hud-log-entries" ref={scrollRef}>
+          {tab === 'log' ? (
+            sessionLog.length > 0 ? sessionLog.map((entry, i) => {
+              const colorClass = getLogColorClass(entry)
+              return (
+              <div key={entry.id || i} className="hud-log-entry">
+                <span className="hud-log-time">
+                  {entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                </span>{' '}
+                <span className={`hud-log-action ${colorClass}`}>{entry.icon} {entry.title}</span>
+                {entry.detail && <span className={`hud-log-action ${colorClass}`}> — {entry.detail}</span>}
+              </div>)
+            }) : (
+              <div className="hud-log-entry hud-log-empty">No events yet...</div>
+            )
+          ) : (
+            narratorHistory.length > 0 ? narratorHistory.map((msg, i) => (
+              <div
+                key={msg.id || i}
+                className={`hud-log-entry hud-chat-msg ${msg.role === 'dm' ? 'hud-chat-dm' : 'hud-chat-player'}`}
+              >
+                <span className="hud-chat-speaker">
+                  {msg.speaker || (msg.role === 'dm' ? 'DM' : 'You')}
+                </span>
+                <span className="hud-chat-text">{msg.text}</span>
+              </div>
+            )) : (
+              <div className="hud-log-entry hud-log-empty">No messages yet...</div>
+            )
+          )}
+        </div>
+        {tab === 'chat' && (
+          <form onSubmit={handleChatSubmit} className="hud-chat-form">
+            <input
+              ref={chatInputRef}
+              className="hud-chat-input"
+              style={{ flex: 1, margin: 0 }}
+              placeholder="Say something..."
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+            />
+            <button type="submit" className="hud-chat-go-btn">GO</button>
+          </form>
         )}
       </div>
-      {/* Chat input — always visible on chat tab for exploration + combat */}
-      {tab === 'chat' && (
-        <form onSubmit={handleChatSubmit} className="hud-chat-form">
-          <input
-            ref={chatInputRef}
-            className="hud-chat-input"
-            style={{ flex: 1, margin: 0 }}
-            placeholder="Say something..."
-            value={chatInput}
-            onChange={e => setChatInput(e.target.value)}
-          />
-          <button type="submit" className="medallion-btn small" style={{ minWidth: 32 }}>
-            <span className="medallion-label">GO</span>
-          </button>
-        </form>
-      )}
     </div>
   )
 }

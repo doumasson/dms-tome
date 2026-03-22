@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { supabase } from './lib/supabase';
 import { setLiveChannel, broadcastApiKeySync } from './lib/liveChannel';
 import { decryptApiKey } from './lib/apiKeyVault';
+import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
 import LoginPage from './components/LoginPage';
@@ -474,10 +475,17 @@ export default function App() {
       syncEncounterDown(savedEncounter);
     }
 
+    // Use getState() to avoid stale closure — setUser() above hasn't re-rendered yet
+    const freshUserId = useStore.getState().user?.id;
+
     // Cache DM's Claude API key for all players (so narrator works without their own key)
+    // Priority: platform default (Supabase) > campaign plaintext > campaign encrypted > none
+    const defaultKey = await loadDefaultApiKey();
     const sharedApiKey = campaignRecord.settings?.claudeApiKey;
     const encryptedKey = campaignRecord.settings?.encrypted_api_key;
-    if (sharedApiKey) {
+    if (defaultKey) {
+      useStore.getState().setSessionApiKey(defaultKey);
+    } else if (sharedApiKey) {
       useStore.getState().setSessionApiKey(sharedApiKey);
     } else if (encryptedKey) {
       try {
@@ -509,10 +517,6 @@ export default function App() {
     if (savedLog?.length) {
       savedLog.forEach(msg => addNarratorMessage(msg));
     }
-
-    // ── Character requirement check ──────────────────────────────────────────
-    // Use getState() to avoid stale closure — setUser() above hasn't re-rendered yet
-    const freshUserId = useStore.getState().user?.id;
     const isAiDm  = campaignRecord.settings?.isAiDm ?? false;
     const userIsDM = campaignRecord.dm_user_id === freshUserId;
 

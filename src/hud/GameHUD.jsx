@@ -77,26 +77,7 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
             <span className="hud-time-text">{timeText}</span>
           </div>
         </div>
-        {/* Chat/Log tab strip — positioned in top bar */}
-        <div
-          className="hud-log-tab-strip hud-top-bar-tabs"
-          onClick={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect()
-            const clickX = e.clientX - rect.left
-            const half = rect.width / 2
-            playParchmentRustle()
-            setLogTab(clickX < half ? 'chat' : 'log')
-          }}
-          style={{ cursor: 'pointer', pointerEvents: 'all' }}
-        >
-          <img
-            src={logTab === 'chat' ? '/ui/log-tab1.png' : '/ui/log-tab2.png'}
-            alt={logTab === 'chat' ? 'Chat active' : 'Log active'}
-            draggable={false}
-            className="hud-log-tab-strip-img"
-          />
-        </div>
-        {/* RIGHT: invite, leave, then icon buttons + sound */}
+        {/* RIGHT: tabs + invite, leave, icon buttons + sound */}
         <div className="hud-top-bar-right">
           <button className="hud-top-bar-btn" onClick={handleCopyInvite} title="Copy invite link">
             {copied ? 'COPIED' : 'INVITE'}

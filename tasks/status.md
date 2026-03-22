@@ -8,7 +8,7 @@
 ## Completed Features
 
 ### Auth & Campaign Management
-- [x] Google sign-in via Supabase Auth
+- [x] Discord sign-in via Supabase Auth
 - [x] Campaign creation wizard (tone/theme/character slots → JSON prompt → Claude generates → import)
 - [x] In-app campaign generator ("✨ Generate with AI" tab — title + tone + scene count → Claude Haiku auto-generates full campaign JSON)
 - [x] Invite link copy button (📋 CODE on DM campaign card, copies `?invite=CODE` URL, 2s "✓ Copied!" confirmation)

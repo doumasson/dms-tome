@@ -5,6 +5,7 @@ import GameHUD from './hud/GameHUD'
 import { broadcastApiKeySync, broadcastRequestApiKey, broadcastEncounterAction } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
+import { loadDefaultApiKey } from './lib/defaultApiKey'
 import { getClaudeApiKey } from './lib/claudeApi'
 import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZones'
 import { handleInteract } from './lib/interactionController'
@@ -97,6 +98,7 @@ export default function GameV2({ onLeave }) {
 
   const pixiRef = useRef(null)
   const [apiKeyLoaded, setApiKeyLoaded] = useState(false)
+  const [worldLoadError, setWorldLoadError] = useState(null)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
   const [toolPanel, setToolPanel] = useState(null)
   const [sheetChar, setSheetChar] = useState(null)
@@ -507,11 +509,22 @@ export default function GameV2({ onLeave }) {
     return () => cancelAnimationFrame(rafId)
   }, [zone])
 
-  // Load API key from localStorage / Supabase on mount
+  // Load API key from env var / localStorage / Supabase on mount
   useEffect(() => {
     const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
 
-    // Check localStorage first (set during campaign creation or prior sessions)
+    // Check platform default key from Supabase (auth-gated, safe)
+    if (!sessionApiKey) {
+      loadDefaultApiKey().then(defaultKey => {
+        if (defaultKey) {
+          useStore.getState().setSessionApiKey(defaultKey)
+          setApiKeyLoaded(true)
+          if (isDM && campaignId) broadcastApiKeySync(defaultKey)
+        }
+      })
+    }
+
+    // Check localStorage (set during campaign creation or prior sessions)
     if (!sessionApiKey && user?.id) {
       const localKey = getClaudeApiKey(user.id)
       if (localKey) {
@@ -722,6 +735,17 @@ export default function GameV2({ onLeave }) {
     broadcastEncounterAction({ type: 'next-turn', userId: user?.id || 'system' })
   }, [nextEncounterTurn, user])
 
+  // World load timeout — if zone never loads after 30s, show error
+  useEffect(() => {
+    if (zone) return
+    const timer = setTimeout(() => {
+      if (!useStore.getState().zone) {
+        setWorldLoadError('World failed to load. The campaign data may be missing area definitions.')
+      }
+    }, 30000)
+    return () => clearTimeout(timer)
+  }, [zone])
+
   // --- Early returns ---
   if (apiKeyLoaded && !sessionApiKey) {
     const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
@@ -729,12 +753,13 @@ export default function GameV2({ onLeave }) {
   }
 
   if (!zone || !myCharacter) {
-    const msg = !zone ? (!currentAreaId ? 'Building area...' : 'Activating area...')
-                      : 'No character loaded'
+    const msg = worldLoadError ? worldLoadError
+      : !zone ? (!currentAreaId ? 'Building area...' : 'Activating area...')
+      : 'No character loaded'
     return (
       <div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontFamily: "'Cinzel', serif", fontSize: 18, gap: 16 }}>
-        {!zone ? 'Loading world...' : 'Character Required'}
-        <div style={{ fontSize: 11, color: '#665a3a' }}>{msg}</div>
+        {worldLoadError ? 'World Load Failed' : !zone ? 'Loading world...' : 'Character Required'}
+        <div style={{ fontSize: 11, color: worldLoadError ? '#cc5533' : '#665a3a', maxWidth: 400, textAlign: 'center' }}>{msg}</div>
         <button onClick={onLeave} style={{
           marginTop: 20, padding: '8px 24px', background: 'rgba(20,15,10,0.8)',
           border: '1px solid rgba(200,170,80,0.3)', color: '#c9a84c',
