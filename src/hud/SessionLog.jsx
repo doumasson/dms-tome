@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import useStore from '../store/useStore'
 import OrnateFrame from './OrnateFrame'
+import { playParchmentRustle } from '../lib/uiSounds'
 
 /** Map log entry type/icon to a CSS color class */
 function getLogColorClass(entry) {
@@ -43,11 +44,11 @@ export default function SessionLog() {
       <div className="hud-log-tabs">
         <div
           className={`hud-log-tab ${tab === 'chat' ? 'active' : ''}`}
-          onClick={() => setTab('chat')}
+          onClick={() => { playParchmentRustle(); setTab('chat') }}
         >Chat</div>
         <div
           className={`hud-log-tab ${tab === 'log' ? 'active' : ''}`}
-          onClick={() => setTab('log')}
+          onClick={() => { playParchmentRustle(); setTab('log') }}
         >Log</div>
       </div>
       {/* Entries */}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { playStoneClick } from '../lib/uiSounds'
 
 const TOOLS = [
   { icon: '🎲', label: 'DICE', key: 'dice' },
@@ -22,6 +23,7 @@ export default function ActionArea({ onTool, onChat, areaTheme }) {
   }
 
   function handleToolClick(key) {
+    playStoneClick()
     if (key === 'rest') {
       setShowRestPicker(p => !p)
     } else {

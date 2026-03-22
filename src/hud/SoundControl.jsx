@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ambient } from '../lib/ambientAudio'
+import { setUiMuted } from '../lib/uiSounds'
 
 export default function SoundControl() {
   const [muted, setMuted] = useState(false)
@@ -7,6 +8,7 @@ export default function SoundControl() {
     const next = !muted
     setMuted(next)
     ambient?.setMuted?.(next)
+    setUiMuted(next)
   }
   return (
     <button
