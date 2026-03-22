@@ -313,12 +313,20 @@ export default function GameV2({ onLeave }) {
         // chat() resolves, so we can check immediately with a microtask delay.
         await new Promise(r => setTimeout(r, 50))
         const { pendingSkillCheck, pendingEncounterData: ped } = useStore.getState()
-        if (!pendingSkillCheck && ped) {
-          // No stealth check requested — start combat immediately
+        if (pendingSkillCheck) return // Stealth check flow handles combat start
+
+        // Check if AI explicitly requested combat via startCombat flag
+        const lastMsg = useStore.getState().narrator?.history?.slice(-1)?.[0]
+        const aiWantsCombat = lastMsg?.startCombat === true
+
+        if (ped && aiWantsCombat) {
+          // AI explicitly decided combat starts now
           clearPendingEncounterData()
           startCombatWithZoneEnemies()
         }
-        // If pendingSkillCheck exists, the stealth result watcher handles it
+        // Otherwise AI offered options (stealth, roleplay, etc.) — keep
+        // pendingEncounterData so combat can start later when the DM decides
+        // based on the player's response via the narrator chat flow
       }, 100)
     } else {
       // No API key — just start combat directly

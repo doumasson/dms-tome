@@ -37,7 +37,7 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
       const result = await callNarrator({ messages: recentMessages, systemPrompt, apiKey })
 
       if (result?.narrative) {
-        const dmMsg = { role: 'dm', speaker: 'DM', text: result.narrative }
+        const dmMsg = { role: 'dm', speaker: 'DM', text: result.narrative, startCombat: !!result?.startCombat }
         addNarratorMessage(dmMsg)
         broadcastNarratorMessage(dmMsg)
       }
