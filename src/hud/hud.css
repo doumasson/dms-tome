@@ -75,16 +75,91 @@
   background: transparent;
 }
 
-/* Top filigree bar image — ornate gold border at top edge of bottom bar */
-.hud-bar-top-img {
+/* === TOP BAR — full width, bar-top.png as background === */
+.hud-top-bar {
   position: absolute;
-  top: -6px;
+  top: 0;
   left: 0;
-  width: 100%;
-  height: 16px;
-  object-fit: fill;
-  pointer-events: none;
-  z-index: 3;
+  right: 0;
+  height: 50px;
+  background-image: url('/ui/bar-top.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  pointer-events: auto;
+}
+
+.hud-top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hud-top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-top-bar-btn {
+  background: rgba(10, 8, 14, 0.6);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  color: var(--gold-muted);
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  cursor: pointer;
+  border-radius: 0;
+  min-height: 0;
+}
+
+.hud-top-bar-btn:hover {
+  border-color: rgba(201, 168, 76, 0.5);
+  color: var(--gold-bright);
+}
+
+.hud-top-bar-btn-danger {
+  border-color: rgba(204, 51, 51, 0.3);
+  color: #884444;
+}
+
+.hud-top-bar-btn-danger:hover {
+  border-color: rgba(204, 51, 51, 0.6);
+  color: #cc3333;
+}
+
+.hud-top-bar-icon-btn {
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  border-radius: 0;
+  transition: filter 0.15s, transform 0.15s;
+}
+
+.hud-top-bar-icon-btn img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.hud-top-bar-icon-btn:hover {
+  filter: brightness(1.3) drop-shadow(0 0 4px rgba(212,175,55,0.4));
+  transform: scale(1.08);
+}
+
+.hud-top-bar-icon-btn:active {
+  transform: scale(0.92);
 }
 
 /* Bottom stone slab image — fills the ENTIRE bottom bar as background texture */
@@ -141,7 +216,19 @@
   gap: 2px;
 }
 
-/* Image-based tab buttons */
+/* Tab strip — single image that shows both tabs, click left/right to switch */
+.hud-log-tab-strip {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.hud-log-tab-strip-img {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+/* Legacy image-based tab buttons (unused, kept for compat) */
 .hud-log-tab-btn {
   background: none;
   border: none;
@@ -257,7 +344,7 @@
 /* Zone label — background now via weather-bar.png in ZoneLabel.jsx */
 .hud-zone-label {
   position: absolute;
-  top: 8px;
+  top: 56px;
   left: 8px;
   z-index: 10;
   padding: 12px 32px;
@@ -414,7 +501,7 @@
 /* PLACEHOLDER: replace with texture asset — metal frame initiative */
 .hud-initiative {
   position: absolute;
-  top: 6px;
+  top: 56px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -457,7 +544,7 @@
 /* Turn banner */
 .hud-turn-banner {
   position: absolute;
-  top: 6px;
+  top: 56px;
   left: 6px;
   z-index: 15;
   background: rgba(6,5,8,0.92);
@@ -515,14 +602,8 @@
   pointer-events: auto;
 }
 
-/* Campaign bar (top-right) */
-/* PLACEHOLDER: replace with texture asset — stone panel campaign bar */
+/* Campaign bar — now inlined in hud-top-bar, no longer absolute positioned */
 .hud-campaign-bar {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 15;
-  padding: 6px 12px;
   display: flex;
   align-items: center;
   gap: 10px;

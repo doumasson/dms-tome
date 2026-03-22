@@ -69,20 +69,30 @@ export default function SessionLog({ onChat }) {
     <div className="hud-log-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
       {/* Parchment background — image asset */}
       <img src="/ui/log-bg.png" className="hud-log-bg-img" alt="" draggable={false} />
-      {/* Tabs — image asset buttons */}
+      {/* Tabs — single image strip, clicking left/right half switches tab */}
       <div className="hud-log-tabs">
-        <button
-          className={`hud-log-tab-btn ${tab === 'chat' ? 'active' : ''}`}
-          onClick={() => { playParchmentRustle(); setTab('chat') }}
+        <div
+          className="hud-log-tab-strip"
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect()
+            const clickX = e.clientX - rect.left
+            const half = rect.width / 2
+            playParchmentRustle()
+            if (clickX < half) {
+              setTab('chat')
+            } else {
+              setTab('log')
+            }
+          }}
+          style={{ cursor: 'pointer' }}
         >
-          <img src="/ui/log-tab1.png" alt="Chat" draggable={false} />
-        </button>
-        <button
-          className={`hud-log-tab-btn ${tab === 'log' ? 'active' : ''}`}
-          onClick={() => { playParchmentRustle(); setTab('log') }}
-        >
-          <img src="/ui/log-tab2.png" alt="Log" draggable={false} />
-        </button>
+          <img
+            src={tab === 'chat' ? '/ui/log-tab1.png' : '/ui/log-tab2.png'}
+            alt={tab === 'chat' ? 'Chat active' : 'Log active'}
+            draggable={false}
+            className="hud-log-tab-strip-img"
+          />
+        </div>
       </div>
       {/* Entries */}
       <div className="hud-log-entries" ref={scrollRef}>
