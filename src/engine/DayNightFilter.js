@@ -1,9 +1,9 @@
 // src/engine/DayNightFilter.js
 const TINTS = {
-  dawn:  { r: 1.0, g: 0.92, b: 0.82, brightness: 0.90 },
+  dawn:  { r: 1.0, g: 1.0,  b: 1.0,  brightness: 1.0  }, // no tint — subtle warmth was annoying
   day:   { r: 1.0, g: 1.0,  b: 1.0,  brightness: 1.0  },
-  dusk:  { r: 1.0, g: 0.82, b: 0.65, brightness: 0.80 },
-  night: { r: 0.5, g: 0.55, b: 0.75, brightness: 0.55 }, // moonlit, not pitch black
+  dusk:  { r: 0.95, g: 0.85, b: 0.72, brightness: 0.85 }, // gentle amber
+  night: { r: 0.5, g: 0.55, b: 0.75, brightness: 0.55 },  // moonlit, not pitch black
 }
 
 export function applyDayNightTint(worldContainer, timeOfDay) {
