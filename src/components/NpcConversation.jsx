@@ -1,4 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+const SPEECH_SUPPORTED = !!SpeechRecognition
 import { callNarrator, buildNpcSystemPrompt } from '../lib/narratorApi'
 import useStore from '../store/useStore'
 
@@ -27,6 +30,29 @@ export default function NpcConversation({
   })
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const pttRecogRef = useRef(null)
+
+  const startPTT = useCallback(() => {
+    if (!SPEECH_SUPPORTED) return
+    try {
+      const recog = new SpeechRecognition()
+      recog.lang = 'en-US'
+      recog.interimResults = false
+      recog.maxAlternatives = 1
+      recog.onresult = (e) => setInput(e.results[0][0].transcript)
+      recog.onerror = () => setIsRecording(false)
+      recog.onend = () => setIsRecording(false)
+      recog.start()
+      pttRecogRef.current = recog
+      setIsRecording(true)
+    } catch { setIsRecording(false) }
+  }, [])
+
+  const stopPTT = useCallback(() => {
+    if (pttRecogRef.current) { pttRecogRef.current.stop(); pttRecogRef.current = null }
+    setIsRecording(false)
+  }, [])
   const [promptCount, setPromptCount] = useState(0)
   const [hardLimited, setHardLimited] = useState(false)
   const scrollRef = useRef(null)
@@ -134,6 +160,21 @@ export default function NpcConversation({
             onChange={e => setInput(e.target.value)}
             autoFocus
           />
+          {SPEECH_SUPPORTED && (
+            <button
+              type="button"
+              className="npc-conv-send"
+              onMouseDown={startPTT}
+              onMouseUp={stopPTT}
+              onMouseLeave={stopPTT}
+              onTouchStart={startPTT}
+              onTouchEnd={stopPTT}
+              title="Hold to speak"
+              style={isRecording ? { background: 'rgba(200,50,50,0.3)', borderColor: 'rgba(200,50,50,0.6)', color: '#e74c3c' } : {}}
+            >
+              {isRecording ? '🔴' : '🎤'}
+            </button>
+          )}
           <button type="submit" className="npc-conv-send" disabled={loading}>
             {loading ? '...' : '▶'}
           </button>

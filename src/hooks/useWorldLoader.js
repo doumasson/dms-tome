@@ -87,8 +87,38 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
       }
 
       // Building failed — fall through to demo area
-      console.warn('[GameV2] No built areas available, falling back to demo area')
+      console.warn('[GameV2] No built areas available after brief building, falling back to demo area')
       worldLoadedRef.current = false
+    }
+
+    // If we have campaign areaBriefs but startArea wasn't in them, try building the first available brief
+    if (!worldLoadedRef.current && campaignData?.areaBriefs) {
+      const briefKeys = Object.keys(campaignData.areaBriefs)
+      if (briefKeys.length > 0) {
+        worldLoadedRef.current = true
+        const firstKey = briefKeys[0]
+        try {
+          const area = buildAreaFromBrief(campaignData.areaBriefs[firstKey], 42)
+          const remainingBriefs = { ...campaignData.areaBriefs }
+          delete remainingBriefs[firstKey]
+          console.log('[GameV2] Built fallback area from first brief:', firstKey)
+          loadAreaWorld({
+            title: campaignData.title || 'Campaign',
+            startArea: firstKey,
+            areas: { [firstKey]: area },
+            areaBriefs: remainingBriefs,
+            questObjectives: campaignData.questObjectives || [],
+          })
+          activateArea(firstKey)
+          if (area.playerStart) {
+            setPlayerPos(safeguardSpawn(area.playerStart, area.enemies, area))
+          }
+          return
+        } catch (e) {
+          console.error('[GameV2] Fallback brief building also failed:', e)
+          worldLoadedRef.current = false
+        }
+      }
     }
 
     // No campaign areas — fall back to demo mini-campaign
