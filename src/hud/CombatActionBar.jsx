@@ -3,6 +3,7 @@ import useStore from '../store/useStore'
 import { getClassCombatActions } from '../lib/classCombatActions'
 import { getClassResources } from '../lib/classResources'
 import ClassResourceBar from './ClassResourceBar'
+import { playStoneClick, playTurnChime } from '../lib/uiSounds'
 
 const TURN_TIMER_SECONDS = 60
 
@@ -43,6 +44,11 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
     return () => { if (timerRef.current) clearInterval(timerRef.current) }
   }, [currentTurn, round, isMyTurn])
 
+  // Play chime when it becomes the player's turn
+  useEffect(() => {
+    if (isMyTurn) playTurnChime()
+  }, [isMyTurn])
+
   // If it's not the player's turn, show a waiting message
   if (!isMyTurn) {
     return (
@@ -77,12 +83,13 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
         <div style={{ textAlign: 'center', color: '#cc3333', fontSize: 12, fontWeight: 700, padding: '12px 0' }}>
           ☠ DEAD
         </div>
-        <button className="hud-end-turn" onClick={onEndTurn}>END TURN</button>
+        <button className="hud-end-turn" onClick={() => { playStoneClick(); onEndTurn() }}>END TURN</button>
       </div>
     )
   }
 
   function handleAction(type, payload) {
+    playStoneClick()
     if (type === 'dash') {
       dashAction()
       return
@@ -229,7 +236,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
         }}>
           {timeLeft}s
         </div>
-        <button className="hud-end-turn" style={{ flex: 1 }} onClick={onEndTurn}>END TURN</button>
+        <button className="hud-end-turn" style={{ flex: 1 }} onClick={() => { playStoneClick(); onEndTurn() }}>END TURN</button>
       </div>
     </div>
   )

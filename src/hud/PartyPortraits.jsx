@@ -1,5 +1,6 @@
 import useStore from '../store/useStore'
 import OrnateFrame from './OrnateFrame'
+import { playStoneClick } from '../lib/uiSounds'
 
 const CLASS_COLORS = {
   Fighter: '#4499dd', Barbarian: '#cc5544', Paladin: '#eedd44',
@@ -42,7 +43,7 @@ export default function PartyPortraits({ onPortraitClick }) {
 
         return (
           <div key={member.name || i} style={{ position: 'relative', cursor: 'pointer' }}
-            onClick={() => onPortraitClick?.(member)}>
+            onClick={() => { playStoneClick(); onPortraitClick?.(member) }}>
             <div style={{
               width: 58, height: 72, background: '#08060c', overflow: 'hidden', position: 'relative',
             }}>
