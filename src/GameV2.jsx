@@ -309,7 +309,7 @@ export default function GameV2({ onLeave }) {
       return { ...ez, center, triggered: triggeredZonesRef.current.has(ez.id) || alreadyCleared }
     })
 
-    const triggered = checkEncounterProximity(pos, zones)
+    const triggered = checkEncounterProximity(pos, zones, useStore.getState().storyFlags)
     if (!triggered) return
 
     // Double-check: don't start combat if all relevant enemies are defeated

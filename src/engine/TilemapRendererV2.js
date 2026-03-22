@@ -63,6 +63,7 @@ export function renderV2Layer(container, layer, width, height, tileSize, tileAtl
     } else {
       // Create new sprite
       sprite = new PIXI.Sprite(tex)
+      sprite.roundPixels = true
       sprite.x = x * tileSize
       sprite.y = y * tileSize
       sprite.width = tileSize

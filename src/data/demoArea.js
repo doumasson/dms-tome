@@ -67,6 +67,7 @@ const DEMO_BRIEFS = {
         id: 'goblin_camp',
         triggerRadius: 5,
         enemies: ['Goblin'],
+        storyFlag: 'warned_about_goblins',
         dmPrompt: 'Three goblins leap from behind the trees, brandishing crude weapons!',
       },
     ],

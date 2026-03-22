@@ -58,6 +58,7 @@ export class TileAtlasV2 {
   /** Load atlas image as PixiJS texture (call from renderer) */
   async loadAtlasImage(name, url, PIXI) {
     const texture = await PIXI.Assets.load(url)
+    texture.source.scaleMode = 'nearest'
     this.textures[name] = texture
     return texture
   }

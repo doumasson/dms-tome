@@ -1,12 +1,14 @@
 /**
  * Check if playerPos is within any untriggered encounter zone.
  * @param {{ x: number, y: number }} playerPos
- * @param {Array<{ id, center: {x,y}, triggerRadius, triggered }>} zones
+ * @param {Array<{ id, center: {x,y}, triggerRadius, triggered, storyFlag? }>} zones
+ * @param {Set} storyFlags — story flags the party has unlocked
  * @returns {object|null} The triggered zone, or null
  */
-export function checkEncounterProximity(playerPos, zones) {
+export function checkEncounterProximity(playerPos, zones, storyFlags = new Set()) {
   for (const zone of zones) {
     if (zone.triggered) continue
+    if (zone.storyFlag && !storyFlags.has(zone.storyFlag)) continue
     const dx = playerPos.x - zone.center.x
     const dy = playerPos.y - zone.center.y
     const dist = Math.sqrt(dx * dx + dy * dy)

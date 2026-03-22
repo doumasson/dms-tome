@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from 'react'
 import useStore from '../store/useStore'
 import { playParchmentRustle } from '../lib/uiSounds'
 
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+const SPEECH_SUPPORTED = !!SpeechRecognition
+
 
 /** Map log entry type/icon to a CSS color class */
 function getLogColorClass(entry) {
@@ -25,6 +28,8 @@ export default function SessionLog({ onChat, tab, setTab }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const scrollRef = useRef(null)
   const chatInputRef = useRef(null)
+  const [isRecording, setIsRecording] = useState(false)
+  const pttRecogRef = useRef(null)
 
   const entries = tab === 'log' ? sessionLog : narratorHistory
 
@@ -57,6 +62,33 @@ export default function SessionLog({ onChat, tab, setTab }) {
     window.addEventListener('combat-say-focus', handler)
     return () => window.removeEventListener('combat-say-focus', handler)
   }, [])
+
+  function startPTT() {
+    if (!SPEECH_SUPPORTED) return
+    try {
+      const recog = new SpeechRecognition()
+      recog.lang = 'en-US'
+      recog.interimResults = false
+      recog.maxAlternatives = 1
+      recog.onresult = (e) => {
+        const transcript = e.results[0][0].transcript
+        setChatInput(transcript)
+      }
+      recog.onerror = () => setIsRecording(false)
+      recog.onend = () => setIsRecording(false)
+      recog.start()
+      pttRecogRef.current = recog
+      setIsRecording(true)
+    } catch { setIsRecording(false) }
+  }
+
+  function stopPTT() {
+    if (pttRecogRef.current) {
+      pttRecogRef.current.stop()
+      pttRecogRef.current = null
+    }
+    setIsRecording(false)
+  }
 
   function handleChatSubmit(e) {
     e.preventDefault()
@@ -139,6 +171,31 @@ export default function SessionLog({ onChat, tab, setTab }) {
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
             />
+            {SPEECH_SUPPORTED && (
+              <button
+                type="button"
+                className="hud-mic-btn"
+                onMouseDown={startPTT}
+                onMouseUp={stopPTT}
+                onMouseLeave={stopPTT}
+                onTouchStart={startPTT}
+                onTouchEnd={stopPTT}
+                title="Hold to speak"
+                style={{
+                  background: isRecording ? 'rgba(200,50,50,0.3)' : 'rgba(201,168,76,0.1)',
+                  border: `1px solid ${isRecording ? 'rgba(200,50,50,0.6)' : 'rgba(201,168,76,0.2)'}`,
+                  color: isRecording ? '#e74c3c' : '#d4af37',
+                  borderRadius: 4,
+                  padding: '4px 8px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem',
+                  flexShrink: 0,
+                  transition: 'all 0.15s',
+                }}
+              >
+                {isRecording ? '\u{1F534}' : '\u{1F3A4}'}
+              </button>
+            )}
             <button type="submit" className="hud-chat-go-btn">GO</button>
           </form>
         )}

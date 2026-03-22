@@ -67,10 +67,11 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       await app.init({
         resizeTo: containerRef.current,
         background: 0x08060c,
-        antialias: true,
+        antialias: false,
         resolution: window.devicePixelRatio || 1,
         autoDensity: true,
       })
+      app.renderer.roundPixels = true
 
       if (destroyed) return
 
