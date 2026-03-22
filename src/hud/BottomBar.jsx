@@ -22,7 +22,7 @@ export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onActi
       <div className="hud-bottom-bar-content">
         <PartyPortraits onPortraitClick={onPortraitClick} />
         <OrnateDivider color={inCombat ? '#cc3333' : '#c9a84c'} />
-        <SessionLog />
+        <SessionLog onChat={onChat} />
         <OrnateDivider color={inCombat ? '#cc3333' : '#c9a84c'} />
         {inCombat ? (
           <CombatActionBar onEndTurn={onEndTurn} onAction={onAction} />

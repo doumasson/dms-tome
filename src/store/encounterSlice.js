@@ -568,6 +568,11 @@ export function createEncounterSlice(set, get) {
         }
       }
 
+      // Move player to safe spawn point (area's playerStart)
+      const currentAreaId = get().currentAreaId;
+      const area = get().areas?.[currentAreaId] || null;
+      const respawnPos = area?.playerStart || null;
+
       set({
         encounter: {
           phase: 'idle',
@@ -577,6 +582,7 @@ export function createEncounterSlice(set, get) {
           log: [],
           activeEffects: [],
         },
+        respawnPosition: respawnPos,
       });
 
       // Narrate the revival
