@@ -50,9 +50,9 @@
   --bg-bar: #14101c;
   --bg-panel: rgba(10, 8, 14, 0.95);
   --border-gold: rgba(201, 168, 76, 0.18);
-  --text-primary: #bba878;
+  --text-primary: #2a2015;
   --text-muted: #5a4a30;
-  --text-log: #8a7a60;
+  --text-log: #3a2e1e;
   --danger: #cc3333;
   --font-display: 'Cinzel Decorative', 'Cinzel', serif;
   --font-heading: 'Cinzel', serif;
@@ -859,8 +859,8 @@
   text-transform: uppercase;
 }
 
-.hud-chat-dm .hud-chat-speaker { color: var(--gold-bright); }
-.hud-chat-player .hud-chat-speaker { color: #5ab0ee; }
+.hud-chat-dm .hud-chat-speaker { color: #1a1208; font-weight: 900; }
+.hud-chat-player .hud-chat-speaker { color: #1a3050; font-weight: 900; }
 
 .hud-chat-text {
   color: var(--text-log);

@@ -101,24 +101,11 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
         <div className={`portrait-frame${isSelected ? ' selected' : ''}`}
           style={{ width: w, height: h }}>
           <img src="/ui/portrait-frame.png" className="portrait-frame-img" alt="" draggable={false} />
-          {/* Portrait placeholder */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: `linear-gradient(180deg, ${color}33, ${color}11)`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: isSmall ? 18 : 26, overflow: 'hidden',
-          }}>
-            {member.portrait ? (
-              <img src={member.portrait} alt={member.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', imageRendering: 'crisp-edges' }} />
-            ) : (
-              <span style={{ fontSize: isSmall ? 16 : 22 }}>
-                {member.class === 'Fighter' ? '⚔' : member.class === 'Sorcerer' ? '🔥' :
-                 member.class === 'Cleric' ? '🛡' : member.class === 'Rogue' ? '🗡' :
-                 member.class === 'Wizard' ? '🔮' : '⚔'}
-              </span>
-            )}
-          </div>
+          {/* Portrait image (if available) */}
+          {member.portrait && (
+            <img src={member.portrait} alt={member.name}
+              style={{ position: 'absolute', inset: 2, width: 'calc(100% - 4px)', height: 'calc(100% - 4px)', objectFit: 'cover', imageRendering: 'crisp-edges', zIndex: 0 }} />
+          )}
           {/* HP tinting overlay */}
           <div className={`portrait-hp-tint ${hpTintClass}`} />
           {/* Status effect condition pips */}

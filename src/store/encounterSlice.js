@@ -106,7 +106,7 @@ export function createEncounterSlice(set, get) {
         if (!resolvedClass && myChar?.name === char.name) {
           resolvedClass = myChar.class || myChar.className || '';
         }
-        console.log('[startEncounter] Player combatant:', { name: char.name, class: resolvedClass, level: char.level, rawClass: char.class, hasEquipped: !!char.equippedItems });
+        console.log('[startEncounter] Player combatant:', { name: char.name, class: resolvedClass, level: char.level, currentHp: char.currentHp, hp: char.hp, maxHp: char.maxHp, rawClass: char.class, hasEquipped: !!char.equippedItems });
         const spd = char.speed || 30;
 
         // Resolve attacks — generate class-appropriate defaults if empty
@@ -214,8 +214,8 @@ export function createEncounterSlice(set, get) {
           class: resolvedClass,
           level: char.level || 1,
           initiative: null,
-          maxHp: char.maxHp || 10,
-          currentHp: char.currentHp ?? char.maxHp ?? 10,
+          maxHp: char.maxHp || char.hp || 10,
+          currentHp: char.currentHp ?? char.hp ?? char.maxHp ?? 10,
           ac: char.ac || 10,
           speed: spd,
           remainingMove: Math.floor(spd / 5),

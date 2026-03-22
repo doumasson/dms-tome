@@ -78,10 +78,10 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
     }
 
     setTransitioning(true)
-    // Prefer the target area's playerStart (guaranteed inside walkable area)
-    // over the source exit's entryPoint (which may be at a map edge with no floor)
+    // Use exit's entryPoint (placed at correct direction) if available,
+    // fall back to target area's playerStart
     const targetArea = areas[targetId]
-    const rawEntry = targetArea?.playerStart || exit.entryPoint || { x: 0, y: 0 }
+    const rawEntry = exit.entryPoint || targetArea?.playerStart || { x: 0, y: 0 }
     // Ensure player doesn't spawn on top of enemies in the target area
     const entry = targetArea
       ? safeguardSpawn(rawEntry, targetArea.enemies, targetArea)
