@@ -281,6 +281,26 @@ export function buildDungeonArea(brief, seed = Date.now()) {
   }
 
   // 10. Process exits — resolve edge exits to tile coordinates
+  // Helper: find the room whose center is closest to a given edge
+  function nearestRoomToEdge(edge) {
+    if (!rooms.length) return { x: 1, y: 1, width: 4, height: 4 }
+    let best = rooms[0], bestDist = Infinity
+    for (const r of rooms) {
+      const cx = r.x + Math.floor(r.width / 2)
+      const cy = r.y + Math.floor(r.height / 2)
+      let dist
+      switch (edge) {
+        case 'north': dist = cy; break
+        case 'south': dist = height - cy; break
+        case 'east':  dist = width - cx; break
+        case 'west':  dist = cx; break
+        default: dist = Infinity
+      }
+      if (dist < bestDist) { bestDist = dist; best = r }
+    }
+    return best
+  }
+
   const placedExits = []
   for (const exit of exits) {
     // Stair/ladder exits are interior POI-anchored
@@ -302,22 +322,27 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     const exitW = exit.width || 3
     const exitH = exit.height || 3
     let x, y, ew, eh, entryPoint
+    // entryPoint is where the player spawns when ENTERING this dungeon
+    // from the given edge. Place them inside the nearest room, not at the map edge.
+    const nearRoom = nearestRoomToEdge(exit.edge)
+    const roomCenterX = nearRoom.x + Math.floor(nearRoom.width / 2)
+    const roomCenterY = nearRoom.y + Math.floor(nearRoom.height / 2)
     switch (exit.edge) {
       case 'north':
         x = Math.floor((width - exitW) / 2); y = 0; ew = exitW; eh = 1
-        entryPoint = { x, y: (exit.targetHeight || height) - 2 }
+        entryPoint = { x: roomCenterX, y: roomCenterY }
         break
       case 'south':
         x = Math.floor((width - exitW) / 2); y = height - 1; ew = exitW; eh = 1
-        entryPoint = { x, y: 1 }
+        entryPoint = { x: roomCenterX, y: roomCenterY }
         break
       case 'east':
         x = width - 1; y = Math.floor((height - exitH) / 2); ew = 1; eh = exitH
-        entryPoint = { x: 1, y }
+        entryPoint = { x: roomCenterX, y: roomCenterY }
         break
       case 'west':
         x = 0; y = Math.floor((height - exitH) / 2); ew = 1; eh = exitH
-        entryPoint = { x: (exit.targetWidth || width) - 2, y }
+        entryPoint = { x: roomCenterX, y: roomCenterY }
         break
       default:
         console.warn(`[dungeonBuilder] Unknown exit edge "${exit.edge}", skipping`)
