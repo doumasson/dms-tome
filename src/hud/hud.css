@@ -1206,3 +1206,36 @@
   0%, 100% { background-color: rgba(200,0,0,0.35); }
   50% { background-color: rgba(200,0,0,0.55); }
 }
+
+/* === Portrait Condition Pips === */
+.portrait-conditions {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  z-index: 3;
+}
+
+.portrait-condition-pip {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.5);
+  box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+.cond-poison { background: #44cc44; }
+.cond-fire { background: #ff6633; }
+.cond-ice { background: #6688ff; }
+.cond-stun { background: #ffff44; }
+.cond-gray { background: #888888; }
+.cond-gold { background: #ffd700; }
+.cond-purple { background: #9944cc; }
+.cond-pink { background: #cc6699; }
+.cond-dark { background: #333333; }
+.cond-blue { background: #4488ff; }
+.cond-white { background: #dddddd; }
+.cond-default { background: #aa8844; }

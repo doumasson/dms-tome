@@ -1,6 +1,23 @@
 import useStore from '../store/useStore'
 import { playStoneClick } from '../lib/uiSounds'
 
+function getConditionClass(condition) {
+  const map = {
+    Poisoned: 'cond-poison',
+    Burning: 'cond-fire',
+    Frozen: 'cond-ice', Restrained: 'cond-ice',
+    Stunned: 'cond-stun',
+    Paralyzed: 'cond-gray',
+    Blessed: 'cond-gold', Hasted: 'cond-gold',
+    Frightened: 'cond-purple',
+    Charmed: 'cond-pink',
+    Blinded: 'cond-dark',
+    Concentrating: 'cond-blue',
+    Invisible: 'cond-white',
+  }
+  return map[condition] || 'cond-default'
+}
+
 const CLASS_COLORS = {
   Fighter: '#4499dd', Barbarian: '#cc5544', Paladin: '#eedd44',
   Ranger: '#44aa66', Rogue: '#cc7722', Monk: '#88bbcc',
@@ -26,6 +43,8 @@ function getHpTintClass(hpRatio) {
 export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
   const myCharacter = useStore(s => s.myCharacter)
   const partyMembers = useStore(s => s.partyMembers)
+  const encounter = useStore(s => s.encounter)
+  const isInCombat = encounter?.phase === 'combat'
 
   const allMembers = []
   if (myCharacter) allMembers.push({ ...myCharacter, isMe: true })
@@ -77,6 +96,21 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
               </div>
               {/* HP tinting overlay */}
               <div className={`portrait-hp-tint ${hpTintClass}`} />
+              {/* Status effect condition pips */}
+              {(() => {
+                const combatant = isInCombat && encounter?.combatants?.find(c => c.id === member.id || c.name === member.name)
+                const conditions = combatant?.conditions || []
+                return isInCombat && conditions.length > 0 ? (
+                  <div className="portrait-conditions">
+                    {conditions.slice(0, 4).map((cond, j) => (
+                      <div key={j}
+                        className={`portrait-condition-pip ${getConditionClass(cond)}`}
+                        title={cond}
+                      />
+                    ))}
+                  </div>
+                ) : null
+              })()}
               {/* HP bar */}
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 5, background: '#0a0004' }}>
                 <div style={{ width: `${hpRatio * 100}%`, height: '100%', background: getHpColor(hpRatio) }} />
