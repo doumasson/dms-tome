@@ -138,11 +138,16 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     return () => {
       destroyed = true
       try {
-        if (app.canvas) app.destroy(true, { children: true })
+        if (appRef.current) {
+          appRef.current.ticker?.stop()
+          appRef.current.destroy(true, { children: true })
+        }
       } catch (e) {
-        // Silently handle if destroy fails during partial init
+        console.warn('[PixiApp] Cleanup error during destroy:', e)
       }
       appRef.current = null
+      worldRef.current = null
+      stageLayersRef.current = {}
     }
   }, [])
 
@@ -337,14 +342,16 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
     app.ticker.add(tickerFn)
     return () => {
-      app.ticker.remove(tickerFn)
-      clearV2Layer(floor)
-      clearV2Layer(walls)
-      clearV2Layer(props)
-      clearV2Layer(roof)
-      clearLighting(stageLayersRef.current.lighting)
-      if (stageLayersRef.current.weather) {
-        clearWeather(stageLayersRef.current.weather)
+      try {
+        app.ticker?.remove(tickerFn)
+        if (floor) clearV2Layer(floor)
+        if (walls) clearV2Layer(walls)
+        if (props) clearV2Layer(props)
+        if (roof) clearV2Layer(roof)
+        if (stageLayersRef.current?.lighting) clearLighting(stageLayersRef.current.lighting)
+        if (stageLayersRef.current?.weather) clearWeather(stageLayersRef.current.weather)
+      } catch (e) {
+        console.warn('[PixiApp] Cleanup error during ticker removal:', e)
       }
       roofAlphaRef.current = {}
     }
@@ -361,8 +368,12 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     wallRendererRef.current = wr
 
     return () => {
-      wr.clear()
-      stageLayersRef.current.walls?.removeChild(wr.container)
+      try {
+        wr.clear()
+        stageLayersRef.current?.walls?.removeChild(wr.container)
+      } catch (e) {
+        console.warn('[PixiApp] Cleanup error during wall renderer removal:', e)
+      }
       wallRendererRef.current = null
     }
   }, [ready, atlasReady, zone?.wallEdges])
@@ -552,7 +563,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     }
 
     el.addEventListener('wheel', onWheel, { passive: false })
-    return () => el.removeEventListener('wheel', onWheel)
+    return () => { if (el) el.removeEventListener('wheel', onWheel) }
   }, [ready])
 
   // Render tokens — skip if animation is playing (PixiJS moves sprites directly)
