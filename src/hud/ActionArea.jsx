@@ -3,11 +3,11 @@ import useStore from '../store/useStore'
 import { playStoneClick } from '../lib/uiSounds'
 
 const TOOLS = [
-  { icon: '🎲', label: 'DICE', key: 'dice' },
-  { icon: '📜', label: 'CHAR', key: 'character' },
-  { icon: '🎒', label: 'PACK', key: 'inventory' },
-  { icon: '📖', label: 'JOURNAL', key: 'journal' },
-  { icon: '🏕', label: 'REST', key: 'rest' },
+  { img: '/ui/btn-dice.png', label: 'DICE', key: 'dice' },
+  { img: '/ui/btn-char.png', label: 'CHAR', key: 'character' },
+  { img: '/ui/btn-pack.png', label: 'PACK', key: 'inventory' },
+  { img: '/ui/btn-journal.png', label: 'JOURNAL', key: 'journal' },
+  { img: '/ui/btn-rest.png', label: 'REST', key: 'rest' },
 ]
 
 export default function ActionArea({ onTool, onChat, areaTheme }) {
@@ -42,17 +42,16 @@ export default function ActionArea({ onTool, onChat, areaTheme }) {
 
   return (
     <div style={{ width: 240, display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0 }}>
-      {/* Tool buttons — circular medallion style */}
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+      {/* Tool buttons — image asset buttons */}
+      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center' }}>
         {TOOLS.map(tool => (
           <div key={tool.key} style={{ position: 'relative' }}>
             <button
-              className="medallion-btn"
+              className="asset-btn"
               title={tool.label}
               onClick={() => handleToolClick(tool.key)}
             >
-              <span style={{ fontSize: 16 }}>{tool.icon}</span>
-              <span className="medallion-label">{tool.label}</span>
+              <img src={tool.img} alt={tool.label} draggable={false} />
             </button>
             {/* Rest picker popover — only for the REST button */}
             {tool.key === 'rest' && showRestPicker && (

@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import useStore from '../store/useStore'
-import OrnateFrame from './OrnateFrame'
 import { playParchmentRustle } from '../lib/uiSounds'
 
 /** Map log entry type/icon to a CSS color class */
@@ -67,18 +66,23 @@ export default function SessionLog({ onChat }) {
   }
 
   return (
-    <div className="hud-log-panel parchment-scroll" style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
-      <OrnateFrame size={18} stroke="#c9a84c" weight={2.5} />
-      {/* Tabs */}
+    <div className="hud-log-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+      {/* Parchment background — image asset */}
+      <img src="/ui/log-bg.png" className="hud-log-bg-img" alt="" draggable={false} />
+      {/* Tabs — image asset buttons */}
       <div className="hud-log-tabs">
-        <div
-          className={`hud-log-tab ${tab === 'chat' ? 'active' : ''}`}
+        <button
+          className={`hud-log-tab-btn ${tab === 'chat' ? 'active' : ''}`}
           onClick={() => { playParchmentRustle(); setTab('chat') }}
-        >Chat</div>
-        <div
-          className={`hud-log-tab ${tab === 'log' ? 'active' : ''}`}
+        >
+          <img src="/ui/log-tab1.png" alt="Chat" draggable={false} />
+        </button>
+        <button
+          className={`hud-log-tab-btn ${tab === 'log' ? 'active' : ''}`}
           onClick={() => { playParchmentRustle(); setTab('log') }}
-        >Log</div>
+        >
+          <img src="/ui/log-tab2.png" alt="Log" draggable={false} />
+        </button>
       </div>
       {/* Entries */}
       <div className="hud-log-entries" ref={scrollRef}>

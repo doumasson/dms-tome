@@ -113,35 +113,31 @@
 .mode-btn {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  /* PLACEHOLDER: medallion button */
-  background: radial-gradient(circle at 35% 35%, #2a2218 0%, #1a1610 60%, #0d0a06 100%);
-  border: 2px solid rgba(140,120,70,0.3);
-  color: #c9a84c;
-  font-size: 16px;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.15s;
-  box-shadow:
-    inset 0 1px 2px rgba(200,180,120,0.1),
-    0 2px 4px rgba(0,0,0,0.4);
+  padding: 0;
 }
 
 .mode-btn:hover {
-  border-color: rgba(200,170,80,0.5);
-  box-shadow:
-    inset 0 1px 2px rgba(200,180,120,0.2),
-    0 0 8px rgba(200,170,80,0.15);
+  transform: scale(1.08);
+}
+.mode-btn:hover img {
+  filter: brightness(1.2) !important;
+}
+
+.mode-btn:active {
+  transform: scale(0.92);
 }
 
 .mode-btn.active {
-  border-color: rgba(220,190,100,0.6);
-  background: radial-gradient(circle at 35% 35%, #3a3228 0%, #2a2620 60%, #1d1a16 100%);
-  box-shadow:
-    inset 0 1px 2px rgba(200,180,120,0.25),
-    0 0 12px rgba(200,170,80,0.2);
+  border-color: rgba(212,175,55,0.6);
+  box-shadow: 0 0 10px rgba(212,175,55,0.35);
 }
 
 .mode-btn-tooltip {

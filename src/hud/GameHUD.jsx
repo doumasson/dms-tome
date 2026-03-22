@@ -24,6 +24,21 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
 
   return (
     <div className="hud-v2" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
+      {/* Ornate top border bar — decorative, sits behind zone label and campaign bar */}
+      <img
+        src="/ui/bar-top.png"
+        alt=""
+        draggable={false}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: 'auto',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+      />
       {/* Campaign bar (top-right) — always visible */}
       <CampaignBar onSettings={onSettings} onLeave={onLeave} />
       {/* Sound mute toggle — top-right near campaign bar */}
