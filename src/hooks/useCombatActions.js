@@ -439,6 +439,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       }
       return
     } else if (type === 'move') {
+      setTargetingMode(null) // Clear any active targeting so tile clicks route to movement
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Click a tile to move during combat.' })
     } else if (type === 'say') {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Type your message in the chat and press enter.' })
