@@ -248,6 +248,29 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     }
   }
 
+  // 7b. Create encounter zones from placed enemies
+  const encounterZones = []
+  const enemyGroups = {} // group by room
+  for (const enemy of placedEnemies) {
+    const roomIdx = rooms.findIndex(r =>
+      enemy.position.x >= r.x && enemy.position.x < r.x + r.width &&
+      enemy.position.y >= r.y && enemy.position.y < r.y + r.height
+    )
+    const key = roomIdx >= 0 ? `room_${roomIdx}` : `pos_${enemy.position.x}_${enemy.position.y}`
+    if (!enemyGroups[key]) enemyGroups[key] = { enemies: [], center: enemy.position }
+    enemyGroups[key].enemies.push(enemy.name)
+  }
+
+  for (const [key, group] of Object.entries(enemyGroups)) {
+    encounterZones.push({
+      id: `encounter_${key}`,
+      triggerRadius: 5,
+      enemies: group.enemies,
+      center: group.center,
+      dmPrompt: `Enemies lurk in the darkness ahead!`,
+    })
+  }
+
   // 8. Place 1-3 traps in corridors
   const traps = []
   const trapCount = 1 + Math.floor(rand() * 3)
@@ -389,6 +412,7 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     doors,
     npcs: [],
     enemies: placedEnemies,
+    encounterZones,
     traps,
     buildings: [],
     lightSources,

@@ -94,12 +94,14 @@ export function createEncounterSlice(set, get) {
 
       // Add party members from campaign characters
       partyMembers?.forEach((char) => {
+        const resolvedClass = char.class || char.className || char.characterClass || '';
+        console.log('[startEncounter] Player combatant:', { name: char.name, class: resolvedClass, level: char.level, rawClass: char.class });
         const spd = char.speed || 30;
         combatants.push({
           id: char.id || crypto.randomUUID(),
           name: char.name,
           type: 'player',
-          class: char.class || '',
+          class: resolvedClass,
           level: char.level || 1,
           initiative: null,
           maxHp: char.maxHp || 10,

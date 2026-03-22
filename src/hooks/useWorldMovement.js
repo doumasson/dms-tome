@@ -176,9 +176,9 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
 
       const tileSize = zone?.tileSize || 32
       playerPosRef.current = { x: nx, y: ny }
+      setPlayerPos({ x: nx, y: ny }) // Update state immediately for fog/encounter/NPC proximity
       const path = [pos, { x: nx, y: ny }]
       animateTokenAlongPath('player', path, null, () => {
-        setPlayerPos({ x: nx, y: ny })
         if (cameraRef.current) cameraRef.current.centerOn(nx, ny, tileSize)
         checkTrapsAtPosition({ x: nx, y: ny })
       }, isV2Zone ? tileSize : undefined)
