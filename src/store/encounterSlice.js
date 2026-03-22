@@ -36,8 +36,25 @@ export function createEncounterSlice(set, get) {
     startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false } = {}) => {
       const combatants = [];
 
+      // Scale enemy count to party size
+      const playerCount = Math.max(1, (partyMembers || []).length);
+      let scaledEnemies = [...(enemies || [])];
+      if (playerCount <= 2 && scaledEnemies.length > 2) {
+        // Solo/duo: cap at playerCount enemies
+        scaledEnemies = scaledEnemies.slice(0, Math.max(1, playerCount));
+      } else if (playerCount <= 3 && scaledEnemies.length > playerCount + 1) {
+        scaledEnemies = scaledEnemies.slice(0, playerCount + 1);
+      }
+      // Also scale individual group counts for solo/duo
+      if (playerCount <= 2) {
+        scaledEnemies = scaledEnemies.map(e => ({
+          ...e,
+          count: Math.min(e.count || 1, Math.max(1, playerCount)),
+        }));
+      }
+
       // Expand enemy groups by count
-      enemies?.forEach((group, gi) => {
+      scaledEnemies.forEach((group, gi) => {
         const count = group.count || 1;
         // Stats may be nested in group.stats (area builder) or top-level (legacy)
         const stats = group.stats || {};
@@ -226,38 +243,70 @@ export function createEncounterSlice(set, get) {
         };
       }),
 
-    nextEncounterTurn: () =>
-      set((state) => {
-        const { combatants, currentTurn, round } = state.encounter;
-        if (combatants.length === 0) return state;
-        const isLast = currentTurn >= combatants.length - 1;
-        const nextTurn = isLast ? 0 : currentTurn + 1;
-        const nextRound = isLast ? round + 1 : round;
-        const log = isLast
-          ? [`Round ${nextRound} begins.`, ...state.encounter.log]
-          : state.encounter.log;
-        // Reset movement + action economy for the next combatant
-        const updated = combatants.map((c, i) =>
-          i === nextTurn ? {
-            ...c,
-            remainingMove: Math.floor((c.speed || 30) / 5),
-            actionsUsed: 0,
-            bonusActionsUsed: 0,
-            reactionUsed: false,
-            disengaged: false,
-            leveledSpellCastThisTurn: false,
-          } : c
-        );
-        return {
-          encounter: {
-            ...state.encounter,
-            combatants: updated,
-            currentTurn: nextTurn,
-            round: nextRound,
-            log: log.slice(0, 30),
-          },
+    nextEncounterTurn: () => {
+      const state = get();
+      const { combatants, currentTurn, round } = state.encounter;
+      if (combatants.length === 0) return;
+
+      // Check for total party kill — all players dead (3 failed saves) or dying with no living players
+      const livingPlayers = combatants.filter(c =>
+        c.type !== 'enemy' && (c.currentHp > 0 || c.deathSaves?.stable)
+      );
+      if (livingPlayers.length === 0) {
+        // TPK — end combat with defeat
+        get().addEncounterLog('\u2620 The party has fallen...');
+        const msg = {
+          role: 'dm', speaker: 'Dungeon Master',
+          text: 'The party has been defeated. Darkness closes in... but fate is not yet done with you.',
+          id: crypto.randomUUID(), timestamp: Date.now(),
         };
-      }),
+        get().addNarratorMessage(msg);
+        broadcastNarratorMessage(msg);
+        setTimeout(() => {
+          get().endEncounterWithDefeat();
+        }, 2500);
+        return;
+      }
+
+      // Find next living combatant (skip dead characters — 3 failed death saves)
+      const isDead = (c) => c.currentHp <= 0 && c.deathSaves?.failures >= 3 && !c.deathSaves?.stable;
+      let nextTurn = currentTurn;
+      let nextRound = round;
+      let attempts = 0;
+      do {
+        const isLast = nextTurn >= combatants.length - 1;
+        nextTurn = isLast ? 0 : nextTurn + 1;
+        if (isLast) nextRound = nextRound + 1;
+        attempts++;
+      } while (isDead(combatants[nextTurn]) && attempts < combatants.length);
+
+      const roundChanged = nextRound !== round;
+      const log = roundChanged
+        ? [`Round ${nextRound} begins.`, ...state.encounter.log]
+        : state.encounter.log;
+
+      // Reset movement + action economy for the next combatant
+      const updated = combatants.map((c, i) =>
+        i === nextTurn ? {
+          ...c,
+          remainingMove: Math.floor((c.speed || 30) / 5),
+          actionsUsed: 0,
+          bonusActionsUsed: 0,
+          reactionUsed: false,
+          disengaged: false,
+          leveledSpellCastThisTurn: false,
+        } : c
+      );
+      set({
+        encounter: {
+          ...state.encounter,
+          combatants: updated,
+          currentTurn: nextTurn,
+          round: nextRound,
+          log: log.slice(0, 30),
+        },
+      });
+    },
 
     applyEncounterDamage: (targetId, amount) => {
       let concentrationBroke = false;
@@ -480,6 +529,54 @@ export function createEncounterSlice(set, get) {
         },
       })),
 
+    // End encounter after TPK — revive players at 1 HP (mercy rule)
+    endEncounterWithDefeat: () => {
+      const state = get();
+      const { combatants } = state.encounter;
+
+      // Sync combatant back to myCharacter, but revive at 1 HP
+      if (combatants?.length && state.myCharacter) {
+        const myCombatant = combatants.find(c =>
+          c.type === 'player' && (c.id === state.myCharacter.id || c.name === state.myCharacter.name)
+        );
+        if (myCombatant) {
+          const hpChanges = {
+            currentHp: 1,
+            hp: 1,
+            conditions: [],
+            spellSlots: myCombatant.spellSlots || state.myCharacter.spellSlots,
+            resourcesUsed: myCombatant.resourcesUsed || {},
+          };
+          set(prev => ({
+            myCharacter: { ...prev.myCharacter, ...hpChanges },
+          }));
+          setTimeout(() => get().updateMyCharacter(hpChanges), 0);
+        }
+      }
+
+      set({
+        encounter: {
+          phase: 'idle',
+          combatants: [],
+          currentTurn: 0,
+          round: 1,
+          log: [],
+          activeEffects: [],
+        },
+      });
+
+      // Narrate the revival
+      const reviveMsg = {
+        role: 'dm', speaker: 'Dungeon Master',
+        text: 'You wake up bruised but alive, the taste of dirt and blood in your mouth. Fate has granted you another chance...',
+        id: crypto.randomUUID(), timestamp: Date.now(),
+      };
+      get().addNarratorMessage(reviveMsg);
+      broadcastNarratorMessage(reviveMsg);
+
+      setTimeout(() => get().saveSessionStateToSupabase(), 0);
+    },
+
     endEncounter: () => {
       const state = get()
       const { combatants } = state.encounter
@@ -595,6 +692,17 @@ export function createEncounterSlice(set, get) {
       const { encounter } = get();
       const active = encounter.combatants[encounter.currentTurn];
       console.log('[runEnemyTurn] Start:', active?.name, 'type:', active?.type, 'hp:', active?.currentHp, 'turn:', encounter.currentTurn)
+
+      // Check if all players are dead/dying — don't run enemy turn if TPK
+      const livingPlayers = encounter.combatants.filter(c =>
+        c.type !== 'enemy' && (c.currentHp > 0 || c.deathSaves?.stable)
+      );
+      if (livingPlayers.length === 0) {
+        console.log('[runEnemyTurn] No living players — TPK detected, skipping enemy turn')
+        get().nextEncounterTurn(); // This will trigger TPK handling
+        return;
+      }
+
       if (!active || active.type !== 'enemy' || active.currentHp <= 0) {
         console.log('[runEnemyTurn] Early return — advancing turn')
         get().nextEncounterTurn();
