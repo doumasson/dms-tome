@@ -101,6 +101,7 @@ export function createCampaignSlice(set, get) {
           sceneTokenPositions: settings?.sceneTokenPositions || state.sceneTokenPositions,
           fogBitfields: settings?.fogBitfields || state.fogBitfields,
           roofStates: settings?.roofStates || state.roofStates,
+          defeatedEnemies: settings?.defeatedEnemies || state.defeatedEnemies,
         };
       }),
     unloadCampaign: () =>
@@ -276,7 +277,7 @@ export function createCampaignSlice(set, get) {
     },
 
     saveSessionStateToSupabase: async () => {
-      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates } = get();
+      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates, defeatedEnemies } = get();
       if (!activeCampaign?.id || !isDM) return;
       try {
         const { data: cur } = await supabase
@@ -290,6 +291,7 @@ export function createCampaignSlice(set, get) {
               encounterState: encounter.phase !== 'idle' ? encounter : null,
               fogBitfields,
               roofStates,
+              defeatedEnemies: defeatedEnemies || {},
             },
           })
           .eq('id', activeCampaign.id);
