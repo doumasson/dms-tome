@@ -3,6 +3,7 @@ import useStore from '../store/useStore'
 import { buildTestArea } from '../data/testArea.js'
 import { buildDemoArea, getDemoBriefs } from '../data/demoArea.js'
 import { buildAreaFromBrief } from '../lib/areaBuilder.js'
+import { safeguardSpawn } from '../lib/gridUtils.js'
 
 /**
  * Loads the area world on mount — test area, campaign areas, or demo fallback.
@@ -32,7 +33,10 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
         console.log('[GameV2] Test area loaded:', testArea.name, `${testArea.width}x${testArea.height}`, testArea.palette?.length, 'palette entries')
         loadArea(testArea.id || 'test-area', testArea)
         activateArea(testArea.id || 'test-area')
-        if (testArea.playerStart) setPlayerPos(testArea.playerStart)
+        if (testArea.playerStart) {
+          const safePos = safeguardSpawn(testArea.playerStart, testArea.enemies, testArea)
+          setPlayerPos(safePos)
+        }
       } catch (e) {
         console.error('[GameV2] Failed to build test area:', e)
         addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })
@@ -107,7 +111,10 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
         ],
       })
       activateArea('area-village')
-      if (demoArea.playerStart) setPlayerPos(demoArea.playerStart)
+      if (demoArea.playerStart) {
+        const safePos = safeguardSpawn(demoArea.playerStart, demoArea.enemies, demoArea)
+        setPlayerPos(safePos)
+      }
     } catch (e) {
       console.error('[GameV2] Failed to build demo area:', e)
       addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })

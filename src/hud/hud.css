@@ -103,13 +103,13 @@
 
 .hud-top-bar-left {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
 }
 
 .hud-top-bar-right {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
 }
 
