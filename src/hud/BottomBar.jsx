@@ -12,7 +12,7 @@ export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onActi
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   return (
-    <div className={`hud-bottom-bar${drawerOpen ? ' drawer-open' : ''}`}>
+    <div className={`hud-bottom-bar stone-panel${drawerOpen ? ' drawer-open' : ''}`}>
       {/* Drawer handle — visible only on phone via CSS */}
       <div className="hud-drawer-handle" onClick={() => setDrawerOpen(o => !o)}>
         <div className="hud-drawer-handle-bar" />

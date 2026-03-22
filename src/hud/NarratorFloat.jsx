@@ -13,7 +13,7 @@ export default function NarratorFloat() {
       position: 'absolute', bottom: 142, left: '50%', transform: 'translateX(-50%)',
       maxWidth: '65%', zIndex: 10,
     }}>
-      <div className="hud-narrator" style={{ position: 'relative' }}>
+      <div className="hud-narrator stone-panel" style={{ position: 'relative' }}>
         <OrnateFrame size={12} stroke="#c9a84c" weight={1.5} jeweled={false} />
         {/* Side flourishes */}
         <svg style={{ position: 'absolute', left: -18, top: '50%', transform: 'translateY(-50%)' }} width="18" height="50" viewBox="0 0 18 50">

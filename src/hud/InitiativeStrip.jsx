@@ -14,7 +14,7 @@ export default function InitiativeStrip() {
   if (!combatants?.length) return null
 
   return (
-    <div className="hud-initiative">
+    <div className="hud-initiative metal-frame">
       <span className="hud-init-round">R{round || 1}</span>
       {combatants.map((c, i) => {
         const isActive = i === currentTurn

@@ -14,7 +14,7 @@ export default function EnemyInfoPanel() {
   const conditions = enemy.conditions || []
 
   return (
-    <div className="hud-enemy-info">
+    <div className="hud-enemy-info stone-panel">
       <div style={{ fontSize: 10, color: '#cc3333', fontWeight: 700, fontFamily: "'Cinzel', serif", letterSpacing: 1 }}>
         {enemy.name?.toUpperCase()}
       </div>

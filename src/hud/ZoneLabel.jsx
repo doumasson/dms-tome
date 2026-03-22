@@ -15,7 +15,7 @@ export default function ZoneLabel({ zone }) {
   const timeIcon = timeOfDay === 'night' ? '🌙' : (timeOfDay === 'dawn' || timeOfDay === 'dusk') ? '🌅' : '☀️'
 
   return (
-    <div className="hud-zone-label" style={{ position: 'relative' }}>
+    <div className="hud-zone-label stone-panel" style={{ position: 'relative' }}>
       <OrnateFrame size={18} stroke="#c9a84c" weight={2.5} />
       <div className="hud-zone-name">{zone.name}</div>
       <div className="hud-zone-sub">
