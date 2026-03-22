@@ -11,6 +11,7 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
   const loadArea = useStore(s => s.loadArea)
   const loadAreaWorld = useStore(s => s.loadAreaWorld)
   const activateArea = useStore(s => s.activateArea)
+  const addNarratorMessage = useStore(s => s.addNarratorMessage)
 
   const worldLoadedRef = useRef(false)
 
@@ -29,6 +30,7 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
         if (testArea.playerStart) setPlayerPos(testArea.playerStart)
       } catch (e) {
         console.error('[GameV2] Failed to build test area:', e)
+        addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })
       }
       return
     }
@@ -46,6 +48,7 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
           console.log('[GameV2] Built starting area from brief:', startId)
         } catch (e) {
           console.error('[GameV2] Failed to build starting area:', e)
+          addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })
         }
       }
 
@@ -67,6 +70,7 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
       if (demoArea.playerStart) setPlayerPos(demoArea.playerStart)
     } catch (e) {
       console.error('[GameV2] Failed to build demo area:', e)
+      addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })
     }
   }, [])
 }
