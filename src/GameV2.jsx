@@ -116,6 +116,43 @@ export default function GameV2({ onLeave }) {
   const isV2Zone = Boolean(zone?.palette)
   const showDebug = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('debug')
 
+  // --- BG2-style keyboard shortcuts for mode screens ---
+  useEffect(() => {
+    function handleKeyDown(e) {
+      // Don't trigger if typing in an input/textarea
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+
+      switch(e.key.toLowerCase()) {
+        case 'c': // Character sheet
+          setActiveMode(prev => prev === 'character' ? null : 'character')
+          if (activeMode !== 'character') setSheetChar(myCharacter)
+          else setSheetChar(null)
+          break
+        case 'i': // Inventory
+          setActiveMode(prev => prev === 'inventory' ? null : 'inventory')
+          if (activeMode !== 'inventory') setSheetChar(myCharacter)
+          else setSheetChar(null)
+          break
+        case 'j': // Journal
+          setShowJournal(prev => !prev)
+          break
+        case 'm': // Map
+          setActiveMode(prev => prev === 'map' ? null : 'map')
+          break
+        case 'escape':
+          setActiveMode(null)
+          setSheetChar(null)
+          setShowJournal(false)
+          setShowApiSettings(false)
+          setShowFormation(false)
+          setToolPanel(null)
+          break
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [activeMode, myCharacter])
+
   // --- Extracted hooks ---
   const { cameraRef } = useAreaCamera({ zone, playerPosRef })
   useAmbientAudio({ theme: zone?.theme, inCombat })
