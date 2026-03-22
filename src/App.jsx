@@ -516,13 +516,7 @@ export default function App() {
     const isAiDm  = campaignRecord.settings?.isAiDm ?? false;
     const userIsDM = campaignRecord.dm_user_id === freshUserId;
 
-    // Human DM doesn't need their own character
-    if (!isAiDm && userIsDM) {
-      setAppView('game');
-      return;
-    }
-
-    // Everyone else must have a character
+    // Check if user already has a character in this campaign
     const { data: memberData } = await supabase
       .from('campaign_members')
       .select('character_data')
@@ -534,6 +528,7 @@ export default function App() {
       setMyCharacter(memberData.character_data);
       setAppView('game');
     } else {
+      // Everyone needs a character — even the DM (they play too)
       setAppView('character-select');
     }
   }

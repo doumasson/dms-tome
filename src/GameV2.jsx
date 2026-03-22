@@ -5,6 +5,7 @@ import GameHUD from './hud/GameHUD'
 import { broadcastApiKeySync, broadcastRequestApiKey, broadcastEncounterAction } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
+import { getClaudeApiKey } from './lib/claudeApi'
 import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZones'
 import { handleInteract } from './lib/interactionController'
 import { isAnimating } from './engine/TokenLayer'
@@ -381,9 +382,21 @@ export default function GameV2({ onLeave }) {
     return () => cancelAnimationFrame(rafId)
   }, [zone])
 
-  // Load API key from Supabase on mount
+  // Load API key from localStorage / Supabase on mount
   useEffect(() => {
     const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
+
+    // Check localStorage first (set during campaign creation or prior sessions)
+    if (!sessionApiKey && user?.id) {
+      const localKey = getClaudeApiKey(user.id)
+      if (localKey) {
+        useStore.getState().setSessionApiKey(localKey)
+        setApiKeyLoaded(true)
+        if (isDM && campaignId) broadcastApiKeySync(localKey)
+        return
+      }
+    }
+
     if (!campaignId || !user?.id) {
       if (sessionApiKey) setApiKeyLoaded(true)
       return
