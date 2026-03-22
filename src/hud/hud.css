@@ -59,6 +59,12 @@
   --font-log: 'Consolas', 'Monaco', monospace;
 }
 
+/* Global crisp image rendering for all HUD images */
+.hud-v2 img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
 /* Bottom bar base — image assets for stone background */
 .hud-bottom-bar {
   position: absolute;
@@ -81,7 +87,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 48px;
   background-image: url('/ui/bar-top.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -160,36 +166,56 @@
   white-space: nowrap;
 }
 
-/* Center time display */
+/* Center time display — clock-style progress bar */
 .hud-top-bar-center {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 3px;
+  justify-content: center;
 }
 
 .hud-time-bar-track {
-  width: 140px;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(201, 168, 76, 0.2);
+  width: 200px;
+  height: 22px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 11px;
   overflow: hidden;
+  position: relative;
 }
 
 .hud-time-bar-fill {
   height: 100%;
   transition: width 0.5s ease;
+  border-radius: 11px;
+}
+
+.hud-time-bar-fill.hud-time-day {
+  background: linear-gradient(90deg, #9a7a2e, #c9a84c, #eedd88);
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+}
+
+.hud-time-bar-fill.hud-time-night {
+  background: linear-gradient(90deg, #3a2266, #6633aa, #9944cc);
+  box-shadow: 0 0 8px rgba(102, 51, 170, 0.4);
 }
 
 .hud-time-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-heading);
   font-size: 10px;
-  color: var(--gold-muted);
+  color: #eee;
   letter-spacing: 1px;
   white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Action area — just buttons, no chat input */
@@ -1446,8 +1472,8 @@
 }
 
 .asset-btn img {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
   display: block;
   pointer-events: none;

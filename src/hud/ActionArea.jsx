@@ -25,8 +25,8 @@ export default function ActionArea({ onTool, areaTheme }) {
 
   return (
     <div className="hud-action-area">
-      {/* Tool buttons — image asset buttons */}
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center' }}>
+      {/* Tool buttons — 2-column grid layout */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, justifyItems: 'center' }}>
         {TOOLS.map(tool => (
           <div key={tool.key} style={{ position: 'relative' }}>
             <button

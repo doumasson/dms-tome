@@ -35,9 +35,10 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
   const currentHour = gameTime?.hour ?? 8
   const timeOfDay = getTimeOfDay(currentHour)
   const timeText = formatTime(gameTime || { hour: 8, day: 1 })
-  // Progress bar: 0-1 representing position in day (0=midnight, 0.5=noon)
-  const timeProgress = currentHour / 24
-  const isNight = timeOfDay === 'night'
+  const isNight = currentHour >= 18 || currentHour < 6
+  const periodProgress = isNight
+    ? (currentHour >= 18 ? (currentHour - 18) / 12 : (currentHour + 6) / 12)
+    : (currentHour - 6) / 12
 
   function handleCopyInvite() {
     if (!inviteCode) return
@@ -64,20 +65,15 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
             {isSafe ? 'SAFE' : 'DANGER'} · {npcCount} NPC{npcCount !== 1 ? 's' : ''}
           </span>
         </div>
-        {/* CENTER: time of day with progress bar */}
+        {/* CENTER: clock-style progress bar */}
         <div className="hud-top-bar-center">
           <div className="hud-time-bar-track">
             <div
-              className="hud-time-bar-fill"
-              style={{
-                width: `${timeProgress * 100}%`,
-                background: isNight
-                  ? 'linear-gradient(90deg, #6633aa, #9944cc)'
-                  : 'linear-gradient(90deg, #c9a84c, #eedd88)',
-              }}
+              className={`hud-time-bar-fill ${isNight ? 'hud-time-night' : 'hud-time-day'}`}
+              style={{ width: `${periodProgress * 100}%` }}
             />
+            <span className="hud-time-text">{timeText}</span>
           </div>
-          <span className="hud-time-text">{timeText}</span>
         </div>
         {/* RIGHT: invite, leave, then icon buttons + sound */}
         <div className="hud-top-bar-right">
