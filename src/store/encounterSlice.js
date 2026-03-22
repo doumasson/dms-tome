@@ -707,7 +707,38 @@ export function createEncounterSlice(set, get) {
           }, 2800);
         }
       } catch (err) {
-        get().addEncounterLog(`\u2694 ${active.name} hesitates. (${err.message})`);
+        console.error('Boss AI turn failed:', err);
+        get().addEncounterLog(`\u2694 AI error: ${err.message} — falling back to basic attack`);
+        // Fallback: use grunt AI so the enemy still does something
+        try {
+          const currentAreaId = get().currentAreaId;
+          const area = get().areas?.[currentAreaId] || null;
+          const collisionData = area?.wallEdges ? {
+            wallEdges: area.wallEdges,
+            cellBlocked: area.cellBlocked || new Uint8Array((area.width || 20) * (area.height || 20)),
+          } : null;
+          const fallbackResult = computeGruntAction(active, encounter.combatants, collisionData, area?.width || 20, area?.height || 20);
+          if (fallbackResult.narrative) {
+            const msg = { role: 'dm', speaker: 'Dungeon Master', text: fallbackResult.narrative, id: crypto.randomUUID(), timestamp: Date.now() };
+            get().addNarratorMessage(msg);
+            broadcastNarratorMessage(msg);
+          }
+          if (fallbackResult.targetId && fallbackResult.damage > 0) {
+            get().applyEncounterDamage(fallbackResult.targetId, fallbackResult.damage);
+            broadcastEncounterAction({ type: 'damage', targetId: fallbackResult.targetId, amount: fallbackResult.damage, userId: get().user?.id || 'system' });
+          }
+          const moveDest = fallbackResult.moveTo;
+          if (moveDest && typeof moveDest.x === 'number') {
+            const occupied = encounter.combatants.some(c => c.id !== active.id && c.position?.x === moveDest.x && c.position?.y === moveDest.y);
+            if (!occupied) {
+              const cost = fallbackResult.moveCost ?? 1;
+              get().moveToken(active.id, moveDest.x, moveDest.y, cost);
+              broadcastEncounterAction({ type: 'move', id: active.id, x: moveDest.x, y: moveDest.y, cost, userId: get().user?.id || 'system' });
+            }
+          }
+        } catch (fallbackErr) {
+          console.error('Grunt AI fallback also failed:', fallbackErr);
+        }
       }
 
       // Auto-advance to next turn — broadcast so ALL clients advance simultaneously
@@ -748,7 +779,7 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
         const msg = { role: 'dm', speaker: 'Dungeon Master', text, id: crypto.randomUUID(), timestamp: Date.now() };
         get().addNarratorMessage(msg);
         broadcastNarratorMessage(msg);
-      } catch { /* non-critical — narration is best-effort */ }
+      } catch (error) { console.warn('Combat narration failed:', error); }
     },
 
     setConcentration: (id, spell) =>

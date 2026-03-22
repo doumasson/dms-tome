@@ -285,8 +285,9 @@ export async function triggerEnemyTurn(enemy, encounter, apiKey) {
       if (!target) result.targetId = closestPlayer?.id || null;
     }
     return result;
-  } catch {
+  } catch (error) {
     // JSON parse failed — fall back to local roll
+    console.warn('Enemy AI response parse failed, using local fallback:', error);
     return localEnemyTurn(enemy, encounter, closestPlayer, canReach, canMoveAndReach, moveSquares);
   }
 }
