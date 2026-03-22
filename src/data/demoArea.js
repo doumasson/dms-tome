@@ -8,8 +8,8 @@ const DEMO_BRIEFS = {
   'area-village': {
     id: 'area-village',
     name: 'Millhaven Village',
-    width: 40,
-    height: 30,
+    width: 80,
+    height: 60,
     theme: 'village',
     pois: [
       { type: 'tavern_main', position: 'center-west', label: 'The Weary Traveler' },
@@ -38,8 +38,8 @@ const DEMO_BRIEFS = {
   'area-forest': {
     id: 'area-forest',
     name: 'Darkwood Forest',
-    width: 50,
-    height: 40,
+    width: 100,
+    height: 75,
     theme: 'forest',
     pois: [
       { type: 'clearing_grass', position: 'south-center', label: 'Forest Edge' },

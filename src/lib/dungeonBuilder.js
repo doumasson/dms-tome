@@ -391,9 +391,7 @@ export function buildDungeonArea(brief, seed = Date.now()) {
   // as it may be outside the generated dungeon rooms.
   let playerStart = firstRoomCenter
   if (placedExits.length > 0 && placedExits[0].entryPoint) {
-    // entryPoint is where the player appears in the TARGET area,
-    // so for the entrance exit, place player near it but inside a room
-    playerStart = firstRoomCenter
+    playerStart = placedExits[0].entryPoint
   }
   // Ensure player doesn't spawn on top of enemies
   playerStart = safeguardSpawn(playerStart, placedEnemies, { width, height, cellBlocked: new Uint8Array(size), layers })

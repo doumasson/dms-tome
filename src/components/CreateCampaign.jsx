@@ -155,7 +155,8 @@ Requirements:
 - Include 3–6 NPCs across areas with distinct personalities
 - The villain (${fields.villain}) should appear in a later area
 - Set questRelevant: true on NPCs that advance the story
-- Area dimensions: width 30–60, height 20–40
+- Outdoor area dimensions: width 80–120, height 60–90 (villages, forests, towns)
+- Dungeon/cave dimensions: width 30–50, height 25–40 (compact, tighter spaces)
 - NPC "position" must match a POI "label" in the same area
 - Connection "from"/"to" must match POI "label" values in the same area
 - Tone: ${fields.tone}

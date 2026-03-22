@@ -16,7 +16,12 @@ import { safeguardSpawn } from './gridUtils.js'
 export function calculateAreaSize(brief) {
   if (brief.width && brief.height) return { width: brief.width, height: brief.height }
   const poiCount = brief.pois?.length || 3
-  const width = Math.min(120, Math.max(40, poiCount * 12))
+  // Dungeons/caves stay compact; outdoor areas are ~4x larger
+  const isDungeon = DUNGEON_THEMES.has(brief.theme)
+  const base = isDungeon ? 12 : 24
+  const maxW = isDungeon ? 80 : 200
+  const minW = isDungeon ? 30 : 80
+  const width = Math.min(maxW, Math.max(minW, poiCount * base))
   const height = Math.round(width * 0.75)
   return { width, height }
 }
