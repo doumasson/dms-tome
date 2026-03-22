@@ -36,7 +36,7 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
       } catch (e) {
         console.error('[GameV2] Failed to build test area:', e)
         addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })
-        worldLoadedRef.current = false // allow retry
+        worldLoadedRef.current = false
       }
       return
     }
@@ -47,16 +47,14 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
     if (hasRealAreas) {
       if (worldLoadedRef.current) return
       worldLoadedRef.current = true
-      const areas = campaignData.areas || {}
+      const areas = { ...(campaignData.areas || {}) }
       const briefs = { ...(campaignData.areaBriefs || {}) }
-      let startId = campaignData.startArea
 
-      // If startArea is missing, pick the first available brief or area
+      // If startArea is undefined, pick the first available brief or area
+      let startId = campaignData.startArea
       if (!startId) {
-        const briefKeys = Object.keys(briefs)
-        const areaKeys = Object.keys(areas)
-        startId = areaKeys[0] || briefKeys[0]
-        console.log('[GameV2] No startArea defined, using first available:', startId)
+        startId = Object.keys(briefs)[0] || Object.keys(areas)[0]
+        console.log('[GameV2] startArea was undefined, using:', startId)
       }
 
       // Build starting area from brief if not already built
@@ -66,20 +64,27 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
           delete briefs[startId]
           console.log('[GameV2] Built starting area from brief:', startId)
         } catch (e) {
-          console.error('[GameV2] Failed to build starting area:', e)
-          addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })
-          worldLoadedRef.current = false
+          console.error('[GameV2] Failed to build starting area from brief:', e)
+          // Fall through to demo area below
         }
       }
 
-      loadAreaWorld({
-        title: campaignData.title,
-        startArea: startId,
-        areas,
-        areaBriefs: briefs,
-        questObjectives: campaignData.questObjectives || [],
-      })
-      return
+      // If we have at least one built area, load the world
+      if (startId && areas[startId]) {
+        loadAreaWorld({
+          title: campaignData.title,
+          startArea: startId,
+          areas,
+          areaBriefs: briefs,
+          questObjectives: campaignData.questObjectives || [],
+        })
+        activateArea(startId)
+        return
+      }
+
+      // Building failed — fall through to demo area
+      console.warn('[GameV2] No built areas available, falling back to demo area')
+      worldLoadedRef.current = false
     }
 
     // No campaign areas — fall back to demo area
@@ -94,7 +99,7 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
     } catch (e) {
       console.error('[GameV2] Failed to build demo area:', e)
       addNarratorMessage?.({ role: 'dm', speaker: 'DM', text: 'The world shimmers... (area loading failed, retrying)' })
-      worldLoadedRef.current = false // allow retry
+      worldLoadedRef.current = false
     }
   }, [campaign])
 }

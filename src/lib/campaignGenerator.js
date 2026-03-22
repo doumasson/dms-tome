@@ -17,8 +17,9 @@ export function buildAreaWorld(aiOutput) {
     storyMilestones = [],
   } = aiOutput
 
-  // Validate we have a starting area
-  const startBrief = areaBriefs[startArea]
+  // If startArea is undefined, pick the first brief key
+  const effectiveStartArea = startArea || Object.keys(areaBriefs)[0]
+  const startBrief = effectiveStartArea ? areaBriefs[effectiveStartArea] : null
   if (!startBrief) {
     console.error(`[campaignGenerator] No brief found for startArea "${startArea}"`)
     return { title, startArea: null, areas: {}, areaBriefs, questObjectives, storyMilestones }
@@ -29,12 +30,12 @@ export function buildAreaWorld(aiOutput) {
 
   // Keep remaining briefs for on-demand generation
   const remainingBriefs = { ...areaBriefs }
-  delete remainingBriefs[startArea]
+  delete remainingBriefs[effectiveStartArea]
 
   return {
     title,
-    startArea,
-    areas: { [startArea]: builtStartArea },
+    startArea: effectiveStartArea,
+    areas: { [effectiveStartArea]: builtStartArea },
     areaBriefs: remainingBriefs,
     questObjectives,
     storyMilestones,
