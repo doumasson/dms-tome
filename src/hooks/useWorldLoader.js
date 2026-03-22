@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import useStore from '../store/useStore'
 import { buildTestArea } from '../data/testArea.js'
-import { buildDemoArea } from '../data/demoArea.js'
+import { buildDemoArea, getDemoBriefs } from '../data/demoArea.js'
 import { buildAreaFromBrief } from '../lib/areaBuilder.js'
 
 /**
@@ -87,14 +87,26 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
       worldLoadedRef.current = false
     }
 
-    // No campaign areas — fall back to demo area
+    // No campaign areas — fall back to demo mini-campaign
     if (worldLoadedRef.current) return
     worldLoadedRef.current = true
     try {
       const demoArea = buildDemoArea()
-      console.log('[GameV2] Demo area built:', demoArea.name || demoArea.id, `${demoArea.width}x${demoArea.height}`)
-      loadArea(demoArea.id, demoArea)
-      activateArea(demoArea.id)
+      const demoBriefs = getDemoBriefs()
+      delete demoBriefs['area-village'] // already built
+      console.log('[GameV2] Demo world loaded:', demoArea.name || demoArea.id, `${demoArea.width}x${demoArea.height}`, Object.keys(demoBriefs).length, 'additional area briefs')
+
+      loadAreaWorld({
+        title: 'Whispers in Millhaven',
+        startArea: 'area-village',
+        areas: { 'area-village': demoArea },
+        areaBriefs: demoBriefs,
+        questObjectives: [
+          { id: 'investigate', text: 'Investigate the goblin activity in Darkwood Forest', completed: false },
+          { id: 'ruins', text: 'Explore the Sunken Ruins', completed: false },
+        ],
+      })
+      activateArea('area-village')
       if (demoArea.playerStart) setPlayerPos(demoArea.playerStart)
     } catch (e) {
       console.error('[GameV2] Failed to build demo area:', e)
