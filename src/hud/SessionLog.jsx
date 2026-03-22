@@ -112,8 +112,8 @@ export default function SessionLog({ onChat }) {
           )
         )}
       </div>
-      {/* Chat input — visible during combat on chat tab so SAY action works */}
-      {inCombat && tab === 'chat' && (
+      {/* Chat input — always visible on chat tab for exploration + combat */}
+      {tab === 'chat' && (
         <form onSubmit={handleChatSubmit} style={{ display: 'flex', gap: 4, padding: '4px 8px 4px', borderTop: '1px solid rgba(140,120,70,0.2)' }}>
           <input
             ref={chatInputRef}

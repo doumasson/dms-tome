@@ -47,13 +47,7 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
         setPendingSkillCheck(result.rollRequest)
       }
 
-      // If DM explicitly says no combat (or doesn't mention it), clear pending encounter
-      if (!result?.startCombat && useStore.getState().pendingEncounterData) {
-        // Player avoided combat through roleplay/persuasion/stealth — clear the encounter
-        const { clearPendingEncounterData } = useStore.getState()
-        clearPendingEncounterData()
-      }
-
+      // Handle combat start/avoid based on DM's response
       if (result?.startCombat) {
         const { pendingEncounterData, clearPendingEncounterData } = useStore.getState()
         if (pendingEncounterData?.startCombatWithZoneEnemies) {
@@ -70,6 +64,10 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
           se(enemies)
         }
       }
+      // Note: pendingEncounterData is NOT cleared on normal DM responses.
+      // It persists until: startCombat triggers it, player leaves area, or
+      // area transition clears it. The DM offering choices ("what do you do?")
+      // must not destroy the pending combat data.
     } catch (err) {
       console.error('[GameV2] Narrator error:', err)
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'The DM is momentarily distracted... (API error)' })
