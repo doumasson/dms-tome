@@ -1,6 +1,7 @@
 import { s } from './charSheetStyles';
 import EquipmentPane from './EquipmentPane';
 import InventoryPane from './InventoryPane';
+import ModeScreen from '../../hud/ModeScreen';
 import useStore from '../../store/useStore';
 
 export default function CharacterSheetModal({ character, onClose }) {
@@ -23,37 +24,34 @@ export default function CharacterSheetModal({ character, onClose }) {
   }
 
   return (
-    <div style={s.overlay} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div style={s.modal}>
-        {/* Header */}
-        <div style={s.header}>
-          <img src={avatarUrl} alt="" style={s.portrait}
-            onError={e => { e.currentTarget.style.display = 'none'; }} />
-          <div style={s.headerInfo}>
-            <div style={s.charName}>{liveChar.name}</div>
-            <div style={s.charSub}>
-              Level {liveChar.level || 1} {liveChar.race} {liveChar.class}
-              {liveChar.background ? ` · ${liveChar.background}` : ''}
-              {!isOwn ? ' (view only)' : ''}
-            </div>
+    <ModeScreen open={true} onClose={onClose} title="Character Record">
+      {/* Header */}
+      <div style={s.header}>
+        <img src={avatarUrl} alt="" style={s.portrait}
+          onError={e => { e.currentTarget.style.display = 'none'; }} />
+        <div style={s.headerInfo}>
+          <div style={s.charName}>{liveChar.name}</div>
+          <div style={s.charSub}>
+            Level {liveChar.level || 1} {liveChar.race} {liveChar.class}
+            {liveChar.background ? ` · ${liveChar.background}` : ''}
+            {!isOwn ? ' (view only)' : ''}
           </div>
-          <button style={s.closeBtn} onClick={onClose} aria-label="Close">✕</button>
-        </div>
-
-        {/* Body: two panes */}
-        <div style={s.body}>
-          <EquipmentPane
-            character={liveChar}
-            readOnly={!isOwn}
-            onDropOnSlot={handleDropOnSlot}
-          />
-          <InventoryPane
-            character={liveChar}
-            readOnly={!isOwn}
-            inCombat={inCombat}
-          />
         </div>
       </div>
-    </div>
+
+      {/* Body: two panes */}
+      <div style={s.body}>
+        <EquipmentPane
+          character={liveChar}
+          readOnly={!isOwn}
+          onDropOnSlot={handleDropOnSlot}
+        />
+        <InventoryPane
+          character={liveChar}
+          readOnly={!isOwn}
+          inCombat={inCombat}
+        />
+      </div>
+    </ModeScreen>
   );
 }

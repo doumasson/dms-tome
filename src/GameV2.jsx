@@ -15,6 +15,7 @@ import OAConfirmModal from './components/v2/OAConfirmModal'
 import TestCombatButton from './components/v2/TestCombatButton'
 import WeaponPickerModal from './hud/WeaponPickerModal'
 import SpellPickerModal from './hud/SpellPickerModal'
+import ModeScreen from './hud/ModeScreen'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -94,6 +95,7 @@ export default function GameV2({ onLeave }) {
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
   const [toolPanel, setToolPanel] = useState(null)
   const [sheetChar, setSheetChar] = useState(null)
+  const [activeMode, setActiveMode] = useState(null) // BG2-style mode screen: 'character' | 'inventory' | 'journal' | 'map' | 'settings' | null
   const [restProposal, setRestProposal] = useState(null)
   const [showApiSettings, setShowApiSettings] = useState(false)
   const [showJournal, setShowJournal] = useState(false)
@@ -505,6 +507,24 @@ export default function GameV2({ onLeave }) {
     else if (tool === 'formation') setShowFormation(true)
   }, [myCharacter])
 
+  const handleModeSelect = useCallback((mode) => {
+    // Toggle off if already active
+    if (activeMode === mode) { setActiveMode(null); return }
+    // Character mode opens the character sheet
+    if (mode === 'character' || mode === 'inventory') {
+      setSheetChar(myCharacter)
+      setActiveMode(mode)
+    } else if (mode === 'journal') {
+      setShowJournal(true)
+      setActiveMode(null) // journal has its own modal
+    } else if (mode === 'settings') {
+      setShowApiSettings(true)
+      setActiveMode(null)
+    } else {
+      setActiveMode(mode) // map or future modes — show placeholder
+    }
+  }, [activeMode, myCharacter])
+
   const handleEndTurn = useCallback(() => {
     nextEncounterTurn()
     broadcastEncounterAction({ type: 'next-turn', userId: user?.id || 'system' })
@@ -540,6 +560,7 @@ export default function GameV2({ onLeave }) {
         onAction={handleCombatAction} onSettings={() => setShowApiSettings(true)} onLeave={onLeave}
         playerPos={playerPos} tokens={tokens} cameraRef={cameraRef}
         onPortraitClick={(member) => setSheetChar(member)}
+        activeMode={activeMode} onModeSelect={handleModeSelect}
       />
       {/* TestCombatButton removed — combat initiates via encounter zones */}
       <Suspense fallback={null}>
@@ -560,8 +581,15 @@ export default function GameV2({ onLeave }) {
       )}
       {sheetChar && (
         <Suspense fallback={null}>
-          <CharacterSheetModal character={sheetChar} onClose={() => setSheetChar(null)} />
+          <CharacterSheetModal character={sheetChar} onClose={() => { setSheetChar(null); setActiveMode(null) }} />
         </Suspense>
+      )}
+      {activeMode === 'map' && (
+        <ModeScreen open={true} onClose={() => setActiveMode(null)} title="World Map">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#8a7a52', fontFamily: "'Cinzel', serif", fontSize: 16, letterSpacing: 1 }}>
+            Coming Soon
+          </div>
+        </ModeScreen>
       )}
       {showApiSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />}
       {showJournal && (

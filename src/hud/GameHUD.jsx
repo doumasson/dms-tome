@@ -6,10 +6,11 @@ import EnemyInfoPanel from './EnemyInfoPanel'
 import CampaignBar from './CampaignBar'
 import Minimap from './Minimap'
 import SoundControl from './SoundControl'
+import ModeButtonStrip from './ModeButtonStrip'
 import useStore from '../store/useStore'
 import './hud.css'
 
-export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef, onPortraitClick }) {
+export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef, onPortraitClick, activeMode, onModeSelect }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const encounter = useStore(s => s.encounter)
   const myCharacter = useStore(s => s.myCharacter)
@@ -58,6 +59,7 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
         </div>
       )}
       <NarratorFloat />
+      <ModeButtonStrip activeMode={activeMode} onModeSelect={onModeSelect} />
       <BottomBar areaTheme={areaTheme} onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} onPortraitClick={onPortraitClick} />
     </div>
   )
