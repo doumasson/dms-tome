@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { encryptApiKey, saveApiKeyToSupabase, loadApiKeyFromSupabase } from '../lib/apiKeyVault'
+import { setClaudeApiKey } from '../lib/claudeApi'
 import { broadcastApiKeySync } from '../lib/liveChannel'
 import useStore from '../store/useStore'
 
@@ -32,8 +33,9 @@ export default function ApiKeySettings({ userId, onClose }) {
       const encrypted = await encryptApiKey(ck, campaignId, userId)
       await saveApiKeyToSupabase(campaignId, encrypted)
 
-      // Update session and broadcast to players
+      // Update session, localStorage, and broadcast to players
       useStore.getState().setSessionApiKey(ck)
+      if (userId) setClaudeApiKey(userId, ck)
       if (isDM) broadcastApiKeySync(ck)
 
       setSaved(true)

@@ -364,7 +364,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   }
 
   async function handleGenerateWithClaude() {
-    const apiKey = getClaudeApiKey(user.id);
+    const apiKey = getClaudeApiKey(user.id) || useStore.getState().sessionApiKey;
     if (!apiKey) {
       setShowApiSettings(true);
       return;
@@ -612,7 +612,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
         {step === 4 && (
           <div style={styles.stepContent}>
             <h2 style={styles.stepTitle}>Generate Campaign</h2>
-            {getClaudeApiKey(user.id) ? (
+            {(getClaudeApiKey(user.id) || useStore.getState().sessionApiKey) ? (
               <>
                 <p style={styles.hint}>Click below to generate your campaign with Claude. This takes about 30 seconds.</p>
                 <button

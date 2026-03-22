@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { supabase } from './lib/supabase';
 import { setLiveChannel, broadcastApiKeySync } from './lib/liveChannel';
+import { decryptApiKey } from './lib/apiKeyVault';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
 import LoginPage from './components/LoginPage';
@@ -475,8 +476,16 @@ export default function App() {
 
     // Cache DM's Claude API key for all players (so narrator works without their own key)
     const sharedApiKey = campaignRecord.settings?.claudeApiKey;
+    const encryptedKey = campaignRecord.settings?.encrypted_api_key;
     if (sharedApiKey) {
       useStore.getState().setSessionApiKey(sharedApiKey);
+    } else if (encryptedKey) {
+      try {
+        const decrypted = await decryptApiKey(encryptedKey, campaignRecord.id, freshUserId);
+        if (decrypted) useStore.getState().setSessionApiKey(decrypted);
+      } catch (e) {
+        console.error('[App] Failed to decrypt shared API key:', e);
+      }
     }
 
     // Save campaign ID so sign-in/refresh restores to game view
