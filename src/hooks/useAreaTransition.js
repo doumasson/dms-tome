@@ -42,6 +42,21 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
   const handleAreaTransition = useCallback((exit) => {
     if (transitioning || inCombat) return
 
+    // Proximity gate: player must be within 1 tile of the exit zone
+    const pp = playerPosRef?.current || playerPos
+    if (pp && exit.x != null && exit.y != null) {
+      const exitW = exit.width || 3
+      // Distance from player to closest point on the exit rectangle
+      const clampedX = Math.max(exit.x, Math.min(exit.x + exitW - 1, pp.x))
+      const clampedY = Math.max(exit.y, Math.min(exit.y + 1, pp.y)) // exit is 2 tiles tall
+      const dx = Math.abs(pp.x - clampedX)
+      const dy = Math.abs(pp.y - clampedY)
+      if (Math.max(dx, dy) > 1) {
+        console.log('[transition] Player too far from exit', { dx, dy, pp, exit })
+        return
+      }
+    }
+
     const targetId = exit.targetArea || exit.targetZone
     if (!targetId) return
 
