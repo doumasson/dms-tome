@@ -30,3 +30,4 @@ repomix-output.xml
 public/tilesets/*.png
 public/tilesets/*.webp
 assets/manifest.json
+.claude/worktrees/
