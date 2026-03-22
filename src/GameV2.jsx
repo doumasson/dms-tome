@@ -535,14 +535,25 @@ export default function GameV2({ onLeave }) {
       }
       if (zone.enemies) {
         const areaDefeated = defeatedEnemies?.[currentAreaId] || []
+        // Group enemies by name and only show scaled count (match what combat will spawn)
+        const partySize = Math.max(1, (partyMembers?.length || 0) + (myCharacter ? 1 : 0))
+        const enemyGroups = {}
         zone.enemies.forEach(e => {
           if (!e.position) return
-          if (areaDefeated.includes(e.name)) return  // Skip defeated enemies
-          t.push({
-            id: e.id, name: e.name,
-            x: e.position.x, y: e.position.y,
-            color: 0x8b0000, borderColor: 0xff3333,
-            isEnemy: true, isNpc: false,
+          if (areaDefeated.includes(e.name)) return
+          if (!enemyGroups[e.name]) enemyGroups[e.name] = []
+          enemyGroups[e.name].push(e)
+        })
+        // Scale each group to party-appropriate count
+        Object.values(enemyGroups).forEach(group => {
+          const maxShow = partySize <= 2 ? Math.min(group.length, partySize) : Math.min(group.length, partySize + 1)
+          group.slice(0, maxShow).forEach(e => {
+            t.push({
+              id: e.id, name: e.name,
+              x: e.position.x, y: e.position.y,
+              color: 0x8b0000, borderColor: 0xff3333,
+              isEnemy: true, isNpc: false,
+            })
           })
         })
       }

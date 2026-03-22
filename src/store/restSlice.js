@@ -110,11 +110,21 @@ export function createRestSlice(set, get) {
               ...state.myCharacter,
               currentHp: match.maxHp,
               hp: match.maxHp,
+              maxHp: match.maxHp,
               conditions: [],
               resourcesUsed: {},
               spellSlots: match.spellSlots,
               hitDiceRemaining: match.hitDiceRemaining,
               equippedItems: match.equippedItems,
+            };
+          } else {
+            // myCharacter not in campaign.characters — heal directly
+            updatedMyChar = {
+              ...state.myCharacter,
+              currentHp: state.myCharacter.maxHp,
+              hp: state.myCharacter.maxHp,
+              conditions: [],
+              resourcesUsed: {},
             };
           }
         }
