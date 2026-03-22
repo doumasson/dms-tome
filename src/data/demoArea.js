@@ -130,7 +130,6 @@ const DEMO_BRIEFS = {
       { position: { x: 20, y: 30 }, type: 'torch' },
       { position: { x: 20, y: 20 }, type: 'torch' },
     ],
-    playerStart: { x: 20, y: 35 },
   },
 }
 

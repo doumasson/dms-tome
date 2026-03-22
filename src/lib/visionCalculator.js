@@ -75,12 +75,41 @@ export function getCharacterVisionRange(character, lighting, carriedLights = [],
 }
 
 /**
+ * Check if a straight line from (x0,y0) to (x1,y1) is blocked by walls.
+ * Uses Bresenham's line algorithm to walk cells. A cell blocks if
+ * its floor is empty (index 0 in floorLayer) — i.e. solid rock/void.
+ * The target cell itself is not checked (we want to see the wall face).
+ */
+function hasLineOfSight(x0, y0, x1, y1, floorLayer, width, height) {
+  if (!floorLayer) return true  // no floor data = no LOS blocking
+  let dx = Math.abs(x1 - x0)
+  let dy = Math.abs(y1 - y0)
+  const sx = x0 < x1 ? 1 : -1
+  const sy = y0 < y1 ? 1 : -1
+  let err = dx - dy
+  let cx = x0, cy = y0
+
+  while (cx !== x1 || cy !== y1) {
+    const e2 = 2 * err
+    if (e2 > -dy) { err -= dy; cx += sx }
+    if (e2 < dx) { err += dx; cy += sy }
+    // Don't check the final cell (target) — we want to see walls themselves
+    if (cx === x1 && cy === y1) break
+    if (cx < 0 || cy < 0 || cx >= width || cy >= height) return false
+    // If this intermediate cell has no floor, line is blocked (solid rock/wall)
+    if (floorLayer[cy * width + cx] === 0) return false
+  }
+  return true
+}
+
+/**
  * Compute the union of all party members' vision circles.
  * @param {Array} partyVisions — [{ position: {x,y}, brightRadius, dimRadius, darkvisionRadius }]
  * @param {number} width, height — area dimensions
+ * @param {Uint16Array} [floorLayer] — optional floor layer for LOS wall blocking
  * @returns {{ active: Set<string>, dim: Set<string>, darkvision: Set<string> }}
  */
-export function computeVision(partyVisions, width, height) {
+export function computeVision(partyVisions, width, height, floorLayer) {
   const active = new Set()
   const dim = new Set()
   const darkvisionTiles = new Set()
@@ -96,6 +125,9 @@ export function computeVision(partyVisions, width, height) {
         const tx = cx + dx
         const ty = cy + dy
         if (tx < 0 || ty < 0 || tx >= width || ty >= height) continue
+
+        // Check line-of-sight if floor data is available
+        if (floorLayer && !hasLineOfSight(cx, cy, tx, ty, floorLayer, width, height)) continue
 
         const key = `${tx},${ty}`
         if (dist <= (pv.brightRadius || 0)) {

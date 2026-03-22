@@ -280,11 +280,71 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     }
   }
 
-  // 10. Determine player start — first room center
+  // 10. Process exits — resolve edge exits to tile coordinates
+  const placedExits = []
+  for (const exit of exits) {
+    // Stair/ladder exits are interior POI-anchored
+    if (exit.type === 'stairs_up' || exit.type === 'stairs_down' || exit.type === 'ladder') {
+      // Place stairs in the nearest room center
+      const targetRoom = rooms[0] || { x: 1, y: 1, width: 4, height: 4 }
+      placedExits.push({
+        x: targetRoom.x + Math.floor(targetRoom.width / 2),
+        y: targetRoom.y + Math.floor(targetRoom.height / 2),
+        width: 1, height: 1,
+        targetArea: exit.targetArea,
+        label: exit.label || '',
+        type: exit.type,
+        entryPoint: exit.entryPoint,
+      })
+      continue
+    }
+
+    const exitW = exit.width || 3
+    const exitH = exit.height || 3
+    let x, y, ew, eh, entryPoint
+    switch (exit.edge) {
+      case 'north':
+        x = Math.floor((width - exitW) / 2); y = 0; ew = exitW; eh = 1
+        entryPoint = { x, y: (exit.targetHeight || height) - 2 }
+        break
+      case 'south':
+        x = Math.floor((width - exitW) / 2); y = height - 1; ew = exitW; eh = 1
+        entryPoint = { x, y: 1 }
+        break
+      case 'east':
+        x = width - 1; y = Math.floor((height - exitH) / 2); ew = 1; eh = exitH
+        entryPoint = { x: 1, y }
+        break
+      case 'west':
+        x = 0; y = Math.floor((height - exitH) / 2); ew = 1; eh = exitH
+        entryPoint = { x: (exit.targetWidth || width) - 2, y }
+        break
+      default:
+        console.warn(`[dungeonBuilder] Unknown exit edge "${exit.edge}", skipping`)
+        continue
+    }
+    placedExits.push({
+      x, y, width: ew, height: eh,
+      targetArea: exit.targetArea,
+      entryPoint,
+      label: exit.label || '',
+    })
+  }
+
+  // 11. Determine player start — prefer exit entryPoint, then first room center
   const firstRoom = rooms[0] || { x: 1, y: 1, width: 4, height: 4 }
-  const playerStart = brief.playerStart || {
+  const firstRoomCenter = {
     x: firstRoom.x + Math.floor(firstRoom.width / 2),
     y: firstRoom.y + Math.floor(firstRoom.height / 2),
+  }
+  // Use first exit's entryPoint if available (player enters from there),
+  // otherwise use first room center. Never use brief.playerStart blindly
+  // as it may be outside the generated dungeon rooms.
+  let playerStart = firstRoomCenter
+  if (placedExits.length > 0 && placedExits[0].entryPoint) {
+    // entryPoint is where the player appears in the TARGET area,
+    // so for the entrance exit, place player near it but inside a room
+    playerStart = firstRoomCenter
   }
 
   return {
@@ -307,8 +367,9 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     traps,
     buildings: [],
     lightSources,
-    exits,
+    exits: placedExits,
     theme,
+    lighting: 'dim',
     generated: true,
   }
 }

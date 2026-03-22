@@ -10,6 +10,7 @@ import { NORTH, EAST, SOUTH, WEST } from '../lib/wallEdgeExtractor.js'
  */
 
 const SPRITES_PER_EDGE = 3
+const DUNGEON_THEMES = new Set(['dungeon', 'cave', 'crypt', 'sewer'])
 
 export class WallRenderer {
   constructor(tileAtlas, tileSize) {
@@ -112,7 +113,9 @@ export class WallRenderer {
 
         const b = regionId > 0 ? this.buildings[regionId - 1] : null
 
-        if (b) {
+        // Dungeon/cave/crypt/sewer themes: render ALL edges (rooms are carved
+        // from solid rock, not freestanding buildings with inner/outer walls).
+        if (b && !DUNGEON_THEMES.has(this.theme)) {
           const centerX = b.x + b.width / 2
           const centerY = b.y + b.height / 2
           // Only render an edge if it faces toward the building center
@@ -121,7 +124,7 @@ export class WallRenderer {
           if (hasW && x > centerX)  this._renderEdgeTiled(x, y, 'west', regionId, neededEdges)
           if (hasE && x < centerX)  this._renderEdgeTiled(x, y, 'east', regionId, neededEdges)
         } else {
-          // Non-building walls: render all edges (no dedup)
+          // Non-building walls or dungeon themes: render all edges
           if (hasN) this._renderEdgeTiled(x, y, 'north', regionId, neededEdges)
           if (hasS) this._renderEdgeTiled(x, y, 'south', regionId, neededEdges)
           if (hasE) this._renderEdgeTiled(x, y, 'east', regionId, neededEdges)
