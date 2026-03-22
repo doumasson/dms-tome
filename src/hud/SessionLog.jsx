@@ -16,8 +16,7 @@ function getLogColorClass(entry) {
   return ''
 }
 
-export default function SessionLog({ onChat }) {
-  const [tab, setTab] = useState('chat')
+export default function SessionLog({ onChat, tab, setTab }) {
   const [chatInput, setChatInput] = useState('')
   const [expanded, setExpanded] = useState(false)
   const sessionLog = useStore(s => s.sessionLog) || []
@@ -67,7 +66,7 @@ export default function SessionLog({ onChat }) {
   }
 
   return (
-    <div className={`hud-log-panel${expanded ? ' hud-log-expanded' : ''}`} style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+    <div className={`hud-log-panel${expanded ? ' hud-log-expanded' : ''}`}>
       {/* Parchment background — image asset */}
       <img src="/ui/log-bg.png" className="hud-log-bg-img" alt="" draggable={false} />
       {/* Expand/retract toggle button */}
@@ -82,31 +81,7 @@ export default function SessionLog({ onChat }) {
           draggable={false}
         />
       </button>
-      {/* Tabs — single image strip, clicking left/right half switches tab */}
-      <div className="hud-log-tabs">
-        <div
-          className="hud-log-tab-strip"
-          onClick={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect()
-            const clickX = e.clientX - rect.left
-            const half = rect.width / 2
-            playParchmentRustle()
-            if (clickX < half) {
-              setTab('chat')
-            } else {
-              setTab('log')
-            }
-          }}
-          style={{ cursor: 'pointer' }}
-        >
-          <img
-            src={tab === 'chat' ? '/ui/log-tab1.png' : '/ui/log-tab2.png'}
-            alt={tab === 'chat' ? 'Chat active' : 'Log active'}
-            draggable={false}
-            className="hud-log-tab-strip-img"
-          />
-        </div>
-      </div>
+      {/* Tabs moved to top bar — see GameHUD.jsx */}
       {/* Entries */}
       <div className="hud-log-entries" ref={scrollRef}>
         {tab === 'log' ? (
@@ -141,7 +116,7 @@ export default function SessionLog({ onChat }) {
       </div>
       {/* Chat input — always visible on chat tab for exploration + combat */}
       {tab === 'chat' && (
-        <form onSubmit={handleChatSubmit} style={{ display: 'flex', gap: 4, padding: '4px 8px 4px', borderTop: '1px solid rgba(140,120,70,0.2)' }}>
+        <form onSubmit={handleChatSubmit} className="hud-chat-form">
           <input
             ref={chatInputRef}
             className="hud-chat-input"

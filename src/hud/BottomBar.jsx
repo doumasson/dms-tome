@@ -6,7 +6,7 @@ import ActionArea from './ActionArea'
 import CombatActionBar from './CombatActionBar'
 import QuickslotBar from './QuickslotBar'
 
-export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onAction, onPortraitClick, onUseQuickslot }) {
+export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onAction, onPortraitClick, onUseQuickslot, logTab, setLogTab }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -21,7 +21,7 @@ export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onActi
       <img src="/ui/bar-bottom.png" className="hud-bar-bottom-img" alt="" draggable={false} />
       <div className="hud-bottom-bar-content">
         <PartyPortraits onPortraitClick={onPortraitClick} />
-        <SessionLog onChat={onChat} />
+        <SessionLog onChat={onChat} tab={logTab} setTab={setLogTab} />
         {inCombat ? (
           <CombatActionBar onEndTurn={onEndTurn} onAction={onAction} />
         ) : (

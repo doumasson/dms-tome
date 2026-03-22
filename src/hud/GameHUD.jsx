@@ -7,6 +7,7 @@ import Minimap from './Minimap'
 import SoundControl from './SoundControl'
 import useStore from '../store/useStore'
 import { getTimeOfDay, formatTime } from '../lib/gameTime'
+import { playParchmentRustle } from '../lib/uiSounds'
 import './hud.css'
 
 export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef, onPortraitClick, activeMode, onModeSelect }) {
@@ -20,6 +21,7 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
   const partyMembers = useStore(s => s.partyMembers)
   const gameTime = useStore(s => s.gameTime)
   const [copied, setCopied] = useState(false)
+  const [logTab, setLogTab] = useState('chat')
 
   const title = campaign?.title || activeCampaign?.name || 'Untitled Campaign'
   const inviteCode = activeCampaign?.invite_code
@@ -75,6 +77,25 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
             <span className="hud-time-text">{timeText}</span>
           </div>
         </div>
+        {/* Chat/Log tab strip — positioned in top bar */}
+        <div
+          className="hud-log-tab-strip hud-top-bar-tabs"
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect()
+            const clickX = e.clientX - rect.left
+            const half = rect.width / 2
+            playParchmentRustle()
+            setLogTab(clickX < half ? 'chat' : 'log')
+          }}
+          style={{ cursor: 'pointer', pointerEvents: 'all' }}
+        >
+          <img
+            src={logTab === 'chat' ? '/ui/log-tab1.png' : '/ui/log-tab2.png'}
+            alt={logTab === 'chat' ? 'Chat active' : 'Log active'}
+            draggable={false}
+            className="hud-log-tab-strip-img"
+          />
+        </div>
         {/* RIGHT: invite, leave, then icon buttons + sound */}
         <div className="hud-top-bar-right">
           <button className="hud-top-bar-btn" onClick={handleCopyInvite} title="Copy invite link">
@@ -108,7 +129,7 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
           <EnemyInfoPanel />
         </>
       )}
-      <BottomBar areaTheme={areaTheme} onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} onPortraitClick={onPortraitClick} />
+      <BottomBar areaTheme={areaTheme} onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} onPortraitClick={onPortraitClick} logTab={logTab} setLogTab={setLogTab} />
     </div>
   )
 }

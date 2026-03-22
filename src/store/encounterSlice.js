@@ -109,19 +109,17 @@ export function createEncounterSlice(set, get) {
         console.log('[startEncounter] Player combatant:', { name: char.name, class: resolvedClass, level: char.level, currentHp: char.currentHp, hp: char.hp, maxHp: char.maxHp, rawClass: char.class, hasEquipped: !!char.equippedItems });
         const spd = char.speed || 30;
 
-        // Resolve attacks — generate class-appropriate defaults if empty
-        let attacks = (char.weapons || char.attacks || []).map(w =>
-          typeof w === 'string'
-            ? { name: w, bonus: '+0', damage: '1d6' }
-            : { name: w.name || w, bonus: w.attackBonus || w.bonus || '+0', damage: w.damage || '1d6' }
-        );
+        // Resolve attacks — prioritize equipped weapons, then weapons/attacks arrays, then class defaults
+        const charStats = char.stats || {};
+        const strMod = Math.floor(((charStats.str || 10) - 10) / 2);
+        const dexMod = Math.floor(((charStats.dex || 10) - 10) / 2);
+        const profBonus = Math.ceil((char.level || 1) / 4) + 1;
+        const meleeBonus = Math.max(strMod, dexMod) + profBonus;
 
-        // Build attacks from equippedItems if weapons/attacks arrays were empty
-        if (attacks.length === 0 && char.equippedItems) {
-          const charStats = char.stats || {};
-          const strMod = Math.floor(((charStats.str || 10) - 10) / 2);
-          const dexMod = Math.floor(((charStats.dex || 10) - 10) / 2);
-          const profBonus = Math.ceil((char.level || 1) / 4) + 1;
+        let attacks = [];
+
+        // 1. Build attacks from actually equipped weapons (most accurate)
+        if (char.equippedItems) {
           const weaponSlots = ['mainHand', 'offHand', 'twoHanded'];
           for (const slot of weaponSlots) {
             const item = char.equippedItems[slot];
@@ -143,12 +141,17 @@ export function createEncounterSlice(set, get) {
           }
         }
 
+        // 2. Fall back to explicit weapons/attacks arrays if no equipped weapons found
         if (attacks.length === 0) {
-          const charStats = char.stats || {};
-          const strMod = Math.floor(((charStats.str || 10) - 10) / 2);
-          const dexMod = Math.floor(((charStats.dex || 10) - 10) / 2);
-          const profBonus = Math.ceil((char.level || 1) / 4) + 1;
-          const meleeBonus = Math.max(strMod, dexMod) + profBonus;
+          attacks = (char.weapons || char.attacks || []).map(w =>
+            typeof w === 'string'
+              ? { name: w, bonus: '+0', damage: '1d6' }
+              : { name: w.name || w, bonus: w.attackBonus || w.bonus || '+0', damage: w.damage || '1d6' }
+          );
+        }
+
+        // 3. Last resort: class-based defaults
+        if (attacks.length === 0) {
           switch (resolvedClass) {
             case 'Monk':
               attacks = [
@@ -196,6 +199,11 @@ export function createEncounterSlice(set, get) {
               attacks = [{ name: 'Unarmed Strike', bonus: `+${meleeBonus}`, damage: `1+${strMod}` }];
           }
           console.log('[startEncounter] Generated default attacks for', char.name, resolvedClass, attacks);
+        }
+
+        // Always include Unarmed Strike as an option
+        if (!attacks.some(a => a.name?.includes('Unarmed'))) {
+          attacks.push({ name: 'Unarmed Strike', bonus: `+${meleeBonus}`, damage: `1+${strMod}` });
         }
 
         // Monks always need Unarmed Strike in their attacks list (for Martial Arts)

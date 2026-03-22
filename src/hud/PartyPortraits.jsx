@@ -104,7 +104,7 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
           {/* Portrait image (if available) */}
           {member.portrait && (
             <img src={member.portrait} alt={member.name}
-              style={{ position: 'absolute', inset: 2, width: 'calc(100% - 4px)', height: 'calc(100% - 4px)', objectFit: 'cover', imageRendering: 'crisp-edges', zIndex: 0 }} />
+              style={{ position: 'absolute', inset: 6, width: 'calc(100% - 12px)', height: 'calc(100% - 12px)', objectFit: 'cover', imageRendering: 'crisp-edges', zIndex: 3 }} />
           )}
           {/* HP tinting overlay */}
           <div className={`portrait-hp-tint ${hpTintClass}`} />

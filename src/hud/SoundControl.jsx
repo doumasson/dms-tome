@@ -21,6 +21,7 @@ export default function SoundControl() {
         fontSize: 14,
         opacity: 0.7,
         pointerEvents: 'all',
+        marginTop: -6,
       }}
       title={muted ? 'Unmute' : 'Mute'}
     >
