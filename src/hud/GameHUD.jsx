@@ -34,7 +34,8 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
           top: 0,
           left: 0,
           width: '100%',
-          height: 'auto',
+          height: 30,
+          objectFit: 'fill',
           zIndex: 1,
           pointerEvents: 'none',
         }}

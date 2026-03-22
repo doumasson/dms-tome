@@ -72,28 +72,28 @@
   padding: 14px 14px 10px;
   gap: 0;
   pointer-events: auto;
-  background: #0a0806;
+  background: linear-gradient(180deg, #12100a 0%, #0e0c08 60%, #1a1610 100%);
 }
 
-/* Top filigree bar image */
+/* Top filigree bar image — ornate gold border */
 .hud-bar-top-img {
   position: absolute;
-  top: -12px;
+  top: -30px;
   left: 0;
   width: 100%;
-  height: 24px;
+  height: 40px;
   object-fit: fill;
   pointer-events: none;
   z-index: 3;
 }
 
-/* Bottom stone slab image */
+/* Bottom stone slab image — textured base */
 .hud-bar-bottom-img {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 40px;
   object-fit: fill;
   pointer-events: none;
   z-index: 0;
@@ -153,7 +153,8 @@
 }
 
 .hud-log-tab-btn img {
-  height: 28px;
+  height: 22px;
+  width: auto;
   display: block;
 }
 

@@ -2,9 +2,9 @@ import { useState } from 'react'
 import './ModeScreen.css'
 
 const MODE_BUTTONS = [
-  { id: 'character', img: '/ui/icon-char.png',    label: 'Character Record' },
-  { id: 'inventory', img: '/ui/icon-pack.png',    label: 'Inventory' },
-  { id: 'journal',   img: '/ui/icon-journal.png', label: 'Journal' },
+  { id: 'character', img: '/ui/btn-char.png',    label: 'Character Record' },
+  { id: 'inventory', img: '/ui/btn-pack.png',    label: 'Inventory' },
+  { id: 'journal',   img: '/ui/btn-journal.png', label: 'Journal' },
   { id: 'map',       img: '/ui/btn-map.png',      label: 'Map' },
   { id: 'settings',  img: '/ui/btn-settings.png', label: 'Settings' },
 ]
@@ -29,8 +29,8 @@ export default function ModeButtonStrip({ activeMode, onModeSelect }) {
               alt={btn.label}
               draggable={false}
               style={{
-                width: 36,
-                height: 36,
+                width: 40,
+                height: 40,
                 objectFit: 'contain',
                 filter: activeMode === btn.id
                   ? 'brightness(1.3) drop-shadow(0 0 6px rgba(212,175,55,0.6))'

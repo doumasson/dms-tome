@@ -16,13 +16,13 @@ export default function ZoneLabel({ zone }) {
   return (
     <div className="hud-zone-label" style={{
       position: 'absolute',
-      top: 8,
+      top: 32,
       left: 8,
       zIndex: 10,
       backgroundImage: 'url(/ui/weather-bar.png)',
       backgroundSize: '100% 100%',
       backgroundRepeat: 'no-repeat',
-      padding: '12px 32px',
+      padding: '10px 28px',
       pointerEvents: 'auto',
       minWidth: 160,
     }}>
