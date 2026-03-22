@@ -130,7 +130,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   }
 
   return (
-    <div className="hud-combat-bar stone-panel" style={{ maxHeight: 160, overflow: 'hidden', padding: '4px 8px' }}>
+    <div className="hud-combat-bar stone-panel" style={{ padding: '4px 8px' }}>
       {/* Class resource bar */}
       <ClassResourceBar combatant={active} />
       {/* Primary actions — circular medallion buttons */}

@@ -12,11 +12,19 @@ export function useRoofManager({ zone, playerPos, playerPosRef, currentAreaId, i
   const roofManagerRef = useRef(new RoofManager())
   const triggeredZonesRef = useRef(new Set())
 
+  // Reset triggered zones only when the player moves to a different area
+  const prevAreaIdRef = useRef(currentAreaId)
+  useEffect(() => {
+    if (currentAreaId !== prevAreaIdRef.current) {
+      triggeredZonesRef.current = new Set()
+      prevAreaIdRef.current = currentAreaId
+    }
+  }, [currentAreaId])
+
   // Register buildings into RoofManager when zone loads
   useEffect(() => {
     if (!zone?.useCamera || !zone?.buildings) return
     roofManagerRef.current = new RoofManager()
-    triggeredZonesRef.current = new Set()
     const rm = roofManagerRef.current
     rm.buildings.clear()
     rm.revealed.clear()

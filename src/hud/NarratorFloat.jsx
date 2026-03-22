@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import useStore from '../store/useStore'
 import OrnateFrame from './OrnateFrame'
 
@@ -6,7 +7,16 @@ export default function NarratorFloat() {
 
   // Find last DM message
   const lastDm = [...history].reverse().find(m => m.role === 'dm')
-  if (!lastDm) return null
+
+  // Auto-hide after 8 seconds
+  const [visible, setVisible] = useState(true)
+  useEffect(() => {
+    setVisible(true)
+    const t = setTimeout(() => setVisible(false), 8000)
+    return () => clearTimeout(t)
+  }, [lastDm?.text])
+
+  if (!lastDm || !visible) return null
 
   return (
     <div style={{
