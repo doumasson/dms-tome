@@ -10,8 +10,8 @@ export default function NarratorFloat() {
 
   return (
     <div style={{
-      position: 'absolute', bottom: 142, left: '50%', transform: 'translateX(-50%)',
-      maxWidth: '65%', zIndex: 10,
+      position: 'absolute', bottom: 170, left: '50%', transform: 'translateX(-50%)',
+      maxWidth: '65%', zIndex: 20,
     }}>
       <div className="hud-narrator stone-panel" style={{ position: 'relative' }}>
         <OrnateFrame size={12} stroke="#c9a84c" weight={1.5} jeweled={false} />
