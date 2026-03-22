@@ -90,6 +90,7 @@ export default function GameV2({ onLeave }) {
   const applyLevelUp = useStore(s => s.applyLevelUp)
   const setPendingEncounterData = useStore(s => s.setPendingEncounterData)
   const clearPendingEncounterData = useStore(s => s.clearPendingEncounterData)
+  const defeatedEnemies = useStore(s => s.defeatedEnemies)
 
   const pixiRef = useRef(null)
   const [apiKeyLoaded, setApiKeyLoaded] = useState(false)
@@ -221,6 +222,19 @@ export default function GameV2({ onLeave }) {
       }
     }
     prevInCombatRef.current = inCombat
+  }, [inCombat])
+
+  // --- Restore player position after combat ends ---
+  useEffect(() => {
+    if (!inCombat) {
+      const lastPos = useStore.getState().lastCombatPosition
+      if (lastPos) {
+        setPlayerPos(lastPos)
+        playerPosRef.current = lastPos
+        if (cameraRef.current) cameraRef.current.centerOn(lastPos.x, lastPos.y, zone?.tileSize || 200)
+        useStore.setState({ lastCombatPosition: null })
+      }
+    }
   }, [inCombat])
 
   // --- Respawn position after TPK defeat ---
@@ -489,8 +503,10 @@ export default function GameV2({ onLeave }) {
         })
       }
       if (zone.enemies) {
+        const areaDefeated = defeatedEnemies?.[currentAreaId] || []
         zone.enemies.forEach(e => {
           if (!e.position) return
+          if (areaDefeated.includes(e.name)) return  // Skip defeated enemies
           t.push({
             id: e.id, name: e.name,
             x: e.position.x, y: e.position.y,
@@ -515,7 +531,7 @@ export default function GameV2({ onLeave }) {
       })
     }
     return t
-  }, [playerPos, zone, myCharacter, inCombat, encounter.combatants, encounter.currentTurn])
+  }, [playerPos, zone, myCharacter, inCombat, encounter.combatants, encounter.currentTurn, defeatedEnemies, currentAreaId])
 
   // Nearby NPCs for chat bubbles
   const nearbyNpcs = useMemo(() => {

@@ -32,6 +32,8 @@ export function createEncounterSlice(set, get) {
       log: [],
       activeEffects: [],   // Persistent spell area overlays: [{ id, spellName, casterId, concentration, areaType, ...geometry }]
     },
+    lastCombatPosition: null,   // Saved player position when combat ends
+    defeatedEnemies: {},        // { [areaId]: [enemyName, ...] } — prevents respawn in exploration
 
     startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false } = {}) => {
       const combatants = [];
@@ -601,11 +603,17 @@ export function createEncounterSlice(set, get) {
       const state = get()
       const { combatants } = state.encounter
 
-      // Sync combatant HP/conditions back to myCharacter before clearing
+      // Save player's final combat position so exploration doesn't revert
+      let lastCombatPosition = null
       if (combatants?.length && state.myCharacter) {
         const myCombatant = combatants.find(c =>
           c.type === 'player' && (c.id === state.myCharacter.id || c.name === state.myCharacter.name)
         )
+        if (myCombatant?.position) {
+          lastCombatPosition = { ...myCombatant.position }
+        }
+
+        // Sync combatant HP/conditions back to myCharacter before clearing
         if (myCombatant) {
           const hpChanges = {
             currentHp: myCombatant.currentHp,
@@ -622,6 +630,19 @@ export function createEncounterSlice(set, get) {
         }
       }
 
+      // Track defeated enemies so they don't respawn in exploration
+      const deadEnemies = (combatants || []).filter(c => c.type === 'enemy' && (c.currentHp ?? 0) <= 0)
+      const deadNames = deadEnemies.map(e => e.name)
+      const areaId = state.currentAreaId
+
+      const defeatedUpdate = {}
+      if (areaId && deadNames.length > 0) {
+        defeatedUpdate.defeatedEnemies = {
+          ...state.defeatedEnemies,
+          [areaId]: [...(state.defeatedEnemies?.[areaId] || []), ...deadNames],
+        }
+      }
+
       set({
         encounter: {
           phase: 'idle',
@@ -631,6 +652,8 @@ export function createEncounterSlice(set, get) {
           log: [],
           activeEffects: [],
         },
+        lastCombatPosition,
+        ...defeatedUpdate,
       });
       // Persist idle state immediately so refresh doesn't restore old combat
       setTimeout(() => get().saveSessionStateToSupabase(), 0);
