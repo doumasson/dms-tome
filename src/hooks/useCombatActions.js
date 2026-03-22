@@ -39,6 +39,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         if (showWeaponPicker) { setShowWeaponPicker(false); return }
         if (showSpellPicker) { setShowSpellPicker(false); return }
         setTargetingMode(null)
+        setSelectedWeapon(null)
         const layer = pixiRef.current?.getMovementRangeLayer?.()
         if (layer) clearAoEPreview(layer)
       }
@@ -201,13 +202,17 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       if (!active || !active.position) return true
 
       // Guard: action already used this turn (prevent double-attack race condition)
-      if (active.actionsUsed) {
+      // Allow bonus action attacks (Martial Arts, Flurry of Blows) even if action is used
+      const isBonusStrike = !!selectedWeapon && (selectedWeapon.name?.includes('Martial Arts') || selectedWeapon.name?.includes('Flurry'))
+      if (active.actionsUsed && !isBonusStrike) {
         setTargetingMode(null)
+        setSelectedWeapon(null)
         return true
       }
 
       const dist = Math.max(Math.abs(active.position.x - x), Math.abs(active.position.y - y))
-      const weapon = active.attacks?.[0] || { name: 'Unarmed Strike', bonus: '+0', damage: '1' }
+      // Use selectedWeapon (from weapon picker or class ability) if set, otherwise first attack
+      const weapon = selectedWeapon || active.attacks?.[0] || { name: 'Unarmed Strike', bonus: '+0', damage: '1' }
       const isRanged = weapon.range != null
       const maxRange = isRanged ? Math.floor((weapon.range || 80) / 5) : 1
 
@@ -220,37 +225,54 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       const coverBonus = COVER_BONUS[coverType] || 0
       const effectiveAC = (target.ac || 10) + coverBonus
 
-      const bonus = parseInt(weapon.bonus) || 0
-      const d20 = Math.floor(Math.random() * 20) + 1
-      const total = d20 + bonus
-      const isCrit = d20 === 20
-      const hit = isCrit || total >= effectiveAC
+      // Determine how many hits (Flurry of Blows = 2, normal = 1)
+      const numHits = weapon.flurryHits || 1
+      const isBonusAttack = !!selectedWeapon && (selectedWeapon.name?.includes('Martial Arts') || selectedWeapon.name?.includes('Flurry'))
+      let totalDamageDealt = 0
+      const logEntries = []
 
-      let damage = 0
-      if (hit) {
-        const dmgResult = rollDamage(weapon.damage || '1')
-        damage = isCrit ? dmgResult.total * 2 : dmgResult.total
+      for (let strike = 0; strike < numHits; strike++) {
+        const bonus = parseInt(weapon.bonus) || 0
+        const d20 = Math.floor(Math.random() * 20) + 1
+        const total = d20 + bonus
+        const isCrit = d20 === 20
+        const hit = isCrit || total >= effectiveAC
+
+        let damage = 0
+        if (hit) {
+          const dmgResult = rollDamage(weapon.damage || '1')
+          damage = isCrit ? dmgResult.total * 2 : dmgResult.total
+          totalDamageDealt += damage
+        }
+
+        if (hit && damage > 0) {
+          const { applyEncounterDamage: applyDmg } = useStore.getState()
+          applyDmg(target.id || target.name, damage)
+        }
+
+        const coverNote = coverBonus > 0 ? ` (${coverType} cover +${coverBonus})` : ''
+        const strikeLabel = numHits > 1 ? ` [Strike ${strike + 1}]` : ''
+        const entry = hit
+          ? `${active.name} → ${target.name}${strikeLabel}: HIT! d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}. ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}.`
+          : `${active.name} → ${target.name}${strikeLabel}: MISS. d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}.`
+        logEntries.push(entry)
       }
 
-      if (hit && damage > 0) {
-        const { applyEncounterDamage: applyDmg } = useStore.getState()
-        applyDmg(target.id || target.name, damage)
+      // Consume action only for normal attacks (bonus attacks already consumed bonus action)
+      if (!isBonusAttack) {
+        const { useAction: consumeAction } = useStore.getState()
+        consumeAction(active.id)
       }
-
-      const { useAction: consumeAction } = useStore.getState()
-      consumeAction(active.id)
       setTargetingMode(null)
+      setSelectedWeapon(null)
 
-      const coverNote = coverBonus > 0 ? ` (${coverType} cover +${coverBonus})` : ''
-      const entry = hit
-        ? `${active.name} → ${target.name}: HIT! d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}. ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}.`
-        : `${active.name} → ${target.name}: MISS. d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}.`
-      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
-      broadcastEncounterAction({ type: 'attack-result', attackerId: active.id, targetId: target.id, hit, damage, log: entry })
+      const fullLog = logEntries.join(' ')
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: fullLog })
+      broadcastEncounterAction({ type: 'attack-result', attackerId: active.id, targetId: target.id, hit: totalDamageDealt > 0, damage: totalDamageDealt, log: fullLog })
 
       const apiKey = sessionApiKey
       if (apiKey) {
-        const resultDesc = hit ? `Hit! ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}` : 'Miss!'
+        const resultDesc = totalDamageDealt > 0 ? `Hit! ${totalDamageDealt} total damage` : 'Miss!'
         narrateCombatAction(active.name, 'Attack', target.name, resultDesc, apiKey)
       }
       return true
@@ -431,14 +453,72 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       return
     } else if (type === 'class-ability') {
       // payload is { name, resourceName, resourceCost }
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active) return
+
+      // Deduct resource if applicable
       if (payload?.resourceName && payload?.resourceCost) {
         const { useClassResource } = useStore.getState()
-        const active = encounter.combatants?.[encounter.currentTurn]
-        if (active) {
-          useClassResource(active.id, payload.resourceName, payload.resourceCost)
-          addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses ${payload.name}!` })
-        }
+        useClassResource(active.id, payload.resourceName, payload.resourceCost)
       }
+
+      // Martial Arts: bonus action unarmed strike (no Ki cost)
+      if (payload?.name === 'Martial Arts') {
+        const { useBonusAction } = useStore.getState()
+        useBonusAction(active.id)
+        const dexMod = Math.floor(((active.stats?.dex || 10) - 10) / 2)
+        const profBonus = Math.ceil((active.level || 1) / 4) + 1
+        const bonus = dexMod + profBonus
+        const martialArtsDie = (active.level || 1) >= 17 ? '1d10' : (active.level || 1) >= 11 ? '1d8' : (active.level || 1) >= 5 ? '1d6' : '1d4'
+        setSelectedWeapon({ name: 'Unarmed Strike (Martial Arts)', bonus: `+${bonus}`, damage: `${martialArtsDie}+${dexMod}` })
+        setTargetingMode('attack')
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: `${active.name} uses Martial Arts! Select a target for a bonus unarmed strike.` })
+        return
+      }
+
+      // Flurry of Blows: two bonus action unarmed strikes (1 Ki)
+      if (payload?.name === 'Flurry of Blows') {
+        const { useBonusAction } = useStore.getState()
+        useBonusAction(active.id)
+        const dexMod = Math.floor(((active.stats?.dex || 10) - 10) / 2)
+        const profBonus = Math.ceil((active.level || 1) / 4) + 1
+        const bonus = dexMod + profBonus
+        const martialArtsDie = (active.level || 1) >= 17 ? '1d10' : (active.level || 1) >= 11 ? '1d8' : (active.level || 1) >= 5 ? '1d6' : '1d4'
+        setSelectedWeapon({ name: 'Unarmed Strike (Flurry)', bonus: `+${bonus}`, damage: `${martialArtsDie}+${dexMod}`, flurryHits: 2 })
+        setTargetingMode('attack')
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: `${active.name} uses Flurry of Blows! Select a target for two unarmed strikes.` })
+        return
+      }
+
+      // Patient Defense: Dodge as bonus action
+      if (payload?.name === 'Patient Defense') {
+        const { useBonusAction } = useStore.getState()
+        useBonusAction(active.id)
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses Patient Defense (Dodge as bonus action).` })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Patient Defense' })
+        return
+      }
+
+      // Step of the Wind: Dash/Disengage as bonus action + jump distance doubled
+      if (payload?.name === 'Step of the Wind') {
+        const { useBonusAction } = useStore.getState()
+        useBonusAction(active.id)
+        // Grant extra movement equal to speed
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, remainingMove: (c.remainingMove || 0) + Math.floor((c.speed || 30) / 5), disengaged: true } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses Step of the Wind (Dash + Disengage as bonus action).` })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Step of the Wind' })
+        return
+      }
+
+      // Default: just announce
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses ${payload.name}!` })
       return
     } else if (type === 'move') {
       setTargetingMode(null) // Clear any active targeting so tile clicks route to movement

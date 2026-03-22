@@ -341,14 +341,18 @@ export default function GameV2({ onLeave }) {
           ...e, isEnemy: true, type: 'enemy',
           position: e.position || { x: pos.x + 2, y: pos.y },
         }))
-        // Include current player with live position so combat places them correctly
+        // Read fresh state so post-rest HP is picked up (closure partyMembers may be stale)
         const myChar = useStore.getState().myCharacter
-        const combatParty = (partyMembers || []).map(p => ({
-          ...p,
-          position: (myChar && (p.id === myChar.id || p.name === myChar.name))
-            ? { ...playerPosRef.current }
-            : null,
-        }))
+        const freshParty = useStore.getState().partyMembers || []
+        const combatParty = freshParty.map(p => {
+          // For the local player, overlay ALL fresh myCharacter data (class, equippedItems, HP, etc.)
+          const isLocal = myChar && (p.id === myChar.id || p.name === myChar.name)
+          return {
+            ...p,
+            ...(isLocal ? myChar : {}),
+            position: isLocal ? { ...playerPosRef.current } : null,
+          }
+        })
         // Ensure host player is included even if not in partyMembers
         if (myChar && !combatParty.some(p => p.id === myChar.id || p.name === myChar.name)) {
           combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
@@ -417,6 +421,18 @@ export default function GameV2({ onLeave }) {
       }, zone.tileSize || 200)
     }
   }, [gameTime?.hour, zone?.npcs])
+
+  // --- Real-time game clock ticker (exploration only) ---
+  // Every 30 real seconds = 5 game minutes (1 real hour ≈ 10 game hours)
+  useEffect(() => {
+    if (inCombat) return
+    const REAL_SECONDS = 30
+    const GAME_HOURS = 5 / 60 // 5 minutes in hours
+    const id = setInterval(() => {
+      advanceGameTime(GAME_HOURS)
+    }, REAL_SECONDS * 1000)
+    return () => clearInterval(id)
+  }, [inCombat, advanceGameTime])
 
   // --- Load area world on mount ---
   useWorldLoader({ campaign, setPlayerPos })

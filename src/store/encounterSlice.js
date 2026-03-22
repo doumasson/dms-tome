@@ -94,14 +94,19 @@ export function createEncounterSlice(set, get) {
       });
 
       // Add party members from campaign characters
-      partyMembers?.forEach((char) => {
+      partyMembers?.forEach((rawChar) => {
+        // Overlay fresh myCharacter data for the local player (handles stale partyMembers from Supabase)
+        const myChar = get().myCharacter;
+        const isLocal = myChar && (rawChar.id === myChar.id || rawChar.name === myChar.name);
+        const char = isLocal ? { ...rawChar, ...myChar } : rawChar;
+
         // Try multiple sources for class
         let resolvedClass = char.class || char.className || char.characterClass || '';
         // If still empty, try to detect from myCharacter in store
-        if (!resolvedClass && get().myCharacter?.name === char.name) {
-          resolvedClass = get().myCharacter.class || get().myCharacter.className || '';
+        if (!resolvedClass && myChar?.name === char.name) {
+          resolvedClass = myChar.class || myChar.className || '';
         }
-        console.log('[startEncounter] Player combatant:', { name: char.name, class: resolvedClass, level: char.level, rawClass: char.class });
+        console.log('[startEncounter] Player combatant:', { name: char.name, class: resolvedClass, level: char.level, rawClass: char.class, hasEquipped: !!char.equippedItems });
         const spd = char.speed || 30;
 
         // Resolve attacks — generate class-appropriate defaults if empty
@@ -110,6 +115,34 @@ export function createEncounterSlice(set, get) {
             ? { name: w, bonus: '+0', damage: '1d6' }
             : { name: w.name || w, bonus: w.attackBonus || w.bonus || '+0', damage: w.damage || '1d6' }
         );
+
+        // Build attacks from equippedItems if weapons/attacks arrays were empty
+        if (attacks.length === 0 && char.equippedItems) {
+          const charStats = char.stats || {};
+          const strMod = Math.floor(((charStats.str || 10) - 10) / 2);
+          const dexMod = Math.floor(((charStats.dex || 10) - 10) / 2);
+          const profBonus = Math.ceil((char.level || 1) / 4) + 1;
+          const weaponSlots = ['mainHand', 'offHand', 'twoHanded'];
+          for (const slot of weaponSlots) {
+            const item = char.equippedItems[slot];
+            if (item && item.damage) {
+              const isFinesse = item.properties?.includes('finesse');
+              const isRanged = item.category?.includes('ranged');
+              const mod = isFinesse ? Math.max(strMod, dexMod) : (isRanged ? dexMod : strMod);
+              const bonus = mod + profBonus;
+              attacks.push({
+                name: item.name,
+                bonus: `+${bonus}`,
+                damage: `${item.damage}+${mod}`,
+                range: item.range?.normal || null,
+              });
+            }
+          }
+          if (attacks.length > 0) {
+            console.log('[startEncounter] Built attacks from equippedItems for', char.name, attacks);
+          }
+        }
+
         if (attacks.length === 0) {
           const charStats = char.stats || {};
           const strMod = Math.floor(((charStats.str || 10) - 10) / 2);
@@ -163,6 +196,15 @@ export function createEncounterSlice(set, get) {
               attacks = [{ name: 'Unarmed Strike', bonus: `+${meleeBonus}`, damage: `1+${strMod}` }];
           }
           console.log('[startEncounter] Generated default attacks for', char.name, resolvedClass, attacks);
+        }
+
+        // Monks always need Unarmed Strike in their attacks list (for Martial Arts)
+        if (resolvedClass === 'Monk' && !attacks.some(a => a.name?.includes('Unarmed'))) {
+          const charStats = char.stats || {};
+          const dexMod = Math.floor(((charStats.dex || 10) - 10) / 2);
+          const profB = Math.ceil((char.level || 1) / 4) + 1;
+          const martialDie = (char.level || 1) >= 17 ? '1d10' : (char.level || 1) >= 11 ? '1d8' : (char.level || 1) >= 5 ? '1d6' : '1d4';
+          attacks.push({ name: 'Unarmed Strike', bonus: `+${dexMod + profB}`, damage: `${martialDie}+${dexMod}` });
         }
 
         combatants.push({

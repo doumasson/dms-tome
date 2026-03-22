@@ -25,6 +25,15 @@ const CLASS_COLORS = {
   Cleric: '#44aa66', Druid: '#558833', Bard: '#cc7799',
 }
 
+const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000]
+
+function getXpRatio(xp, level) {
+  const curr = XP_THRESHOLDS[Math.min(level - 1, 19)] || 0
+  const next = XP_THRESHOLDS[Math.min(level, 19)] || 355000
+  if (next <= curr) return 1
+  return Math.min(1, Math.max(0, (xp - curr) / (next - curr)))
+}
+
 function getHpColor(ratio) {
   if (ratio > 0.5) return '#228844'
   if (ratio > 0.25) return '#cc7722'
@@ -122,8 +131,12 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
                 ) : null
               })()}
               {/* HP bar */}
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 5, background: '#0a0004' }}>
+              <div style={{ position: 'absolute', bottom: 3, left: 0, right: 0, height: 4, background: '#0a0004' }}>
                 <div style={{ width: `${hpRatio * 100}%`, height: '100%', background: getHpColor(hpRatio) }} />
+              </div>
+              {/* XP bar */}
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: '#0a0004' }}>
+                <div style={{ width: `${getXpRatio(member.xp || 0, member.level || 1) * 100}%`, height: '100%', background: '#c9a84c' }} />
               </div>
               {/* Level badge */}
               <div style={{
