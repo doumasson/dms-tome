@@ -63,8 +63,18 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
     <div style={{ display: 'flex', gap: 7, alignItems: 'center', flexShrink: 0 }}>
       {allMembers.slice(0, 6).map((member, i) => {
         const color = CLASS_COLORS[member.class] || '#888'
-        const hp = member.hp ?? member.currentHp ?? member.maxHp ?? 10
-        const maxHp = member.maxHp ?? 10
+        let hp = member.hp ?? member.currentHp ?? member.maxHp ?? 10
+        let maxHp = member.maxHp ?? 10
+
+        // During combat, override with live combatant HP
+        if (isInCombat && encounter?.combatants) {
+          const combatant = encounter.combatants.find(c => c.id === member.id || c.name === member.name)
+          if (combatant) {
+            hp = combatant.currentHp ?? hp
+            maxHp = combatant.maxHp ?? maxHp
+          }
+        }
+
         const hpRatio = maxHp > 0 ? hp / maxHp : 1
         const isActive = member.isMe
         const isSelected = isActive || (activeCombatantId && member.id === activeCombatantId)
