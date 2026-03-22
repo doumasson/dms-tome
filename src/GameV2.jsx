@@ -398,6 +398,10 @@ export default function GameV2({ onLeave }) {
     }
   }, [playerPos, zone, inCombat, isDM, addNarratorMessage, sessionApiKey, partyMembers, defeatedEnemies, currentAreaId])
 
+  // --- Chat handler (must be declared before skill check effect that uses triggerDmFollowUp) ---
+  const { handleChat, triggerDmFollowUp } = useNarratorChat({ sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage, playerPosRef })
+  handleChatRef.current = handleChat
+
   // --- Skill check follow-up: feed result back to AI DM ---
   // When a player completes a skill check (Persuasion, Intimidation, etc.),
   // automatically trigger the AI DM to narrate the outcome. The roll result
@@ -717,10 +721,6 @@ export default function GameV2({ onLeave }) {
     nextEncounterTurn()
     broadcastEncounterAction({ type: 'next-turn', userId: user?.id || 'system' })
   }, [nextEncounterTurn, user])
-
-  // --- Chat handler ---
-  const { handleChat, triggerDmFollowUp } = useNarratorChat({ sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage, playerPosRef })
-  handleChatRef.current = handleChat
 
   // --- Early returns ---
   if (apiKeyLoaded && !sessionApiKey) {

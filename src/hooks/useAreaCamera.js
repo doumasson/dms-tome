@@ -17,7 +17,9 @@ export function useAreaCamera({ zone, playerPosRef }) {
     }
     const w = window.innerWidth
     const h = window.innerHeight
+    const prevZoom = cameraRef.current?.zoom ?? 0.5
     const cam = new Camera(w, h)
+    cam.zoom = prevZoom // Preserve zoom level across zone transitions
     const tileSize = zone?.tileSize || 200
     cam.setAreaBounds((zone?.width || 40) * tileSize, (zone?.height || 30) * tileSize)
     cam.centerOnImmediate(playerPosRef.current.x, playerPosRef.current.y, tileSize)
