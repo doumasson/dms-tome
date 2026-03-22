@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CLASSES, getSpellSlots, getFeaturesUpToLevel } from '../data/classes';
 import SpellPickPanel, { getSpellGainCount, getCantripGainCount, isPreparedCaster } from './levelUp/SpellPickPanel';
+import ASIPanel, { grantsASI } from './levelUp/ASIPanel';
 
 // ─── D&D 5e XP thresholds ─────────────────────────────────────────────────────
 const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000];
@@ -65,10 +66,12 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
   const [confirmed, setConfirmed] = useState(false);
   const [spellStep, setSpellStep] = useState(false); // true = showing spell picker
   const [pickedSpells, setPickedSpells] = useState([]);
+  const [asiIncreases, setAsiIncreases] = useState({}); // e.g. { str: 2 } or { dex: 1, wis: 1 }
 
   const spellsToGain = getSpellGainCount(cls);
   const cantripGain = getCantripGainCount(cls, newLevel);
   const needsSpellPick = (spellsToGain > 0 || cantripGain > 0 || isPreparedCaster(cls)) && clsData?.castingType;
+  const hasASI = grantsASI(cls, newLevel);
 
   if (!clsData) {
     return (
@@ -111,17 +114,34 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
     const updatedSpells = pickedSpells.length > 0
       ? [...existingSpells, ...pickedSpells]
       : existingSpells;
+
+    // Apply ASI increases to stats
+    let updatedStats = { ...(character.stats || {}) };
+    if (hasASI && Object.keys(asiIncreases).length > 0) {
+      for (const [ability, amount] of Object.entries(asiIncreases)) {
+        updatedStats[ability] = Math.min(20, (updatedStats[ability] || 10) + amount);
+      }
+    }
+
+    // Recalculate finalHp with potentially updated CON from ASI
+    const newConMod = Math.floor(((updatedStats.con ?? 10) - 10) / 2);
+    const conModChanged = newConMod !== conMod;
+    // If CON increased via ASI, retroactively gain 1 HP per level (5e rule)
+    const conHpBonus = conModChanged ? (newConMod - conMod) * newLevel : 0;
+
     onConfirm({
       level: newLevel,
-      maxHp: finalHp,
-      hp: finalHp,
+      maxHp: finalHp + conHpBonus,
+      hp: finalHp + conHpBonus,
       spellSlots: Object.keys(newSlots).length > 0 ? newSlots : character.spellSlots,
       features: allFeaturesNew,
       spells: updatedSpells,
+      stats: updatedStats,
     });
   }
 
   const hpRollPending = hpChoice === 'roll' && rolledHp === null;
+  const asiPending = hasASI && Object.keys(asiIncreases).length === 0;
 
   return (
     <div style={s.overlay} onClick={e => e.target === e.currentTarget && onCancel()}>
@@ -135,28 +155,38 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
           </div>
         </div>
 
-        {/* Step indicator for casters */}
-        {needsSpellPick && (
-          <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
-            {['Stats', 'Spells'].map((label, i) => {
-              const isActive = (i === 0 && !spellStep) || (i === 1 && spellStep);
-              const isDone = i === 0 && spellStep;
-              return (
-                <div key={label} style={{
-                  flex: 1, textAlign: 'center', padding: '8px 0',
-                  fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.7rem',
-                  letterSpacing: '0.08em', fontWeight: 700,
-                  color: isActive ? '#d4af37' : isDone ? '#2ecc71' : 'rgba(200,180,140,0.3)',
-                  borderBottom: isActive ? '2px solid #d4af37' : '2px solid transparent',
-                  cursor: isDone ? 'pointer' : 'default',
-                  transition: 'all 0.2s',
-                }} onClick={() => isDone && setSpellStep(false)}>
-                  {isDone ? '✓ ' : ''}{label}
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {/* Step indicator for multi-step level ups */}
+        {(needsSpellPick || hasASI) && (() => {
+          const steps = ['Stats'];
+          if (hasASI) steps.push('ASI');
+          if (needsSpellPick) steps.push('Spells');
+          // Only show tabs if more than just Stats
+          if (steps.length <= 1) return null;
+          return (
+            <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
+              {steps.map((label) => {
+                const currentStep = spellStep ? 'Spells' : 'Stats';
+                const isActive = label === currentStep;
+                const stepIdx = steps.indexOf(label);
+                const currentIdx = steps.indexOf(currentStep);
+                const isDone = stepIdx < currentIdx;
+                return (
+                  <div key={label} style={{
+                    flex: 1, textAlign: 'center', padding: '8px 0',
+                    fontFamily: "'Cinzel', Georgia, serif", fontSize: '0.7rem',
+                    letterSpacing: '0.08em', fontWeight: 700,
+                    color: isActive ? '#d4af37' : isDone ? '#2ecc71' : 'rgba(200,180,140,0.3)',
+                    borderBottom: isActive ? '2px solid #d4af37' : '2px solid transparent',
+                    cursor: isDone ? 'pointer' : 'default',
+                    transition: 'all 0.2s',
+                  }} onClick={() => isDone && setSpellStep(false)}>
+                    {isDone ? '\u2713 ' : ''}{label}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {/* Spell Selection Step */}
         {spellStep && (
@@ -234,6 +264,13 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
               </div>
             )}
 
+            {hasASI && (
+              <div style={s.section}>
+                <div style={s.sectionTitle}>Ability Score Improvement</div>
+                <ASIPanel stats={character.stats || {}} onChange={setAsiIncreases} />
+              </div>
+            )}
+
             {clsData.castingType && Object.keys(newSlots).length > 0 && (
               <div style={s.section}>
                 <div style={s.sectionTitle}>Spell Slots at Level {newLevel}</div>
@@ -278,10 +315,10 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
           <button
             style={{
               ...s.confirmBtn,
-              ...((hpRollPending && !spellStep) ? s.confirmBtnDisabled : {}),
+              ...(((hpRollPending || asiPending) && !spellStep) ? s.confirmBtnDisabled : {}),
             }}
             onClick={spellStep ? handleConfirm : handleNext}
-            disabled={confirmed || (hpRollPending && !spellStep)}
+            disabled={confirmed || ((hpRollPending || asiPending) && !spellStep)}
           >
             {confirmed
               ? 'Leveling up…'
