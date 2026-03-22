@@ -29,10 +29,23 @@ export function createCampaignSlice(set, get) {
     },
     clearActiveCampaign: () => set({ activeCampaign: null, isDM: false, dmMode: false, myCharacter: null, partyMembers: [] }),
     resetCampaign: () => set({
-      campaign: {}, activeCampaign: null,
+      campaign: {
+        title: '', scenes: [], characters: [], loaded: false,
+        currentSceneIndex: 0, notes: { dm: '', shared: '' },
+        savedEncounters: [], questObjectives: [],
+      },
+      activeCampaign: null,
       encounter: { phase: 'idle', combatants: [], currentTurn: 0, round: 1, log: [], activeEffects: [] },
       partyMembers: [], narrator: { history: [], open: false },
       sessionApiKey: null, isDM: false, dmMode: false, myCharacter: null,
+      // V2 world state
+      currentAreaId: null, areas: {}, areaBriefs: {}, areaLayers: null,
+      areaTokenPositions: {}, fogBitfields: {}, roofStates: {},
+      sceneImages: {}, sceneTokenPositions: {},
+      // Story state
+      storyFlags: new Set(), journal: [], npcBusy: null,
+      activeCutscene: null, stealthMode: null,
+      campaignComplete: false,
     }),
     setIsDM: (value) => set({ isDM: value, dmMode: value }),
 

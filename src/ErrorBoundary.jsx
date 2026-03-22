@@ -37,17 +37,34 @@ export default class ErrorBoundary extends Component {
               {this.state.error.message}{'\n\n'}{this.state.error.stack}{this.state.componentStack ? '\n\nComponent Stack:' + this.state.componentStack : ''}
             </pre>
           </details>
-          <button
-            onClick={() => window.location.reload()}
-            style={{
-              background: 'linear-gradient(135deg, #d4af37, #a8841f)',
-              border: 'none', borderRadius: 8, padding: '12px 28px',
-              color: '#1a0e00', fontFamily: "'Cinzel', Georgia, serif",
-              fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer',
-            }}
-          >
-            Reload & Continue
-          </button>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                background: 'linear-gradient(135deg, #d4af37, #a8841f)',
+                border: 'none', borderRadius: 8, padding: '12px 28px',
+                color: '#1a0e00', fontFamily: "'Cinzel', Georgia, serif",
+                fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer',
+              }}
+            >
+              Reload & Continue
+            </button>
+            <button
+              onClick={() => {
+                localStorage.removeItem('activeCampaignId');
+                window.location.reload();
+              }}
+              style={{
+                background: 'transparent',
+                border: '1px solid rgba(212,175,55,0.4)', borderRadius: 8,
+                padding: '12px 28px', color: '#d4af37',
+                fontFamily: "'Cinzel', Georgia, serif",
+                fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer',
+              }}
+            >
+              Back to Campaigns
+            </button>
+          </div>
         </div>
       </div>
     );
