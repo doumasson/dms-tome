@@ -476,6 +476,30 @@ export function createEncounterSlice(set, get) {
       })),
 
     endEncounter: () => {
+      const state = get()
+      const { combatants } = state.encounter
+
+      // Sync combatant HP/conditions back to myCharacter before clearing
+      if (combatants?.length && state.myCharacter) {
+        const myCombatant = combatants.find(c =>
+          c.type === 'player' && (c.id === state.myCharacter.id || c.name === state.myCharacter.name)
+        )
+        if (myCombatant) {
+          const hpChanges = {
+            currentHp: myCombatant.currentHp,
+            hp: myCombatant.currentHp,
+            conditions: myCombatant.conditions?.filter(c => c !== 'Surprised') || [],
+            spellSlots: myCombatant.spellSlots || state.myCharacter.spellSlots,
+            resourcesUsed: myCombatant.resourcesUsed || {},
+          }
+          set(prev => ({
+            myCharacter: { ...prev.myCharacter, ...hpChanges },
+          }))
+          // Persist to Supabase so HP survives refresh
+          setTimeout(() => get().updateMyCharacter(hpChanges), 0)
+        }
+      }
+
       set({
         encounter: {
           phase: 'idle',

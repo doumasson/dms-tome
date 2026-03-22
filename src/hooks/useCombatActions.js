@@ -299,6 +299,8 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
       const spellOrigin = { x, y }
       const saveAbility = spell.saveAbility || 'dex'
+      const results = []
+      const logLines = []
       for (const target of affected) {
         const coverType = calculateCover(spellOrigin, target.position, zone.wallEdges, propCoverRef.current, zone.width)
         const coverSaveBonus = COVER_BONUS[coverType] || 0
@@ -312,14 +314,18 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
           applyDmg(target.id, dmg)
         }
 
+        results.push({ targetId: target.id, damage: dmg, saved })
+
         const coverNote = coverSaveBonus > 0 ? ` (${coverType} cover +${coverSaveBonus})` : ''
         const entry = `${target.name}: ${saveAbility.toUpperCase()} save ${saveRoll} vs DC ${saveDC}${coverNote} — ${saved ? 'SAVE' : 'FAIL'} (${dmg} ${spell.name} damage)`
         addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
+        logLines.push(entry)
       }
 
       const { useAction: consumeAction } = useStore.getState()
       consumeAction(active.id)
-      broadcastEncounterAction({ type: 'aoe-resolve', spellName: spell.name, casterId: active.id, affectedTiles, saveDC })
+      const castLog = `${active.name} casts ${spell.name}! ${logLines.join(' ')}`
+      broadcastEncounterAction({ type: 'aoe-resolve', spellName: spell.name, casterId: active.id, affectedTiles, saveDC, results, log: castLog, userId: useStore.getState().user?.id })
 
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} casts ${spell.name}!` })
 
