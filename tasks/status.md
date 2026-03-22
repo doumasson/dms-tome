@@ -36,6 +36,8 @@
 - [x] Enemy AI turns — AI + fallback auto-fires on enemy initiative; damage/conditions/narration broadcast to all clients
 - [x] Saving throw broadcast — DM rolls saves, result narrated to all via broadcastNarratorMessage
 - [x] Conditions enforcement — adv/disadv/auto-crit in AttackPanel; Paralyzed/Stunned auto-fail STR/DEX saves; concentration CON save auto-triggers on damage, breaks spell if failed (broadcast)
+- [x] Saving throw proficiency — class-based save proficiencies applied to concentration checks, AoE spell saves, and trap saves (per 5e SRD: +2 at L1, +3 at L5, etc.)
+- [x] Skill check proficiency — proficiency bonus applied to skill checks based on character's skill list; expertise support (double proficiency); proficiency/expertise displayed in SkillCheckPanel UI
 - [x] DM manual effect clear — ACTIVE EFFECTS panel in DM combat sidebar, ✕ dismiss per effect, `removeEncounterEffect` broadcasts `remove-effect`
 - [x] Post-combat loot screen — auto-triggers when all enemies die; XP split, CR-based gold, 1–2 item drops
 

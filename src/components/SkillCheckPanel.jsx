@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import useStore from '../store/useStore'
 import { broadcastEncounterAction } from '../lib/liveChannel'
+import { getSkillBonus } from '../lib/derivedStats'
 
 export default function SkillCheckPanel() {
   const check = useStore(s => s.pendingSkillCheck)
@@ -17,7 +18,7 @@ export default function SkillCheckPanel() {
   if (!check) return null
 
   const skill = check.skill || 'Ability Check'
-  const modifier = getSkillModifier(myCharacter, skill)
+  const { bonus: modifier, proficient: isProficient, expertise: hasExpertise } = getSkillModifier(myCharacter, skill)
 
   // Only show Guidance/Bardic if a party member can actually provide them
   const myConditions = new Set(myCharacter?.conditions || [])
@@ -73,7 +74,11 @@ export default function SkillCheckPanel() {
       borderRadius: 8, padding: '16px 24px', minWidth: 280, zIndex: 100,
       fontFamily: 'Cinzel, serif', color: '#e8dcc8', textAlign: 'center',
     }}>
-      <div style={{ fontSize: 16, color: '#d4af37', marginBottom: 6 }}>{skill} Check</div>
+      <div style={{ fontSize: 16, color: '#d4af37', marginBottom: 6 }}>
+        {skill} Check
+        {hasExpertise && <span style={{ fontSize: 11, color: '#44cc66', marginLeft: 6 }}>(expertise)</span>}
+        {isProficient && !hasExpertise && <span style={{ fontSize: 11, color: '#88aaff', marginLeft: 6 }}>(proficient)</span>}
+      </div>
       {check.reason && <div style={{ fontSize: 11, marginBottom: 10, opacity: 0.7 }}>{check.reason}</div>}
       <div style={{ fontSize: 20, marginBottom: 12 }}>
         Modifier: <span style={{ color: '#d4af37' }}>{modifier >= 0 ? '+' : ''}{modifier}</span>
@@ -112,16 +117,10 @@ export default function SkillCheckPanel() {
 }
 
 function getSkillModifier(character, skill) {
-  if (!character) return 0
+  if (!character) return { bonus: 0, proficient: false, expertise: false }
   const stats = character.stats || character.abilityScores || {}
-  const map = {
-    'Perception': 'wis', 'Stealth': 'dex', 'Athletics': 'str', 'Acrobatics': 'dex',
-    'Investigation': 'int', 'Arcana': 'int', 'History': 'int', 'Nature': 'int',
-    'Religion': 'int', 'Insight': 'wis', 'Medicine': 'wis', 'Survival': 'wis',
-    'Animal Handling': 'wis', 'Deception': 'cha', 'Intimidation': 'cha',
-    'Performance': 'cha', 'Persuasion': 'cha', 'Sleight of Hand': 'dex',
-  }
-  const ability = map[skill] || 'str'
-  const score = stats[ability] || 10
-  return Math.floor((score - 10) / 2)
+  const proficientSkills = character.skills || []
+  const expertiseSkills = character.expertiseSkills || []
+  const level = character.level || 1
+  return getSkillBonus(stats, skill, proficientSkills, expertiseSkills, level)
 }
