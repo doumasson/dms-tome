@@ -735,14 +735,19 @@ export default function GameV2({ onLeave }) {
     broadcastEncounterAction({ type: 'next-turn', userId: user?.id || 'system' })
   }, [nextEncounterTurn, user])
 
-  // World load timeout — if zone never loads after 30s, show error
+  // World load timeout — if zone never loads after 5s, show diagnostic error
   useEffect(() => {
     if (zone) return
     const timer = setTimeout(() => {
-      if (!useStore.getState().zone) {
-        setWorldLoadError('World failed to load. The campaign data may be missing area definitions.')
+      if (!useStore.getState().currentAreaId) {
+        const state = useStore.getState()
+        const areaKeys = Object.keys(state.areas || {})
+        const briefKeys = Object.keys(state.areaBriefs || {})
+        const campTitle = state.campaign?.title || 'none'
+        const campBriefs = Object.keys(state.campaign?.areaBriefs || {})
+        setWorldLoadError(`No area loaded. Campaign: "${campTitle}". Areas in store: [${areaKeys}]. Briefs in store: [${briefKeys}]. Campaign briefs: [${campBriefs}].`)
       }
-    }, 30000)
+    }, 5000)
     return () => clearTimeout(timer)
   }, [zone])
 

@@ -64,11 +64,13 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
       // Build starting area from brief if not already built
       if (startId && !areas[startId] && briefs[startId]) {
         try {
+          console.log('[GameV2] Building area from brief:', startId, JSON.stringify(Object.keys(briefs[startId])))
           areas[startId] = buildAreaFromBrief(briefs[startId], 42)
           delete briefs[startId]
-          console.log('[GameV2] Built starting area from brief:', startId)
+          console.log('[GameV2] Built starting area from brief:', startId, `${areas[startId].width}x${areas[startId].height}`)
         } catch (e) {
-          console.error('[GameV2] Failed to build starting area from brief:', e)
+          console.error('[GameV2] Failed to build starting area from brief:', e.message, e.stack)
+          addNarratorMessage?.({ role: 'dm', speaker: 'System', text: `Area build error: ${e.message}` })
           // Fall through to demo area below
         }
       }
