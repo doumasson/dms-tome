@@ -87,7 +87,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: 80px;
   background-image: url('/ui/bar-top.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -489,7 +489,7 @@
 /* Zone label — background now via weather-bar.png in ZoneLabel.jsx */
 .hud-zone-label {
   position: absolute;
-  top: 70px;
+  top: 86px;
   left: 8px;
   z-index: 10;
   padding: 12px 32px;
@@ -646,7 +646,7 @@
 /* PLACEHOLDER: replace with texture asset — metal frame initiative */
 .hud-initiative {
   position: absolute;
-  top: 70px;
+  top: 86px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -689,7 +689,7 @@
 /* Turn banner */
 .hud-turn-banner {
   position: absolute;
-  top: 70px;
+  top: 86px;
   left: 6px;
   z-index: 15;
   background: rgba(6,5,8,0.92);
@@ -738,7 +738,7 @@
 /* PLACEHOLDER: replace with texture asset — stone panel enemy info */
 .hud-enemy-info {
   position: absolute;
-  top: 70px;
+  top: 86px;
   right: 6px;
   width: 150px;
   z-index: 15;
@@ -1496,8 +1496,9 @@
 .portrait-frame {
   position: relative;
   border: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  overflow: hidden;
+  box-shadow: none;
+  overflow: visible;
+  background: transparent !important;
 }
 
 /* Portrait frame image overlay */
@@ -1514,9 +1515,7 @@
 }
 
 .portrait-frame.selected {
-  box-shadow:
-    0 0 10px rgba(200,170,80,0.3),
-    0 0 0 1px rgba(200,170,80,0.2);
+  filter: drop-shadow(0 0 6px rgba(200,170,80,0.4));
 }
 
 /* HP tinting overlay */

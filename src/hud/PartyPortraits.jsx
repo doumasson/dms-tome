@@ -99,7 +99,7 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
         onClick={() => { playStoneClick(); onPortraitClick?.(member) }}>
         {/* Stone frame wrapper — image asset */}
         <div className={`portrait-frame${isSelected ? ' selected' : ''}`}
-          style={{ width: w, height: h, background: '#08060c' }}>
+          style={{ width: w, height: h }}>
           <img src="/ui/portrait-frame.png" className="portrait-frame-img" alt="" draggable={false} />
           {/* Portrait placeholder */}
           <div style={{
