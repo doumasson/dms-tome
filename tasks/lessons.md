@@ -49,3 +49,15 @@ useEffect(() => { ... }, [inCombat]); // safe
 **Pattern:** Killed enemy token stays at full opacity with 0 HP bar. Player can't tell visually that it's dead.
 
 **Rule:** Set `group.alpha = 0.25` on tokens with `currentHp <= 0`. The HP bar disappearing is not enough visual feedback.
+
+## Dungeon Entry Points Must Be Inside Rooms, Not at Map Edges
+
+**Pattern:** Exit `entryPoint` coordinates use map-edge positions like `{ x: centerX, y: 1 }`. But BSP-generated dungeon rooms have padding from the map edge, so row 1 may be solid rock with no floor tiles. Player spawns outside the walkable area.
+
+**Rule:** For dungeon exits, set `entryPoint` to the center of the nearest BSP room to that edge. Also, when transitioning areas, prefer the target area's `playerStart` over the source exit's `entryPoint`.
+
+## Wall Sprites Need Per-Direction Rotation/Flip
+
+**Pattern:** Wall connector sprites are oriented horizontally by default. For east/west edges they need rotation. But applying the same rotation to both east and west (or no flip on south) makes walls look uniform/wrong.
+
+**Rule:** Apply direction-specific transforms: north = no rotation, south = flip Y, east = rotate +90 degrees, west = rotate -90 degrees. This ensures wall textures face inward on all four edges.

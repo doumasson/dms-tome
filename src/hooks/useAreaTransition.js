@@ -60,7 +60,10 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
     }
 
     setTransitioning(true)
-    const entry = exit.entryPoint || { x: 0, y: 0 }
+    // Prefer the target area's playerStart (guaranteed inside walkable area)
+    // over the source exit's entryPoint (which may be at a map edge with no floor)
+    const targetArea = areas[targetId]
+    const entry = targetArea?.playerStart || exit.entryPoint || { x: 0, y: 0 }
     broadcastAreaTransition(targetId, entry)
     lastNpcTriggerRef.current = null
     advanceGameTime(1)

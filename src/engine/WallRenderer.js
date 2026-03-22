@@ -153,7 +153,7 @@ export class WallRenderer {
     const isVertical = dir === 'east' || dir === 'west'
     const result = resolveWallTile(this.theme, isVertical ? 'vertical' : 'horizontal', x, y, regionId)
     const tileId = typeof result === 'string' ? result : result.tileId
-    const rotate = typeof result === 'object' && result.rotate
+    const shouldRotate = typeof result === 'object' && result.rotate
 
     const info = this.tileAtlas.resolve(tileId)
     const tex = info ? this.tileAtlas.getTexture(info, PIXI) : null
@@ -182,7 +182,29 @@ export class WallRenderer {
         sprite.y = y * ts + offset
       }
 
-      if (rotate) sprite.rotation = Math.PI / 2
+      // Apply rotation/flip per edge direction:
+      // North: no rotation (horizontal connector as-is)
+      // South: flip vertically (scale.y = -1) so wall faces inward
+      // East:  rotate 90 degrees clockwise
+      // West:  rotate 90 degrees + flip (270 degrees = -90)
+      switch (dir) {
+        case 'north':
+          // No rotation needed
+          break
+        case 'south':
+          sprite.scale.y *= -1
+          break
+        case 'east':
+          if (shouldRotate) {
+            sprite.rotation = Math.PI / 2
+          }
+          break
+        case 'west':
+          if (shouldRotate) {
+            sprite.rotation = -Math.PI / 2
+          }
+          break
+      }
 
       this.edgeContainer.addChild(sprite)
       this.edgeMap.set(key, sprite)
