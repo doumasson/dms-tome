@@ -1,21 +1,24 @@
 export function advanceTime(current, hours) {
   const totalHours = current.hour + hours
   const day = current.day + Math.floor(totalHours / 24)
-  const hour = ((totalHours % 24) + 24) % 24
+  // Round to avoid floating point accumulation (e.g., 4.049999...)
+  const hour = Math.round(((totalHours % 24) + 24) % 24 * 100) / 100
   return { hour, day }
 }
 
 export function getTimeOfDay(hour) {
-  if (hour >= 5 && hour <= 7) return 'dawn'
-  if (hour >= 8 && hour <= 17) return 'day'
-  if (hour >= 18 && hour <= 19) return 'dusk'
+  const h = Math.floor(hour)
+  if (h >= 5 && h <= 7) return 'dawn'
+  if (h >= 8 && h <= 17) return 'day'
+  if (h >= 18 && h <= 19) return 'dusk'
   return 'night'
 }
 
 export function formatTime({ hour, day }) {
-  const h = hour % 12 || 12
-  const ampm = hour < 12 ? 'AM' : 'PM'
-  return `${h}:00 ${ampm}, Day ${day}`
+  const h = Math.floor(hour) % 12 || 12
+  const mins = Math.round((hour % 1) * 60)
+  const ampm = Math.floor(hour) < 12 ? 'AM' : 'PM'
+  return `${h}:${String(mins).padStart(2, '0')} ${ampm}, Day ${day}`
 }
 
 export const TIME_COSTS = {
