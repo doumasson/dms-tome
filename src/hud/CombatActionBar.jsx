@@ -115,6 +115,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   // Class-specific actions
   const classActions = getClassCombatActions(active.class, active.level || 1)
   const classResources = getClassResources(active.class, active.level || 1, active.stats)
+  console.log('[CombatActionBar]', { class: active.class, level: active.level, classActions: classActions.length, attacks: active.attacks?.length })
 
   function isAbilityDisabled(action) {
     if (action.actionType === 'action' && !actionsLeft) return true

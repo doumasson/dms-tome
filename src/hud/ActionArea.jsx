@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import useStore from '../store/useStore'
 import { playStoneClick } from '../lib/uiSounds'
 
 const TOOLS = [
@@ -12,8 +13,16 @@ const TOOLS = [
 export default function ActionArea({ onTool, onChat, areaTheme }) {
   const [input, setInput] = useState('')
   const [showRestPicker, setShowRestPicker] = useState(false)
+  const narratorMessages = useStore(s => s.narratorMessages)
 
   const isDungeonTheme = ['dungeon', 'cave', 'crypt', 'sewer'].includes(areaTheme)
+
+  // Show contextual placeholder — full prompt when DM recently asked something
+  const lastDmMsg = narratorMessages?.slice(-3).find(m => m.role === 'dm')
+  const hasRecentDmPrompt = lastDmMsg && (
+    lastDmMsg.text?.includes('?') || lastDmMsg.text?.toLowerCase().includes('what do you')
+  )
+  const placeholder = hasRecentDmPrompt ? 'What do you do?' : 'Chat...'
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -82,7 +91,7 @@ export default function ActionArea({ onTool, onChat, areaTheme }) {
       <form onSubmit={handleSubmit} style={{ flex: 1, display: 'flex', gap: 3, alignItems: 'stretch' }}>
         <input
           className="hud-chat-input"
-          placeholder="What do you do?"
+          placeholder={placeholder}
           value={input}
           onChange={e => setInput(e.target.value)}
         />

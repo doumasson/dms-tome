@@ -34,6 +34,7 @@ export function createEncounterSlice(set, get) {
     },
     lastCombatPosition: null,   // Saved player position when combat ends
     defeatedEnemies: {},        // { [areaId]: [enemyName, ...] } — prevents respawn in exploration
+    showDeathOptions: false,    // Show respawn choice dialog after TPK
 
     startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false } = {}) => {
       const combatants = [];
@@ -94,9 +95,76 @@ export function createEncounterSlice(set, get) {
 
       // Add party members from campaign characters
       partyMembers?.forEach((char) => {
-        const resolvedClass = char.class || char.className || char.characterClass || '';
+        // Try multiple sources for class
+        let resolvedClass = char.class || char.className || char.characterClass || '';
+        // If still empty, try to detect from myCharacter in store
+        if (!resolvedClass && get().myCharacter?.name === char.name) {
+          resolvedClass = get().myCharacter.class || get().myCharacter.className || '';
+        }
         console.log('[startEncounter] Player combatant:', { name: char.name, class: resolvedClass, level: char.level, rawClass: char.class });
         const spd = char.speed || 30;
+
+        // Resolve attacks — generate class-appropriate defaults if empty
+        let attacks = (char.weapons || char.attacks || []).map(w =>
+          typeof w === 'string'
+            ? { name: w, bonus: '+0', damage: '1d6' }
+            : { name: w.name || w, bonus: w.attackBonus || w.bonus || '+0', damage: w.damage || '1d6' }
+        );
+        if (attacks.length === 0) {
+          const charStats = char.stats || {};
+          const strMod = Math.floor(((charStats.str || 10) - 10) / 2);
+          const dexMod = Math.floor(((charStats.dex || 10) - 10) / 2);
+          const profBonus = Math.ceil((char.level || 1) / 4) + 1;
+          const meleeBonus = Math.max(strMod, dexMod) + profBonus;
+          switch (resolvedClass) {
+            case 'Monk':
+              attacks = [
+                { name: 'Unarmed Strike', bonus: `+${meleeBonus}`, damage: `1d4+${dexMod}` },
+                { name: 'Quarterstaff', bonus: `+${meleeBonus}`, damage: `1d6+${dexMod}` },
+              ];
+              break;
+            case 'Fighter': case 'Paladin': case 'Barbarian': case 'Ranger':
+              attacks = [
+                { name: 'Longsword', bonus: `+${meleeBonus}`, damage: `1d8+${strMod}` },
+                { name: 'Unarmed Strike', bonus: `+${meleeBonus}`, damage: `1+${strMod}` },
+              ];
+              break;
+            case 'Rogue':
+              attacks = [
+                { name: 'Shortsword', bonus: `+${meleeBonus}`, damage: `1d6+${dexMod}` },
+                { name: 'Dagger', bonus: `+${meleeBonus}`, damage: `1d4+${dexMod}` },
+              ];
+              break;
+            case 'Cleric':
+              attacks = [
+                { name: 'Mace', bonus: `+${strMod + profBonus}`, damage: `1d6+${strMod}` },
+                { name: 'Unarmed Strike', bonus: `+${meleeBonus}`, damage: `1+${strMod}` },
+              ];
+              break;
+            case 'Wizard': case 'Sorcerer': case 'Warlock':
+              attacks = [
+                { name: 'Quarterstaff', bonus: `+${strMod + profBonus}`, damage: `1d6+${strMod}` },
+                { name: 'Dagger', bonus: `+${meleeBonus}`, damage: `1d4+${dexMod}` },
+              ];
+              break;
+            case 'Bard':
+              attacks = [
+                { name: 'Rapier', bonus: `+${dexMod + profBonus}`, damage: `1d8+${dexMod}` },
+                { name: 'Dagger', bonus: `+${meleeBonus}`, damage: `1d4+${dexMod}` },
+              ];
+              break;
+            case 'Druid':
+              attacks = [
+                { name: 'Quarterstaff', bonus: `+${strMod + profBonus}`, damage: `1d6+${strMod}` },
+                { name: 'Scimitar', bonus: `+${dexMod + profBonus}`, damage: `1d6+${dexMod}` },
+              ];
+              break;
+            default:
+              attacks = [{ name: 'Unarmed Strike', bonus: `+${meleeBonus}`, damage: `1+${strMod}` }];
+          }
+          console.log('[startEncounter] Generated default attacks for', char.name, resolvedClass, attacks);
+        }
+
         combatants.push({
           id: char.id || crypto.randomUUID(),
           name: char.name,
@@ -112,11 +180,7 @@ export function createEncounterSlice(set, get) {
           actionsUsed: 0,
           bonusActionsUsed: 0,
           stats: char.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
-          attacks: (char.weapons || char.attacks || []).map(w =>
-            typeof w === 'string'
-              ? { name: w, bonus: '+0', damage: '1d6' }
-              : { name: w.name || w, bonus: w.attackBonus || w.bonus || '+0', damage: w.damage || '1d6' }
-          ),
+          attacks,
           spells: char.spells || [],
           spellSlots: char.spellSlots || null,
           resourcesUsed: char.resourcesUsed || {},
@@ -551,36 +615,9 @@ export function createEncounterSlice(set, get) {
         },
       })),
 
-    // End encounter after TPK — revive players at 1 HP (mercy rule)
+    // End encounter after TPK — show death options dialog
     endEncounterWithDefeat: () => {
-      const state = get();
-      const { combatants } = state.encounter;
-
-      // Sync combatant back to myCharacter, but revive at 1 HP
-      if (combatants?.length && state.myCharacter) {
-        const myCombatant = combatants.find(c =>
-          c.type === 'player' && (c.id === state.myCharacter.id || c.name === state.myCharacter.name)
-        );
-        if (myCombatant) {
-          const hpChanges = {
-            currentHp: 1,
-            hp: 1,
-            conditions: [],
-            spellSlots: myCombatant.spellSlots || state.myCharacter.spellSlots,
-            resourcesUsed: myCombatant.resourcesUsed || {},
-          };
-          set(prev => ({
-            myCharacter: { ...prev.myCharacter, ...hpChanges },
-          }));
-          setTimeout(() => get().updateMyCharacter(hpChanges), 0);
-        }
-      }
-
-      // Move player to safe spawn point (area's playerStart)
-      const currentAreaId = get().currentAreaId;
-      const area = get().areas?.[currentAreaId] || null;
-      const respawnPos = area?.playerStart || null;
-
+      // End combat phase but don't auto-revive — let the player choose
       set({
         encounter: {
           phase: 'idle',
@@ -590,8 +627,38 @@ export function createEncounterSlice(set, get) {
           log: [],
           activeEffects: [],
         },
+        showDeathOptions: true,
+      });
+    },
+
+    // Mercy revive — player chose to continue after TPK
+    mercyRevive: () => {
+      const state = get();
+
+      // Revive character at 1 HP
+      if (state.myCharacter) {
+        const hpChanges = {
+          currentHp: 1,
+          hp: 1,
+          conditions: [],
+        };
+        set(prev => ({
+          myCharacter: { ...prev.myCharacter, ...hpChanges },
+          showDeathOptions: false,
+        }));
+        setTimeout(() => get().updateMyCharacter(hpChanges), 0);
+      } else {
+        set({ showDeathOptions: false });
+      }
+
+      // Move player to safe spawn point (area's playerStart)
+      const currentAreaId = get().currentAreaId;
+      const area = get().areas?.[currentAreaId] || null;
+      const respawnPos = area?.playerStart || null;
+
+      set({
         respawnPosition: respawnPos,
-        defeatReset: true, // Signal GameV2 to clear triggeredZonesRef so encounter can re-trigger
+        defeatReset: true,
       });
 
       // Narrate the revival
