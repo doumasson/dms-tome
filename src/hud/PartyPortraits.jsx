@@ -100,7 +100,7 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
         {/* Stone frame wrapper — image asset */}
         <div className={`portrait-frame${isSelected ? ' selected' : ''}`}
           style={{ width: w, height: h, background: '#08060c' }}>
-          <img src="/ui/portrait-frame-ornate.png" className="portrait-frame-img" alt="" draggable={false} />
+          <img src="/ui/portrait-frame.png" className="portrait-frame-img" alt="" draggable={false} />
           {/* Portrait placeholder */}
           <div style={{
             position: 'absolute', inset: 0,
@@ -168,7 +168,7 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', gap: 4, flexShrink: 0, alignSelf: 'center' }}>
       {/* Other party members stacked vertically above */}
       {others.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>

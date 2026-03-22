@@ -87,7 +87,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 48px;
+  height: 64px;
   background-image: url('/ui/bar-top.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -365,8 +365,9 @@
 }
 
 .hud-log-tab-strip-img {
-  height: 28px;
-  width: auto;
+  width: 160px;
+  height: 24px;
+  object-fit: fill;
   display: block;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -488,7 +489,7 @@
 /* Zone label — background now via weather-bar.png in ZoneLabel.jsx */
 .hud-zone-label {
   position: absolute;
-  top: 66px;
+  top: 70px;
   left: 8px;
   z-index: 10;
   padding: 12px 32px;
@@ -645,7 +646,7 @@
 /* PLACEHOLDER: replace with texture asset — metal frame initiative */
 .hud-initiative {
   position: absolute;
-  top: 66px;
+  top: 70px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -688,7 +689,7 @@
 /* Turn banner */
 .hud-turn-banner {
   position: absolute;
-  top: 66px;
+  top: 70px;
   left: 6px;
   z-index: 15;
   background: rgba(6,5,8,0.92);
@@ -737,7 +738,7 @@
 /* PLACEHOLDER: replace with texture asset — stone panel enemy info */
 .hud-enemy-info {
   position: absolute;
-  top: 66px;
+  top: 70px;
   right: 6px;
   width: 150px;
   z-index: 15;
