@@ -364,6 +364,20 @@ export function createEncounterSlice(set, get) {
       if (concentrationBroke) {
         broadcastEncounterAction({ type: 'clear-concentration', id: targetId, userId: get().user?.id || 'system' });
       }
+      // Check if all enemies are dead — trigger loot/victory from any damage source
+      const afterDmg = get().encounter;
+      if (afterDmg.phase === 'combat') {
+        const allEnemiesDead = afterDmg.combatants.every(c => c.type !== 'enemy' || c.currentHp <= 0);
+        if (allEnemiesDead) {
+          const deadEnemies = afterDmg.combatants.filter(c => c.type === 'enemy');
+          const partySize = afterDmg.combatants.filter(c => c.type === 'player').length || 1;
+          if (deadEnemies.length > 0 && !get().pendingLoot) {
+            get().setPendingLoot({ enemies: deadEnemies, partySize });
+          }
+          get().addNarratorMessage({ role: 'dm', speaker: 'DM', text: 'Victory! All enemies have fallen.' });
+          setTimeout(() => get().endEncounter(), 2000);
+        }
+      }
     },
 
     applyEncounterHeal: (targetId, amount) =>
