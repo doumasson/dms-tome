@@ -14,7 +14,7 @@ function makePortraitUrl(name, race, cls) {
     `portrait of a ${r} ${c} named ${n}, fantasy D&D 5e character art, dramatic lighting, ` +
     `detailed face, dark background, heroic, no text, no border`
   );
-  return `https://image.pollinations.ai/prompt/${prompt}?width=256&height=256&nologo=true&model=flux-schnell&seed=${seed}`;
+  return `https://image.pollinations.ai/prompt/${prompt}?width=256&height=256&nologo=true&model=turbo&seed=${seed}`;
 }
 
 /**
