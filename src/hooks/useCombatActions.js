@@ -385,10 +385,11 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     if (activeCheck && (activeCheck.currentHp ?? 0) <= 0 && type !== 'death-save' && type !== 'stabilize') return
 
     if (type === 'death-save') {
-      const { rollDeathSave } = useStore.getState()
+      const { applyDeathSaveResult } = useStore.getState()
       const active = encounter.combatants?.[encounter.currentTurn]
       if (!active) return
-      rollDeathSave(active.id)
+      const roll = Math.floor(Math.random() * 20) + 1
+      applyDeathSaveResult(active.id, roll)
       const updated = useStore.getState().encounter.combatants.find(c => c.id === active.id)
       if (updated) {
         if (updated.currentHp > 0) {
@@ -397,8 +398,8 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
           addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} has failed 3 death saves — they are dead.` })
         }
       }
-      broadcastEncounterAction({ type: 'death-save', id: active.id })
-      return
+      broadcastEncounterAction({ type: 'death-save', id: active.id, roll })
+      return roll
     } else if (type === 'stabilize') {
       const { stabilizeCombatant } = useStore.getState()
       const active = encounter.combatants?.[encounter.currentTurn]
