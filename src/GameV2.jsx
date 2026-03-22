@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useRef, lazy, Suspense } from 'react'
+import { useState, useCallback, useMemo, useEffect, useLayoutEffect, useRef, lazy, Suspense } from 'react'
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
@@ -227,7 +227,8 @@ export default function GameV2({ onLeave }) {
   }, [inCombat])
 
   // --- Restore player position after combat ends ---
-  useEffect(() => {
+  // useLayoutEffect ensures position updates before paint, preventing flicker to pre-combat position
+  useLayoutEffect(() => {
     if (!inCombat) {
       const lastPos = useStore.getState().lastCombatPosition
       if (lastPos) {
@@ -292,13 +293,31 @@ export default function GameV2({ onLeave }) {
     const pos = playerPosRef.current
     if (!pos) return
 
+    const areaDefeated = defeatedEnemies?.[currentAreaId] || []
     const zones = zone.encounterZones.map(ez => {
       const center = ez.center || ez.position || { x: Math.floor((zone.width || 40) / 2), y: Math.floor((zone.height || 30) / 2) }
-      return { ...ez, center, triggered: triggeredZonesRef.current.has(ez.id) }
+      // Check if ALL enemies for this encounter zone are already defeated
+      const ezEnemyNames = ez.enemies || []
+      const allDefeated = ezEnemyNames.length > 0 && ezEnemyNames.every(name => areaDefeated.includes(name))
+      // Also check zone-level enemies if this zone references them
+      const zoneEnemiesDefeated = !ezEnemyNames.length && (zone.enemies || []).length > 0 &&
+        (zone.enemies || []).every(e => areaDefeated.includes(e.name))
+      const alreadyCleared = allDefeated || zoneEnemiesDefeated
+      return { ...ez, center, triggered: triggeredZonesRef.current.has(ez.id) || alreadyCleared }
     })
 
     const triggered = checkEncounterProximity(pos, zones)
     if (!triggered) return
+
+    // Double-check: don't start combat if all relevant enemies are defeated
+    const relevantEnemies = triggered.enemies?.length
+      ? (zone.enemies || []).filter(e => triggered.enemies.some(name => e.name?.includes(name) || e.id?.includes(name)))
+      : (zone.enemies || [])
+    const allRelevantDefeated = relevantEnemies.length > 0 && relevantEnemies.every(e => areaDefeated.includes(e.name))
+    if (allRelevantDefeated) {
+      triggeredZonesRef.current.add(triggered.id)
+      return
+    }
 
     triggeredZonesRef.current.add(triggered.id)
     if (isDM || !activeCampaign) {
@@ -370,7 +389,7 @@ export default function GameV2({ onLeave }) {
       addNarratorMessage({ role: 'dm', speaker: 'DM', text: triggered.dmPrompt || 'Combat begins!' })
       startCombatWithZoneEnemies()
     }
-  }, [playerPos, zone, inCombat, isDM, addNarratorMessage, sessionApiKey, partyMembers])
+  }, [playerPos, zone, inCombat, isDM, addNarratorMessage, sessionApiKey, partyMembers, defeatedEnemies, currentAreaId])
 
   // --- NPC schedule movement on time-of-day changes ---
   useEffect(() => {

@@ -704,16 +704,50 @@ export function createEncounterSlice(set, get) {
         }
       }
 
-      // Track defeated enemies so they don't respawn in exploration
-      const deadEnemies = (combatants || []).filter(c => c.type === 'enemy' && (c.currentHp ?? 0) <= 0)
-      const deadNames = deadEnemies.map(e => e.name)
+      // Track defeated enemies so they don't respawn in exploration.
+      // When combat ends in victory (all enemies dead), mark ALL original zone
+      // enemies as defeated — not just the scaled-down combatants that were in the fight.
       const areaId = state.currentAreaId
+      const allEnemiesDead = (combatants || []).every(c => c.type !== 'enemy' || (c.currentHp ?? 0) <= 0)
 
       const defeatedUpdate = {}
-      if (areaId && deadNames.length > 0) {
-        defeatedUpdate.defeatedEnemies = {
-          ...state.defeatedEnemies,
-          [areaId]: [...(state.defeatedEnemies?.[areaId] || []), ...deadNames],
+      if (areaId) {
+        if (allEnemiesDead) {
+          // Victory: mark ALL zone enemies as defeated (covers scaling mismatch)
+          const area = state.areas?.[areaId]
+          const allZoneEnemyNames = (area?.enemies || []).map(e => e.name)
+          // Also include combatant names in case zone.enemies doesn't cover them
+          const combatEnemyNames = (combatants || []).filter(c => c.type === 'enemy').map(e => e.name)
+          const allNames = [...new Set([...allZoneEnemyNames, ...combatEnemyNames])]
+          if (allNames.length > 0) {
+            defeatedUpdate.defeatedEnemies = {
+              ...state.defeatedEnemies,
+              [areaId]: [...new Set([...(state.defeatedEnemies?.[areaId] || []), ...allNames])],
+            }
+          }
+        } else {
+          // Partial victory: only mark actually killed enemies
+          const deadNames = (combatants || []).filter(c => c.type === 'enemy' && (c.currentHp ?? 0) <= 0).map(e => e.name)
+          if (deadNames.length > 0) {
+            defeatedUpdate.defeatedEnemies = {
+              ...state.defeatedEnemies,
+              [areaId]: [...(state.defeatedEnemies?.[areaId] || []), ...deadNames],
+            }
+          }
+        }
+      }
+
+      // Update area token position directly so exploration mode uses combat-end position
+      // instead of reverting to the pre-combat playerPos
+      const posUpdate = {}
+      if (lastCombatPosition && areaId) {
+        const playerId = state.myCharacter?.id || 'player'
+        posUpdate.areaTokenPositions = {
+          ...state.areaTokenPositions,
+          [areaId]: {
+            ...(state.areaTokenPositions?.[areaId] || {}),
+            [playerId]: lastCombatPosition,
+          },
         }
       }
 
@@ -728,6 +762,7 @@ export function createEncounterSlice(set, get) {
         },
         lastCombatPosition,
         ...defeatedUpdate,
+        ...posUpdate,
       });
       // Persist idle state immediately so refresh doesn't restore old combat
       setTimeout(() => get().saveSessionStateToSupabase(), 0);
