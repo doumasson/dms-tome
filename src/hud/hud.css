@@ -69,31 +69,31 @@
   z-index: 20;
   display: flex;
   flex-direction: column;
-  padding: 14px 14px 10px;
+  padding: 10px 14px 6px;
   gap: 0;
   pointer-events: auto;
-  background: linear-gradient(180deg, #12100a 0%, #0e0c08 60%, #1a1610 100%);
+  background: transparent;
 }
 
-/* Top filigree bar image — ornate gold border */
+/* Top filigree bar image — ornate gold border at top edge of bottom bar */
 .hud-bar-top-img {
   position: absolute;
-  top: -30px;
+  top: -6px;
   left: 0;
   width: 100%;
-  height: 40px;
+  height: 16px;
   object-fit: fill;
   pointer-events: none;
   z-index: 3;
 }
 
-/* Bottom stone slab image — textured base */
+/* Bottom stone slab image — fills the ENTIRE bottom bar as background texture */
 .hud-bar-bottom-img {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 40px;
+  height: 100%;
   object-fit: fill;
   pointer-events: none;
   z-index: 0;
