@@ -31,6 +31,48 @@ export default function StepClass({ cls, setCls }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
+      {/* Detail panel - fixed at top */}
+      <div style={{ height: 200, overflow: 'auto', ...s.detailPanel }}>
+        {preview ? (
+          <>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 6 }}>
+              <div style={s.detailTitle}>{preview.name}</div>
+            </div>
+            <div style={s.classMetaRow}>
+              <span style={s.classMeta}>Hit Die: d{preview.hitDie}</span>
+              <span style={s.classMeta}>Primary: {preview.primaryAbility}</span>
+              <span style={s.classMeta}>Saves: {preview.savingThrows.join(', ')}</span>
+            </div>
+            {preview.castingType && (
+              <div style={s.castingBadge}>
+                {preview.castingType === 'warlock' ? '✦ Pact Magic' : `✦ ${preview.castingType} caster`}
+                {preview.spellAbility && ` (${preview.spellAbility})`}
+              </div>
+            )}
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 8 }}>
+              <div>
+                <div style={s.traitHeader}>Level 1 Features</div>
+                {(preview.features[1] || []).map(f => (
+                  <div key={f} style={s.traitItem}>• {f}</div>
+                ))}
+              </div>
+              <div>
+                <div style={s.traitHeader}>Proficiencies</div>
+                <div style={s.traitItem}>Armor: {preview.armorProficiencies.join(', ') || 'None'}</div>
+                <div style={s.traitItem}>Weapons: {preview.weaponProficiencies.join(', ')}</div>
+                <div style={{ ...s.traitHeader, marginTop: 10 }}>Starting Equipment</div>
+                {(preview.startingEquipment || []).map((e, i) => (
+                  <div key={i} style={{ ...s.traitItem, marginBottom: 2 }}>• {e}</div>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <p style={s.detailPlaceholder}>Select a class to see its features and abilities.</p>
+        )}
+      </div>
+
       {/* Class card grid */}
       <div style={s.cardGrid}>
         {CLASS_NAMES.map(name => {
@@ -56,48 +98,6 @@ export default function StepClass({ cls, setCls }) {
           );
         })}
       </div>
-
-      {/* Detail panel */}
-      {preview ? (
-        <div style={s.detailPanel}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 6 }}>
-            <div style={s.detailTitle}>{preview.name}</div>
-          </div>
-          <div style={s.classMetaRow}>
-            <span style={s.classMeta}>Hit Die: d{preview.hitDie}</span>
-            <span style={s.classMeta}>Primary: {preview.primaryAbility}</span>
-            <span style={s.classMeta}>Saves: {preview.savingThrows.join(', ')}</span>
-          </div>
-          {preview.castingType && (
-            <div style={s.castingBadge}>
-              {preview.castingType === 'warlock' ? '✦ Pact Magic' : `✦ ${preview.castingType} caster`}
-              {preview.spellAbility && ` (${preview.spellAbility})`}
-            </div>
-          )}
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 8 }}>
-            <div>
-              <div style={s.traitHeader}>Level 1 Features</div>
-              {(preview.features[1] || []).map(f => (
-                <div key={f} style={s.traitItem}>• {f}</div>
-              ))}
-            </div>
-            <div>
-              <div style={s.traitHeader}>Proficiencies</div>
-              <div style={s.traitItem}>Armor: {preview.armorProficiencies.join(', ') || 'None'}</div>
-              <div style={s.traitItem}>Weapons: {preview.weaponProficiencies.join(', ')}</div>
-              <div style={{ ...s.traitHeader, marginTop: 10 }}>Starting Equipment</div>
-              {(preview.startingEquipment || []).map((e, i) => (
-                <div key={i} style={{ ...s.traitItem, marginBottom: 2 }}>• {e}</div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div style={s.detailPanel}>
-          <p style={s.detailPlaceholder}>Select a class to see its features and abilities.</p>
-        </div>
-      )}
     </div>
   );
 }

@@ -32,6 +32,52 @@ export default function StepBackground({ background, setBackground, skills, setS
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
+      {/* Detail panel - fixed at top */}
+      <div style={{ height: 200, overflow: 'auto', ...s.detailPanel }}>
+        {preview ? (
+          <>
+            <div style={s.detailTitle}>{preview.name}</div>
+            <p style={s.detailDesc}>{preview.description}</p>
+
+            <div style={s.traitHeader}>Background Skills (auto-granted)</div>
+            <div style={{ ...s.skillTagRow, marginBottom: 12 }}>
+              {preview.skills.map(sk => (
+                <span key={sk} style={s.skillTagFixed}>{sk}</span>
+              ))}
+            </div>
+
+            {background === preview.name && clsData && (
+              <>
+                <div style={s.traitHeader}>
+                  Class Skills — choose {classSkillCount}
+                  <span style={{ color: 'rgba(212,175,55,0.5)', fontWeight: 400 }}>
+                    {' '}({skills.filter(sk => !bgSkills.includes(sk)).length}/{classSkillCount} chosen)
+                  </span>
+                </div>
+                <div style={s.skillTagRow}>
+                  {classSkillPool.map(sk => {
+                    const isBg     = bgSkills.includes(sk);
+                    const isChosen = skills.includes(sk) && !isBg;
+                    return (
+                      <button
+                        key={sk}
+                        style={{ ...s.skillTagBtn, ...(isChosen ? s.skillTagChosen : {}), ...(isBg ? { opacity: 0.3, cursor: 'default' } : {}) }}
+                        onClick={() => toggleSkill(sk)}
+                        disabled={isBg}
+                      >
+                        {sk}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <p style={s.detailPlaceholder}>Select a background to see its skills and description.</p>
+        )}
+      </div>
+
       {/* Background card grid */}
       <div style={{ ...s.cardGrid, gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))' }}>
         {BACKGROUNDS.map(b => {
@@ -56,52 +102,6 @@ export default function StepBackground({ background, setBackground, skills, setS
           );
         })}
       </div>
-
-      {/* Detail + skill selection */}
-      {preview ? (
-        <div style={s.detailPanel}>
-          <div style={s.detailTitle}>{preview.name}</div>
-          <p style={s.detailDesc}>{preview.description}</p>
-
-          <div style={s.traitHeader}>Background Skills (auto-granted)</div>
-          <div style={{ ...s.skillTagRow, marginBottom: 12 }}>
-            {preview.skills.map(sk => (
-              <span key={sk} style={s.skillTagFixed}>{sk}</span>
-            ))}
-          </div>
-
-          {background === preview.name && clsData && (
-            <>
-              <div style={s.traitHeader}>
-                Class Skills — choose {classSkillCount}
-                <span style={{ color: 'rgba(212,175,55,0.5)', fontWeight: 400 }}>
-                  {' '}({skills.filter(sk => !bgSkills.includes(sk)).length}/{classSkillCount} chosen)
-                </span>
-              </div>
-              <div style={s.skillTagRow}>
-                {classSkillPool.map(sk => {
-                  const isBg     = bgSkills.includes(sk);
-                  const isChosen = skills.includes(sk) && !isBg;
-                  return (
-                    <button
-                      key={sk}
-                      style={{ ...s.skillTagBtn, ...(isChosen ? s.skillTagChosen : {}), ...(isBg ? { opacity: 0.3, cursor: 'default' } : {}) }}
-                      onClick={() => toggleSkill(sk)}
-                      disabled={isBg}
-                    >
-                      {sk}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div>
-      ) : (
-        <div style={s.detailPanel}>
-          <p style={s.detailPlaceholder}>Select a background to see its skills and description.</p>
-        </div>
-      )}
     </div>
   );
 }

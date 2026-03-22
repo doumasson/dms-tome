@@ -19,7 +19,7 @@ export default function StepRace({ race, setRace }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
       {/* Detail panel - always at top */}
-      <div style={{ minHeight: 120, ...s.detailPanel }}>
+      <div style={{ height: 180, overflow: 'auto', ...s.detailPanel }}>
         {preview ? (
           <>
             <div style={s.detailTitle}>{preview.name}</div>

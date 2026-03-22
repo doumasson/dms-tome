@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { generateCampaignJSON } from '../lib/claudeApi';
 import { loadDefaultApiKey } from '../lib/defaultApiKey';
-import { DEMO_CAMPAIGN } from '../data/demoCampaign';
+import { getDemoBriefs } from '../data/demoArea';
 import useStore from '../store/useStore';
 
 const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
@@ -311,13 +311,27 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   async function handleTryDemo() {
     setDemoLoading(true);
     const inviteCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+
+    // Build V2 campaign data with area briefs (not old scenes format)
+    const areaBriefs = getDemoBriefs();
+    const demoCampaignData = {
+      title: 'Whispers in Millhaven',
+      description: 'A demo adventure across three connected areas: a quiet village, a goblin-infested forest, and sunken ruins hiding a boss fight.',
+      startArea: 'area-village',
+      areaBriefs,
+      questObjectives: [
+        { id: 'investigate', text: 'Investigate the goblin activity in Darkwood Forest', completed: false },
+        { id: 'ruins', text: 'Explore the Sunken Ruins', completed: false },
+      ],
+    };
+
     const { data: campaign, error } = await supabase
       .from('campaigns')
       .insert({
-        name: DEMO_CAMPAIGN.title,
+        name: demoCampaignData.title,
         dm_user_id: user.id,
         invite_code: inviteCode,
-        campaign_data: DEMO_CAMPAIGN,
+        campaign_data: demoCampaignData,
         settings: { isAiDm: true },
       })
       .select()
@@ -331,7 +345,6 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
       role: 'dm',
     });
 
-    preGenerateSceneImages(campaign.id, DEMO_CAMPAIGN.scenes || []);
     setDemoLoading(false);
     onDone({ ...campaign, userRole: 'dm' });
   }

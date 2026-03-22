@@ -222,7 +222,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
           <div style={s.stepHeading}>{STEP_TITLES[currentLabel]}</div>
           <div style={s.divider} />
 
-          {(race || cls) && (
+          {(race || cls) && (dynamicSteps.indexOf('Abilities') < step) && (
             <SummaryPanel
               name={name}
               race={race}

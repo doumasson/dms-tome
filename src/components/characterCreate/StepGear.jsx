@@ -23,6 +23,26 @@ function getWeaponsForPicker(cats, oneHandedOnly = false) {
   });
 }
 
+const ITEM_DESCRIPTIONS = {
+  "arcane focus": "A crystal, orb, rod, staff, or wand used to channel spells instead of material components",
+  "component pouch": "A small belt pouch containing material components for casting spells",
+  "explorer's pack": "Backpack, bedroll, mess kit, tinderbox, 10 torches, 10 days rations, waterskin, 50ft rope",
+  "dungeoneer's pack": "Backpack, crowbar, hammer, 10 pitons, 10 torches, tinderbox, 10 days rations, waterskin, 50ft rope",
+  "diplomat's pack": "Chest, fine clothes, ink, pen, lamp, 2 flasks oil, 5 sheets paper, vial perfume, sealing wax, soap",
+  "entertainer's pack": "Backpack, bedroll, 2 costumes, 5 candles, 5 days rations, waterskin, disguise kit",
+  "priest's pack": "Backpack, blanket, 10 candles, tinderbox, alms box, 2 blocks incense, censer, vestments, 2 days rations, waterskin",
+  "scholar's pack": "Backpack, book of lore, ink, pen, 10 sheets parchment, little bag of sand, small knife",
+  "burglar's pack": "Backpack, 1000 ball bearings, 10ft string, bell, 5 candles, crowbar, hammer, 10 pitons, hooded lantern, 2 flasks oil, 5 days rations, tinderbox, waterskin, 50ft rope",
+};
+
+function getItemDescription(text) {
+  const lower = text.toLowerCase();
+  for (const [key, desc] of Object.entries(ITEM_DESCRIPTIONS)) {
+    if (lower.includes(key)) return desc;
+  }
+  return null;
+}
+
 // PHB starting gold by class (dice count × sides × multiplier)
 const CLASS_GOLD = {
   Barbarian: { dice: 2, sides: 4, mult: 10, label: '2d4 × 10 gp' },
@@ -77,12 +97,14 @@ export default function StepGear({ cls, background, gearChoices, setGearChoices 
   const bgEquip   = BG_EQUIPMENT[background] || null;
 
   const equipLines = (clsData?.startingEquipment || []).map(parseLine);
+  const hasRolledGold = gearChoices.gold > 0 && gearChoices.method === 'gold';
 
   function setSelection(idx, val) {
     setGearChoices(prev => ({
       ...prev,
       method: 'equipment',
       selections: { ...prev.selections, [idx]: val },
+      gold: 0,
     }));
   }
 
@@ -103,7 +125,7 @@ export default function StepGear({ cls, background, gearChoices, setGearChoices 
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* ── Starting Equipment ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, opacity: hasRolledGold ? 0.3 : 1, pointerEvents: hasRolledGold ? 'none' : 'auto', transition: 'opacity 0.2s' }}>
         {equipLines.length === 0 && (
           <p style={{ color: 'rgba(200,180,140,0.35)', fontStyle: 'italic', fontSize: '0.8rem' }}>
             Select a class to see starting equipment.
@@ -120,14 +142,21 @@ export default function StepGear({ cls, background, gearChoices, setGearChoices 
                     const sel = gearChoices.selections?.[idx] === opt ||
                                 (!gearChoices.selections?.[idx] && opt === 'a');
                     const picker = detectWeaponPicker(text);
+                    const desc = getItemDescription(text);
                     return (
                       <div key={opt} style={{ flex: 1, minWidth: 120 }}>
                         <button
                           style={{ ...choiceBtn, ...(sel ? choiceBtnSel : {}), width: '100%' }}
                           onClick={() => setSelection(idx, opt)}
+                          title={desc || undefined}
                         >
                           <span style={choiceOptLabel}>Option {opt.toUpperCase()}</span>
                           <span style={choiceText}>{text}</span>
+                          {desc && (
+                            <span style={{ fontSize: '0.62rem', color: 'rgba(200,180,140,0.45)', lineHeight: 1.3, display: 'block', marginTop: 2 }}>
+                              {desc}
+                            </span>
+                          )}
                         </button>
                         {sel && picker && (
                           <WeaponPicker
@@ -150,14 +179,21 @@ export default function StepGear({ cls, background, gearChoices, setGearChoices 
                     const sel = gearChoices.selections?.[idx] === opt ||
                                 (!gearChoices.selections?.[idx] && opt === 'a');
                     const picker = detectWeaponPicker(text);
+                    const desc = getItemDescription(text);
                     return (
                       <div key={opt} style={{ flex: 1, minWidth: 140 }}>
                         <button
                           style={{ ...choiceBtn, ...(sel ? choiceBtnSel : {}), width: '100%' }}
                           onClick={() => setSelection(idx, opt)}
+                          title={desc || undefined}
                         >
                           <span style={choiceOptLabel}>Option {opt.toUpperCase()}</span>
                           <span style={choiceText}>{text}</span>
+                          {desc && (
+                            <span style={{ fontSize: '0.62rem', color: 'rgba(200,180,140,0.45)', lineHeight: 1.3, display: 'block', marginTop: 2 }}>
+                              {desc}
+                            </span>
+                          )}
                         </button>
                         {sel && picker && (
                           <WeaponPicker
@@ -199,17 +235,43 @@ export default function StepGear({ cls, background, gearChoices, setGearChoices 
           Starting Gold (Alternative)
         </div>
         {goldTable ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <span style={{ color: 'rgba(200,180,140,0.65)', fontSize: '0.8rem' }}>
-              Roll <strong style={{ color: '#d4af37' }}>{goldTable.label}</strong> instead of equipment
-            </span>
-            <button
-              style={{ ...s.rollDiceBtn, padding: '6px 14px', fontSize: '0.78rem', ...(gearChoices.gold > 0 ? { opacity: 0.35, cursor: 'not-allowed' } : {}) }}
-              onClick={gearChoices.gold > 0 ? undefined : handleRollGold}
-              disabled={gearChoices.gold > 0}
-            >
-              {gearChoices.gold > 0 ? `${gearChoices.gold} gp` : '🎲 Roll'}
-            </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+              <span style={{ color: 'rgba(200,180,140,0.65)', fontSize: '0.8rem' }}>
+                Roll <strong style={{ color: '#d4af37' }}>{goldTable.label}</strong> instead of equipment
+              </span>
+              <button
+                style={{ ...s.rollDiceBtn, padding: '6px 14px', fontSize: '0.78rem' }}
+                onClick={handleRollGold}
+              >
+                {gearChoices.gold > 0 ? '🎲 Re-roll' : '🎲 Roll'}
+              </button>
+            </div>
+            {gearChoices.gold > 0 && (
+              <div style={{
+                background: 'rgba(212,175,55,0.08)',
+                border: '2px solid rgba(212,175,55,0.4)',
+                borderRadius: 8,
+                padding: '8px 16px',
+                textAlign: 'center',
+                animation: 'fadeIn 0.3s ease-out',
+              }}>
+                <div style={{ fontFamily: "'Cinzel', Georgia, serif", fontSize: '1.4rem', fontWeight: 700, color: '#d4af37' }}>
+                  {gearChoices.gold} gp
+                </div>
+                <div style={{ fontSize: '0.65rem', color: 'rgba(200,180,140,0.5)', marginTop: 2 }}>
+                  Starting Gold (replaces equipment above)
+                </div>
+              </div>
+            )}
+            {gearChoices.gold > 0 && (
+              <button
+                onClick={() => setGearChoices(prev => ({ ...prev, gold: 0, method: 'equipment' }))}
+                style={{ background: 'none', border: 'none', color: 'rgba(200,180,140,0.4)', cursor: 'pointer', fontSize: '0.7rem', textDecoration: 'underline', marginTop: 4, alignSelf: 'center' }}
+              >
+                ↺ Use Equipment Instead
+              </button>
+            )}
           </div>
         ) : (
           <p style={{ color: 'rgba(200,180,140,0.35)', fontStyle: 'italic', fontSize: '0.8rem', margin: 0 }}>
@@ -224,11 +286,19 @@ export default function StepGear({ cls, background, gearChoices, setGearChoices 
 // ── FixedItemRow: renders a fixed equipment line, with weapon picker if vague ──
 function FixedItemRow({ text, lineIdx, gearChoices, setWeaponPick }) {
   const picker = detectWeaponPicker(text);
+  const desc = getItemDescription(text);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       <div style={fixedItem}>
         <span style={fixedIcon}>✓</span>
-        <span style={fixedText}>{text}</span>
+        <div>
+          <span style={fixedText}>{text}</span>
+          {desc && (
+            <span style={{ fontSize: '0.62rem', color: 'rgba(200,180,140,0.45)', lineHeight: 1.3, display: 'block', marginTop: 2 }}>
+              {desc}
+            </span>
+          )}
+        </div>
       </div>
       {picker && (
         <WeaponPicker
