@@ -25,17 +25,16 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   endTurnRef.current = onEndTurn
 
   useEffect(() => {
-    // Reset timer whenever turn or round changes
+    // Reset timer whenever turn or round changes — runs for ALL turns (player + enemy)
     setTimeLeft(TURN_TIMER_SECONDS)
     if (timerRef.current) clearInterval(timerRef.current)
-    if (!isMyTurn) return
     timerRef.current = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timerRef.current)
           timerRef.current = null
-          // Auto-end turn
-          setTimeout(() => endTurnRef.current?.(), 0)
+          // Auto-end turn only if it's the player's turn
+          if (isMyTurn) setTimeout(() => endTurnRef.current?.(), 0)
           return 0
         }
         return prev - 1
@@ -49,12 +48,20 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
     if (isMyTurn) playTurnChime()
   }, [isMyTurn])
 
-  // If it's not the player's turn, show a waiting message
+  // If it's not the player's turn, show a waiting message with timer
   if (!isMyTurn) {
     return (
       <div className="hud-combat-bar stone-panel">
-        <div style={{ textAlign: 'center', color: '#8a7a52', fontSize: 12, fontStyle: 'italic', padding: '12px 0' }}>
-          Waiting for {active?.name || 'next combatant'}'s turn...
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '10px 0' }}>
+          <div style={{
+            fontFamily: 'Cinzel, serif', fontSize: 16, fontWeight: 700,
+            color: timeLeft <= 10 ? '#cc3333' : '#665a3a', minWidth: 32, textAlign: 'center',
+          }}>
+            {timeLeft}s
+          </div>
+          <div style={{ color: '#8a7a52', fontSize: 12, fontStyle: 'italic' }}>
+            Waiting for {active?.name || 'next combatant'}'s turn...
+          </div>
         </div>
       </div>
     )
@@ -123,11 +130,11 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   }
 
   return (
-    <div className="hud-combat-bar stone-panel">
+    <div className="hud-combat-bar stone-panel" style={{ maxHeight: 160, overflow: 'hidden', padding: '4px 8px' }}>
       {/* Class resource bar */}
       <ClassResourceBar combatant={active} />
       {/* Primary actions — circular medallion buttons */}
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 4, justifyContent: 'center', flexWrap: 'wrap' }}>
         <button
           className={`medallion-btn large attack${(!canAttack || !actionsLeft) ? ' disabled' : ''}`}
           disabled={!canAttack || !actionsLeft}
@@ -144,6 +151,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
               key={action.name}
               className={`medallion-btn large${isSpell ? ' cast' : ''}${disabled ? ' disabled' : ''}`}
               disabled={disabled}
+              title={action.name}
               onClick={() => isSpell
                 ? handleAction('spell-pick')
                 : handleAction('class-ability', {
@@ -153,8 +161,8 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
                   })
               }
             >
-              <span style={{ fontSize: 16 }}>{action.icon}</span>
-              <span className="medallion-label">{action.name.toUpperCase()}</span>
+              <span style={{ fontSize: 14 }}>{action.icon}</span>
+              <span className="medallion-label">{action.name.length > 6 ? action.name.slice(0,5).toUpperCase() : action.name.toUpperCase()}</span>
             </button>
           )
         })}
