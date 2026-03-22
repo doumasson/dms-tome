@@ -1091,3 +1091,118 @@
 @media (max-width: 767px) {
   .hud-minimap { display: none; }
 }
+
+/* === Medallion Buttons (BG2/IWD style circular coin buttons) === */
+.medallion-btn {
+  /* PLACEHOLDER: replace with metal rim texture asset */
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #2a2218 0%, #1a1610 60%, #0d0a06 100%);
+  border: 2px solid;
+  border-image: none;
+  border-color: rgba(180,155,90,0.5) rgba(120,100,60,0.3) rgba(80,65,35,0.4) rgba(150,130,75,0.4);
+  box-shadow:
+    inset 0 1px 2px rgba(200,180,120,0.15),
+    inset 0 -1px 2px rgba(0,0,0,0.4),
+    0 2px 4px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  color: #c9a84c;
+  font-size: 11px;
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0;
+  min-height: 0;
+}
+
+.medallion-btn:hover {
+  border-color: rgba(220,190,110,0.6) rgba(160,140,80,0.4) rgba(120,100,55,0.5) rgba(190,170,95,0.5);
+  box-shadow:
+    inset 0 1px 2px rgba(200,180,120,0.25),
+    inset 0 -1px 2px rgba(0,0,0,0.3),
+    0 2px 6px rgba(0,0,0,0.5),
+    0 0 8px rgba(200,170,80,0.15);
+}
+
+.medallion-btn:active {
+  transform: scale(0.95);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.5),
+    inset 0 -1px 1px rgba(200,180,120,0.1),
+    0 1px 2px rgba(0,0,0,0.4);
+}
+
+.medallion-btn.disabled,
+.medallion-btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  filter: grayscale(0.5);
+}
+
+/* Size variants */
+.medallion-btn.large { width: 52px; height: 52px; font-size: 12px; }
+.medallion-btn.small { width: 36px; height: 36px; font-size: 9px; }
+
+/* Combat action color variants */
+.medallion-btn.attack { color: #c9a84c; } /* gold */
+.medallion-btn.cast { color: #9966cc; }   /* purple */
+.medallion-btn.move { color: #44aa66; }   /* green */
+.medallion-btn.danger { color: #cc3333; } /* red - end turn */
+
+/* Medallion label text below icon */
+.medallion-btn .medallion-label {
+  font-size: 6px;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* === Portrait Stone Frames (BG2/IWD style) === */
+.portrait-frame {
+  /* PLACEHOLDER: replace with stone frame border-image asset */
+  position: relative;
+  border: 3px solid;
+  border-color: rgba(140,120,80,0.5) rgba(90,75,50,0.4) rgba(60,50,30,0.5) rgba(110,95,65,0.4);
+  box-shadow:
+    inset 0 0 4px rgba(0,0,0,0.6),
+    0 2px 6px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+.portrait-frame.selected {
+  border-color: rgba(220,190,100,0.7) rgba(180,155,80,0.5) rgba(140,120,60,0.6) rgba(200,175,90,0.6);
+  box-shadow:
+    inset 0 0 4px rgba(0,0,0,0.4),
+    0 0 10px rgba(200,170,80,0.3),
+    0 0 0 1px rgba(200,170,80,0.2);
+}
+
+/* HP tinting overlay */
+.portrait-hp-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  transition: background-color 0.3s;
+}
+
+.portrait-hp-tint.hp-full { background-color: rgba(0,180,0,0.15); }
+.portrait-hp-tint.hp-high { background-color: rgba(80,180,0,0.15); }
+.portrait-hp-tint.hp-mid { background-color: rgba(200,180,0,0.2); }
+.portrait-hp-tint.hp-low { background-color: rgba(220,80,0,0.25); }
+.portrait-hp-tint.hp-critical { background-color: rgba(200,0,0,0.35); animation: hpPulse 1.5s infinite; }
+.portrait-hp-tint.hp-dead { background-color: rgba(0,0,0,0.6); filter: grayscale(1); }
+
+@keyframes hpPulse {
+  0%, 100% { background-color: rgba(200,0,0,0.35); }
+  50% { background-color: rgba(200,0,0,0.55); }
+}

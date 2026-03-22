@@ -1,5 +1,4 @@
 import useStore from '../store/useStore'
-import OrnateFrame from './OrnateFrame'
 
 const CLASS_COLORS = {
   Fighter: '#4499dd', Barbarian: '#cc5544', Paladin: '#eedd44',
@@ -14,7 +13,16 @@ function getHpColor(ratio) {
   return '#cc3333'
 }
 
-export default function PartyPortraits({ onPortraitClick }) {
+function getHpTintClass(hpRatio) {
+  if (hpRatio <= 0) return 'hp-dead'
+  if (hpRatio <= 0.1) return 'hp-critical'
+  if (hpRatio <= 0.3) return 'hp-low'
+  if (hpRatio <= 0.6) return 'hp-mid'
+  if (hpRatio < 1) return 'hp-high'
+  return 'hp-full'
+}
+
+export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
   const myCharacter = useStore(s => s.myCharacter)
   const partyMembers = useStore(s => s.partyMembers)
 
@@ -39,23 +47,25 @@ export default function PartyPortraits({ onPortraitClick }) {
         const maxHp = member.maxHp ?? 10
         const hpRatio = maxHp > 0 ? hp / maxHp : 1
         const isActive = member.isMe
+        const isSelected = isActive || (activeCombatantId && member.id === activeCombatantId)
+        const hpTintClass = getHpTintClass(hpRatio)
 
         return (
           <div key={member.name || i} style={{ position: 'relative', cursor: 'pointer' }}
             onClick={() => onPortraitClick?.(member)}>
-            <div style={{
-              width: 58, height: 72, background: '#08060c', overflow: 'hidden', position: 'relative',
-            }}>
+            {/* Stone frame wrapper */}
+            <div className={`portrait-frame${isSelected ? ' selected' : ''}`}
+              style={{ width: 58, height: 72, background: '#08060c' }}>
               {/* Portrait placeholder */}
               <div style={{
-                position: 'absolute', inset: 2,
+                position: 'absolute', inset: 0,
                 background: `linear-gradient(180deg, ${color}33, ${color}11)`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 26, overflow: 'hidden',
               }}>
                 {member.portrait ? (
                   <img src={member.portrait} alt={member.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 4 }} />
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
                   <span style={{ fontSize: 22 }}>
                     {member.class === 'Fighter' ? '⚔' : member.class === 'Sorcerer' ? '🔥' :
@@ -64,6 +74,8 @@ export default function PartyPortraits({ onPortraitClick }) {
                   </span>
                 )}
               </div>
+              {/* HP tinting overlay */}
+              <div className={`portrait-hp-tint ${hpTintClass}`} />
               {/* HP bar */}
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 5, background: '#0a0004' }}>
                 <div style={{ width: `${hpRatio * 100}%`, height: '100%', background: getHpColor(hpRatio) }} />
@@ -73,22 +85,17 @@ export default function PartyPortraits({ onPortraitClick }) {
                 position: 'absolute', top: 2, right: 3,
                 background: 'rgba(8,6,12,0.9)', padding: '1px 4px',
                 fontSize: 8, color, fontWeight: 'bold', fontFamily: "'Cinzel', serif",
+                zIndex: 1,
               }}>
                 {member.level || 1}
               </div>
             </div>
-            {/* Ornate frame */}
-            <OrnateFrame
-              size={isActive ? 18 : 16}
-              stroke={isActive ? '#c9a84c' : '#8a7a52'}
-              weight={isActive ? 2.5 : 2}
-            />
             {/* Name */}
             <div style={{
               position: 'absolute', bottom: -18, left: '50%', transform: 'translateX(-50%)',
-              fontSize: 8, color: isActive ? '#eedd88' : '#a09068',
-              whiteSpace: 'nowrap', fontFamily: isActive ? "'Cinzel Decorative', serif" : "'Cinzel', serif",
-              fontWeight: isActive ? 700 : 400, letterSpacing: 1,
+              fontSize: 8, color: isSelected ? '#eedd88' : '#a09068',
+              whiteSpace: 'nowrap', fontFamily: isSelected ? "'Cinzel Decorative', serif" : "'Cinzel', serif",
+              fontWeight: isSelected ? 700 : 400, letterSpacing: 1,
             }}>
               {(member.name || 'Hero').toUpperCase()}
             </div>
