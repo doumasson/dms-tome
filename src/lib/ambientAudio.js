@@ -279,29 +279,35 @@ class AmbientSystem {
   }
 
   _combat() {
+    /* PLACEHOLDER — procedural combat ambience. Will replace with real audio assets. */
     const ctx = this.ctx;
-    // Tense tremolo bass
-    const { osc, gain } = this._osc('sawtooth', 48, 0);
 
-    const lfo = ctx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 5.5;
-    const lfoG = ctx.createGain();      lfoG.gain.value = 0.07;
+    // Low sine drone (non-harsh, subtle tension)
+    this._osc('sine', 45, 0.04);
+    // Minor second interval for dissonance
+    this._osc('sine', 48, 0.025);
+
+    // Slow tremolo on a soft pad tone (sine, not sawtooth — avoids buzzing)
+    const { osc, gain } = this._osc('sine', 90, 0);
+    const lfo = ctx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.8;
+    const lfoG = ctx.createGain();      lfoG.gain.value = 0.02;
     lfo.connect(lfoG); lfoG.connect(gain.gain);
-    gain.gain.setValueAtTime(0.07, ctx.currentTime);
+    gain.gain.setValueAtTime(0.03, ctx.currentTime);
     lfo.start();
     this._track({ stop: () => lfo.stop() });
 
-    // Tension layer — filtered low noise
-    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 140;
-    const g = ctx.createGain();         g.gain.value = 0.04;
+    // Very quiet filtered noise for atmosphere
+    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 100;
+    const g = ctx.createGain();         g.gain.value = 0.015;
     this._loopNoise(f, g);
 
-    // Pulse (heartbeat-like thud every ~0.6s)
+    // Sparse heartbeat thud (every ~2.5s instead of 0.6s, much less repetitive)
     const pulse = () => {
       if (this.type !== 'combat') return;
       this._thud();
-      this._timer(pulse, 580 + Math.random() * 80);
+      this._timer(pulse, 2200 + Math.random() * 1800);
     };
-    this._timer(pulse, 600);
+    this._timer(pulse, 3000);
   }
 
   // ── Sound effects ────────────────────────────────────────────────────────
@@ -375,7 +381,7 @@ class AmbientSystem {
     o.type = 'sine';
     o.frequency.setValueAtTime(80, ctx.currentTime);
     o.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 0.12);
-    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.setValueAtTime(0.06, ctx.currentTime);
     g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
     o.connect(g); g.connect(this.master);
     o.start(); o.stop(ctx.currentTime + 0.22);
