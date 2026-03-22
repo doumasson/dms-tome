@@ -6,8 +6,9 @@ import ActionArea from './ActionArea'
 import CombatActionBar from './CombatActionBar'
 import OrnateDivider from './OrnateDivider'
 import FiligreeBar from './FiligreeBar'
+import QuickslotBar from './QuickslotBar'
 
-export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onAction, onPortraitClick }) {
+export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onAction, onPortraitClick, onUseQuickslot }) {
   const inCombat = useStore(s => s.encounter.phase === 'combat')
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -28,6 +29,7 @@ export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onActi
         ) : (
           <ActionArea areaTheme={areaTheme} onTool={onTool} onChat={onChat} />
         )}
+        <QuickslotBar onUseSlot={onUseQuickslot} />
       </div>
       {/* Bottom ornament */}
       <svg style={{ position: 'absolute', bottom: 2, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none' }} width="280" height="10" viewBox="0 0 280 10">
