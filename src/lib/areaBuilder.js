@@ -9,6 +9,7 @@ import {
 import { extractWallEdges } from './wallEdgeExtractor.js'
 import { getBlockingSet } from '../engine/tileAtlas'
 import { resolveRoofTile } from './roofStyles.js'
+import { safeguardSpawn } from './gridUtils.js'
 
 /* ── Area sizing ─────────────────────────────────────────────── */
 
@@ -347,9 +348,11 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   }
 
   // 13. Determine player start — first exit entry point or center
-  const playerStart = brief.playerStart || (placedExits.length > 0
+  const rawStart = brief.playerStart || (placedExits.length > 0
     ? { x: placedExits[0].x, y: placedExits[0].y === 0 ? 1 : placedExits[0].y }
     : { x: Math.floor(width / 2), y: Math.floor(height / 2) })
+  // Ensure player doesn't spawn on top of enemies
+  const playerStart = safeguardSpawn(rawStart, placedEnemies, { width, height, cellBlocked, layers })
 
   // Note: layers are returned as raw Uint16Arrays for immediate rendering.
   // Encoding to base64 happens at storage time via areaStorage.encodeLayers().

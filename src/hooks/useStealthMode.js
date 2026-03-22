@@ -47,19 +47,18 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
     if (!lastSkillCheckResult || !pendingEncounterData) return
     const { skill, total, pass } = lastSkillCheckResult
 
-    // Only handle stealth checks for deferred encounters
-    if (skill !== 'Stealth') {
-      clearPendingEncounterData()
-      clearLastSkillCheckResult()
-      pendingEncounterData.startCombatWithZoneEnemies()
-      return
-    }
+    // Only handle stealth checks here — non-stealth checks (Persuasion, etc.)
+    // are handled by the skill-check follow-up flow in GameV2, which sends
+    // the result back to the AI DM and lets it decide the outcome.
+    // Don't clear lastSkillCheckResult — let GameV2's watcher consume it.
+    if (skill !== 'Stealth') return
 
     clearLastSkillCheckResult()
     if (!pass) {
       // Stealth failed — start combat immediately
       const { startCombatWithZoneEnemies } = pendingEncounterData
       clearPendingEncounterData()
+      useStore.getState().setEncounterLock(false)
       addNarratorMessage({ role: 'dm', speaker: 'DM', text: 'You failed to stay hidden! The enemies spot you!' })
       startCombatWithZoneEnemies()
     } else {
@@ -84,6 +83,7 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
       }
       setStealthMode(stealthData)
       clearPendingEncounterData()
+      useStore.getState().setEncounterLock(false)
       addNarratorMessage({ role: 'dm', speaker: 'DM', text: `You blend into the shadows... (Stealth: ${total})` })
       // Broadcast stealth state to other players
       broadcastEncounterAction?.({ type: 'stealth-mode', active: true, stealthResult: total })

@@ -5,6 +5,7 @@ import { buildUnifiedPalette, remapChunk, stampChunk } from './mapGenerator.js'
 import { THEME_TERRAIN } from './areaBuilder.js'
 import { seededRandom } from './seededRandom.js'
 import trapTemplates from '../data/trapTemplates.json'
+import { safeguardSpawn } from './gridUtils.js'
 
 // Edge bit constants (matches wallEdgeExtractor.js)
 const NORTH = 0x1
@@ -394,6 +395,8 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     // so for the entrance exit, place player near it but inside a room
     playerStart = firstRoomCenter
   }
+  // Ensure player doesn't spawn on top of enemies
+  playerStart = safeguardSpawn(playerStart, placedEnemies, { width, height, cellBlocked: new Uint8Array(size), layers })
 
   return {
     id,

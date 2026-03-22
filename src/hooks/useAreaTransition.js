@@ -4,6 +4,7 @@ import { buildAreaFromBrief } from '../lib/areaBuilder.js'
 import { saveArea } from '../lib/areaStorage.js'
 import { broadcastAreaTransition } from '../lib/liveChannel'
 import { playZoneTransition } from '../engine/ZoneTransition'
+import { safeguardSpawn } from '../lib/gridUtils.js'
 
 /**
  * Handles area transitions (exit clicks) and exit-proximity pre-generation.
@@ -11,6 +12,8 @@ import { playZoneTransition } from '../engine/ZoneTransition'
 export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign, pixiRef, setPlayerPos, playerPosRef, advanceGameTime, playerPos }) {
   const buildAndLoadArea = useStore(s => s.buildAndLoadArea)
   const activateArea = useStore(s => s.activateArea)
+  const clearPendingEncounterData = useStore(s => s.clearPendingEncounterData)
+  const setEncounterLock = useStore(s => s.setEncounterLock)
 
   const [transitioning, setTransitioning] = useState(false)
   const lastNpcTriggerRef = useRef(null)
@@ -78,9 +81,16 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
     // Prefer the target area's playerStart (guaranteed inside walkable area)
     // over the source exit's entryPoint (which may be at a map edge with no floor)
     const targetArea = areas[targetId]
-    const entry = targetArea?.playerStart || exit.entryPoint || { x: 0, y: 0 }
+    const rawEntry = targetArea?.playerStart || exit.entryPoint || { x: 0, y: 0 }
+    // Ensure player doesn't spawn on top of enemies in the target area
+    const entry = targetArea
+      ? safeguardSpawn(rawEntry, targetArea.enemies, targetArea)
+      : rawEntry
     broadcastAreaTransition(targetId, entry)
     lastNpcTriggerRef.current = null
+    // Clear encounter lock when leaving the area
+    clearPendingEncounterData()
+    setEncounterLock(false)
     advanceGameTime(10 / 60) // 10 minutes per area transition
 
     const app = pixiRef.current?.getApp()

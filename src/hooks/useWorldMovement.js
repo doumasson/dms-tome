@@ -81,9 +81,10 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
 
   // Click-to-move: pathfind and animate walk (non-combat only)
   const handleWorldTileClick = useCallback(({ x, y }) => {
-    // Block world movement during combat
-    const { encounter } = useStore.getState()
+    // Block world movement during combat or encounter negotiation
+    const { encounter, encounterLock } = useStore.getState()
     if (encounter?.phase === 'combat') return false
+    if (encounterLock) return false
     if (isAnimating()) return false
 
     const wd = walkDataRef.current
@@ -158,9 +159,10 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
       if (!dir) return
       e.preventDefault()
 
-      // Block world movement during combat
-      const { encounter: enc } = useStore.getState()
+      // Block world movement during combat or encounter negotiation
+      const { encounter: enc, encounterLock: encLock } = useStore.getState()
       if (enc?.phase === 'combat') return
+      if (encLock) return
 
       if (isAnimating()) return
       const wd = walkDataRef.current

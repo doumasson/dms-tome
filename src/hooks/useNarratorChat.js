@@ -53,6 +53,7 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
         if (pendingEncounterData?.startCombatWithZoneEnemies) {
           // Encounter zone triggered earlier, DM now confirms combat — use zone enemies
           clearPendingEncounterData()
+          useStore.getState().setEncounterLock(false)
           pendingEncounterData.startCombatWithZoneEnemies()
         } else if (result?.enemies?.length) {
           // DM-initiated combat from conversation (no encounter zone)
@@ -76,5 +77,64 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
     }
   }, [sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage])
 
-  return { handleChat }
+  /**
+   * Trigger the AI DM to respond based on the current conversation history,
+   * without adding a new visible player message. Used for skill check follow-ups
+   * where the result is already in the chat history from SkillCheckPanel.
+   */
+  const triggerDmFollowUp = useCallback(async () => {
+    if (chatInFlightRef.current) return
+    const apiKey = sessionApiKey
+    if (!apiKey) return
+
+    chatInFlightRef.current = true
+    try {
+      const history = useStore.getState().narrator?.history || []
+      const recentMessages = history.slice(-14).map(m => ({
+        role: m.role === 'dm' ? 'assistant' : 'user',
+        content: m.text,
+      }))
+
+      const sceneWithPos = { ...zone, playerPosition: playerPosRef.current }
+      const systemPrompt = buildSystemPrompt(campaign, partyMembers, sceneWithPos, recentMessages.length, useStore.getState().gameTime, useStore.getState().quests)
+
+      const result = await callNarrator({ messages: recentMessages, systemPrompt, apiKey })
+
+      if (result?.narrative) {
+        const dmMsg = { role: 'dm', speaker: 'DM', text: result.narrative, startCombat: !!result?.startCombat }
+        addNarratorMessage(dmMsg)
+        broadcastNarratorMessage(dmMsg)
+      }
+
+      if (result?.rollRequest) {
+        const { setPendingSkillCheck } = useStore.getState()
+        setPendingSkillCheck(result.rollRequest)
+      }
+
+      if (result?.startCombat) {
+        const { pendingEncounterData, clearPendingEncounterData } = useStore.getState()
+        if (pendingEncounterData?.startCombatWithZoneEnemies) {
+          clearPendingEncounterData()
+          useStore.getState().setEncounterLock(false)
+          pendingEncounterData.startCombatWithZoneEnemies()
+        } else if (result?.enemies?.length) {
+          const { startEncounter: se } = useStore.getState()
+          const enemies = result.enemies.map(e => ({
+            ...e, isEnemy: true, type: 'enemy',
+            position: e.position || { x: Math.floor(Math.random() * (zone?.width || 10)), y: Math.floor(Math.random() * (zone?.height || 8)) },
+          }))
+          se(enemies)
+        }
+      }
+
+      return result
+    } catch (err) {
+      console.error('[GameV2] Narrator follow-up error:', err)
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'The DM is momentarily distracted... (API error)' })
+    } finally {
+      chatInFlightRef.current = false
+    }
+  }, [sessionApiKey, campaign, partyMembers, zone, addNarratorMessage])
+
+  return { handleChat, triggerDmFollowUp }
 }

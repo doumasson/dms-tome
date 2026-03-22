@@ -90,6 +90,7 @@ export default function GameV2({ onLeave }) {
   const applyLevelUp = useStore(s => s.applyLevelUp)
   const setPendingEncounterData = useStore(s => s.setPendingEncounterData)
   const clearPendingEncounterData = useStore(s => s.clearPendingEncounterData)
+  const setEncounterLock = useStore(s => s.setEncounterLock)
   const defeatedEnemies = useStore(s => s.defeatedEnemies)
   const showDeathOptions = useStore(s => s.showDeathOptions)
   const mercyRevive = useStore(s => s.mercyRevive)
@@ -365,6 +366,7 @@ export default function GameV2({ onLeave }) {
       // AI narrates first — store encounter data so stealth check can defer combat
       const encounterPayload = { startCombatWithZoneEnemies, triggered, enemyPositions: (zone.enemies || []).filter(e => e.position).map(e => ({ ...e.position, name: e.name, wis: e.stats?.wis ?? 10 })) }
       setPendingEncounterData(encounterPayload)
+      setEncounterLock(true)
       setTimeout(async () => {
         const chat = handleChatRef.current
         if (chat) await chat(prompt)
@@ -382,6 +384,7 @@ export default function GameV2({ onLeave }) {
         if (ped && aiWantsCombat) {
           // AI explicitly decided combat starts now
           clearPendingEncounterData()
+          setEncounterLock(false)
           startCombatWithZoneEnemies()
         }
         // Otherwise AI offered options (stealth, roleplay, etc.) — keep
@@ -394,6 +397,44 @@ export default function GameV2({ onLeave }) {
       startCombatWithZoneEnemies()
     }
   }, [playerPos, zone, inCombat, isDM, addNarratorMessage, sessionApiKey, partyMembers, defeatedEnemies, currentAreaId])
+
+  // --- Skill check follow-up: feed result back to AI DM ---
+  // When a player completes a skill check (Persuasion, Intimidation, etc.),
+  // automatically trigger the AI DM to narrate the outcome. The roll result
+  // is already in the narrator history from SkillCheckPanel's addNarratorMessage.
+  const lastSkillCheckResult = useStore(s => s.lastSkillCheckResult)
+  useEffect(() => {
+    if (!lastSkillCheckResult || !sessionApiKey || !isDM) return
+    const { skill, pass } = lastSkillCheckResult
+    // Stealth checks are handled by useStealthMode — skip them here
+    if (skill === 'Stealth') return
+
+    // Clear the result so it's not processed again
+    const { clearLastSkillCheckResult } = useStore.getState()
+    clearLastSkillCheckResult()
+
+    // Small delay to ensure the skill check result message is in narrator history
+    const timer = setTimeout(async () => {
+      if (!triggerDmFollowUp) return
+      const result = await triggerDmFollowUp()
+
+      // If the AI responded with startCombat, the triggerDmFollowUp handler
+      // already processed it. If not, and we still have pendingEncounterData
+      // from an encounter zone, the AI chose to avoid combat (diplomacy worked).
+      const { pendingEncounterData: ped } = useStore.getState()
+      if (ped && pass) {
+        // Successful non-stealth check in an encounter zone — AI let it resolve
+        // peacefully. Check if the AI's latest response has startCombat.
+        if (!result?.startCombat) {
+          // AI didn't request combat — diplomacy/skill succeeded, clear encounter
+          useStore.getState().clearPendingEncounterData()
+          useStore.getState().setEncounterLock(false)
+        }
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [lastSkillCheckResult, sessionApiKey, isDM, triggerDmFollowUp])
 
   // --- NPC schedule movement on time-of-day changes ---
   useEffect(() => {
@@ -678,7 +719,7 @@ export default function GameV2({ onLeave }) {
   }, [nextEncounterTurn, user])
 
   // --- Chat handler ---
-  const { handleChat } = useNarratorChat({ sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage, playerPosRef })
+  const { handleChat, triggerDmFollowUp } = useNarratorChat({ sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage, playerPosRef })
   handleChatRef.current = handleChat
 
   // --- Early returns ---

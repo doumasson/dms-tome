@@ -49,6 +49,10 @@ export function createGameTimeSlice(set, get) {
     setPendingEncounterData: (data) => set({ pendingEncounterData: data }),
     clearPendingEncounterData: () => set({ pendingEncounterData: null }),
 
+    // === Encounter Lock (prevents world movement during encounter negotiation) ===
+    encounterLock: false,
+    setEncounterLock: (locked) => set({ encounterLock: locked }),
+
     // === Session-wide API key (broadcast from DM to all players) ===
     sessionApiKey: null,
     setSessionApiKey: (key) => set({ sessionApiKey: key }),
