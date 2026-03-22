@@ -530,8 +530,22 @@ export default function App() {
   }
 
   function handleLeaveCampaign() {
-    localStorage.removeItem('activeCampaignId');
-    useStore.getState().resetCampaign();
+    try {
+      // Clean up realtime channel before resetting state
+      if (channelRef.current) {
+        channelRef.current.unsubscribe();
+        setLiveChannel(null);
+        channelRef.current = null;
+        setLiveConnected(false);
+      }
+      localStorage.removeItem('activeCampaignId');
+      useStore.getState().resetCampaign();
+    } catch (err) {
+      console.error('[handleLeaveCampaign] error during cleanup:', err);
+      // Force-clear even if something threw
+      try { localStorage.removeItem('activeCampaignId'); } catch {}
+      try { useStore.getState().resetCampaign(); } catch {}
+    }
     setAppView('select');
   }
 
