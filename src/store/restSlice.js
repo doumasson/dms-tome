@@ -91,15 +91,37 @@ export function createRestSlice(set, get) {
               };
             }
           }
-          return { ...c, currentHp: c.maxHp, resourcesUsed: {}, spellSlots, hitDiceRemaining, equippedItems: recharged };
+          return { ...c, currentHp: c.maxHp, conditions: [], resourcesUsed: {}, spellSlots, hitDiceRemaining, equippedItems: recharged };
         });
         // Also restore HP for player combatants in an active encounter
         const updatedCombatants = state.encounter.combatants.map((c) => {
           if (c.type !== 'player') return c;
           return { ...c, currentHp: c.maxHp, conditions: [], deathSaves: { successes: 0, failures: 0, stable: false } };
         });
+
+        // Update myCharacter directly so the HUD reflects full heal immediately
+        let updatedMyChar = state.myCharacter;
+        if (state.myCharacter) {
+          const match = updatedChars.find(c =>
+            c.id === state.myCharacter.id || c.name === state.myCharacter.name
+          );
+          if (match) {
+            updatedMyChar = {
+              ...state.myCharacter,
+              currentHp: match.maxHp,
+              hp: match.maxHp,
+              conditions: [],
+              resourcesUsed: {},
+              spellSlots: match.spellSlots,
+              hitDiceRemaining: match.hitDiceRemaining,
+              equippedItems: match.equippedItems,
+            };
+          }
+        }
+
         return {
           campaign: { ...state.campaign, characters: updatedChars },
+          myCharacter: updatedMyChar,
           encounter: {
             ...state.encounter,
             combatants: updatedCombatants,

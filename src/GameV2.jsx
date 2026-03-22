@@ -239,6 +239,7 @@ export default function GameV2({ onLeave }) {
 
   // --- Respawn position after TPK defeat ---
   const respawnPosition = useStore(s => s.respawnPosition)
+  const defeatReset = useStore(s => s.defeatReset)
   useEffect(() => {
     if (respawnPosition && !inCombat) {
       setPlayerPos(respawnPosition)
@@ -247,6 +248,15 @@ export default function GameV2({ onLeave }) {
       useStore.setState({ respawnPosition: null })
     }
   }, [respawnPosition, inCombat])
+
+  // --- After TPK defeat, clear triggered zones so encounters can re-trigger ---
+  useEffect(() => {
+    if (defeatReset) {
+      triggeredZonesRef.current = new Set()
+      hasMovedRef.current = false // Prevent immediate re-trigger on spawn
+      useStore.setState({ defeatReset: false })
+    }
+  }, [defeatReset])
 
   // --- Watch for XP crossing a level threshold ---
   useEffect(() => {

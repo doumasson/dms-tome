@@ -591,6 +591,7 @@ export function createEncounterSlice(set, get) {
           activeEffects: [],
         },
         respawnPosition: respawnPos,
+        defeatReset: true, // Signal GameV2 to clear triggeredZonesRef so encounter can re-trigger
       });
 
       // Narrate the revival
