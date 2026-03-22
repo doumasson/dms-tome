@@ -27,16 +27,19 @@ export default function ApiKeySettings({ userId, onClose }) {
 
   async function handleSave() {
     const ck = claudeKey.trim()
-    if (!ck || !campaignId || !userId) return
+    if (!ck || !userId) return
 
     try {
-      const encrypted = await encryptApiKey(ck, campaignId, userId)
-      await saveApiKeyToSupabase(campaignId, encrypted)
-
-      // Update session, localStorage, and broadcast to players
+      // Always save to session store + localStorage
       useStore.getState().setSessionApiKey(ck)
-      if (userId) setClaudeApiKey(userId, ck)
-      if (isDM) broadcastApiKeySync(ck)
+      setClaudeApiKey(userId, ck)
+
+      // Save to Supabase if we have a campaign (skip during campaign creation)
+      if (campaignId) {
+        const encrypted = await encryptApiKey(ck, campaignId, userId)
+        await saveApiKeyToSupabase(campaignId, encrypted)
+        if (isDM) broadcastApiKeySync(ck)
+      }
 
       setSaved(true)
       setTimeout(() => { setSaved(false); onClose() }, 800)
