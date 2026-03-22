@@ -3,8 +3,22 @@ import { ALIGNMENT_OPTIONS, avatarUrl } from '../../lib/charBuilder';
 import { s } from './charCreateStyles';
 import PortraitPickerModal from '../PortraitPickerModal';
 
+const ALIGNMENT_TIPS = {
+  'Lawful Good': 'Follows a code of honor and acts for the greater good.',
+  'Neutral Good': 'Does the best they can without bias toward law or chaos.',
+  'Chaotic Good': 'Acts on conscience, with little regard for rules.',
+  'Lawful Neutral': 'Acts in accordance with law, tradition, or personal code.',
+  'True Neutral': 'Acts without prejudice or compulsion.',
+  'Chaotic Neutral': 'Follows their whims above all else.',
+  'Lawful Evil': 'Methodically takes what they want within a code of conduct.',
+  'Neutral Evil': 'Does whatever they can get away with.',
+  'Chaotic Evil': 'Acts with arbitrary violence, driven by greed and hate.',
+};
+
 export default function StepIdentity({ name, setName, alignment, setAlignment, appearance, setAppearance, backstory, setBackstory, race, cls, portrait, setPortrait }) {
   const [showPicker, setShowPicker] = useState(false);
+  const [tooltip, setTooltip] = useState(null);
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const seed   = name.trim() || `${race} ${cls}`;
   const avatar = avatarUrl(seed, race, cls);
   const imgSrc = portrait || avatar;
@@ -60,11 +74,33 @@ export default function StepIdentity({ name, setName, alignment, setAlignment, a
                   key={a}
                   style={{ ...s.alignBtn, ...(alignment === a ? s.alignBtnActive : {}) }}
                   onClick={() => setAlignment(a)}
+                  onMouseMove={(e) => setTooltipPos({ x: e.clientX + 12, y: e.clientY - 30 })}
+                  onMouseEnter={() => setTooltip(ALIGNMENT_TIPS[a])}
+                  onMouseLeave={() => setTooltip(null)}
                 >
                   {a}
                 </button>
               ))}
             </div>
+            {tooltip && (
+              <div style={{
+                position: 'fixed',
+                left: tooltipPos.x,
+                top: tooltipPos.y,
+                background: 'rgba(10,8,6,0.95)',
+                border: '1px solid rgba(201,168,76,0.3)',
+                padding: '6px 10px',
+                color: '#bba878',
+                fontSize: 11,
+                maxWidth: 220,
+                pointerEvents: 'none',
+                zIndex: 1000,
+                borderRadius: 4,
+                lineHeight: 1.4,
+              }}>
+                {tooltip}
+              </div>
+            )}
           </div>
         </div>
       </div>

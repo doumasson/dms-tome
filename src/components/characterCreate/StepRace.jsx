@@ -18,6 +18,35 @@ export default function StepRace({ race, setRace }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
+      {/* Detail panel - always at top */}
+      <div style={{ minHeight: 120, ...s.detailPanel }}>
+        {preview ? (
+          <>
+            <div style={s.detailTitle}>{preview.name}</div>
+            <div style={s.statBonusRow}>
+              {Object.entries(preview.statBonuses || {}).map(([k, v]) => (
+                <span key={k} style={s.statBonusBadge}>{STAT_LABELS[k]} +{v}</span>
+              ))}
+              {preview.flexibleBonusCount && (
+                <span style={s.statBonusBadge}>Any +1 ×{preview.flexibleBonusCount}</span>
+              )}
+            </div>
+            <p style={s.detailDesc}>{preview.description}</p>
+            <div style={s.traitList}>
+              <div style={s.traitHeader}>Speed {preview.speed}ft · {preview.size}{preview.darkvision ? ` · Darkvision ${preview.darkvision}ft` : ''}</div>
+              {(preview.traits || []).map(t => (
+                <div key={t.name} style={s.traitItem}>
+                  <span style={s.traitName}>{t.name}.</span>{' '}
+                  <span style={s.traitDesc}>{t.description}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p style={{ color: '#665a3a', margin: 0 }}>Hover or select a race to see details</p>
+        )}
+      </div>
+
       {/* Race card grid */}
       <div style={s.cardGrid}>
         {bases.map(r => {
@@ -81,37 +110,6 @@ export default function StepRace({ race, setRace }) {
           );
         })}
       </div>
-
-      {/* Detail panel */}
-      {preview && (
-        <div style={s.detailPanel}>
-          <div style={s.detailTitle}>{preview.name}</div>
-          <div style={s.statBonusRow}>
-            {Object.entries(preview.statBonuses || {}).map(([k, v]) => (
-              <span key={k} style={s.statBonusBadge}>{STAT_LABELS[k]} +{v}</span>
-            ))}
-            {preview.flexibleBonusCount && (
-              <span style={s.statBonusBadge}>Any +1 ×{preview.flexibleBonusCount}</span>
-            )}
-          </div>
-          <p style={s.detailDesc}>{preview.description}</p>
-          <div style={s.traitList}>
-            <div style={s.traitHeader}>Speed {preview.speed}ft · {preview.size}{preview.darkvision ? ` · Darkvision ${preview.darkvision}ft` : ''}</div>
-            {(preview.traits || []).map(t => (
-              <div key={t.name} style={s.traitItem}>
-                <span style={s.traitName}>{t.name}.</span>{' '}
-                <span style={s.traitDesc}>{t.description}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {!preview && (
-        <div style={s.detailPanel}>
-          <p style={s.detailPlaceholder}>Select a race to see its traits and abilities.</p>
-        </div>
-      )}
     </div>
   );
 }

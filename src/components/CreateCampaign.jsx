@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { getClaudeApiKey, generateCampaignJSON } from '../lib/claudeApi';
+import { generateCampaignJSON } from '../lib/claudeApi';
+import { loadDefaultApiKey } from '../lib/defaultApiKey';
 import { DEMO_CAMPAIGN } from '../data/demoCampaign';
 import useStore from '../store/useStore';
-import ApiKeySettings from './ApiKeySettings';
 
 const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
 const SETTINGS = ['High Fantasy', 'Forgotten Realms', 'Dark Gothic', 'Steampunk', 'Ancient World', 'Urban Fantasy', 'Sci-Fi'];
@@ -192,7 +192,7 @@ function validateCampaignJson(text) {
 
 const DEFAULT_FIELDS = {
   name: '',
-  isAiDm: false,      // false = Human DM, true = AI DM (everyone plays)
+  isAiDm: true,
   tone: TONES[0],
   setting: SETTINGS[0],
   length: LENGTHS[0],
@@ -208,15 +208,14 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   const [step, setStep] = useState(1);
   const [fields, setFields] = useState(DEFAULT_FIELDS);
   const [campaignId, setCampaignId] = useState(null);
-  const [jsonText, setJsonText] = useState('');
-  const [jsonError, setJsonError] = useState('');
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [createdCampaign, setCreatedCampaign] = useState(null);
   const [copied, setCopied] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState('');
-  const [showApiSettings, setShowApiSettings] = useState(false);
+  const [byokKey, setByokKey] = useState('');
+  const [needsByok, setNeedsByok] = useState(false);
 
   // Restore draft on mount — ONLY from explicit DB draft (user selected a draft from campaign list).
   // Fresh "Create New Campaign" clicks never restore anything — always start at step 1.
@@ -234,13 +233,12 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     setFields(f => ({ ...f, [key]: val }));
   }
 
-  function saveDraftLocally(currentStep, currentFields, currentCampaignId, currentJsonText = '') {
+  function saveDraftLocally(currentStep, currentFields, currentCampaignId) {
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
       userId: user.id,
       campaignId: currentCampaignId,
       step: currentStep,
       fields: currentFields,
-      jsonText: currentJsonText,
     }));
   }
 
@@ -270,7 +268,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           dm_user_id: user.id,
           invite_code: inviteCode,
           campaign_data: { __draft: true, __step: 1, fields },
-          settings: { isAiDm: fields.isAiDm },
+          settings: { isAiDm: true },
         })
         .select()
         .single();
@@ -300,19 +298,13 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     saveDraftLocally(2, fields, id);
   }
 
-  // Steps 2–4: advance step and async-save progress
-  function handleStepNext(nextStep) {
-    setStep(nextStep);
-    saveDraftLocally(nextStep, fields, campaignId, jsonText);
-    saveDraftToDb(nextStep, fields, campaignId);
-  }
-
   function handleStartOver() {
     localStorage.removeItem(DRAFT_KEY);
     setFields(DEFAULT_FIELDS);
     setStep(1);
-    setJsonText('');
-    setJsonError('');
+    setGenerateError('');
+    setNeedsByok(false);
+    setByokKey('');
     // Keep campaignId so we reuse the existing DB draft record instead of orphaning it
   }
 
@@ -344,72 +336,75 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     onDone({ ...campaign, userRole: 'dm' });
   }
 
-  function handleFileUpload(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      setJsonText(cleanJsonText(ev.target.result || ''));
-      setJsonError('');
-    };
-    reader.readAsText(file);
-    // Reset the input so the same file can be re-uploaded if needed
-    e.target.value = '';
+  async function doGenerate(apiKey) {
+    const rawText = await generateCampaignJSON(generatePrompt(fields), apiKey);
+    const cleaned = cleanJsonText(rawText);
+    const validation = validateCampaignJson(cleaned);
+    if (!validation.ok) throw new Error(validation.error);
+    await handleCreate(validation.data, apiKey);
   }
 
-  function handleCopyPrompt() {
-    navigator.clipboard.writeText(generatePrompt(fields));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  async function handleGenerateWithClaude() {
-    const apiKey = getClaudeApiKey(user.id) || useStore.getState().sessionApiKey;
-    if (!apiKey) {
-      setShowApiSettings(true);
-      return;
-    }
-    setGenerating(true);
+  async function handleAutoGenerate() {
+    setStep(3);
     setGenerateError('');
+    setGenerating(true);
+    setNeedsByok(false);
     try {
-      const rawText = await generateCampaignJSON(generatePrompt(fields), apiKey);
-      setJsonText(cleanJsonText(rawText));
-      handleStepNext(5);
+      let apiKey = await loadDefaultApiKey();
+      if (!apiKey) {
+        // No platform key - show BYOK input and stop
+        setGenerating(false);
+        setNeedsByok(true);
+        return;
+      }
+      await doGenerate(apiKey);
     } catch (err) {
-      setGenerateError(err.message || 'Generation failed. Check your API key and try again.');
-    } finally {
+      setGenerateError(err.message || 'Generation failed');
       setGenerating(false);
     }
   }
 
-  async function handleCreate() {
-    const validation = validateCampaignJson(jsonText);
-    if (!validation.ok) {
-      setJsonError('Invalid JSON: ' + validation.error);
-      return;
+  async function handleByokSubmit() {
+    if (!byokKey.trim()) return;
+    setGenerating(true);
+    setGenerateError('');
+    setNeedsByok(false);
+    try {
+      await doGenerate(byokKey.trim());
+    } catch (err) {
+      setGenerateError(err.message || 'Generation failed');
+      setGenerating(false);
     }
+  }
 
+  async function handleCreate(parsedData, apiKey) {
     setCreating(true);
-    setJsonError('');
 
     let campaign;
+    const campaignData = parsedData;
+    const settingsObj = { isAiDm: true };
+    if (apiKey && apiKey !== (await loadDefaultApiKey())) {
+      // User provided their own key — store it in campaign settings
+      settingsObj.claudeApiKey = apiKey;
+    }
 
     if (campaignId) {
       // Update the existing draft record with final campaign data
       const { data, error } = await supabase
         .from('campaigns')
         .update({
-          name: validation.data.title || fields.name,
-          campaign_data: validation.data,
-          settings: { isAiDm: fields.isAiDm },
+          name: campaignData.title || fields.name,
+          campaign_data: campaignData,
+          settings: settingsObj,
         })
         .eq('id', campaignId)
         .select()
         .single();
 
       if (error) {
-        setJsonError('Failed to save campaign: ' + error.message);
+        setGenerateError('Failed to save campaign: ' + error.message);
         setCreating(false);
+        setGenerating(false);
         return;
       }
       campaign = data;
@@ -419,18 +414,19 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
       const { data, error } = await supabase
         .from('campaigns')
         .insert({
-          name: validation.data.title || fields.name,
+          name: campaignData.title || fields.name,
           dm_user_id: user.id,
           invite_code: inviteCode,
-          campaign_data: validation.data,
-          settings: { isAiDm: fields.isAiDm },
+          campaign_data: campaignData,
+          settings: settingsObj,
         })
         .select()
         .single();
 
       if (error) {
-        setJsonError('Failed to create campaign: ' + error.message);
+        setGenerateError('Failed to create campaign: ' + error.message);
         setCreating(false);
+        setGenerating(false);
         return;
       }
       campaign = data;
@@ -445,7 +441,8 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     localStorage.removeItem(DRAFT_KEY);
     setCreatedCampaign(campaign);
     setCreating(false);
-    setStep(6);
+    setGenerating(false);
+    setStep(4);
   }
 
   const inviteLink = createdCampaign
@@ -453,24 +450,23 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     : '';
 
   return (
-    <>
     <div style={styles.page}>
       <div style={styles.card}>
         {/* Back button */}
-        <button onClick={step > 1 && step < 6 ? () => setStep(s => s - 1) : onBack} style={styles.backBtn}>
-          ← {step > 1 && step < 6 ? 'Back' : 'All Campaigns'}
+        <button onClick={step > 1 && step < 4 ? () => setStep(s => s - 1) : onBack} style={styles.backBtn}>
+          ← {step > 1 && step < 4 ? 'Back' : 'All Campaigns'}
         </button>
 
-        {/* Progress */}
-        {step < 6 && (
+        {/* Progress — 3 dots (steps 1, 2, 3 don't show generating/success) */}
+        {step <= 2 && (
           <div style={styles.progress}>
-            {[1,2,3,4,5].map(s => (
+            {[1,2,3].map(s => (
               <div key={s} style={{ ...styles.dot, background: s <= step ? 'var(--gold)' : 'var(--border-color)' }} />
             ))}
           </div>
         )}
 
-        {/* Step 1: Name + DM Type */}
+        {/* Step 1: Name + Tone + Setting */}
         {step === 1 && (
           <div style={styles.stepContent}>
             <h2 style={styles.stepTitle}>New Campaign</h2>
@@ -498,28 +494,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               <span style={styles.orLine} /><span style={styles.orText}>or create your own</span><span style={styles.orLine} />
             </div>
 
-            {/* DM type choice */}
-            <p style={styles.dmTypeHeading}>Who runs the game?</p>
-            <div style={styles.dmTypeRow}>
-              <button
-                onClick={() => setField('isAiDm', false)}
-                style={{ ...styles.dmTypeBtn, ...(fields.isAiDm === false ? styles.dmTypeBtnActive : {}) }}
-              >
-                <span style={styles.dmTypeIcon}>👤</span>
-                <span style={styles.dmTypeName}>I'm the DM</span>
-                <span style={styles.dmTypeDesc}>You run the game. Players join and take actions — you don't need a character.</span>
-              </button>
-              <button
-                onClick={() => setField('isAiDm', true)}
-                style={{ ...styles.dmTypeBtn, ...(fields.isAiDm === true ? styles.dmTypeBtnActive : {}) }}
-              >
-                <span style={styles.dmTypeIcon}>🎭</span>
-                <span style={styles.dmTypeName}>Dungeon Master</span>
-                <span style={styles.dmTypeDesc}>The Dungeon Master narrates the story. Everyone — including you — creates a character and plays.</span>
-              </button>
-            </div>
-
-            <label style={{ ...styles.label, marginTop: 20 }}>Campaign Name</label>
+            <label style={{ ...styles.label, marginTop: 4 }}>Campaign Name</label>
             <input
               autoFocus
               value={fields.name}
@@ -528,6 +503,27 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               style={styles.input}
               onKeyDown={e => e.key === 'Enter' && fields.name.trim() && handleStep1Next()}
             />
+
+            <label style={{ ...styles.label, marginTop: 16 }}>Campaign Tone</label>
+            <div style={styles.optionGrid}>
+              {TONES.map(t => (
+                <button key={t} onClick={() => setField('tone', t)}
+                  style={{ ...styles.optionBtn, ...(fields.tone === t ? styles.optionBtnActive : {}) }}>
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            <label style={{ ...styles.label, marginTop: 16 }}>Setting</label>
+            <div style={styles.optionGrid}>
+              {SETTINGS.map(s => (
+                <button key={s} onClick={() => setField('setting', s)}
+                  style={{ ...styles.optionBtn, ...(fields.setting === s ? styles.optionBtnActive : {}) }}>
+                  {s}
+                </button>
+              ))}
+            </div>
+
             <button
               disabled={!fields.name.trim() || saving}
               onClick={handleStep1Next}
@@ -538,34 +534,8 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           </div>
         )}
 
-        {/* Step 2: Tone & Setting */}
+        {/* Step 2: Details */}
         {step === 2 && (
-          <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>Tone &amp; Setting</h2>
-            <label style={styles.label}>Campaign Tone</label>
-            <div style={styles.optionGrid}>
-              {TONES.map(t => (
-                <button key={t} onClick={() => setField('tone', t)}
-                  style={{ ...styles.optionBtn, ...(fields.tone === t ? styles.optionBtnActive : {}) }}>
-                  {t}
-                </button>
-              ))}
-            </div>
-            <label style={{ ...styles.label, marginTop: 20 }}>Setting</label>
-            <div style={styles.optionGrid}>
-              {SETTINGS.map(s => (
-                <button key={s} onClick={() => setField('setting', s)}
-                  style={{ ...styles.optionBtn, ...(fields.setting === s ? styles.optionBtnActive : {}) }}>
-                  {s}
-                </button>
-              ))}
-            </div>
-            <button onClick={() => handleStepNext(3)} style={styles.nextBtn}>Next →</button>
-          </div>
-        )}
-
-        {/* Step 3: Details */}
-        {step === 3 && (
           <div style={styles.stepContent}>
             <h2 style={styles.stepTitle}>Campaign Details</h2>
             <div style={styles.row}>
@@ -604,90 +574,65 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               style={styles.textarea}
               rows={3}
             />
-            <button onClick={() => handleStepNext(4)} style={styles.nextBtn}>Generate Prompt →</button>
+            <button onClick={handleAutoGenerate} style={styles.createBtn}>
+              Create Campaign →
+            </button>
           </div>
         )}
 
-        {/* Step 4: Generate */}
-        {step === 4 && (
+        {/* Step 3: Generating... */}
+        {step === 3 && (
           <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>Generate Campaign</h2>
-            {(getClaudeApiKey(user.id) || useStore.getState().sessionApiKey) ? (
-              <>
-                <p style={styles.hint}>Click below to generate your campaign with Claude. This takes about 30 seconds.</p>
-                <button
-                  onClick={handleGenerateWithClaude}
-                  disabled={generating}
-                  style={styles.generateBtn}
-                >
-                  {generating ? '✦ Generating Campaign...' : '✦ Generate with Claude'}
-                </button>
-                {generateError && <p style={styles.errorMsg}>{generateError}</p>}
-                <div style={styles.orDivider}><span style={styles.orText}>or use manually</span></div>
-              </>
-            ) : (
-              <>
-                <p style={styles.hint}>
-                  Add your Claude API key to generate campaigns automatically, or copy the prompt and paste it into any AI.
-                </p>
-                <button onClick={() => setShowApiSettings(true)} style={styles.addKeyBtn}>
-                  ⚙ Add Claude API Key
-                </button>
-                <div style={styles.orDivider}><span style={styles.orText}>or copy prompt manually</span></div>
-              </>
+            {generating && (
+              <div style={styles.generatingWrap}>
+                <div style={styles.spinner} />
+                <h2 style={styles.stepTitle}>Forging your world...</h2>
+                <p style={styles.hint}>This usually takes about 30 seconds. The AI Dungeon Master is crafting areas, NPCs, and encounters.</p>
+              </div>
             )}
-            <div style={styles.promptBox}>
-              <pre style={styles.promptText}>{generatePrompt(fields)}</pre>
-            </div>
-            <button onClick={handleCopyPrompt} style={styles.copyBtn}>
-              {copied ? '✓ Copied!' : 'Copy Prompt'}
-            </button>
-            <button onClick={() => handleStepNext(5)} style={styles.nextBtn}>I've Got My JSON →</button>
+
+            {!generating && needsByok && !generateError && (
+              <div style={styles.stepContent}>
+                <h2 style={styles.stepTitle}>API Key Required</h2>
+                <p style={styles.hint}>No platform key configured. Enter your Claude API key to generate the campaign:</p>
+                <input
+                  value={byokKey}
+                  onChange={e => setByokKey(e.target.value)}
+                  placeholder="sk-ant-..."
+                  style={{ ...styles.input, fontFamily: 'monospace', fontSize: '0.85rem' }}
+                  onKeyDown={e => e.key === 'Enter' && byokKey.trim() && handleByokSubmit()}
+                  type="password"
+                />
+                <button
+                  onClick={handleByokSubmit}
+                  disabled={!byokKey.trim()}
+                  style={styles.createBtn}
+                >
+                  Generate Campaign →
+                </button>
+                <button onClick={handleStartOver} style={styles.startOverBtn}>
+                  ↺ Start Over
+                </button>
+              </div>
+            )}
+
+            {!generating && generateError && (
+              <div style={styles.stepContent}>
+                <h2 style={styles.stepTitle}>Generation Failed</h2>
+                <p style={styles.errorMsg}>{generateError}</p>
+                <button onClick={handleAutoGenerate} style={styles.nextBtn}>
+                  Retry →
+                </button>
+                <button onClick={handleStartOver} style={styles.startOverBtn}>
+                  ↺ Start Over
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Step 5: Import JSON */}
-        {step === 5 && (
-          <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>Import Campaign JSON</h2>
-            <p style={styles.hint}>Upload the .json file your AI generated, or paste the JSON text below.</p>
-
-            {/* File upload */}
-            <label style={styles.uploadLabel}>
-              <input
-                type="file"
-                accept=".json,application/json"
-                onChange={handleFileUpload}
-                style={{ display: 'none' }}
-              />
-              <span style={styles.uploadBtn}>📁 Upload JSON File</span>
-            </label>
-
-            <div style={styles.orDivider}><span style={styles.orText}>or paste below</span></div>
-
-            <textarea
-              value={jsonText}
-              onChange={e => { setJsonText(e.target.value); setJsonError(''); }}
-              placeholder='{ "title": "...", "scenes": [...], "characters": [...] }'
-              style={{ ...styles.textarea, fontFamily: 'monospace', fontSize: '0.8rem', minHeight: 200 }}
-              rows={10}
-            />
-            {jsonError && <p style={styles.errorMsg}>{jsonError}</p>}
-            <button
-              onClick={handleCreate}
-              disabled={creating || !jsonText.trim()}
-              style={styles.createBtn}
-            >
-              {creating ? 'Creating Campaign...' : 'Create Campaign'}
-            </button>
-            <button onClick={handleStartOver} style={styles.startOverBtn}>
-              ↺ Start Over
-            </button>
-          </div>
-        )}
-
-        {/* Step 6: Success */}
-        {step === 6 && createdCampaign && (
+        {/* Step 4: Success */}
+        {step === 4 && createdCampaign && (
           <div style={styles.stepContent}>
             <div style={styles.successIcon}>⚔</div>
             <h2 style={styles.stepTitle}>Campaign Created!</h2>
@@ -709,10 +654,6 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
         )}
       </div>
     </div>
-    {showApiSettings && (
-      <ApiKeySettings userId={user.id} onClose={() => setShowApiSettings(false)} />
-    )}
-    </>
   );
 }
 
@@ -760,53 +701,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
-  },
-  dmTypeHeading: {
-    color: 'rgba(200,180,140,0.55)',
-    fontSize: '0.72rem',
-    fontFamily: "'Cinzel', Georgia, serif",
-    textTransform: 'uppercase',
-    letterSpacing: '0.1em',
-    fontWeight: 600,
-    margin: '4px 0 0',
-  },
-  dmTypeRow: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 10,
-  },
-  dmTypeBtn: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: 4,
-    background: 'rgba(255,255,255,0.02)',
-    border: '2px solid rgba(255,255,255,0.08)',
-    borderRadius: 10,
-    padding: '14px 14px',
-    cursor: 'pointer',
-    textAlign: 'left',
-    transition: 'border-color 0.2s, background 0.2s',
-    color: '#f0e6d0',
-  },
-  dmTypeBtnActive: {
-    background: 'rgba(212,175,55,0.08)',
-    borderColor: '#d4af37',
-  },
-  dmTypeIcon: {
-    fontSize: '1.6rem',
-    lineHeight: 1,
-  },
-  dmTypeName: {
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontWeight: 700,
-    fontSize: '0.9rem',
-    color: '#d4af37',
-  },
-  dmTypeDesc: {
-    color: 'rgba(200,180,140,0.55)',
-    fontSize: '0.72rem',
-    lineHeight: 1.4,
   },
   stepTitle: {
     fontFamily: "'Cinzel', Georgia, serif",
@@ -898,61 +792,6 @@ const styles = {
     outline: 'none',
     lineHeight: 1.6,
   },
-  promptBox: {
-    background: 'var(--bg-secondary)',
-    border: '1px solid var(--border-color)',
-    borderRadius: 8,
-    padding: '14px 16px',
-    maxHeight: 280,
-    overflowY: 'auto',
-  },
-  promptText: {
-    color: 'var(--text-secondary)',
-    fontSize: '0.78rem',
-    margin: 0,
-    whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word',
-    lineHeight: 1.6,
-    fontFamily: 'monospace',
-  },
-  generateBtn: {
-    background: 'linear-gradient(135deg, #f0c868, #d4af37, #a8841f)',
-    color: '#1a0e00',
-    border: 'none',
-    borderRadius: 10,
-    padding: '16px 28px',
-    fontSize: '1rem',
-    fontWeight: 700,
-    fontFamily: "'Cinzel', Georgia, serif",
-    cursor: 'pointer',
-    width: '100%',
-    minHeight: 54,
-    letterSpacing: '0.04em',
-  },
-  addKeyBtn: {
-    background: 'linear-gradient(160deg, #3a2412, #2e1e0e)',
-    border: '1px solid var(--border-gold)',
-    color: 'var(--gold)',
-    borderRadius: 8,
-    padding: '12px 20px',
-    cursor: 'pointer',
-    fontWeight: 700,
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontSize: '0.88rem',
-    width: '100%',
-    minHeight: 48,
-  },
-  copyBtn: {
-    background: 'linear-gradient(160deg, #3a2412, #2e1e0e)',
-    border: '1px solid var(--border-gold)',
-    color: 'var(--gold)',
-    borderRadius: 8,
-    padding: '12px 20px',
-    cursor: 'pointer',
-    fontWeight: 700,
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontSize: '0.88rem',
-  },
   nextBtn: {
     background: 'linear-gradient(160deg, #3a2412, #2e1e0e)',
     border: '1px solid var(--border-gold)',
@@ -1026,38 +865,6 @@ const styles = {
     fontSize: '0.85rem',
     margin: 0,
     textAlign: 'center',
-  },
-  uploadLabel: {
-    cursor: 'pointer',
-    display: 'block',
-  },
-  uploadBtn: {
-    display: 'block',
-    background: 'var(--bg-card)',
-    border: '2px dashed var(--border-gold)',
-    color: 'var(--gold)',
-    borderRadius: 8,
-    padding: '14px 20px',
-    textAlign: 'center',
-    fontFamily: "'Cinzel', Georgia, serif",
-    fontSize: '0.9rem',
-    fontWeight: 600,
-    letterSpacing: '0.03em',
-    cursor: 'pointer',
-    transition: 'background 0.15s',
-  },
-  orDivider: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    margin: '4px 0',
-  },
-  orText: {
-    color: 'var(--text-muted)',
-    fontSize: '0.78rem',
-    fontFamily: "'Cinzel', Georgia, serif",
-    letterSpacing: '0.06em',
-    margin: '0 auto',
   },
   startOverBtn: {
     background: 'transparent',
@@ -1153,4 +960,28 @@ const styles = {
     textTransform: 'uppercase',
     whiteSpace: 'nowrap',
   },
+  generatingWrap: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 16,
+    padding: '40px 0',
+    textAlign: 'center',
+  },
+  spinner: {
+    width: 48,
+    height: 48,
+    border: '3px solid rgba(212,175,55,0.2)',
+    borderTop: '3px solid #d4af37',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+  },
 };
+
+// Inject spinner keyframes
+if (typeof document !== 'undefined' && !document.getElementById('create-campaign-spinner')) {
+  const style = document.createElement('style');
+  style.id = 'create-campaign-spinner';
+  style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+  document.head.appendChild(style);
+}

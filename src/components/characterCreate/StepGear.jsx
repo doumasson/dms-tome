@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { CLASSES } from '../../data/classes';
 import { BACKGROUNDS } from '../../lib/charBuilder';
 import { WEAPONS } from '../../data/equipment';
@@ -61,8 +60,12 @@ function rollGold(goldTable) {
   return total * goldTable.mult;
 }
 
-// Parse "(a) X or (b) Y" style lines
+// Parse "(a) X or (b) Y" or "(a) X, (b) Y, or (c) Z" style lines
 function parseLine(line) {
+  // 3-option: (a) X, (b) Y, or (c) Z
+  const match3 = line.match(/^\(a\)\s*(.+?),\s*\(b\)\s*(.+?),?\s*or\s+\(c\)\s*(.+)$/i);
+  if (match3) return { type: 'choice3', a: match3[1].trim(), b: match3[2].trim(), c: match3[3].trim() };
+  // 2-option: (a) X or (b) Y
   const match = line.match(/^\(a\)\s*(.+?)\s+or\s+\(b\)\s*(.+)$/i);
   if (match) return { type: 'choice', a: match[1].trim(), b: match[2].trim() };
   return { type: 'fixed', item: line };
@@ -75,13 +78,10 @@ export default function StepGear({ cls, background, gearChoices, setGearChoices 
 
   const equipLines = (clsData?.startingEquipment || []).map(parseLine);
 
-  function setMethod(m) {
-    setGearChoices(prev => ({ ...prev, method: m }));
-  }
-
   function setSelection(idx, val) {
     setGearChoices(prev => ({
       ...prev,
+      method: 'equipment',
       selections: { ...prev.selections, [idx]: val },
     }));
   }
@@ -99,118 +99,124 @@ export default function StepGear({ cls, background, gearChoices, setGearChoices 
     setGearChoices(prev => ({ ...prev, gold: amount, method: 'gold' }));
   }
 
-  const isEquip = gearChoices.method === 'equipment';
-  const isGold  = gearChoices.method === 'gold';
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
-      {/* Method picker */}
-      <div style={methodToggle}>
-        <button
-          style={{ ...methodBtn, ...(isEquip ? methodBtnActive : {}) }}
-          onClick={() => setMethod('equipment')}
-        >
-          🎒 Class Starting Equipment
-        </button>
-        <button
-          style={{ ...methodBtn, ...(isGold ? methodBtnActive : {}) }}
-          onClick={() => setMethod('gold')}
-        >
-          💰 Roll for Gold
-        </button>
+      {/* ── Starting Equipment ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {equipLines.length === 0 && (
+          <p style={{ color: 'rgba(200,180,140,0.35)', fontStyle: 'italic', fontSize: '0.8rem' }}>
+            Select a class to see starting equipment.
+          </p>
+        )}
+
+        {equipLines.map((line, idx) => (
+          <div key={idx} style={equipRow}>
+            {line.type === 'choice3' ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div style={choiceLabel}>Choose one:</div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {[['a', line.a], ['b', line.b], ['c', line.c]].map(([opt, text]) => {
+                    const sel = gearChoices.selections?.[idx] === opt ||
+                                (!gearChoices.selections?.[idx] && opt === 'a');
+                    const picker = detectWeaponPicker(text);
+                    return (
+                      <div key={opt} style={{ flex: 1, minWidth: 120 }}>
+                        <button
+                          style={{ ...choiceBtn, ...(sel ? choiceBtnSel : {}), width: '100%' }}
+                          onClick={() => setSelection(idx, opt)}
+                        >
+                          <span style={choiceOptLabel}>Option {opt.toUpperCase()}</span>
+                          <span style={choiceText}>{text}</span>
+                        </button>
+                        {sel && picker && (
+                          <WeaponPicker
+                            picker={picker}
+                            pickKey={`${idx}-${opt}`}
+                            gearChoices={gearChoices}
+                            setWeaponPick={setWeaponPick}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : line.type === 'choice' ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div style={choiceLabel}>Choose one:</div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {[['a', line.a], ['b', line.b]].map(([opt, text]) => {
+                    const sel = gearChoices.selections?.[idx] === opt ||
+                                (!gearChoices.selections?.[idx] && opt === 'a');
+                    const picker = detectWeaponPicker(text);
+                    return (
+                      <div key={opt} style={{ flex: 1, minWidth: 140 }}>
+                        <button
+                          style={{ ...choiceBtn, ...(sel ? choiceBtnSel : {}), width: '100%' }}
+                          onClick={() => setSelection(idx, opt)}
+                        >
+                          <span style={choiceOptLabel}>Option {opt.toUpperCase()}</span>
+                          <span style={choiceText}>{text}</span>
+                        </button>
+                        {sel && picker && (
+                          <WeaponPicker
+                            picker={picker}
+                            pickKey={`${idx}-${opt}`}
+                            gearChoices={gearChoices}
+                            setWeaponPick={setWeaponPick}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <FixedItemRow text={line.item} lineIdx={idx} gearChoices={gearChoices} setWeaponPick={setWeaponPick} />
+            )}
+          </div>
+        ))}
+
+        {/* Background gear */}
+        {bgEquip && (
+          <div style={{ marginTop: 4 }}>
+            <div style={{ ...s.traitHeader, marginTop: 0 }}>Background Equipment ({background})</div>
+            <div style={fixedItem}>
+              <span style={fixedIcon}>✓</span>
+              <span style={fixedText}>{bgEquip}</span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* ── Starting Equipment ── */}
-      {isEquip && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {equipLines.length === 0 && (
-            <p style={{ color: 'rgba(200,180,140,0.35)', fontStyle: 'italic', fontSize: '0.8rem' }}>
-              Select a class to see starting equipment.
-            </p>
-          )}
+      {/* ── Divider ── */}
+      <div style={{ borderTop: '1px solid rgba(212,175,55,0.15)', margin: '8px 0' }} />
 
-          {equipLines.map((line, idx) => (
-            <div key={idx} style={equipRow}>
-              {line.type === 'fixed' ? (
-                <FixedItemRow text={line.item} lineIdx={idx} gearChoices={gearChoices} setWeaponPick={setWeaponPick} />
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <div style={choiceLabel}>Choose one:</div>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    {[['a', line.a], ['b', line.b]].map(([opt, text]) => {
-                      const sel = gearChoices.selections?.[idx] === opt ||
-                                  (!gearChoices.selections?.[idx] && opt === 'a');
-                      const picker = detectWeaponPicker(text);
-                      return (
-                        <div key={opt} style={{ flex: 1, minWidth: 140 }}>
-                          <button
-                            style={{ ...choiceBtn, ...(sel ? choiceBtnSel : {}), width: '100%' }}
-                            onClick={() => setSelection(idx, opt)}
-                          >
-                            <span style={choiceOptLabel}>Option {opt.toUpperCase()}</span>
-                            <span style={choiceText}>{text}</span>
-                          </button>
-                          {sel && picker && (
-                            <WeaponPicker
-                              picker={picker}
-                              pickKey={`${idx}-${opt}`}
-                              gearChoices={gearChoices}
-                              setWeaponPick={setWeaponPick}
-                            />
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-
-          {/* Background gear */}
-          {bgEquip && (
-            <div style={{ marginTop: 4 }}>
-              <div style={{ ...s.traitHeader, marginTop: 0 }}>Background Equipment ({background})</div>
-              <div style={fixedItem}>
-                <span style={fixedIcon}>✓</span>
-                <span style={fixedText}>{bgEquip}</span>
-              </div>
-            </div>
-          )}
+      {/* ── Starting Gold (Alternative) ── */}
+      <div>
+        <div style={{ fontSize: '0.72rem', color: 'rgba(200,180,140,0.5)', fontFamily: "'Cinzel', Georgia, serif", textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, marginBottom: 8 }}>
+          Starting Gold (Alternative)
         </div>
-      )}
-
-      {/* ── Roll for Gold ── */}
-      {isGold && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center', padding: '16px 0' }}>
-          {goldTable && (
-            <>
-              <p style={goldDesc}>
-                Instead of starting equipment, roll <strong style={{ color: '#d4af37' }}>{goldTable.label}</strong> and
-                spend the gold on gear in town before your first adventure.
-              </p>
-              <button style={{ ...s.rollDiceBtn, ...(gearChoices.gold > 0 ? { opacity: 0.35, cursor: 'not-allowed' } : {}) }} onClick={gearChoices.gold > 0 ? undefined : handleRollGold} disabled={gearChoices.gold > 0}>
-                🎲 Roll {goldTable.label}
-              </button>
-              {gearChoices.gold > 0 && (
-                <div style={goldResult}>
-                  <div style={goldResultAmt}>{gearChoices.gold} gp</div>
-                  <div style={goldResultLabel}>Starting Gold</div>
-                </div>
-              )}
-              <p style={goldHint}>
-                You can purchase weapons, armor, and adventuring gear from the shop at the start of your campaign.
-              </p>
-            </>
-          )}
-          {!goldTable && (
-            <p style={{ color: 'rgba(200,180,140,0.35)', fontStyle: 'italic', fontSize: '0.8rem' }}>
-              Select a class first to roll for gold.
-            </p>
-          )}
-        </div>
-      )}
+        {goldTable ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <span style={{ color: 'rgba(200,180,140,0.65)', fontSize: '0.8rem' }}>
+              Roll <strong style={{ color: '#d4af37' }}>{goldTable.label}</strong> instead of equipment
+            </span>
+            <button
+              style={{ ...s.rollDiceBtn, padding: '6px 14px', fontSize: '0.78rem', ...(gearChoices.gold > 0 ? { opacity: 0.35, cursor: 'not-allowed' } : {}) }}
+              onClick={gearChoices.gold > 0 ? undefined : handleRollGold}
+              disabled={gearChoices.gold > 0}
+            >
+              {gearChoices.gold > 0 ? `${gearChoices.gold} gp` : '🎲 Roll'}
+            </button>
+          </div>
+        ) : (
+          <p style={{ color: 'rgba(200,180,140,0.35)', fontStyle: 'italic', fontSize: '0.8rem', margin: 0 }}>
+            Select a class first.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
@@ -328,25 +334,6 @@ const wpDmg = {
 };
 
 // ── Local styles ────────────────────────────────────────────────────────────
-const methodToggle = {
-  display: 'flex', gap: 10, justifyContent: 'center',
-};
-const methodBtn = {
-  flex: 1, maxWidth: 260,
-  background: 'rgba(255,255,255,0.03)',
-  border: '1px solid rgba(255,255,255,0.1)',
-  borderRadius: 10, padding: '12px 14px',
-  color: 'rgba(200,180,140,0.55)',
-  fontFamily: "'Cinzel', Georgia, serif",
-  fontSize: '0.78rem', fontWeight: 700,
-  cursor: 'pointer', transition: 'all 0.15s',
-  letterSpacing: '0.03em',
-};
-const methodBtnActive = {
-  background: 'rgba(212,175,55,0.1)',
-  border: '1px solid rgba(212,175,55,0.45)',
-  color: '#d4af37',
-};
 const equipRow = {
   background: 'rgba(255,255,255,0.02)',
   border: '1px solid rgba(212,175,55,0.1)',
@@ -390,29 +377,4 @@ const choiceText = {
   fontSize: '0.75rem', color: 'rgba(200,180,140,0.8)',
   fontFamily: "'Cinzel', Georgia, serif", lineHeight: 1.4,
   display: 'block',
-};
-const goldDesc = {
-  color: 'rgba(200,180,140,0.65)', fontSize: '0.82rem',
-  lineHeight: 1.6, textAlign: 'center', maxWidth: 460, margin: 0,
-};
-const goldResult = {
-  background: 'rgba(212,175,55,0.08)',
-  border: '2px solid rgba(212,175,55,0.4)',
-  borderRadius: 12, padding: '16px 32px',
-  textAlign: 'center',
-};
-const goldResultAmt = {
-  fontFamily: "'Cinzel Decorative', 'Cinzel', Georgia, serif",
-  fontSize: '2.4rem', fontWeight: 700, color: '#d4af37',
-  lineHeight: 1,
-};
-const goldResultLabel = {
-  fontFamily: "'Cinzel', Georgia, serif",
-  fontSize: '0.72rem', color: 'rgba(200,180,140,0.5)',
-  letterSpacing: '0.1em', textTransform: 'uppercase',
-  marginTop: 4,
-};
-const goldHint = {
-  color: 'rgba(200,180,140,0.35)', fontSize: '0.75rem',
-  textAlign: 'center', fontStyle: 'italic', margin: 0,
 };

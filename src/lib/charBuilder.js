@@ -46,7 +46,7 @@ export function profBonus(level) {
 
 export function calcHp(cls, conScore) {
   const conMod = modNum(conScore);
-  return cls.hitDie + conMod;
+  return Math.max(1, cls.hitDie + conMod);
 }
 
 export function calcAc(cls, dexScore) {

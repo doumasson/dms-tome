@@ -138,7 +138,9 @@ export const CLASSES = {
       }
     },
     spellSlots: null,
-    extraAttacks: { 5: 2, 11: 3, 20: 4 }
+    extraAttacks: { 5: 2, 11: 3, 20: 4 },
+    primaryStats: ['str'],
+    secondaryStats: ['con']
   },
 
   Barbarian: {
@@ -196,7 +198,9 @@ export const CLASSES = {
     specialDefense: {
       "Unarmored Defense": "AC = 10 + DEX modifier + CON modifier (when not wearing armor)"
     },
-    rageDamageBonus: { 1: 2, 9: 3, 16: 4 }
+    rageDamageBonus: { 1: 2, 9: 3, 16: 4 },
+    primaryStats: ['str'],
+    secondaryStats: ['con']
   },
 
   Rogue: {
@@ -265,7 +269,9 @@ export const CLASSES = {
       6: "3d6",  7: "4d6",  8: "4d6",  9: "5d6", 10: "5d6",
       11: "6d6", 12: "6d6", 13: "7d6", 14: "7d6", 15: "8d6",
       16: "8d6", 17: "9d6", 18: "9d6", 19: "10d6", 20: "10d6"
-    }
+    },
+    primaryStats: ['dex'],
+    secondaryStats: ['con', 'int']
   },
 
   Wizard: {
@@ -320,7 +326,9 @@ export const CLASSES = {
       }
     },
     spellSlots: FULL_CASTER_SLOTS,
-    extraAttacks: {}
+    extraAttacks: {},
+    primaryStats: ['int'],
+    secondaryStats: ['con']
   },
 
   Sorcerer: {
@@ -377,7 +385,9 @@ export const CLASSES = {
     spellSlots: FULL_CASTER_SLOTS,
     extraAttacks: {},
     // Sorcery points equal to Sorcerer level starting at level 2
-    sorceryPoints: "level >= 2 ? level : 0"
+    sorceryPoints: "level >= 2 ? level : 0",
+    primaryStats: ['cha'],
+    secondaryStats: ['con']
   },
 
   Cleric: {
@@ -395,8 +405,8 @@ export const CLASSES = {
     castingType: "full",
     spellAbility: "WIS",
     startingEquipment: [
-      "(a) a mace or (b) a warhammer (if proficient)",
-      "(a) scale mail, (b) leather armor, or (c) chain mail (if proficient)",
+      "(a) a mace or (b) a warhammer",
+      "(a) scale mail, (b) leather armor, or (c) chain mail",
       "(a) a light crossbow and 20 bolts or (b) any simple weapon",
       "(a) a priest's pack or (b) an explorer's pack",
       "A shield and a holy symbol"
@@ -432,7 +442,9 @@ export const CLASSES = {
       }
     },
     spellSlots: FULL_CASTER_SLOTS,
-    extraAttacks: {}
+    extraAttacks: {},
+    primaryStats: ['wis'],
+    secondaryStats: ['str', 'con']
   },
 
   Paladin: {
@@ -499,7 +511,9 @@ export const CLASSES = {
       }
     },
     spellSlots: HALF_CASTER_SLOTS,
-    extraAttacks: { 5: 2 }
+    extraAttacks: { 5: 2 },
+    primaryStats: ['str', 'cha'],
+    secondaryStats: ['con']
   },
 
   Ranger: {
@@ -554,7 +568,9 @@ export const CLASSES = {
       }
     },
     spellSlots: HALF_CASTER_SLOTS,
-    extraAttacks: { 5: 2 }
+    extraAttacks: { 5: 2 },
+    primaryStats: ['dex'],
+    secondaryStats: ['wis']
   },
 
   Monk: {
@@ -623,7 +639,9 @@ export const CLASSES = {
       1: "1d4",  5: "1d6",  11: "1d8",  17: "1d10"
     },
     // Ki points equal to Monk level
-    kiPoints: "level"
+    kiPoints: "level",
+    primaryStats: ['dex', 'wis'],
+    secondaryStats: ['con']
   },
 
   Bard: {
@@ -685,7 +703,9 @@ export const CLASSES = {
     // Bardic Inspiration die by level
     bardicInspirationDie: {
       1: "d6",  5: "d8",  10: "d10",  15: "d12"
-    }
+    },
+    primaryStats: ['cha'],
+    secondaryStats: ['dex']
   },
 
   Druid: {
@@ -742,7 +762,9 @@ export const CLASSES = {
       }
     },
     spellSlots: FULL_CASTER_SLOTS,
-    extraAttacks: {}
+    extraAttacks: {},
+    primaryStats: ['wis'],
+    secondaryStats: ['con']
   },
 
   Warlock: {
@@ -805,7 +827,9 @@ export const CLASSES = {
     // Pact magic: short-rest recharge, always highest available slot level
     spellSlots: null,
     pactMagic: WARLOCK_SLOTS,
-    extraAttacks: {}
+    extraAttacks: {},
+    primaryStats: ['cha'],
+    secondaryStats: ['con']
   }
 };
 

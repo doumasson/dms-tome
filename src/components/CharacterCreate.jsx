@@ -176,7 +176,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     Class:      <StepClass      key="class"     cls={cls}               setCls={setCls} />,
     Background: <StepBackground key="bg"        background={background} setBackground={setBackground} skills={skills} setSkills={setSkills} cls={cls} />,
     Spells:     <StepSpells     key="spells"    cls={cls}               selectedSpells={selectedSpells} setSelectedSpells={setSelectedSpells} />,
-    Abilities:  <StepAbilities  key="abilities" race={race}             baseStats={baseStats} setBaseStats={setBaseStats} method={method} setMethod={setMethod} flexChoices={flexChoices} setFlexChoices={setFlexChoices} />,
+    Abilities:  <StepAbilities  key="abilities" race={race} cls={cls}    baseStats={baseStats} setBaseStats={setBaseStats} method={method} setMethod={setMethod} flexChoices={flexChoices} setFlexChoices={setFlexChoices} />,
     Identity:   <StepIdentity   key="identity"  name={name}             setName={setName} alignment={alignment} setAlignment={setAlignment} appearance={appearance} setAppearance={setAppearance} backstory={backstory} setBackstory={setBackstory} race={race} cls={cls} portrait={portrait} setPortrait={setPortrait} />,
     Gear:       <StepGear       key="gear"      cls={cls}               background={background} gearChoices={gearChoices} setGearChoices={setGearChoices} />,
   };

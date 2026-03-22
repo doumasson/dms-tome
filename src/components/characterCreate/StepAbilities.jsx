@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getRace, applyRacialBonuses } from '../../data/races';
+import { CLASSES } from '../../data/classes';
 import { STANDARD_ARRAY, STAT_KEYS, STAT_LABELS, STAT_FULL, statMod } from '../../lib/charBuilder';
 import { s } from './charCreateStyles';
 
@@ -19,8 +20,9 @@ function rollAllSets() {
   return sets.map((s, i) => ({ ...s, dropped: i === dropIdx }));
 }
 
-export default function StepAbilities({ race, baseStats, setBaseStats, method, setMethod, flexChoices, setFlexChoices }) {
+export default function StepAbilities({ race, cls, baseStats, setBaseStats, method, setMethod, flexChoices, setFlexChoices }) {
   const raceData = getRace(race);
+  const clsData = cls ? CLASSES[cls] : null;
   const finalStats = raceData ? applyRacialBonuses(baseStats, race, flexChoices) : baseStats;
 
   // Standard array mode
@@ -30,6 +32,7 @@ export default function StepAbilities({ race, baseStats, setBaseStats, method, s
   const [rollSets, setRollSets] = useState(null);
   const [assignments, setAssignments] = useState({});
   const [pickTarget, setPickTarget] = useState(null);
+  const [rerollsUsed, setRerollsUsed] = useState(0);
 
   // Auto-roll on mount when in rolled mode
   useEffect(() => {
@@ -134,14 +137,23 @@ export default function StepAbilities({ race, baseStats, setBaseStats, method, s
               const final = finalStats[k];
               const bonus = final - base;
               const isTarget = assignTarget === k;
+              const isPrimary = clsData?.primaryStats?.includes(k);
+              const isSecondary = clsData?.secondaryStats?.includes(k);
               return (
                 <button
                   key={k}
-                  style={{ ...s.statBlock, ...(isTarget ? s.statBlockTarget : {}) }}
+                  style={{
+                    ...s.statBlock,
+                    ...(isTarget ? s.statBlockTarget : {}),
+                    ...(isPrimary ? { border: '2px solid rgba(212,175,55,0.6)', boxShadow: '0 0 8px rgba(212,175,55,0.2)' } : {}),
+                    ...(isSecondary && !isPrimary ? { border: '2px solid rgba(160,160,180,0.3)' } : {}),
+                  }}
                   onClick={() => setAssignTarget(isTarget ? null : k)}
                   title={STAT_FULL[k]}
                 >
                   <div style={s.statBlockLabel}>{STAT_LABELS[k]}</div>
+                  {isPrimary && <div style={{ fontSize: '0.5rem', color: '#d4af37', fontWeight: 700, letterSpacing: '0.05em' }}>★ PRIMARY</div>}
+                  {isSecondary && !isPrimary && <div style={{ fontSize: '0.5rem', color: 'rgba(160,160,180,0.6)', fontWeight: 700, letterSpacing: '0.05em' }}>◆ SECONDARY</div>}
                   <div style={s.statBlockVal}>{final}</div>
                   <div style={s.statBlockMod}>{statMod(final)}</div>
                   {bonus !== 0 && <div style={s.statBlockBonus}>+{bonus} racial</div>}
@@ -222,6 +234,8 @@ export default function StepAbilities({ race, baseStats, setBaseStats, method, s
                   const bonus = final - base;
                   const isTarget = pickTarget === k;
                   const hasValue = assignments[k] !== undefined;
+                  const isPrimary = clsData?.primaryStats?.includes(k);
+                  const isSecondary = clsData?.secondaryStats?.includes(k);
                   return (
                     <button
                       key={k}
@@ -229,6 +243,8 @@ export default function StepAbilities({ race, baseStats, setBaseStats, method, s
                         ...s.statBlock,
                         ...(isTarget ? s.statBlockTarget : {}),
                         ...(hasValue && !isTarget ? diceStatAssigned : {}),
+                        ...(isPrimary ? { border: '2px solid rgba(212,175,55,0.6)', boxShadow: '0 0 8px rgba(212,175,55,0.2)' } : {}),
+                        ...(isSecondary && !isPrimary ? { border: '2px solid rgba(160,160,180,0.3)' } : {}),
                       }}
                       onClick={() => {
                         if (hasValue) unassignStat(k);
@@ -237,6 +253,8 @@ export default function StepAbilities({ race, baseStats, setBaseStats, method, s
                       title={STAT_FULL[k]}
                     >
                       <div style={s.statBlockLabel}>{STAT_LABELS[k]}</div>
+                      {isPrimary && <div style={{ fontSize: '0.5rem', color: '#d4af37', fontWeight: 700, letterSpacing: '0.05em' }}>★ PRIMARY</div>}
+                      {isSecondary && !isPrimary && <div style={{ fontSize: '0.5rem', color: 'rgba(160,160,180,0.6)', fontWeight: 700, letterSpacing: '0.05em' }}>◆ SECONDARY</div>}
                       <div style={{ ...s.statBlockVal, ...(hasValue ? {} : { color: 'rgba(200,180,140,0.2)', fontSize: '0.9rem' }) }}>
                         {hasValue ? final : '—'}
                       </div>
@@ -252,10 +270,11 @@ export default function StepAbilities({ race, baseStats, setBaseStats, method, s
               {/* Re-roll button */}
               <div style={{ textAlign: 'center' }}>
                 <button
-                  style={{ ...s.rollDiceBtn, background: 'rgba(255,255,255,0.06)', color: 'rgba(200,180,140,0.6)', border: '1px solid rgba(255,255,255,0.1)' }}
-                  onClick={handleRoll}
+                  style={{ ...s.rollDiceBtn, background: 'rgba(255,255,255,0.06)', color: 'rgba(200,180,140,0.6)', border: '1px solid rgba(255,255,255,0.1)', ...(rerollsUsed >= 1 ? { opacity: 0.35, cursor: 'not-allowed' } : {}) }}
+                  onClick={() => { if (rerollsUsed < 1) { handleRoll(); setRerollsUsed(r => r + 1); } }}
+                  disabled={rerollsUsed >= 1}
                 >
-                  🎲 Re-roll
+                  {rerollsUsed >= 1 ? '🎲 No Rerolls Left' : '🎲 Re-roll (1 left)'}
                 </button>
               </div>
             </>
