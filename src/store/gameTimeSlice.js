@@ -201,7 +201,10 @@ export function createGameTimeSlice(set, get) {
 
     activateArea: (areaId) => set(state => {
       const area = state.areas[areaId];
-      if (!area) return {};
+      if (!area) {
+        console.warn(`[activateArea] Area "${areaId}" not found. Available:`, Object.keys(state.areas || {}));
+        return {};
+      }
       return {
         currentAreaId: areaId,
         areaLayers: area.layers,

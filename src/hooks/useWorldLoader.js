@@ -83,6 +83,12 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
           questObjectives: campaignData.questObjectives || [],
         })
         activateArea(startId)
+        // Set player position from built area
+        const builtArea = areas[startId]
+        if (builtArea.playerStart) {
+          const safePos = safeguardSpawn(builtArea.playerStart, builtArea.enemies || [], builtArea)
+          setPlayerPos(safePos)
+        }
         return
       }
 
