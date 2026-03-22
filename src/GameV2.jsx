@@ -314,7 +314,7 @@ export default function GameV2({ onLeave }) {
 
     // Double-check: don't start combat if all relevant enemies are defeated
     const relevantEnemies = triggered.enemies?.length
-      ? (zone.enemies || []).filter(e => triggered.enemies.some(name => e.name?.includes(name) || e.id?.includes(name)))
+      ? (zone.enemies || []).filter(e => triggered.enemies.some(name => e.name === name || e.name?.startsWith(name + ' ')))
       : (zone.enemies || [])
     const allRelevantDefeated = relevantEnemies.length > 0 && relevantEnemies.every(e => areaDefeated.includes(e.name))
     if (allRelevantDefeated) {
@@ -335,7 +335,7 @@ export default function GameV2({ onLeave }) {
       // Get enemies from the zone data that match this encounter
       const zoneEnemies = (zone.enemies || []).filter(e => {
         const enemyNames = triggered.enemies || []
-        return enemyNames.some(name => e.name?.includes(name) || e.id?.includes(name))
+        return enemyNames.some(name => e.name === name || e.name?.startsWith(name + ' '))
       })
       // Fall back to all zone enemies if no match
       const enemies = zoneEnemies.length > 0 ? zoneEnemies : (zone.enemies || [])

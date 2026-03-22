@@ -221,6 +221,51 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         return true
       }
 
+      // Save-based spell resolution (Sacred Flame, Poison Spray, etc.)
+      if (selectedWeapon?.isSaveSpell) {
+        const saveAbility = selectedWeapon.save.toLowerCase()
+        const casterAbility = active.class === 'Cleric' ? 'wis' : active.class === 'Wizard' ? 'int' : active.class === 'Druid' ? 'wis' : 'cha'
+        const casterMod = Math.floor(((active.stats?.[casterAbility] || 10) - 10) / 2)
+        const profBonusVal = Math.ceil((active.level || 1) / 4) + 1
+        const saveDC = 8 + profBonusVal + casterMod
+
+        const targetSaveProfs = target.class ? getSaveProficiencies(target.class) : []
+        const baseSaveMod = Math.floor(((target.stats?.[saveAbility] || 10) - 10) / 2)
+        const saveProfBonus = targetSaveProfs.includes(saveAbility) ? getProfBonus(target.level || 1) : 0
+        const saveMod = baseSaveMod + saveProfBonus
+        const saveRoll = Math.floor(Math.random() * 20) + 1 + saveMod
+        const saved = saveRoll >= saveDC
+
+        const dmgResult = rollDamage(selectedWeapon.damage)
+        const damage = saved ? 0 : dmgResult.total
+
+        if (damage > 0) {
+          const { applyEncounterDamage: applyDmg } = useStore.getState()
+          applyDmg(target.id || target.name, damage)
+        }
+
+        // Consume action
+        const { useAction: consumeAction } = useStore.getState()
+        consumeAction(active.id)
+
+        // Consume spell slot (if not cantrip)
+        if (selectedWeapon.castLevel > 0) {
+          const { useSpellSlot } = useStore.getState()
+          useSpellSlot(active.id, selectedWeapon.castLevel)
+        }
+
+        const entry = saved
+          ? `${active.name} casts ${selectedWeapon.name} on ${target.name}! ${saveAbility.toUpperCase()} save: ${saveRoll} vs DC ${saveDC} — SAVE! No damage.`
+          : `${active.name} casts ${selectedWeapon.name} on ${target.name}! ${saveAbility.toUpperCase()} save: ${saveRoll} vs DC ${saveDC} — FAIL! ${damage} ${selectedWeapon.damageType} damage.`
+
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: entry })
+        broadcastEncounterAction({ type: 'attack-result', attackerId: active.id, targetId: target.id, hit: !saved, damage, log: entry })
+
+        setTargetingMode(null)
+        setSelectedWeapon(null)
+        return true
+      }
+
       const coverType = calculateCover(active.position, { x, y }, zone.wallEdges, propCoverRef.current, zone.width)
       const coverBonus = COVER_BONUS[coverType] || 0
       const effectiveAC = (target.ac || 10) + coverBonus
@@ -629,6 +674,21 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       // Ranged/melee spell attack — same as weapon attack targeting
       setTargetingMode('attack')
       addNarratorMessage({ role: 'dm', speaker: 'System', text: `Cast ${spell.name}. Click a target. Press Escape to cancel.` })
+    } else if (spell.save && !spell.areaType) {
+      // Single-target save spell (Sacred Flame, Poison Spray, etc.)
+      // Store the spell for resolution when target is clicked
+      setSelectedWeapon({
+        name: spell.name,
+        isSaveSpell: true,
+        save: spell.save,
+        damage: spell.damage?.dice || '1d8',
+        damageType: spell.damage?.type || 'radiant',
+        range: spell.range || 60,
+        level: spell.level,
+        castLevel: castLevel,
+      });
+      setTargetingMode('attack');
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: `Cast ${spell.name}. Click a target. Press Escape to cancel.` });
     } else {
       // Self/utility spell — cast immediately, consume slot
       if (castLevel > 0) {

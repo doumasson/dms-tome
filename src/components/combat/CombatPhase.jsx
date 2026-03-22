@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useSyncExternalStore } from 'react';
 import useStore from '../../store/useStore';
 import { rollDamage } from '../../lib/dice';
 import { crToXp } from '../../lib/xpTable';
-import { broadcastPlayerMove, broadcastNarratorMessage } from '../../lib/liveChannel';
+import { broadcastPlayerMove, broadcastNarratorMessage, broadcastEncounterAction } from '../../lib/liveChannel';
 import { COMBAT_SPELLS } from '../../lib/combatSpells';
 import PartyPanel from '../PartyPanel';
 import CharDetailPanel from '../CharDetailPanel';
@@ -206,6 +206,179 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     const msg = { role: 'dm', speaker: 'Dungeon Master', text, id: crypto.randomUUID(), timestamp: Date.now() };
     addNarratorMessage(msg);
     broadcastNarratorMessage(msg);
+  }
+
+  function handleSpecialAbility(combatant, action) {
+    if (!action || !combatant) return;
+
+    if (action.id === 'channel_divinity') {
+      // Consume the resource
+      const { useClassResource } = useStore.getState();
+      useClassResource(combatant.id, 'Channel Divinity', 1);
+
+      if (combatant.class === 'Cleric') {
+        // Turn Undead: each enemy within 30ft must make WIS save
+        const wisMod = Math.floor(((combatant.stats?.wis || 10) - 10) / 2);
+        const profBonus = Math.ceil((combatant.level || 1) / 4) + 1;
+        const saveDC = 8 + profBonus + wisMod;
+
+        // Find enemies within 30ft (6 tiles)
+        const inRange = combatants.filter(c =>
+          c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position && combatant.position &&
+          Math.max(Math.abs(c.position.x - combatant.position.x), Math.abs(c.position.y - combatant.position.y)) <= 6
+        );
+
+        if (inRange.length === 0) {
+          handleNarrate(`${combatant.name} channels divine energy — Turn Undead! But no enemies are within range.`);
+          broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Channel Divinity: Turn Undead' });
+          return;
+        }
+
+        const results = [];
+        for (const enemy of inRange) {
+          const saveMod = Math.floor(((enemy.stats?.wis || 10) - 10) / 2);
+          const roll = Math.floor(Math.random() * 20) + 1 + saveMod;
+          const saved = roll >= saveDC;
+
+          // Destroy Undead threshold by cleric level
+          const lvl = combatant.level || 1;
+          const destroyThreshold = lvl >= 17 ? 4 : lvl >= 14 ? 3 : lvl >= 11 ? 2 : lvl >= 8 ? 1 : lvl >= 5 ? 0.5 : 0;
+          const enemyCR = parseFloat(enemy.stats?.cr || '1');
+
+          if (!saved && destroyThreshold > 0 && enemyCR <= destroyThreshold) {
+            onDamage(enemy.id, 999);
+            results.push(`${enemy.name}: WIS save ${roll} vs DC ${saveDC} — FAIL! DESTROYED!`);
+          } else if (!saved) {
+            onAddCondition(enemy.id, 'Frightened');
+            results.push(`${enemy.name}: WIS save ${roll} vs DC ${saveDC} — FAIL! Turned (Frightened).`);
+          } else {
+            results.push(`${enemy.name}: WIS save ${roll} vs DC ${saveDC} — SAVE!`);
+          }
+        }
+
+        const msg = `${combatant.name} channels divine energy — Turn Undead! (DC ${saveDC})\n${results.join('\n')}`;
+        handleNarrate(msg);
+        broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Channel Divinity: Turn Undead', log: msg });
+
+      } else if (combatant.class === 'Paladin') {
+        // Sacred Weapon: add CHA to attack rolls for 1 minute
+        handleNarrate(`${combatant.name} channels divine energy — Sacred Weapon! Their weapon glows with holy light.`);
+        broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Channel Divinity: Sacred Weapon' });
+      } else {
+        handleNarrate(`${combatant.name} channels divine energy!`);
+        broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Channel Divinity' });
+      }
+      return;
+    }
+
+    // --- Second Wind (Fighter) ---
+    if (action.id === 'second_wind') {
+      useClassResource(combatant.id, 'Second Wind', 1);
+      const lvl = combatant.level || 1;
+      const healDice = rollDamage(`1d10+${lvl}`);
+      onHeal(combatant.id, healDice.total);
+      handleNarrate(`${combatant.name} uses Second Wind, recovering ${healDice.total} HP!`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Second Wind', heal: healDice.total });
+      return;
+    }
+
+    // --- Action Surge (Fighter) ---
+    if (action.id === 'action_surge') {
+      useClassResource(combatant.id, 'Action Surge', 1);
+      useStore.setState(state => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === combatant.id ? { ...c, actionsUsed: 0 } : c
+          ),
+        },
+      }));
+      handleNarrate(`${combatant.name} surges with adrenaline — an additional action this turn!`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Action Surge' });
+      return;
+    }
+
+    // --- Rage (Barbarian) ---
+    if (action.id === 'rage') {
+      useClassResource(combatant.id, 'Rages', 1);
+      onAddCondition(combatant.id, 'Raging');
+      const lvl = combatant.level || 1;
+      const rageDmg = lvl >= 16 ? 4 : lvl >= 9 ? 3 : 2;
+      handleNarrate(`${combatant.name} enters a RAGE! (+${rageDmg} melee damage, resistance to physical damage)`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Rage' });
+      return;
+    }
+
+    // --- Reckless Attack (Barbarian) ---
+    if (action.id === 'reckless') {
+      onAddCondition(combatant.id, 'Reckless');
+      handleNarrate(`${combatant.name} attacks recklessly! Advantage on STR attacks this turn, but enemies have advantage against them.`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Reckless Attack' });
+      return;
+    }
+
+    // --- Lay on Hands (Paladin) ---
+    if (action.id === 'lay_on_hands') {
+      const lvl = combatant.level || 1;
+      const poolMax = lvl * 5;
+      const used = combatant.resourcesUsed?.['Lay on Hands'] || 0;
+      const remaining = Math.max(0, poolMax - used);
+      const healAmt = Math.min(remaining, Math.max(1, Math.ceil(remaining / 2)));
+      if (healAmt <= 0) {
+        handleNarrate(`${combatant.name} has no Lay on Hands healing remaining.`);
+        return;
+      }
+      useClassResource(combatant.id, 'Lay on Hands', healAmt);
+      onHeal(combatant.id, healAmt);
+      handleNarrate(`${combatant.name} lays hands on themselves, restoring ${healAmt} HP! (${remaining - healAmt} pool remaining)`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Lay on Hands', heal: healAmt });
+      return;
+    }
+
+    // --- Bardic Inspiration (Bard) ---
+    if (action.id === 'bardic_inspiration') {
+      useClassResource(combatant.id, 'Bardic Inspiration', 1);
+      const lvl = combatant.level || 1;
+      const diSize = lvl < 5 ? 'd6' : lvl < 10 ? 'd8' : lvl < 15 ? 'd10' : 'd12';
+      const allies = combatants.filter(c => !c.isEnemy && c.id !== combatant.id && (c.currentHp ?? c.hp) > 0);
+      const target = allies.length > 0 ? allies[Math.floor(Math.random() * allies.length)] : null;
+      const targetName = target ? target.name : 'the party';
+      handleNarrate(`${combatant.name} inspires ${targetName} with a 1${diSize} Bardic Inspiration die!`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Bardic Inspiration', target: targetName });
+      return;
+    }
+
+    // --- Wild Shape (Druid) ---
+    if (action.id === 'wild_shape') {
+      useClassResource(combatant.id, 'Wild Shape', 1);
+      const lvl = combatant.level || 1;
+      const maxCR = lvl >= 8 ? 1 : lvl >= 4 ? 0.5 : 0.25;
+      handleNarrate(`${combatant.name} transforms using Wild Shape! (Max CR ${maxCR})`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Wild Shape' });
+      return;
+    }
+
+    // --- Arcane Recovery (Wizard) ---
+    if (action.id === 'arcane_recovery') {
+      useClassResource(combatant.id, 'Arcane Recovery', 1);
+      const lvl = combatant.level || 1;
+      const slotsRecovered = Math.ceil(lvl / 2);
+      handleNarrate(`${combatant.name} uses Arcane Recovery, recovering up to ${slotsRecovered} levels of spell slots!`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Arcane Recovery' });
+      return;
+    }
+
+    // --- Metamagic (Sorcerer) ---
+    if (action.id === 'metamagic') {
+      useClassResource(combatant.id, 'Sorcery Points', 1);
+      handleNarrate(`${combatant.name} spends a Sorcery Point to modify their next spell with Metamagic!`);
+      broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: 'Metamagic' });
+      return;
+    }
+
+    // --- Generic special ability fallback ---
+    handleNarrate(`${combatant.name} uses ${action.label || action.id}.`);
+    broadcastEncounterAction({ type: 'class-ability', id: combatant.id, ability: action.label || action.id });
   }
 
   function handleSpellOpen(combatant, action) {
@@ -675,7 +848,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
                       ⚠ {activeCombatant.name} is <strong>{incapCondition}</strong> — cannot act
                     </div>
                   ) : (
-                    <ActionPanel combatant={activeCombatant} onAttack={() => setPanel('attack')} onSpell={(c, action) => handleSpellOpen(c, action)} onSpecial={() => {}} style={{ marginBottom: 8 }} />
+                    <ActionPanel combatant={activeCombatant} onAttack={() => setPanel('attack')} onSpell={(c, action) => handleSpellOpen(c, action)} onSpecial={handleSpecialAbility} style={{ marginBottom: 8 }} />
                   )}
                   {dmMode && !incapCondition && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4, paddingTop: 8, borderTop: '1px solid #2a1a0a' }}>

@@ -295,6 +295,22 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     }
   }
 
+  // 11b. Calculate encounter zone centers from placed enemy positions
+  const processedEncounterZones = (encounterZones || []).map(ez => {
+    const ezEnemyNames = ez.enemies || [];
+    // Find placed enemies that match this encounter zone
+    const matchingEnemies = placedEnemies.filter(pe =>
+      ezEnemyNames.some(name => pe.name === name || pe.name.startsWith(name + ' '))
+    );
+    if (matchingEnemies.length > 0) {
+      // Calculate center as average position of matching enemies
+      const avgX = Math.round(matchingEnemies.reduce((sum, e) => sum + e.position.x, 0) / matchingEnemies.length);
+      const avgY = Math.round(matchingEnemies.reduce((sum, e) => sum + e.position.y, 0) / matchingEnemies.length);
+      return { ...ez, center: { x: avgX, y: avgY } };
+    }
+    return ez;
+  });
+
   // 12. Place exits
   const placedExits = []
   for (const exit of exits) {
@@ -370,7 +386,7 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     playerStart,
     npcs: placedNpcs,
     enemies: placedEnemies,
-    encounterZones,
+    encounterZones: processedEncounterZones,
     buildings,
     lightSources: allLightSources,
     exits: placedExits,
