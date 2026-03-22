@@ -81,10 +81,12 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 50px;
+  height: 60px;
   background-image: url('/ui/bar-top.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -134,6 +136,70 @@
   color: #cc3333;
 }
 
+/* Zone info inlined in top bar left */
+.hud-zone-name-inline {
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--gold-bright);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(201, 168, 76, 0.3);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hud-zone-info-inline {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  color: var(--gold-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Center time display */
+.hud-top-bar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.hud-time-bar-track {
+  width: 140px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  overflow: hidden;
+}
+
+.hud-time-bar-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.hud-time-text {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  color: var(--gold-muted);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* Action area — just buttons, no chat input */
+.hud-action-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .hud-top-bar-icon-btn {
   background: none;
   border: none;
@@ -151,6 +217,8 @@
   width: 32px;
   height: 32px;
   object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .hud-top-bar-icon-btn:hover {
@@ -172,6 +240,8 @@
   object-fit: fill;
   pointer-events: none;
   z-index: 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .hud-bottom-bar-content {
@@ -183,6 +253,7 @@
   align-items: stretch;
   position: relative;
   z-index: 1;
+  overflow: visible;
 }
 
 /* Session log panel — image asset background */
@@ -192,6 +263,49 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: height 0.3s ease, margin-top 0.3s ease;
+}
+
+/* Expanded log panel — extends upward above the bottom bar */
+.hud-log-panel.hud-log-expanded {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 340px;
+  z-index: 5;
+}
+
+/* Expand/retract toggle button */
+.hud-log-expand-btn {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  min-height: 0;
+  border-radius: 0;
+  transition: filter 0.15s, transform 0.15s;
+}
+
+.hud-log-expand-btn img {
+  display: block;
+  width: 40px;
+  height: auto;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.hud-log-expand-btn:hover {
+  filter: brightness(1.3) drop-shadow(0 0 4px rgba(212,175,55,0.4));
+}
+
+.hud-log-expand-btn:active {
+  transform: translateX(-50%) scale(0.92);
 }
 
 /* Parchment background image */
@@ -203,6 +317,8 @@
   object-fit: fill;
   pointer-events: none;
   z-index: 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .hud-log-panel > *:not(.hud-log-bg-img) {
@@ -226,6 +342,8 @@
   height: 28px;
   width: auto;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 /* Legacy image-based tab buttons (unused, kept for compat) */
@@ -344,7 +462,7 @@
 /* Zone label — background now via weather-bar.png in ZoneLabel.jsx */
 .hud-zone-label {
   position: absolute;
-  top: 56px;
+  top: 66px;
   left: 8px;
   z-index: 10;
   padding: 12px 32px;
@@ -501,7 +619,7 @@
 /* PLACEHOLDER: replace with texture asset — metal frame initiative */
 .hud-initiative {
   position: absolute;
-  top: 56px;
+  top: 66px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -544,7 +662,7 @@
 /* Turn banner */
 .hud-turn-banner {
   position: absolute;
-  top: 56px;
+  top: 66px;
   left: 6px;
   z-index: 15;
   background: rgba(6,5,8,0.92);
@@ -593,7 +711,7 @@
 /* PLACEHOLDER: replace with texture asset — stone panel enemy info */
 .hud-enemy-info {
   position: absolute;
-  top: 50px;
+  top: 66px;
   right: 6px;
   width: 150px;
   z-index: 15;
@@ -1328,9 +1446,13 @@
 }
 
 .asset-btn img {
-  height: 52px;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
   display: block;
   pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .asset-btn:hover {
@@ -1360,6 +1482,8 @@
   object-fit: fill;
   pointer-events: none;
   z-index: 2;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .portrait-frame.selected {

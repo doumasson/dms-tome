@@ -19,6 +19,7 @@ function getLogColorClass(entry) {
 export default function SessionLog({ onChat }) {
   const [tab, setTab] = useState('chat')
   const [chatInput, setChatInput] = useState('')
+  const [expanded, setExpanded] = useState(false)
   const sessionLog = useStore(s => s.sessionLog) || []
   const narratorHistory = useStore(s => s.narrator?.history) || []
   const inCombat = useStore(s => s.encounter.phase === 'combat')
@@ -66,9 +67,21 @@ export default function SessionLog({ onChat }) {
   }
 
   return (
-    <div className="hud-log-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+    <div className={`hud-log-panel${expanded ? ' hud-log-expanded' : ''}`} style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
       {/* Parchment background — image asset */}
       <img src="/ui/log-bg.png" className="hud-log-bg-img" alt="" draggable={false} />
+      {/* Expand/retract toggle button */}
+      <button
+        className="hud-log-expand-btn"
+        onClick={() => setExpanded(prev => !prev)}
+        title={expanded ? 'Collapse log' : 'Expand log'}
+      >
+        <img
+          src={expanded ? '/ui/log-retract.png' : '/ui/log-expand.png'}
+          alt={expanded ? 'Collapse' : 'Expand'}
+          draggable={false}
+        />
+      </button>
       {/* Tabs — single image strip, clicking left/right half switches tab */}
       <div className="hud-log-tabs">
         <div

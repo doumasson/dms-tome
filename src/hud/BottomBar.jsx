@@ -25,7 +25,7 @@ export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onActi
         {inCombat ? (
           <CombatActionBar onEndTurn={onEndTurn} onAction={onAction} />
         ) : (
-          <ActionArea areaTheme={areaTheme} onTool={onTool} onChat={onChat} />
+          <ActionArea areaTheme={areaTheme} onTool={onTool} />
         )}
         <QuickslotBar onUseSlot={onUseQuickslot} />
       </div>

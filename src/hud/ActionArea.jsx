@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import useStore from '../store/useStore'
 import { playStoneClick } from '../lib/uiSounds'
 
 const TOOLS = [
@@ -10,26 +9,10 @@ const TOOLS = [
   { img: '/ui/btn-rest.png', label: 'REST', key: 'rest' },
 ]
 
-export default function ActionArea({ onTool, onChat, areaTheme }) {
-  const [input, setInput] = useState('')
+export default function ActionArea({ onTool, areaTheme }) {
   const [showRestPicker, setShowRestPicker] = useState(false)
-  const narratorMessages = useStore(s => s.narratorMessages)
 
   const isDungeonTheme = ['dungeon', 'cave', 'crypt', 'sewer'].includes(areaTheme)
-
-  // Show contextual placeholder — full prompt when DM recently asked something
-  const lastDmMsg = narratorMessages?.slice(-3).find(m => m.role === 'dm')
-  const hasRecentDmPrompt = lastDmMsg && (
-    lastDmMsg.text?.includes('?') || lastDmMsg.text?.toLowerCase().includes('what do you')
-  )
-  const placeholder = hasRecentDmPrompt ? 'What do you do?' : 'Chat...'
-
-  function handleSubmit(e) {
-    e.preventDefault()
-    if (!input.trim()) return
-    onChat?.(input.trim())
-    setInput('')
-  }
 
   function handleToolClick(key) {
     playStoneClick()
@@ -41,7 +24,7 @@ export default function ActionArea({ onTool, onChat, areaTheme }) {
   }
 
   return (
-    <div style={{ width: 240, display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0 }}>
+    <div className="hud-action-area">
       {/* Tool buttons — image asset buttons */}
       <div style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center' }}>
         {TOOLS.map(tool => (
@@ -86,17 +69,6 @@ export default function ActionArea({ onTool, onChat, areaTheme }) {
           </div>
         ))}
       </div>
-      {/* Chat input */}
-      <form onSubmit={handleSubmit} style={{ flex: 1, display: 'flex', gap: 3, alignItems: 'stretch' }}>
-        <input
-          className="hud-chat-input"
-          placeholder={placeholder}
-          value={input}
-          onChange={e => setInput(e.target.value)}
-        />
-        <button type="button" className="hud-tool-btn" style={{ width: 36 }}>🎤</button>
-        <button type="submit" className="hud-send-btn">▶</button>
-      </form>
     </div>
   )
 }

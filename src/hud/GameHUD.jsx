@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import BottomBar from './BottomBar'
-import ZoneLabel from './ZoneLabel'
 import NarratorFloat from './NarratorFloat'
 import InitiativeStrip from './InitiativeStrip'
 import EnemyInfoPanel from './EnemyInfoPanel'
 import Minimap from './Minimap'
 import SoundControl from './SoundControl'
 import useStore from '../store/useStore'
+import { getTimeOfDay, formatTime } from '../lib/gameTime'
 import './hud.css'
 
 export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef, onPortraitClick, activeMode, onModeSelect }) {
@@ -18,11 +18,26 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
   const campaign = useStore(s => s.campaign)
   const activeCampaign = useStore(s => s.activeCampaign)
   const partyMembers = useStore(s => s.partyMembers)
+  const gameTime = useStore(s => s.gameTime)
   const [copied, setCopied] = useState(false)
 
   const title = campaign?.title || activeCampaign?.name || 'Untitled Campaign'
   const inviteCode = activeCampaign?.invite_code
   const playerCount = (partyMembers?.length || 0) + 1
+
+  // Zone info for top bar
+  const zoneName = zone?.name || title
+  const npcCount = zone?.npcs?.length || 0
+  const zoneTags = zone?.tags || []
+  const isSafe = zoneTags.includes('safe')
+
+  // Time of day for center display
+  const currentHour = gameTime?.hour ?? 8
+  const timeOfDay = getTimeOfDay(currentHour)
+  const timeText = formatTime(gameTime || { hour: 8, day: 1 })
+  // Progress bar: 0-1 representing position in day (0=midnight, 0.5=noon)
+  const timeProgress = currentHour / 24
+  const isNight = timeOfDay === 'night'
 
   function handleCopyInvite() {
     if (!inviteCode) return
@@ -42,21 +57,36 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
     <div className="hud-v2" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
       {/* === TOP BAR — full width, bar-top.png as background === */}
       <div className="hud-top-bar">
-        {/* LEFT: campaign name, player count, invite */}
+        {/* LEFT: zone name, danger level, NPC count */}
         <div className="hud-top-bar-left">
-          <span className="hud-campaign-name">{title}</span>
-          <span className="hud-campaign-players">
-            {playerCount} {playerCount === 1 ? 'Adventurer' : 'Adventurers'}
+          <span className="hud-zone-name-inline">{zoneName}</span>
+          <span className="hud-zone-info-inline">
+            {isSafe ? 'SAFE' : 'DANGER'} · {npcCount} NPC{npcCount !== 1 ? 's' : ''}
           </span>
+        </div>
+        {/* CENTER: time of day with progress bar */}
+        <div className="hud-top-bar-center">
+          <div className="hud-time-bar-track">
+            <div
+              className="hud-time-bar-fill"
+              style={{
+                width: `${timeProgress * 100}%`,
+                background: isNight
+                  ? 'linear-gradient(90deg, #6633aa, #9944cc)'
+                  : 'linear-gradient(90deg, #c9a84c, #eedd88)',
+              }}
+            />
+          </div>
+          <span className="hud-time-text">{timeText}</span>
+        </div>
+        {/* RIGHT: invite, leave, then icon buttons + sound */}
+        <div className="hud-top-bar-right">
           <button className="hud-top-bar-btn" onClick={handleCopyInvite} title="Copy invite link">
             {copied ? 'COPIED' : 'INVITE'}
           </button>
           <button className="hud-top-bar-btn hud-top-bar-btn-danger" onClick={onLeave} title="Leave campaign">
             LEAVE
           </button>
-        </div>
-        {/* RIGHT: map, settings, group icon buttons + sound */}
-        <div className="hud-top-bar-right">
           <SoundControl />
           <button className="hud-top-bar-icon-btn" onClick={() => onModeSelect('map')} title="Map">
             <img src="/ui/btn-map.png" alt="Map" draggable={false} />
@@ -71,8 +101,8 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
       </div>
       {/* Minimap — below top bar, top-right */}
       <Minimap playerPos={playerPos} tokens={tokens} cameraRef={cameraRef} />
-      {/* Zone label (exploration) or Turn banner (combat) */}
-      {inCombat ? (
+      {/* Turn banner (combat only) — zone info is now in top bar */}
+      {inCombat && (
         <>
           <div className="hud-turn-banner">
             <div className="hud-turn-title">{isMyTurn ? 'Your Turn' : `${activeCombatant?.name || '...'}'s Turn`}</div>
@@ -81,21 +111,6 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
           <InitiativeStrip />
           <EnemyInfoPanel />
         </>
-      ) : (
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <ZoneLabel zone={zone} />
-          {activeQuestCount > 0 && (
-            <div style={{
-              position: 'absolute', top: 6, right: -52,
-              color: '#c9a84c', fontSize: 11,
-              fontFamily: "'Cinzel', serif", fontWeight: 700,
-              pointerEvents: 'none',
-              textShadow: '0 1px 4px rgba(0,0,0,0.8)',
-            }}>
-              {activeQuestCount}
-            </div>
-          )}
-        </div>
       )}
       <NarratorFloat />
       <BottomBar areaTheme={areaTheme} onTool={onTool} onChat={onChat} onEndTurn={onEndTurn} onAction={onAction} onPortraitClick={onPortraitClick} />
