@@ -137,7 +137,7 @@ export default function Minimap({ playerPos, tokens, cameraRef }) {
   if (!zone) return null
 
   return (
-    <div className="hud-minimap" style={{ pointerEvents: 'auto' }}>
+    <div className="hud-minimap metal-frame" style={{ pointerEvents: 'auto' }}>
       <canvas
         ref={canvasRef}
         width={W}

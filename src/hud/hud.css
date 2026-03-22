@@ -1,6 +1,46 @@
 /* @import MUST be first in the file */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;700;900&display=swap');
 
+/* === PLACEHOLDER TEXTURE CLASSES === */
+/* PLACEHOLDER: replace with texture asset — stone/masonry panel */
+.stone-panel {
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(80,70,55,0.03) 2px, rgba(80,70,55,0.03) 4px),
+    repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(60,50,40,0.03) 2px, rgba(60,50,40,0.03) 4px),
+    linear-gradient(180deg, #1a1510 0%, #0f0c08 40%, #0a0806 100%);
+  border-top: 1px solid rgba(180,160,120,0.15);
+  border-left: 1px solid rgba(180,160,120,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.6);
+  border-right: 1px solid rgba(0,0,0,0.4);
+  box-shadow: inset 0 1px 0 rgba(180,160,120,0.08), inset 0 -1px 0 rgba(0,0,0,0.3);
+}
+
+/* PLACEHOLDER: replace with texture asset — hammered metal frame */
+.metal-frame {
+  background:
+    repeating-linear-gradient(30deg, transparent, transparent 3px, rgba(100,95,85,0.04) 3px, rgba(100,95,85,0.04) 5px),
+    linear-gradient(180deg, #16140f 0%, #0d0b08 50%, #080604 100%);
+  border: 1px solid rgba(140,130,100,0.2);
+  box-shadow: inset 0 1px 0 rgba(160,150,120,0.1), inset 0 -2px 0 rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* PLACEHOLDER: replace with texture asset — aged dark parchment scroll */
+.parchment-scroll {
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(120,100,60,0.02) 3px, rgba(120,100,60,0.02) 6px),
+    linear-gradient(180deg, #12100a 0%, #0e0c07 50%, #100e08 100%);
+  border: 1px solid rgba(160,140,80,0.12);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.4), inset 0 0 3px rgba(120,100,60,0.05);
+}
+
+/* === Combat Log Color Classes === */
+.log-damage { color: #cc3333; }
+.log-heal { color: #33aa55; }
+.log-hit { color: #e8d44d; font-weight: bold; }
+.log-miss { color: #666655; font-style: italic; }
+.log-spell { color: #9966cc; }
+.log-save { color: #5588cc; }
+
 /* === V2 HUD Palette === */
 .hud-v2 {
   --gold: #c9a84c;
@@ -19,7 +59,7 @@
   --font-log: 'Consolas', 'Monaco', monospace;
 }
 
-/* Bottom bar base */
+/* Bottom bar base — uses .stone-panel via JSX className */
 .hud-bottom-bar {
   position: absolute;
   bottom: 0;
@@ -27,7 +67,6 @@
   right: 0;
   height: 160px;
   z-index: 20;
-  background: linear-gradient(180deg, #14101c 0%, #0a0810 100%);
   display: flex;
   flex-direction: column;
   padding: 14px 14px 10px;
@@ -45,12 +84,10 @@
 }
 
 /* Session log panel */
+/* Session log — uses .parchment-scroll via JSX className */
 .hud-log-panel {
   flex: 1;
   position: relative;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-gold);
-  box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -97,8 +134,8 @@
 .hud-log-time { color: var(--text-muted); font-size: 9px; }
 .hud-log-action { color: var(--text-log); }
 .hud-log-location { color: #bba060; }
-.hud-log-damage { color: var(--danger); }
-.hud-log-hit { color: #228844; font-weight: 700; }
+.hud-log-damage { color: #cc3333; }
+.hud-log-hit { color: #e8d44d; font-weight: 700; }
 
 /* Tool buttons */
 .hud-tool-btn {
@@ -149,12 +186,12 @@
 }
 
 /* Zone label */
+/* PLACEHOLDER: replace with texture asset — stone panel zone label */
 .hud-zone-label {
   position: absolute;
   top: 8px;
   left: 8px;
   z-index: 10;
-  background: rgba(8, 6, 12, 0.92);
   padding: 10px 28px;
   pointer-events: auto;
 }
@@ -179,11 +216,10 @@
 }
 
 /* Narrator float */
+/* PLACEHOLDER: replace with texture asset — stone panel narrator */
 .hud-narrator {
   position: relative;
   z-index: 10;
-  background: rgba(8, 6, 12, 0.92);
-  border: 1px solid rgba(201, 168, 76, 0.2);
   padding: 10px 28px;
   pointer-events: auto;
 }
@@ -307,14 +343,13 @@
 }
 
 /* Initiative strip */
+/* PLACEHOLDER: replace with texture asset — metal frame initiative */
 .hud-initiative {
   position: absolute;
   top: 6px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
-  background: rgba(6,5,8,0.92);
-  border: 1px solid #2a1010;
   padding: 4px 8px;
   display: flex;
   gap: 3px;
@@ -400,27 +435,25 @@
 }
 
 /* Enemy info */
+/* PLACEHOLDER: replace with texture asset — stone panel enemy info */
 .hud-enemy-info {
   position: absolute;
   top: 50px;
   right: 6px;
   width: 150px;
   z-index: 15;
-  background: rgba(6,5,8,0.92);
-  border: 1px solid #331010;
   border-left: 2px solid #cc3333;
   padding: 8px;
   pointer-events: auto;
 }
 
 /* Campaign bar (top-right) */
+/* PLACEHOLDER: replace with texture asset — stone panel campaign bar */
 .hud-campaign-bar {
   position: absolute;
   top: 8px;
   right: 8px;
   z-index: 15;
-  background: rgba(8, 6, 12, 0.92);
-  border: 1px solid rgba(201, 168, 76, 0.15);
   padding: 6px 12px;
   display: flex;
   align-items: center;
@@ -1043,6 +1076,7 @@
 .hud-drawer-handle { display: none; }
 
 /* Minimap (top-right, below campaign bar) */
+/* PLACEHOLDER: replace with texture asset — metal frame minimap */
 .hud-minimap {
   position: absolute;
   top: 60px;
@@ -1050,8 +1084,6 @@
   z-index: 14;
   width: 160px;
   height: 120px;
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid #d4af37;
   border-radius: 4px;
   overflow: hidden;
 }

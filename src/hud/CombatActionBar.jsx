@@ -46,7 +46,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   // If it's not the player's turn, show a waiting message
   if (!isMyTurn) {
     return (
-      <div className="hud-combat-bar">
+      <div className="hud-combat-bar stone-panel">
         <div style={{ textAlign: 'center', color: '#8a7a52', fontSize: 12, fontStyle: 'italic', padding: '12px 0' }}>
           Waiting for {active?.name || 'next combatant'}'s turn...
         </div>
@@ -73,7 +73,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   // Dead players can only do death saves — block all other actions
   if (isDead && !isDying) {
     return (
-      <div className="hud-combat-bar">
+      <div className="hud-combat-bar stone-panel">
         <div style={{ textAlign: 'center', color: '#cc3333', fontSize: 12, fontWeight: 700, padding: '12px 0' }}>
           ☠ DEAD
         </div>
@@ -116,7 +116,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   }
 
   return (
-    <div className="hud-combat-bar">
+    <div className="hud-combat-bar stone-panel">
       {/* Class resource bar */}
       <ClassResourceBar combatant={active} />
       {/* Primary actions */}
@@ -292,7 +292,7 @@ function DeathSaveUI({ active, onAction, onEndTurn }) {
         </div>
       )}
       {/* Bottom bar — END TURN only after rolling */}
-      <div className="hud-combat-bar">
+      <div className="hud-combat-bar stone-panel">
         <div style={{ textAlign: 'center', color: '#cc3333', fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
           ☠ {rolled ? 'Death save rolled' : 'You must roll a death save'}
         </div>

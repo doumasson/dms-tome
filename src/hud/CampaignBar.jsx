@@ -21,7 +21,7 @@ export default function CampaignBar({ onSettings, onLeave }) {
   }
 
   return (
-    <div className="hud-campaign-bar">
+    <div className="hud-campaign-bar stone-panel">
       <span className="hud-campaign-name">{title}</span>
       <span className="hud-campaign-players">
         ⚔ {playerCount} {playerCount === 1 ? 'Adventurer' : 'Adventurers'}

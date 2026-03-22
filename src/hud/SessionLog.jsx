@@ -2,6 +2,20 @@ import { useState, useRef, useEffect } from 'react'
 import useStore from '../store/useStore'
 import OrnateFrame from './OrnateFrame'
 
+/** Map log entry type/icon to a CSS color class */
+function getLogColorClass(entry) {
+  const t = (entry.type || '').toLowerCase()
+  const title = (entry.title || '').toLowerCase()
+  const icon = entry.icon || ''
+  if (t === 'damage' || title.includes('damage') || icon === '💥') return 'log-damage'
+  if (t === 'heal' || title.includes('heal') || icon === '💚') return 'log-heal'
+  if (t === 'hit' || t === 'crit' || title.includes('critical')) return 'log-hit'
+  if (t === 'miss' || title.includes('miss')) return 'log-miss'
+  if (t === 'spell' || title.includes('cast') || icon === '✨') return 'log-spell'
+  if (t === 'save' || title.includes('save') || title.includes('saving throw')) return 'log-save'
+  return ''
+}
+
 export default function SessionLog() {
   const [tab, setTab] = useState('chat')
   const sessionLog = useStore(s => s.sessionLog) || []
@@ -23,7 +37,7 @@ export default function SessionLog() {
   }, [entries.length])
 
   return (
-    <div className="hud-log-panel" style={{ position: 'relative' }}>
+    <div className="hud-log-panel parchment-scroll" style={{ position: 'relative' }}>
       <OrnateFrame size={18} stroke="#c9a84c" weight={2.5} />
       {/* Tabs */}
       <div className="hud-log-tabs">
@@ -39,15 +53,17 @@ export default function SessionLog() {
       {/* Entries */}
       <div className="hud-log-entries" ref={scrollRef}>
         {tab === 'log' ? (
-          sessionLog.length > 0 ? sessionLog.map((entry, i) => (
+          sessionLog.length > 0 ? sessionLog.map((entry, i) => {
+            const colorClass = getLogColorClass(entry)
+            return (
             <div key={entry.id || i} className="hud-log-entry">
               <span className="hud-log-time">
                 {entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
               </span>{' '}
-              <span className="hud-log-action">{entry.icon} {entry.title}</span>
-              {entry.detail && <span className="hud-log-action"> — {entry.detail}</span>}
-            </div>
-          )) : (
+              <span className={`hud-log-action ${colorClass}`}>{entry.icon} {entry.title}</span>
+              {entry.detail && <span className={`hud-log-action ${colorClass}`}> — {entry.detail}</span>}
+            </div>)
+          }) : (
             <div className="hud-log-entry hud-log-empty">No events yet...</div>
           )
         ) : (
