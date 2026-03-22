@@ -248,6 +248,7 @@ export default function GameV2({ onLeave }) {
 
   useEffect(() => {
     if (!zone?.encounterZones?.length || !playerPos || inCombat) return
+    if (!myCharacter) return // No character — can't enter combat
     if (!hasMovedRef.current) return // Don't trigger on spawn
     if (stealthMode?.active) return // Already sneaking — don't trigger new encounters
     const pos = playerPosRef.current
@@ -582,8 +583,18 @@ export default function GameV2({ onLeave }) {
 
   if (!zone) {
     return (
-      <div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontFamily: "'Cinzel', serif", fontSize: 18 }}>
+      <div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontFamily: "'Cinzel', serif", fontSize: 18, gap: 16 }}>
         Loading world...
+        <div style={{ fontSize: 11, color: '#665a3a' }}>
+          {!currentAreaId ? 'Building area...' : `Activating area...`}
+        </div>
+        <button onClick={onLeave} style={{
+          marginTop: 20, padding: '8px 24px', background: 'rgba(20,15,10,0.8)',
+          border: '1px solid rgba(200,170,80,0.3)', color: '#c9a84c',
+          fontFamily: "'Cinzel', serif", fontSize: 12, cursor: 'pointer',
+        }}>
+          ← Back to Campaigns
+        </button>
       </div>
     )
   }
