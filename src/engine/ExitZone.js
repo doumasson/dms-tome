@@ -1,14 +1,15 @@
 import * as PIXI from 'pixi.js'
-import { getTileSize } from './tileAtlas'
 
 /**
  * Render exit zones onto a PIXI.Container.
  * @param {PIXI.Container} container - The exits layer
  * @param {Array} exits - Array of { position: {x,y}, width, direction, targetZone, label }
+ * @param {Function} onExitClick - callback when exit is clicked
+ * @param {number} [tileSz] - tile size in pixels (default 200)
  */
-export function renderExits(container, exits, onExitClick) {
+export function renderExits(container, exits, onExitClick, tileSz) {
   container.removeChildren()
-  const tileSize = getTileSize()
+  const tileSize = tileSz || 200
 
   for (const exit of exits) {
     const group = new PIXI.Container()

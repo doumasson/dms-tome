@@ -562,6 +562,40 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     renderTokens(stageLayersRef.current.tokens, tokens, zone?.tileSize || 200)
   }, [tokens, ready])
 
+  // Render exit zones — transform areaBuilder format to ExitZone format
+  useEffect(() => {
+    if (!ready || !zone?.exits?.length || !stageLayersRef.current.exits) return
+    if (inCombat) {
+      clearExits(stageLayersRef.current.exits)
+      return
+    }
+    const transformed = zone.exits.map(exit => {
+      // Infer direction from position (edge detection)
+      let direction = 'north'
+      if (exit.edge) direction = exit.edge
+      else if (exit.y === 0) direction = 'north'
+      else if (exit.y >= (zone.height || 30) - 2) direction = 'south'
+      else if (exit.x === 0) direction = 'west'
+      else if (exit.x >= (zone.width || 40) - 2) direction = 'east'
+      return {
+        position: { x: exit.x, y: exit.y },
+        width: exit.width || 3,
+        direction,
+        targetZone: exit.targetArea || exit.targetZone,
+        entryPoint: exit.entryPoint,
+        label: exit.label || '',
+      }
+    })
+    const ts = zone?.tileSize || 200
+    renderExits(stageLayersRef.current.exits, transformed, (exitData) => {
+      onExitClickRef.current?.({
+        targetArea: exitData.targetZone,
+        entryPoint: exitData.entryPoint,
+        label: exitData.label,
+      })
+    }, ts)
+  }, [zone?.exits, ready, inCombat])
+
   return (
     <div
       ref={containerRef}
