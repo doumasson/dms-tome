@@ -6,9 +6,19 @@ const tokenGroupMap = new Map()
 let activeAnimation = null
 
 /**
+ * Get the BG2/IWD-style selection circle color for a token.
+ */
+function getSelectionCircleColor(token) {
+  if (token.isEnemy || token.type === 'enemy') return 0xcc2222  // Red - hostile
+  if (token.isNpc) return 0x44cccc  // Cyan - neutral NPC
+  if (token.type === 'ally') return 0x4488dd  // Blue - allied
+  return 0x00cc44  // Green - party member
+}
+
+/**
  * Render tokens (players + NPCs) onto a PIXI.Container.
  * @param {PIXI.Container} container - The tokens layer
- * @param {Array} tokens - Array of { id, name, x, y, color, borderColor, isNpc, questRelevant }
+ * @param {Array} tokens - Array of { id, name, x, y, color, borderColor, isNpc, questRelevant, isEnemy, isActive }
  */
 export function renderTokens(container, tokens, tileSizeOverride) {
   container.removeChildren()
@@ -20,6 +30,16 @@ export function renderTokens(container, tokens, tileSizeOverride) {
     group.x = token.x * tileSize + tileSize / 2
     group.y = token.y * tileSize + tileSize / 2
     group.label = token.id // store ID for lookup
+
+    // Selection circle (drawn first, underneath token) — BG2/IWD style
+    const selectionCircle = new PIXI.Graphics()
+    const circleRadius = tileSize * (token.isActive ? 0.48 : 0.45)
+    const circleColor = getSelectionCircleColor(token)
+    const alpha = token.isActive ? 0.7 : 0.4
+    selectionCircle.ellipse(0, tileSize * 0.15, circleRadius, circleRadius * 0.45)
+    selectionCircle.stroke({ width: token.isActive ? 2.5 : 1.5, color: circleColor, alpha })
+    selectionCircle.fill({ color: circleColor, alpha: alpha * 0.15 })
+    group.addChild(selectionCircle)
 
     // Circle background
     const bg = new PIXI.Graphics()

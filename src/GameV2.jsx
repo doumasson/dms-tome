@@ -373,6 +373,7 @@ export default function GameV2({ onLeave }) {
 
     // During combat, render tokens from encounter.combatants (live positions + HP)
     if (inCombat && encounter.combatants?.length) {
+      const activeCombatantId = encounter.combatants[encounter.currentTurn]?.id
       encounter.combatants.forEach(c => {
         if (!c.position) return
         const isEnemy = c.type === 'enemy'
@@ -383,6 +384,7 @@ export default function GameV2({ onLeave }) {
           color: isEnemy ? 0x8b0000 : 0x0c1828,
           borderColor: isEnemy ? 0xff3333 : (CLASS_COLORS[c.class] || 0x4499dd),
           isEnemy, isNpc: false,
+          isActive: c.id === activeCombatantId,
           showHpBar: true,
           currentHp: c.currentHp ?? c.maxHp,
           maxHp: c.maxHp ?? 10,
