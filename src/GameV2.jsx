@@ -223,6 +223,17 @@ export default function GameV2({ onLeave }) {
     prevInCombatRef.current = inCombat
   }, [inCombat])
 
+  // --- Respawn position after TPK defeat ---
+  const respawnPosition = useStore(s => s.respawnPosition)
+  useEffect(() => {
+    if (respawnPosition && !inCombat) {
+      setPlayerPos(respawnPosition)
+      playerPosRef.current = respawnPosition
+      if (cameraRef.current) cameraRef.current.centerOn(respawnPosition.x, respawnPosition.y, zone?.tileSize || 200)
+      useStore.setState({ respawnPosition: null })
+    }
+  }, [respawnPosition, inCombat])
+
   // --- Watch for XP crossing a level threshold ---
   useEffect(() => {
     if (!myCharacter) return

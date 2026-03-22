@@ -442,7 +442,8 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       setTargetingMode(null) // Clear any active targeting so tile clicks route to movement
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Click a tile to move during combat.' })
     } else if (type === 'say') {
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Type your message in the chat and press enter.' })
+      // Focus the SessionLog chat input via custom event
+      window.dispatchEvent(new CustomEvent('combat-say-focus'))
     } else if (type === 'disengage') {
       const { useAction: consumeAction } = useStore.getState()
       const active = encounter.combatants?.[encounter.currentTurn]

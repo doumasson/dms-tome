@@ -36,6 +36,7 @@ export function createCampaignSlice(set, get) {
       },
       activeCampaign: null,
       encounter: { phase: 'idle', combatants: [], currentTurn: 0, round: 1, log: [], activeEffects: [] },
+      respawnPosition: null,
       partyMembers: [], narrator: { history: [], open: false },
       sessionApiKey: null, isDM: false, dmMode: false, myCharacter: null,
       // V2 world state

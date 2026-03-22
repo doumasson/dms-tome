@@ -130,132 +130,135 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   }
 
   return (
-    <div className="hud-combat-bar stone-panel" style={{ padding: '4px 8px' }}>
-      {/* Class resource bar */}
-      <ClassResourceBar combatant={active} />
-      {/* Primary actions — circular medallion buttons */}
-      <div style={{ display: 'flex', gap: 4, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <button
-          className={`medallion-btn large attack${(!canAttack || !actionsLeft) ? ' disabled' : ''}`}
-          disabled={!canAttack || !actionsLeft}
-          onClick={() => handleAction('attack-pick')}
-        >
-          <span style={{ fontSize: 16 }}>⚔</span>
-          <span className="medallion-label">ATTACK</span>
-        </button>
-        {classActions.map(action => {
-          const isSpell = action.handler === 'openSpellPicker'
-          const disabled = !canAct || isAbilityDisabled(action)
-          return (
-            <button
-              key={action.name}
-              className={`medallion-btn large${isSpell ? ' cast' : ''}${disabled ? ' disabled' : ''}`}
-              disabled={disabled}
-              title={action.name}
-              onClick={() => isSpell
-                ? handleAction('spell-pick')
-                : handleAction('class-ability', {
-                    name: action.name,
-                    resourceName: action.resourceName,
-                    resourceCost: action.resourceCost,
-                  })
-              }
-            >
-              <span style={{ fontSize: 14 }}>{action.icon}</span>
-              <span className="medallion-label">{action.name.length > 6 ? action.name.slice(0,5).toUpperCase() : action.name.toUpperCase()}</span>
-            </button>
-          )
-        })}
-        <button
-          className={`medallion-btn large move${(!canMove || moveLeft <= 0) ? ' disabled' : ''}`}
-          disabled={!canMove || moveLeft <= 0}
-          onClick={() => handleAction('move')}
-        >
-          <span style={{ fontSize: 16 }}>🏃</span>
-          <span className="medallion-label">MOVE</span>
-        </button>
-      </div>
-      {/* Secondary actions — small medallions + economy */}
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center', marginTop: 4 }}>
-        <button
-          className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
-          disabled={!canAct || !actionsLeft}
-          onClick={() => handleAction('dodge')}
-          title="Dodge"
-        >
-          <span className="medallion-label">DGE</span>
-        </button>
-        <button
-          className={`medallion-btn small${(!canMove || !actionsLeft) ? ' disabled' : ''}`}
-          disabled={!canMove || !actionsLeft}
-          onClick={() => handleAction('dash')}
-          title="Dash"
-        >
-          <span className="medallion-label">DSH</span>
-        </button>
-        <button
-          className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
-          disabled={!canAct || !actionsLeft}
-          onClick={() => handleAction('hide')}
-          title="Hide"
-        >
-          <span className="medallion-label">HDE</span>
-        </button>
-        <button
-          className={`medallion-btn small${(!canMove || !actionsLeft) ? ' disabled' : ''}`}
-          disabled={!canMove || !actionsLeft}
-          onClick={() => handleAction('disengage')}
-          title="Disengage"
-        >
-          <span className="medallion-label">DIS</span>
-        </button>
-        <button
-          className="medallion-btn small"
-          onClick={() => handleAction('say')}
-          title="Say"
-        >
-          <span className="medallion-label">SAY</span>
-        </button>
-        {isProne && (
+    <div className="hud-combat-bar stone-panel" style={{ padding: '4px 8px', display: 'flex', flexDirection: 'column' }}>
+      {/* Scrollable action area */}
+      <div style={{ flex: 1, overflow: 'auto', maxHeight: 100 }}>
+        {/* Class resource bar */}
+        <ClassResourceBar combatant={active} />
+        {/* Primary actions — circular medallion buttons */}
+        <div style={{ display: 'flex', gap: 4, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button
-            className={`medallion-btn small${!actionsLeft ? ' disabled' : ''}`}
-            disabled={!actionsLeft}
-            style={{ color: '#cc8822' }}
-            onClick={() => handleAction('standup')}
-            title="Stand Up"
+            className={`medallion-btn large attack${(!canAttack || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canAttack || !actionsLeft}
+            onClick={() => handleAction('attack-pick')}
           >
-            <span className="medallion-label">UP</span>
+            <span style={{ fontSize: 16 }}>⚔</span>
+            <span className="medallion-label">ATTACK</span>
           </button>
+          {classActions.map(action => {
+            const isSpell = action.handler === 'openSpellPicker'
+            const disabled = !canAct || isAbilityDisabled(action)
+            return (
+              <button
+                key={action.name}
+                className={`medallion-btn large${isSpell ? ' cast' : ''}${disabled ? ' disabled' : ''}`}
+                disabled={disabled}
+                title={action.name}
+                onClick={() => isSpell
+                  ? handleAction('spell-pick')
+                  : handleAction('class-ability', {
+                      name: action.name,
+                      resourceName: action.resourceName,
+                      resourceCost: action.resourceCost,
+                    })
+                }
+              >
+                <span style={{ fontSize: 14 }}>{action.icon}</span>
+                <span className="medallion-label">{action.name.length > 6 ? action.name.slice(0,5).toUpperCase() : action.name.toUpperCase()}</span>
+              </button>
+            )
+          })}
+          <button
+            className={`medallion-btn large move${(!canMove || moveLeft <= 0) ? ' disabled' : ''}`}
+            disabled={!canMove || moveLeft <= 0}
+            onClick={() => handleAction('move')}
+          >
+            <span style={{ fontSize: 16 }}>🏃</span>
+            <span className="medallion-label">MOVE</span>
+          </button>
+        </div>
+        {/* Secondary actions — small medallions + economy */}
+        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center', marginTop: 4 }}>
+          <button
+            className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canAct || !actionsLeft}
+            onClick={() => handleAction('dodge')}
+            title="Dodge"
+          >
+            <span className="medallion-label">DGE</span>
+          </button>
+          <button
+            className={`medallion-btn small${(!canMove || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canMove || !actionsLeft}
+            onClick={() => handleAction('dash')}
+            title="Dash"
+          >
+            <span className="medallion-label">DSH</span>
+          </button>
+          <button
+            className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canAct || !actionsLeft}
+            onClick={() => handleAction('hide')}
+            title="Hide"
+          >
+            <span className="medallion-label">HDE</span>
+          </button>
+          <button
+            className={`medallion-btn small${(!canMove || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canMove || !actionsLeft}
+            onClick={() => handleAction('disengage')}
+            title="Disengage"
+          >
+            <span className="medallion-label">DIS</span>
+          </button>
+          <button
+            className="medallion-btn small"
+            onClick={() => handleAction('say')}
+            title="Say"
+          >
+            <span className="medallion-label">SAY</span>
+          </button>
+          {isProne && (
+            <button
+              className={`medallion-btn small${!actionsLeft ? ' disabled' : ''}`}
+              disabled={!actionsLeft}
+              style={{ color: '#cc8822' }}
+              onClick={() => handleAction('standup')}
+              title="Stand Up"
+            >
+              <span className="medallion-label">UP</span>
+            </button>
+          )}
+          <div className="hud-economy">
+            <div className="hud-economy-dot">
+              <div style={{ width: 6, height: 6, background: actionsLeft ? '#4499dd' : '#332a1e' }} />
+              <span>ACT</span>
+            </div>
+            <div className="hud-economy-dot">
+              <div style={{ width: 6, height: 6, background: bonusLeft ? '#cc8822' : '#332a1e' }} />
+              <span>BNS</span>
+            </div>
+            <div className="hud-economy-dot">
+              <div style={{ width: 6, height: 6, background: moveLeft > 0 ? '#44aa66' : '#332a1e' }} />
+              <span>{moveLeft}ft</span>
+            </div>
+          </div>
+        </div>
+        {/* Active condition badges */}
+        {conditions.size > 0 && (
+          <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
+            {[...conditions].map(c => (
+              <span key={c} style={{
+                fontSize: 9, padding: '1px 6px', borderRadius: 3,
+                background: 'rgba(200,50,50,0.3)', border: '1px solid #cc3333',
+                color: '#ff6666',
+              }}>{c}</span>
+            ))}
+          </div>
         )}
-        <div className="hud-economy">
-          <div className="hud-economy-dot">
-            <div style={{ width: 6, height: 6, background: actionsLeft ? '#4499dd' : '#332a1e' }} />
-            <span>ACT</span>
-          </div>
-          <div className="hud-economy-dot">
-            <div style={{ width: 6, height: 6, background: bonusLeft ? '#cc8822' : '#332a1e' }} />
-            <span>BNS</span>
-          </div>
-          <div className="hud-economy-dot">
-            <div style={{ width: 6, height: 6, background: moveLeft > 0 ? '#44aa66' : '#332a1e' }} />
-            <span>{moveLeft}ft</span>
-          </div>
-        </div>
       </div>
-      {/* Active condition badges */}
-      {conditions.size > 0 && (
-        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
-          {[...conditions].map(c => (
-            <span key={c} style={{
-              fontSize: 9, padding: '1px 6px', borderRadius: 3,
-              background: 'rgba(200,50,50,0.3)', border: '1px solid #cc3333',
-              color: '#ff6666',
-            }}>{c}</span>
-          ))}
-        </div>
-      )}
-      {/* End turn (danger medallion) + timer */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, justifyContent: 'center' }}>
+      {/* ALWAYS VISIBLE: timer + end turn — outside scroll area */}
+      <div style={{ borderTop: '1px solid rgba(140,120,70,0.2)', paddingTop: 4, marginTop: 4, display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
         <div style={{
           fontFamily: 'Cinzel, serif', fontSize: 18, fontWeight: 700,
           color: timeLeft <= 10 ? '#cc3333' : timeLeft <= 20 ? '#cc8822' : '#d4af37',

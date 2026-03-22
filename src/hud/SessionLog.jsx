@@ -17,28 +17,57 @@ function getLogColorClass(entry) {
   return ''
 }
 
-export default function SessionLog() {
+export default function SessionLog({ onChat }) {
   const [tab, setTab] = useState('chat')
+  const [chatInput, setChatInput] = useState('')
   const sessionLog = useStore(s => s.sessionLog) || []
   const narratorHistory = useStore(s => s.narrator?.history) || []
+  const inCombat = useStore(s => s.encounter.phase === 'combat')
   const scrollRef = useRef(null)
+  const chatInputRef = useRef(null)
 
   const entries = tab === 'log' ? sessionLog : narratorHistory
 
   // Auto-scroll to bottom on new messages
+  const userScrolledRef = useRef(false)
   useEffect(() => {
     const el = scrollRef.current
-    if (el) {
-      // Only auto-scroll if user is near the bottom (within 60px)
+    if (!el) return
+    const onScroll = () => {
       const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60
-      if (nearBottom) {
-        el.scrollTop = el.scrollHeight
-      }
+      userScrolledRef.current = !nearBottom
+    }
+    el.addEventListener('scroll', onScroll)
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el && !userScrolledRef.current) {
+      el.scrollTop = el.scrollHeight
     }
   }, [entries.length])
 
+  // Focus chat input when SAY is clicked during combat (listen for custom event)
+  useEffect(() => {
+    const handler = () => {
+      setTab('chat')
+      setTimeout(() => chatInputRef.current?.focus(), 50)
+    }
+    window.addEventListener('combat-say-focus', handler)
+    return () => window.removeEventListener('combat-say-focus', handler)
+  }, [])
+
+  function handleChatSubmit(e) {
+    e.preventDefault()
+    const text = chatInput.trim()
+    if (!text) return
+    onChat?.(text)
+    setChatInput('')
+  }
+
   return (
-    <div className="hud-log-panel parchment-scroll" style={{ position: 'relative' }}>
+    <div className="hud-log-panel parchment-scroll" style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
       <OrnateFrame size={18} stroke="#c9a84c" weight={2.5} />
       {/* Tabs */}
       <div className="hud-log-tabs">
@@ -83,6 +112,22 @@ export default function SessionLog() {
           )
         )}
       </div>
+      {/* Chat input — visible during combat on chat tab so SAY action works */}
+      {inCombat && tab === 'chat' && (
+        <form onSubmit={handleChatSubmit} style={{ display: 'flex', gap: 4, padding: '4px 8px 4px', borderTop: '1px solid rgba(140,120,70,0.2)' }}>
+          <input
+            ref={chatInputRef}
+            className="hud-chat-input"
+            style={{ flex: 1, margin: 0 }}
+            placeholder="Say something..."
+            value={chatInput}
+            onChange={e => setChatInput(e.target.value)}
+          />
+          <button type="submit" className="medallion-btn small" style={{ minWidth: 32 }}>
+            <span className="medallion-label">GO</span>
+          </button>
+        </form>
+      )}
     </div>
   )
 }
