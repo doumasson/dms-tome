@@ -65,6 +65,7 @@ const VictoryScreen       = lazy(() => import('./components/game/VictoryScreen')
 const DefeatScreen        = lazy(() => import('./components/game/DefeatScreen'))
 const PreCombatMenu       = lazy(() => import('./components/game/PreCombatMenu'))
 const SessionResume       = lazy(() => import('./components/game/SessionResume'))
+const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -146,6 +147,8 @@ export default function GameV2({ onLeave }) {
   const [showPreCombat, setShowPreCombat] = useState(false)
   const [pendingCombatEnemies, setPendingCombatEnemies] = useState(null)
   const [showSessionResume, setShowSessionResume] = useState(false)
+  const [showSpellTargeting, setShowSpellTargeting] = useState(false)
+  const [pendingSpell, setPendingSpell] = useState(null)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1125,6 +1128,15 @@ export default function GameV2({ onLeave }) {
             characters={[myCharacter]}
             recap={`Your adventure continues... Character Level: ${myCharacter.level}, HP: ${myCharacter.currentHp || myCharacter.hp}/${myCharacter.hp}`}
             onResume={() => setShowSessionResume(false)}
+          />
+        </Suspense>
+      )}
+      {showSpellTargeting && pendingSpell && inCombat && (
+        <Suspense fallback={null}>
+          <SpellTargeting
+            spell={pendingSpell}
+            onConfirm={() => { setShowSpellTargeting(false); setPendingSpell(null) }}
+            onCancel={() => { setShowSpellTargeting(false); setPendingSpell(null) }}
           />
         </Suspense>
       )}
