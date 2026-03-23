@@ -647,4 +647,62 @@ test.describe('Game Integration Tests', () => {
     expect(viewportSize.width).toBeLessThanOrEqual(1024); // Mobile width
     expect(viewportSize.height).toBeGreaterThanOrEqual(600); // Landscape minimum
   });
+
+  test('should complete full end-to-end game flow', async ({ page, baseURL }) => {
+    // Complete flow: login → campaign select → character select → game play
+
+    // 1. Navigate to app
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+    const initialTitle = await page.title();
+    expect(['DungeonMind', 'campaigns'].some(t => initialTitle.includes(t))).toBeTruthy();
+
+    // 2. Select campaign
+    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
+    expect((await campaignButtons.count())).toBeGreaterThan(0);
+    await campaignButtons.first().click();
+    await page.waitForLoadState('networkidle');
+
+    // 3. Select character
+    const characterButtons = page.locator('button:has-text("Aric")');
+    expect((await characterButtons.count())).toBeGreaterThan(0);
+    await characterButtons.first().click();
+    await page.waitForLoadState('networkidle');
+
+    // 4. Verify game loaded with all core elements
+    await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
+
+    // 5. Verify 80/20 layout
+    const sceneArea = page.locator('.scene-area').first();
+    const sceneHeight = await sceneArea.evaluate(el => el.offsetHeight);
+    const mainAreaHeight = await sceneArea.evaluate(el => el.parentElement.offsetHeight);
+    const ratio = sceneHeight / mainAreaHeight;
+    expect(ratio).toBeGreaterThan(0.75);
+    expect(ratio).toBeLessThan(0.85);
+
+    // 6. Verify HUD elements
+    const hudBar = page.locator('.hud-bottom-bar').first();
+    expect((await hudBar.count())).toBeGreaterThan(0);
+
+    // 7. Verify narrator bar
+    const narratorBar = page.locator('.narrator-bar').first();
+    expect((await narratorBar.count())).toBeGreaterThan(0);
+
+    // 8. Verify multiplayer UI (invite/leave)
+    const inviteBtn = page.locator('button:has-text("INVITE")');
+    const leaveBtn = page.locator('button:has-text("LEAVE")');
+    expect((await inviteBtn.count())).toBeGreaterThan(0);
+    expect((await leaveBtn.count())).toBeGreaterThan(0);
+
+    // 9. Verify canvas (game world)
+    const canvas = page.locator('canvas').first();
+    expect((await canvas.count())).toBeGreaterThan(0);
+
+    // 10. Take final screenshot showing complete game state
+    const finalScreenshot = await page.screenshot();
+    expect(finalScreenshot).toBeTruthy();
+
+    // 11. Verify no errors by checking for error screen
+    const errorHeading = page.locator('text="Something went wrong"');
+    expect((await errorHeading.count())).toBe(0); // Should not have error
+  });
 });
