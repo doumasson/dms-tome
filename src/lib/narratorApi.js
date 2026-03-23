@@ -205,13 +205,21 @@ ${npc.sideQuest ? '- If appropriate, mention your side quest to interest the pla
 ${steerHint}
 
 Respond ONLY with a raw JSON object — no markdown, no code fences:
-{"narrative":"Your in-character response here.","rollRequest":null}
+{"narrative":"Your in-character response here.","rollRequest":null,"reputationChange":null}
 
 rollRequest rules:
 - Set to null for normal conversation. Only include when the player is actively trying to influence you.
 - Format: {"skill":"Persuasion","dc":13,"reason":"Convince the guard to let you pass"}
 - Valid skills: Persuasion, Intimidation, Deception, Insight
-- Do NOT request a roll if a roll result was just provided — narrate the outcome instead.`
+- Do NOT request a roll if a roll result was just provided — narrate the outcome instead.
+
+reputationChange rules:
+- Use only when wrapping up the conversation and a reputation change is narratively appropriate.
+- If you're a faction member, you may suggest a reputation change based on how well the interaction went.
+- Format: {"faction":"faction-id","delta":15,"reason":"You proved yourself trustworthy"}
+- delta is typically -25 to +25 (negative for poor relations, positive for good relations)
+- Set to null for normal conversation.
+- Include the reason so the player understands why their reputation changed.`
 }
 
 // Generate 2-3 continuation scenes when a campaign concludes and players want to keep playing
@@ -320,17 +328,17 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
       parsed.narrative = sanitizeOutput(parsed.narrative)
       return parsed
     }
-    return { narrative: String(parsed?.narrative || '(No response)'), rollRequest: null, stateHint: null, advanceScene: false };
+    return { narrative: String(parsed?.narrative || '(No response)'), rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null };
   } catch {
     // Try to extract narrative value with a regex that handles escaped quotes
     const narrativeMatch = text.match(/"narrative"\s*:\s*"((?:[^"\\]|\\.)*)"/);
     if (narrativeMatch) {
       return {
         narrative: sanitizeOutput(narrativeMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"')),
-        rollRequest: null, stateHint: null, advanceScene: false,
+        rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null,
       };
     }
     // Never show raw JSON — return a DM pause message
-    return { narrative: '(The Dungeon Master pauses to consider the situation…)', rollRequest: null, stateHint: null, advanceScene: false };
+    return { narrative: '(The Dungeon Master pauses to consider the situation…)', rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null };
   }
 }

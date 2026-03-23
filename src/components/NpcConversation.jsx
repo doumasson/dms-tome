@@ -26,6 +26,8 @@ export default function NpcConversation({
   const sessionApiKey = useStore(s => s.sessionApiKey)
   const myCharacter = useStore(s => s.myCharacter)
   const factionReputation = useStore(s => s.factionReputation)
+  const adjustFactionReputation = useStore(s => s.adjustFactionReputation)
+  const addNarratorMessage = useStore(s => s.addNarratorMessage)
 
   const [messages, setMessages] = useState(() => {
     if (initialMessage) {
@@ -41,6 +43,9 @@ export default function NpcConversation({
   // Social skill check state
   const [pendingRoll, setPendingRoll] = useState(null) // { skill, dc, reason }
   const [rollResult, setRollResult] = useState(null)    // { d20, total, pass, skill }
+
+  // Reputation change state
+  const [pendingRepChange, setPendingRepChange] = useState(null) // { faction, delta, reason }
 
   const startPTT = useCallback(() => {
     if (!SPEECH_SUPPORTED) return
@@ -70,7 +75,7 @@ export default function NpcConversation({
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages.length, pendingRoll, rollResult])
+  }, [messages.length, pendingRoll, rollResult, pendingRepChange])
 
   useEffect(() => {
     onPromptCount?.(promptCount)
@@ -112,6 +117,11 @@ export default function NpcConversation({
       // Check for social skill check request
       if (result?.rollRequest && result.rollRequest.skill && result.rollRequest.dc) {
         setPendingRoll(result.rollRequest)
+      }
+
+      // Check for reputation change
+      if (result?.reputationChange && result.reputationChange.faction && typeof result.reputationChange.delta === 'number') {
+        setPendingRepChange(result.reputationChange)
       }
 
       if (isCritical && newCount >= 7 && newCount < (maxPrompts || 10)) {
@@ -206,6 +216,40 @@ export default function NpcConversation({
     }, 1800)
   }
 
+  /** Apply reputation change and broadcast to other players */
+  async function handleReputationChange() {
+    if (!pendingRepChange) return
+
+    const { faction, delta, reason } = pendingRepChange
+    const sign = delta > 0 ? '+' : ''
+    const changeText = `${reason || `Reputation with ${faction}: ${sign}${delta}`}`
+
+    // Apply to store
+    adjustFactionReputation(faction, delta)
+
+    // Broadcast to other players
+    broadcastEncounterAction({
+      type: 'reputation-change',
+      faction,
+      delta,
+      characterName: myCharacter?.name || 'Party',
+    })
+
+    // Add to narrator log
+    addNarratorMessage({
+      role: 'system',
+      speaker: 'Reputation Update',
+      text: changeText,
+    })
+
+    // Clear state and disable conversation
+    setMessages(prev => [...prev, {
+      role: 'system', speaker: '', text: `Reputation with ${faction}: ${sign}${delta}`,
+    }])
+    setPendingRepChange(null)
+    setHardLimited(true)
+  }
+
   function handleSubmit(e) {
     e.preventDefault()
     handleSend()
@@ -256,7 +300,39 @@ export default function NpcConversation({
         </div>
       )}
 
-      {!disabled && !hardLimited && !pendingRoll && !rollResult && (
+      {/* Reputation change panel */}
+      {pendingRepChange && !rollResult && (
+        <div style={{
+          padding: '12px 16px', textAlign: 'center', fontFamily: 'Cinzel, serif',
+          background: 'rgba(20,16,12,0.95)', borderTop: '2px solid #d4af37',
+          color: '#e8dcc8',
+        }}>
+          <div style={{ fontSize: 14, color: '#d4af37', marginBottom: 8 }}>
+            Reputation Change
+          </div>
+          {pendingRepChange.reason && (
+            <div style={{ fontSize: 12, marginBottom: 10, opacity: 0.85 }}>
+              {pendingRepChange.reason}
+            </div>
+          )}
+          <div style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 12 }}>
+            {pendingRepChange.faction}: <span style={{
+              color: pendingRepChange.delta > 0 ? '#44aa44' : '#ff6666'
+            }}>
+              {pendingRepChange.delta > 0 ? '+' : ''}{pendingRepChange.delta}
+            </span>
+          </div>
+          <button onClick={handleReputationChange} style={{
+            width: '100%', padding: '10px 0', background: '#d4af37', color: '#1a1614',
+            border: 'none', borderRadius: 4, cursor: 'pointer', fontFamily: 'Cinzel, serif',
+            fontSize: 14, fontWeight: 'bold', letterSpacing: 1,
+          }}>
+            Accept
+          </button>
+        </div>
+      )}
+
+      {!disabled && !hardLimited && !pendingRoll && !rollResult && !pendingRepChange && (
         <form onSubmit={handleSubmit} className="npc-conv-input-row">
           <input
             className="npc-conv-input"
