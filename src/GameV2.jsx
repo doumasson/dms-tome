@@ -85,6 +85,7 @@ const RulesReference_     = lazy(() => import('./components/game/RulesReference'
 const SkillsPanel_        = lazy(() => import('./components/game/SkillsPanel'))
 const SpellsPanel_        = lazy(() => import('./components/game/SpellsPanel'))
 const TurnManager_        = lazy(() => import('./components/game/TurnManager'))
+const Inventory_          = lazy(() => import('./components/game/Inventory'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -187,6 +188,7 @@ export default function GameV2({ onLeave }) {
   const [showSkills, setShowSkills] = useState(false)
   const [showSpells, setShowSpells] = useState(false)
   const [showTurnManager, setShowTurnManager] = useState(false)
+  const [showInventory, setShowInventory] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1339,6 +1341,19 @@ export default function GameV2({ onLeave }) {
           <TurnManager_
             combatant={encounter.combatants[encounter.currentTurn]}
             onClose={() => setShowTurnManager(false)}
+          />
+        </Suspense>
+      )}
+      {showInventory && myCharacter && (
+        <Suspense fallback={null}>
+          <Inventory_
+            items={myCharacter.inventory || []}
+            equipment={myCharacter.equipment || {}}
+            gold={myCharacter.gold || 0}
+            onEquip={() => {}}
+            onUse={() => {}}
+            onDrop={() => {}}
+            onClose={() => setShowInventory(false)}
           />
         </Suspense>
       )}
