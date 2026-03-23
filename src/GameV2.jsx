@@ -77,6 +77,7 @@ const EquipmentPanel_     = lazy(() => import('./components/game/EquipmentPanel'
 const ExplorationActions_ = lazy(() => import('./components/game/ExplorationActions'))
 const EnemyInfo_          = lazy(() => import('./components/game/EnemyInfo'))
 const InitiativeTracker_  = lazy(() => import('./components/game/InitiativeTracker'))
+const LevelUpPanel_       = lazy(() => import('./components/game/LevelUpPanel'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -172,6 +173,7 @@ export default function GameV2({ onLeave }) {
   const [showEnemyInfo, setShowEnemyInfo] = useState(false)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
   const [showInitiativeTracker, setShowInitiativeTracker] = useState(false)
+  const [showLevelUpPanel, setShowLevelUpPanel] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1263,6 +1265,15 @@ export default function GameV2({ onLeave }) {
           <InitiativeTracker_
             encounter={encounter}
             onClose={() => setShowInitiativeTracker(false)}
+          />
+        </Suspense>
+      )}
+      {showLevelUpPanel && myCharacter && (
+        <Suspense fallback={null}>
+          <LevelUpPanel_
+            character={myCharacter}
+            onConfirm={() => setShowLevelUpPanel(false)}
+            onCancel={() => setShowLevelUpPanel(false)}
           />
         </Suspense>
       )}
