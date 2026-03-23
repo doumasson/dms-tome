@@ -10,6 +10,7 @@ import './HUD.css';
 export default function HUD() {
   const myCharacter = useStore(s => s.myCharacter);
   const encounter = useStore(s => s.encounter);
+  const rollDeathSave = useStore(s => s.rollDeathSave);
   const inCombat = encounter.phase !== 'idle';
 
   if (!myCharacter) return null;
@@ -128,6 +129,15 @@ export default function HUD() {
               </div>
             )}
           </div>
+          {!deathSaves.stable && inCombat && (
+            <button
+              className="death-save-button"
+              onClick={() => rollDeathSave(combatant.id)}
+              title="Roll a d20 death saving throw"
+            >
+              Roll Death Save
+            </button>
+          )}
         </div>
       )}
     </div>
