@@ -83,8 +83,6 @@ export default function GameV2({ onLeave }) {
   const mercyRevive = useStore(s => s.mercyRevive)
 
   const pixiRef = useRef(null)
-  const [apiKeyLoaded, setApiKeyLoaded] = useState(false)
-  const [worldLoadError, setWorldLoadError] = useState(null)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
   const [toolPanel, setToolPanel] = useState(null)
   const [sheetChar, setSheetChar] = useState(null)
@@ -191,6 +189,25 @@ export default function GameV2({ onLeave }) {
 
   // --- Stealth approach system ---
   const { stealthMode } = useStealthMode({ playerPos, playerPosRef, partyMembers, zone })
+
+  // --- Major game effects (combat, level-up, session resume, encounters, API key loading, etc.) ---
+  const {
+    apiKeyLoaded: effectsApiKeyLoaded,
+    worldLoadError: effectsWorldLoadError,
+    handleChatRef: effectsHandleChatRef,
+    handleInteractRef: effectsHandleInteractRef,
+  } = useGameEffects({
+    inCombat, encounter, playerPos, playerPosRef, cameraRef, setPlayerPos, zone, myCharacter, isDM, activeCampaign,
+    addNarratorMessage, sessionApiKey, partyMembers, currentAreaId, stealthMode, campaign, user, gameTime, advanceGameTime,
+    setShowVictory, setShowDefeat, setEncounterRewards, setShowLevelUp, setShowSessionResume, dismissedLevelRef,
+    clearPendingEncounterData, setPendingEncounterData, setEncounterLock, areas, areaBriefs, activateArea: activateArea, areaLayers,
+  })
+
+  // Use the values from useGameEffects
+  const apiKeyLoaded = effectsApiKeyLoaded
+  const worldLoadError = effectsWorldLoadError
+  if (effectsHandleChatRef) handleChatRef.current = effectsHandleChatRef.current
+  if (effectsHandleInteractRef) handleInteractRef.current = effectsHandleInteractRef.current
 
   // --- Combined tile click handler ---
   const handleTileClick = useCallback(({ x, y }) => {
