@@ -72,6 +72,7 @@ const GameLayout          = lazy(() => import('./components/game/GameLayout'))
 const NPCDialogue         = lazy(() => import('./components/game/NPCDialogue'))
 const CharacterInventory_ = lazy(() => import('./components/game/CharacterInventory'))
 const CombatLog_          = lazy(() => import('./components/game/CombatLog'))
+const ConditionsPanel_    = lazy(() => import('./components/game/ConditionsPanel'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -161,6 +162,7 @@ export default function GameV2({ onLeave }) {
   const [showNPCDialogue, setShowNPCDialogue] = useState(false)
   const [showCharacterInventory, setShowCharacterInventory] = useState(false)
   const [showCombatLog, setShowCombatLog] = useState(false)
+  const [showConditions, setShowConditions] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1207,6 +1209,14 @@ export default function GameV2({ onLeave }) {
           <CombatLog_
             encounter={encounter}
             onClose={() => setShowCombatLog(false)}
+          />
+        </Suspense>
+      )}
+      {showConditions && myCharacter && (
+        <Suspense fallback={null}>
+          <ConditionsPanel_
+            activeConditions={myCharacter.conditions || []}
+            onClose={() => setShowConditions(false)}
           />
         </Suspense>
       )}
