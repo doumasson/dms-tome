@@ -4,6 +4,7 @@
  */
 
 import { generateTreasureHoard } from './lootTables.js'
+import { generateBossPhases } from './bossPhases.js'
 
 // Boss difficulty tiers
 export const BOSS_TIERS = {
@@ -208,7 +209,14 @@ export function generateBossEncounter(partyLevel = 5, tier = BOSS_TIERS.CHAMPION
     position: { x: 7, y: 7 },
     description: `A formidable ${arch.name} of terrible power. Known as ${bossName}.`,
     xpReward: calculateBossXP(cr, partyLevel),
+    bossPhase: 1,
+    usedLegendaryActions: 0,
+    phases: [], // Will populate after object creation
   };
+
+  // Generate phases for multi-phase encounter
+  boss.phases = generateBossPhases(boss);
+  return boss;
 }
 
 /**

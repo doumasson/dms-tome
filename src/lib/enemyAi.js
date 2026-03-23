@@ -68,13 +68,30 @@ function buildEnemyTurnPrompt(enemy, encounter) {
   const pos = enemy.position ? `(${enemy.position.x},${enemy.position.y})` : 'unplaced';
   const moveSquares = enemy.remainingMove ?? Math.floor((enemy.speed || 30) / 5);
 
+  // Phase information for bosses
+  const phaseInfo = enemy.phases && enemy.phases.length > 0
+    ? (() => {
+        const currentPhaseNum = enemy.bossPhase || 1;
+        const currentPhase = enemy.phases[currentPhaseNum - 1];
+        if (currentPhase) {
+          const abilities = currentPhase.activatedAbilities?.join(', ') || 'none';
+          const legendaryBudget = (enemy.maxLegendaryActionsPerRound || 3) - (enemy.usedLegendaryActions || 0);
+          return `\nBOSS PHASE: ${currentPhaseNum}/${enemy.phases.length}
+- Tactics: ${currentPhase.tactics}
+- Available abilities: ${abilities}
+- Legendary actions remaining: ${legendaryBudget}/3`;
+        }
+        return '';
+      })()
+    : '';
+
   return `You are a tactical D&D 5e Dungeon Master controlling ${enemy.name} in combat.
 
 ENEMY: ${enemy.name}
 - HP: ${enemy.currentHp}/${enemy.maxHp}, AC: ${enemy.ac}, Position: ${pos}
 - Speed: ${enemy.speed || 30}ft (${moveSquares} squares remaining)
 - Attacks: ${attacks}
-- Conditions: ${enemy.conditions?.join(', ') || 'none'}
+- Conditions: ${enemy.conditions?.join(', ') || 'none'}${phaseInfo}
 
 PARTY (enemies to ${enemy.name}):
 ${partyLines || 'No players visible'}

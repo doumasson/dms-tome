@@ -797,6 +797,15 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
               </div>
               <div style={{ fontSize: '0.65rem', color: 'rgba(231,76,60,0.6)', fontFamily: "'Cinzel', Georgia, serif", letterSpacing: '0.12em', marginBottom: 4, textTransform: 'uppercase' }}>Enemy</div>
               <div style={{ fontSize: '0.82rem', color: '#e74c3c', fontFamily: "'Cinzel', Georgia, serif", fontWeight: 700, marginBottom: 10 }}>{activeCombatant.name}</div>
+              {/* Boss phase indicator */}
+              {activeCombatant.phases && activeCombatant.phases.length > 0 && (
+                <div style={{ fontSize: '0.65rem', color: '#f39c12', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 8, padding: '4px 6px', background: 'rgba(243,156,18,0.15)', borderRadius: 3 }}>
+                  ⚡ Phase {activeCombatant.bossPhase || 1}/{activeCombatant.phases.length}
+                  {activeCombatant.usedLegendaryActions !== undefined && (
+                    <span style={{ marginLeft: 8 }}>{(activeCombatant.maxLegendaryActionsPerRound || 3) - (activeCombatant.usedLegendaryActions || 0)}/3 Legendary</span>
+                  )}
+                </div>
+              )}
               {/* HP bar */}
               {activeCombatant.maxHp > 0 && (
                 <div style={{ width: '100%', height: 4, background: '#2a0a06', borderRadius: 2, marginBottom: 10 }}>

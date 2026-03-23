@@ -1,6 +1,7 @@
 import { triggerEnemyTurn, computeGruntAction } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 import { getSaveProficiencies, profBonus as getProfBonus } from '../lib/derivedStats.js';
+import { checkPhaseTransition } from '../lib/bossPhases.js';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -445,12 +446,43 @@ export function createEncounterSlice(set, get) {
           disengaged: false,
           leveledSpellCastThisTurn: false,
           readiedAction: null,
+          usedLegendaryActions: 0, // Reset legendary action budget at start of boss turn
         } : c
       );
+
+      // Check for boss phase transition
+      let finalCombatants = updated;
+      const activeCombatant = updated[nextTurn];
+      if (activeCombatant && activeCombatant.phases && activeCombatant.phases.length > 0) {
+        const newPhase = checkPhaseTransition(activeCombatant);
+        if (newPhase && newPhase.number !== activeCombatant.bossPhase) {
+          // Phase transition occurred
+          const oldPhase = activeCombatant.bossPhase || 1;
+          finalCombatants = updated.map((c, i) =>
+            i === nextTurn ? {
+              ...c,
+              bossPhase: newPhase.number,
+              currentHp: c.currentHp, // Maintain current HP across phase
+            } : c
+          );
+          // Log phase change
+          log.unshift(`⚡ ${activeCombatant.name} enters Phase ${newPhase.number}! ${newPhase.description}`);
+          // Broadcast phase change to all clients
+          broadcastEncounterAction({
+            type: 'boss-phase-change',
+            bossId: activeCombatant.id,
+            bossName: activeCombatant.name,
+            newPhase: newPhase.number,
+            description: newPhase.description,
+            userId: get().user?.id || 'system',
+          });
+        }
+      }
+
       set({
         encounter: {
           ...state.encounter,
-          combatants: updated,
+          combatants: finalCombatants,
           currentTurn: nextTurn,
           round: nextRound,
           log: log.slice(0, 30),
