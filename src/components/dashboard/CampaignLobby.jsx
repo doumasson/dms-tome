@@ -1,139 +1,123 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './CampaignLobby.css';
 
 /**
  * Campaign Lobby Component
- * Waiting room before game starts
- * Shows invite code, player list, start game button
+ * Waiting room, invite code display, player list
  */
+
 export default function CampaignLobby({
   campaign = {},
+  inviteCode = 'LOADING',
   players = [],
   isHost = false,
-  onStartGame = () => {},
-  onLeave = () => {},
-  onCopyInviteCode = () => {}
+  onStart = () => {},
+  onLeave = () => {}
 }) {
-  const [copied, setCopied] = useState(false);
-
-  const inviteUrl = campaign.inviteCode
-    ? `${window.location.origin}?invite=${campaign.inviteCode}`
-    : '';
+  const [copiedCode, setCopiedCode] = useState(false);
 
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(inviteUrl);
-    setCopied(true);
-    onCopyInviteCode?.();
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard.writeText(inviteCode);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
   };
 
-  const canStartGame = players.length > 0 && isHost;
+  const canStart = players.length > 0 && isHost;
 
   return (
-    <div className="campaign-lobby">
+    <div className="campaign-lobby-container">
+      {/* Header */}
       <div className="lobby-header">
-        <h1>{campaign.title || 'Campaign Lobby'}</h1>
-        <p>Waiting for players to join...</p>
+        <h1>{campaign.name || 'Campaign Lobby'}</h1>
+        <p>Gather your party. Adventure awaits.</p>
       </div>
 
-      <div className="lobby-container">
-        {/* Invite code section */}
-        <div className="lobby-section invite-section">
-          <h2>Invite Players</h2>
-          <div className="invite-code-box">
-            <div className="code-display">
-              <code>{campaign.inviteCode || '—'}</code>
-            </div>
+      {/* Invite code section */}
+      <div className="invite-section">
+        <div className="invite-card">
+          <div className="invite-label">Invite Code</div>
+          <div className="invite-code-display">
+            <span className="code-text">{inviteCode}</span>
             <button
-              className="btn-copy-code"
+              className="copy-btn"
               onClick={handleCopyCode}
-              title="Copy invite link"
+              title="Copy invite code"
             >
-              {copied ? '✓ Copied!' : 'Copy Link'}
+              {copiedCode ? '✓' : '📋'}
             </button>
           </div>
-          <p className="invite-help">
-            Share the invite code with friends or send them the link above.
-          </p>
-        </div>
-
-        {/* Player list section */}
-        <div className="lobby-section players-section">
-          <h2>Party Members</h2>
-          <div className="players-list">
-            {players.length === 0 ? (
-              <div className="empty-state">
-                <p>No players have joined yet</p>
-              </div>
-            ) : (
-              players.map((player, i) => (
-                <div key={i} className="player-item">
-                  <div className="player-avatar">
-                    {player.portrait ? (
-                      <img src={player.portrait} alt={player.name} />
-                    ) : (
-                      <div className="avatar-placeholder">
-                        {player.name?.[0]?.toUpperCase() || '?'}
-                      </div>
-                    )}
-                  </div>
-                  <div className="player-info">
-                    <div className="player-name">{player.name || 'Unknown'}</div>
-                    <div className="player-class">
-                      {player.class || 'No class selected'} •{' '}
-                      {player.race || 'No race selected'}
-                    </div>
-                  </div>
-                  {isHost && (
-                    <div className="player-status">
-                      {i === 0 ? '⚔️ Host' : '🛡️ Ready'}
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-          <div className="players-count">
-            {players.length} / 6 players
-          </div>
-        </div>
-
-        {/* Campaign info section */}
-        <div className="lobby-section info-section">
-          <h2>Campaign Details</h2>
-          <div className="info-item">
-            <span className="info-label">Campaign Name:</span>
-            <span className="info-value">{campaign.title || '—'}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Narrator:</span>
-            <span className="info-value">The Narrator (AI)</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Rules:</span>
-            <span className="info-value">SRD 5.1</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Status:</span>
-            <span className="info-value waiting">Waiting to start...</span>
-          </div>
+          <p className="invite-desc">Share this code with other players to join</p>
         </div>
       </div>
+
+      {/* Players section */}
+      <div className="players-section">
+        <div className="section-title">
+          Party Members ({players.length})
+        </div>
+
+        <div className="players-list">
+          {players.length === 0 ? (
+            <div className="no-players">
+              <p>No players yet</p>
+              <p className="empty-desc">Waiting for others to join...</p>
+            </div>
+          ) : (
+            players.map((player, idx) => (
+              <div key={idx} className="player-card">
+                <div className="player-avatar">
+                  {player.name?.charAt(0).toUpperCase() || '?'}
+                </div>
+                <div className="player-info">
+                  <div className="player-name">{player.name || 'Unknown'}</div>
+                  <div className="player-class">
+                    {player.class || 'Adventurer'}
+                  </div>
+                </div>
+                {player.isHost && (
+                  <div className="host-badge">Host</div>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Campaign info */}
+      {campaign.description && (
+        <div className="campaign-info">
+          <div className="section-title">Campaign</div>
+          <p className="info-text">{campaign.description}</p>
+        </div>
+      )}
 
       {/* Action buttons */}
       <div className="lobby-actions">
-        <button className="btn-leave" onClick={onLeave}>
+        <button
+          className="leave-btn"
+          onClick={onLeave}
+        >
           Leave Campaign
         </button>
+
         {isHost && (
           <button
-            className="btn-start"
-            onClick={onStartGame}
-            disabled={!canStartGame}
-            title={!canStartGame ? 'Need at least one player to start' : 'Start the adventure!'}
+            className="start-btn"
+            onClick={onStart}
+            disabled={!canStart}
+            title={canStart ? 'Start the campaign' : 'Waiting for players...'}
           >
-            {players.length === 0 ? 'Waiting for players...' : 'Begin Adventure →'}
+            Start Campaign
           </button>
+        )}
+      </div>
+
+      {/* Status bar */}
+      <div className="lobby-status">
+        {isHost ? (
+          <p>✓ You are the Host</p>
+        ) : (
+          <p>Waiting for host to start...</p>
         )}
       </div>
     </div>
