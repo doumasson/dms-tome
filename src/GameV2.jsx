@@ -32,6 +32,7 @@ import { useWorldMovement } from './hooks/useWorldMovement'
 import { useStealthMode } from './hooks/useStealthMode'
 import { useNarratorChat } from './hooks/useNarratorChat'
 import { useWorldLoader } from './hooks/useWorldLoader'
+import { useRandomEncounters } from './hooks/useRandomEncounters'
 import { getNpcMovements } from './lib/npcScheduler.js'
 import { getTimeOfDay } from './lib/gameTime.js'
 import { findPathEdge } from './lib/pathfinding'
@@ -177,6 +178,8 @@ export default function GameV2({ onLeave }) {
   useFogOfWar({ zone, playerPos, playerPosRef, currentAreaId, myCharacter, isDM, pixiRef, cameraRef })
 
   const { roofManagerRef, triggeredZonesRef } = useRoofManager({ zone, playerPos, playerPosRef, currentAreaId, isDM })
+
+  useRandomEncounters({ playerPos, inCombat, isDM, zone })
 
   const {
     targetingMode, pendingOA, setPendingOA,
