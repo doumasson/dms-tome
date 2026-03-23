@@ -1,5 +1,24 @@
 import { test, expect } from '@playwright/test';
 
+// Helper function to navigate through campaign and character selection
+async function navigateToGame(page) {
+  // Select first campaign card button (skip header buttons at indices 0-1, join button at 2)
+  const allButtons = page.locator('button');
+  const buttonCount = await allButtons.count();
+  if (buttonCount > 3) {
+    await allButtons.nth(3).click();
+    await page.waitForLoadState('networkidle');
+  }
+
+  // Select character (find buttons with "Aric" or similar, or click first character button)
+  const charButtons = page.locator('button:has-text("Aric"), button:has-text("Select"), button[style*="character"]');
+  const charCount = await charButtons.count();
+  if (charCount > 0) {
+    await charButtons.first().click();
+    await page.waitForLoadState('networkidle');
+  }
+}
+
 test.describe('Game Integration Tests', () => {
   test('should load game with auto-login and reach PixiJS map', async ({ page, baseURL }) => {
     // Navigate to the app with auto-login enabled
@@ -17,25 +36,8 @@ test.describe('Game Integration Tests', () => {
     const campaignContainer = page.locator('[class*="campaign"]').first();
     await expect(campaignContainer).toBeVisible({ timeout: 10000 });
 
-    // Select "Agent Test Campaign" if available
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign"), div:has-text("Agent Test Campaign")');
-    const campaignCount = await campaignButtons.count();
-    if (campaignCount > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    // Look for character selection screen
-    const characterSection = page.locator('[class*="character"], h2:has-text("Select")').first();
-    await expect(characterSection).toBeVisible({ timeout: 10000 });
-
-    // Select character - look for any character card or option
-    const characterButtons = page.locator('button:has-text("Aric"), button:has-text("Select"), [class*="character"][role="button"]');
-    const charCount = await characterButtons.count();
-    if (charCount > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate through campaign and character selection
+    await navigateToGame(page);
 
     // Wait for game to load - verify scene area (main game container)
     const sceneArea = page.locator('.scene-area').first();
@@ -173,18 +175,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen (same flow as first test)
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -207,18 +199,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -248,18 +230,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -289,18 +261,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -336,18 +298,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -367,18 +319,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -418,18 +360,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -471,18 +403,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -511,18 +433,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -550,18 +462,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -595,18 +497,8 @@ test.describe('Game Integration Tests', () => {
     // Navigate and reach game
     await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
 
-    // Get through to game screen
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    if ((await campaignButtons.count()) > 0) {
-      await campaignButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
-
-    const characterButtons = page.locator('button:has-text("Aric")');
-    if ((await characterButtons.count()) > 0) {
-      await characterButtons.first().click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Navigate to game
+    await navigateToGame(page);
 
     // Wait for game to load on mobile
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
@@ -645,17 +537,8 @@ test.describe('Game Integration Tests', () => {
     const initialTitle = await page.title();
     expect(['DungeonMind', 'campaigns'].some(t => initialTitle.includes(t))).toBeTruthy();
 
-    // 2. Select campaign
-    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
-    expect((await campaignButtons.count())).toBeGreaterThan(0);
-    await campaignButtons.first().click();
-    await page.waitForLoadState('networkidle');
-
-    // 3. Select character
-    const characterButtons = page.locator('button:has-text("Aric")');
-    expect((await characterButtons.count())).toBeGreaterThan(0);
-    await characterButtons.first().click();
-    await page.waitForLoadState('networkidle');
+    // 2-3. Navigate through campaign and character selection
+    await navigateToGame(page);
 
     // 4. Verify game loaded with all core elements
     await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
