@@ -60,6 +60,7 @@ const InitiativeTracker   = lazy(() => import('./components/game/InitiativeTrack
 const TurnManager         = lazy(() => import('./components/game/TurnManager'))
 const PartyStatus         = lazy(() => import('./components/game/PartyStatus'))
 const EnemyInfo           = lazy(() => import('./components/game/EnemyInfo'))
+const RulesReference      = lazy(() => import('./components/game/RulesReference'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
