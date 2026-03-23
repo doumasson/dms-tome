@@ -18,7 +18,7 @@ import { checkReadiedTrigger as checkTrigger, resolveReadiedAttack as resolveRea
  * combat movement (with opportunity attacks), movement range rendering,
  * cover calculation, enemy auto-turns, and combat camera lock.
  */
-export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM }) {
+export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM, setShowSpellTargeting, setPendingSpell }) {
   const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
   const runEnemyTurn = useStore(s => s.runEnemyTurn)
   const activeCampaign = useStore(s => s.activeCampaign)
@@ -1309,6 +1309,50 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       })
       broadcastEncounterAction({ type: 'ready-action', id: active.id, readiedAction: payload })
       setShowReadyModal(false)
+    } else if (type === 'spell-confirm') {
+      // payload = { spell, position, targets }
+      const { useSpellSlot, useAction: consumeAction } = useStore.getState()
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active) return
+
+      const spell = payload.spell
+      const selectedTargets = payload.targets || []
+
+      // Consume spell slot
+      if (spell.castLevel > 0) {
+        useSpellSlot(active.id, spell.castLevel)
+      }
+
+      // Consume action
+      consumeAction(active.id)
+
+      // Calculate damage and apply to targets
+      let damageRolls = []
+      for (const targetId of selectedTargets) {
+        const target = encounter.combatants?.find(c => c.id === targetId)
+        if (!target) continue
+
+        const damage = rollDamage(spell.damage?.dice || '1d6')
+        const currentHp = (target.currentHp ?? target.hp) - damage
+
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === targetId ? { ...c, currentHp: Math.max(0, currentHp) } : c
+            ),
+          },
+        }))
+
+        damageRolls.push(`${target.name}: ${damage} damage`)
+      }
+
+      const resultText = damageRolls.length > 0
+        ? `${active.name} casts ${spell.name}! Affected: ${damageRolls.join(', ')}`
+        : `${active.name} casts ${spell.name}!`
+
+      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: resultText })
+      broadcastEncounterAction({ type: 'spell-cast', id: active.id, spell: spell.name, targets: selectedTargets, damage: damageRolls })
     }
   }, [addNarratorMessage, encounter])
 
@@ -1384,14 +1428,9 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
     // Enter targeting based on spell type
     if (spell.areaType) {
-      // AoE spell — use existing spell targeting mode
-      setTargetingMode({ type: 'spell', spell: {
-        ...spell,
-        damage: spell.damage?.dice || '1d6',
-        saveAbility: (spell.save || 'dex').toLowerCase(),
-        halfOnSave: spell.save != null,
-        castingAbility: null,
-      }, castLevel })
+      // AoE spell — show targeting overlay
+      setPendingSpell({ ...spell, castLevel })
+      setShowSpellTargeting(true)
       addNarratorMessage({ role: 'dm', speaker: 'System', text: `Targeting ${spell.name}. Click to place. Press Escape to cancel.` })
     } else if (spell.attack) {
       // Ranged/melee spell attack — same as weapon attack targeting

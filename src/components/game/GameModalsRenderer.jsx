@@ -311,7 +311,8 @@ export default function GameModalsRenderer({
         <Suspense fallback={null}>
           <SpellTargeting
             spell={pendingSpell}
-            onConfirm={() => { setShowSpellTargeting(false) }}
+            encounter={encounter}
+            onConfirm={({ position, targets }) => { handleCombatAction('spell-confirm', { spell: pendingSpell, position, targets }); setShowSpellTargeting(false) }}
             onCancel={() => { setShowSpellTargeting(false) }}
           />
         </Suspense>

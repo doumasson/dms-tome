@@ -172,7 +172,7 @@ export default function GameV2({ onLeave }) {
     readyTriggerPrompt, checkReadiedTriggers,
     executeReadiedAction, passReadiedAction,
     handleSpellSelected, handleWeaponSelected, handleConsumableUsed, selectedWeapon,
-  } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM })
+  } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM, setShowSpellTargeting, setPendingSpell })
 
   const { handleAreaTransition } = useAreaTransition({
     area, areas, areaBriefs, inCombat, campaign, pixiRef,

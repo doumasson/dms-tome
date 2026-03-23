@@ -9,8 +9,10 @@ import './SpellTargeting.css';
 
 export default function SpellTargeting({
   spell = {},
+  encounter = {},
   onConfirm = () => {},
-  onCancel = () => {}
+  onCancel = () => {},
+  onCast = () => {}
 }) {
   const [targetPosition, setTargetPosition] = useState({ x: 50, y: 50 });
   const [selectedTargets, setSelectedTargets] = useState([]);
@@ -96,20 +98,18 @@ export default function SpellTargeting({
             strokeWidth="0.5"
           />
 
-          {/* Target indicators (placeholder) */}
-          {[
-            { id: 1, x: 35, y: 30, name: 'Goblin 1' },
-            { id: 2, x: 55, y: 45, name: 'Goblin 2' },
-            { id: 3, x: 65, y: 25, name: 'Goblin 3' }
-          ].map(target => {
-            const isInArea = Math.hypot(target.x - targetPosition.x, target.y - targetPosition.y) < (areaSize * 1.5);
+          {/* Target indicators from actual combatants */}
+          {(encounter.combatants || []).filter(c => c.type !== 'player').map(target => {
+            const targetX = (target.position?.x || 50) / 10; // Normalize grid position to 0-100
+            const targetY = (target.position?.y || 50) / 10;
+            const isInArea = Math.hypot(targetX - targetPosition.x, targetY - targetPosition.y) < (areaSize * 1.5);
             const isSelected = selectedTargets.includes(target.id);
 
             return (
               <g key={target.id} onClick={(e) => { e.stopPropagation(); handleTargetSelect(target.id); }}>
                 <circle
-                  cx={target.x}
-                  cy={target.y}
+                  cx={targetX}
+                  cy={targetY}
                   r="2"
                   fill={isInArea ? (isSelected ? '#2ecc71' : '#f39c12') : '#666'}
                   stroke={isInArea ? '#d4af37' : '#999'}
@@ -118,8 +118,8 @@ export default function SpellTargeting({
                 />
                 {isInArea && (
                   <text
-                    x={target.x}
-                    y={target.y - 3}
+                    x={targetX}
+                    y={targetY - 3}
                     fontSize="2"
                     fill="#d4af37"
                     textAnchor="middle"
