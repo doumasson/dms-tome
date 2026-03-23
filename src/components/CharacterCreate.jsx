@@ -5,7 +5,7 @@ import { CLASSES } from '../data/classes';
 import { getRace, applyRacialBonuses } from '../data/races';
 import {
   calcHp, calcAc, buildAttacks, buildSpellSlots, buildFeatures,
-  avatarUrl, profBonus, getStarterSpells,
+  avatarUrl, profBonus, getStarterSpells, BACKGROUNDS,
 } from '../lib/charBuilder';
 import { getStartingInventory, WEAPONS, ARMOR, getSlotType, computeAcFromEquipped } from '../data/equipment';
 import { s } from './characterCreate/charCreateStyles';
@@ -71,7 +71,19 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     const label = dynamicSteps[step];
     if (label === 'Race')       return !!race;
     if (label === 'Class')      return !!cls;
-    if (label === 'Background') return !!background;
+    if (label === 'Background') {
+      if (!background) return false;
+      // Validate skill selection
+      const clsData = CLASSES[cls];
+      const bg = BACKGROUNDS.find(b => b.name === background);
+      if (!clsData || !bg) return false;
+
+      const classSkillCount = clsData.skillCount || 2;
+      const bgSkills = bg.skills || [];
+      const selectedClassSkills = skills.filter(sk => !bgSkills.includes(sk));
+
+      return selectedClassSkills.length === classSkillCount;
+    }
     if (label === 'Spells')     return true;
     if (label === 'Abilities')  return true;
     if (label === 'Identity')   return !!name.trim();
