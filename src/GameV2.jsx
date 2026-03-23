@@ -22,6 +22,7 @@ import { useWorldMovement } from './hooks/useWorldMovement'
 import { useStealthMode } from './hooks/useStealthMode'
 import { useRandomEncounters } from './hooks/useRandomEncounters'
 import { useGameEffects } from './hooks/useGameEffects'
+import { useGameTokens } from './hooks/useGameTokens'
 import './hud/hud.css'
 
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
@@ -205,6 +206,12 @@ export default function GameV2({ onLeave }) {
   if (effectsHandleChatRef) handleChatRef.current = effectsHandleChatRef.current
   if (effectsHandleInteractRef) handleInteractRef.current = effectsHandleInteractRef.current
 
+  // --- Game tokens and nearby NPCs ---
+  const { tokens, nearbyNpcs } = useGameTokens({
+    zone, playerPos, myCharacter, inCombat, encounter, activeNpc,
+    partyMembers, defeatedEnemies, currentAreaId,
+  })
+
   // --- Combined tile click handler ---
   const handleTileClick = useCallback(({ x, y }) => {
     if (isAnimating()) return
@@ -237,106 +244,6 @@ export default function GameV2({ onLeave }) {
     return () => cancelAnimationFrame(rafId)
   }, [zone])
 
-
-  // --- Token list ---
-  const tokens = useMemo(() => {
-    if (!zone) return []
-    const t = []
-
-    // During combat, render tokens from encounter.combatants (live positions + HP)
-    if (inCombat && encounter.combatants?.length) {
-      const activeCombatantId = encounter.combatants[encounter.currentTurn]?.id
-      encounter.combatants.forEach(c => {
-        if (!c.position) return
-        const isEnemy = c.type === 'enemy'
-        const isDead = (c.currentHp ?? 0) <= 0
-        t.push({
-          id: c.id, name: c.name,
-          x: c.position.x, y: c.position.y,
-          color: isEnemy ? 0x8b0000 : 0x0c1828,
-          borderColor: isEnemy ? 0xff3333 : (CLASS_COLORS[c.class] || 0x4499dd),
-          isEnemy, isNpc: false,
-          isActive: c.id === activeCombatantId,
-          showHpBar: true,
-          currentHp: c.currentHp ?? c.maxHp,
-          maxHp: c.maxHp ?? 10,
-          opacity: isDead ? 0.3 : 1,
-        })
-      })
-    } else {
-      // Exploration mode — player + NPCs + area enemies
-      t.push({
-        id: 'player',
-        name: myCharacter?.name || 'Hero',
-        x: playerPos.x, y: playerPos.y,
-        color: 0x0c1828,
-        borderColor: CLASS_COLORS[myCharacter?.class] || 0x4499dd,
-        isNpc: false,
-      })
-      if (zone.npcs) {
-        zone.npcs.forEach(npc => {
-          if (!npc.position) return
-          t.push({
-            id: npc.name, name: npc.name,
-            x: npc.position.x, y: npc.position.y,
-            color: 0x1a1208,
-            borderColor: npc.questRelevant ? 0xc9a84c : 0x8a7a52,
-            isNpc: true, questRelevant: npc.questRelevant,
-          })
-        })
-      }
-      if (zone.enemies) {
-        const areaDefeated = defeatedEnemies?.[currentAreaId] || []
-        // Group enemies by name and only show scaled count (match what combat will spawn)
-        const partySize = Math.max(1, (partyMembers?.length || 0) + (myCharacter ? 1 : 0))
-        const enemyGroups = {}
-        zone.enemies.forEach(e => {
-          if (!e.position) return
-          if (areaDefeated.includes(e.name)) return
-          if (!enemyGroups[e.name]) enemyGroups[e.name] = []
-          enemyGroups[e.name].push(e)
-        })
-        // Scale each group to party-appropriate count
-        Object.values(enemyGroups).forEach(group => {
-          const maxShow = partySize <= 2 ? Math.min(group.length, partySize) : Math.min(group.length, partySize + 1)
-          group.slice(0, maxShow).forEach(e => {
-            t.push({
-              id: e.id, name: e.name,
-              x: e.position.x, y: e.position.y,
-              color: 0x8b0000, borderColor: 0xff3333,
-              isEnemy: true, isNpc: false,
-            })
-          })
-        })
-      }
-    }
-
-    // Always include NPCs during combat for visual context
-    if (inCombat && zone.npcs) {
-      zone.npcs.forEach(npc => {
-        if (!npc.position) return
-        t.push({
-          id: npc.name, name: npc.name,
-          x: npc.position.x, y: npc.position.y,
-          color: 0x1a1208,
-          borderColor: npc.questRelevant ? 0xc9a84c : 0x8a7a52,
-          isNpc: true, questRelevant: npc.questRelevant,
-        })
-      })
-    }
-    return t
-  }, [playerPos, zone, myCharacter, inCombat, encounter.combatants, encounter.currentTurn, defeatedEnemies, currentAreaId])
-
-  // Nearby NPCs for chat bubbles
-  const nearbyNpcs = useMemo(() => {
-    if (!zone?.npcs || inCombat || activeNpc) return []
-    return zone.npcs.filter(npc => {
-      if (!npc.position) return false
-      const dx = Math.abs(playerPos.x - npc.position.x)
-      const dy = Math.abs(playerPos.y - npc.position.y)
-      return dx <= 3 && dy <= 3
-    })
-  }, [playerPos, zone, inCombat, activeNpc])
 
   // --- Interaction handlers ---
   const openNpcInteraction = useCallback((npc) => {
