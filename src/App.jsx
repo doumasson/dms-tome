@@ -886,15 +886,19 @@ export default function App() {
           onSelectExisting={async (char) => {
             setMyCharacter(char);
             if (activeCampaign?.id) {
-              const { data: members } = await supabase
-                .from('campaign_members')
-                .select('user_id, role, character_data')
-                .eq('campaign_id', activeCampaign.id);
-              const seen = new Set();
-              const players = (members || [])
-                .filter(m => m.character_data?.name && !seen.has(m.user_id) && seen.add(m.user_id))
-                .map(m => ({ ...m.character_data }));
-              setPartyMembers(players);
+              try {
+                const { data: members } = await supabase
+                  .from('campaign_members')
+                  .select('user_id, role, character_data')
+                  .eq('campaign_id', activeCampaign.id);
+                const seen = new Set();
+                const players = (members || [])
+                  .filter(m => m.character_data?.name && !seen.has(m.user_id) && seen.add(m.user_id))
+                  .map(m => ({ ...m.character_data }));
+                setPartyMembers(players);
+              } catch (err) {
+                console.error('Failed to load party members:', err);
+              }
             }
             setAppView('game');
           }}
