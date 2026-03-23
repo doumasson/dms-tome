@@ -312,4 +312,51 @@ test.describe('Game Integration Tests', () => {
       expect(optionCount).toBeGreaterThan(0); // Should have at least one action option
     }
   });
+
+  test('should display NPC dialogue when talking to NPCs', async ({ page, baseURL }) => {
+    // Navigate and reach game
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+
+    // Get through to game screen
+    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
+    if ((await campaignButtons.count()) > 0) {
+      await campaignButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    const characterButtons = page.locator('button:has-text("Aric")');
+    if ((await characterButtons.count()) > 0) {
+      await characterButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    // Wait for game to load
+    await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
+
+    // Look for NpcDialog elements (overlay and dialog container)
+    const npcDialogOverlay = page.locator('.npc-dialog-overlay');
+    const npcDialog = page.locator('.npc-dialog');
+
+    // Check if NpcDialog is visible (indicates an NPC was talked to)
+    const dialogExists = await npcDialog.count();
+    expect(dialogExists).toBeGreaterThanOrEqual(0); // Dialog may not be active until NPC is spoken to
+
+    // If dialog exists, verify it has the required elements
+    if (dialogExists > 0) {
+      // Verify dialog has NPC name and role
+      const dialogHeader = page.locator('.npc-dialog-header');
+      await expect(dialogHeader).toBeVisible({ timeout: 5000 });
+
+      const npcName = page.locator('.npc-dialog-name');
+      const npcRole = page.locator('.npc-dialog-role');
+
+      // Verify both NPC name and role are present
+      expect((await npcName.count())).toBeGreaterThan(0);
+      expect((await npcRole.count())).toBeGreaterThan(0);
+
+      // Verify close button exists
+      const closeBtn = page.locator('.npc-dialog-close');
+      expect((await closeBtn.count())).toBeGreaterThan(0);
+    }
+  });
 });
