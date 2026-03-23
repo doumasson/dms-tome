@@ -95,10 +95,11 @@ export default function GameModalsRenderer({
       {stealthMode?.active && (
         <div style={{
           position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)',
-          background: 'rgba(10,10,10,0.9)', border: '1px solid #44aa66',
-          borderRadius: 6, padding: '6px 18px', zIndex: 90,
-          fontFamily: 'Cinzel, serif', color: '#44aa66', fontSize: 13,
+          background: 'rgba(26, 26, 26, 0.95)', border: '2px solid #2ecc71',
+          borderRadius: 4, padding: '8px 16px', zIndex: 90,
+          fontFamily: 'Cinzel, serif', color: '#2ecc71', fontSize: 13,
           letterSpacing: 1, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 8,
+          boxShadow: '0 0 12px rgba(46, 204, 113, 0.2)',
         }}>
           <span style={{ fontSize: 16 }}>👁</span>
           SNEAKING — Stealth: {stealthMode.stealthResult}
