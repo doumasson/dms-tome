@@ -80,6 +80,16 @@ test.describe('Game Integration Tests', () => {
       console.log('Canvas found but visibility check failed, likely still initializing');
     }
 
+    // Verify 80/20 layout proportions (scene area 80%, narrator 20%)
+    const sceneAreaEl = page.locator('.scene-area').first();
+    const sceneHeight = await sceneAreaEl.evaluate(el => el.offsetHeight);
+    const mainAreaHeight = await sceneAreaEl.evaluate(el => el.parentElement.offsetHeight);
+    const sceneRatio = sceneHeight / mainAreaHeight;
+
+    // Scene area should be approximately 80% (allow 5% variance: 75%-85%)
+    expect(sceneRatio).toBeGreaterThan(0.75);
+    expect(sceneRatio).toBeLessThan(0.85);
+
     // Verify page title is DungeonMind
     const finalTitle = await page.title();
     expect(finalTitle).toContain('DungeonMind');
