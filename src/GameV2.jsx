@@ -21,6 +21,7 @@ import SpellPickerModal from './hud/SpellPickerModal'
 import ConsumablePickerModal from './hud/ConsumablePickerModal'
 import ReadyActionModal from './hud/ReadyActionModal'
 import ReadyActionPrompt from './hud/ReadyActionPrompt'
+import HUD from './components/game/HUD'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -955,6 +956,7 @@ export default function GameV2({ onLeave }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
       <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
+      <HUD />
       {nearbyNpcs.map(npc => (
         <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
       ))}
