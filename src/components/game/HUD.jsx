@@ -14,21 +14,19 @@ export default function HUD() {
 
   if (!myCharacter) return null;
 
-  const cd = myCharacter.character_data || {};
-
   // In combat: find live HP from the combatants array
   const combatant = inCombat
     ? encounter.combatants?.find(c => c.id === myCharacter.id || c.name === myCharacter.name)
     : null;
 
-  const hp = combatant?.currentHp ?? cd.currentHp ?? cd.hp ?? 0;
-  const maxHp = combatant?.maxHp ?? cd.maxHp ?? 10;
-  const ac = cd.ac ?? combatant?.ac ?? 10;
-  const conditions = combatant?.conditions ?? cd.conditions ?? [];
+  const hp = combatant?.currentHp ?? myCharacter.currentHp ?? myCharacter.hp ?? 0;
+  const maxHp = combatant?.maxHp ?? myCharacter.maxHp ?? 10;
+  const ac = myCharacter.ac ?? combatant?.ac ?? 10;
+  const conditions = combatant?.conditions ?? myCharacter.conditions ?? [];
 
   // Spell slots: { 1: { available, max } } or { 1: 4 } (max only)
-  const spellSlots = cd.spellSlots ?? {};
-  const usedSlots = cd.spellSlotsUsed ?? {};
+  const spellSlots = myCharacter.spellSlots ?? {};
+  const usedSlots = myCharacter.spellSlotsUsed ?? {};
   const slotLevels = Object.entries(spellSlots)
     .map(([lv, v]) => {
       const max = typeof v === 'object' ? (v.max ?? v) : v;
