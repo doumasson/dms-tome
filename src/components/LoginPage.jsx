@@ -27,8 +27,8 @@ export default function LoginPage({ inviteCode }) {
     <div style={styles.page}>
       <div style={styles.card}>
         <D20Icon />
-        <h1 style={styles.title}>DM's Tome</h1>
-        <p style={styles.subtitle}>D&amp;D 5e Campaign Manager</p>
+        <h1 style={styles.title}>DungeonMind</h1>
+        <p style={styles.subtitle}>SRD 5.1 Campaign Manager</p>
 
         {inviteCode && (
           <div style={styles.inviteBanner}>

@@ -103,7 +103,7 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
       {/* Header */}
       <header style={styles.header}>
         <div style={styles.headerLeft}>
-          <span style={styles.logo}>DM's Tome</span>
+          <span style={styles.logo}>DungeonMind</span>
         </div>
         <div style={styles.userInfo}>
           {user.avatar_url && (
@@ -146,8 +146,8 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
             <div style={styles.onboardingD20}>⚔</div>
             <h3 style={styles.onboardingTitle}>Your adventure awaits.</h3>
             <p style={styles.onboardingSubtitle}>
-              DM's Tome is a real D&amp;D 5e game — played with friends, run by The Narrator.
-              No human DM needed.
+              DungeonMind is a real SRD 5.1 game — played with friends, run by The Narrator.
+              No human Narrator needed.
             </p>
 
             <div style={styles.onboardingSteps}>

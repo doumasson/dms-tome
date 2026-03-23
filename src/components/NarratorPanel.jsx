@@ -196,7 +196,7 @@ export default function NarratorPanel() {
       r.onresult = (e) => {
         for (let i = e.resultIndex; i < e.results.length; i++) {
           const t = e.results[i][0].transcript.toLowerCase();
-          if (t.includes('hey dm') || t.includes('hey dungeon master')) {
+          if (t.includes('hey dm') || t.includes('hey the narrator')) {
             r.stop();
             setTimeout(() => startPTT(), 400);
             return;

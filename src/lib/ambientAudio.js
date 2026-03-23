@@ -1,4 +1,4 @@
-// Procedural ambient audio system for DM's Tome.
+// Procedural ambient audio system for DungeonMind.
 // Generates scene-appropriate soundscapes using the Web Audio API — no external
 // audio files, no API keys, no network requests. Falls back silently on
 // browsers that block autoplay.

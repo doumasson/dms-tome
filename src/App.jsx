@@ -851,7 +851,7 @@ export default function App() {
         <header style={styles.header}>
           <div style={styles.headerLeft}>
             <D20Icon />
-            <h1 style={styles.appTitle}>DM's Tome</h1>
+            <h1 style={styles.appTitle}>DungeonMind</h1>
             {activeCampaign && (
               <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
             )}
@@ -894,7 +894,7 @@ export default function App() {
         <header style={styles.header}>
           <div style={styles.headerLeft}>
             <D20Icon />
-            <h1 style={styles.appTitle}>DM's Tome</h1>
+            <h1 style={styles.appTitle}>DungeonMind</h1>
             {activeCampaign && (
               <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
             )}
@@ -950,7 +950,7 @@ export default function App() {
       <header style={styles.header}>
         <div style={styles.headerLeft}>
           <D20Icon />
-          <h1 style={styles.appTitle}>DM's Tome</h1>
+          <h1 style={styles.appTitle}>DungeonMind</h1>
           {activeCampaign && (
             <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
           )}

@@ -1,7 +1,7 @@
 {
   "name": "DungeonMind",
   "short_name": "DungeonMind",
-  "description": "A real-time multiplayer D&D 5e game where an AI Narrator replaces the Dungeon Master",
+  "description": "A real-time multiplayer SRD 5.1 game where an AI Narrator is The Narrator",
   "start_url": "/",
   "display": "fullscreen",
   "orientation": "landscape",
