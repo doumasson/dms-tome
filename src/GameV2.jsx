@@ -75,6 +75,7 @@ const CombatLog_          = lazy(() => import('./components/game/CombatLog'))
 const ConditionsPanel_    = lazy(() => import('./components/game/ConditionsPanel'))
 const EquipmentPanel_     = lazy(() => import('./components/game/EquipmentPanel'))
 const ExplorationActions_ = lazy(() => import('./components/game/ExplorationActions'))
+const EnemyInfo_          = lazy(() => import('./components/game/EnemyInfo'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -167,6 +168,8 @@ export default function GameV2({ onLeave }) {
   const [showConditions, setShowConditions] = useState(false)
   const [showEquipment, setShowEquipment] = useState(false)
   const [showExplorationActions, setShowExplorationActions] = useState(false)
+  const [showEnemyInfo, setShowEnemyInfo] = useState(false)
+  const [selectedEnemy, setSelectedEnemy] = useState(null)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1242,6 +1245,14 @@ export default function GameV2({ onLeave }) {
             onDetectTrap={() => ({ success: true, message: 'No traps detected.' })}
             onDisarmTrap={() => ({ success: true, message: 'Trap disarmed.' })}
             onClose={() => setShowExplorationActions(false)}
+          />
+        </Suspense>
+      )}
+      {showEnemyInfo && selectedEnemy && (
+        <Suspense fallback={null}>
+          <EnemyInfo_
+            enemy={selectedEnemy}
+            onClose={() => setShowEnemyInfo(false)}
           />
         </Suspense>
       )}
