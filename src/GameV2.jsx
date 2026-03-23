@@ -52,6 +52,7 @@ const ExplorationActions  = lazy(() => import('./components/game/ExplorationActi
 const PauseMenu           = lazy(() => import('./components/game/PauseMenu'))
 const SkillsPanel         = lazy(() => import('./components/game/SkillsPanel'))
 const SpellsPanel         = lazy(() => import('./components/game/SpellsPanel'))
+const ConditionsPanel     = lazy(() => import('./components/game/ConditionsPanel'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
