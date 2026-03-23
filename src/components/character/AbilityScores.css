@@ -1,0 +1,336 @@
+/* Ability Scores - Character creation screen */
+
+.ability-scores-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a1a 100%);
+  padding: 24px;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+  gap: 32px;
+}
+
+/* Header */
+.scores-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.scores-header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #d4af37;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.scores-header p {
+  font-size: 16px;
+  color: #aaa;
+  font-family: 'Georgia', serif;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Method selector */
+.method-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.method-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: rgba(42, 42, 26, 0.6);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+}
+
+.method-btn:hover {
+  background: rgba(42, 42, 26, 0.8);
+  border-color: rgba(212, 175, 55, 0.6);
+  transform: translateY(-2px);
+}
+
+.method-btn.active {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #d4af37;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+}
+
+.method-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.method-desc {
+  font-size: 12px;
+  color: #999;
+  font-family: 'Georgia', serif;
+}
+
+/* Scores grid */
+.scores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 24px;
+  background: rgba(26, 26, 26, 0.5);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+}
+
+/* Ability input */
+.ability-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.ability-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.score-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #e8d5a3;
+  line-height: 1;
+}
+
+.score-display {
+  font-size: 32px;
+  font-weight: 700;
+  color: #e8d5a3;
+}
+
+.modifier {
+  font-size: 12px;
+  color: #999;
+  font-weight: 600;
+}
+
+/* Pointbuy control */
+.pointbuy-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.adjust-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: #d4af37;
+  color: #1a1a1a;
+  border: 1px solid #a0821d;
+  border-radius: 2px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adjust-btn:hover {
+  background: #e8d5a3;
+  color: #0a0a0a;
+}
+
+.adjust-btn:active {
+  transform: scale(0.95);
+}
+
+.adjust-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Score select */
+.score-select {
+  padding: 8px 12px;
+  background: #1a1a1a;
+  border: 1px solid #d4af37;
+  color: #e8d5a3;
+  border-radius: 2px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.score-select:focus {
+  outline: none;
+  border-color: #e8d5a3;
+  box-shadow: 0 0 8px rgba(232, 213, 163, 0.3);
+}
+
+/* Point buy info */
+.pointbuy-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 4px;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #2ecc71;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pointbuy-info.over-budget {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.3);
+  color: #e74c3c;
+}
+
+/* Roll button */
+.roll-button {
+  padding: 12px 24px;
+  background: #2ecc71;
+  color: #000;
+  border: 1px solid #27ae60;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Cinzel', Georgia, serif;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  align-self: center;
+}
+
+.roll-button:hover {
+  background: #27ae60;
+  transform: scale(1.05);
+}
+
+.roll-button:active {
+  transform: scale(0.98);
+}
+
+/* Confirm button */
+.confirm-button {
+  padding: 14px 32px;
+  background: #d4af37;
+  color: #1a1a1a;
+  border: 1px solid #a0821d;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Cinzel', Georgia, serif;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  align-self: center;
+  min-width: 200px;
+}
+
+.confirm-button:hover:not(:disabled) {
+  background: #e8d5a3;
+  color: #0a0a0a;
+  transform: scale(1.05);
+}
+
+.confirm-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.confirm-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .ability-scores-container {
+    padding: 16px;
+    gap: 24px;
+  }
+
+  .scores-header h1 {
+    font-size: 28px;
+  }
+
+  .scores-header p {
+    font-size: 14px;
+  }
+
+  .method-selector {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .method-btn {
+    padding: 16px;
+  }
+
+  .scores-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .score-value {
+    font-size: 28px;
+  }
+
+  .adjust-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+}
+
+@media (max-height: 600px) {
+  .ability-scores-container {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .scores-header h1 {
+    font-size: 24px;
+  }
+
+  .scores-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .score-value {
+    font-size: 24px;
+  }
+}
