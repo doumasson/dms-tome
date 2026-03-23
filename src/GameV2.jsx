@@ -71,6 +71,7 @@ const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
 const NPCDialogue         = lazy(() => import('./components/game/NPCDialogue'))
 const CharacterInventory_ = lazy(() => import('./components/game/CharacterInventory'))
+const CombatLog_          = lazy(() => import('./components/game/CombatLog'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -159,6 +160,7 @@ export default function GameV2({ onLeave }) {
   const [showGameLayout, setShowGameLayout] = useState(false)
   const [showNPCDialogue, setShowNPCDialogue] = useState(false)
   const [showCharacterInventory, setShowCharacterInventory] = useState(false)
+  const [showCombatLog, setShowCombatLog] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1197,6 +1199,14 @@ export default function GameV2({ onLeave }) {
           <CharacterInventory_
             character={myCharacter}
             onClose={() => setShowCharacterInventory(false)}
+          />
+        </Suspense>
+      )}
+      {showCombatLog && inCombat && (
+        <Suspense fallback={null}>
+          <CombatLog_
+            encounter={encounter}
+            onClose={() => setShowCombatLog(false)}
           />
         </Suspense>
       )}
