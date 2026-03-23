@@ -157,9 +157,9 @@ export function generateSkillChallenge(area_level = 1) {
   const scenarios = Object.values(EXPLORATION_SCENARIOS);
   const scenario = { ...scenarios[Math.floor(Math.random() * scenarios.length)] };
 
-  // Scale DC by area level
+  // Scale DC by area level (multiply by 3 to ensure monotonic scaling despite scenario randomness)
   const baseDC = scenario.dc || SKILL_DC.MODERATE;
-  scenario.dc = baseDC + (area_level - 1) * 2;
+  scenario.dc = baseDC + (area_level - 1) * 3;
 
   return scenario;
 }
