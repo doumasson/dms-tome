@@ -176,8 +176,8 @@ test.describe('Game Integration Tests', () => {
     // Get initial size/class of narrator bar
     const initialHeight = await narratorBar.evaluate(el => el.offsetHeight);
 
-    // Find and click the narrator bar toggle button (▲The Narrator button)
-    const toggleBtn = page.locator('button:has-text("The Narrator"), [class*="narrator"][class*="toggle"]').first();
+    // Find and click the narrator bar toggle button using specific class selector
+    const toggleBtn = page.locator('button.narrator-toggle');
     const toggleCount = await toggleBtn.count();
 
     if (toggleCount > 0) {
