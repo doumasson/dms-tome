@@ -1,5 +1,6 @@
 import { findPathEdge } from './pathfinding.js'
 import { rollDamage } from './dice.js'
+import { getMinionsActionPriority, shouldMinionRetreat, calculateFlankingBonus } from './minionAi.js'
 
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
@@ -246,6 +247,97 @@ export function computeGruntAction(enemy, combatants, collisionData, width, heig
     moveTo: moveEnd, movePath, moveCost,
     narrative: `${enemy.name} advances toward the party.`,
   }
+}
+
+/**
+ * Compute minion action — tactical coordination with boss.
+ * Minions support boss, focus fire, and retreat if necessary.
+ */
+export function computeMinionAction(minion, encounter) {
+  const players = encounter.combatants.filter(c => c.type === 'player' && c.currentHp > 0);
+  if (!players.length) {
+    return { action: 'idle', narrative: `${minion.name} surveys the battlefield.`, targetId: null, damage: 0 };
+  }
+
+  // Find boss (usually highest CR in enemies)
+  const allEnemies = encounter.combatants.filter(c => c.type === 'enemy' && c.currentHp > 0 && c.id !== minion.id);
+  const boss = allEnemies.length > 0
+    ? allEnemies.reduce((b, e) => (b.cr || 0) > (e.cr || 0) ? b : e)
+    : null;
+
+  // Find other minions (allies)
+  const allies = allEnemies.filter(a => a.id !== minion.id && (!a.cr || a.cr < 5));
+
+  // Check if should retreat
+  if (boss && shouldMinionRetreat(minion, boss, allies, players)) {
+    return { action: 'retreat', narrative: `${minion.name} flees from combat!`, targetId: null, damage: 0 };
+  }
+
+  // Get tactical priority
+  const tacticResult = boss
+    ? getMinionsActionPriority(minion, boss, allies, players)
+    : { action: 'idle', narrative: `${minion.name} waits.` };
+
+  // Convert tactical result to combat action
+  if (tacticResult.action === 'attack' || tacticResult.action === 'focus-fire') {
+    const target = encounter.combatants.find(c => c.id === tacticResult.targetId);
+    if (target && minion.position && target.position) {
+      const dist = Math.hypot(minion.position.x - target.position.x, minion.position.y - target.position.y);
+      if (dist <= 1.5) {
+        // Compute attack with flanking bonus
+        const bonusAttacks = minion.attacks || [];
+        const attack = bonusAttacks[0] || { name: 'Strike', bonus: '+0', damage: '1d6' };
+        const bonusNum = parseInt((attack.bonus || '+0').replace('+', '')) || 0;
+        const flankBonus = calculateFlankingBonus(minion, [boss, ...allies], target);
+        const d20 = Math.floor(Math.random() * 20) + 1;
+        const total = d20 + bonusNum + flankBonus;
+        const hit = d20 === 20 || (d20 !== 1 && total >= (target.ac || 10));
+
+        let damage = 0;
+        if (hit) {
+          const diceMatch = (attack.damage || '1d6').match(/(\d+)d(\d+)([+-]\d+)?/);
+          if (diceMatch) {
+            const count = parseInt(diceMatch[1]);
+            const sides = parseInt(diceMatch[2]);
+            const bonus = parseInt(diceMatch[3] || '0');
+            damage = Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1).reduce((a, b) => a + b, 0) + bonus;
+          }
+        }
+
+        const flankNote = flankBonus > 0 ? ' (flanking!)' : '';
+        return {
+          action: 'attack',
+          targetId: tacticResult.targetId,
+          hit,
+          damage,
+          d20,
+          bonus: bonusNum,
+          total,
+          narrative: `${minion.name} ${hit ? `strikes ${target.name}${flankNote} for ${damage} damage!` : `swings at ${target.name} but misses!`}`,
+        };
+      }
+    }
+  }
+
+  // Move toward objective
+  if (tacticResult.moveTo) {
+    const occupied = encounter.combatants.some(c => c.id !== minion.id && c.position?.x === tacticResult.moveTo.x && c.position?.y === tacticResult.moveTo.y);
+    if (!occupied) {
+      return {
+        action: 'move',
+        moveTo: tacticResult.moveTo,
+        narrative: tacticResult.narrative || `${minion.name} moves.`,
+        targetId: tacticResult.targetId,
+      };
+    }
+  }
+
+  return {
+    action: 'idle',
+    narrative: tacticResult.narrative || `${minion.name} waits.`,
+    targetId: null,
+    damage: 0,
+  };
 }
 
 export async function triggerEnemyTurn(enemy, encounter, apiKey) {

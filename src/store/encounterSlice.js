@@ -1,4 +1,4 @@
-import { triggerEnemyTurn, computeGruntAction } from '../lib/enemyAi';
+import { triggerEnemyTurn, computeGruntAction, computeMinionAction } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 import { getSaveProficiencies, profBonus as getProfBonus } from '../lib/derivedStats.js';
 import { checkPhaseTransition } from '../lib/bossPhases.js';
@@ -1044,14 +1044,18 @@ export function createEncounterSlice(set, get) {
 
       get().addEncounterLog(`\u2694 ${active.name} is acting...`);
 
-      // Determine grunt vs boss: boss flag or CR >= 5 uses Claude API; everything else is grunt
-      const isBoss = active.isBoss || (active.cr != null && Number(active.cr) >= 5);
-      console.log('[runEnemyTurn] isBoss:', isBoss, 'cr:', active.cr)
+      // Determine enemy type: minion > boss > grunt
+      const isMinion = active.originalName && active.originalName !== active.name;
+      const isBoss = !isMinion && (active.isBoss || (active.cr != null && Number(active.cr) >= 5));
+      console.log('[runEnemyTurn] Enemy type - isMinion:', isMinion, 'isBoss:', isBoss, 'name:', active.name, 'cr:', active.cr)
 
       try {
         let result;
 
-        if (isBoss) {
+        if (isMinion) {
+          // Minion path: tactical coordination with boss
+          result = computeMinionAction(active, encounter);
+        } else if (isBoss) {
           // Boss path: use Claude API for rich tactical decisions
           result = await triggerEnemyTurn(active, encounter, apiKey);
         } else {
