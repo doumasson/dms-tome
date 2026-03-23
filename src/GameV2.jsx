@@ -56,7 +56,6 @@ const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
-const CombatLog_          = lazy(() => import('./components/game/CombatLog'))
 const ConditionsPanel_    = lazy(() => import('./components/game/ConditionsPanel'))
 const EquipmentPanel_     = lazy(() => import('./components/game/EquipmentPanel'))
 const ExplorationActions_ = lazy(() => import('./components/game/ExplorationActions'))
@@ -151,7 +150,6 @@ export default function GameV2({ onLeave }) {
   const [showSessionResume, setShowSessionResume] = useState(false)
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
-  const [showCombatLog, setShowCombatLog] = useState(false)
   const [showConditions, setShowConditions] = useState(false)
   const [showEquipment, setShowEquipment] = useState(false)
   const [showExplorationActions, setShowExplorationActions] = useState(false)
@@ -1180,14 +1178,6 @@ export default function GameV2({ onLeave }) {
             currentTurnIndex={encounter.currentTurn || 0}
             onAction={handleCombatAction}
             onEndTurn={handleEndTurn}
-          />
-        </Suspense>
-      )}
-      {showCombatLog && inCombat && (
-        <Suspense fallback={null}>
-          <CombatLog_
-            encounter={encounter}
-            onClose={() => setShowCombatLog(false)}
           />
         </Suspense>
       )}
