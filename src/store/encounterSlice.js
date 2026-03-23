@@ -456,6 +456,22 @@ export function createEncounterSlice(set, get) {
         const newCombatants = state.encounter.combatants.map((c) => {
           if (c.id !== targetId) return c;
           const newHp = Math.max(0, c.currentHp - amount);
+
+          // Wild Shape revert: when beast form drops to 0, revert to original form
+          if (newHp === 0 && c.wildShape) {
+            const overflow = amount - c.currentHp; // excess damage carries over
+            const revertHp = Math.max(0, c.wildShape.originalHp - overflow);
+            return {
+              ...c,
+              currentHp: revertHp,
+              maxHp: c.wildShape.originalMaxHp,
+              ac: c.wildShape.originalAc,
+              speed: c.wildShape.originalSpeed,
+              wildShape: null,
+              ...(revertHp === 0 && c.type === 'player' ? { concentration: null, deathSaves: { successes: 0, failures: 0, stable: false } } : {}),
+            };
+          }
+
           // Massive damage (damage >= maxHp while at 0) = instant death
           if (c.currentHp === 0 && amount >= c.maxHp) {
             return { ...c, currentHp: 0, deathSaves: { successes: 0, failures: 3, stable: false } };

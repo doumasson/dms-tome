@@ -248,9 +248,19 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
           applyDmg(target.id || target.name, damage)
         }
 
-        // Consume action
-        const { useAction: consumeAction } = useStore.getState()
-        consumeAction(active.id)
+        // Consume action (or bonus action if Quickened Spell active)
+        if (active.quickenedSpell) {
+          const { useBonusAction } = useStore.getState()
+          useBonusAction(active.id)
+          useStore.setState(state => ({
+            encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, quickenedSpell: false } : c
+            ) },
+          }))
+        } else {
+          const { useAction: consumeAction } = useStore.getState()
+          consumeAction(active.id)
+        }
 
         // Consume spell slot (if not cantrip)
         if (selectedWeapon.castLevel > 0) {
@@ -309,7 +319,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         }
         const total = d20 + bonus
         const isCrit = d20 === 20
-        const hit = isCrit || total >= effectiveAC
+        let hit = isCrit || total >= effectiveAC
 
         let damage = 0
         let bonusDmgNotes = ''
@@ -354,7 +364,51 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
             if (useSpellSlot) useSpellSlot(active.id, 1) // consume lowest slot
           }
 
+          // Hunter's Mark extra damage (Ranger, 1d6 per hit on marked target)
+          if (active.huntersMarkTarget && active.huntersMarkTarget === (target.id || target.name)) {
+            const hmResult = rollDamage('1d6')
+            damage += hmResult.total
+            bonusDmgNotes += ` +${hmResult.total} hunter`
+          }
+
+          // Bardic Inspiration bonus on attack roll (consume the die)
+          if (active.bardicInspiration && !hit) {
+            const biResult = rollDamage(`1${active.bardicInspiration}`)
+            const newTotal = total + biResult.total
+            if (newTotal >= effectiveAC) {
+              hit = true
+              damage = rollDamage(weapon.damage || '1').total
+              if (isCrit) damage *= 2
+              bonusDmgNotes += ` (Bardic +${biResult.total} turned miss→hit)`
+              // Consume inspiration
+              useStore.setState(state => ({
+                encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                  c.id === active.id ? { ...c, bardicInspiration: null } : c
+                ) },
+              }))
+            }
+          }
+
           totalDamageDealt += damage
+
+          // Stunning Strike resolution (Monk, on hit, target CON save or Stunned)
+          if (hit && active.stunningStrikeReady) {
+            const wisMod = Math.floor(((active.stats?.wis || 10) - 10) / 2)
+            const prof = Math.ceil((active.level || 1) / 4) + 1
+            const dc = 8 + prof + wisMod
+            const conSave = Math.floor(Math.random() * 20) + 1 + Math.floor(((target.stats?.con || 10) - 10) / 2)
+            if (conSave < dc) {
+              useStore.getState().addEncounterCondition(target.id || target.name, 'Stunned')
+              bonusDmgNotes += ` [STUNNED! CON ${conSave} < DC ${dc}]`
+            } else {
+              bonusDmgNotes += ` [Stun resisted CON ${conSave} ≥ DC ${dc}]`
+            }
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === active.id ? { ...c, stunningStrikeReady: false } : c
+              ) },
+            }))
+          }
         }
 
         if (hit && damage > 0) {
@@ -611,8 +665,19 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         logLines.push(entry)
       }
 
-      const { useAction: consumeAction } = useStore.getState()
-      consumeAction(active.id)
+      // Consume action (or bonus action if Quickened Spell active)
+      if (active.quickenedSpell) {
+        const { useBonusAction } = useStore.getState()
+        useBonusAction(active.id)
+        useStore.setState(state => ({
+          encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+            c.id === active.id ? { ...c, quickenedSpell: false } : c
+          ) },
+        }))
+      } else {
+        const { useAction: consumeAction } = useStore.getState()
+        consumeAction(active.id)
+      }
       const castLog = `${active.name} casts ${spell.name}! ${logLines.join(' ')}`
       broadcastEncounterAction({ type: 'aoe-resolve', spellName: spell.name, casterId: active.id, affectedTiles, saveDC, results, log: castLog, userId: useStore.getState().user?.id })
 
@@ -918,7 +983,199 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         return
       }
 
-      // Default: just announce (for abilities not yet implemented like Wild Shape, Channel Divinity)
+      // --- Bard: Bardic Inspiration (give ally an inspiration die) ---
+      if (payload?.name === 'Bardic Inspiration') {
+        const { useBonusAction } = useStore.getState()
+        useBonusAction(active.id)
+        // Find first non-enemy ally without inspiration
+        const allies = encounter.combatants.filter(c => !c.isEnemy && c.id !== active.id && (c.currentHp ?? 1) > 0 && !c.bardicInspiration)
+        if (allies.length === 0) {
+          addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} has no valid allies to inspire.` })
+          return
+        }
+        const target = allies[0]
+        const lvl = active.level || 1
+        const dieSize = lvl >= 15 ? 'd12' : lvl >= 10 ? 'd10' : lvl >= 5 ? 'd8' : 'd6'
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === target.id ? { ...c, bardicInspiration: dieSize } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} inspires ${target.name} with a 1${dieSize} Bardic Inspiration die!`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Bardic Inspiration', targetId: target.id, dieSize })
+        return
+      }
+
+      // --- Cleric: Channel Divinity — Turn Undead (30ft AoE, WIS save or Turned) ---
+      if (payload?.name === 'Channel Divinity') {
+        const { useAction: consumeAction, addEncounterCondition } = useStore.getState()
+        consumeAction(active.id)
+        const wisMod = Math.floor(((active.stats?.wis || 10) - 10) / 2)
+        const prof = Math.ceil((active.level || 1) / 4) + 1
+        const dc = 8 + prof + wisMod
+        const results = []
+        const turnedIds = []
+        for (const c of encounter.combatants) {
+          if (!c.isEnemy || (c.currentHp ?? 0) <= 0) continue
+          // Check if within 30ft (6 tiles)
+          if (!active.position || !c.position) continue
+          const dist = Math.max(Math.abs(c.position.x - active.position.x), Math.abs(c.position.y - active.position.y))
+          if (dist > 6) continue
+          // Check if undead (by name/type heuristic)
+          const nameLC = (c.name || '').toLowerCase()
+          const typeLC = (c.creatureType || '').toLowerCase()
+          const isUndead = typeLC.includes('undead') || nameLC.includes('skeleton') || nameLC.includes('zombie') || nameLC.includes('ghoul') || nameLC.includes('wight') || nameLC.includes('wraith') || nameLC.includes('vampire') || nameLC.includes('lich') || nameLC.includes('specter')
+          if (!isUndead) continue
+          const wisSave = Math.floor(Math.random() * 20) + 1 + Math.floor(((c.stats?.wis || 10) - 10) / 2)
+          if (wisSave < dc) {
+            addEncounterCondition(c.id, 'Turned')
+            turnedIds.push(c.id)
+            results.push(`${c.name}: FAIL (${wisSave})`)
+          } else {
+            results.push(`${c.name}: PASS (${wisSave})`)
+          }
+        }
+        if (results.length > 0) {
+          addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${active.name} channels divinity — Turn Undead! (DC ${dc})\n${results.join(', ')}`,
+          })
+        } else {
+          addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${active.name} channels divinity — Turn Undead! No undead within range.`,
+          })
+        }
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Channel Divinity', turnedIds, dc })
+        return
+      }
+
+      // --- Druid: Wild Shape (transform into beast form) ---
+      if (payload?.name === 'Wild Shape') {
+        const { useAction: consumeAction } = useStore.getState()
+        consumeAction(active.id)
+        const lvl = active.level || 2
+        const maxCR = lvl >= 8 ? 1 : lvl >= 4 ? 0.5 : 0.25
+        // Beast forms by CR
+        const forms = [
+          { name: 'Wolf', cr: 0.25, hp: 11, ac: 13, speed: 40, attack: { name: 'Bite', bonus: '+4', damage: '2d4+2' } },
+          { name: 'Giant Spider', cr: 1, hp: 26, ac: 14, speed: 30, attack: { name: 'Bite', bonus: '+5', damage: '1d8+3' } },
+          { name: 'Brown Bear', cr: 1, hp: 34, ac: 11, speed: 40, attack: { name: 'Claws', bonus: '+5', damage: '2d6+4' } },
+          { name: 'Dire Wolf', cr: 1, hp: 37, ac: 14, speed: 50, attack: { name: 'Bite', bonus: '+5', damage: '2d6+3' } },
+          { name: 'Giant Toad', cr: 1, hp: 39, ac: 11, speed: 20, attack: { name: 'Bite', bonus: '+4', damage: '1d10+2' } },
+          { name: 'Cat', cr: 0, hp: 2, ac: 12, speed: 40, attack: { name: 'Claws', bonus: '+0', damage: '1' } },
+          { name: 'Giant Badger', cr: 0.25, hp: 13, ac: 10, speed: 30, attack: { name: 'Bite', bonus: '+3', damage: '1d6+1' } },
+        ]
+        const eligible = forms.filter(f => f.cr <= maxCR)
+        const chosen = eligible[Math.floor(Math.random() * eligible.length)] || forms[0]
+        // Store original stats as backup, apply beast form
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? {
+                ...c,
+                wildShape: {
+                  formName: chosen.name,
+                  formHp: chosen.hp,
+                  formAc: chosen.ac,
+                  formSpeed: chosen.speed,
+                  formAttack: chosen.attack,
+                  originalHp: c.currentHp,
+                  originalMaxHp: c.maxHp,
+                  originalAc: c.ac,
+                  originalSpeed: c.speed,
+                },
+                currentHp: chosen.hp,
+                maxHp: chosen.hp,
+                ac: chosen.ac,
+                speed: chosen.speed,
+                remainingMove: Math.floor(chosen.speed / 5),
+              } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} transforms into a ${chosen.name}! (${chosen.hp} HP, AC ${chosen.ac}, ${chosen.attack.name} ${chosen.attack.bonus} for ${chosen.attack.damage})`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Wild Shape', form: chosen })
+        return
+      }
+
+      // --- Ranger: Hunter's Mark (mark target for extra 1d6 damage) ---
+      if (payload?.name === "Hunter's Mark") {
+        const { useBonusAction } = useStore.getState()
+        useBonusAction(active.id)
+        // Mark the nearest enemy
+        let closestEnemy = null
+        let closestDist = Infinity
+        for (const c of encounter.combatants) {
+          if (!c.isEnemy || (c.currentHp ?? 0) <= 0) continue
+          if (active.position && c.position) {
+            const d = Math.max(Math.abs(c.position.x - active.position.x), Math.abs(c.position.y - active.position.y))
+            if (d < closestDist) { closestDist = d; closestEnemy = c }
+          }
+        }
+        if (!closestEnemy) {
+          addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} has no valid target for Hunter's Mark.` })
+          return
+        }
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, huntersMarkTarget: closestEnemy.id, concentrating: "Hunter's Mark" } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} marks ${closestEnemy.name} with Hunter's Mark! Extra 1d6 damage on each hit. (Concentration)`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: "Hunter's Mark", targetId: closestEnemy.id })
+        return
+      }
+
+      // --- Monk: Stunning Strike (CON save or Stunned on next hit) ---
+      if (payload?.name === 'Stunning Strike') {
+        // Mark the combatant — resolved on next successful hit
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, stunningStrikeReady: true } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} prepares a Stunning Strike! The next hit forces a CON save or the target is Stunned.`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Stunning Strike' })
+        return
+      }
+
+      // --- Sorcerer: Quickened Spell (next spell costs bonus action instead of action) ---
+      if (payload?.name === 'Quickened Spell') {
+        const { useBonusAction } = useStore.getState()
+        // Quickened Spell doesn't cost bonus action here — it makes the NEXT spell use bonus action instead of action
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, quickenedSpell: true } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} uses Metamagic: Quickened Spell! The next spell is cast as a bonus action.`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Quickened Spell' })
+        return
+      }
+
+      // Default: just announce
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses ${payload.name}!` })
       return
     } else if (type === 'grapple') {

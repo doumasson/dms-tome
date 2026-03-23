@@ -343,6 +343,54 @@ export default function App() {
               ) },
             }))
             store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} channels Divine Smite!` })
+          } else if (payload.ability === 'Bardic Inspiration') {
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.targetId ? { ...c, bardicInspiration: payload.dieSize } : c
+              ) },
+            }))
+            const tgt = store.encounter.combatants?.find(c => c.id === payload.targetId)
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} inspires ${tgt?.name || 'an ally'} with Bardic Inspiration (1${payload.dieSize})!` })
+          } else if (payload.ability === 'Channel Divinity') {
+            if (payload.turnedIds?.length) {
+              for (const tid of payload.turnedIds) store.addEncounterCondition(tid, 'Turned')
+            }
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} channels divinity — Turn Undead! (DC ${payload.dc})` })
+          } else if (payload.ability === 'Wild Shape') {
+            if (payload.form) {
+              useStore.setState(state => ({
+                encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                  c.id === payload.id ? {
+                    ...c,
+                    wildShape: { formName: payload.form.name, formHp: payload.form.hp, formAc: payload.form.ac, formSpeed: payload.form.speed, formAttack: payload.form.attack, originalHp: c.currentHp, originalMaxHp: c.maxHp, originalAc: c.ac, originalSpeed: c.speed },
+                    currentHp: payload.form.hp, maxHp: payload.form.hp, ac: payload.form.ac, speed: payload.form.speed, remainingMove: Math.floor(payload.form.speed / 5),
+                  } : c
+                ) },
+              }))
+            }
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} transforms into a ${payload.form?.name || 'beast'}!` })
+          } else if (payload.ability === "Hunter's Mark") {
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, huntersMarkTarget: payload.targetId, concentrating: "Hunter's Mark" } : c
+              ) },
+            }))
+            const marked = store.encounter.combatants?.find(c => c.id === payload.targetId)
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} marks ${marked?.name || 'a target'} with Hunter's Mark!` })
+          } else if (payload.ability === 'Stunning Strike') {
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, stunningStrikeReady: true } : c
+              ) },
+            }))
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} prepares Stunning Strike!` })
+          } else if (payload.ability === 'Quickened Spell') {
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, quickenedSpell: true } : c
+              ) },
+            }))
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} uses Metamagic: Quickened Spell!` })
           } else {
             store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} uses ${payload.ability}!` })
           }

@@ -273,8 +273,16 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] **Paladin: Divine Smite** — toggle on, adds 2d8 radiant on next melee hit, consumes spell slot
 - [x] **Paladin: Lay on Hands** — heal from pool (level×5 HP), costs action
 - [x] **Monk: Patient Defense** — Dodge as bonus action, applies Dodging condition
-- All multiplayer broadcast handlers added for class abilities
-- 288 tests, 0 failures.
+- [x] **Monk: Stunning Strike** — on hit, target CON save or Stunned (Ki cost), free action toggle
+- [x] **Bard: Bardic Inspiration** — give ally an inspiration die (d6/d8/d10/d12 by level), bonus action, resource tracked
+- [x] **Cleric: Channel Divinity: Turn Undead** — 30ft AoE, undead WIS save vs spell DC or Turned condition
+- [x] **Druid: Wild Shape** — transform into beast form (Wolf/Bear/Spider/etc by CR), temp HP, natural weapon, revert on 0 HP with overflow damage
+- [x] **Ranger: Hunter's Mark** — mark target for +1d6 damage per hit, bonus action, concentration tracked
+- [x] **Sorcerer: Quickened Spell** — Metamagic, next spell cast as bonus action instead of action, costs 2 Sorcery Points
+- All 12 classes now have functional combat abilities with multiplayer broadcast handlers
+- Wild Shape revert on 0 HP with overflow damage wired into `applyEncounterDamage`
+- Bardic Inspiration die consumed on near-miss attack rolls (turns miss→hit)
+- 294 tests, 0 failures.
 
 ---
 
@@ -307,3 +315,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Grapple & Shove combat actions, loot→inventory bug fix. 288 tests.
 - **2026-03-22:** Hide, Help, Use Item combat actions. All standard 5e actions now functional in combat bar.
 - **2026-03-22:** Extra Attack + 10 class abilities implemented: Fighter (Second Wind, Action Surge), Barbarian (Rage, Reckless Attack), Rogue (Sneak Attack, Cunning Action), Paladin (Divine Smite, Lay on Hands), Monk (Patient Defense). 288 tests.
+- **2026-03-22:** 6 more class abilities: Stunning Strike (Monk), Bardic Inspiration (Bard), Channel Divinity: Turn Undead (Cleric), Wild Shape (Druid), Hunter's Mark (Ranger), Quickened Spell (Sorcerer). All 12 classes now combat-functional. Wild Shape revert on 0 HP. 294 tests.

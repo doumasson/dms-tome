@@ -76,7 +76,19 @@ export function getClassCombatActions(className, level) {
       }
       break
 
-    // Sorcerer, Warlock, Wizard, Ranger — Spells button covers them
+    case 'Ranger':
+      if (level >= 2) {
+        actions.push({ name: "Hunter's Mark", icon: '🎯', actionType: 'bonus_action', handler: 'huntersMark' })
+      }
+      break
+
+    case 'Sorcerer':
+      if (level >= 3) {
+        actions.push({ name: 'Quickened Spell', icon: '⚡', actionType: 'free', resourceName: 'Sorcery Points', resourceCost: 2 })
+      }
+      break
+
+    // Warlock, Wizard — Spells button covers them
   }
 
   return actions

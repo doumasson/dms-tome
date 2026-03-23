@@ -64,6 +64,40 @@ describe('getClassCombatActions', () => {
     expect(actions.map(a => a.name)).toContain('Bardic Inspiration')
   })
 
+  it('returns Channel Divinity for Cleric', () => {
+    const actions = getClassCombatActions('Cleric', 1)
+    expect(actions.map(a => a.name)).toContain('Channel Divinity')
+  })
+
+  it('returns Wild Shape for Druid at level 2+', () => {
+    expect(getClassCombatActions('Druid', 1).map(a => a.name)).not.toContain('Wild Shape')
+    expect(getClassCombatActions('Druid', 2).map(a => a.name)).toContain('Wild Shape')
+  })
+
+  it("returns Hunter's Mark for Ranger at level 2+", () => {
+    expect(getClassCombatActions('Ranger', 1).map(a => a.name)).not.toContain("Hunter's Mark")
+    expect(getClassCombatActions('Ranger', 2).map(a => a.name)).toContain("Hunter's Mark")
+  })
+
+  it('returns Quickened Spell for Sorcerer at level 3+', () => {
+    expect(getClassCombatActions('Sorcerer', 2).map(a => a.name)).not.toContain('Quickened Spell')
+    const actions = getClassCombatActions('Sorcerer', 3)
+    expect(actions.map(a => a.name)).toContain('Quickened Spell')
+    const qs = actions.find(a => a.name === 'Quickened Spell')
+    expect(qs.resourceName).toBe('Sorcery Points')
+    expect(qs.resourceCost).toBe(2)
+  })
+
+  it('Ranger gets Spells button at level 2+', () => {
+    const actions = getClassCombatActions('Ranger', 2)
+    expect(actions.map(a => a.name)).toContain('Spells')
+  })
+
+  it('Sorcerer gets Spells button', () => {
+    const actions = getClassCombatActions('Sorcerer', 1)
+    expect(actions.map(a => a.name)).toContain('Spells')
+  })
+
   it('each action has required fields', () => {
     const actions = getClassCombatActions('Fighter', 5)
     for (const a of actions) {
