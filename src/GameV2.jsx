@@ -69,6 +69,7 @@ const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
+const NPCDialogue         = lazy(() => import('./components/game/NPCDialogue'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -155,6 +156,7 @@ export default function GameV2({ onLeave }) {
   const [showNarratorBar, setShowNarratorBar] = useState(true)
   const [showCombatUI, setShowCombatUI] = useState(false)
   const [showGameLayout, setShowGameLayout] = useState(false)
+  const [showNPCDialogue, setShowNPCDialogue] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1172,6 +1174,19 @@ export default function GameV2({ onLeave }) {
         <Suspense fallback={null}>
           <GameLayout
             onClose={() => setShowGameLayout(false)}
+          />
+        </Suspense>
+      )}
+      {showNPCDialogue && (
+        <Suspense fallback={null}>
+          <NPCDialogue
+            npc={{}}
+            dialogue=""
+            skillChecks={[]}
+            choices={[]}
+            onChoice={() => {}}
+            onSkillCheck={() => {}}
+            onClose={() => setShowNPCDialogue(false)}
           />
         </Suspense>
       )}
