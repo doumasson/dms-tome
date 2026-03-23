@@ -370,6 +370,23 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Narrative — Tactic and tier descriptions for DM storytelling and world-building
 - 387 tests, 0 failures.
 
+### Multi-Phase Boss Encounters ✅ COMPLETE
+- [x] Phase system — HP-threshold-triggered transitions (Lieutenant: 2 phases, Champion: 3, Legendary/Ancient: 4)
+- [x] Phase generation — Procedural phase array with escalating tactics and abilities
+- [x] Phase transitions — Checked on each turn, triggered when HP crosses threshold
+- [x] Ability resolver — Execute boss abilities with mechanical effects (damage, healing, conditions, positioning, minion spawning)
+- [x] Legendary action tracking — 3-per-cycle budget per boss, reset at start of boss turn, consumed by AI decisions
+- [x] Lair actions — Enabled in final 2 phases, environmental hazards (ceiling collapse, magical blast, telekinetic push)
+- [x] Minion spawning — Generate and add minions to encounter when phase specifies (scales with phase count)
+- [x] Tactics escalation — Boss tactics shift toward aggressive/berserker in later phases
+- [x] Ability escalation — More abilities activate in later phases (phase 1 has fewer, phase 4 has all)
+- [x] AI prompt injection — Phase description, available abilities, legendary action budget sent to Claude for tactical decisions
+- [x] UI phase indicator — Shows current phase number/total and legendary actions remaining in boss info panel
+- [x] Multiplayer sync — Phase changes broadcast via Supabase Realtime, all clients update automatically
+- [x] Phase narrative — Descriptive text for each phase (combat begins, boss bloodied and enraged, etc.)
+- 48 new tests covering phase generation, transitions, ability execution, minion spawning, legendary action tracking
+- 435 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -387,6 +404,7 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-22:** Multi-Phase Boss Encounters complete — HP-threshold-triggered phase transitions, ability execution, minion spawning, legendary action tracking, lair actions, AI prompt injection, phase UI indicator. 48 new tests. 435 tests passing.
 - **2026-03-18:** Phase 1 V2 rebuild complete — PixiJS tilemap renderer + ornate HUD on branch `phase1/tilemap-renderer-hud`. V1 untouched, V2 opt-in via `?v2`.
 - **2026-03-18:** Phases 2 & 3 complete — zone transitions with fade, 8 room templates, zone-based campaign gen, combat UX, API key fix. Branch has 46 commits ahead of main.
 - **2026-03-18:** V2 Front Door complete — API key gate, campaign bar, sanitization, HUD labels, session log polish, combat fix. 6 new commits.
