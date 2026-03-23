@@ -3,8 +3,8 @@
 .game-layout {
   display: flex;
   flex-direction: column;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: #1a1a1a;
   overflow: hidden;
   font-family: 'Cinzel', Georgia, serif;
@@ -22,6 +22,7 @@
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   min-height: 0;
+  min-width: 0;
 }
 
 
