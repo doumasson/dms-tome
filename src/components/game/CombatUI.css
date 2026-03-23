@@ -1,0 +1,387 @@
+/* Combat UI - Turn order, actions, movement */
+
+.combat-ui {
+  position: fixed;
+  left: 16px;
+  bottom: 20%;
+  max-width: 340px;
+  background: linear-gradient(180deg, rgba(42, 42, 26, 0.85), rgba(26, 26, 26, 0.95));
+  border: 2px solid #d4af37;
+  border-radius: 4px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+  z-index: 100;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+/* Header with round and turn info */
+.combat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  gap: 8px;
+}
+
+.round-info,
+.turn-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.round-label,
+.turn-label {
+  font-size: 11px;
+  color: #d4af37;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.round-number {
+  font-size: 18px;
+  color: #d4af37;
+  font-weight: 700;
+}
+
+.turn-name {
+  font-size: 12px;
+  color: #e8d5a3;
+  font-weight: 600;
+}
+
+.your-turn-badge {
+  background: rgba(46, 204, 113, 0.2);
+  border: 1px solid #2ecc71;
+  color: #2ecc71;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Initiative list */
+.initiative-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.initiative-title {
+  font-size: 11px;
+  color: #d4af37;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.combatants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.combatant-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 2px solid rgba(212, 175, 55, 0.2);
+  border-radius: 2px;
+  font-size: 11px;
+  transition: all 0.2s ease;
+}
+
+.combatant-row.active {
+  background: rgba(212, 175, 55, 0.1);
+  border-left-color: #d4af37;
+  box-shadow: inset 0 0 8px rgba(212, 175, 55, 0.1);
+}
+
+.combatant-row.enemy.active {
+  background: rgba(231, 76, 60, 0.1);
+  border-left-color: #e74c3c;
+}
+
+.combatant-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: rgba(212, 175, 55, 0.2);
+  border-radius: 50%;
+  font-weight: 700;
+  color: #d4af37;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.combatant-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.combatant-name {
+  font-weight: 600;
+  color: #e8d5a3;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.combatant-hp {
+  font-size: 10px;
+  color: #888;
+}
+
+.hp-label {
+  color: #d4af37;
+  font-weight: 600;
+}
+
+.hp-value {
+  color: #e8d5a3;
+}
+
+.active-indicator {
+  color: #d4af37;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Action panel */
+.action-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-resources {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.resource {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 2px;
+  text-align: center;
+}
+
+.resource-label {
+  font-size: 10px;
+  color: #d4af37;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.resource-value {
+  font-size: 12px;
+  color: #2ecc71;
+  font-weight: 700;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.action-button {
+  padding: 10px 8px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.08));
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 2px;
+  color: #e8d5a3;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.15));
+  border-color: rgba(212, 175, 55, 0.6);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+}
+
+.action-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Specific action button colors */
+.attack-btn {
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.attack-btn:hover:not(:disabled) {
+  background: rgba(231, 76, 60, 0.15);
+  border-color: rgba(231, 76, 60, 0.6);
+}
+
+.spell-btn {
+  border-color: rgba(52, 152, 219, 0.3);
+}
+
+.spell-btn:hover:not(:disabled) {
+  background: rgba(52, 152, 219, 0.15);
+  border-color: rgba(52, 152, 219, 0.6);
+}
+
+.move-btn {
+  border-color: rgba(46, 204, 113, 0.3);
+}
+
+.move-btn:hover:not(:disabled) {
+  background: rgba(46, 204, 113, 0.15);
+  border-color: rgba(46, 204, 113, 0.6);
+}
+
+.dodge-btn {
+  border-color: rgba(241, 196, 15, 0.3);
+}
+
+.dodge-btn:hover:not(:disabled) {
+  background: rgba(241, 196, 15, 0.15);
+  border-color: rgba(241, 196, 15, 0.6);
+}
+
+/* End turn button */
+.end-turn-button {
+  padding: 12px;
+  background: #d4af37;
+  color: #1a1a1a;
+  border: 1px solid #a0821d;
+  border-radius: 2px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.end-turn-button:hover {
+  background: #e8d5a3;
+  color: #0a0a0a;
+}
+
+.end-turn-button:active {
+  background: #c9a12c;
+}
+
+/* Waiting panel */
+.waiting-panel {
+  padding: 16px;
+  text-align: center;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 2px;
+}
+
+.waiting-panel p {
+  margin: 0;
+  font-size: 12px;
+  color: #b8a878;
+  font-style: italic;
+}
+
+/* Dark scrollbar */
+.combat-ui::-webkit-scrollbar {
+  width: 6px;
+}
+
+.combat-ui::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.combat-ui::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 3px;
+}
+
+.combat-ui::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .combat-ui {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 22%;
+    max-width: 90vw;
+    width: 90vw;
+  }
+
+  .action-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .combatants-list {
+    max-height: 120px;
+  }
+}
+
+@media (max-height: 600px) {
+  .combat-ui {
+    padding: 12px;
+    gap: 12px;
+    bottom: 25%;
+  }
+
+  .combatants-list {
+    max-height: 100px;
+  }
+
+  .action-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .action-button {
+    padding: 8px 6px;
+    font-size: 10px;
+  }
+
+  .resource {
+    padding: 4px;
+    gap: 2px;
+  }
+
+  .resource-label {
+    font-size: 9px;
+  }
+
+  .resource-value {
+    font-size: 11px;
+  }
+}
