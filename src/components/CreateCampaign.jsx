@@ -325,12 +325,21 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
       title: 'Whispers in Millhaven',
       description: 'A demo adventure across three connected areas: a quiet village, a goblin-infested forest, and sunken ruins hiding a boss fight.',
       startArea: 'area-village',
+      factions: [
+        { id: 'millhaven-guard', name: 'Millhaven Guard', description: 'Village militia protecting the locals from goblin raids', alignment: 'Lawful Good' },
+        { id: 'goblin-tribe', name: 'Goblin Tribe', description: 'Scattered goblin forces seeking treasure and revenge', alignment: 'Chaotic Evil' },
+      ],
       areaBriefs,
       questObjectives: [
         { id: 'investigate', text: 'Investigate the goblin activity in Darkwood Forest', completed: false },
         { id: 'ruins', text: 'Explore the Sunken Ruins', completed: false },
       ],
     };
+    // Update areaBriefs to add faction affiliations to NPCs
+    demoCampaignData.areaBriefs['area-village'].npcs = [
+      { name: 'Barkeep Hilda', position: 'The Weary Traveler', personality: 'Gruff but kind tavern owner who has heard rumors of goblin activity in the forest to the north', faction: 'millhaven-guard', questRelevant: true },
+      { name: 'Elder Maren', position: "Elder's House", personality: 'Wise village elder who asks you to investigate the old ruins in the forest', faction: 'millhaven-guard', questRelevant: true },
+    ];
 
     const { data: campaign, error } = await supabase
       .from('campaigns')
