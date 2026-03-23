@@ -319,6 +319,18 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Multiplayer broadcast — encounter suggestions synced to all players via Supabase Realtime
 - 336 tests, 0 failures.
 
+### Environmental Combat Hazards ✅ COMPLETE
+- [x] Hazard types — 10 types (lava, fire, ice, poison gas, lightning, darkness, webs, collapse, blessed, cursed)
+- [x] Damage effects — lava (2d6 fire), fire (1d6 fire), poison (1d4 poison), lightning (1d8 lightning), collapse (2d6 bludgeoning)
+- [x] Save effects — ice/webs (STR save vs prone/escape), lightning (CON save vs concentration break)
+- [x] Tactical effects — darkness (ranged disadvantage), blessed (undead disadvantage), cursed (all rolls disadvantage)
+- [x] Difficulty scaling — 30% base hazard spawn, 50% for deadly encounters, more hazards in tougher combats
+- [x] Distance calculation — radius-based damage, only affects tiles within hazard area
+- [x] Tile visualization — getHazardTiles() returns affected coordinates for UI rendering
+- [x] DM narration — describeHazard() provides story-rich descriptions for each hazard type
+- [x] Integration — hazards automatically generated with random encounters, passed through combat initialization
+- 346 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -361,3 +373,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Faction-gated merchant inventory — merchants affiliated with factions show exclusive premium items to players with good reputation (Friendly+, rep > 25). Items marked with ✦ sparkle. Unlocks Silver Longsword, Enchanted Bow, Mithril Armor, Shield +1, Superior Potions based on shop type. 327 tests.
 - **2026-03-22:** Game Over Modal component — created GameOverModal.jsx to replace inline defeat UI. Displays when all party members are defeated (3 failed death saves), offering revive (Resurrect Party) or leave campaign options. Extracted styling into component for cleaner code. Maintains existing defeat flow with mercyRevive and onLeave handlers. 327 tests passing.
 - **2026-03-22:** Random Encounter System — wandering monsters in dungeons (20% trigger), wilderness (15%), towns (10%). Encounters scale by party level, area type; 50+ monsters with D&D stats; CR-based difficulty rating (Easy/Medium/Hard/Deadly); automatic loot (gold + consumables). DM gets narrative prompt with monster names, can initiate combat or roleplay. Seamlessly integrated into exploration movement system. 336 tests.
+- **2026-03-22:** Environmental Combat Hazards — 10 dynamic battlefield effects (lava, fire, ice, poison, lightning, darkness, webs, collapse, blessed, cursed) create tactical challenges. Damage-based (2d6 lava, 1d6 fire, 1d4 poison, 1d8 lightning), save-based (ice/webs STR saves), status effects (darkness/cursed penalties, blessed boost). Distance-calculated, tile-based visualization. 30% spawn rate (50% deadly encounters). Integrated with random encounters. 346 tests.
