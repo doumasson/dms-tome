@@ -115,6 +115,26 @@ export default function GameV2({ onLeave }) {
   const isV2Zone = Boolean(zone?.palette)
   const showDebug = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('debug')
 
+  // Early return if not ready (must be before any hooks that depend on zone/character)
+  if (!zone || !myCharacter) {
+    const msg = !zone ? (!currentAreaId ? 'Building area...' : 'Activating area...')
+      : 'No character loaded'
+    const worldLoadError = ''
+    return (
+      <div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontFamily: "'Cinzel', serif", fontSize: 18, gap: 16 }}>
+        {worldLoadError ? 'World Load Failed' : 'Loading...'}
+        <div style={{ fontSize: 11, color: '#665a3a', maxWidth: 400, textAlign: 'center' }}>{msg}</div>
+        <button onClick={onLeave} style={{
+          marginTop: 20, padding: '8px 24px', background: 'rgba(20,15,10,0.8)',
+          border: '1px solid rgba(200,170,80,0.3)', color: '#c9a84c',
+          fontFamily: "'Cinzel', serif", fontSize: 12, cursor: 'pointer',
+        }}>
+          ← Back to Campaigns
+        </button>
+      </div>
+    )
+  }
+
   // --- BG2-style keyboard shortcuts for mode screens ---
   useEffect(() => {
     function handleKeyDown(e) {
@@ -390,25 +410,7 @@ export default function GameV2({ onLeave }) {
     return <ApiKeyGate campaignId={campaignId} userId={user?.id} onKeyReady={() => setApiKeyLoaded(true)} />
   }
 
-  if (!zone || !myCharacter) {
-    const msg = worldLoadError ? worldLoadError
-      : !zone ? (!currentAreaId ? 'Building area...' : 'Activating area...')
-      : 'No character loaded'
-    return (
-      <div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontFamily: "'Cinzel', serif", fontSize: 18, gap: 16 }}>
-        {worldLoadError ? 'World Load Failed' : !zone ? 'Loading world...' : 'Character Required'}
-        <div style={{ fontSize: 11, color: worldLoadError ? '#cc5533' : '#665a3a', maxWidth: 400, textAlign: 'center' }}>{msg}</div>
-        <button onClick={onLeave} style={{
-          marginTop: 20, padding: '8px 24px', background: 'rgba(20,15,10,0.8)',
-          border: '1px solid rgba(200,170,80,0.3)', color: '#c9a84c',
-          fontFamily: "'Cinzel', serif", fontSize: 12, cursor: 'pointer',
-        }}>
-          ← Back to Campaigns
-        </button>
-      </div>
-    )
-  }
-
+  // Early return for zone/character already handled above — proceed with game render
   return (
     <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c' }}>Loading...</div>}>
       <GameLayout>
