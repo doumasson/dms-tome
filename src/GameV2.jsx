@@ -56,7 +56,6 @@ const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
-const NPCDialogue         = lazy(() => import('./components/game/NPCDialogue'))
 const CharacterInventory_ = lazy(() => import('./components/game/CharacterInventory'))
 const CombatLog_          = lazy(() => import('./components/game/CombatLog'))
 const ConditionsPanel_    = lazy(() => import('./components/game/ConditionsPanel'))
@@ -155,7 +154,6 @@ export default function GameV2({ onLeave }) {
   const [showSessionResume, setShowSessionResume] = useState(false)
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
-  const [showNPCDialogue, setShowNPCDialogue] = useState(false)
   const [showCharacterInventory, setShowCharacterInventory] = useState(false)
   const [showCombatLog, setShowCombatLog] = useState(false)
   const [showConditions, setShowConditions] = useState(false)
@@ -1170,19 +1168,6 @@ export default function GameV2({ onLeave }) {
             currentTurnIndex={encounter.currentTurn || 0}
             onAction={handleCombatAction}
             onEndTurn={handleEndTurn}
-          />
-        </Suspense>
-      )}
-      {showNPCDialogue && (
-        <Suspense fallback={null}>
-          <NPCDialogue
-            npc={{}}
-            dialogue=""
-            skillChecks={[]}
-            choices={[]}
-            onChoice={() => {}}
-            onSkillCheck={() => {}}
-            onClose={() => setShowNPCDialogue(false)}
           />
         </Suspense>
       )}
