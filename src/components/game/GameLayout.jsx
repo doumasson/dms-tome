@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import NarratorBar from './NarratorBar';
 import './GameLayout.css';
 
 /**
@@ -9,44 +10,35 @@ import './GameLayout.css';
  * Dark fantasy theme, gold accents, landscape-locked, mobile touch-friendly.
  */
 export default function GameLayout({ children }) {
-  const [narratorExpanded, setNarratorExpanded] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [isListening, setIsListening] = useState(false);
+
+  const handleSendMessage = (text) => {
+    // Add player message
+    setMessages(prev => [...prev, { role: 'player', text }]);
+    // Simulate narrator response (in real app, would call AI API)
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        role: 'narrator',
+        text: 'You describe your action. The world responds...'
+      }]);
+    }, 500);
+  };
 
   return (
     <div className="game-layout">
-      {/* Scene area - top 80% (or more if narrator collapsed) */}
-      <div className={`scene-area ${narratorExpanded ? 'narrator-expanded' : ''}`}>
+      {/* Scene area - top 80% */}
+      <div className="scene-area">
         {/* Placeholder for scene map, tokens, grid overlay */}
         {children?.sceneContent}
       </div>
 
-      {/* Narrator bar - bottom 20%, collapses to minimal when not expanded */}
-      <div className={`narrator-bar ${narratorExpanded ? 'expanded' : 'collapsed'}`}>
-        <button
-          className="narrator-toggle"
-          onClick={() => setNarratorExpanded(!narratorExpanded)}
-          aria-label="Toggle narrator panel"
-        >
-          {narratorExpanded ? '▼' : '▲'} The Narrator
-        </button>
-
-        {/* Narrator content - only visible when expanded */}
-        {narratorExpanded && (
-          <div className="narrator-content">
-            <div className="narrator-messages">
-              {/* Message history placeholder */}
-              <p className="placeholder-text">Awaiting The Narrator...</p>
-            </div>
-            <div className="narrator-input">
-              <input
-                type="text"
-                placeholder="Describe your action..."
-                className="action-input"
-              />
-              <button className="send-button">Send</button>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Narrator bar - bottom 20%, expands to 40% */}
+      <NarratorBar
+        messages={messages}
+        onSendMessage={handleSendMessage}
+        isListening={isListening}
+      />
 
       {/* Action buttons - above narrator bar, thumb-reachable */}
       <div className="action-buttons-hud">
