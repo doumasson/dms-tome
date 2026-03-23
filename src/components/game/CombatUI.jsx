@@ -2,137 +2,108 @@ import './CombatUI.css';
 
 /**
  * Combat UI Component
- * Turn order display, action buttons, movement indicator
- * Shows current combatant and available actions
+ * Turn order, action buttons, movement indicator
+ * End turn button
  */
+
 export default function CombatUI({
-  combatants = [],
+  initiative = [],
   currentTurnIndex = 0,
-  currentRound = 1,
-  remainingMovement = 30,
-  remainingActions = 1,
-  remainingBonus = 1,
-  onAttack = () => {},
-  onCastSpell = () => {},
-  onMove = () => {},
-  onDodge = () => {},
+  playerActions = [],
+  movementRemaining = 30,
+  onAction = () => {},
   onEndTurn = () => {},
-  isMyTurn = false
+  onMove = () => {}
 }) {
-  const activeCombatant = combatants[currentTurnIndex];
-  const isEnemy = activeCombatant?.type === 'enemy';
+  const currentCombatant = initiative[currentTurnIndex];
+  const isPlayerTurn = currentCombatant?.isPlayer;
+
+  const actions = [
+    { id: 'attack', name: 'Attack', icon: '⚔️', cost: 'action' },
+    { id: 'spell', name: 'Cast Spell', icon: '✨', cost: 'action' },
+    { id: 'dodge', name: 'Dodge', icon: '🛡️', cost: 'action' },
+    { id: 'dash', name: 'Dash', icon: '💨', cost: 'action' },
+    { id: 'disengage', name: 'Disengage', icon: '👣', cost: 'action' },
+    { id: 'help', name: 'Help', icon: '🤝', cost: 'action' }
+  ];
 
   return (
     <div className="combat-ui">
-      {/* Header with round and turn info */}
-      <div className="combat-header">
-        <div className="round-info">
-          <span className="round-label">Round</span>
-          <span className="round-number">{currentRound}</span>
-        </div>
-        <div className="turn-info">
-          <span className="turn-label">Turn:</span>
-          <span className="turn-name">{activeCombatant?.name || '—'}</span>
-        </div>
-        {isMyTurn && !isEnemy && (
-          <div className="your-turn-badge">🎯 Your Turn</div>
-        )}
-      </div>
-
-      {/* Initiative/Turn order */}
-      <div className="initiative-list">
-        <div className="initiative-title">Initiative Order</div>
-        <div className="combatants-list">
-          {combatants.map((combatant, index) => (
+      {/* Initiative order */}
+      <div className="initiative-panel">
+        <div className="panel-title">Initiative</div>
+        <div className="initiative-list">
+          {initiative.map((combatant, idx) => (
             <div
-              key={index}
-              className={`combatant-row ${index === currentTurnIndex ? 'active' : ''} ${combatant.type}`}
+              key={idx}
+              className={`initiative-entry ${idx === currentTurnIndex ? 'active' : ''} ${combatant.isPlayer ? 'player' : 'enemy'}`}
             >
-              <div className="combatant-number">{index + 1}</div>
+              <div className="initiative-turn">{idx + 1}</div>
               <div className="combatant-info">
                 <div className="combatant-name">{combatant.name}</div>
                 <div className="combatant-hp">
-                  <span className="hp-label">HP:</span>
-                  <span className="hp-value">
-                    {combatant.currentHp}/{combatant.maxHp}
+                  <span className="hp-bar">
+                    <span
+                      className="hp-fill"
+                      style={{
+                        width: `${(combatant.currentHp / combatant.maxHp) * 100}%`
+                      }}
+                    />
                   </span>
+                  <span className="hp-text">{combatant.currentHp}/{combatant.maxHp}</span>
                 </div>
               </div>
-              {index === currentTurnIndex && (
-                <div className="active-indicator">►</div>
-              )}
+              {idx === currentTurnIndex && <div className="turn-indicator">→</div>}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Action panel - only show if it's the player's turn */}
-      {isMyTurn && !isEnemy && (
+      {/* Action panel (only on player turn) */}
+      {isPlayerTurn && (
         <div className="action-panel">
-          <div className="action-resources">
-            <div className="resource">
-              <span className="resource-label">Actions:</span>
-              <span className="resource-value">{remainingActions}</span>
-            </div>
-            <div className="resource">
-              <span className="resource-label">Movement:</span>
-              <span className="resource-value">{remainingMovement} ft</span>
-            </div>
-            <div className="resource">
-              <span className="resource-label">Bonus:</span>
-              <span className="resource-value">{remainingBonus}</span>
+          <div className="panel-title">Actions</div>
+
+          {/* Movement indicator */}
+          <div className="movement-indicator">
+            <div className="movement-label">Movement: {movementRemaining} ft</div>
+            <div className="movement-bar">
+              <div
+                className="movement-fill"
+                style={{ width: `${(movementRemaining / 30) * 100}%` }}
+              />
             </div>
           </div>
 
+          {/* Action buttons */}
           <div className="action-buttons">
-            <button
-              className="action-button attack-btn"
-              onClick={onAttack}
-              disabled={remainingActions <= 0}
-              title="Use an action to attack"
-            >
-              ⚔️ Attack
-            </button>
-            <button
-              className="action-button spell-btn"
-              onClick={onCastSpell}
-              disabled={remainingActions <= 0}
-              title="Use an action to cast a spell"
-            >
-              🔮 Cast Spell
-            </button>
-            <button
-              className="action-button move-btn"
-              onClick={onMove}
-              disabled={remainingMovement <= 0}
-              title="Move up to your speed"
-            >
-              🚶 Move
-            </button>
-            <button
-              className="action-button dodge-btn"
-              onClick={onDodge}
-              disabled={remainingActions <= 0}
-              title="Take the Dodge action"
-            >
-              🛡️ Dodge
-            </button>
+            {actions.map(action => (
+              <button
+                key={action.id}
+                className="action-btn"
+                onClick={() => onAction(action.id)}
+                title={action.name}
+              >
+                <span className="action-icon">{action.icon}</span>
+                <span className="action-label">{action.name}</span>
+              </button>
+            ))}
           </div>
 
-          <button
-            className="end-turn-button"
-            onClick={onEndTurn}
-            title="End your turn and pass to the next combatant"
-          >
+          {/* End turn button */}
+          <button className="end-turn-btn" onClick={onEndTurn}>
             End Turn →
           </button>
         </div>
       )}
 
-      {/* Waiting indicator if not your turn */}
-      {!isMyTurn && (
-        <div className="waiting-panel">
-          <p>Waiting for {activeCombatant?.name || 'current combatant'}...</p>
+      {/* Enemy turn indicator */}
+      {!isPlayerTurn && (
+        <div className="enemy-turn">
+          <div className="enemy-name">{currentCombatant?.name} is acting...</div>
+          <div className="loading-indicator">
+            <span>•</span><span>•</span><span>•</span>
+          </div>
         </div>
       )}
     </div>
