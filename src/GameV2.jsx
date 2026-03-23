@@ -50,6 +50,7 @@ const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
 const FactionReputation   = lazy(() => import('./components/FactionReputation'))
+const GameOverModal       = lazy(() => import('./components/GameOverModal'))
 const CombatDebugOverlay  = lazy(() => import('./hud/CombatDebugOverlay'))
 const WorldMap            = lazy(() => import('./hud/WorldMap'))
 
@@ -119,6 +120,7 @@ export default function GameV2({ onLeave }) {
   const [showFormation, setShowFormation] = useState(false)
   const [showLevelUp, setShowLevelUp] = useState(false)
   const [showInteractionMenu, setShowInteractionMenu] = useState(false)
+  const [showGameOver, setShowGameOver] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -984,47 +986,12 @@ export default function GameV2({ onLeave }) {
         </Suspense>
       )}
       {showDeathOptions && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200,
-        }}>
-          <div style={{
-            background: '#0e0b14', border: '2px solid #cc3333', borderRadius: 8,
-            padding: '32px 40px', maxWidth: 400, textAlign: 'center',
-            fontFamily: "'Cinzel', serif", color: '#e8dcc8',
-          }}>
-            <div style={{ fontSize: 22, color: '#cc3333', fontWeight: 700, marginBottom: 8 }}>
-              The Party Has Fallen
-            </div>
-            <div style={{ fontSize: 12, color: '#8a7a52', marginBottom: 24, lineHeight: 1.6 }}>
-              Darkness closes in... but fate is not yet done with you.
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <button
-                onClick={mercyRevive}
-                style={{
-                  padding: '12px 24px', background: 'rgba(200,170,80,0.15)',
-                  border: '1px solid #d4af37', color: '#d4af37', borderRadius: 4,
-                  cursor: 'pointer', fontFamily: "'Cinzel', serif", fontSize: 14,
-                  fontWeight: 700, letterSpacing: 1,
-                }}
-              >
-                Continue (Revive at 1 HP)
-              </button>
-              <button
-                onClick={() => { useStore.setState({ showDeathOptions: false }); onLeave() }}
-                style={{
-                  padding: '12px 24px', background: 'rgba(200,50,50,0.15)',
-                  border: '1px solid #cc3333', color: '#cc3333', borderRadius: 4,
-                  cursor: 'pointer', fontFamily: "'Cinzel', serif", fontSize: 14,
-                  fontWeight: 700, letterSpacing: 1,
-                }}
-              >
-                New Character
-              </button>
-            </div>
-          </div>
-        </div>
+        <Suspense fallback={null}>
+          <GameOverModal
+            onRevive={mercyRevive}
+            onLeave={() => { useStore.setState({ showDeathOptions: false }); onLeave() }}
+          />
+        </Suspense>
       )}
     </div>
   )
