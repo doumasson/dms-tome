@@ -63,6 +63,7 @@ const EnemyInfo           = lazy(() => import('./components/game/EnemyInfo'))
 const RulesReference      = lazy(() => import('./components/game/RulesReference'))
 const VictoryScreen       = lazy(() => import('./components/game/VictoryScreen'))
 const DefeatScreen        = lazy(() => import('./components/game/DefeatScreen'))
+const PreCombatMenu       = lazy(() => import('./components/game/PreCombatMenu'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -141,6 +142,8 @@ export default function GameV2({ onLeave }) {
   const [showVictory, setShowVictory] = useState(false)
   const [showDefeat, setShowDefeat] = useState(false)
   const [encounterRewards, setEncounterRewards] = useState(null)
+  const [showPreCombat, setShowPreCombat] = useState(false)
+  const [pendingCombatEnemies, setPendingCombatEnemies] = useState(null)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -848,6 +851,28 @@ export default function GameV2({ onLeave }) {
     return () => clearTimeout(timer)
   }, [zone])
 
+  // --- Helper to start combat from PreCombatMenu ---
+  const startCombatFromMenu = useCallback((enemies) => {
+    setShowPreCombat(false)
+    setPendingCombatEnemies(null)
+    const { startEncounter } = useStore.getState()
+    const myChar = useStore.getState().myCharacter
+    const freshParty = useStore.getState().partyMembers || []
+    const combatEnemies = enemies.map(e => ({
+      ...e, isEnemy: true, type: 'enemy',
+      position: e.position || { x: playerPosRef.current.x + 2, y: playerPosRef.current.y },
+    }))
+    const combatParty = freshParty.map(p => ({
+      ...p,
+      ...(myChar && (p.id === myChar.id || p.name === myChar.name) ? myChar : {}),
+      position: myChar && (p.id === myChar.id || p.name === myChar.name) ? { ...playerPosRef.current } : null,
+    }))
+    if (myChar && !combatParty.some(p => p.id === myChar.id || p.name === myChar.name)) {
+      combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
+    }
+    startEncounter(combatEnemies, combatParty, true)
+  }, [])
+
   // --- Early returns ---
   if (apiKeyLoaded && !sessionApiKey) {
     const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
@@ -1059,6 +1084,19 @@ export default function GameV2({ onLeave }) {
             defeats={encounter.combatants?.filter(c => c.type === 'player' && (c.currentHp ?? 0) <= 0) || []}
             onRetry={() => { setShowDefeat(false); useStore.setState({ defeatReset: true }) }}
             onContinue={() => { setShowDefeat(false); onLeave() }}
+          />
+        </Suspense>
+      )}
+      {showPreCombat && pendingCombatEnemies && (
+        <Suspense fallback={null}>
+          <PreCombatMenu
+            enemies={pendingCombatEnemies}
+            onSneak={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
+            onTalk={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
+            onPickpocket={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
+            onAmbush={() => startCombatFromMenu(pendingCombatEnemies)}
+            onCharge={() => startCombatFromMenu(pendingCombatEnemies)}
+            onCancel={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
           />
         </Suspense>
       )}
