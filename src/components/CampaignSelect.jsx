@@ -213,7 +213,7 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
                       <span style={styles.lastPlayed}>Last played {formatDate(campaign.updated_at)}</span>
                     )}
                     {!isDraft && campaign.userRole === 'dm' && campaign.invite_code && (
-                      <button
+                      <div
                         onClick={e => {
                           e.stopPropagation();
                           const link = `${window.location.origin}${window.location.pathname}?invite=${campaign.invite_code}`;
@@ -221,11 +221,11 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
                           setCopiedCode(campaign.id);
                           setTimeout(() => setCopiedCode(null), 2000);
                         }}
-                        style={styles.inviteCopyBtn}
+                        style={{ ...styles.inviteCopyBtn, cursor: 'pointer' }}
                         title="Copy invite link"
                       >
                         {copiedCode === campaign.id ? '✓ Copied!' : `📋 ${campaign.invite_code}`}
-                      </button>
+                      </div>
                     )}
                     <span style={styles.enterArrow}>{isDraft ? '✏' : '→'}</span>
                   </div>
