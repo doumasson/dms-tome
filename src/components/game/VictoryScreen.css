@@ -1,0 +1,427 @@
+.victory-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(16, 185, 129, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+  animation: victoryFadeIn 0.5s ease-out;
+}
+
+@keyframes victoryFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.victory-panel {
+  background: linear-gradient(135deg, #1a1a1a 0%, #1a2a1a 100%);
+  border: 3px solid #10b981;
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(16, 185, 129, 0.4), 0 8px 32px rgba(0, 0, 0, 0.8);
+  padding: 30px;
+  max-width: 700px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: victoryPulse 0.6s ease-out;
+}
+
+@keyframes victoryPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Victory Banner */
+.victory-banner {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(74, 222, 128, 0.1) 100%);
+  border: 2px solid #10b981;
+  border-radius: 8px;
+}
+
+.victory-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+  animation: victoryBounce 0.8s ease-out;
+}
+
+@keyframes victoryBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.victory-title {
+  margin: 0 0 8px 0;
+  font-size: 36px;
+  font-weight: 900;
+  color: #10b981;
+  font-family: 'Cinzel', Georgia, serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.victory-subtitle {
+  font-size: 14px;
+  color: #4ade80;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+/* Summary Section */
+.summary-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.summary-stat {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: #4ade80;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #10b981;
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+/* Section Styles */
+.enemies-section,
+.loot-section,
+.level-ups-section {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 12px;
+  color: #10b981;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+/* Enemies List */
+.enemies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.enemy-entry {
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 3px solid #ef4444;
+  border-radius: 4px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.enemy-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.enemy-name {
+  flex: 1;
+  font-size: 12px;
+  color: #e8d5a3;
+  font-weight: 600;
+}
+
+.enemy-xp {
+  font-size: 10px;
+  color: #ffd700;
+  font-weight: 600;
+}
+
+/* Loot Section */
+.loot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  width: 100%;
+}
+
+.loot-toggle {
+  font-size: 10px;
+  color: #10b981;
+  opacity: 0.6;
+}
+
+.loot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.loot-item {
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 3px solid #fbbf24;
+  border-radius: 4px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.item-name {
+  font-size: 12px;
+  color: #e8d5a3;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-rarity {
+  font-size: 9px;
+  color: #fbbf24;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  font-weight: 600;
+}
+
+.item-qty {
+  font-size: 10px;
+  color: #d4af37;
+  font-weight: 600;
+  background: rgba(212, 175, 55, 0.15);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* Level Ups Section */
+.level-ups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.level-up-item {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.level-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  animation: levelUpFloat 1s ease-in-out infinite;
+}
+
+@keyframes levelUpFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.level-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.level-name {
+  font-size: 12px;
+  color: #e8d5a3;
+  font-weight: 600;
+}
+
+.level-value {
+  font-size: 11px;
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+/* Rewards Summary */
+.rewards-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(74, 222, 128, 0.05) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 6px;
+}
+
+.reward-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reward-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.reward-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.reward-label {
+  font-size: 10px;
+  color: #4ade80;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  font-weight: 600;
+}
+
+.reward-value {
+  font-size: 14px;
+  color: #10b981;
+  font-weight: 700;
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+/* Footer */
+.victory-footer {
+  display: flex;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.victory-button {
+  flex: 1;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(74, 222, 128, 0.2) 100%);
+  border: 2px solid #10b981;
+  border-radius: 6px;
+  color: #10b981;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 44px;
+}
+
+.victory-button:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(74, 222, 128, 0.4) 100%);
+  border-color: #4ade80;
+  color: #4ade80;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  transform: translateY(-2px);
+}
+
+.victory-button:active {
+  transform: translateY(0);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 700px) {
+  .victory-panel {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .victory-title {
+    font-size: 28px;
+  }
+
+  .summary-section {
+    grid-template-columns: 1fr;
+  }
+
+  .reward-box {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* Scrollbar styling */
+.victory-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.victory-panel::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.victory-panel::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.3);
+  border-radius: 4px;
+}
+
+.victory-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.5);
+}
