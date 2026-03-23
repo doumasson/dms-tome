@@ -64,6 +64,7 @@ const RulesReference      = lazy(() => import('./components/game/RulesReference'
 const VictoryScreen       = lazy(() => import('./components/game/VictoryScreen'))
 const DefeatScreen        = lazy(() => import('./components/game/DefeatScreen'))
 const PreCombatMenu       = lazy(() => import('./components/game/PreCombatMenu'))
+const SessionResume       = lazy(() => import('./components/game/SessionResume'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -144,6 +145,7 @@ export default function GameV2({ onLeave }) {
   const [encounterRewards, setEncounterRewards] = useState(null)
   const [showPreCombat, setShowPreCombat] = useState(false)
   const [pendingCombatEnemies, setPendingCombatEnemies] = useState(null)
+  const [showSessionResume, setShowSessionResume] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -340,6 +342,18 @@ export default function GameV2({ onLeave }) {
       setShowLevelUp(true)
     }
   }, [myCharacter?.xp])
+
+  // --- Show session resume on first load if resuming campaign ---
+  const sessionResumeShownRef = useRef(false)
+  useEffect(() => {
+    if (myCharacter && zone && campaign && !sessionResumeShownRef.current && !inCombat) {
+      // Check if this is a resumed session (character has previous game time or experience)
+      if (myCharacter.xp > 0 || (myCharacter.spellSlots && Object.keys(myCharacter.spellSlots).length > 0)) {
+        setShowSessionResume(true)
+        sessionResumeShownRef.current = true
+      }
+    }
+  }, [myCharacter?.id, zone?.id, campaign?.id])
 
   // --- Encounter zone proximity detection ---
   // --- Encounter zone proximity detection ---
@@ -1097,6 +1111,20 @@ export default function GameV2({ onLeave }) {
             onAmbush={() => startCombatFromMenu(pendingCombatEnemies)}
             onCharge={() => startCombatFromMenu(pendingCombatEnemies)}
             onCancel={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
+          />
+        </Suspense>
+      )}
+      {showSessionResume && myCharacter && (
+        <Suspense fallback={null}>
+          <SessionResume
+            sessionData={{
+              campaignName: campaign?.title || 'Your Campaign',
+              lastSessionDate: myCharacter.lastPlayedAt || new Date().toISOString(),
+              currentLocation: zone?.title || 'Exploration'
+            }}
+            characters={[myCharacter]}
+            recap={`Your adventure continues... Character Level: ${myCharacter.level}, HP: ${myCharacter.currentHp || myCharacter.hp}/${myCharacter.hp}`}
+            onResume={() => setShowSessionResume(false)}
           />
         </Suspense>
       )}
