@@ -11,7 +11,7 @@ export default function HUD() {
   const myCharacter = useStore(s => s.myCharacter);
   const encounter = useStore(s => s.encounter);
   const rollDeathSave = useStore(s => s.rollDeathSave);
-  const inCombat = encounter.phase !== 'idle';
+  const inCombat = encounter?.phase === 'combat';
 
   if (!myCharacter) return null;
 
