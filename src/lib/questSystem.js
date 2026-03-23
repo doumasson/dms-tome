@@ -53,3 +53,17 @@ export function completeObjective(quest, objectiveId) {
 export function isQuestComplete(quest) {
   return quest.objectives.every(obj => obj.completed)
 }
+
+/**
+ * Mark a quest as completed if all objectives are done.
+ * Returns the updated quest (or same quest if not yet complete).
+ * @param {object} quest
+ * @returns {object} quest with status updated to 'completed' if all objectives done
+ */
+export function maybeCompleteQuest(quest) {
+  if (quest.status !== 'active') return quest
+  if (isQuestComplete(quest)) {
+    return { ...quest, status: 'completed' }
+  }
+  return quest
+}

@@ -2,7 +2,7 @@
  * Story progression state — flags, journal, NPC busy locks, quests.
  * Merged into the main Zustand store.
  */
-import { completeObjective } from '../lib/questSystem.js'
+import { completeObjective, maybeCompleteQuest } from '../lib/questSystem.js'
 
 export function createStorySlice(set, get) {
   return {
@@ -35,10 +35,23 @@ export function createStorySlice(set, get) {
     updateQuest: (questId, updates) => set(s => ({
       quests: s.quests.map(q => q.id === questId ? { ...q, ...updates } : q)
     })),
-    completeQuestObjective: (questId, objId) => set(s => ({
-      quests: s.quests.map(q =>
-        q.id === questId ? completeObjective(q, objId) : q
-      )
-    })),
+    completeQuestObjective: (questId, objId) => set(s => {
+      const updatedQuests = s.quests.map(q => {
+        if (q.id !== questId) return q
+        const withObjComplete = completeObjective(q, objId)
+        const withQuestComplete = maybeCompleteQuest(withObjComplete)
+
+        // If quest just completed and has a faction, increase reputation
+        if (withQuestComplete.status === 'completed' && q.status !== 'completed' && withQuestComplete.faction) {
+          const repIncrement = 20 // Default quest completion reward
+          if (s.adjustFactionReputation) {
+            s.adjustFactionReputation(withQuestComplete.faction, repIncrement)
+          }
+        }
+
+        return withQuestComplete
+      })
+      return { quests: updatedQuests }
+    }),
   }
 }
