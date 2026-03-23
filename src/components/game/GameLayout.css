@@ -43,6 +43,41 @@
   }
 }
 
+/* Mobile portrait adjustments (375px width) */
+@media (max-width: 480px) {
+  .game-layout {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .scene-area {
+    flex: 7;
+    min-height: 0;
+  }
+
+  .narrator-bar {
+    flex: 3;
+  }
+
+  .narrator-bar.expanded {
+    max-height: 50vh;
+  }
+
+  .narrator-toggle {
+    height: 44px;
+    font-size: 11px;
+    padding: 0 8px;
+  }
+
+  .narrator-content {
+    padding: 8px;
+  }
+
+  .narrator-messages {
+    font-size: 12px;
+  }
+}
+
 /* Prevent scrolling and rubber band effect */
 body.game-active {
   overflow: hidden;
