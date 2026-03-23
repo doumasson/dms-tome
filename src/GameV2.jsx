@@ -241,11 +241,6 @@ export default function GameV2({ onLeave }) {
     handleWorldTileClick({ x, y })
   }, [handleCombatTileClick, handleWorldTileClick])
 
-  // --- Chat handler (must be declared before skill check effect that uses triggerDmFollowUp) ---
-  const { handleChat, triggerDmFollowUp } = useNarratorChat({ sessionApiKey, myCharacter, user, campaign, partyMembers, zone, addNarratorMessage, playerPosRef })
-  handleChatRef.current = handleChat
-
-
   useEffect(() => {
     dialogOpenRef.current = !!activeNpc || showInteractionMenu
   }, [activeNpc, showInteractionMenu])
