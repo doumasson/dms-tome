@@ -144,7 +144,6 @@ export default function GameV2({ onLeave }) {
   const [showFormation, setShowFormation] = useState(false)
   const [showLevelUp, setShowLevelUp] = useState(false)
   const [showInteractionMenu, setShowInteractionMenu] = useState(false)
-  const [showGameOver, setShowGameOver] = useState(false)
   const [showVictory, setShowVictory] = useState(false)
   const [showDefeat, setShowDefeat] = useState(false)
   const [encounterRewards, setEncounterRewards] = useState(null)
