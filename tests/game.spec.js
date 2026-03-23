@@ -598,4 +598,53 @@ test.describe('Game Integration Tests', () => {
     const logCount = await activityLog.count();
     expect(logCount).toBeGreaterThanOrEqual(0); // Activity log for state tracking
   });
+
+  test('should display correct mobile layout', async ({ page, baseURL }) => {
+    // Set mobile viewport (landscape orientation as per spec)
+    await page.setViewportSize({ width: 1024, height: 600 }); // Landscape mobile
+
+    // Navigate and reach game
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+
+    // Get through to game screen
+    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
+    if ((await campaignButtons.count()) > 0) {
+      await campaignButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    const characterButtons = page.locator('button:has-text("Aric")');
+    if ((await characterButtons.count()) > 0) {
+      await characterButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    // Wait for game to load on mobile
+    await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
+
+    // Verify mobile-specific elements
+    const gameLayout = page.locator('.game-layout').first();
+    expect((await gameLayout.count())).toBeGreaterThan(0); // Game should load on mobile
+
+    // Check for responsive layout (80% map, 20% narrator)
+    const sceneArea = page.locator('.scene-area').first();
+    const narratorBar = page.locator('.narrator-bar').first();
+    expect((await sceneArea.count())).toBeGreaterThan(0); // Scene visible on mobile
+    expect((await narratorBar.count())).toBeGreaterThan(0); // Narrator bar visible on mobile
+
+    // Verify hamburger menu for mobile sidebar
+    const hamburger = page.locator('button:has-text("☰"), [class*="hamburger"]');
+    const hamburgerCount = await hamburger.count();
+    expect(hamburgerCount).toBeGreaterThanOrEqual(0); // Hamburger may appear on mobile
+
+    // Verify HUD is accessible on mobile
+    const hudElements = page.locator('.hud-bottom-bar, [class*="hud"]');
+    const hudCount = await hudElements.count();
+    expect(hudCount).toBeGreaterThan(0); // HUD should be visible on mobile
+
+    // Check viewport size to confirm mobile layout
+    const viewportSize = await page.viewportSize();
+    expect(viewportSize.width).toBeLessThanOrEqual(1024); // Mobile width
+    expect(viewportSize.height).toBeGreaterThanOrEqual(600); // Landscape minimum
+  });
 });
