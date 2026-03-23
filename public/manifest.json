@@ -1,0 +1,31 @@
+{
+  "name": "DungeonMind",
+  "short_name": "DungeonMind",
+  "description": "A real-time multiplayer D&D 5e game where an AI Narrator replaces the Dungeon Master",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#1a1a1a",
+  "theme_color": "#d4af37",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["games"],
+  "screenshots": [
+    {
+      "src": "/screenshots/narrow.png",
+      "sizes": "540x720",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/wide.png",
+      "sizes": "1280x720",
+      "form_factor": "wide"
+    }
+  ]
+}
