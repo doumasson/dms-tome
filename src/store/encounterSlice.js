@@ -386,7 +386,7 @@ export function createEncounterSlice(set, get) {
         if (difficultyInfo.warning) {
           const msg = {
             role: 'dm',
-            speaker: 'Dungeon Master',
+            speaker: 'The Narrator',
             text: difficultyInfo.warning,
             id: crypto.randomUUID(),
             timestamp: Date.now(),
@@ -399,7 +399,7 @@ export function createEncounterSlice(set, get) {
         if (difficultyInfo.scaling) {
           const scalingMsg = {
             role: 'dm',
-            speaker: 'Dungeon Master',
+            speaker: 'The Narrator',
             text: `[DM Note] ${difficultyInfo.scaling.reason} (Difficulty: ${difficultyInfo.difficulty})`,
             id: crypto.randomUUID(),
             timestamp: Date.now(),
@@ -445,7 +445,7 @@ export function createEncounterSlice(set, get) {
         // TPK — end combat with defeat
         get().addEncounterLog('\u2620 The party has fallen...');
         const msg = {
-          role: 'dm', speaker: 'Dungeon Master',
+          role: 'dm', speaker: 'The Narrator',
           text: 'The party has been defeated. Darkness closes in... but fate is not yet done with you.',
           id: crypto.randomUUID(), timestamp: Date.now(),
         };
@@ -832,7 +832,7 @@ export function createEncounterSlice(set, get) {
 
       // Narrate the revival
       const reviveMsg = {
-        role: 'dm', speaker: 'Dungeon Master',
+        role: 'dm', speaker: 'The Narrator',
         text: 'You wake up bruised but alive, the taste of dirt and blood in your mouth. Fate has granted you another chance...',
         id: crypto.randomUUID(), timestamp: Date.now(),
       };
@@ -1229,7 +1229,7 @@ export function createEncounterSlice(set, get) {
         // Narrate in chat — broadcast to ALL players, not just the DM's client
         if (result.narrative) {
           const msg = {
-            role: 'dm', speaker: 'Dungeon Master',
+            role: 'dm', speaker: 'The Narrator',
             text: result.narrative,
             id: crypto.randomUUID(), timestamp: Date.now(),
           };
@@ -1267,7 +1267,7 @@ export function createEncounterSlice(set, get) {
           } : null;
           const fallbackResult = computeGruntAction(active, encounter.combatants, collisionData, area?.width || 20, area?.height || 20);
           if (fallbackResult.narrative) {
-            const msg = { role: 'dm', speaker: 'Dungeon Master', text: fallbackResult.narrative, id: crypto.randomUUID(), timestamp: Date.now() };
+            const msg = { role: 'dm', speaker: 'The Narrator', text: fallbackResult.narrative, id: crypto.randomUUID(), timestamp: Date.now() };
             get().addNarratorMessage(msg);
             broadcastNarratorMessage(msg);
           }
@@ -1301,7 +1301,7 @@ export function createEncounterSlice(set, get) {
     // Fires-and-forgets — does not block turn progression.
     narrateCombatAction: async (actorName, actionLabel, targetName, resultDesc, apiKey) => {
       if (!apiKey) return;
-      const prompt = `You are the Dungeon Master narrating a D&D 5e combat action.
+      const prompt = `You are the Narrator for a D&D 5e combat action.
 ${actorName} uses ${actionLabel}${targetName ? ` against ${targetName}` : ''}.
 Result: ${resultDesc}
 Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice numbers. Pure immersive narration.`;
@@ -1324,7 +1324,7 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
         const data = await res.json();
         const text = data.content?.[0]?.text?.trim();
         if (!text) return;
-        const msg = { role: 'dm', speaker: 'Dungeon Master', text, id: crypto.randomUUID(), timestamp: Date.now() };
+        const msg = { role: 'dm', speaker: 'The Narrator', text, id: crypto.randomUUID(), timestamp: Date.now() };
         get().addNarratorMessage(msg);
         broadcastNarratorMessage(msg);
       } catch (error) { console.warn('Combat narration failed:', error); }

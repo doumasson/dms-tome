@@ -146,7 +146,7 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
             <div style={styles.onboardingD20}>⚔</div>
             <h3 style={styles.onboardingTitle}>Your adventure awaits.</h3>
             <p style={styles.onboardingSubtitle}>
-              DM's Tome is a real D&amp;D 5e game — played with friends, run by an AI Dungeon Master.
+              DM's Tome is a real D&amp;D 5e game — played with friends, run by The Narrator.
               No human DM needed.
             </p>
 
@@ -154,7 +154,7 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
               {[
                 { n: '1', head: 'Create a campaign', body: 'Set the tone, world, and villain. The AI builds the story.' },
                 { n: '2', head: 'Invite your party', body: 'Share a code. Friends join on any device — phone, tablet, laptop.' },
-                { n: '3', head: 'Play', body: 'The Dungeon Master narrates, runs enemies, calls for rolls. You just play.' },
+                { n: '3', head: 'Play', body: 'The Narrator narrates, runs enemies, calls for rolls. You just play.' },
               ].map(({ n, head, body }) => (
                 <div key={n} style={styles.onboardingStep}>
                   <div style={styles.onboardingStepNum}>{n}</div>
@@ -167,7 +167,7 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
             </div>
 
             <div style={styles.onboardingNote}>
-              <strong style={{ color: '#d4af37' }}>You'll need a Claude API key</strong> to power the AI Dungeon Master.
+              <strong style={{ color: '#d4af37' }}>You'll need a Claude API key</strong> to power The Narrator.
               Get one free at{' '}
               <a href="https://console.anthropic.com" target="_blank" rel="noreferrer" style={{ color: '#d4af37' }}>
                 console.anthropic.com

@@ -133,7 +133,7 @@ export default function NarratorPanel() {
     const text = [currentScene.title, currentScene.text].filter(Boolean).join('\n\n');
     const msg = {
       role: 'dm',
-      speaker: 'Dungeon Master',
+      speaker: 'The Narrator',
       text,
       id: crypto.randomUUID(),
       timestamp: Date.now(),
@@ -351,7 +351,7 @@ export default function NarratorPanel() {
       activeNpcRef.current = null; // reset after each DM response
       const dmMsg = {
         role: 'dm',
-        speaker: 'Dungeon Master',
+        speaker: 'The Narrator',
         text: result.narrative,
         rollRequest: result.rollRequest || null,
         stateHint:   result.stateHint   || null,
@@ -441,7 +441,7 @@ export default function NarratorPanel() {
     return (
       <div style={styles.minimizedBar} onClick={() => { setMinimized(false); setUnread(0); }}>
         <span style={styles.headerIcon}>{loading ? '⏳' : isEnemyTurn ? '⚔' : '🎭'}</span>
-        <span style={styles.minimizedTitle}>Dungeon Master</span>
+        <span style={styles.minimizedTitle}>The Narrator</span>
         {currentSceneName && (
           <span style={styles.minimizedScene}>· {currentSceneName}</span>
         )}
@@ -461,7 +461,7 @@ export default function NarratorPanel() {
         <span style={styles.headerIcon}>{loading ? '⏳' : isEnemyTurn ? '⚔' : '🎭'}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={styles.headerTitle}>
-            Dungeon Master
+            The Narrator
             {isEnemyTurn && !loading && (
               <span style={{ fontSize: '0.65rem', color: '#e74c3c', marginLeft: 8, fontFamily: 'inherit', letterSpacing: 0, animation: 'goldPulse 2s infinite' }}>
                 {activeEnemyName}'s turn
@@ -506,7 +506,7 @@ export default function NarratorPanel() {
             {msg.role === 'dm' ? (
               // Only show DM label when preceded by a player message (avoids repetition)
               (i === 0 || narrator.history[i - 1]?.role !== 'dm') && (
-                <span style={styles.dmLabel}>The Dungeon Master</span>
+                <span style={styles.dmLabel}>The Narrator</span>
               )
             ) : (
               <span style={styles.playerLabel}>⚔ {msg.speaker}</span>
@@ -568,7 +568,7 @@ export default function NarratorPanel() {
         ))}
         {loading && (
           <div style={styles.dmBubble}>
-            <p style={{ ...styles.bubbleText, opacity: 0.4, fontStyle: 'italic' }}>The Dungeon Master stirs…</p>
+            <p style={{ ...styles.bubbleText, opacity: 0.4, fontStyle: 'italic' }}>The Narrator stirs…</p>
           </div>
         )}
       </div>

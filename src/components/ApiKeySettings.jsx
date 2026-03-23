@@ -54,7 +54,7 @@ export default function ApiKeySettings({ userId, onClose }) {
         <button onClick={onClose} style={styles.closeBtn} aria-label="Close">✕</button>
         <h2 style={styles.title}>API Key Settings</h2>
         <p style={styles.hint}>
-          The DM's Claude key powers the AI Dungeon Master for all players.
+          Your Claude API key powers The Narrator for all players.
           Keys are encrypted and stored in your campaign record.
         </p>
 

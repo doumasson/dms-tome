@@ -86,7 +86,7 @@ function buildEnemyTurnPrompt(enemy, encounter) {
       })()
     : '';
 
-  return `You are a tactical D&D 5e Dungeon Master controlling ${enemy.name} in combat.
+  return `You are a tactical D&D 5e Narrator controlling ${enemy.name} in combat.
 
 ENEMY: ${enemy.name}
 - HP: ${enemy.currentHp}/${enemy.maxHp}, AC: ${enemy.ac}, Position: ${pos}

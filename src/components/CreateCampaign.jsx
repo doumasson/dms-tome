@@ -510,7 +510,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
                 <span style={styles.demoIcon}>🗡</span>
                 <div>
                   <div style={styles.demoTitle}>Whispers in the Dark</div>
-                  <div style={styles.demoSubtitle}>Ready-to-play 4-hour one-shot · No setup · 3–5 players · AI Dungeon Master</div>
+                  <div style={styles.demoSubtitle}>Ready-to-play 4-hour one-shot · No setup · 3–5 players · The Narrator</div>
                 </div>
               </div>
               <div style={styles.demoRight}>
@@ -616,7 +616,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               <div style={styles.generatingWrap}>
                 <div style={styles.spinner} />
                 <h2 style={styles.stepTitle}>Forging your world...</h2>
-                <p style={styles.hint}>This usually takes about 30 seconds. The AI Dungeon Master is crafting areas, NPCs, and encounters.</p>
+                <p style={styles.hint}>This usually takes about 30 seconds. The Narrator is crafting areas, NPCs, and encounters.</p>
               </div>
             )}
 

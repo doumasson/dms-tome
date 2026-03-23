@@ -203,7 +203,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   function handleLogOnly(entry) { onLog(entry); }
 
   function handleNarrate(text) {
-    const msg = { role: 'dm', speaker: 'Dungeon Master', text, id: crypto.randomUUID(), timestamp: Date.now() };
+    const msg = { role: 'dm', speaker: 'The Narrator', text, id: crypto.randomUUID(), timestamp: Date.now() };
     addNarratorMessage(msg);
     broadcastNarratorMessage(msg);
   }

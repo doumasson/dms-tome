@@ -18,9 +18,9 @@ describe('Narrator API', () => {
       expect(prompt.length).toBeGreaterThan(100)
     })
 
-    it('includes Dungeon Master instructions', () => {
+    it('includes Narrator instructions', () => {
       const prompt = buildSystemPrompt({ title: 'Campaign' }, [], null, 0, null, [])
-      expect(prompt).toContain('Dungeon Master')
+      expect(prompt).toContain('Narrator')
     })
 
     it('includes party member information', () => {
@@ -174,7 +174,7 @@ describe('Narrator API', () => {
   })
 
   describe('Prompt structure validation', () => {
-    it('generates syntactically valid DM prompt', () => {
+    it('generates syntactically valid Narrator prompt', () => {
       const campaign = { title: 'Test Campaign' }
       const party = [{ name: 'Hero', level: 1, class: 'Fighter', race: 'Human', currentHp: 10, maxHp: 10, ac: 10 }]
       const scene = { name: 'Room', theme: 'dungeon' }

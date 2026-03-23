@@ -123,7 +123,7 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
     ? `\n\nActive quests:\n${activeQuests.map(q => `- ${q.title}: ${(q.objectives || []).filter(o => !o.completed).map(o => o.text).join(', ')}`).join('\n')}`
     : ''
 
-  return `You are the Dungeon Master for a D&D 5e campaign called "${title}".
+  return `You are the Narrator for a D&D 5e campaign called "${title}".
 
 ${sceneText}
 
@@ -347,6 +347,6 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
       };
     }
     // Never show raw JSON — return a DM pause message
-    return { narrative: '(The Dungeon Master pauses to consider the situation…)', rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null, questOffer: null };
+    return { narrative: '(The Narrator pauses to consider the situation…)', rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null, questOffer: null };
   }
 }

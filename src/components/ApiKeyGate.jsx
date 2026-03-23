@@ -5,8 +5,8 @@ import useStore from '../store/useStore'
 
 /**
  * Full-screen gate shown when no API key is available.
- * DM: sees input field to enter key.
- * Non-DM: sees waiting message (key comes via broadcast from DM).
+ * Host: sees input field to enter key.
+ * Guest: sees waiting message (key comes via broadcast from host).
  */
 export default function ApiKeyGate({ campaignId, userId, onKeyReady }) {
   const isDM = useStore(s => s.isDM)
@@ -60,12 +60,12 @@ export default function ApiKeyGate({ campaignId, userId, onKeyReady }) {
         </svg>
 
         <h1 style={styles.title}>
-          {isDM ? 'The Dungeon Master Awaits' : 'Awaiting the Dungeon Master'}
+          {isDM ? 'The Narrator Awaits' : 'Awaiting the Narrator'}
         </h1>
         <p style={styles.subtitle}>
           {isDM
-            ? 'An API key is required to summon the AI Dungeon Master.'
-            : 'Waiting for the Dungeon Master to share the realm key...'}
+            ? 'An API key is required to summon The Narrator.'
+            : 'Waiting for the host to share the realm key...'}
         </p>
 
         {isDM ? (

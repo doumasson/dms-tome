@@ -51,7 +51,7 @@ export function useRandomEncounters({
     // DM gets narrative prompt, can choose to engage or let party pass
     const msg = {
       role: 'dm',
-      speaker: 'Dungeon Master',
+      speaker: 'The Narrator',
       text: `${dmPrompt}\n\nYou notice ${enemies.map(e => e.originalName).join(', ')} ahead! Initiative?`,
       id: crypto.randomUUID(),
       timestamp: Date.now(),

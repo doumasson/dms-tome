@@ -1,5 +1,5 @@
 // Floating interaction prompt shown when a player token approaches a scene hotspot.
-// Clicking triggers a Dungeon Master interaction for that zone.
+// Clicking triggers a Narrator interaction for that zone.
 export default function InteractionZone({ zone, onClick }) {
   return (
     <div

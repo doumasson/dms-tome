@@ -105,7 +105,7 @@ export default function CampaignEndModal({ onWrapUp }) {
 
         {loading && (
           <p style={styles.loadingHint}>
-            The Dungeon Master is crafting new scenes for your party…
+            The Narrator is crafting new scenes for your party…
           </p>
         )}
       </div>

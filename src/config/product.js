@@ -1,12 +1,12 @@
 export const productConfig = {
   id: 'dms-tome',
-  appName: "DM's Tome",
-  marketingTagline: 'Rethemeable campaign runner for live tabletop sessions',
-  gameplayTagline: 'Create or join campaigns, manage encounters, and run live sessions.',
+  appName: 'DungeonMind',
+  marketingTagline: 'AI-powered fantasy RPG for multiplayer campaigns',
+  gameplayTagline: 'Create or join campaigns, manage encounters, and play live sessions.',
   roles: {
-    gameMasterShort: 'DM',
-    gameMasterFull: 'Dungeon Master',
-    narratorSpeaker: 'Dungeon Master',
+    gameMasterShort: 'Host',
+    gameMasterFull: 'The Narrator',
+    narratorSpeaker: 'The Narrator',
   },
   system: {
     rulesetId: 'srd5e',
