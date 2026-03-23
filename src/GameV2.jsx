@@ -56,7 +56,6 @@ const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
-const PartyStatus_        = lazy(() => import('./components/game/PartyStatus'))
 const RulesReference_     = lazy(() => import('./components/game/RulesReference'))
 const SkillsPanel_        = lazy(() => import('./components/game/SkillsPanel'))
 const SpellsPanel_        = lazy(() => import('./components/game/SpellsPanel'))
@@ -145,7 +144,6 @@ export default function GameV2({ onLeave }) {
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
-  const [showPartyStatus, setShowPartyStatus] = useState(false)
   const [showRulesReference, setShowRulesReference] = useState(false)
   const [showSkills, setShowSkills] = useState(false)
   const [showSpells, setShowSpells] = useState(false)
@@ -1166,15 +1164,6 @@ export default function GameV2({ onLeave }) {
             currentTurnIndex={encounter.currentTurn || 0}
             onAction={handleCombatAction}
             onEndTurn={handleEndTurn}
-          />
-        </Suspense>
-      )}
-      {showPartyStatus && (
-        <Suspense fallback={null}>
-          <PartyStatus_
-            partyMembers={partyMembers || []}
-            myCharacter={myCharacter}
-            onClose={() => setShowPartyStatus(false)}
           />
         </Suspense>
       )}
