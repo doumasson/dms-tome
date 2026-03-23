@@ -2,13 +2,9 @@ import { useState, useCallback, useMemo, useEffect, useLayoutEffect, useRef, laz
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
-import { broadcastApiKeySync, broadcastRequestApiKey, broadcastEncounterAction } from './lib/liveChannel'
+import { broadcastEncounterAction } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
-import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
-import { loadDefaultApiKey } from './lib/defaultApiKey'
-import { getClaudeApiKey } from './lib/claudeApi'
-import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZones'
-import { handleInteract, getAvailableInteractions } from './lib/interactionController'
+import { getAvailableInteractions } from './lib/interactionController'
 import { getDisposition } from './lib/factionSystem'
 import { isAnimating } from './engine/TokenLayer'
 import ChatBubble from './components/ChatBubble'
@@ -223,13 +219,6 @@ export default function GameV2({ onLeave }) {
   handleChatRef.current = handleChat
 
 
-  // Activate current area whenever currentAreaId changes
-  useEffect(() => {
-    if (currentAreaId && areas[currentAreaId] && !areaLayers) {
-      activateArea(currentAreaId)
-    }
-  }, [currentAreaId, areas, areaLayers])
-
   useEffect(() => {
     dialogOpenRef.current = !!activeNpc || showInteractionMenu
   }, [activeNpc, showInteractionMenu])
@@ -248,56 +237,6 @@ export default function GameV2({ onLeave }) {
     return () => cancelAnimationFrame(rafId)
   }, [zone])
 
-  // Load API key from env var / localStorage / Supabase on mount
-  useEffect(() => {
-    const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
-
-    // Check platform default key from Supabase (auth-gated, safe)
-    if (!sessionApiKey) {
-      loadDefaultApiKey().then(defaultKey => {
-        if (defaultKey) {
-          useStore.getState().setSessionApiKey(defaultKey)
-          setApiKeyLoaded(true)
-          if (isDM && campaignId) broadcastApiKeySync(defaultKey)
-        }
-      })
-    }
-
-    // Check localStorage (set during campaign creation or prior sessions)
-    if (!sessionApiKey && user?.id) {
-      const localKey = getClaudeApiKey(user.id)
-      if (localKey) {
-        useStore.getState().setSessionApiKey(localKey)
-        setApiKeyLoaded(true)
-        if (isDM && campaignId) broadcastApiKeySync(localKey)
-        return
-      }
-    }
-
-    if (!campaignId || !user?.id) {
-      if (sessionApiKey) setApiKeyLoaded(true)
-      return
-    }
-    if (isDM) {
-      loadApiKeyFromSupabase(campaignId, user.id).then(key => {
-        if (key) {
-          useStore.getState().setSessionApiKey(key)
-          broadcastApiKeySync(key)
-        }
-        setApiKeyLoaded(true)
-      }).catch(() => setApiKeyLoaded(true))
-    } else {
-      broadcastRequestApiKey()
-      const warningTimer = setTimeout(() => {
-        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Waiting for DM to share API key...' })
-      }, 5000)
-      const timer = setTimeout(() => setApiKeyLoaded(true), 15000)
-      const unsub = useStore.subscribe((state) => {
-        if (state.sessionApiKey) { clearTimeout(warningTimer); clearTimeout(timer); setApiKeyLoaded(true) }
-      })
-      return () => { clearTimeout(warningTimer); clearTimeout(timer); unsub() }
-    }
-  }, [campaign?.id, user?.id, isDM])
 
   // --- Token list ---
   const tokens = useMemo(() => {
@@ -507,22 +446,6 @@ export default function GameV2({ onLeave }) {
     nextEncounterTurn()
     broadcastEncounterAction({ type: 'next-turn', userId: user?.id || 'system' })
   }, [nextEncounterTurn, user])
-
-  // World load timeout — if zone never loads after 5s, show diagnostic error
-  useEffect(() => {
-    if (zone) return
-    const timer = setTimeout(() => {
-      if (!useStore.getState().currentAreaId) {
-        const state = useStore.getState()
-        const areaKeys = Object.keys(state.areas || {})
-        const briefKeys = Object.keys(state.areaBriefs || {})
-        const campTitle = state.campaign?.title || 'none'
-        const campBriefs = Object.keys(state.campaign?.areaBriefs || {})
-        setWorldLoadError(`No area loaded. Campaign: "${campTitle}". Areas in store: [${areaKeys}]. Briefs in store: [${briefKeys}]. Campaign briefs: [${campBriefs}].`)
-      }
-    }, 5000)
-    return () => clearTimeout(timer)
-  }, [zone])
 
   // --- Helper to start combat from PreCombatMenu ---
   const startCombatFromMenu = useCallback((enemies) => {
