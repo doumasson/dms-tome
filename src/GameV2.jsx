@@ -56,7 +56,6 @@ const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
-const InitiativeTracker_  = lazy(() => import('./components/game/InitiativeTracker'))
 const PauseMenu_          = lazy(() => import('./components/game/PauseMenu'))
 const PartyStatus_        = lazy(() => import('./components/game/PartyStatus'))
 const RulesReference_     = lazy(() => import('./components/game/RulesReference'))
@@ -147,7 +146,6 @@ export default function GameV2({ onLeave }) {
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
-  const [showInitiativeTracker, setShowInitiativeTracker] = useState(false)
   const [showPauseMenu, setShowPauseMenu] = useState(false)
   const [showPartyStatus, setShowPartyStatus] = useState(false)
   const [showRulesReference, setShowRulesReference] = useState(false)
@@ -1170,14 +1168,6 @@ export default function GameV2({ onLeave }) {
             currentTurnIndex={encounter.currentTurn || 0}
             onAction={handleCombatAction}
             onEndTurn={handleEndTurn}
-          />
-        </Suspense>
-      )}
-      {showInitiativeTracker && inCombat && (
-        <Suspense fallback={null}>
-          <InitiativeTracker_
-            encounter={encounter}
-            onClose={() => setShowInitiativeTracker(false)}
           />
         </Suspense>
       )}
