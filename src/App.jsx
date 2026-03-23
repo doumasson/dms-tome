@@ -688,7 +688,27 @@ export default function App() {
       useStore.getState().initializeFactions(factions);
     } else {
       // No campaign data — initialize with minimal defaults so game can load
-      loadCampaign({ title: campaignRecord.name || 'Campaign', scenes: [] });
+      loadCampaign({
+        title: campaignRecord.name || 'Campaign',
+        scenes: [],
+        startArea: 'default-area',
+        areas: {
+          'default-area': {
+            id: 'default-area',
+            name: campaignRecord.name || 'Campaign',
+            palette: [],
+            layers: [],
+            collision: null,
+            tileSize: 32,
+            theme: 'default',
+            npcs: [],
+            width: 20,
+            height: 15,
+          }
+        }
+      });
+      // Activate the default area
+      useStore.getState().activateArea('default-area');
     }
     if (campaignRecord.settings) {
       loadCampaignSettings(campaignRecord.settings);
