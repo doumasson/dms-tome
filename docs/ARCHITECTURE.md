@@ -199,99 +199,99 @@ Agent works through this list in priority order.
 Check boxes as screens are completed in tasks/status.md.
 
 ### Auth Flow
-- [x] Landing page (login / signup CTA)
-- [x] Supabase auth screen
-- [x] Post-login redirect to dashboard
-- [x] Dev auto-login bypass (VITE_DEV_AUTO_LOGIN=true, never in production)
+- [ ] Landing page (login / signup CTA)
+- [ ] Supabase auth screen
+- [ ] Post-login redirect to dashboard
+- [ ] Dev auto-login bypass (VITE_DEV_AUTO_LOGIN=true, never in production)
 
 ### Dashboard
-- [x] Campaign list (my campaigns)
-- [x] Create new campaign button
-- [x] Join campaign via invite code
-- [x] Account settings
+- [ ] Campaign list (my campaigns)
+- [ ] Create new campaign button
+- [ ] Join campaign via invite code
+- [ ] Account settings
 
 ### Campaign Setup
-- [x] New campaign wizard (name, world tone, difficulty)
-- [x] Campaign lobby (host waiting for players)
-- [x] Invite code display and share
-- [x] Player list (who has joined)
+- [ ] New campaign wizard (name, world tone, difficulty)
+- [ ] Campaign lobby (host waiting for players)
+- [ ] Invite code display and share
+- [ ] Player list (who has joined)
 
 ### Character Creation
-- [x] Race selection (all SRD 5.1 races)
-- [x] Class selection (all 12 SRD 5.1 classes)
-- [x] Ability score assignment (standard array / point buy / roll)
-- [x] Background selection
-- [x] Equipment selection
-- [x] Character name and appearance
-- [x] Character review and confirm
-- [x] Character sheet (persistent, viewable during play)
+- [ ] Race selection (all SRD 5.1 races)
+- [ ] Class selection (all 12 SRD 5.1 classes)
+- [ ] Ability score assignment (standard array / point buy / roll)
+- [ ] Background selection
+- [ ] Equipment selection
+- [ ] Character name and appearance
+- [ ] Character review and confirm
+- [ ] Character sheet (persistent, viewable during play)
 
 ### Main Game Screen
-- [x] Scene image (top 80%, full bleed)
-- [x] PixiJS tilemap with token layer
-- [x] Grid overlay (always visible)
-- [x] Fog of war overlay
-- [x] Narrator bar (bottom 20%, collapses and expands)
-- [x] Player input (text + push to talk)
-- [x] HUD: HP bar, AC, spell slots, conditions
-- [x] Initiative order tracker (combat only)
-- [x] Action buttons above narrator bar, thumb-reachable on mobile
-- [x] Bonus action buttons (class specific)
-- [x] Movement remaining indicator (combat only)
-- [x] End turn button (combat only)
+- [ ] Scene image (top 80%, full bleed)
+- [ ] PixiJS tilemap with token layer
+- [ ] Grid overlay (always visible)
+- [ ] Fog of war overlay
+- [ ] Narrator bar (bottom 20%, collapses and expands)
+- [ ] Player input (text + push to talk)
+- [ ] HUD: HP bar, AC, spell slots, conditions
+- [ ] Initiative order tracker (combat only)
+- [ ] Action buttons above narrator bar, thumb-reachable on mobile
+- [ ] Bonus action buttons (class specific)
+- [ ] Movement remaining indicator (combat only)
+- [ ] End turn button (combat only)
 
 ### Pre-Combat Phase
-- [x] Detection zone visual on map
-- [x] Pre-combat choice panel: Sneak / Talk / Pickpocket / Ambush / Charge
-- [x] Stealth check result display
-- [x] Pickpocket result display
-- [x] Perception check result display
+- [ ] Detection zone visual on map
+- [ ] Pre-combat choice panel: Sneak / Talk / Pickpocket / Ambush / Charge
+- [ ] Stealth check result display
+- [ ] Pickpocket result display
+- [ ] Perception check result display
 
 ### Combat
-- [x] Turn order banner with portraits
-- [x] Active player highlight on map
-- [x] Enemy token HP bars
-- [x] Spell targeting overlay (cone / line / sphere SVG)
-- [x] Attack roll display with breakdown
-- [x] Damage roll display
-- [x] Death save UI (3 successes / 3 failures)
-- [x] Concentration tracker
-- [x] Condition icons on tokens
-- [x] Opportunity attack prompt
+- [ ] Turn order banner with portraits
+- [ ] Active player highlight on map
+- [ ] Enemy token HP bars
+- [ ] Spell targeting overlay (cone / line / sphere SVG)
+- [ ] Attack roll display with breakdown
+- [ ] Damage roll display
+- [ ] Death save UI (3 successes / 3 failures)
+- [ ] Concentration tracker
+- [ ] Condition icons on tokens
+- [ ] Opportunity attack prompt
 
 ### NPC Interaction
-- [x] NPC dialogue panel with portrait
-- [x] Skill check prompt (Persuasion / Intimidation / Deception)
-- [x] Skill check result with roll breakdown
-- [x] Faction reputation indicator
-- [x] Trade / barter screen
+- [ ] NPC dialogue panel with portrait
+- [ ] Skill check prompt (Persuasion / Intimidation / Deception)
+- [ ] Skill check result with roll breakdown
+- [ ] Faction reputation indicator
+- [ ] Trade / barter screen
 
 ### Inventory and Equipment
-- [x] Inventory panel with item grid
-- [x] Equipment slots
-- [x] Loot display after combat or search
-- [x] Gold display
-- [x] Item tooltip
-- [x] Use / Equip / Drop actions
+- [ ] Inventory panel with item grid
+- [ ] Equipment slots
+- [ ] Loot display after combat or search
+- [ ] Gold display
+- [ ] Item tooltip
+- [ ] Use / Equip / Drop actions
 
 ### Exploration
-- [x] Search room result
-- [x] Lockpick attempt UI
-- [x] Trap detection and disarm UI
-- [x] Area transition (fade to new scene)
-- [x] Area name indicator
+- [ ] Search room result
+- [ ] Lockpick attempt UI
+- [ ] Trap detection and disarm UI
+- [ ] Area transition (fade to new scene)
+- [ ] Area name indicator
 
 ### Session Management
-- [x] Session resume screen
-- [x] Player disconnected notification
-- [x] Host migration if host drops
-- [x] Session end summary (XP, loot)
+- [ ] Session resume screen
+- [ ] Player disconnected notification
+- [ ] Host migration if host drops
+- [ ] Session end summary (XP, loot)
 
 ### Leveling Up
-- [x] Level up notification
-- [x] Stat increase selection
-- [x] New ability and spell selection
-- [x] Updated character sheet confirmation
+- [ ] Level up notification
+- [ ] Stat increase selection
+- [ ] New ability and spell selection
+- [ ] Updated character sheet confirmation
 
 ---
 
