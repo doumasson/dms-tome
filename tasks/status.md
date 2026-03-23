@@ -299,7 +299,8 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Campaign loading — faction initialization on campaign load via `initializeFactions`
 - [x] NPC dialogue integration — faction context injected into `buildNpcSystemPrompt`, NPCs greet/help based on player reputation with their faction
 - [x] Demo campaign wired — "Millhaven Guard" and "Goblin Tribe" factions, village NPCs affiliated with guard
-- Reputation affects NPC greeting, willingness to help, prices (discounts/surcharges), and future special favors
+- [x] Faction reputation UI — FactionReputation modal component, color-coded reputation bars, HUD button (⚔ FACTION), accessible from action bar
+- Reputation affects NPC greeting, willingness to help, prices (discounts/surcharges), and special favors
 - 327 tests, 0 failures.
 
 ---
@@ -336,3 +337,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** 6 more class abilities: Stunning Strike (Monk), Bardic Inspiration (Bard), Channel Divinity: Turn Undead (Cleric), Wild Shape (Druid), Hunter's Mark (Ranger), Quickened Spell (Sorcerer). All 12 classes now combat-functional. Wild Shape revert on 0 HP. 294 tests.
 - **2026-03-22:** Social skill checks in NPC dialog — Persuasion/Intimidation/Deception/Insight checks triggered by AI NPC, inline roll UI, results feed back to shape NPC response, multiplayer broadcast. 306 tests.
 - **2026-03-22:** Faction system implementation — complete reputation tracking (-100 to +100), faction storage in campaign JSON, AI NPC personality injection based on player reputation, NPC greeting/pricing/help modifiers based on faction standing (Hostile/Unfriendly/Neutral/Friendly/Revered). Demo campaign wired with Guard & Goblin Tribe factions. All 12 classes now combat-functional.
+- **2026-03-22:** Faction reputation UI — FactionReputation modal displays all factions with color-coded reputation bars (-100 to +100), ⚔ FACTION button on HUD action bar for player visibility of standing. Lazy loaded for performance.
