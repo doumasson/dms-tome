@@ -27,7 +27,6 @@ import './hud/hud.css'
 
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
-const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameModalsRenderer  = lazy(() => import('./components/game/GameModalsRenderer'))
 
 // ─── D&D 5e XP thresholds (inlined from LevelUpModal to avoid static import) ──
