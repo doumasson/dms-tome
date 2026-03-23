@@ -16,7 +16,7 @@ const CharacterSelect  = lazy(() => import('./components/CharacterSelect'));
 const CharacterProfile = lazy(() => import('./components/CharacterProfile'));
 const CampaignEndModal = lazy(() => import('./components/CampaignEndModal'));
 const CampaignManager  = lazy(() => import('./components/CampaignManager'));
-const GameLayout       = lazy(() => import('./components/GameLayout'));
+const GameLayout       = lazy(() => import('./components/game/GameLayout'));
 
 function D20Icon() {
   return (
