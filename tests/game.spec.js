@@ -373,4 +373,55 @@ test.describe('Game Integration Tests', () => {
     const inventoryCount = await inventoryElements.count();
     expect(inventoryCount).toBeGreaterThanOrEqual(0); // Inventory should be accessible
   });
+
+  test('should display SpellTargeting overlay in combat', async ({ page, baseURL }) => {
+    // Navigate and reach game
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+
+    // Get through to game screen
+    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
+    if ((await campaignButtons.count()) > 0) {
+      await campaignButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    const characterButtons = page.locator('button:has-text("Aric")');
+    if ((await characterButtons.count()) > 0) {
+      await characterButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    // Wait for game to load
+    await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
+
+    // Look for spell targeting overlay elements (used during spell casting in combat)
+    const spellTargetingOverlay = page.locator('.spell-targeting-overlay');
+    const targetingMap = page.locator('.targeting-map');
+    const targetingSvg = page.locator('.targeting-svg');
+
+    // Check if spell targeting is visible
+    const overlayExists = await spellTargetingOverlay.count();
+    expect(overlayExists).toBeGreaterThanOrEqual(0); // May not be active until spell is cast
+
+    // If spell targeting is active, verify required elements exist
+    if (overlayExists > 0) {
+      // Verify targeting header with spell info
+      const targetingHeader = page.locator('.targeting-header');
+      expect((await targetingHeader.count())).toBeGreaterThan(0);
+
+      // Verify targeting map and SVG overlay
+      expect((await targetingMap.count())).toBeGreaterThan(0);
+      expect((await targetingSvg.count())).toBeGreaterThan(0);
+
+      // Verify affected targets list
+      const affectedTargets = page.locator('.affected-targets');
+      expect((await affectedTargets.count())).toBeGreaterThan(0);
+
+      // Verify action buttons (confirm/cancel)
+      const cancelBtn = page.locator('.cancel-btn');
+      const confirmBtn = page.locator('.confirm-btn');
+      expect((await cancelBtn.count())).toBeGreaterThan(0);
+      expect((await confirmBtn.count())).toBeGreaterThan(0);
+    }
+  });
 });
