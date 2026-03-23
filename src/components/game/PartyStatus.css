@@ -1,0 +1,532 @@
+.party-status-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 800;
+  backdrop-filter: blur(4px);
+}
+
+.party-status-panel {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a1a 100%);
+  border: 2px solid #d4af37;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.25), 0 0 20px rgba(0, 0, 0, 0.9);
+  padding: 20px;
+  max-width: 800px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  animation: partyStatusSlideIn 0.3s ease-out;
+}
+
+@keyframes partyStatusSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.party-status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+.party-status-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #d4af37;
+  font-family: 'Cinzel', Georgia, serif;
+  letter-spacing: 1px;
+}
+
+.party-status-close {
+  background: none;
+  border: none;
+  color: #d4af37;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.party-status-close:hover {
+  background: rgba(212, 175, 55, 0.15);
+}
+
+/* Party Overview */
+.party-overview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 6px;
+}
+
+.overview-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 4px;
+}
+
+.overview-stat.healthy {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.overview-stat.wounded {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.overview-stat.dead {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.stat-label {
+  font-size: 10px;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  font-weight: 600;
+}
+
+.stat-icon {
+  font-size: 16px;
+}
+
+.stat-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffd700;
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+/* Controls */
+.party-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.sort-label {
+  color: #d4af37;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.sort-select {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  color: #d4af37;
+  padding: 4px 8px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.sort-select:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #e8c547;
+}
+
+/* Content Area */
+.party-content {
+  flex: 1;
+  min-height: 300px;
+  overflow-y: auto;
+}
+
+.empty-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+.empty-text {
+  color: #d4af37;
+  text-align: center;
+  font-style: italic;
+  font-size: 13px;
+}
+
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Member Card */
+.member-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.member-card:hover {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.member-card.dead {
+  opacity: 0.6;
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Member Header */
+.member-header {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.member-header:hover {
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.member-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+.member-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.member-name-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.member-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e8d5a3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-class {
+  font-size: 10px;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  font-weight: 600;
+}
+
+/* HP Status Display */
+.member-hp-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.hp-bar-mini {
+  flex: 1;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 7px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.hp-bar-fill-mini {
+  height: 100%;
+  transition: width 0.3s ease;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.hp-status-label {
+  font-size: 10px;
+  color: #10b981;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  min-width: 65px;
+  text-align: right;
+}
+
+.hp-status-label.wounded {
+  color: #f59e0b;
+}
+
+.hp-status-label.critical {
+  color: #ef4444;
+}
+
+.hp-status-label.dead {
+  color: #9ca3af;
+}
+
+/* Conditions Badge */
+.conditions-badge-compact {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid #f59e0b;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  color: #f59e0b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Expand Icon */
+.expand-icon {
+  font-size: 10px;
+  color: #d4af37;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* Member Details */
+.member-details {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(212, 175, 55, 0.1);
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-title {
+  font-size: 11px;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.detail-label {
+  color: #b8a575;
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.detail-value {
+  color: #e8d5a3;
+  font-weight: 600;
+}
+
+/* HP Bars */
+.hp-bar-large {
+  flex: 1;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  overflow: hidden;
+  min-width: 120px;
+}
+
+.hp-bar-fill-large {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Conditions List */
+.conditions-list-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.condition-tag {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-size: 10px;
+  color: #fca5a5;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+/* Resources */
+.resource-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.resource-label {
+  color: #d4af37;
+  font-weight: 600;
+}
+
+.resource-value {
+  color: #8bc8ff;
+  font-weight: 600;
+}
+
+/* Footer */
+.party-status-footer {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.party-status-button {
+  flex: 1;
+  padding: 10px 16px;
+  background: rgba(212, 175, 55, 0.2);
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  color: #d4af37;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+}
+
+.party-status-button:hover {
+  background: rgba(212, 175, 55, 0.3);
+  border-color: #e8c547;
+  color: #e8c547;
+}
+
+.party-status-button:active {
+  transform: scale(0.98);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 800px) {
+  .party-status-panel {
+    max-width: 98%;
+    padding: 16px;
+  }
+
+  .party-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .member-header {
+    padding: 10px 12px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .member-info {
+    min-width: auto;
+    flex: 1;
+    flex-shrink: 0;
+  }
+
+  .member-hp-status {
+    width: 100%;
+    min-width: auto;
+    order: 3;
+  }
+
+  .conditions-badge-compact {
+    order: 4;
+  }
+
+  .expand-icon {
+    order: 5;
+  }
+
+  .member-details {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+}
+
+/* Scrollbar styling */
+.party-status-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.party-status-panel::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.party-status-panel::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+}
+
+.party-status-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
+}

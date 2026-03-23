@@ -58,6 +58,7 @@ const CharacterInventory  = lazy(() => import('./components/game/CharacterInvent
 const CombatLog           = lazy(() => import('./components/game/CombatLog'))
 const InitiativeTracker   = lazy(() => import('./components/game/InitiativeTracker'))
 const TurnManager         = lazy(() => import('./components/game/TurnManager'))
+const PartyStatus         = lazy(() => import('./components/game/PartyStatus'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
