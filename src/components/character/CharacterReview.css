@@ -1,0 +1,313 @@
+/* Character Review - Final confirmation before creation */
+
+.character-review-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a1a 100%);
+  padding: 24px;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+  gap: 32px;
+}
+
+/* Header */
+.review-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.review-header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #d4af37;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.review-header p {
+  font-size: 16px;
+  color: #aaa;
+  font-family: 'Georgia', serif;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Review grid */
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Review section */
+.review-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: rgba(42, 42, 26, 0.6);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+}
+
+.review-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #d4af37;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  padding-bottom: 8px;
+}
+
+/* Stat rows */
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  gap: 12px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 14px;
+  color: #e8d5a3;
+  font-weight: 600;
+  text-align: right;
+}
+
+.stat-value.hp {
+  color: #2ecc71;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.stat-value.ac {
+  color: #f39c12;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Appearance note */
+.appearance-note {
+  padding: 12px;
+  background: rgba(212, 175, 55, 0.1);
+  border-left: 2px solid rgba(212, 175, 55, 0.4);
+  border-radius: 2px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #ccc;
+  font-family: 'Georgia', serif;
+  margin-top: 8px;
+}
+
+.appearance-note strong {
+  color: #d4af37;
+}
+
+/* Abilities section */
+.abilities-section {
+  grid-column: 1 / -1;
+}
+
+.abilities-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.ability-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px 12px;
+  background: rgba(26, 26, 26, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.ability-abbr {
+  font-size: 11px;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ability-score {
+  font-size: 24px;
+  font-weight: 700;
+  color: #e8d5a3;
+  line-height: 1;
+}
+
+.ability-mod {
+  font-size: 11px;
+  color: #999;
+  font-weight: 600;
+}
+
+/* Combat section */
+.combat-section {
+  grid-column: 1 / -1;
+}
+
+/* Action buttons */
+.review-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.edit-button {
+  padding: 12px 24px;
+  background: #555;
+  color: #e8d5a3;
+  border: 1px solid #666;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Cinzel', Georgia, serif;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  min-width: 160px;
+}
+
+.edit-button:hover {
+  background: #666;
+  border-color: #777;
+  transform: scale(1.05);
+}
+
+.edit-button:active {
+  transform: scale(0.98);
+}
+
+.confirm-button {
+  padding: 12px 24px;
+  background: #d4af37;
+  color: #1a1a1a;
+  border: 1px solid #a0821d;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Cinzel', Georgia, serif;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  min-width: 160px;
+}
+
+.confirm-button:hover {
+  background: #e8d5a3;
+  color: #0a0a0a;
+  transform: scale(1.05);
+}
+
+.confirm-button:active {
+  transform: scale(0.98);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .character-review-container {
+    padding: 16px;
+    gap: 24px;
+  }
+
+  .review-header h1 {
+    font-size: 28px;
+  }
+
+  .review-header p {
+    font-size: 14px;
+  }
+
+  .review-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .abilities-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .ability-box {
+    padding: 12px 8px;
+  }
+
+  .ability-score {
+    font-size: 20px;
+  }
+
+  .review-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .edit-button,
+  .confirm-button {
+    width: 100%;
+  }
+}
+
+@media (max-height: 600px) {
+  .character-review-container {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .review-header h1 {
+    font-size: 24px;
+  }
+
+  .review-section {
+    padding: 16px;
+  }
+
+  .abilities-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+
+  .ability-box {
+    padding: 8px 6px;
+    gap: 2px;
+  }
+
+  .ability-score {
+    font-size: 18px;
+  }
+
+  .ability-mod {
+    font-size: 9px;
+  }
+}
