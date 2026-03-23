@@ -429,6 +429,22 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 19 new tests covering all tactical priorities, flanking, retreat logic
 - 480 tests, 0 failures.
 
+### Spell Preparation System ✅ COMPLETE
+- [x] Spell preparation mechanics — Clerics, Druids, Monks, Paladins, Wizards prepare spells at rest
+- [x] Prepared spell formula — Class level + ability modifier (WIS for Cleric/Druid/Monk, CHA for Paladin, INT for Wizard)
+- [x] Minimum spell preparation — Minimum 1 spell prepared even at low levels
+- [x] Spell availability filtering — Spells filtered by class, level requirement, and character level
+- [x] Cantrip vs leveled spells — Cantrips always available, leveled spells limited by prepared count
+- [x] Validation system — Prevents preparing more spells than allowed; checks spell availability
+- [x] Non-preparation casters — Sorcerers, Bards, Warlocks bypass system and know all spells
+- [x] Character integration — getPreparedSpells, setPreparedSpells for character spell management
+- [x] UI descriptions — describeSpellPrepStatus provides human-readable preparation status
+- [x] Spell readiness check — isSpellPrepared determines if spell is available for casting
+- Adds strategic depth to character building and rest decisions
+- Core D&D 5e mechanic differentiating preparation vs knowledge casters
+- 24 new tests covering all spell preparation scenarios and edge cases
+- 504 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -446,6 +462,7 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-22:** Spell Preparation System complete — Clerics, Druids, Monks, Paladins, Wizards prepare spells using class level + ability modifier formula. Spell availability filtered by class and level. Validation prevents over-preparation. Non-prep casters (Sorcerer, Bard, Warlock) bypass system. 24 new tests. 504 tests passing.
 - **2026-03-22:** Minion Tactical Coordination complete — Intelligent minion support with boss protection priority, focus fire, flanking bonuses, and tactical retreat. Minions identified and routed through tactical AI. Boss fights now significantly harder with coordinated minion support. 19 new tests. 480 tests passing.
 - **2026-03-22:** Dynamic Encounter Difficulty Warnings and Scaling complete — Party vs enemy power calculations, 5-tier difficulty ratings, context-aware warnings for Hard/Deadly encounters, auto-scaling suggestions, DM narrator integration. Teaches balance concepts and helps strategic decisions. 26 new tests. 461 tests passing.
 - **2026-03-22:** Boss Ability Execution in Combat complete — AI decides when to activate abilities, full effect resolution (damage/healing/conditions/minions), legendary action tracking, multiplayer broadcast. Bosses now escalate tactically through phases. Fixed flaky randomEncounters test. 435 tests passing.
