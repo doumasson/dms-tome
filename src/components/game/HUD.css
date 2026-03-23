@@ -1,0 +1,249 @@
+/* HUD Component - Top-left character status display */
+
+.hud-container {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(26, 26, 26, 0.85);
+  border: 2px solid #d4af37;
+  border-radius: 4px;
+  padding: 12px;
+  min-width: 180px;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+  backdrop-filter: blur(4px);
+}
+
+/* Section styling */
+.hud-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.hud-section + .hud-section {
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  padding-top: 8px;
+}
+
+/* HP Bar Section */
+.hud-hp {
+  min-width: 160px;
+}
+
+.hp-label {
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 11px;
+}
+
+.hp-bar-wrapper {
+  height: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hp-bar {
+  height: 100%;
+  background: #2ecc71;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+}
+
+.hp-text {
+  font-size: 11px;
+  text-align: center;
+  color: #e8d5a3;
+  font-weight: 600;
+}
+
+.hp-text.dying {
+  color: #e74c3c;
+  font-weight: 700;
+  animation: pulse-dying 1s infinite;
+}
+
+@keyframes pulse-dying {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* AC Badge */
+.hud-ac {
+  align-items: center;
+}
+
+.ac-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 4px;
+  padding: 8px 12px;
+  min-width: 60px;
+  justify-content: center;
+}
+
+.ac-label {
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 10px;
+}
+
+.ac-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #d4af37;
+}
+
+/* Spell Slots Section */
+.hud-spells {
+  min-width: 160px;
+}
+
+.spells-label {
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 11px;
+}
+
+.spell-slots-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spell-slot-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slot-level {
+  font-weight: 700;
+  color: #d4af37;
+  min-width: 20px;
+  text-align: center;
+}
+
+.slot-pips {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.slot-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #d4af37;
+}
+
+.slot-pip.available {
+  background: #d4af37;
+  box-shadow: 0 0 4px rgba(212, 175, 55, 0.6);
+}
+
+.slot-pip.used {
+  background: transparent;
+  opacity: 0.4;
+}
+
+/* Conditions Section */
+.hud-conditions {
+  min-width: 160px;
+}
+
+.conditions-label {
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 11px;
+}
+
+.conditions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.condition-tag {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-size: 10px;
+  color: #e8d5a3;
+  white-space: nowrap;
+}
+
+.condition-tag.overflow {
+  background: rgba(200, 80, 80, 0.2);
+  border-color: rgba(200, 80, 80, 0.5);
+  color: #e8b8b8;
+}
+
+/* Mobile adjustments */
+@media (max-height: 600px) {
+  .hud-container {
+    top: 8px;
+    left: 8px;
+    padding: 8px;
+    gap: 8px;
+    min-width: 150px;
+    font-size: 11px;
+  }
+
+  .hp-bar-wrapper {
+    height: 12px;
+  }
+
+  .ac-badge {
+    padding: 6px 10px;
+  }
+
+  .ac-value {
+    font-size: 14px;
+  }
+
+  .slot-pip {
+    width: 6px;
+    height: 6px;
+  }
+
+  .condition-tag {
+    padding: 2px 4px;
+    font-size: 9px;
+  }
+}
+
+/* Tablet/landscape adjustments */
+@media (max-width: 1024px) and (max-height: 800px) {
+  .hud-container {
+    min-width: 140px;
+  }
+
+  .spell-slots-container {
+    gap: 4px;
+  }
+
+  .slot-pips {
+    gap: 3px;
+  }
+}

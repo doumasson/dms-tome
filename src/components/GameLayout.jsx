@@ -6,6 +6,7 @@ import ScenePanel from './ScenePanel';
 import EncounterView from './EncounterView';
 import NarratorPanel from './NarratorPanel';
 import PlayerStatusBar from './PlayerStatusBar';
+import HUD from './game/HUD';
 import TurnAnnouncement from './TurnAnnouncement';
 import DiceTray from './DiceTray';
 import LootGenerator from './LootGenerator';
@@ -140,6 +141,8 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
               trigger={turnAnnounceTrigger}
             />
           )}
+          {/* HUD overlay - character status in top-left */}
+          <HUD />
           {/* Floating narrator overlay */}
           <NarratorPanel />
         </div>
