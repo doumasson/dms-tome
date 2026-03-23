@@ -491,6 +491,12 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 49 comprehensive tests covering all resistance types and interactions
 - 618 tests, 0 failures.
 
+### Branding Refactor ✅ COMPLETE
+- [x] Updated product name to "DungeonMind"
+- [x] Changed all user-facing AI references from "Dungeon Master" to "The Narrator"
+- [x] Updated 13 source files: NarratorPanel, ApiKeyGate, ApiKeySettings, CreateCampaign, CampaignEndModal, InteractionZone, CombatPhase, narratorApi, narratorApi.test, encounterSlice, enemyAi, useRandomEncounters, product.js
+- [x] Build passing (979ms), branding consistency verified across UI
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
