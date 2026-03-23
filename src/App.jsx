@@ -720,6 +720,13 @@ export default function App() {
           }
         };
     useStore.getState().loadAreaWorld(world);
+
+    // Activate the starting area to properly initialize layers and collision
+    const startAreaId = world.startArea || Object.keys(world.areas || {})[0];
+    if (startAreaId && world.areas?.[startAreaId]) {
+      useStore.getState().activateArea(startAreaId);
+    }
+
     if (campaignRecord.settings) {
       loadCampaignSettings(campaignRecord.settings);
     }
