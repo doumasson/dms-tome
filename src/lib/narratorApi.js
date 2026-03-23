@@ -175,10 +175,18 @@ Rules:
 - If the player asks about something you would know, share it helpfully.
 - If they ask about something outside your knowledge, say so in character.
 ${npc.sideQuest ? '- If appropriate, mention your side quest to interest the player.' : ''}
+- When a player tries to PERSUADE, INTIMIDATE, DECEIVE, or INSIGHT-READ you, include a rollRequest. Set the DC based on how hard the ask is: easy (DC 10), medium (DC 13), hard (DC 15), very hard (DC 18), near impossible (DC 20). Choose the appropriate skill: Persuasion for friendly convincing, Intimidation for threats, Deception for lies, Insight for reading motives.
+- When a SKILL CHECK RESULT appears (e.g. "rolled Persuasion: 18 — Success!"), you MUST honor the result. SUCCESS means the player's approach worked — respond accordingly (reveal secrets, agree to help, lower prices, etc.). FAILURE means you resist or see through them. Never ignore roll results.
 ${steerHint}
 
 Respond ONLY with a raw JSON object — no markdown, no code fences:
-{"narrative":"Your in-character response here."}`
+{"narrative":"Your in-character response here.","rollRequest":null}
+
+rollRequest rules:
+- Set to null for normal conversation. Only include when the player is actively trying to influence you.
+- Format: {"skill":"Persuasion","dc":13,"reason":"Convince the guard to let you pass"}
+- Valid skills: Persuasion, Intimidation, Deception, Insight
+- Do NOT request a roll if a roll result was just provided — narrate the outcome instead.`
 }
 
 // Generate 2-3 continuation scenes when a campaign concludes and players want to keep playing

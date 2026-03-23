@@ -284,6 +284,14 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - Bardic Inspiration die consumed on near-miss attack rolls (turns miss→hit)
 - 294 tests, 0 failures.
 
+### Social Skill Checks in NPC Dialog
+- [x] NPC system prompt updated — AI NPC requests Persuasion/Intimidation/Deception/Insight checks with DC based on difficulty
+- [x] Inline skill check UI in NPC dialog — shows skill, DC, modifier (with proficiency/expertise indicators), Roll d20 button
+- [x] Roll result fed back into NPC conversation — AI must honor SUCCESS/FAILURE outcomes in subsequent response
+- [x] Multiplayer broadcast — social check results broadcast via `skill-check-result` with `npc-dialog` context
+- [x] Narrator log integration — roll results posted to session log so all players see them
+- 306 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -316,3 +324,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Hide, Help, Use Item combat actions. All standard 5e actions now functional in combat bar.
 - **2026-03-22:** Extra Attack + 10 class abilities implemented: Fighter (Second Wind, Action Surge), Barbarian (Rage, Reckless Attack), Rogue (Sneak Attack, Cunning Action), Paladin (Divine Smite, Lay on Hands), Monk (Patient Defense). 288 tests.
 - **2026-03-22:** 6 more class abilities: Stunning Strike (Monk), Bardic Inspiration (Bard), Channel Divinity: Turn Undead (Cleric), Wild Shape (Druid), Hunter's Mark (Ranger), Quickened Spell (Sorcerer). All 12 classes now combat-functional. Wild Shape revert on 0 HP. 294 tests.
+- **2026-03-22:** Social skill checks in NPC dialog — Persuasion/Intimidation/Deception/Insight checks triggered by AI NPC, inline roll UI, results feed back to shape NPC response, multiplayer broadcast. 306 tests.

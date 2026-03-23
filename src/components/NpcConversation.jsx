@@ -3,11 +3,14 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 const SPEECH_SUPPORTED = !!SpeechRecognition
 import { callNarrator, buildNpcSystemPrompt } from '../lib/narratorApi'
+import { broadcastEncounterAction } from '../lib/liveChannel'
+import { getSkillBonus } from '../lib/derivedStats'
 import useStore from '../store/useStore'
 
 /**
  * Shared conversation component for NPC dialog and story cutscene.
- * Handles: message display, text input, AI calls, prompt counting.
+ * Handles: message display, text input, AI calls, prompt counting,
+ * and social skill checks (Persuasion, Intimidation, Deception, Insight).
  */
 export default function NpcConversation({
   npc,
@@ -21,6 +24,7 @@ export default function NpcConversation({
   const campaign = useStore(s => s.campaign)
   const storyFlags = useStore(s => s.storyFlags)
   const sessionApiKey = useStore(s => s.sessionApiKey)
+  const myCharacter = useStore(s => s.myCharacter)
 
   const [messages, setMessages] = useState(() => {
     if (initialMessage) {
@@ -32,6 +36,10 @@ export default function NpcConversation({
   const [loading, setLoading] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const pttRecogRef = useRef(null)
+
+  // Social skill check state
+  const [pendingRoll, setPendingRoll] = useState(null) // { skill, dc, reason }
+  const [rollResult, setRollResult] = useState(null)    // { d20, total, pass, skill }
 
   const startPTT = useCallback(() => {
     if (!SPEECH_SUPPORTED) return
@@ -61,39 +69,31 @@ export default function NpcConversation({
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages.length])
+  }, [messages.length, pendingRoll, rollResult])
 
   useEffect(() => {
     onPromptCount?.(promptCount)
   }, [promptCount, onPromptCount])
 
-  async function handleSend(text) {
-    const trimmed = (text || input).trim()
-    if (!trimmed || loading || disabled || hardLimited) return
+  /** Compute skill modifier for the active character */
+  function getSkillModifier(skill) {
+    if (!myCharacter) return { bonus: 0, proficient: false, expertise: false }
+    const stats = myCharacter.stats || myCharacter.abilityScores || {}
+    const proficientSkills = myCharacter.skills || []
+    const expertiseSkills = myCharacter.expertiseSkills || []
+    const level = myCharacter.level || 1
+    return getSkillBonus(stats, skill, proficientSkills, expertiseSkills, level)
+  }
 
+  /** Send AI call and handle response (narrative + rollRequest) */
+  async function sendToNpc(allMessages, newCount) {
     const apiKey = sessionApiKey
     if (!apiKey) return
 
-    if (maxPrompts && promptCount >= maxPrompts) {
-      setHardLimited(true)
-      setMessages(prev => [...prev, {
-        role: 'npc', speaker: npc.name,
-        text: `${npc.name} has said all they have to say.`,
-      }])
-      return
-    }
-
-    const playerMsg = { role: 'player', speaker: 'You', text: trimmed }
-    setMessages(prev => [...prev, playerMsg])
-    setInput('')
     setLoading(true)
-
-    const newCount = promptCount + 1
-    setPromptCount(newCount)
-
     try {
       const systemPrompt = buildNpcSystemPrompt(npc, campaign, storyFlags, newCount, isCritical)
-      const history = [...messages, playerMsg].map(m => ({
+      const history = allMessages.map(m => ({
         role: m.role === 'npc' ? 'assistant' : 'user',
         content: m.text,
       }))
@@ -105,8 +105,13 @@ export default function NpcConversation({
       })
 
       const dialogue = result?.narrative || '...'
+      const npcMsg = { role: 'npc', speaker: npc.name, text: dialogue }
+      setMessages(prev => [...prev, npcMsg])
 
-      setMessages(prev => [...prev, { role: 'npc', speaker: npc.name, text: dialogue }])
+      // Check for social skill check request
+      if (result?.rollRequest && result.rollRequest.skill && result.rollRequest.dc) {
+        setPendingRoll(result.rollRequest)
+      }
 
       if (isCritical && newCount >= 7 && newCount < (maxPrompts || 10)) {
         setTimeout(() => {
@@ -125,6 +130,79 @@ export default function NpcConversation({
     } finally {
       setLoading(false)
     }
+  }
+
+  async function handleSend(text) {
+    const trimmed = (text || input).trim()
+    if (!trimmed || loading || disabled || hardLimited || pendingRoll) return
+
+    const apiKey = sessionApiKey
+    if (!apiKey) return
+
+    if (maxPrompts && promptCount >= maxPrompts) {
+      setHardLimited(true)
+      setMessages(prev => [...prev, {
+        role: 'npc', speaker: npc.name,
+        text: `${npc.name} has said all they have to say.`,
+      }])
+      return
+    }
+
+    const playerMsg = { role: 'player', speaker: 'You', text: trimmed }
+    const updated = [...messages, playerMsg]
+    setMessages(updated)
+    setInput('')
+
+    const newCount = promptCount + 1
+    setPromptCount(newCount)
+
+    await sendToNpc(updated, newCount)
+  }
+
+  /** Handle the d20 roll for a social skill check */
+  async function handleSocialRoll() {
+    if (!pendingRoll) return
+
+    const skill = pendingRoll.skill
+    const dc = pendingRoll.dc
+    const { bonus, proficient, expertise } = getSkillModifier(skill)
+    const d20 = Math.floor(Math.random() * 20) + 1
+    const total = d20 + bonus
+    const pass = total >= dc
+    const charName = myCharacter?.name || 'You'
+
+    const resultText = `${charName} rolled ${skill}: ${total} (d20: ${d20} + ${bonus}) — ${pass ? 'Success!' : 'Failure'}`
+
+    // Add roll result to conversation
+    const rollMsg = { role: 'player', speaker: charName, text: resultText }
+    const updatedMessages = [...messages, rollMsg]
+    setMessages(updatedMessages)
+
+    // Broadcast to other players
+    broadcastEncounterAction({
+      type: 'skill-check-result',
+      characterName: charName,
+      skill,
+      total,
+      pass,
+      context: 'npc-dialog',
+      npcName: npc.name,
+    })
+
+    // Also add to narrator log so other players see it
+    const { addNarratorMessage } = useStore.getState()
+    addNarratorMessage({ role: 'user', speaker: charName, text: `[${npc.name}] ${resultText}` })
+
+    setRollResult({ d20, total, pass, skill, bonus, proficient, expertise })
+    setPendingRoll(null)
+
+    // After showing result briefly, send follow-up to NPC for outcome narration
+    setTimeout(async () => {
+      setRollResult(null)
+      const newCount = promptCount + 1
+      setPromptCount(newCount)
+      await sendToNpc(updatedMessages, newCount)
+    }, 1800)
   }
 
   function handleSubmit(e) {
@@ -151,7 +229,33 @@ export default function NpcConversation({
         )}
       </div>
 
-      {!disabled && !hardLimited && (
+      {/* Social Skill Check Panel — inline in NPC dialog */}
+      {pendingRoll && !rollResult && (
+        <SocialCheckInline
+          skill={pendingRoll.skill}
+          dc={pendingRoll.dc}
+          reason={pendingRoll.reason}
+          modifier={getSkillModifier(pendingRoll.skill)}
+          onRoll={handleSocialRoll}
+        />
+      )}
+
+      {/* Roll result display */}
+      {rollResult && (
+        <div style={{
+          padding: '10px 16px', textAlign: 'center', fontFamily: 'Cinzel, serif',
+          background: 'rgba(20,16,12,0.9)', borderTop: '1px solid #c9a84c',
+        }}>
+          <span style={{
+            fontSize: 20, fontWeight: 'bold',
+            color: rollResult.pass ? '#44aa44' : '#cc3333',
+          }}>
+            {rollResult.total} — {rollResult.pass ? 'SUCCESS' : 'FAILURE'}
+          </span>
+        </div>
+      )}
+
+      {!disabled && !hardLimited && !pendingRoll && !rollResult && (
         <form onSubmit={handleSubmit} className="npc-conv-input-row">
           <input
             className="npc-conv-input"
@@ -183,6 +287,38 @@ export default function NpcConversation({
       {hardLimited && (
         <div className="npc-conv-limited">The conversation has concluded.</div>
       )}
+    </div>
+  )
+}
+
+/**
+ * Inline social skill check prompt — appears inside NPC dialog.
+ * Shows skill name, DC, modifier, and a Roll button.
+ */
+function SocialCheckInline({ skill, dc, reason, modifier, onRoll }) {
+  const { bonus, proficient, expertise } = modifier
+  return (
+    <div style={{
+      padding: '12px 16px', textAlign: 'center', fontFamily: 'Cinzel, serif',
+      background: 'rgba(20,16,12,0.95)', borderTop: '2px solid #d4af37',
+      color: '#e8dcc8',
+    }}>
+      <div style={{ fontSize: 15, color: '#d4af37', marginBottom: 4 }}>
+        {skill} Check
+        {expertise && <span style={{ fontSize: 11, color: '#44cc66', marginLeft: 6 }}>(expertise)</span>}
+        {proficient && !expertise && <span style={{ fontSize: 11, color: '#88aaff', marginLeft: 6 }}>(proficient)</span>}
+      </div>
+      {reason && <div style={{ fontSize: 11, marginBottom: 8, opacity: 0.7 }}>{reason}</div>}
+      <div style={{ fontSize: 18, marginBottom: 10 }}>
+        Modifier: <span style={{ color: '#d4af37' }}>{bonus >= 0 ? '+' : ''}{bonus}</span>
+      </div>
+      <button onClick={onRoll} style={{
+        width: '100%', padding: '10px 0', background: '#d4af37', color: '#1a1614',
+        border: 'none', borderRadius: 4, cursor: 'pointer', fontFamily: 'Cinzel, serif',
+        fontSize: 15, fontWeight: 'bold', letterSpacing: 1,
+      }}>
+        Roll d20
+      </button>
     </div>
   )
 }
