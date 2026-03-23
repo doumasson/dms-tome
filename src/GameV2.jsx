@@ -226,6 +226,11 @@ export default function GameV2({ onLeave }) {
   if (effectsHandleChatRef) handleChatRef.current = effectsHandleChatRef.current
   if (effectsHandleInteractRef) handleInteractRef.current = effectsHandleInteractRef.current
 
+  // Create stable handler from useGameEffects chat ref
+  const handleChat = useCallback((text) => {
+    if (handleChatRef.current) return handleChatRef.current(text)
+  }, [])
+
   // --- Game tokens and nearby NPCs ---
   const { tokens, nearbyNpcs } = useGameTokens({
     zone, playerPos, myCharacter, inCombat, encounter, activeNpc,
