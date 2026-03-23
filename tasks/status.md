@@ -475,6 +475,22 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 35 new tests for world interactions
 - 569 tests, 0 failures.
 
+### Damage Types and Resistances System ✅ COMPLETE
+- [x] 13 damage types — Bludgeoning, piercing, slashing, fire, cold, lightning, thunder, poison, acid, psychic, radiant, necrotic, force
+- [x] Damage resistances — Half damage reduction per damage type
+- [x] Damage vulnerabilities — Double damage per D&D 5e rules
+- [x] Damage immunities — Complete immunity to specific damage types
+- [x] Nonmagical damage handling — Creatures immune to nonmagical weapons (e.g., ghosts)
+- [x] Racial resistances — Dwarf/Halfling poison, Tiefling fire (per SRD)
+- [x] Condition-based damage modification — Barbarian rage B/P/S resist, petrified 25% reduction
+- [x] Equipment-based resistances — Potions of Fire Resistance, magical armor bonuses
+- [x] Compilation system — getAllDamageResistances aggregates from race/class/items/conditions
+- [x] Magical vs nonmagical detection — Distinguishes spell/magical weapon vs mundane weapon damage
+- Enables proper D&D 5e damage calculations for complex encounters
+- Supports boss mechanics with resistances/vulnerabilities
+- 49 comprehensive tests covering all resistance types and interactions
+- 618 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -492,6 +508,7 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-22:** Damage Types and Resistances System complete — 13 D&D 5e damage types (physical/elemental/exotic). Resistance/vulnerability/immunity mechanics with proper interactions. Racial resistances (Dwarf poison, Tiefling fire), condition modifiers (Barbarian rage, petrified), equipment bonuses. Nonmagical damage immunity for ghosts. 49 comprehensive tests. 618 tests passing.
 - **2026-03-22:** World Interactions Test Suite complete — Comprehensive 35-test suite covering pickpocketing, lockpicking, forced entry, searching, and loot generation. Tests validate d20 mechanics, skill scaling, class-based advantages (Rogue lockpick/pickpocket bonuses, Barbarian forced entry, etc.), and loot distribution. Ensures exploration gameplay is fully tested and reliable. 569 tests passing.
 - **2026-03-22:** Ritual Casting System complete — Wizards, Clerics, Druids, Bards, Paladins, Rangers can cast ritual spells (no slot consumption). Sorcerers/Warlocks/Monks excluded per 5e rules. Prep casters respect prepared spells, non-prep access all known rituals. Spells marked: Alarm, Comprehend Languages, Detect Magic, Find Familiar, Identify, Magic Mouth, Leomund's Tiny Hut, etc. 30 new tests. 534 tests passing.
 - **2026-03-22:** Exploration Skill Check DC Scaling fix — Increased scaling multiplier from 2 to 3 to ensure monotonic DC increase across area levels (preventing lower-level scenarios from tying with higher-level challenges).
