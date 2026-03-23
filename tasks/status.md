@@ -292,7 +292,7 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Narrator log integration — roll results posted to session log so all players see them
 - 306 tests, 0 failures.
 
-### Faction System
+### Faction System ✅ COMPLETE
 - [x] Faction library (`factionSystem.js`) — reputation tracking (-100 to +100), disposition calculation (Hostile/Unfriendly/Neutral/Friendly/Revered), dialogue context generation
 - [x] Zustand faction slice — global faction reputation map, faction initialization, reputation adjustment/setting actions
 - [x] Campaign generation prompt updated — factions array in campaign schema, NPCs assigned to factions via `faction` field
@@ -304,7 +304,8 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] NPC quest offers — NPCs can offer quests during conversation (title, description, objectives), auto-added to player journal with NPC/faction metadata, inline acceptance UI
 - [x] Quest completion → Reputation gain — when faction-affiliated quest fully completed (all objectives done), player auto-gains +20 reputation, quest marked 'completed'
 - [x] Hostile faction encounters — approaching NPC with Hostile disposition (reputation <= -75) triggers combat instead of dialogue, NPC becomes enemy combatant
-- Reputation affects NPC greeting, willingness to help, prices (discounts/surcharges), special favors, and combat encounters
+- [x] Faction-gated merchant inventory — merchants show exclusive premium items to players with Friendly+ reputation (> 25), marked with ✦ sparkle, unlocks best gear
+- Reputation now affects: NPC greeting, dialogue options, willingness to help, prices (10% off friendly, 25% off revered), combat encounters, merchant inventory
 - 327 tests, 0 failures.
 
 ---
@@ -346,3 +347,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** NPC quest offers auto-wired — NPCs can offer quests during conversations with title/description/objectives. Accepted quests auto-add to player journal with NPC/faction metadata. Complete gameplay loop: talk → quest offered → accept → complete → return for reward. 327 tests.
 - **2026-03-22:** Quest completion → Reputation gain — faction-affiliated quests auto-increase reputation (+20) when all objectives completed. Stacks with NPC conversation reputation changes for meaningful progression. 327 tests.
 - **2026-03-22:** Hostile faction encounters — NPCs from factions with Hostile player reputation (≤-75) initiate combat on sight instead of dialogue. Provides natural combat encounters in exploration based on player choices. 327 tests.
+- **2026-03-22:** Faction-gated merchant inventory — merchants affiliated with factions show exclusive premium items to players with good reputation (Friendly+, rep > 25). Items marked with ✦ sparkle. Unlocks Silver Longsword, Enchanted Bow, Mithril Armor, Shield +1, Superior Potions based on shop type. 327 tests.
