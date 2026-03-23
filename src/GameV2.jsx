@@ -79,6 +79,7 @@ const EnemyInfo_          = lazy(() => import('./components/game/EnemyInfo'))
 const InitiativeTracker_  = lazy(() => import('./components/game/InitiativeTracker'))
 const LevelUpPanel_       = lazy(() => import('./components/game/LevelUpPanel'))
 const PauseMenu_          = lazy(() => import('./components/game/PauseMenu'))
+const PartyStatus_        = lazy(() => import('./components/game/PartyStatus'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -176,6 +177,7 @@ export default function GameV2({ onLeave }) {
   const [showInitiativeTracker, setShowInitiativeTracker] = useState(false)
   const [showLevelUpPanel, setShowLevelUpPanel] = useState(false)
   const [showPauseMenu, setShowPauseMenu] = useState(false)
+  const [showPartyStatus, setShowPartyStatus] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1287,6 +1289,15 @@ export default function GameV2({ onLeave }) {
             onHelp={() => {}}
             onLeave={onLeave}
             playerCount={partyMembers?.length || 1}
+          />
+        </Suspense>
+      )}
+      {showPartyStatus && (
+        <Suspense fallback={null}>
+          <PartyStatus_
+            partyMembers={partyMembers || []}
+            myCharacter={myCharacter}
+            onClose={() => setShowPartyStatus(false)}
           />
         </Suspense>
       )}
