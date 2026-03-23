@@ -62,6 +62,11 @@ test.describe('Game Integration Tests', () => {
     const portraitCount = await partyPortraits.count();
     expect(portraitCount).toBeGreaterThanOrEqual(0); // Party portraits may be in different structures
 
+    // Verify HUD is showing character stats (HP, AC, spell slots)
+    const hudStats = page.locator('[class*="hp"], [class*="ac"], [class*="stat"], [class*="slot"]');
+    const statCount = await hudStats.count();
+    expect(statCount).toBeGreaterThan(0); // Should have at least some stat displays
+
     // Verify PixiJS canvas element exists (game world rendering)
     const canvas = page.locator('canvas').first();
     const canvasExists = await canvas.count();
