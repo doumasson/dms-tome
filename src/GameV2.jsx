@@ -74,6 +74,7 @@ const CharacterInventory_ = lazy(() => import('./components/game/CharacterInvent
 const CombatLog_          = lazy(() => import('./components/game/CombatLog'))
 const ConditionsPanel_    = lazy(() => import('./components/game/ConditionsPanel'))
 const EquipmentPanel_     = lazy(() => import('./components/game/EquipmentPanel'))
+const ExplorationActions_ = lazy(() => import('./components/game/ExplorationActions'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -165,6 +166,7 @@ export default function GameV2({ onLeave }) {
   const [showCombatLog, setShowCombatLog] = useState(false)
   const [showConditions, setShowConditions] = useState(false)
   const [showEquipment, setShowEquipment] = useState(false)
+  const [showExplorationActions, setShowExplorationActions] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1227,6 +1229,19 @@ export default function GameV2({ onLeave }) {
           <EquipmentPanel_
             character={myCharacter}
             onClose={() => setShowEquipment(false)}
+          />
+        </Suspense>
+      )}
+      {showExplorationActions && !inCombat && (
+        <Suspense fallback={null}>
+          <ExplorationActions_
+            character={myCharacter}
+            roomData={{}}
+            onSearch={() => ({ success: true, message: 'Search complete.' })}
+            onLockpick={() => ({ success: true, message: 'Door unlocked.' })}
+            onDetectTrap={() => ({ success: true, message: 'No traps detected.' })}
+            onDisarmTrap={() => ({ success: true, message: 'Trap disarmed.' })}
+            onClose={() => setShowExplorationActions(false)}
           />
         </Suspense>
       )}
