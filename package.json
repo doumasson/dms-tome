@@ -17,6 +17,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.99.2",
     "pixi.js": "^8.17.1",
+    "playwright": "^1.58.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "uuid": "^13.0.0",
