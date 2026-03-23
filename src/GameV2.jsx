@@ -977,6 +977,24 @@ export default function GameV2({ onLeave }) {
           <WorldMap open={true} onClose={() => setActiveMode(null)} />
         </Suspense>
       )}
+      {activeMode === 'character' && sheetChar && (
+        <Suspense fallback={null}>
+          <CharacterSheetModal character={sheetChar} onClose={() => { setActiveMode(null) }} />
+        </Suspense>
+      )}
+      {activeMode === 'inventory' && myCharacter && (
+        <Suspense fallback={null}>
+          <Inventory_
+            items={myCharacter.inventory || []}
+            equipment={myCharacter.equipment || {}}
+            gold={myCharacter.gold || 0}
+            onEquip={() => {}}
+            onUse={() => {}}
+            onDrop={() => {}}
+            onClose={() => setActiveMode(null)}
+          />
+        </Suspense>
+      )}
       {showApiSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />}
       {showJournal && (
         <Suspense fallback={null}>
