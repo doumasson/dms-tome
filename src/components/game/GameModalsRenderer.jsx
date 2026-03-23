@@ -300,10 +300,11 @@ export default function GameModalsRenderer({
             sessionData={{
               campaignName: campaign?.title || 'Your Campaign',
               lastSessionDate: myCharacter.lastPlayedAt || new Date().toISOString(),
-              currentLocation: zone?.title || 'Exploration'
+              currentLocation: zone?.title || 'Exploration',
+              locationDescription: zone?.description || zone?.narrative || 'A mysterious place awaits your return.'
             }}
             characters={[myCharacter]}
-            recap={`Your adventure continues... Character Level: ${myCharacter.level}, HP: ${myCharacter.currentHp || myCharacter.hp}/${myCharacter.hp}`}
+            recap={`Your adventure continues in ${zone?.title || 'the world'}... Character Level: ${myCharacter.level}, HP: ${myCharacter.currentHp || myCharacter.hp}/${myCharacter.hp}`}
             onResume={() => setShowSessionResume(false)}
           />
         </Suspense>
