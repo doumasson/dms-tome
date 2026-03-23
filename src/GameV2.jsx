@@ -330,7 +330,8 @@ export default function GameV2({ onLeave }) {
 
   const handleTool = useCallback((tool) => {
     if (tool === 'dice') setToolPanel('dice')
-    else if (tool === 'character' || tool === 'inventory') setSheetChar(myCharacter)
+    else if (tool === 'character') setSheetChar(myCharacter)
+    else if (tool === 'inventory') setActiveMode(prev => prev === 'inventory' ? null : 'inventory')
     else if (tool === 'journal') setShowJournal(true)
     else if (tool === 'faction') setShowFactions(true)
     else if (tool === 'short-rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
