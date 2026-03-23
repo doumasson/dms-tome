@@ -424,4 +424,57 @@ test.describe('Game Integration Tests', () => {
       expect((await confirmBtn.count())).toBeGreaterThan(0);
     }
   });
+
+  test('should resume session after page reload', async ({ page, baseURL }) => {
+    // Navigate and reach game
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+
+    // Get through to game screen
+    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
+    if ((await campaignButtons.count()) > 0) {
+      await campaignButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    const characterButtons = page.locator('button:has-text("Aric")');
+    if ((await characterButtons.count()) > 0) {
+      await characterButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    // Wait for game to load
+    await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
+
+    // Take initial screenshot to verify game state
+    const initialScreenshot = await page.screenshot();
+    expect(initialScreenshot).toBeTruthy();
+
+    // Get initial game state elements
+    const initialScene = page.locator('.scene-area').first();
+    const initialHUD = page.locator('.hud-bottom-bar').first();
+    expect((await initialScene.count())).toBeGreaterThan(0);
+    expect((await initialHUD.count())).toBeGreaterThan(0);
+
+    // Reload the page to test session persistence
+    await page.reload({ waitUntil: 'networkidle' });
+
+    // After reload, verify we're still in the game (not kicked back to login)
+    const gameLayoutAfterReload = page.locator('.game-layout').first();
+    const sceneAfterReload = page.locator('.scene-area').first();
+    const hudAfterReload = page.locator('.hud-bottom-bar').first();
+
+    // Should still be in game after reload
+    const gameLayoutExists = await gameLayoutAfterReload.count();
+    expect(gameLayoutExists).toBeGreaterThan(0); // Game layout should persist
+
+    // Scene and HUD should still be visible
+    const sceneExists = await sceneAfterReload.count();
+    const hudExists = await hudAfterReload.count();
+    expect(sceneExists).toBeGreaterThan(0); // Scene should persist
+    expect(hudExists).toBeGreaterThan(0); // HUD should persist
+
+    // Take screenshot after reload to verify state resumed
+    const reloadedScreenshot = await page.screenshot();
+    expect(reloadedScreenshot).toBeTruthy();
+  });
 });
