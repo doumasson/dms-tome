@@ -301,6 +301,7 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Demo campaign wired — "Millhaven Guard" and "Goblin Tribe" factions, village NPCs affiliated with guard
 - [x] Faction reputation UI — FactionReputation modal component, color-coded reputation bars, HUD button (⚔ FACTION), accessible from action bar
 - [x] Reputation changes from NPC interactions — NPCs can suggest reputation delta on conversation end with reason text, applied to store, broadcast to all players, shown in narrator log
+- [x] NPC quest offers — NPCs can offer quests during conversation (title, description, objectives), auto-added to player journal with NPC/faction metadata, inline acceptance UI
 - Reputation affects NPC greeting, willingness to help, prices (discounts/surcharges), and special favors
 - 327 tests, 0 failures.
 
@@ -340,3 +341,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Faction system implementation — complete reputation tracking (-100 to +100), faction storage in campaign JSON, AI NPC personality injection based on player reputation, NPC greeting/pricing/help modifiers based on faction standing (Hostile/Unfriendly/Neutral/Friendly/Revered). Demo campaign wired with Guard & Goblin Tribe factions. All 12 classes now combat-functional.
 - **2026-03-22:** Faction reputation UI — FactionReputation modal displays all factions with color-coded reputation bars (-100 to +100), ⚔ FACTION button on HUD action bar for player visibility of standing. Lazy loaded for performance.
 - **2026-03-22:** Reputation changes from NPC interactions — NPCs can suggest reputation changes when wrapping up conversations. Changes show in inline panel with reason, applied to store, broadcast to all players, feed into narrator log. Makes faction system mechanically impactful. 327 tests.
+- **2026-03-22:** NPC quest offers auto-wired — NPCs can offer quests during conversations with title/description/objectives. Accepted quests auto-add to player journal with NPC/faction metadata. Complete gameplay loop: talk → quest offered → accept → complete → return for reward. 327 tests.
