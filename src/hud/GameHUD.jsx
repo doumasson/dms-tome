@@ -7,7 +7,6 @@ import Minimap from './Minimap'
 import SoundControl from './SoundControl'
 import useStore from '../store/useStore'
 import { getTimeOfDay, formatTime } from '../lib/gameTime'
-import { playParchmentRustle } from '../lib/uiSounds'
 import './hud.css'
 
 export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef, onPortraitClick, activeMode, onModeSelect }) {
