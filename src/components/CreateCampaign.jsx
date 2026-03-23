@@ -3,11 +3,8 @@ import { supabase } from '../lib/supabase';
 import { generateCampaignJSON } from '../lib/claudeApi';
 import { loadDefaultApiKey } from '../lib/defaultApiKey';
 import { getDemoBriefs } from '../data/demoArea';
+import { generateDemoCharacter } from '../lib/demoCharacter';
 import useStore from '../store/useStore';
-import { calcHp, calcAc, buildAttacks, buildSpellSlots, buildFeatures, avatarUrl, profBonus } from '../lib/charBuilder';
-import { getRace, applyRacialBonuses } from '../data/races';
-import { CLASSES } from '../data/classes';
-import { getStartingInventory, computeAcFromEquipped } from '../data/equipment';
 
 const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
 const SETTINGS = ['High Fantasy', 'The Shattered Kingdoms', 'Dark Gothic', 'Steampunk', 'Ancient World', 'Urban Fantasy', 'Sci-Fi'];
@@ -16,75 +13,6 @@ const LEVELS = ['1–4 (Tier 1)', '5–10 (Tier 2)', '11–16 (Tier 3)', '17–2
 const VILLAINS = ['Ancient Dragon', 'Lich', 'Demon Lord', 'Corrupt Noble', 'Cosmic Horror', 'Cult Leader', 'Rival Adventurer'];
 
 const DRAFT_KEY = 'dm-tome-wizard-draft';
-
-// Generate a demo character for quick play
-function generateDemoCharacter(userName) {
-  const race = 'Human';
-  const cls = 'Fighter';
-  const raceData = getRace(race);
-  const clsData = CLASSES[cls];
-  const baseStats = { str: 15, dex: 14, con: 16, int: 10, wis: 12, cha: 10 };
-  const finalStats = raceData ? applyRacialBonuses(baseStats, race, []) : baseStats;
-  const hp = calcHp(clsData, finalStats.con);
-  const ac = calcAc(clsData, finalStats.dex);
-  const attacks = buildAttacks(cls, finalStats);
-  const spellSlots = buildSpellSlots(cls, 1);
-  const features = buildFeatures(cls, 1);
-  const pb = profBonus(1);
-
-  const starterItems = getStartingInventory();
-  const allItems = starterItems.map(item => ({
-    ...item,
-    instanceId: item.instanceId || crypto.randomUUID()
-  }));
-
-  const equippedItems = {};
-  const equippedInstanceIds = new Set();
-  for (const item of allItems) {
-    if (item.name?.includes('Longsword') && !equippedItems.mainHand) {
-      equippedItems.mainHand = item;
-      equippedInstanceIds.add(item.instanceId);
-    } else if (item.name?.includes('Chain Mail') && !equippedItems.chest) {
-      equippedItems.chest = item;
-      equippedInstanceIds.add(item.instanceId);
-    }
-  }
-
-  const unequippedItems = allItems.filter(i => !equippedInstanceIds.has(i.instanceId));
-  const startingAc = Object.keys(equippedItems).length > 0
-    ? computeAcFromEquipped(equippedItems, finalStats)
-    : ac;
-
-  return {
-    id: crypto.randomUUID(),
-    name: 'Demo Adventurer',
-    class: cls,
-    race,
-    background: 'Soldier',
-    alignment: 'Lawful Good',
-    appearance: 'Grizzled veteran with battle scars',
-    backstory: 'A seasoned warrior ready for adventure',
-    level: 1,
-    xp: 0,
-    hp, maxHp: hp, currentHp: hp,
-    ac: startingAc,
-    speed: raceData?.speed || 30,
-    stats: finalStats,
-    skills: [],
-    attacks,
-    features,
-    spellSlots,
-    spells: [],
-    equipment: clsData?.startingEquipment || [],
-    inventory: unequippedItems,
-    equippedItems,
-    gold: 50,
-    proficiencyBonus: pb,
-    portrait: avatarUrl('Demo Adventurer', race, cls),
-    userId: null,
-    userName,
-  };
-}
 
 // Clean up AI-generated JSON before parsing
 function cleanJsonText(str) {
