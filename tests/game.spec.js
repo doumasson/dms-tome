@@ -37,27 +37,34 @@ test.describe('Game Integration Tests', () => {
       await page.waitForLoadState('networkidle');
     }
 
-    // Wait for game to load - check for HUD elements first
-    // Verify HUD bottom bar (party portraits, action area)
+    // Wait for game to load - verify scene area (main game container)
+    const sceneArea = page.locator('.scene-area').first();
+    await expect(sceneArea).toBeVisible({ timeout: 15000 });
+
+    // Verify game layout wrapper loaded
+    const gameLayout = page.locator('.game-layout').first();
+    await expect(gameLayout).toBeVisible({ timeout: 10000 });
+
+    // Verify HUD bottom bar (party portraits, action area) is present
     const hudBottomBar = page.locator('.hud-bottom-bar').first();
-    await expect(hudBottomBar).toBeVisible({ timeout: 15000 });
+    await expect(hudBottomBar).toBeVisible({ timeout: 5000 });
 
-    // Verify action buttons are present (game is interactive)
-    const actionButtons = page.locator('button[title="DICE"], button[title="CHAR"], button[title="PACK"]');
-    await expect(actionButtons.first()).toBeVisible({ timeout: 10000 });
-
-    // Verify narrator/chat area is present
-    const sessionLog = page.locator('.session-log, [class*="log"]').first();
+    // Verify session log area with chat/log tabs
+    const sessionLog = page.locator('.hud-log-outer, [class*="hud-log"]').first();
     await expect(sessionLog).toBeVisible({ timeout: 5000 });
 
-    // Verify PixiJS canvas - if present (may be rendered async)
+    // Verify narrator bar at bottom
+    const narratorBar = page.locator('.narrator-bar, [class*="narrator"]').first();
+    await expect(narratorBar).toBeVisible({ timeout: 5000 });
+
+    // Verify PixiJS canvas element exists (game world rendering)
     const canvas = page.locator('canvas').first();
     try {
       await expect(canvas).toBeVisible({ timeout: 5000 });
     } catch {
-      // Canvas might be rendering asynchronously, check if game is still interactive
-      const gameElement = page.locator('[class*="game"], [class*="pixi"], canvas');
-      expect(await gameElement.count()).toBeGreaterThanOrEqual(0);
+      // Canvas might exist but be off-screen temporarily during init
+      const canvasCount = await canvas.count();
+      expect(canvasCount).toBeGreaterThan(0);
     }
 
     // Verify page title is DungeonMind
