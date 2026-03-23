@@ -128,10 +128,10 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
         />
       </div>
 
-      {/* Main content area */}
+      {/* Main content area — 80/20 split */}
       <div style={styles.mainArea}>
-        {/* Combat or Scene — fills remaining space, narrator floats over it */}
-        <div style={{ ...styles.contentArea, position: 'relative' }}>
+        {/* Top 80%: Combat or Scene */}
+        <div style={styles.sceneArea}>
           {inCombat ? <EncounterView /> : <ScenePanel />}
           {/* "Your Turn" / "[Name]'s Turn" announcement */}
           {inCombat && activeCombatant && (
@@ -143,11 +143,12 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
           )}
           {/* HUD overlay - character status in top-left */}
           <HUD />
-          {/* Floating narrator overlay */}
-          <NarratorPanel />
         </div>
 
-        {/* Always-visible character status strip */}
+        {/* Bottom 20% (expandable to 40%): Narrator Bar */}
+        <NarratorPanel />
+
+        {/* Character status strip anchored above narrator bar */}
         <PlayerStatusBar />
       </div>
 
@@ -263,11 +264,12 @@ const styles = {
     minWidth: 0,
     position: 'relative',
   },
-  contentArea: {
-    flex: 1,
+  sceneArea: {
+    flex: '0 0 80%',
     minHeight: 0,
-    overflowY: 'auto',
-    overflowX: 'hidden',
+    minWidth: 0,
+    position: 'relative',
+    overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
   },

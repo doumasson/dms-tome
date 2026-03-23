@@ -2,11 +2,9 @@
 
 export const styles = {
   panel: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 340,
+    flex: '0 1 20%',
+    minHeight: 44,
+    maxHeight: '40%',
     display: 'flex',
     flexDirection: 'column',
     background: 'linear-gradient(180deg, rgba(26,16,8,0.96) 0%, rgba(17,11,5,0.98) 100%)',
@@ -18,11 +16,9 @@ export const styles = {
     boxShadow: '0 -8px 32px rgba(0,0,0,0.7)',
   },
   minimizedBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: '0 0 auto',
     height: 44,
+    minHeight: 44,
     display: 'flex',
     alignItems: 'center',
     gap: 8,
