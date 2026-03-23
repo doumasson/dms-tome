@@ -82,6 +82,7 @@ const PauseMenu_          = lazy(() => import('./components/game/PauseMenu'))
 const PartyStatus_        = lazy(() => import('./components/game/PartyStatus'))
 const RulesReference_     = lazy(() => import('./components/game/RulesReference'))
 const SkillsPanel_        = lazy(() => import('./components/game/SkillsPanel'))
+const SpellsPanel_        = lazy(() => import('./components/game/SpellsPanel'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -182,6 +183,7 @@ export default function GameV2({ onLeave }) {
   const [showPartyStatus, setShowPartyStatus] = useState(false)
   const [showRulesReference, setShowRulesReference] = useState(false)
   const [showSkills, setShowSkills] = useState(false)
+  const [showSpells, setShowSpells] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1317,6 +1319,14 @@ export default function GameV2({ onLeave }) {
           <SkillsPanel_
             character={myCharacter}
             onClose={() => setShowSkills(false)}
+          />
+        </Suspense>
+      )}
+      {showSpells && myCharacter && (
+        <Suspense fallback={null}>
+          <SpellsPanel_
+            character={myCharacter}
+            onClose={() => setShowSpells(false)}
           />
         </Suspense>
       )}
