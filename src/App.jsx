@@ -688,9 +688,8 @@ export default function App() {
       useStore.getState().initializeFactions(factions);
     } else {
       // No campaign data — initialize with minimal defaults so game can load
-      loadCampaign({
+      const defaultWorld = {
         title: campaignRecord.name || 'Campaign',
-        scenes: [],
         startArea: 'default-area',
         areas: {
           'default-area': {
@@ -706,9 +705,10 @@ export default function App() {
             height: 15,
           }
         }
-      });
-      // Activate the default area
-      useStore.getState().activateArea('default-area');
+      };
+      // Load both campaign and world/areas
+      loadCampaign({ title: defaultWorld.title, scenes: [] });
+      useStore.getState().loadAreaWorld(defaultWorld);
     }
     if (campaignRecord.settings) {
       loadCampaignSettings(campaignRecord.settings);
