@@ -6,6 +6,7 @@ import { useState } from 'react'
 import useStore from '../store/useStore'
 import { buyItem, sellItem, canBuy, calculateSellPrice } from '../lib/shopSystem'
 import shopInventories from '../data/shopInventories.json'
+import { getDisposition } from '../lib/factionSystem'
 
 const ITEM_TYPE_ICON = {
   weapon_light:     '🗡️',
@@ -122,17 +123,32 @@ export default function ShopPanel({ npc, shopType, onClose }) {
   const addItemToInventory = useStore(s => s.addItemToInventory)
   const removeItemFromInventory = useStore(s => s.removeItemFromInventory)
   const addGold           = useStore(s => s.addGold)
+  const factionReputation = useStore(s => s.factionReputation)
   const [toast, setToast] = useState(null)
   const [toastTimer, setToastTimer] = useState(null)
 
   const shopData   = shopInventories[shopType] || shopInventories['general_store']
-  const shopItems  = shopData?.items || []
+  let shopItems    = shopData?.items || []
   const shopName   = shopData?.name || 'Shop'
   const gold       = myCharacter?.gold || 0
   const inventory  = myCharacter?.inventory || []
   const strScore   = myCharacter?.stats?.str || 10
   const carryCapacity = strScore * 15
   const totalWeight   = inventory.reduce((sum, i) => sum + ((i.weight || 0) * (i.quantity || 1)), 0)
+
+  // Add faction-exclusive items if player has good reputation with NPC's faction
+  if (npc?.faction && shopData?.factionItems) {
+    const rep = factionReputation?.[npc.faction] ?? 0
+    const disposition = getDisposition(rep)
+    // Show faction items if player is at least Friendly (rep > 25)
+    if (rep > 25) {
+      shopItems = [...shopItems, ...shopData.factionItems.map(item => ({
+        ...item,
+        name: `✦ ${item.name}`, // Mark as exclusive with sparkle
+        factionExclusive: true,
+      }))]
+    }
+  }
 
   function showToast(msg) {
     if (toastTimer) clearTimeout(toastTimer)

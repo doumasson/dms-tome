@@ -10,6 +10,10 @@
       { "id": "handaxe",      "name": "Handaxe",       "price": 5,   "type": "weapon_light",       "stats": { "damage": "1d6",  "damageType": "slashing" }, "weight": 2,  "sizeCategory": "small" },
       { "id": "shortbow",     "name": "Shortbow",      "price": 25,  "type": "weapon_ranged",      "stats": { "damage": "1d6",  "damageType": "piercing", "range": "80/320" }, "weight": 2, "sizeCategory": "medium" },
       { "id": "longbow",      "name": "Longbow",       "price": 50,  "type": "weapon_ranged",      "stats": { "damage": "1d8",  "damageType": "piercing", "range": "150/600" }, "weight": 2, "sizeCategory": "large" }
+    ],
+    "factionItems": [
+      { "id": "silver_longsword",  "name": "Silver Longsword",    "price": 85,  "type": "weapon_one_handed",  "stats": { "damage": "1d8", "damageType": "slashing", "effect": "effective vs undead" }, "weight": 3, "sizeCategory": "medium" },
+      { "id": "enchanted_bow",      "name": "Enchanted Longbow +1","price": 150, "type": "weapon_ranged",      "stats": { "damage": "1d8+1", "damageType": "piercing", "range": "150/600" }, "weight": 2, "sizeCategory": "large" }
     ]
   },
   "armor_shop": {
@@ -22,6 +26,10 @@
       { "id": "chain_mail",        "name": "Chain Mail",         "price": 75,  "type": "armor_heavy",   "stats": { "ac": 16, "stealthDis": true }, "weight": 55, "sizeCategory": "large" },
       { "id": "shield",            "name": "Shield",             "price": 10,  "type": "shield",        "stats": { "acBonus": 2 },         "weight": 6,  "sizeCategory": "medium" },
       { "id": "half_plate",        "name": "Half Plate",         "price": 750, "type": "armor_heavy",   "stats": { "ac": 15, "stealthDis": true }, "weight": 40, "sizeCategory": "large" }
+    ],
+    "factionItems": [
+      { "id": "mithril_shirt",     "name": "Mithril Chain Shirt", "price": 200, "type": "armor_medium", "stats": { "ac": 13, "effect": "weighs half as much as steel" }, "weight": 10, "sizeCategory": "medium" },
+      { "id": "enchanted_shield",  "name": "Shield +1",           "price": 180, "type": "shield",        "stats": { "acBonus": 3, "effect": "+1 AC" }, "weight": 6, "sizeCategory": "medium" }
     ]
   },
   "potion_shop": {
@@ -33,6 +41,10 @@
       { "id": "antitoxin",             "name": "Antitoxin",                  "price": 50,  "type": "potion", "stats": { "effect": "advantage on saves vs poison" }, "weight": 0.5, "sizeCategory": "tiny" },
       { "id": "potion_climbing",       "name": "Potion of Climbing",         "price": 75,  "type": "potion", "stats": { "effect": "climbing speed equals walking speed, advantage on Str (Athletics) checks" }, "weight": 0.5, "sizeCategory": "tiny" },
       { "id": "potion_water_breathing","name": "Potion of Water Breathing",  "price": 180, "type": "potion", "stats": { "effect": "breathe underwater for 1 hour" }, "weight": 0.5, "sizeCategory": "tiny" }
+    ],
+    "factionItems": [
+      { "id": "potion_superior_healing","name": "Potion of Superior Healing", "price": 300, "type": "potion", "stats": { "healDice": "8d4+8" },    "weight": 0.5, "sizeCategory": "tiny" },
+      { "id": "potion_invisibility",    "name": "Potion of Invisibility",     "price": 350, "type": "potion", "stats": { "effect": "become invisible for 1 hour or until you attack" }, "weight": 0.5, "sizeCategory": "tiny" }
     ]
   },
   "general_store": {
