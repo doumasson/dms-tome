@@ -148,4 +148,49 @@ test.describe('Game Integration Tests', () => {
     const initialImage = await page.screenshot();
     expect(initialImage).toBeTruthy();
   });
+
+  test('should verify NarratorBar collapsing and expanding', async ({ page, baseURL }) => {
+    // Navigate and reach game
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+
+    // Get through to game screen (same flow as first test)
+    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
+    if ((await campaignButtons.count()) > 0) {
+      await campaignButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    const characterButtons = page.locator('button:has-text("Aric")');
+    if ((await characterButtons.count()) > 0) {
+      await characterButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    // Wait for game to load
+    await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
+
+    // Find narrator bar and its toggle button
+    const narratorBar = page.locator('.narrator-bar, [class*="narrator"]').first();
+    await expect(narratorBar).toBeVisible({ timeout: 5000 });
+
+    // Get initial size/class of narrator bar
+    const initialHeight = await narratorBar.evaluate(el => el.offsetHeight);
+
+    // Find and click the narrator bar toggle button (▲The Narrator button)
+    const toggleBtn = page.locator('button:has-text("The Narrator"), [class*="narrator"][class*="toggle"]').first();
+    const toggleCount = await toggleBtn.count();
+
+    if (toggleCount > 0) {
+      // Click to expand/collapse
+      await toggleBtn.click();
+      await page.waitForTimeout(300); // Wait for animation
+
+      // Verify size changed (collapse/expand happened)
+      const newHeight = await narratorBar.evaluate(el => el.offsetHeight);
+      expect(newHeight).not.toBe(initialHeight); // Height should change
+    }
+
+    // Verify narrator bar still exists after toggle
+    await expect(narratorBar).toBeVisible({ timeout: 5000 });
+  });
 });
