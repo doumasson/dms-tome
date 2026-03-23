@@ -138,6 +138,9 @@ export default function GameV2({ onLeave }) {
   const [showLevelUp, setShowLevelUp] = useState(false)
   const [showInteractionMenu, setShowInteractionMenu] = useState(false)
   const [showGameOver, setShowGameOver] = useState(false)
+  const [showVictory, setShowVictory] = useState(false)
+  const [showDefeat, setShowDefeat] = useState(false)
+  const [encounterRewards, setEncounterRewards] = useState(null)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -296,6 +299,33 @@ export default function GameV2({ onLeave }) {
       useStore.setState({ defeatReset: false })
     }
   }, [defeatReset])
+
+  // --- Detect combat end and show victory/defeat screens ---
+  const prevInCombatForEndRef = useRef(false)
+  useEffect(() => {
+    if (prevInCombatForEndRef.current && !inCombat) {
+      // Combat just ended
+      const { encounter: lastEncounter } = useStore.getState()
+      const combatants = lastEncounter?.combatants || []
+
+      // Check if it's a victory (all enemies dead) or defeat (all players dead)
+      const enemies = combatants.filter(c => c.type === 'enemy')
+      const players = combatants.filter(c => c.type === 'player')
+      const allEnemiesDead = enemies.length > 0 && enemies.every(e => (e.currentHp ?? 0) <= 0)
+      const allPlayersDead = players.length > 0 && players.every(p => (p.currentHp ?? 0) <= 0)
+
+      if (allEnemiesDead) {
+        // Victory: set up rewards data
+        const rewards = lastEncounter?.rewards || { xp: 0, gold: 0 }
+        setEncounterRewards(rewards)
+        setShowVictory(true)
+      } else if (allPlayersDead) {
+        // Defeat: show defeated party members
+        setShowDefeat(true)
+      }
+    }
+    prevInCombatForEndRef.current = inCombat
+  }, [inCombat])
 
   // --- Watch for XP crossing a level threshold ---
   useEffect(() => {
@@ -1009,6 +1039,26 @@ export default function GameV2({ onLeave }) {
           <GameOverModal
             onRevive={mercyRevive}
             onLeave={() => { useStore.setState({ showDeathOptions: false }); onLeave() }}
+          />
+        </Suspense>
+      )}
+      {showVictory && (
+        <Suspense fallback={null}>
+          <VictoryScreen
+            encounter={encounter}
+            loot={{ items: [] }}
+            rewards={encounterRewards || { xp: 0, gold: 0 }}
+            onContinue={() => setShowVictory(false)}
+          />
+        </Suspense>
+      )}
+      {showDefeat && (
+        <Suspense fallback={null}>
+          <DefeatScreen
+            encounter={encounter}
+            defeats={encounter.combatants?.filter(c => c.type === 'player' && (c.currentHp ?? 0) <= 0) || []}
+            onRetry={() => { setShowDefeat(false); useStore.setState({ defeatReset: true }) }}
+            onContinue={() => { setShowDefeat(false); onLeave() }}
           />
         </Suspense>
       )}
