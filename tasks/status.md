@@ -356,6 +356,20 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Scenario generation — random challenges by area difficulty level
 - 372 tests, 0 failures.
 
+### Named Boss/Champion Encounters ✅ COMPLETE
+- [x] Boss tiers — Lieutenant (CR L-1), Champion (CR L+2), Legendary (CR L+5), Ancient (CR L+8)
+- [x] Boss archetypes — Warlord, Archmage, Master Assassin, High Priest, Ancient Dragon with unique stat modifiers
+- [x] Boss abilities — Multiattack, Regeneration, Legendary Actions (3/round), Magic Resistance, Immunity types, Aura, Teleport
+- [x] Boss tactics — Aggressive, Defensive, Tactical, Spellcaster, Summoner, Berserker — influences combat behavior
+- [x] Boss HP scaling — Warrior (1.5x), Mage (0.8x), Rogue (1.0x), Cleric (1.3x), Dragon (2.0x)
+- [x] Boss AC scaling — Warrior +2, Rogue +2, Dragon +3 for archetype appropriateness
+- [x] Unique names — 20+ boss names per archetype (Thrall the Destroyer, Archmagus Vorgrim, The Phantom, etc.)
+- [x] Legendary status — Champions/Legends/Ancients get legendary actions with 3 actions per round
+- [x] Boss treasure — CR-based legendary hoards (500gp to 100kgp+ with magic items)
+- [x] XP rewards — 1.5x multiplier for boss defeats, proper DMG challenge scaling
+- [x] Narrative — Tactic and tier descriptions for DM storytelling and world-building
+- 387 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -401,3 +415,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Environmental Combat Hazards — 10 dynamic battlefield effects (lava, fire, ice, poison, lightning, darkness, webs, collapse, blessed, cursed) create tactical challenges. Damage-based (2d6 lava, 1d6 fire, 1d4 poison, 1d8 lightning), save-based (ice/webs STR saves), status effects (darkness/cursed penalties, blessed boost). Distance-calculated, tile-based visualization. 30% spawn rate (50% deadly encounters). Integrated with random encounters. 346 tests.
 - **2026-03-22:** Comprehensive Loot Table System — official D&D 5e treasure generation by party level (1-20). 40+ magic items with rarities (Common/Uncommon/Rare/Very Rare/Legendary). Difficulty scaling: Easy 50%, Medium 100%, Hard 150%, Deadly 200%. Item drops scale L1 (10%) to L20 (100%). Boss treasure hoards 500gp–100kgp by CR. Party size scaling prevents overpowering. Integration with random encounters. 358 tests.
 - **2026-03-22:** Exploration Skill Checks — d20 skill system for non-combat world interaction. 15+ scenarios (hidden passages, traps, climbing, tracking, reading people, identifying magic). Perception (WIS), Stealth (DEX), Investigation (INT), Acrobatics, Survival, Arcana. Proficiency bonus applied, expertise doubles bonus for mastery. Critical success (20) finds extras, critical failure (1) spectacular consequences. Class-aware skill availability. Dynamic narrative text for results. Difficulty scales with area level. 372 tests.
+- **2026-03-22:** Named Boss/Champion Encounters — 4 tiers (Lieutenant/Champion/Legendary/Ancient) with unique names and abilities. 5 archetypes: Warlord (1.5x HP), Archmage (spellcaster, teleport), Assassin (tactical), High Priest (healing/summons), Ancient Dragon (2x HP, 3 AC bonus). Boss abilities: Multiattack, Regeneration, Legendary Actions, Magic Resistance, Immunity types, Aura, Teleport. CR scales with tier (L-1 to L+8). Tactical variations: Aggressive/Defensive/Tactical/Spellcaster/Summoner/Berserker. Boss-specific treasure hoards. 1.5x XP multiplier. 387 tests.
