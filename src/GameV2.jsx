@@ -56,7 +56,6 @@ const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
-const ExplorationActions_ = lazy(() => import('./components/game/ExplorationActions'))
 const EnemyInfo_          = lazy(() => import('./components/game/EnemyInfo'))
 const InitiativeTracker_  = lazy(() => import('./components/game/InitiativeTracker'))
 const PauseMenu_          = lazy(() => import('./components/game/PauseMenu'))
@@ -148,7 +147,6 @@ export default function GameV2({ onLeave }) {
   const [showSessionResume, setShowSessionResume] = useState(false)
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
-  const [showExplorationActions, setShowExplorationActions] = useState(false)
   const [showEnemyInfo, setShowEnemyInfo] = useState(false)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
   const [showInitiativeTracker, setShowInitiativeTracker] = useState(false)
@@ -1174,19 +1172,6 @@ export default function GameV2({ onLeave }) {
             currentTurnIndex={encounter.currentTurn || 0}
             onAction={handleCombatAction}
             onEndTurn={handleEndTurn}
-          />
-        </Suspense>
-      )}
-      {showExplorationActions && !inCombat && (
-        <Suspense fallback={null}>
-          <ExplorationActions_
-            character={myCharacter}
-            roomData={{}}
-            onSearch={() => ({ success: true, message: 'Search complete.' })}
-            onLockpick={() => ({ success: true, message: 'Door unlocked.' })}
-            onDetectTrap={() => ({ success: true, message: 'No traps detected.' })}
-            onDisarmTrap={() => ({ success: true, message: 'Trap disarmed.' })}
-            onClose={() => setShowExplorationActions(false)}
           />
         </Suspense>
       )}
