@@ -40,6 +40,7 @@
 - [x] Skill check proficiency — proficiency bonus applied to skill checks based on character's skill list; expertise support (double proficiency); proficiency/expertise displayed in SkillCheckPanel UI
 - [x] DM manual effect clear — ACTIVE EFFECTS panel in DM combat sidebar, ✕ dismiss per effect, `removeEncounterEffect` broadcasts `remove-effect`
 - [x] Post-combat loot screen — auto-triggers when all enemies die; XP split, CR-based gold, 1–2 item drops
+- [x] Game Over modal — displays when all party members are defeated (3 failed death saves); offers Resurrect Party or Leave Campaign buttons; dark fantasy styling consistent with game aesthetic
 
 ### Characters
 - [x] Full character builder — race, class, background, abilities (standard array / point buy / 4d6-drop-lowest with interactive assignment), identity
@@ -348,3 +349,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Quest completion → Reputation gain — faction-affiliated quests auto-increase reputation (+20) when all objectives completed. Stacks with NPC conversation reputation changes for meaningful progression. 327 tests.
 - **2026-03-22:** Hostile faction encounters — NPCs from factions with Hostile player reputation (≤-75) initiate combat on sight instead of dialogue. Provides natural combat encounters in exploration based on player choices. 327 tests.
 - **2026-03-22:** Faction-gated merchant inventory — merchants affiliated with factions show exclusive premium items to players with good reputation (Friendly+, rep > 25). Items marked with ✦ sparkle. Unlocks Silver Longsword, Enchanted Bow, Mithril Armor, Shield +1, Superior Potions based on shop type. 327 tests.
+- **2026-03-22:** Game Over Modal component — created GameOverModal.jsx to replace inline defeat UI. Displays when all party members are defeated (3 failed death saves), offering revive (Resurrect Party) or leave campaign options. Extracted styling into component for cleaner code. Maintains existing defeat flow with mercyRevive and onLeave handlers. 327 tests passing.
