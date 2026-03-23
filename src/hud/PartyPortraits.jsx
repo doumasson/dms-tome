@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import useStore from '../store/useStore'
 import { playStoneClick } from '../lib/uiSounds'
 
@@ -54,6 +55,7 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
   const partyMembers = useStore(s => s.partyMembers)
   const encounter = useStore(s => s.encounter)
   const isInCombat = encounter?.phase === 'combat'
+  const [hoveredMemberId, setHoveredMemberId] = useState(null)
 
   const allMembers = []
   if (myCharacter) allMembers.push({ ...myCharacter, isMe: true })
@@ -96,7 +98,9 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
 
     return (
       <div key={member.name || i} style={{ position: 'relative', cursor: 'pointer' }}
-        onClick={() => { playStoneClick(); onPortraitClick?.(member) }}>
+        onClick={() => { playStoneClick(); onPortraitClick?.(member) }}
+        onMouseEnter={() => setHoveredMemberId(member.id || member.name)}
+        onMouseLeave={() => setHoveredMemberId(null)}>
         {/* Stone frame wrapper — image asset */}
         <div className={`portrait-frame${isSelected ? ' selected' : ''}`}
           style={{ width: w, height: h }}>
@@ -150,6 +154,21 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
         }}>
           {(member.name || 'Hero').toUpperCase()}
         </div>
+
+        {/* Hover tooltip showing stats */}
+        {hoveredMemberId === (member.id || member.name) && (
+          <div style={{
+            position: 'absolute', bottom: isSmall ? 50 : 110, left: '50%', transform: 'translateX(-50%)',
+            background: 'rgba(20,15,10,0.95)', border: '1px solid #d4af37', borderRadius: 4,
+            padding: '6px 8px', fontSize: 9, color: '#c9a84c',
+            fontFamily: "'Cinzel', serif", zIndex: 10, whiteSpace: 'nowrap',
+            pointerEvents: 'none', lineHeight: 1.4
+          }}>
+            <div>HP: {hp}/{maxHp}</div>
+            <div>AC: {member.ac || 10}</div>
+            <div>Spells: {member.spellSlots ? Object.values(member.spellSlots || {}).reduce((a, b) => a + b, 0) : 0}</div>
+          </div>
+        )}
       </div>
     )
   }
