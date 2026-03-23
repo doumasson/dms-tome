@@ -31,12 +31,13 @@ export function createEncounterSlice(set, get) {
       round: 1,
       log: [],
       activeEffects: [],   // Persistent spell area overlays: [{ id, spellName, casterId, concentration, areaType, ...geometry }]
+      hazards: [],         // Environmental hazards affecting the battlefield
     },
     lastCombatPosition: null,   // Saved player position when combat ends
     defeatedEnemies: {},        // { [areaId]: [enemyName, ...] } — prevents respawn in exploration
     showDeathOptions: false,    // Show respawn choice dialog after TPK
 
-    startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false } = {}) => {
+    startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false, hazards = [] } = {}) => {
       const combatants = [];
 
       // Scale enemy count to party size
@@ -300,6 +301,7 @@ export function createEncounterSlice(set, get) {
             currentTurn: 0,
             round: 1,
             log: [`Initiative rolled — ${initLog}`],
+            hazards,
           },
         });
       } else {
@@ -310,6 +312,7 @@ export function createEncounterSlice(set, get) {
             currentTurn: 0,
             round: 1,
             log: ['Encounter started — roll initiative for all combatants.'],
+            hazards,
           },
         });
       }

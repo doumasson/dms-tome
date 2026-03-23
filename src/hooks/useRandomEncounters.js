@@ -63,6 +63,7 @@ export function useRandomEncounters({
     useStore.setState({
       pendingEncounterData: {
         enemies,
+        hazards,
         difficulty: difficultyRating,
         dmPrompt,
         loot: calculateRandomEncounterLoot(enemies, partyMembers.length),

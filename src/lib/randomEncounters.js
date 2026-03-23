@@ -1,7 +1,10 @@
 /**
  * Random Encounter System — wandering monsters in dungeons/wilderness.
  * Encounters scale by area type (dungeon/wilderness/town) and party level.
+ * May include environmental hazards for tactical challenge.
  */
+
+import { determineEncounterHazards, describeHazard } from './environmentalHazards.js'
 
 // Encounter tables by area type and level (monsters by CR)
 const ENCOUNTER_TABLES = {
@@ -126,9 +129,15 @@ export function generateRandomEncounter(partyLevel, partySize, areaType = 'dunge
           ? 'Hard'
           : 'Deadly';
 
+  // Generate environmental hazards (30% chance, more common in deadly encounters)
+  const hazardProbability = difficultyRating === 'Deadly' ? 0.5 : 0.3;
+  const hazards = determineEncounterHazards(hazardProbability);
+  const hazardDescriptions = hazards.map(h => describeHazard(h));
+
   return {
     enemies,
-    dmPrompt: `Random encounter: ${selectedMonsters.join(', ')} (${difficultyRating})`,
+    hazards,
+    dmPrompt: `Random encounter: ${selectedMonsters.join(', ')} (${difficultyRating})${hazardDescriptions.length > 0 ? '\n' + hazardDescriptions.join('\n') : ''}`,
     difficultyRating,
   };
 }
