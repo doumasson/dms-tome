@@ -205,7 +205,7 @@ ${npc.sideQuest ? '- If appropriate, mention your side quest to interest the pla
 ${steerHint}
 
 Respond ONLY with a raw JSON object — no markdown, no code fences:
-{"narrative":"Your in-character response here.","rollRequest":null,"reputationChange":null}
+{"narrative":"Your in-character response here.","rollRequest":null,"reputationChange":null,"questOffer":null}
 
 rollRequest rules:
 - Set to null for normal conversation. Only include when the player is actively trying to influence you.
@@ -219,7 +219,15 @@ reputationChange rules:
 - Format: {"faction":"faction-id","delta":15,"reason":"You proved yourself trustworthy"}
 - delta is typically -25 to +25 (negative for poor relations, positive for good relations)
 - Set to null for normal conversation.
-- Include the reason so the player understands why their reputation changed.`
+- Include the reason so the player understands why their reputation changed.
+
+questOffer rules:
+- Use to offer a side quest or mission to the player.
+- Include questOffer only when the player has shown interest in helping or the NPC feels they can trust the player.
+- Format: {"title":"Quest Title","description":"One sentence description","objectives":["Objective 1","Objective 2"]}
+- objectives is an array of 1-3 strings describing the quest steps
+- Set to null for normal conversation.
+- Combine with reputationChange if appropriate (NPC offers quest AND suggests initial rep change).`
 }
 
 // Generate 2-3 continuation scenes when a campaign concludes and players want to keep playing
@@ -328,17 +336,17 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
       parsed.narrative = sanitizeOutput(parsed.narrative)
       return parsed
     }
-    return { narrative: String(parsed?.narrative || '(No response)'), rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null };
+    return { narrative: String(parsed?.narrative || '(No response)'), rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null, questOffer: null };
   } catch {
     // Try to extract narrative value with a regex that handles escaped quotes
     const narrativeMatch = text.match(/"narrative"\s*:\s*"((?:[^"\\]|\\.)*)"/);
     if (narrativeMatch) {
       return {
         narrative: sanitizeOutput(narrativeMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"')),
-        rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null,
+        rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null, questOffer: null,
       };
     }
     // Never show raw JSON — return a DM pause message
-    return { narrative: '(The Dungeon Master pauses to consider the situation…)', rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null };
+    return { narrative: '(The Dungeon Master pauses to consider the situation…)', rollRequest: null, stateHint: null, advanceScene: false, reputationChange: null, questOffer: null };
   }
 }

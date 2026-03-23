@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 const SPEECH_SUPPORTED = !!SpeechRecognition
 import { callNarrator, buildNpcSystemPrompt } from '../lib/narratorApi'
+import { createQuest } from '../lib/questSystem'
 import { broadcastEncounterAction } from '../lib/liveChannel'
 import { getSkillBonus } from '../lib/derivedStats'
 import useStore from '../store/useStore'
@@ -28,6 +29,7 @@ export default function NpcConversation({
   const factionReputation = useStore(s => s.factionReputation)
   const adjustFactionReputation = useStore(s => s.adjustFactionReputation)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
+  const addQuest = useStore(s => s.addQuest)
 
   const [messages, setMessages] = useState(() => {
     if (initialMessage) {
@@ -46,6 +48,9 @@ export default function NpcConversation({
 
   // Reputation change state
   const [pendingRepChange, setPendingRepChange] = useState(null) // { faction, delta, reason }
+
+  // Quest offer state
+  const [pendingQuestOffer, setPendingQuestOffer] = useState(null) // { title, description, objectives }
 
   const startPTT = useCallback(() => {
     if (!SPEECH_SUPPORTED) return
@@ -75,7 +80,7 @@ export default function NpcConversation({
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages.length, pendingRoll, rollResult, pendingRepChange])
+  }, [messages.length, pendingRoll, rollResult, pendingRepChange, pendingQuestOffer])
 
   useEffect(() => {
     onPromptCount?.(promptCount)
@@ -122,6 +127,11 @@ export default function NpcConversation({
       // Check for reputation change
       if (result?.reputationChange && result.reputationChange.faction && typeof result.reputationChange.delta === 'number') {
         setPendingRepChange(result.reputationChange)
+      }
+
+      // Check for quest offer
+      if (result?.questOffer && result.questOffer.title && result.questOffer.objectives) {
+        setPendingQuestOffer(result.questOffer)
       }
 
       if (isCritical && newCount >= 7 && newCount < (maxPrompts || 10)) {
@@ -250,6 +260,38 @@ export default function NpcConversation({
     setHardLimited(true)
   }
 
+  /** Accept a quest offer and add to player's journal */
+  async function handleAcceptQuest() {
+    if (!pendingQuestOffer) return
+
+    const { title, description, objectives } = pendingQuestOffer
+
+    // Create quest object
+    const quest = createQuest(
+      title,
+      objectives.map(text => ({ text })),
+      { description, npcName: npc.name, faction: npc.faction }
+    )
+
+    // Add to store
+    addQuest(quest)
+
+    // Add to narrator log
+    addNarratorMessage({
+      role: 'system',
+      speaker: 'Quest Added',
+      text: `${title}`,
+    })
+
+    // Show in conversation
+    setMessages(prev => [...prev, {
+      role: 'system', speaker: '', text: `Quest added: ${title}`,
+    }])
+
+    setPendingQuestOffer(null)
+    setHardLimited(true)
+  }
+
   function handleSubmit(e) {
     e.preventDefault()
     handleSend()
@@ -332,7 +374,42 @@ export default function NpcConversation({
         </div>
       )}
 
-      {!disabled && !hardLimited && !pendingRoll && !rollResult && !pendingRepChange && (
+      {/* Quest offer panel */}
+      {pendingQuestOffer && !rollResult && (
+        <div style={{
+          padding: '12px 16px', textAlign: 'left', fontFamily: 'Cinzel, serif',
+          background: 'rgba(20,16,12,0.95)', borderTop: '2px solid #d4af37',
+          color: '#e8dcc8',
+        }}>
+          <div style={{ fontSize: 14, color: '#d4af37', marginBottom: 8, textAlign: 'center' }}>
+            Quest Offered
+          </div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', marginBottom: 6, color: '#d4af37' }}>
+            {pendingQuestOffer.title}
+          </div>
+          {pendingQuestOffer.description && (
+            <div style={{ fontSize: 12, marginBottom: 10, opacity: 0.85 }}>
+              {pendingQuestOffer.description}
+            </div>
+          )}
+          {pendingQuestOffer.objectives && pendingQuestOffer.objectives.length > 0 && (
+            <div style={{ fontSize: 11, marginBottom: 10, opacity: 0.75 }}>
+              {pendingQuestOffer.objectives.map((obj, i) => (
+                <div key={i}>• {obj}</div>
+              ))}
+            </div>
+          )}
+          <button onClick={handleAcceptQuest} style={{
+            width: '100%', padding: '10px 0', background: '#d4af37', color: '#1a1614',
+            border: 'none', borderRadius: 4, cursor: 'pointer', fontFamily: 'Cinzel, serif',
+            fontSize: 13, fontWeight: 'bold', letterSpacing: 1,
+          }}>
+            Accept Quest
+          </button>
+        </div>
+      )}
+
+      {!disabled && !hardLimited && !pendingRoll && !rollResult && !pendingRepChange && !pendingQuestOffer && (
         <form onSubmit={handleSubmit} className="npc-conv-input-row">
           <input
             className="npc-conv-input"
