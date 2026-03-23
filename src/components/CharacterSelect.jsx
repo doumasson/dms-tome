@@ -30,7 +30,40 @@ export default function CharacterSelect({ user, campaignId, onSelectExisting, on
         return true;
       });
 
-      setCharacters(unique.map(m => m.character_data));
+      let chars = unique.map(m => m.character_data);
+
+      // In dev/test mode with no characters, auto-seed test character for Playwright
+      if (chars.length === 0 && import.meta.env.VITE_DEV_AUTO_LOGIN === 'true') {
+        const testChar = {
+          id: 'test-aric-shadowblade',
+          name: 'Aric Shadowblade',
+          class: 'Rogue',
+          race: 'Human',
+          background: 'Criminal',
+          level: 1,
+          xp: 0,
+          hp: 8, maxHp: 8, currentHp: 8,
+          ac: 14,
+          speed: 30,
+          stats: { str: 10, dex: 16, con: 10, int: 12, wis: 12, cha: 14 },
+          skills: ['Acrobatics', 'Sleight of Hand'],
+          attacks: [{ name: 'Dagger', bonus: '+5', damage: '1d4+3' }],
+          features: [],
+          spellSlots: {},
+          spells: [],
+          equipment: [],
+          inventory: [],
+          equippedItems: {},
+          gold: 15,
+          proficiencyBonus: 2,
+          portrait: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23d4af37" width="200" height="200"/%3E%3C/svg%3E',
+          userId: user.id,
+          userName: user.name,
+        };
+        chars = [testChar];
+      }
+
+      setCharacters(chars);
       setLoading(false);
     }
     load();
