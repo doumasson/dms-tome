@@ -2,20 +2,49 @@ import { test, expect } from '@playwright/test';
 
 // Helper function to navigate through campaign and character selection
 async function navigateToGame(page) {
-  // Select first campaign card button (skip header buttons at indices 0-1, join button at 2)
-  const allButtons = page.locator('button');
-  const buttonCount = await allButtons.count();
-  if (buttonCount > 3) {
-    await allButtons.nth(3).click();
+  // Wait for campaign selection screen to be visible
+  const campaignHeading = page.locator('h2:has-text("Your Campaigns")');
+  await expect(campaignHeading).toBeVisible({ timeout: 5000 });
+
+  // Find and click the PLAY button on the campaign card
+  // Look for buttons that are in the campaign list area
+  const playButtons = page.locator('button:has-text("PLAY")');
+  if ((await playButtons.count()) > 0) {
+    await playButtons.first().click();
     await page.waitForLoadState('networkidle');
+  } else {
+    // Fallback: find any button after the join input that's not join/create
+    const buttons = page.locator('button');
+    const count = await buttons.count();
+    // Skip first two header buttons, skip join/create buttons (usually at 2-4), click first campaign button
+    for (let i = 5; i < count; i++) {
+      const btn = buttons.nth(i);
+      const text = await btn.textContent();
+      if (text && !text.includes('Create') && !text.includes('Join')) {
+        await btn.click();
+        await page.waitForLoadState('networkidle');
+        break;
+      }
+    }
   }
 
-  // Select character (find buttons with "Aric" or similar, or click first character button)
-  const charButtons = page.locator('button:has-text("Aric"), button:has-text("Select"), button[style*="character"]');
-  const charCount = await charButtons.count();
-  if (charCount > 0) {
+  // Wait for character selection to load
+  await page.waitForTimeout(500);
+
+  // Select character - click the character select button or card
+  const charButtons = page.locator('button:has-text("Select"), button:has-text("Aric")');
+  if ((await charButtons.count()) > 0) {
     await charButtons.first().click();
     await page.waitForLoadState('networkidle');
+  } else {
+    // Fallback: look for any button on character select screen
+    const allButtons = page.locator('button');
+    const allCount = await allButtons.count();
+    // Skip back button (usually first) and click second button which should be character
+    if (allCount > 1) {
+      await allButtons.nth(1).click();
+      await page.waitForLoadState('networkidle');
+    }
   }
 }
 
