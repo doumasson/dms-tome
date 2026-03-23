@@ -686,6 +686,9 @@ export default function App() {
       // Initialize factions from campaign data
       const factions = campaignRecord.campaign_data.factions || [];
       useStore.getState().initializeFactions(factions);
+    } else {
+      // No campaign data — initialize with minimal defaults so game can load
+      loadCampaign({ title: campaignRecord.name || 'Campaign', scenes: [] });
     }
     if (campaignRecord.settings) {
       loadCampaignSettings(campaignRecord.settings);
