@@ -154,15 +154,40 @@ Rules for special fields:
  * Build a system prompt for an NPC conversation.
  * NPC stays in character, guides toward story/side quest.
  */
-export function buildNpcSystemPrompt(npc, campaign, storyFlags, promptCount, isCritical) {
+export function buildNpcSystemPrompt(npc, campaign, storyFlags, promptCount, isCritical, factionReputation = {}) {
   const flagsList = storyFlags.size > 0 ? Array.from(storyFlags).join(', ') : 'none'
   const steerHint = isCritical && promptCount >= 5
     ? '\nThe conversation has gone on long enough. Start wrapping up — hint that you have nothing more to say.'
     : ''
 
+  // Faction context
+  let factionBlock = ''
+  if (npc.faction) {
+    const rep = factionReputation[npc.faction] ?? 0
+    let disposition = 'Neutral'
+    let modifier = ''
+    if (rep <= -75) {
+      disposition = 'Hostile'
+      modifier = 'Refuses service. May attack.'
+    } else if (rep <= -25) {
+      disposition = 'Unfriendly'
+      modifier = 'Reluctant to help. Higher prices.'
+    } else if (rep <= 25) {
+      disposition = 'Neutral'
+      modifier = 'Standard service. Normal prices.'
+    } else if (rep <= 75) {
+      disposition = 'Friendly'
+      modifier = 'Eager to help. Discounted prices (10% off).'
+    } else {
+      disposition = 'Revered'
+      modifier = 'Will go out of their way. Discounted prices (25% off). May grant favors.'
+    }
+    factionBlock = `\nFaction: ${npc.faction} member\nPlayer reputation with your faction: ${disposition} (${rep}/100)\n${modifier}`
+  }
+
   return `You are ${npc.name}, a ${npc.role}. You are an NPC in a D&D 5e campaign called "${campaign?.title || 'an unnamed campaign'}".
 
-Personality: ${npc.personality}
+Personality: ${npc.personality}${factionBlock}
 ${npc.sideQuest ? `Side quest you can offer: ${npc.sideQuest}` : ''}
 ${isCritical && npc.criticalInfo ? `Critical information to deliver: ${npc.criticalInfo}` : ''}
 

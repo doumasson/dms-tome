@@ -683,6 +683,9 @@ export default function App() {
     setActiveCampaign(campaignRecord);
     if (campaignRecord.campaign_data && Object.keys(campaignRecord.campaign_data).length > 0) {
       loadCampaign(campaignRecord.campaign_data);
+      // Initialize factions from campaign data
+      const factions = campaignRecord.campaign_data.factions || [];
+      useStore.getState().initializeFactions(factions);
     }
     if (campaignRecord.settings) {
       loadCampaignSettings(campaignRecord.settings);

@@ -25,6 +25,7 @@ export default function NpcConversation({
   const storyFlags = useStore(s => s.storyFlags)
   const sessionApiKey = useStore(s => s.sessionApiKey)
   const myCharacter = useStore(s => s.myCharacter)
+  const factionReputation = useStore(s => s.factionReputation)
 
   const [messages, setMessages] = useState(() => {
     if (initialMessage) {
@@ -92,7 +93,7 @@ export default function NpcConversation({
 
     setLoading(true)
     try {
-      const systemPrompt = buildNpcSystemPrompt(npc, campaign, storyFlags, newCount, isCritical)
+      const systemPrompt = buildNpcSystemPrompt(npc, campaign, storyFlags, newCount, isCritical, factionReputation)
       const history = allMessages.map(m => ({
         role: m.role === 'npc' ? 'assistant' : 'user',
         content: m.text,

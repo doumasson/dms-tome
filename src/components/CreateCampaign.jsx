@@ -58,6 +58,10 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
 {
   "title": "${fields.name}",
   "startArea": "area-village",
+  "factions": [
+    { "id": "town-guard", "name": "Town Guard", "description": "Official protectors of law and order", "alignment": "Lawful Good" },
+    { "id": "shadow-guild", "name": "Shadow Guild", "description": "Underground network of thieves and smugglers", "alignment": "Chaotic Neutral" }
+  ],
   "questObjectives": [
     { "id": "q1", "name": "Main quest objective description", "status": "active" }
   ],
@@ -79,7 +83,7 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
         { "from": "Market Square", "to": "Elder's House" }
       ],
       "npcs": [
-        { "name": "Barkeep Hilda", "position": "The Rusty Flagon", "personality": "Gruff but kind tavern owner, knows local rumors", "questRelevant": true }
+        { "name": "Barkeep Hilda", "position": "The Rusty Flagon", "personality": "Gruff but kind tavern owner, knows local rumors", "faction": "town-guard", "questRelevant": true }
       ],
       "enemies": [],
       "encounterZones": [],
@@ -101,7 +105,7 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
         { "from": "Clearing", "to": "Hermit's Hut" }
       ],
       "npcs": [
-        { "name": "Old Marren", "position": "Hermit's Hut", "personality": "Paranoid hermit who knows about the curse" }
+        { "name": "Old Marren", "position": "Hermit's Hut", "personality": "Paranoid hermit who knows about the curse", "faction": "shadow-guild" }
       ],
       "enemies": [
         { "name": "Goblin Scout", "position": "Clearing", "count": 3, "stats": { "hp": 7, "ac": 15, "speed": 30, "cr": "1/4" }, "attacks": [{ "name": "Scimitar", "bonus": "+4", "damage": "1d6+2" }] }
@@ -152,7 +156,9 @@ Requirements:
 - Create 3–6 areas forming a connected graph (every area reachable via exits)
 - Exits MUST be bidirectional: if area A exits to area B, area B must exit back to area A
 - Each area should have 2–5 POIs
+- Create 2–4 factions with distinct motivations and alignments (political, criminal, merchant, mercenary, religious, etc.)
 - Include 3–6 NPCs across areas with distinct personalities
+- Each NPC must have a "faction" field (faction id) representing their primary allegiance
 - The villain (${fields.villain}) should appear in a later area
 - Set questRelevant: true on NPCs that advance the story
 - Outdoor area dimensions: width 80–120, height 60–90 (villages, forests, towns)

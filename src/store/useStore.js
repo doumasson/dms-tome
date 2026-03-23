@@ -6,6 +6,7 @@ import { createRestSlice } from './restSlice';
 import { createGameTimeSlice } from './gameTimeSlice';
 import { createUiSlice } from './uiSlice';
 import { createStorySlice } from './storySlice';
+import { createFactionSlice } from './factionSlice';
 
 const useStore = create((...a) => ({
   ...createCampaignSlice(...a),
@@ -15,6 +16,7 @@ const useStore = create((...a) => ({
   ...createGameTimeSlice(...a),
   ...createUiSlice(...a),
   ...createStorySlice(...a),
+  ...createFactionSlice(...a),
 }));
 
 export default useStore;
