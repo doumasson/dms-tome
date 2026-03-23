@@ -292,6 +292,16 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Narrator log integration — roll results posted to session log so all players see them
 - 306 tests, 0 failures.
 
+### Faction System
+- [x] Faction library (`factionSystem.js`) — reputation tracking (-100 to +100), disposition calculation (Hostile/Unfriendly/Neutral/Friendly/Revered), dialogue context generation
+- [x] Zustand faction slice — global faction reputation map, faction initialization, reputation adjustment/setting actions
+- [x] Campaign generation prompt updated — factions array in campaign schema, NPCs assigned to factions via `faction` field
+- [x] Campaign loading — faction initialization on campaign load via `initializeFactions`
+- [x] NPC dialogue integration — faction context injected into `buildNpcSystemPrompt`, NPCs greet/help based on player reputation with their faction
+- [x] Demo campaign wired — "Millhaven Guard" and "Goblin Tribe" factions, village NPCs affiliated with guard
+- Reputation affects NPC greeting, willingness to help, prices (discounts/surcharges), and future special favors
+- 327 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -325,3 +335,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Extra Attack + 10 class abilities implemented: Fighter (Second Wind, Action Surge), Barbarian (Rage, Reckless Attack), Rogue (Sneak Attack, Cunning Action), Paladin (Divine Smite, Lay on Hands), Monk (Patient Defense). 288 tests.
 - **2026-03-22:** 6 more class abilities: Stunning Strike (Monk), Bardic Inspiration (Bard), Channel Divinity: Turn Undead (Cleric), Wild Shape (Druid), Hunter's Mark (Ranger), Quickened Spell (Sorcerer). All 12 classes now combat-functional. Wild Shape revert on 0 HP. 294 tests.
 - **2026-03-22:** Social skill checks in NPC dialog — Persuasion/Intimidation/Deception/Insight checks triggered by AI NPC, inline roll UI, results feed back to shape NPC response, multiplayer broadcast. 306 tests.
+- **2026-03-22:** Faction system implementation — complete reputation tracking (-100 to +100), faction storage in campaign JSON, AI NPC personality injection based on player reputation, NPC greeting/pricing/help modifiers based on faction standing (Hostile/Unfriendly/Neutral/Friendly/Revered). Demo campaign wired with Guard & Goblin Tribe factions. All 12 classes now combat-functional.
