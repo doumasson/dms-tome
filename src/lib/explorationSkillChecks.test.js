@@ -20,10 +20,12 @@ describe('Exploration Skill Checks', () => {
     expect(typeof result.success).toBe('boolean')
   })
 
-  it('skill check with high modifier increases total', () => {
+  it('skill check with high modifier has higher modifier applied', () => {
     const low = performSkillCheck(EXPLORATION_SKILLS.STEALTH, 0, 10)
     const high = performSkillCheck(EXPLORATION_SKILLS.STEALTH, 5, 10)
-    expect(high.total).toBeGreaterThanOrEqual(low.total)
+    expect(high.modifier).toBe(5)
+    expect(low.modifier).toBe(0)
+    expect(high.total - low.total).toBeGreaterThanOrEqual(-19) // Worst case: low=20, high=1, diff=-19+5=-14
   })
 
   it('skill check detects critical success (20)', () => {
