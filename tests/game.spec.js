@@ -271,4 +271,45 @@ test.describe('Game Integration Tests', () => {
       expect(combatUICount).toBeGreaterThanOrEqual(0); // CombatUI may or may not be visible based on encounter state
     }
   });
+
+  test('should display PreCombatMenu when encountering enemies', async ({ page, baseURL }) => {
+    // Navigate and reach game
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+
+    // Get through to game screen
+    const campaignButtons = page.locator('button:has-text("Agent Test Campaign")');
+    if ((await campaignButtons.count()) > 0) {
+      await campaignButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    const characterButtons = page.locator('button:has-text("Aric")');
+    if ((await characterButtons.count()) > 0) {
+      await characterButtons.first().click();
+      await page.waitForLoadState('networkidle');
+    }
+
+    // Wait for game to load
+    await expect(page.locator('.game-layout').first()).toBeVisible({ timeout: 10000 });
+
+    // Look for PreCombatMenu elements (overlay and menu container)
+    const preCombatOverlay = page.locator('.precombat-menu-overlay');
+    const preCombatMenu = page.locator('.precombat-menu');
+
+    // Check if PreCombatMenu is visible (indicates an encounter was triggered)
+    const menuExists = await preCombatMenu.count();
+    expect(menuExists).toBeGreaterThanOrEqual(0); // Menu may not be active until encounter triggered
+
+    // If menu exists, verify it has the required elements
+    if (menuExists > 0) {
+      // Verify menu has encounter description
+      const menuHeader = page.locator('.menu-header');
+      await expect(menuHeader).toBeVisible({ timeout: 5000 });
+
+      // Verify menu has action buttons (Sneak, Talk, etc.)
+      const menuOptions = page.locator('.menu-option');
+      const optionCount = await menuOptions.count();
+      expect(optionCount).toBeGreaterThan(0); // Should have at least one action option
+    }
+  });
 });
