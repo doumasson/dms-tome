@@ -209,6 +209,10 @@ test.describe('Game Integration Tests', () => {
     const toggleCount = await toggleBtn.count();
 
     if (toggleCount > 0) {
+      // Get initial content visibility
+      const contentBefore = page.locator('.narrator-content');
+      const contentVisibleBefore = await contentBefore.isVisible().catch(() => false);
+
       // Click to expand/collapse
       await toggleBtn.click();
       await page.waitForTimeout(300); // Wait for animation
@@ -216,6 +220,11 @@ test.describe('Game Integration Tests', () => {
       // Verify size changed (collapse/expand happened)
       const newHeight = await narratorBar.evaluate(el => el.offsetHeight);
       expect(newHeight).not.toBe(initialHeight); // Height should change
+
+      // Verify content visibility toggled
+      const contentAfter = page.locator('.narrator-content');
+      const contentVisibleAfter = await contentAfter.isVisible().catch(() => false);
+      expect(contentVisibleAfter).not.toBe(contentVisibleBefore); // Visibility should toggle
     }
 
     // Verify narrator bar still exists after toggle
