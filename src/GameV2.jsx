@@ -166,7 +166,6 @@ export default function GameV2({ onLeave }) {
   const [showSkills, setShowSkills] = useState(false)
   const [showSpells, setShowSpells] = useState(false)
   const [showTurnManager, setShowTurnManager] = useState(false)
-  const [showInventory, setShowInventory] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1295,19 +1294,6 @@ export default function GameV2({ onLeave }) {
           <TurnManager_
             combatant={encounter.combatants[encounter.currentTurn]}
             onClose={() => setShowTurnManager(false)}
-          />
-        </Suspense>
-      )}
-      {showInventory && myCharacter && (
-        <Suspense fallback={null}>
-          <Inventory_
-            items={myCharacter.inventory || []}
-            equipment={myCharacter.equipment || {}}
-            gold={myCharacter.gold || 0}
-            onEquip={() => {}}
-            onUse={() => {}}
-            onDrop={() => {}}
-            onClose={() => setShowInventory(false)}
           />
         </Suspense>
       )}
