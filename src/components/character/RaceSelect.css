@@ -1,378 +1,273 @@
-/* Race Selection Screen */
-
-.race-select-screen {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a1a 100%);
-  color: #e8d5a3;
-  font-family: 'Cinzel', Georgia, serif;
-  overflow: hidden;
-}
-
-.race-select-header {
-  padding: 24px;
-  border-bottom: 2px solid #d4af37;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.race-select-header h1 {
-  margin: 0 0 8px 0;
-  font-size: 28px;
-  color: #d4af37;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.race-select-header p {
-  margin: 0;
-  font-size: 13px;
-  color: #b8a878;
-}
+/* Race Select - Dark fantasy card layout, mobile friendly */
 
 .race-select-container {
   display: flex;
-  flex: 1;
-  overflow: hidden;
-  gap: 20px;
-  padding: 20px;
-  min-height: 0;
-}
-
-/* Race cards grid */
-.race-cards-grid {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-width: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a1a 100%);
+  padding: 24px;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+  gap: 32px;
 }
 
-.race-group {
+/* Header */
+.race-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 24px;
+}
+
+.race-header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #d4af37;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.race-subtitle {
+  font-size: 16px;
+  color: #aaa;
+  font-family: 'Georgia', serif;
+  margin: 0;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* Race grid */
+.race-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Race card */
 .race-card {
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, rgba(42, 42, 26, 0.8), rgba(26, 26, 26, 0.9));
+  position: relative;
+  background: rgba(42, 42, 26, 0.6);
   border: 2px solid rgba(212, 175, 55, 0.3);
   border-radius: 4px;
-  padding: 16px;
+  padding: 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   text-align: left;
-  position: relative;
-  gap: 12px;
-  min-height: 200px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
 }
 
 .race-card:hover {
-  background: linear-gradient(135deg, rgba(42, 42, 26, 1), rgba(26, 26, 26, 1));
+  background: rgba(42, 42, 26, 0.8);
   border-color: rgba(212, 175, 55, 0.6);
-  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
 }
 
 .race-card.selected {
-  background: linear-gradient(135deg, rgba(46, 204, 113, 0.15), rgba(26, 26, 26, 0.95));
-  border-color: #2ecc71;
-  box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #d4af37;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.4), inset 0 0 12px rgba(212, 175, 55, 0.1);
 }
 
-.race-card-header {
-  margin-bottom: 8px;
+/* Card inner content */
+.race-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
 }
 
+/* Race name */
 .race-name {
-  margin: 0;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 700;
   color: #d4af37;
+  margin: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-weight: 700;
 }
 
-.race-subrace {
-  font-size: 12px;
-  color: #b8a878;
-  text-transform: none;
-  letter-spacing: 0;
-  margin-left: 6px;
-}
-
-.race-card-details {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  min-height: 0;
-}
-
-.race-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 11px;
-}
-
-.meta-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.meta-label {
-  color: #888;
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.meta-value {
-  color: #e8d5a3;
-  font-weight: 600;
-}
-
-.race-bonuses {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 8px;
-  background: rgba(212, 175, 55, 0.08);
-  border-left: 2px solid #d4af37;
-}
-
-.bonuses-label {
-  font-size: 11px;
-  color: #d4af37;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-}
-
-.bonuses-value {
-  font-size: 12px;
-  color: #e8d5a3;
-}
-
+/* Race description */
 .race-description {
-  font-size: 12px;
-  line-height: 1.4;
-  color: #d0c5a8;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ccc;
   margin: 0;
+  flex: 1;
+  font-family: 'Georgia', serif;
 }
 
-.race-traits-preview {
-  font-size: 11px;
-  color: #888;
-  margin-top: auto;
+/* Traits section */
+.race-traits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .traits-label {
-  color: #d4af37;
-  font-weight: 600;
-}
-
-.race-card-indicator {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(46, 204, 113, 0.2);
-  border: 2px solid #2ecc71;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.race-card.selected .race-card-indicator {
-  opacity: 1;
-}
-
-.selected-icon {
-  color: #2ecc71;
-  font-weight: 700;
-  font-size: 14px;
-}
-
-/* Details panel */
-.race-details-panel {
-  width: 320px;
-  background: linear-gradient(180deg, rgba(42, 42, 26, 0.9), rgba(26, 26, 26, 0.95));
-  border: 2px solid #d4af37;
-  border-radius: 4px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
-  flex-shrink: 0;
-}
-
-.race-details-panel h2 {
-  margin: 0;
-  font-size: 20px;
-  color: #d4af37;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.subrace-label {
-  margin: 0;
-  font-size: 12px;
-  color: #b8a878;
-}
-
-.details-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.details-section h3 {
-  margin: 0;
-  font-size: 13px;
-  color: #d4af37;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-  padding-bottom: 6px;
-}
-
-.details-section p {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
-  color: #d0c5a8;
-}
-
-.traits-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.trait-item {
-  padding: 8px;
-  background: rgba(212, 175, 55, 0.05);
-  border-left: 2px solid #d4af37;
-}
-
-.trait-item h4 {
-  margin: 0 0 4px 0;
   font-size: 11px;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.trait-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.trait-tag {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #e8d5a3;
+  white-space: nowrap;
+}
+
+/* Ability bonus */
+.ability-bonus {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.bonus-label {
+  font-size: 10px;
+  font-weight: 700;
   color: #d4af37;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.trait-item p {
-  margin: 0;
-  font-size: 11px;
-  line-height: 1.4;
-  color: #d0c5a8;
+.bonus-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2ecc71;
 }
 
-.details-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: auto;
-}
-
-.btn-back,
-.btn-confirm {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 2px;
-  font-family: 'Cinzel', Georgia, serif;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 44px;
-}
-
-.btn-back {
-  background: rgba(212, 175, 55, 0.15);
-  color: #d4af37;
-  border: 1px solid #d4af37;
-}
-
-.btn-back:hover {
-  background: rgba(212, 175, 55, 0.25);
-}
-
-.btn-confirm {
+/* Selection indicator */
+.selection-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
   background: #d4af37;
   color: #1a1a1a;
-  border: 1px solid #a0821d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+}
+
+/* Confirmation message */
+.race-confirmation {
+  text-align: center;
+  padding: 16px 24px;
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 4px;
+  max-width: 600px;
+  margin: 0 auto;
+  color: #2ecc71;
+  font-size: 14px;
+}
+
+.race-confirmation strong {
+  color: #d4af37;
   font-weight: 700;
 }
 
-.btn-confirm:hover {
-  background: #e8d5a3;
-}
-
-.btn-confirm:active {
-  background: #c9a12c;
-}
-
-/* Mobile responsive */
-@media (max-width: 1024px) {
-  .race-select-container {
-    flex-direction: column;
-  }
-
-  .race-details-panel {
-    width: 100%;
-    max-height: 300px;
-  }
-
-  .race-group {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
-}
-
+/* Mobile adjustments */
 @media (max-width: 768px) {
-  .race-select-screen {
-    height: 100svh;
-  }
-
-  .race-select-header {
-    padding: 16px;
-  }
-
-  .race-select-header h1 {
-    font-size: 20px;
-  }
-
   .race-select-container {
-    padding: 12px;
-    gap: 12px;
+    padding: 16px;
+    gap: 24px;
   }
 
-  .race-group {
+  .race-header h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .race-subtitle {
+    font-size: 14px;
+  }
+
+  .race-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .race-card {
-    padding: 12px;
-    min-height: auto;
+    min-height: 280px;
+    padding: 16px;
   }
 
-  .race-details-panel {
-    max-height: 40vh;
+  .race-name {
+    font-size: 18px;
+  }
+
+  .race-description {
+    font-size: 12px;
+  }
+
+  .trait-tag {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+  .race-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+/* Landscape mobile */
+@media (max-height: 600px) {
+  .race-select-container {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .race-header h1 {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .race-subtitle {
+    font-size: 12px;
+  }
+
+  .race-card {
+    min-height: 200px;
+    padding: 12px;
+  }
+
+  .race-name {
+    font-size: 16px;
+  }
+
+  .race-description {
+    font-size: 11px;
   }
 }
