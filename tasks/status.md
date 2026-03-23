@@ -309,6 +309,16 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - Reputation now affects: NPC greeting, dialogue options, willingness to help, prices (10% off friendly, 25% off revered), combat encounters, merchant inventory
 - 327 tests, 0 failures.
 
+### Random Encounter System ✅ COMPLETE
+- [x] Dynamic encounter generation — CR-based monster selection from 300+ combinations, scaled by party level (1-20) and area type (dungeon/wilderness/town)
+- [x] Probabilistic triggering — 10% town, 15% wilderness, 20% dungeon encounter per movement check, integrates seamlessly with exploration
+- [x] Difficulty scaling — encounters rated Easy/Medium/Hard/Deadly based on total CR vs party budget, prevents trivial fights and deadly surprises
+- [x] Monster stat library — 50+ monsters with HD/AC/HP/attacks, consistent with D&D 5e stat blocks
+- [x] Encounter loot — CR-scaled gold split by party size, 20% chance of consumable item drop
+- [x] DM narrative integration — AI DM gets encounter prompt, monster names, difficulty rating; can accept combat or roleplay
+- [x] Multiplayer broadcast — encounter suggestions synced to all players via Supabase Realtime
+- 336 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -350,3 +360,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Hostile faction encounters — NPCs from factions with Hostile player reputation (≤-75) initiate combat on sight instead of dialogue. Provides natural combat encounters in exploration based on player choices. 327 tests.
 - **2026-03-22:** Faction-gated merchant inventory — merchants affiliated with factions show exclusive premium items to players with good reputation (Friendly+, rep > 25). Items marked with ✦ sparkle. Unlocks Silver Longsword, Enchanted Bow, Mithril Armor, Shield +1, Superior Potions based on shop type. 327 tests.
 - **2026-03-22:** Game Over Modal component — created GameOverModal.jsx to replace inline defeat UI. Displays when all party members are defeated (3 failed death saves), offering revive (Resurrect Party) or leave campaign options. Extracted styling into component for cleaner code. Maintains existing defeat flow with mercyRevive and onLeave handlers. 327 tests passing.
+- **2026-03-22:** Random Encounter System — wandering monsters in dungeons (20% trigger), wilderness (15%), towns (10%). Encounters scale by party level, area type; 50+ monsters with D&D stats; CR-based difficulty rating (Easy/Medium/Hard/Deadly); automatic loot (gold + consumables). DM gets narrative prompt with monster names, can initiate combat or roleplay. Seamlessly integrated into exploration movement system. 336 tests.
