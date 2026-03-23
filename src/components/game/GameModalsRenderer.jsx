@@ -316,10 +316,10 @@ export default function GameModalsRenderer({
           />
         </Suspense>
       )}
-      {inCombat && encounter.combatants && (
+      {inCombat && Array.isArray(encounter.combatants) && (
         <Suspense fallback={null}>
           <CombatUI
-            initiative={encounter.combatants || []}
+            initiative={encounter.combatants}
             currentTurnIndex={encounter.currentTurn || 0}
             onAction={handleCombatAction}
             onEndTurn={handleEndTurn}
