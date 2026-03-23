@@ -399,6 +399,20 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - Boss encounters now escalate tactically - phase transitions unlock new abilities that bosses actually use
 - 435 tests, 0 failures.
 
+### Dynamic Encounter Difficulty Warnings and Scaling ✅ COMPLETE
+- [x] Party power calculation — Factors: class, level, HP, AC, spell slots, health status
+- [x] Enemy power calculation — Factors: CR, HP, AC, boss status, minion status
+- [x] Difficulty rating — 5-tier system: Trivial/Easy/Medium/Hard/Deadly based on power ratio
+- [x] Context-aware warnings — Only warn when Hard or Deadly, not for easy encounters
+- [x] Encounter scaling suggestions — Add minions for trivial, remove for deadly encounters
+- [x] Player guidance — Warnings broadcast via narrator so all players are informed
+- [x] DM notes — Scaling suggestions sent as DM narrator notes for context
+- [x] One-time warnings — Marked as shown so players aren't spammed with warnings
+- Helps players make strategic decisions about retreat, reinforcements, or tactics
+- Teaches D&D 5e encounter balance concepts naturally during play
+- 26 new tests for difficulty calculations and scaling logic
+- 461 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -416,6 +430,7 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-22:** Dynamic Encounter Difficulty Warnings and Scaling complete — Party vs enemy power calculations, 5-tier difficulty ratings, context-aware warnings for Hard/Deadly encounters, auto-scaling suggestions, DM narrator integration. Teaches balance concepts and helps strategic decisions. 26 new tests. 461 tests passing.
 - **2026-03-22:** Boss Ability Execution in Combat complete — AI decides when to activate abilities, full effect resolution (damage/healing/conditions/minions), legendary action tracking, multiplayer broadcast. Bosses now escalate tactically through phases. Fixed flaky randomEncounters test. 435 tests passing.
 - **2026-03-22:** Multi-Phase Boss Encounters complete — HP-threshold-triggered phase transitions, ability execution, minion spawning, legendary action tracking, lair actions, AI prompt injection, phase UI indicator. 48 new tests. 435 tests passing.
 - **2026-03-18:** Phase 1 V2 rebuild complete — PixiJS tilemap renderer + ornate HUD on branch `phase1/tilemap-renderer-hud`. V1 untouched, V2 opt-in via `?v2`.
