@@ -73,7 +73,7 @@ export function resolveTrapEffect(trap, target) {
 
   // Roll d20 + modifier for saving throw
   const d20 = rollDamage('1d20')
-  const saveRoll = d20.total + modifier + saveProfBonus
+  const saveRoll = Math.max(1, d20.total + modifier + saveProfBonus)
   const saved = saveRoll >= effect.saveDC
 
   if (saved) {
