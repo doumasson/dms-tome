@@ -165,15 +165,6 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
                 </div>
               ))}
             </div>
-
-            <div style={styles.onboardingNote}>
-              <strong style={{ color: '#d4af37' }}>You'll need a Claude API key</strong> to power The Narrator.
-              Get one free at{' '}
-              <a href="https://console.anthropic.com" target="_blank" rel="noreferrer" style={{ color: '#d4af37' }}>
-                console.anthropic.com
-              </a>
-              {' '}— add it in ⚙ Settings after creating your first campaign.
-            </div>
           </div>
         ) : (
           <div style={styles.campaignList}>
