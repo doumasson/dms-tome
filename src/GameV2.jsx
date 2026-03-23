@@ -309,15 +309,22 @@ export default function GameV2({ onLeave }) {
 
   const handleNpcClick = useCallback((clickedToken) => {
     if (inCombat || isAnimating()) return
-    const npc = zone?.npcs?.find(n => n.name === clickedToken.name || n.name === clickedToken.id)
-    if (!npc) return
     const pos = playerPosRef.current
-    const dx = Math.abs(pos.x - npc.position.x)
-    const dy = Math.abs(pos.y - npc.position.y)
+    const dx = Math.abs(pos.x - (clickedToken.position?.x ?? clickedToken.x ?? 0))
+    const dy = Math.abs(pos.y - (clickedToken.position?.y ?? clickedToken.y ?? 0))
     if (dx > 1 || dy > 1) {
-      addNarratorMessage({ role: 'dm', speaker: 'System', text: `You need to move closer to ${npc.name}.` })
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: `You need to move closer to ${clickedToken.name}.` })
       return
     }
+    // Check if this is an enemy token
+    if (clickedToken.isEnemy || clickedToken.type === 'enemy') {
+      setPendingCombatEnemies([clickedToken])
+      setShowPreCombat(true)
+      return
+    }
+    // Otherwise treat as NPC
+    const npc = zone?.npcs?.find(n => n.name === clickedToken.name || n.name === clickedToken.id)
+    if (!npc) return
     handleInteractRef.current?.()
   }, [zone, inCombat, addNarratorMessage])
 
