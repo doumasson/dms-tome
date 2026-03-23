@@ -1,50 +1,6 @@
 import { useState } from 'react';
 import useStore from '../store/useStore';
-
-function HpBar({ current, max }) {
-  const pct = max > 0 ? Math.max(0, Math.min(1, current / max)) : 0;
-  const color =
-    pct > 0.6 ? '#27ae60' :
-    pct > 0.3 ? '#e67e22' :
-    pct > 0   ? '#e74c3c' : '#555';
-
-  return (
-    <div style={hpBarStyles.track}>
-      <div style={{ ...hpBarStyles.fill, width: `${pct * 100}%`, background: color }} />
-      <span style={hpBarStyles.label}>{current}/{max}</span>
-    </div>
-  );
-}
-
-const hpBarStyles = {
-  track: {
-    position: 'relative',
-    height: 14,
-    background: 'rgba(0,0,0,0.4)',
-    borderRadius: 2,
-    overflow: 'hidden',
-    border: '1px solid rgba(255,255,255,0.06)',
-  },
-  fill: {
-    height: '100%',
-    borderRadius: 2,
-    transition: 'width 0.4s ease, background 0.4s ease',
-    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
-  },
-  label: {
-    position: 'absolute',
-    inset: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '0.62rem',
-    fontWeight: 700,
-    color: 'rgba(255,255,255,0.85)',
-    letterSpacing: '0.04em',
-    textShadow: '0 1px 2px rgba(0,0,0,0.9)',
-    fontFamily: "'Cinzel', Georgia, serif",
-  },
-};
+import HpBar from './HpBar';
 
 const CONDITION_COLORS = {
   Blinded: '#888', Charmed: '#e91e8c', Deafened: '#888',
