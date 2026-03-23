@@ -445,6 +445,21 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 24 new tests covering all spell preparation scenarios and edge cases
 - 504 tests, 0 failures.
 
+### Ritual Casting System ✅ COMPLETE
+- [x] Ritual casting feature access — Wizards, Clerics, Druids, Bards, Paladins, Rangers can cast rituals
+- [x] Excluded classes — Sorcerers, Warlocks, Monks cannot cast rituals (no ritual casting feature)
+- [x] Ritual spell filtering — Only spells marked with ritual=true can be cast as rituals
+- [x] Preparation respecting — Prep casters only access prepared ritual spells
+- [x] Knowledge respecting — Non-prep casters access all known ritual spells
+- [x] Casting time — Rituals take 10 minutes to cast (10 min + spell casting time)
+- [x] No slot consumption — Ritual spells don't consume spell slots
+- [x] Spell data updated — Existing spells marked: Alarm, Comprehend Languages, Detect Magic, Find Familiar, Identify, Magic Mouth, Leomund's Tiny Hut, etc.
+- [x] Character validation — canCastRituals, getAvailableRituals for exploration/utility phases
+- Enables utility caster gameplay in exploration mode
+- Differentiates caster types (ritualists vs combat casters)
+- 30 new tests covering ritual access, filtering, and spell selection
+- 534 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -462,6 +477,8 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-22:** Ritual Casting System complete — Wizards, Clerics, Druids, Bards, Paladins, Rangers can cast ritual spells (no slot consumption). Sorcerers/Warlocks/Monks excluded per 5e rules. Prep casters respect prepared spells, non-prep access all known rituals. Spells marked: Alarm, Comprehend Languages, Detect Magic, Find Familiar, Identify, Magic Mouth, Leomund's Tiny Hut, etc. 30 new tests. 534 tests passing.
+- **2026-03-22:** Exploration Skill Check DC Scaling fix — Increased scaling multiplier from 2 to 3 to ensure monotonic DC increase across area levels (preventing lower-level scenarios from tying with higher-level challenges).
 - **2026-03-22:** Spell Preparation System complete — Clerics, Druids, Monks, Paladins, Wizards prepare spells using class level + ability modifier formula. Spell availability filtered by class and level. Validation prevents over-preparation. Non-prep casters (Sorcerer, Bard, Warlock) bypass system. 24 new tests. 504 tests passing.
 - **2026-03-22:** Minion Tactical Coordination complete — Intelligent minion support with boss protection priority, focus fire, flanking bonuses, and tactical retreat. Minions identified and routed through tactical AI. Boss fights now significantly harder with coordinated minion support. 19 new tests. 480 tests passing.
 - **2026-03-22:** Dynamic Encounter Difficulty Warnings and Scaling complete — Party vs enemy power calculations, 5-tier difficulty ratings, context-aware warnings for Hard/Deadly encounters, auto-scaling suggestions, DM narrator integration. Teaches balance concepts and helps strategic decisions. 26 new tests. 461 tests passing.
