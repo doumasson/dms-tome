@@ -76,6 +76,7 @@ const ConditionsPanel_    = lazy(() => import('./components/game/ConditionsPanel
 const EquipmentPanel_     = lazy(() => import('./components/game/EquipmentPanel'))
 const ExplorationActions_ = lazy(() => import('./components/game/ExplorationActions'))
 const EnemyInfo_          = lazy(() => import('./components/game/EnemyInfo'))
+const InitiativeTracker_  = lazy(() => import('./components/game/InitiativeTracker'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -170,6 +171,7 @@ export default function GameV2({ onLeave }) {
   const [showExplorationActions, setShowExplorationActions] = useState(false)
   const [showEnemyInfo, setShowEnemyInfo] = useState(false)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
+  const [showInitiativeTracker, setShowInitiativeTracker] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1253,6 +1255,14 @@ export default function GameV2({ onLeave }) {
           <EnemyInfo_
             enemy={selectedEnemy}
             onClose={() => setShowEnemyInfo(false)}
+          />
+        </Suspense>
+      )}
+      {showInitiativeTracker && inCombat && (
+        <Suspense fallback={null}>
+          <InitiativeTracker_
+            encounter={encounter}
+            onClose={() => setShowInitiativeTracker(false)}
           />
         </Suspense>
       )}
