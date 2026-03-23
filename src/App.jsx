@@ -681,35 +681,45 @@ export default function App() {
     }
 
     setActiveCampaign(campaignRecord);
+
+    // Load campaign data (V1 scenes, characters, etc.)
     if (campaignRecord.campaign_data && Object.keys(campaignRecord.campaign_data).length > 0) {
       loadCampaign(campaignRecord.campaign_data);
       // Initialize factions from campaign data
       const factions = campaignRecord.campaign_data.factions || [];
       useStore.getState().initializeFactions(factions);
     } else {
-      // No campaign data — initialize with minimal defaults so game can load
-      const defaultWorld = {
-        title: campaignRecord.name || 'Campaign',
-        startArea: 'default-area',
-        areas: {
-          'default-area': {
-            id: 'default-area',
-            name: campaignRecord.name || 'Campaign',
-            palette: [],
-            layers: [],
-            collision: null,
-            tileSize: 32,
-            theme: 'default',
-            npcs: [],
-            width: 20,
-            height: 15,
-          }
-        }
-      };
-      // Load both campaign and world/areas
-      loadCampaign({ title: defaultWorld.title, scenes: [] });
-      useStore.getState().loadAreaWorld(defaultWorld);
+      loadCampaign({ title: campaignRecord.name || 'Campaign', scenes: [] });
     }
+
+    // Load V2 areas — extract from campaign_data.areas or create default
+    const world = campaignRecord.campaign_data?.areas
+      ? {
+          title: campaignRecord.campaign_data.title || campaignRecord.name || 'Campaign',
+          startArea: campaignRecord.campaign_data.startArea || Object.keys(campaignRecord.campaign_data.areas)[0],
+          areas: campaignRecord.campaign_data.areas,
+          areaBriefs: campaignRecord.campaign_data.areaBriefs || {},
+          questObjectives: campaignRecord.campaign_data.questObjectives || [],
+        }
+      : {
+          title: campaignRecord.name || 'Campaign',
+          startArea: 'default-area',
+          areas: {
+            'default-area': {
+              id: 'default-area',
+              name: campaignRecord.name || 'Campaign',
+              palette: [],
+              layers: [],
+              collision: null,
+              tileSize: 32,
+              theme: 'default',
+              npcs: [],
+              width: 20,
+              height: 15,
+            }
+          }
+        };
+    useStore.getState().loadAreaWorld(world);
     if (campaignRecord.settings) {
       loadCampaignSettings(campaignRecord.settings);
     }
