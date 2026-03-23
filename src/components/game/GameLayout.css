@@ -17,32 +17,13 @@
   background: #1a1a1a;
   position: relative;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border-bottom: 2px solid #d4af37;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  min-height: 0;
 }
 
-/* Scene placeholder - full bleed, no white space */
-.scene-area::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #2a2a1a 0%, #1a1a1a 100%);
-  z-index: 1;
-}
-
-/* Action buttons HUD - above narrator bar, thumb-reachable */
-.action-buttons-hud {
-  position: absolute;
-  bottom: 20%;
-  right: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 10;
-  pointer-events: none;
-}
 
 /* Mobile landscape adjustments */
 @media (max-height: 600px) {

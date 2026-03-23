@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import useStore from '../../store/useStore';
 import NarratorBar from './NarratorBar';
 import './GameLayout.css';
 
@@ -10,40 +10,26 @@ import './GameLayout.css';
  * Dark fantasy theme, gold accents, landscape-locked, mobile touch-friendly.
  */
 export default function GameLayout({ children }) {
-  const [messages, setMessages] = useState([]);
-  const [isListening, setIsListening] = useState(false);
+  const narratorMessages = useStore(s => s.narratorMessages || []);
+  const addNarratorMessage = useStore(s => s.addNarratorMessage);
 
   const handleSendMessage = (text) => {
-    // Add player message
-    setMessages(prev => [...prev, { role: 'player', text }]);
-    // Simulate narrator response (in real app, would call AI API)
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        role: 'narrator',
-        text: 'You describe your action. The world responds...'
-      }]);
-    }, 500);
+    // Add player message to store
+    addNarratorMessage({ role: 'player', text });
   };
 
   return (
     <div className="game-layout">
       {/* Scene area - top 80% */}
       <div className="scene-area">
-        {/* Placeholder for scene map, tokens, grid overlay */}
-        {children?.sceneContent}
+        {children}
       </div>
 
       {/* Narrator bar - bottom 20%, expands to 40% */}
       <NarratorBar
-        messages={messages}
+        messages={narratorMessages}
         onSendMessage={handleSendMessage}
-        isListening={isListening}
       />
-
-      {/* Action buttons - above narrator bar, thumb-reachable */}
-      <div className="action-buttons-hud">
-        {/* Placeholder for action buttons */}
-      </div>
     </div>
   );
 }

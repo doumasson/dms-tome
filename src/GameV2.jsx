@@ -942,7 +942,7 @@ export default function GameV2({ onLeave }) {
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: '#08060c' }}>
+    <GameLayout>
       <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
       <HUD />
       {nearbyNpcs.map(npc => (
@@ -956,7 +956,6 @@ export default function GameV2({ onLeave }) {
         onPortraitClick={(member) => setSheetChar(member)}
         activeMode={activeMode} onModeSelect={handleModeSelect}
       />
-      {/* TestCombatButton removed — combat initiates via encounter zones */}
       <Suspense fallback={null}>
         <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
       </Suspense>
@@ -1167,32 +1166,12 @@ export default function GameV2({ onLeave }) {
           />
         </Suspense>
       )}
-      {showNarratorBar && (
-        <Suspense fallback={null}>
-          <NarratorBar
-            messages={useStore.getState().narrator?.history || []}
-            onSendMessage={(msg) => {
-              if (handleChatRef.current) {
-                handleChatRef.current(msg)
-              }
-            }}
-            isListening={false}
-          />
-        </Suspense>
-      )}
       {showCombatUI && inCombat && (
         <Suspense fallback={null}>
           <CombatUI
             encounter={encounter}
             onClose={() => setShowCombatUI(false)}
             onAction={handleCombatAction}
-          />
-        </Suspense>
-      )}
-      {showGameLayout && (
-        <Suspense fallback={null}>
-          <GameLayout
-            onClose={() => setShowGameLayout(false)}
           />
         </Suspense>
       )}
@@ -1343,6 +1322,6 @@ export default function GameV2({ onLeave }) {
           />
         </Suspense>
       )}
-    </div>
+    </GameLayout>
   )
 }
