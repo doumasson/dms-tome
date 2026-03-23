@@ -33,7 +33,7 @@ export default function CharacterSelect({ user, campaignId, onSelectExisting, on
       let chars = unique.map(m => m.character_data);
 
       // In dev/test mode with no characters, auto-seed test character for Playwright
-      if (chars.length === 0 && import.meta.env.VITE_DEV_AUTO_LOGIN === 'true') {
+      if (chars.length === 0 && import.meta.env.VITE_DEV_AUTO_LOGIN === 'true' && user?.id) {
         const testChar = {
           id: 'test-aric-shadowblade',
           name: 'Aric Shadowblade',
@@ -58,7 +58,7 @@ export default function CharacterSelect({ user, campaignId, onSelectExisting, on
           proficiencyBonus: 2,
           portrait: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23d4af37" width="200" height="200"/%3E%3C/svg%3E',
           userId: user.id,
-          userName: user.name,
+          userName: user.name || 'Agent',
         };
         chars = [testChar];
       }
