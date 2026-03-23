@@ -57,14 +57,21 @@ test.describe('Game Integration Tests', () => {
     const narratorBar = page.locator('.narrator-bar, [class*="narrator"]').first();
     await expect(narratorBar).toBeVisible({ timeout: 5000 });
 
+    // Verify party portraits (character HUD) are loaded
+    const partyPortraits = page.locator('[class*="portrait"], [class*="party"]').first();
+    await expect(partyPortraits).toBeVisible({ timeout: 5000 });
+
     // Verify PixiJS canvas element exists (game world rendering)
     const canvas = page.locator('canvas').first();
+    const canvasExists = await canvas.count();
+    expect(canvasExists).toBeGreaterThan(0);
+
+    // Try to verify canvas is visible, but don't fail if not immediately visible
     try {
       await expect(canvas).toBeVisible({ timeout: 5000 });
-    } catch {
-      // Canvas might exist but be off-screen temporarily during init
-      const canvasCount = await canvas.count();
-      expect(canvasCount).toBeGreaterThan(0);
+    } catch (e) {
+      // Canvas may be rendering or off-screen temporarily, but element must exist
+      console.log('Canvas found but visibility check failed, likely still initializing');
     }
 
     // Verify page title is DungeonMind
