@@ -387,6 +387,18 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 48 new tests covering phase generation, transitions, ability execution, minion spawning, legendary action tracking
 - 435 tests, 0 failures.
 
+### Boss Ability Execution in Combat ✅ COMPLETE
+- [x] AI ability selection — Claude decides when to activate abilities based on tactical situation
+- [x] Ability execution resolution — Full mechanical effects applied (damage, healing, conditions, positioning)
+- [x] Legendary action tracking — Abilities tracked, 3-per-cycle budget enforced, reset per turn
+- [x] Minion spawning integration — Abilities trigger minion spawns, added to combat immediately
+- [x] Multiplayer broadcast — All ability activations and effects broadcast via Supabase Realtime
+- [x] UI support — Ability narratives displayed in combat log and narrator chat
+- [x] Multi-phase ability escalation — Different abilities unlock in each phase, AI aware of availability
+- [x] Flaky test fix — Increased randomEncounters test sample size for statistical reliability
+- Boss encounters now escalate tactically - phase transitions unlock new abilities that bosses actually use
+- 435 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -404,6 +416,7 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-22:** Boss Ability Execution in Combat complete — AI decides when to activate abilities, full effect resolution (damage/healing/conditions/minions), legendary action tracking, multiplayer broadcast. Bosses now escalate tactically through phases. Fixed flaky randomEncounters test. 435 tests passing.
 - **2026-03-22:** Multi-Phase Boss Encounters complete — HP-threshold-triggered phase transitions, ability execution, minion spawning, legendary action tracking, lair actions, AI prompt injection, phase UI indicator. 48 new tests. 435 tests passing.
 - **2026-03-18:** Phase 1 V2 rebuild complete — PixiJS tilemap renderer + ornate HUD on branch `phase1/tilemap-renderer-hud`. V1 untouched, V2 opt-in via `?v2`.
 - **2026-03-18:** Phases 2 & 3 complete — zone transitions with fade, 8 room templates, zone-based campaign gen, combat UX, API key fix. Branch has 46 commits ahead of main.
