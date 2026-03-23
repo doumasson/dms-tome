@@ -199,6 +199,77 @@
   color: #e8b8b8;
 }
 
+/* Death Saves Section */
+.hud-death-saves {
+  min-width: 160px;
+}
+
+.death-saves-label {
+  font-weight: 700;
+  color: #e74c3c;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 11px;
+}
+
+.death-saves-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.save-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(200, 80, 80, 0.15);
+  border: 1px solid rgba(200, 80, 80, 0.3);
+  border-radius: 3px;
+}
+
+.save-label {
+  font-weight: 700;
+  font-size: 14px;
+  color: #e74c3c;
+  min-width: 16px;
+}
+
+.save-count {
+  font-size: 11px;
+  color: #e8d5a3;
+  font-weight: 600;
+}
+
+.save-type.success-saves {
+  border-color: rgba(46, 204, 113, 0.3);
+}
+
+.save-type.success-saves .save-label {
+  color: #2ecc71;
+}
+
+.save-type.failure-saves {
+  border-color: rgba(200, 80, 80, 0.4);
+}
+
+.save-type.failure-saves .save-label {
+  color: #e74c3c;
+}
+
+.save-type.stable-status {
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+.save-type.stable-status .save-label {
+  color: #d4af37;
+}
+
+.save-text {
+  font-size: 10px;
+  color: #d4af37;
+}
+
 /* Mobile adjustments */
 @media (max-height: 600px) {
   .hud-container {

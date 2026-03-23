@@ -42,6 +42,7 @@ export default function HUD() {
   const hpPct = maxHp > 0 ? hp / maxHp : 1;
   const hpColor = hpPct > 0.5 ? '#2ecc71' : hpPct > 0.25 ? '#f39c12' : '#e74c3c';
   const dying = hp <= 0;
+  const deathSaves = combatant?.deathSaves || { successes: 0, failures: 0, stable: false };
 
   return (
     <div className="hud-container">
@@ -104,6 +105,29 @@ export default function HUD() {
             ))}
             {conditions.length > 4 && (
               <div className="condition-tag overflow">+{conditions.length - 4}</div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Death Saves (when dying) */}
+      {dying && (
+        <div className="hud-section hud-death-saves">
+          <div className="death-saves-label">Death Saves</div>
+          <div className="death-saves-group">
+            <div className="save-type success-saves">
+              <span className="save-label">✓</span>
+              <span className="save-count">{deathSaves.successes}/3</span>
+            </div>
+            <div className="save-type failure-saves">
+              <span className="save-label">✗</span>
+              <span className="save-count">{deathSaves.failures}/3</span>
+            </div>
+            {deathSaves.stable && (
+              <div className="save-type stable-status">
+                <span className="save-label">⊙</span>
+                <span className="save-text">Stable</span>
+              </div>
             )}
           </div>
         </div>
