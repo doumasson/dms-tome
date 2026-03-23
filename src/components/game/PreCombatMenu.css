@@ -1,27 +1,27 @@
-/* Pre-Combat Detection Menu */
+/* Pre-Combat Menu - Encounter options panel */
 
-.pre-combat-overlay {
+.precombat-menu-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
   z-index: 1000;
-  backdrop-filter: blur(2px);
+  padding: 16px;
 }
 
-.pre-combat-menu {
+.precombat-menu {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, rgba(42, 42, 26, 0.95), rgba(26, 26, 26, 0.98));
-  border: 3px solid #d4af37;
-  border-radius: 4px;
-  padding: 32px;
-  max-width: 600px;
-  width: 90%;
   gap: 24px;
-  box-shadow: 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(212, 175, 55, 0.05);
+  padding: 32px;
+  background: #1a1a1a;
+  border: 2px solid #d4af37;
+  border-radius: 4px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.2);
   font-family: 'Cinzel', Georgia, serif;
   color: #e8d5a3;
 }
@@ -29,236 +29,229 @@
 /* Header */
 .menu-header {
   text-align: center;
-  gap: 8px;
 }
 
 .menu-header h2 {
-  margin: 0;
-  font-size: 28px;
-  color: #d4af37;
+  font-size: 32px;
+  font-weight: 700;
+  color: #e74c3c;
+  margin: 0 0 8px 0;
   text-transform: uppercase;
   letter-spacing: 2px;
-  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+  text-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
 }
 
-.enemy-notice {
-  margin: 8px 0 0 0;
+.encounter-desc {
   font-size: 14px;
-  color: #f39c12;
+  color: #d4af37;
+  margin: 0 0 8px 0;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
-.enemy-list {
-  margin: 8px 0 0 0;
+.enemy-names {
   font-size: 13px;
-  color: #e8d5a3;
+  color: #ccc;
+  margin: 0;
+  font-family: 'Georgia', serif;
   font-style: italic;
 }
 
-/* Action choices grid */
-.action-choices {
+/* Menu options grid */
+.menu-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 12px;
 }
 
-/* Action button */
-.action-btn {
+/* Menu option buttons */
+.menu-option {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 16px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+  gap: 6px;
+  padding: 16px 12px;
+  background: rgba(42, 42, 26, 0.7);
   border: 2px solid rgba(212, 175, 55, 0.3);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: center;
   font-family: 'Cinzel', Georgia, serif;
   color: #e8d5a3;
-  text-align: center;
-  min-height: 120px;
 }
 
-.action-btn:hover {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
+.menu-option:hover {
+  background: rgba(42, 42, 26, 0.9);
   border-color: rgba(212, 175, 55, 0.6);
-  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 
-.action-btn:active {
+.menu-option:active {
   transform: translateY(0);
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.08));
 }
 
-/* Action button variants */
-.action-btn.sneak-btn:hover {
-  border-color: #9b59b6;
-  box-shadow: 0 0 12px rgba(155, 89, 182, 0.3);
+.option-icon {
+  font-size: 24px;
+  display: block;
 }
 
-.action-btn.talk-btn:hover {
-  border-color: #3498db;
-  box-shadow: 0 0 12px rgba(52, 152, 219, 0.3);
-}
-
-.action-btn.pickpocket-btn:hover {
-  border-color: #16a085;
-  box-shadow: 0 0 12px rgba(22, 160, 133, 0.3);
-}
-
-.action-btn.ambush-btn:hover {
-  border-color: #f39c12;
-  box-shadow: 0 0 12px rgba(243, 156, 18, 0.3);
-}
-
-.action-btn.charge-btn:hover {
-  border-color: #e74c3c;
-  box-shadow: 0 0 12px rgba(231, 76, 60, 0.3);
-}
-
-.action-icon {
-  font-size: 32px;
-  line-height: 1;
-}
-
-.action-name {
-  font-size: 13px;
-  color: #d4af37;
+.option-name {
+  font-size: 12px;
   font-weight: 700;
+  color: #d4af37;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
-.action-desc {
-  font-size: 11px;
-  color: #b8a878;
-  font-style: italic;
+.option-desc {
+  font-size: 10px;
+  color: #999;
+  font-family: 'Georgia', serif;
+}
+
+/* Specific button colors */
+.sneak-btn {
+  border-color: rgba(100, 150, 200, 0.3);
+}
+
+.sneak-btn:hover {
+  background: rgba(100, 150, 200, 0.1);
+}
+
+.talk-btn {
+  border-color: rgba(150, 180, 150, 0.3);
+}
+
+.talk-btn:hover {
+  background: rgba(150, 180, 150, 0.1);
+}
+
+.pickpocket-btn {
+  border-color: rgba(200, 180, 100, 0.3);
+}
+
+.pickpocket-btn:hover {
+  background: rgba(200, 180, 100, 0.1);
+}
+
+.ambush-btn {
+  border-color: rgba(180, 120, 100, 0.3);
+}
+
+.ambush-btn:hover {
+  background: rgba(180, 120, 100, 0.1);
+}
+
+.charge-btn {
+  border-color: rgba(200, 80, 80, 0.3);
+}
+
+.charge-btn:hover {
+  background: rgba(200, 80, 80, 0.1);
 }
 
 /* Footer */
 .menu-footer {
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
-  padding-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 
-.footer-text {
-  margin: 0;
-  font-size: 12px;
-  color: #b8a878;
-  line-height: 1.5;
-  text-align: center;
-  font-family: Georgia, serif;
-}
-
-/* Cancel/Retreat button */
-.btn-cancel {
-  padding: 12px 24px;
-  background: rgba(231, 76, 60, 0.15);
-  color: #e74c3c;
-  border: 1px solid rgba(231, 76, 60, 0.4);
+.cancel-btn {
+  padding: 10px 20px;
+  background: #555;
+  color: #e8d5a3;
+  border: 1px solid #666;
   border-radius: 2px;
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.2s ease;
-  align-self: flex-end;
 }
 
-.btn-cancel:hover {
-  background: rgba(231, 76, 60, 0.25);
-  border-color: rgba(231, 76, 60, 0.6);
+.cancel-btn:hover {
+  background: #666;
+  border-color: #777;
 }
 
-/* Mobile responsive */
+.cancel-btn:active {
+  transform: scale(0.98);
+}
+
+/* Mobile adjustments */
 @media (max-width: 768px) {
-  .pre-combat-menu {
-    padding: 24px 16px;
-    gap: 20px;
-    width: 95%;
-  }
-
-  .menu-header h2 {
-    font-size: 20px;
-  }
-
-  .enemy-notice {
-    font-size: 12px;
-  }
-
-  .enemy-list {
-    font-size: 11px;
-  }
-
-  .action-choices {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 10px;
-  }
-
-  .action-btn {
-    padding: 12px;
-    min-height: 100px;
-    gap: 6px;
-  }
-
-  .action-icon {
-    font-size: 28px;
-  }
-
-  .action-name {
-    font-size: 11px;
-  }
-
-  .action-desc {
-    font-size: 10px;
-  }
-
-  .footer-text {
-    font-size: 11px;
-  }
-
-  .btn-cancel {
-    width: 100%;
-    align-self: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .pre-combat-menu {
-    padding: 16px 12px;
+  .precombat-menu {
+    padding: 24px;
     gap: 16px;
   }
 
   .menu-header h2 {
-    font-size: 18px;
+    font-size: 28px;
   }
 
-  .action-choices {
+  .encounter-desc {
+    font-size: 12px;
+  }
+
+  .enemy-names {
+    font-size: 11px;
+  }
+
+  .menu-options {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 10px;
   }
 
-  .action-btn {
-    padding: 10px;
-    min-height: 90px;
+  .menu-option {
+    padding: 12px 8px;
   }
 
-  .action-icon {
+  .option-icon {
+    font-size: 20px;
+  }
+
+  .option-name {
+    font-size: 11px;
+  }
+
+  .option-desc {
+    font-size: 9px;
+  }
+}
+
+@media (max-height: 600px) {
+  .precombat-menu {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .menu-header h2 {
     font-size: 24px;
   }
 
-  .action-name {
+  .menu-options {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .menu-option {
+    padding: 8px 6px;
+  }
+
+  .option-icon {
+    font-size: 18px;
+  }
+
+  .option-name {
     font-size: 10px;
   }
 
-  .action-desc {
-    display: none;
+  .option-desc {
+    font-size: 8px;
   }
 }

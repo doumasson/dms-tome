@@ -1,10 +1,11 @@
 import './PreCombatMenu.css';
 
 /**
- * Pre-Combat Detection Zone Menu
- * Appears when party detects enemies nearby
- * Choice panel: Sneak / Talk / Pickpocket / Ambush / Charge
+ * Pre-Combat Menu Component
+ * Choice panel for encountering enemies
+ * Options: Sneak, Talk, Pickpocket, Ambush, Charge
  */
+
 export default function PreCombatMenu({
   enemies = [],
   onSneak = () => {},
@@ -18,90 +19,73 @@ export default function PreCombatMenu({
   const enemyNames = enemies.map(e => e.name).join(', ');
 
   return (
-    <div className="pre-combat-overlay">
-      <div className="pre-combat-menu">
-        {/* Header */}
+    <div className="precombat-menu-overlay">
+      <div className="precombat-menu">
         <div className="menu-header">
-          <h2>⚔️ Encounter Detected</h2>
-          <p className="enemy-notice">
-            {enemyCount === 1 ? 'A foe approaches' : `${enemyCount} enemies detected`}
+          <h2>Encounter!</h2>
+          <p className="encounter-desc">
+            You have spotted {enemyCount} {enemyCount === 1 ? 'enemy' : 'enemies'}
           </p>
-          {enemies.length <= 3 && (
-            <p className="enemy-list">{enemyNames}</p>
-          )}
+          <p className="enemy-names">{enemyNames}</p>
         </div>
 
-        {/* Action choices */}
-        <div className="action-choices">
-          {/* Sneak */}
+        <div className="menu-options">
           <button
-            className="action-btn sneak-btn"
+            className="menu-option sneak-btn"
             onClick={onSneak}
-            title="Attempt to avoid combat through stealth"
+            title="Attempt to sneak past or hide"
           >
-            <div className="action-icon">🤐</div>
-            <div className="action-name">Sneak</div>
-            <div className="action-desc">Avoid combat</div>
+            <span className="option-icon">🥷</span>
+            <span className="option-name">Sneak</span>
+            <span className="option-desc">Stealth Check (DC 13)</span>
           </button>
 
-          {/* Talk */}
           <button
-            className="action-btn talk-btn"
+            className="menu-option talk-btn"
             onClick={onTalk}
-            title="Attempt peaceful dialogue"
+            title="Attempt to talk to the enemies"
           >
-            <div className="action-icon">💬</div>
-            <div className="action-name">Talk</div>
-            <div className="action-desc">Negotiate</div>
+            <span className="option-icon">💬</span>
+            <span className="option-name">Talk</span>
+            <span className="option-desc">Persuasion Check (DC 14)</span>
           </button>
 
-          {/* Pickpocket */}
           <button
-            className="action-btn pickpocket-btn"
+            className="menu-option pickpocket-btn"
             onClick={onPickpocket}
-            title="Attempt to steal and flee"
+            title="Attempt to pickpocket while undetected"
           >
-            <div className="action-icon">👐</div>
-            <div className="action-name">Pickpocket</div>
-            <div className="action-desc">Steal & flee</div>
+            <span className="option-icon">💰</span>
+            <span className="option-name">Pickpocket</span>
+            <span className="option-desc">Sleight of Hand (DC 15)</span>
           </button>
 
-          {/* Ambush */}
           <button
-            className="action-btn ambush-btn"
+            className="menu-option ambush-btn"
             onClick={onAmbush}
-            title="Strike first with surprise"
+            title="Prepare an ambush attack"
           >
-            <div className="action-icon">⚡</div>
-            <div className="action-name">Ambush</div>
-            <div className="action-desc">Surprise attack</div>
+            <span className="option-icon">⚔️</span>
+            <span className="option-name">Ambush</span>
+            <span className="option-desc">Initiative Advantage</span>
           </button>
 
-          {/* Charge */}
           <button
-            className="action-btn charge-btn"
+            className="menu-option charge-btn"
             onClick={onCharge}
-            title="Rush into direct combat"
+            title="Charge directly at the enemies"
           >
-            <div className="action-icon">🏃</div>
-            <div className="action-name">Charge</div>
-            <div className="action-desc">Direct combat</div>
+            <span className="option-icon">💥</span>
+            <span className="option-name">Charge</span>
+            <span className="option-desc">Direct Combat</span>
           </button>
         </div>
 
-        {/* Info text */}
         <div className="menu-footer">
-          <p className="footer-text">
-            Choose your approach. The outcome will depend on your party's abilities and The Narrator's judgment.
-          </p>
-        </div>
-
-        {/* Cancel button (if applicable) */}
-        {onCancel && (
-          <button className="btn-cancel" onClick={onCancel}>
-            Retreat
+          <button className="cancel-btn" onClick={onCancel}>
+            Cancel
           </button>
-        )}
+        </div>
       </div>
     </div>
   );
