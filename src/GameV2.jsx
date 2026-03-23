@@ -9,6 +9,7 @@ import { loadDefaultApiKey } from './lib/defaultApiKey'
 import { getClaudeApiKey } from './lib/claudeApi'
 import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZones'
 import { handleInteract, getAvailableInteractions } from './lib/interactionController'
+import { getDisposition } from './lib/factionSystem'
 import { isAnimating } from './engine/TokenLayer'
 import ChatBubble from './components/ChatBubble'
 import ApiKeySettings from './components/ApiKeySettings'
@@ -673,14 +674,39 @@ export default function GameV2({ onLeave }) {
 
   // --- Interaction handlers ---
   const openNpcInteraction = useCallback((npc) => {
-    const busy = useStore.getState().npcBusy
+    const state = useStore.getState()
+    const busy = state.npcBusy
     if (busy && busy.npcName === npc.name) {
       addNarratorMessage({ role: 'dm', speaker: 'System', text: `${npc.name} is speaking with ${busy.playerName}.` })
       return
     }
+
+    // Check if NPC is from a faction the player is hostile with
+    if (npc.faction) {
+      const rep = state.factionReputation?.[npc.faction] ?? 0
+      const disposition = getDisposition(rep)
+      if (disposition === 'Hostile') {
+        // Trigger combat with this NPC as an enemy
+        const enemyDef = {
+          name: npc.name,
+          hp: 15 + Math.floor(Math.random() * 10), // Basic enemy stats
+          ac: 12,
+          speed: 30,
+          stats: { str: 12, dex: 12, con: 12, int: 10, wis: 10, cha: 10 },
+          attacks: [{ name: 'Sword', bonus: '+3', damage: '1d8+1' }],
+          startPosition: npc.position,
+        }
+        state.startEncounter([enemyDef], `${npc.name} recognizes you as an enemy of the ${npc.faction}! Combat initiated!`)
+        state.setEncounterActive(true)
+        broadcastEncounterAction({ type: 'start-encounter', enemies: [enemyDef] })
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: `${npc.name} recognizes your hostility toward the ${npc.faction} and attacks!` })
+        return
+      }
+    }
+
     if (npc.shopType) {
       setActiveShop({ npc, shopType: npc.shopType })
-    } else if (npc.critical && !useStore.getState().hasStoryFlag(npc.criticalFlag)) {
+    } else if (npc.critical && !state.hasStoryFlag(npc.criticalFlag)) {
       setActiveNpc({ ...npc, isCutscene: true })
     } else {
       setActiveNpc({ ...npc, isCutscene: false })
