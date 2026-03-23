@@ -1,6 +1,6 @@
 /**
  * RoofManager — tracks building bounds, doors, and reveal state
- * for Baldur's Gate-style roof-lift buildings.
+ * for classic dungeon-crawler-style roof-lift buildings.
  */
 
 export class RoofManager {

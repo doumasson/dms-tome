@@ -6,7 +6,7 @@ import { getDemoBriefs } from '../data/demoArea';
 import useStore from '../store/useStore';
 
 const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
-const SETTINGS = ['High Fantasy', 'Forgotten Realms', 'Dark Gothic', 'Steampunk', 'Ancient World', 'Urban Fantasy', 'Sci-Fi'];
+const SETTINGS = ['High Fantasy', 'The Shattered Kingdoms', 'Dark Gothic', 'Steampunk', 'Ancient World', 'Urban Fantasy', 'Sci-Fi'];
 const LENGTHS = ['One-shot (~4 hours)', 'Short campaign (3–5 sessions)', 'Full campaign (10+ sessions)'];
 const LEVELS = ['1–4 (Tier 1)', '5–10 (Tier 2)', '11–16 (Tier 3)', '17–20 (Tier 4)'];
 const VILLAINS = ['Ancient Dragon', 'Lich', 'Demon Lord', 'Corrupt Noble', 'Cosmic Horror', 'Cult Leader', 'Rival Adventurer'];
@@ -528,7 +528,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               autoFocus
               value={fields.name}
               onChange={e => setField('name', e.target.value)}
-              placeholder="e.g. The Curse of Strahd's Shadow"
+              placeholder="e.g. The Curse of the Shadow King"
               style={styles.input}
               onKeyDown={e => e.key === 'Enter' && fields.name.trim() && handleStep1Next()}
             />
