@@ -2,6 +2,7 @@ import { triggerEnemyTurn, computeGruntAction } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 import { getSaveProficiencies, profBonus as getProfBonus } from '../lib/derivedStats.js';
 import { checkPhaseTransition } from '../lib/bossPhases.js';
+import { executeAbility, spawnMinions, isLegendaryAbility } from '../lib/abilityResolver.js';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -1047,6 +1048,92 @@ export function createEncounterSlice(set, get) {
               x, y, cost,
               userId: get().user?.id || 'system',
             });
+          }
+        }
+
+        // Execute boss ability if specified
+        if (result.abilityToUse && active.phases) {
+          const targets = encounter.combatants.filter(c => c.type === 'player' && c.currentHp > 0);
+          const abilityResult = executeAbility(result.abilityToUse, active, targets, encounter);
+
+          // Log ability activation
+          get().addEncounterLog(`✨ ${active.name} uses ${result.abilityToUse}! ${abilityResult.narrative}`);
+          broadcastEncounterAction({
+            type: 'boss-ability',
+            bossId: active.id,
+            bossName: active.name,
+            ability: result.abilityToUse,
+            narrative: abilityResult.narrative,
+            userId: get().user?.id || 'system',
+          });
+
+          // Apply ability effects
+          if (abilityResult.damage > 0 && abilityResult.affectedTargets?.length) {
+            abilityResult.affectedTargets.forEach(targetId => {
+              get().applyEncounterDamage(targetId, abilityResult.damage);
+              broadcastEncounterAction({
+                type: 'damage',
+                targetId,
+                amount: abilityResult.damage,
+                userId: get().user?.id || 'system',
+              });
+            });
+          }
+
+          // Apply healing if regeneration or other heal ability
+          if (abilityResult.healTarget && abilityResult.healAmount > 0) {
+            get().applyEncounterHeal(abilityResult.healTarget, abilityResult.healAmount);
+            get().addEncounterLog(`💚 ${active.name} heals ${abilityResult.healAmount} HP`);
+          }
+
+          // Apply conditions from ability
+          if (abilityResult.conditions?.length) {
+            abilityResult.conditions.forEach(cond => {
+              const targets = abilityResult.affectedTargets || encounter.combatants
+                .filter(c => c.type === 'player').map(c => c.id);
+              targets.forEach(targetId => {
+                get().addEncounterCondition(targetId, cond.type || cond);
+                broadcastEncounterAction({
+                  type: 'add-condition',
+                  id: targetId,
+                  condition: cond.type || cond,
+                  userId: get().user?.id || 'system',
+                });
+              });
+            });
+          }
+
+          // Spawn minions if ability triggers spawning
+          if (abilityResult.minionSpawn) {
+            const newMinions = spawnMinions(abilityResult.minionSpawn, active.position, encounter.combatants);
+            set((state) => ({
+              encounter: {
+                ...state.encounter,
+                combatants: [...state.encounter.combatants, ...newMinions],
+              },
+            }));
+            newMinions.forEach(minion => {
+              broadcastEncounterAction({
+                type: 'minion-spawn',
+                minion,
+                userId: get().user?.id || 'system',
+              });
+            });
+            get().addEncounterLog(`⚔ ${newMinions.length} minions spawn!`);
+          }
+
+          // Track legendary action usage
+          if (isLegendaryAbility(result.abilityToUse)) {
+            set((state) => ({
+              encounter: {
+                ...state.encounter,
+                combatants: state.encounter.combatants.map((c) =>
+                  c.id === active.id
+                    ? { ...c, usedLegendaryActions: (c.usedLegendaryActions || 0) + 1 }
+                    : c
+                ),
+              },
+            }));
           }
         }
 

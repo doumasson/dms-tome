@@ -14,13 +14,20 @@ describe('Random Encounters', () => {
 
   it('dungeon encounters have higher trigger rate than town', () => {
     // Run multiple rolls and check distribution
+    // Dungeon: 20% threshold, Town: 10% threshold
+    // With large sample, dungeon should consistently trigger more often
     let dungeonTriggered = 0
     let townTriggered = 0
-    for (let i = 0; i < 100; i++) {
+    const samples = 1000
+    for (let i = 0; i < samples; i++) {
       if (rollRandomEncounter('dungeon')) dungeonTriggered++
       if (rollRandomEncounter('town')) townTriggered++
     }
-    expect(dungeonTriggered).toBeGreaterThan(townTriggered)
+    // Dungeon should be roughly 2x town (20% vs 10%)
+    // Allow for variance: dungeon should be at least 1.5x town rate
+    const dungeonRate = dungeonTriggered / samples
+    const townRate = townTriggered / samples
+    expect(dungeonRate).toBeGreaterThan(townRate * 1.2)
   })
 
   it('generateRandomEncounter returns valid enemy group', () => {

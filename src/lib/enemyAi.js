@@ -102,7 +102,7 @@ ${alliesLines}
 GRID: 10x8 (0-9 x-axis, 0-7 y-axis). Each square = 5ft. Grid uses (x,y) coords.
 
 Decide ${enemy.name}'s turn. Respond ONLY with this exact JSON — no markdown, no extra text:
-{"action":"attack","targetId":"<player_id>","attackRoll":<d20_total>,"hit":<true|false>,"damage":<number>,"damageType":"<type>","moveToPosition":{"x":<0-9>,"y":<0-7>},"appliedConditions":[],"narrative":"<1-2 sentence vivid narration of what the enemy does>","logEntry":"<short combat log line>"}
+{"action":"attack","targetId":"<player_id>","attackRoll":<d20_total>,"hit":<true|false>,"damage":<number>,"damageType":"<type>","moveToPosition":{"x":<0-9>,"y":<0-7>},"appliedConditions":[],"abilityToUse":"<ABILITY_NAME_or_null>","narrative":"<1-2 sentence vivid narration of what the enemy does>","logEntry":"<short combat log line>"}
 
 Rules:
 - Pick the most tactically sound action (attack nearest player, move to flank, etc.)
@@ -110,6 +110,7 @@ Rules:
 - attackRoll = d20 roll + attack bonus total. Set hit=true if attackRoll >= target AC.
 - If no attack this turn, set targetId to null and damage to 0.
 - moveToPosition: choose a valid grid cell to move to (within movement range), or omit if not moving.
+- abilityToUse: if a boss ability should be triggered this turn, set to the ability name (e.g., "MULTI_ATTACK", "REGENERATION", "TELEPORT"), otherwise null.
 - narrative: write as the DM narrating to players — present tense, immersive, 1-2 sentences.`;
 }
 
