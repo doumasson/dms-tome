@@ -67,6 +67,7 @@ const PreCombatMenu       = lazy(() => import('./components/game/PreCombatMenu')
 const SessionResume       = lazy(() => import('./components/game/SessionResume'))
 const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'))
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
+const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -151,6 +152,7 @@ export default function GameV2({ onLeave }) {
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
   const [showNarratorBar, setShowNarratorBar] = useState(true)
+  const [showCombatUI, setShowCombatUI] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1152,6 +1154,15 @@ export default function GameV2({ onLeave }) {
               }
             }}
             isListening={false}
+          />
+        </Suspense>
+      )}
+      {showCombatUI && inCombat && (
+        <Suspense fallback={null}>
+          <CombatUI
+            encounter={encounter}
+            onClose={() => setShowCombatUI(false)}
+            onAction={handleCombatAction}
           />
         </Suspense>
       )}
