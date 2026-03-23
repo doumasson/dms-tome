@@ -1166,12 +1166,13 @@ export default function GameV2({ onLeave }) {
           />
         </Suspense>
       )}
-      {showCombatUI && inCombat && (
+      {inCombat && encounter.combatants && (
         <Suspense fallback={null}>
           <CombatUI
-            encounter={encounter}
-            onClose={() => setShowCombatUI(false)}
+            initiative={encounter.combatants || []}
+            currentTurnIndex={encounter.currentTurn || 0}
             onAction={handleCombatAction}
+            onEndTurn={handleEndTurn}
           />
         </Suspense>
       )}
