@@ -44,6 +44,7 @@ export default function GameModalsRenderer({
   showInteractionMenu, setShowInteractionMenu,
   showVictory, setShowVictory,
   showDefeat, setShowDefeat,
+  showDeathOptions,
   showPreCombat, setShowPreCombat,
   pendingCombatEnemies,
   showSessionResume, setShowSessionResume,

@@ -440,6 +440,7 @@ export default function GameV2({ onLeave }) {
           showInteractionMenu={showInteractionMenu} setShowInteractionMenu={setShowInteractionMenu}
           showVictory={showVictory} setShowVictory={setShowVictory}
           showDefeat={showDefeat} setShowDefeat={setShowDefeat}
+          showDeathOptions={showDeathOptions}
           showPreCombat={showPreCombat} setShowPreCombat={setShowPreCombat}
           pendingCombatEnemies={pendingCombatEnemies}
           showSessionResume={showSessionResume} setShowSessionResume={setShowSessionResume}
