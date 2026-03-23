@@ -3,6 +3,7 @@ import useStore from '../store/useStore'
 import { getClassCombatActions } from '../lib/classCombatActions'
 import { getClassResources } from '../lib/classResources'
 import ClassResourceBar from './ClassResourceBar'
+import DeathSaveUI from './DeathSaveUI'
 import { playStoneClick, playTurnChime } from '../lib/uiSounds'
 
 const TURN_TIMER_SECONDS = 60
@@ -243,6 +244,14 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
             title="Use Item — drink a potion or use a consumable (costs action)"
           >
             <span className="medallion-label">USE</span>
+          </button>
+          <button
+            className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canAct || !actionsLeft}
+            onClick={() => handleAction('ready')}
+            title="Ready — prepare an action with a trigger (uses action + reaction)"
+          >
+            <span className="medallion-label">RDY</span>
           </button>
           <button
             className="medallion-btn small"

@@ -304,6 +304,53 @@ export default function App() {
             text: `A combatant uses ${payload.itemName || 'an item'}.`,
           })
           break
+        case 'ready-action': {
+          // Remote player readied an action — update their combatant state
+          const { setReadiedAction } = store
+          setReadiedAction(payload.id, payload.readiedAction)
+          const rc = store.encounter.combatants?.find(c => c.id === payload.id)
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${rc?.name || 'A combatant'} readies an action.`,
+          })
+          break
+        }
+        case 'readied-attack-resolve': {
+          const rc2 = store.encounter.combatants?.find(c => c.id === payload.attackerId)
+          const tc2 = store.encounter.combatants?.find(c => c.id === payload.targetId)
+          const r = payload.result || {}
+          const hitStr = r.hit ? `hits for ${r.damage} damage${r.crit ? ' (CRIT!)' : ''}` : 'misses'
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `Readied Attack: ${rc2?.name || '?'} attacks ${tc2?.name || '?'} — ${hitStr}`,
+          })
+          if (r.hit && r.damage > 0) {
+            store.applyEncounterDamage(payload.targetId, r.damage)
+          }
+          // Mark reaction used + clear readied action
+          useStore.setState(state => ({
+            encounter: {
+              ...state.encounter,
+              combatants: state.encounter.combatants.map(c =>
+                c.id === payload.attackerId ? { ...c, reactionUsed: true, readiedAction: null } : c
+              ),
+            },
+          }))
+          break
+        }
+        case 'readied-move': {
+          const rm = store.encounter.combatants?.find(c => c.id === payload.id)
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${rm?.name || 'A combatant'} executes readied ${payload.response === 'dash' ? 'Dash' : 'movement'}.`,
+          })
+          useStore.setState(state => ({
+            encounter: {
+              ...state.encounter,
+              combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, reactionUsed: true, readiedAction: null } : c
+              ),
+            },
+          }))
+          break
+        }
         case 'class-ability': {
           const ca = store.encounter.combatants?.find(c => c.id === payload.id)
           const aName = ca?.name || 'A combatant'

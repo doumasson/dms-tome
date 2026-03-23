@@ -11,6 +11,7 @@ import { broadcastEncounterAction } from '../lib/liveChannel'
 import { getSaveProficiencies, profBonus as getProfBonus, abilityMod } from '../lib/derivedStats.js'
 import { resolveContestedCheck } from '../lib/contestedCheck.js'
 import { getExtraAttacks, CLASSES } from '../data/classes.js'
+import { checkReadiedTrigger as checkTrigger, resolveReadiedAttack as resolveReady } from '../lib/readiedAction.js'
 
 /**
  * Encapsulates all combat-specific logic: attack targeting, spell AoE,
@@ -31,17 +32,20 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
   const [showSpellPicker, setShowSpellPicker] = useState(false)
   const [selectedWeapon, setSelectedWeapon] = useState(null)
   const [showConsumablePicker, setShowConsumablePicker] = useState(false)
+  const [showReadyModal, setShowReadyModal] = useState(false)
+  const [readyTriggerPrompt, setReadyTriggerPrompt] = useState(null) // { combatantId, readiedAction, triggerDescription, targetId }
   const reachableTilesRef = useRef(new Set())
   const propCoverRef = useRef(new Set())
 
   // --- Escape to cancel targeting mode or close pickers ---
   useEffect(() => {
-    if (!targetingMode && !showWeaponPicker && !showSpellPicker && !showConsumablePicker) return
+    if (!targetingMode && !showWeaponPicker && !showSpellPicker && !showConsumablePicker && !showReadyModal) return
     const onKey = (e) => {
       if (e.key === 'Escape') {
         if (showWeaponPicker) { setShowWeaponPicker(false); return }
         if (showSpellPicker) { setShowSpellPicker(false); return }
         if (showConsumablePicker) { setShowConsumablePicker(false); return }
+        if (showReadyModal) { setShowReadyModal(false); return }
         setTargetingMode(null)
         setSelectedWeapon(null)
         const layer = pixiRef.current?.getMovementRangeLayer?.()
@@ -50,7 +54,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [targetingMode, showWeaponPicker, showSpellPicker, showConsumablePicker])
+  }, [targetingMode, showWeaponPicker, showSpellPicker, showConsumablePicker, showReadyModal])
 
   // --- Combat camera lock (area camera mode only) ---
   // Compute bounds ONCE when combat starts, not on every combatant change.
@@ -182,6 +186,40 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
     return () => clearTimeout(timer)
   }, [encounter.currentTurn, encounter.phase, inCombat, shouldRunEnemyAI, runEnemyTurn, sessionApiKey, nextEncounterTurn])
+
+  // --- Check readied action triggers after each enemy turn ---
+  // When the turn changes, check if the just-completed enemy turn triggered any readied actions.
+  const prevTurnRef = useRef(encounter.currentTurn)
+  useEffect(() => {
+    if (!inCombat || prevTurnRef.current === encounter.currentTurn) return
+    const prevIdx = prevTurnRef.current
+    prevTurnRef.current = encounter.currentTurn
+    const combatants = encounter.combatants || []
+    const prevActive = combatants[prevIdx]
+    if (!prevActive?.isEnemy || (prevActive.currentHp ?? 0) <= 0) return
+
+    // Check move-based triggers (enemy just moved and is now near a player with readied action)
+    const myChar = useStore.getState().myCharacter
+    for (const c of combatants) {
+      if (!c.readiedAction || c.reactionUsed || (c.currentHp ?? 1) <= 0) continue
+      if (c.id !== myChar?.id) continue
+      const triggered = checkTrigger(c.readiedAction, 'move', {
+        moverId: prevActive.id,
+        moverName: prevActive.name,
+        moverIsEnemy: true,
+        toPos: prevActive.position,
+      }, c)
+      if (triggered) {
+        setReadyTriggerPrompt({
+          combatantId: c.id,
+          readiedAction: c.readiedAction,
+          triggerDescription: `${prevActive.name} moved into range!`,
+          targetId: prevActive.id,
+        })
+        break
+      }
+    }
+  }, [encounter.currentTurn, inCombat, encounter.combatants])
 
   // --- Handle combat tile click (attack, spell, movement) ---
   // Returns true if click was handled by combat logic, false otherwise
@@ -1254,6 +1292,23 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       }))
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} takes the Disengage action.` })
       broadcastEncounterAction({ type: 'disengage', id: active.id })
+    } else if (type === 'ready') {
+      // Open the Ready Action modal (handled by showReadyModal state)
+      setShowReadyModal(true)
+    } else if (type === 'ready-confirm') {
+      // payload = { trigger, response, weapon }
+      const { useAction: consumeAction, setReadiedAction } = useStore.getState()
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active) return
+      consumeAction(active.id)
+      setReadiedAction(active.id, payload)
+      const triggerLabel = payload.trigger.replace(/-/g, ' ')
+      const responseLabel = payload.response.replace(/-/g, ' ')
+      addNarratorMessage({ role: 'dm', speaker: 'Combat',
+        text: `${active.name} readies an action: ${responseLabel}${payload.weapon ? ` (${payload.weapon.name})` : ''} — trigger: ${triggerLabel}.`,
+      })
+      broadcastEncounterAction({ type: 'ready-action', id: active.id, readiedAction: payload })
+      setShowReadyModal(false)
     }
   }, [addNarratorMessage, encounter])
 
@@ -1401,6 +1456,85 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     broadcastEncounterAction({ type: 'use-item', id: active.id, itemName: item.name, effect })
   }, [encounter, addNarratorMessage])
 
+  // --- Readied action trigger check ---
+  // Called after enemy moves/attacks/casts to see if any player has a readied action that fires
+  const checkReadiedTriggers = useCallback((eventType, eventData) => {
+    if (!inCombat) return
+    const combatants = useStore.getState().encounter.combatants || []
+    const myChar = useStore.getState().myCharacter
+    for (const c of combatants) {
+      if (!c.readiedAction || c.reactionUsed) continue
+      if ((c.currentHp ?? 1) <= 0) continue
+      // Only prompt for local player's readied action
+      if (c.id !== myChar?.id) continue
+      if (checkTrigger(c.readiedAction, eventType, eventData, c)) {
+        setReadyTriggerPrompt({
+          combatantId: c.id,
+          readiedAction: c.readiedAction,
+          triggerDescription: `${eventData.moverName || 'A creature'} triggered your readied action!`,
+          targetId: eventData.moverId,
+        })
+        break
+      }
+    }
+  }, [inCombat])
+
+  // --- Execute a readied action (player chose "Execute!") ---
+  const executeReadiedAction = useCallback(() => {
+    if (!readyTriggerPrompt) return
+    const { combatantId, readiedAction, targetId } = readyTriggerPrompt
+    const combatants = useStore.getState().encounter.combatants || []
+    const holder = combatants.find(c => c.id === combatantId)
+    if (!holder) { setReadyTriggerPrompt(null); return }
+
+    // Mark reaction used
+    useStore.setState(state => ({
+      encounter: {
+        ...state.encounter,
+        combatants: state.encounter.combatants.map(c =>
+          c.id === combatantId ? { ...c, reactionUsed: true, readiedAction: null } : c
+        ),
+      },
+    }))
+
+    const response = readiedAction.response
+    if (response === 'melee-attack' || response === 'ranged-attack') {
+      const target = combatants.find(c => c.id === targetId)
+      if (!target) {
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${holder.name}'s readied attack has no valid target.` })
+      } else {
+        const result = resolveReady(holder, target, readiedAction.weapon)
+        const hitStr = result.hit
+          ? `hits for ${result.damage} damage${result.crit ? ' (CRIT!)' : ''}`
+          : 'misses'
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `Readied Attack: ${holder.name} attacks ${target.name} — ${hitStr} (d20: ${result.d20}, total: ${result.total} vs AC ${result.ac})`,
+        })
+        if (result.hit && result.damage > 0) {
+          const { applyEncounterDamage } = useStore.getState()
+          applyEncounterDamage(target.id, result.damage)
+        }
+        broadcastEncounterAction({
+          type: 'readied-attack-resolve',
+          attackerId: combatantId,
+          targetId: target.id,
+          result,
+        })
+      }
+    } else if (response === 'move' || response === 'dash') {
+      addNarratorMessage({ role: 'dm', speaker: 'Combat',
+        text: `${holder.name} executes readied ${response === 'dash' ? 'Dash' : 'movement'}.`,
+      })
+      broadcastEncounterAction({ type: 'readied-move', id: combatantId, response })
+    }
+    setReadyTriggerPrompt(null)
+  }, [readyTriggerPrompt, addNarratorMessage])
+
+  // --- Pass on readied action ---
+  const passReadiedAction = useCallback(() => {
+    setReadyTriggerPrompt(null)
+  }, [])
+
   return {
     targetingMode,
     setTargetingMode,
@@ -1414,6 +1548,11 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     showWeaponPicker, setShowWeaponPicker,
     showSpellPicker, setShowSpellPicker,
     showConsumablePicker, setShowConsumablePicker,
+    showReadyModal, setShowReadyModal,
+    readyTriggerPrompt,
+    checkReadiedTriggers,
+    executeReadiedAction,
+    passReadiedAction,
     handleSpellSelected,
     handleWeaponSelected,
     handleConsumableUsed,

@@ -89,6 +89,7 @@ export function createEncounterSlice(set, get) {
               ? { x: group.position.x + (i > 0 ? i : 0), y: group.position.y }
               : null,
             deathSaves: { successes: 0, failures: 0, stable: false },
+            readiedAction: null,
           });
         }
       });
@@ -238,6 +239,7 @@ export function createEncounterSlice(set, get) {
           concentration: null,
           position: char.position || null,
           deathSaves: { successes: 0, failures: 0, stable: false },
+          readiedAction: null,
           portrait: makePortraitUrl(char.name, char.race, char.class),
         });
       });
@@ -361,6 +363,28 @@ export function createEncounterSlice(set, get) {
         };
       }),
 
+    // === Readied Action ===
+    setReadiedAction: (combatantId, readiedAction) => {
+      set((state) => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === combatantId ? { ...c, readiedAction, reactionUsed: false } : c
+          ),
+        },
+      }))
+    },
+    clearReadiedAction: (combatantId) => {
+      set((state) => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === combatantId ? { ...c, readiedAction: null } : c
+          ),
+        },
+      }))
+    },
+
     nextEncounterTurn: () => {
       const state = get();
       const { combatants, currentTurn, round } = state.encounter;
@@ -417,6 +441,7 @@ export function createEncounterSlice(set, get) {
           reactionUsed: false,
           disengaged: false,
           leveledSpellCastThisTurn: false,
+          readiedAction: null,
         } : c
       );
       set({

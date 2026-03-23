@@ -18,6 +18,8 @@ import TestCombatButton from './components/v2/TestCombatButton'
 import WeaponPickerModal from './hud/WeaponPickerModal'
 import SpellPickerModal from './hud/SpellPickerModal'
 import ConsumablePickerModal from './hud/ConsumablePickerModal'
+import ReadyActionModal from './hud/ReadyActionModal'
+import ReadyActionPrompt from './hud/ReadyActionPrompt'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -177,6 +179,9 @@ export default function GameV2({ onLeave }) {
     showWeaponPicker, setShowWeaponPicker,
     showSpellPicker, setShowSpellPicker,
     showConsumablePicker, setShowConsumablePicker,
+    showReadyModal, setShowReadyModal,
+    readyTriggerPrompt, checkReadiedTriggers,
+    executeReadiedAction, passReadiedAction,
     handleSpellSelected, handleWeaponSelected, handleConsumableUsed, selectedWeapon,
   } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM })
 
@@ -908,6 +913,21 @@ export default function GameV2({ onLeave }) {
           character={encounter.combatants[encounter.currentTurn]}
           onSelect={handleConsumableUsed}
           onClose={() => setShowConsumablePicker(false)}
+        />
+      )}
+      {showReadyModal && inCombat && encounter.combatants?.[encounter.currentTurn] && (
+        <ReadyActionModal
+          combatant={encounter.combatants[encounter.currentTurn]}
+          onConfirm={(readyData) => handleCombatAction('ready-confirm', readyData)}
+          onCancel={() => setShowReadyModal(false)}
+        />
+      )}
+      {readyTriggerPrompt && (
+        <ReadyActionPrompt
+          readiedAction={readyTriggerPrompt.readiedAction}
+          triggerDescription={readyTriggerPrompt.triggerDescription}
+          onExecute={executeReadiedAction}
+          onPass={passReadiedAction}
         />
       )}
       {activeShop && (
