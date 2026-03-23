@@ -80,6 +80,7 @@ const InitiativeTracker_  = lazy(() => import('./components/game/InitiativeTrack
 const LevelUpPanel_       = lazy(() => import('./components/game/LevelUpPanel'))
 const PauseMenu_          = lazy(() => import('./components/game/PauseMenu'))
 const PartyStatus_        = lazy(() => import('./components/game/PartyStatus'))
+const RulesReference_     = lazy(() => import('./components/game/RulesReference'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -178,6 +179,7 @@ export default function GameV2({ onLeave }) {
   const [showLevelUpPanel, setShowLevelUpPanel] = useState(false)
   const [showPauseMenu, setShowPauseMenu] = useState(false)
   const [showPartyStatus, setShowPartyStatus] = useState(false)
+  const [showRulesReference, setShowRulesReference] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1298,6 +1300,13 @@ export default function GameV2({ onLeave }) {
             partyMembers={partyMembers || []}
             myCharacter={myCharacter}
             onClose={() => setShowPartyStatus(false)}
+          />
+        </Suspense>
+      )}
+      {showRulesReference && (
+        <Suspense fallback={null}>
+          <RulesReference_
+            onClose={() => setShowRulesReference(false)}
           />
         </Suspense>
       )}
