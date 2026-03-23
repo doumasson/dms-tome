@@ -706,6 +706,22 @@ export default function App() {
     // Use getState() to avoid stale closure — setUser() above hasn't re-rendered yet
     const freshUserId = useStore.getState().user?.id;
 
+    // Ensure user has a campaign_members row (required for character selection to work)
+    if (freshUserId) {
+      await supabase
+        .from('campaign_members')
+        .upsert(
+          {
+            campaign_id: campaignRecord.id,
+            user_id: freshUserId,
+            role: 'player',
+          },
+          { onConflict: 'campaign_id,user_id' }
+        )
+        .select()
+        .maybeSingle();
+    }
+
     // Cache DM's Claude API key for all players (so narrator works without their own key)
     // Priority: platform default (Supabase) > campaign plaintext > campaign encrypted > none
     const defaultKey = await loadDefaultApiKey();
