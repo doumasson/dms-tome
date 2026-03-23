@@ -467,8 +467,14 @@ describe('Enemy AI', () => {
         const result = computeGruntAction(enemy, combatants, null, 10, 8)
         if (result.hit) {
           foundHit = true
-          expect(result.damage).toBeGreaterThanOrEqual(7) // 2d6 min 2, +5 = 7
-          expect(result.damage).toBeLessThanOrEqual(17) // 2d6 max 12, +5 = 17
+          // 2d6+5: normal 7-17, crit 14-34
+          if (result.isCrit) {
+            expect(result.damage).toBeGreaterThanOrEqual(14)
+            expect(result.damage).toBeLessThanOrEqual(34)
+          } else {
+            expect(result.damage).toBeGreaterThanOrEqual(7)
+            expect(result.damage).toBeLessThanOrEqual(17)
+          }
           break
         }
       }
