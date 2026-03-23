@@ -48,6 +48,7 @@ const LevelUpModal        = lazy(() => import('./components/LevelUpModal'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
+const FactionReputation   = lazy(() => import('./components/FactionReputation'))
 const CombatDebugOverlay  = lazy(() => import('./hud/CombatDebugOverlay'))
 const WorldMap            = lazy(() => import('./hud/WorldMap'))
 
@@ -110,6 +111,7 @@ export default function GameV2({ onLeave }) {
   const [restProposal, setRestProposal] = useState(null)
   const [showApiSettings, setShowApiSettings] = useState(false)
   const [showJournal, setShowJournal] = useState(false)
+  const [showFactions, setShowFactions] = useState(false)
   const [activeNpc, setActiveNpc] = useState(null)
   const [activeShop, setActiveShop] = useState(null)
   const [worldTransform, setWorldTransform] = useState(null)
@@ -724,6 +726,7 @@ export default function GameV2({ onLeave }) {
     if (tool === 'dice') setToolPanel('dice')
     else if (tool === 'character' || tool === 'inventory') setSheetChar(myCharacter)
     else if (tool === 'journal') setShowJournal(true)
+    else if (tool === 'faction') setShowFactions(true)
     else if (tool === 'short-rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
     else if (tool === 'long-rest') setRestProposal({ type: 'long', proposedBy: myCharacter?.name || 'Someone' })
     else if (tool === 'formation') setShowFormation(true)
@@ -838,6 +841,11 @@ export default function GameV2({ onLeave }) {
       {showJournal && (
         <Suspense fallback={null}>
           <JournalModal onClose={() => setShowJournal(false)} />
+        </Suspense>
+      )}
+      {showFactions && (
+        <Suspense fallback={null}>
+          <FactionReputation onClose={() => setShowFactions(false)} />
         </Suspense>
       )}
       {restProposal && (

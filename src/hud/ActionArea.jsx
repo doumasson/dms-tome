@@ -7,6 +7,7 @@ const TOOLS = [
   { img: '/ui/btn-pack.png', label: 'PACK', key: 'inventory' },
   { img: '/ui/btn-journal.png', label: 'JOURNAL', key: 'journal' },
   { img: '/ui/btn-rest.png', label: 'REST', key: 'rest' },
+  { img: '/ui/btn-faction.png', label: 'FACTION', key: 'faction', icon: '⚔' },
 ]
 
 export default function ActionArea({ onTool, areaTheme }) {
@@ -34,7 +35,11 @@ export default function ActionArea({ onTool, areaTheme }) {
               title={tool.label}
               onClick={() => handleToolClick(tool.key)}
             >
-              <img src={tool.img} alt={tool.label} draggable={false} />
+              {tool.icon ? (
+                <span style={{ fontSize: 24, lineHeight: 1 }}>{tool.icon}</span>
+              ) : (
+                <img src={tool.img} alt={tool.label} draggable={false} />
+              )}
             </button>
             {/* Rest picker popover — only for the REST button */}
             {tool.key === 'rest' && showRestPicker && (
