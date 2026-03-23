@@ -63,7 +63,6 @@ const EquipmentPanel_     = lazy(() => import('./components/game/EquipmentPanel'
 const ExplorationActions_ = lazy(() => import('./components/game/ExplorationActions'))
 const EnemyInfo_          = lazy(() => import('./components/game/EnemyInfo'))
 const InitiativeTracker_  = lazy(() => import('./components/game/InitiativeTracker'))
-const LevelUpPanel_       = lazy(() => import('./components/game/LevelUpPanel'))
 const PauseMenu_          = lazy(() => import('./components/game/PauseMenu'))
 const PartyStatus_        = lazy(() => import('./components/game/PartyStatus'))
 const RulesReference_     = lazy(() => import('./components/game/RulesReference'))
@@ -162,7 +161,6 @@ export default function GameV2({ onLeave }) {
   const [showEnemyInfo, setShowEnemyInfo] = useState(false)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
   const [showInitiativeTracker, setShowInitiativeTracker] = useState(false)
-  const [showLevelUpPanel, setShowLevelUpPanel] = useState(false)
   const [showPauseMenu, setShowPauseMenu] = useState(false)
   const [showPartyStatus, setShowPartyStatus] = useState(false)
   const [showRulesReference, setShowRulesReference] = useState(false)
@@ -1247,15 +1245,6 @@ export default function GameV2({ onLeave }) {
           <InitiativeTracker_
             encounter={encounter}
             onClose={() => setShowInitiativeTracker(false)}
-          />
-        </Suspense>
-      )}
-      {showLevelUpPanel && myCharacter && (
-        <Suspense fallback={null}>
-          <LevelUpPanel_
-            character={myCharacter}
-            onConfirm={() => setShowLevelUpPanel(false)}
-            onCancel={() => setShowLevelUpPanel(false)}
           />
         </Suspense>
       )}
