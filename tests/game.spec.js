@@ -62,10 +62,28 @@ test.describe('Game Integration Tests', () => {
     const portraitCount = await partyPortraits.count();
     expect(portraitCount).toBeGreaterThanOrEqual(0); // Party portraits may be in different structures
 
-    // Verify HUD is showing character stats (HP, AC, spell slots)
+    // Verify HUD is showing character stats with real values (HP, AC, spell slots)
     const hudStats = page.locator('[class*="hp"], [class*="ac"], [class*="stat"], [class*="slot"]');
     const statCount = await hudStats.count();
     expect(statCount).toBeGreaterThan(0); // Should have at least some stat displays
+
+    // Extract and verify HP and AC values are numeric and non-zero
+    const hpElement = page.locator('[class*="hp"]').first();
+    const acElement = page.locator('[class*="ac"]').first();
+
+    if ((await hpElement.count()) > 0) {
+      const hpText = await hpElement.textContent();
+      const hpMatch = hpText.match(/(\d+)/);
+      expect(hpMatch).toBeTruthy(); // HP should contain a number
+      expect(parseInt(hpMatch[1])).toBeGreaterThan(0); // HP should be > 0
+    }
+
+    if ((await acElement.count()) > 0) {
+      const acText = await acElement.textContent();
+      const acMatch = acText.match(/(\d+)/);
+      expect(acMatch).toBeTruthy(); // AC should contain a number
+      expect(parseInt(acMatch[1])).toBeGreaterThan(0); // AC should be > 0
+    }
 
     // Verify PixiJS canvas element exists (game world rendering)
     const canvas = page.locator('canvas').first();
