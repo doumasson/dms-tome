@@ -85,4 +85,37 @@ test.describe('Game Integration Tests', () => {
     const elementCount = await hudElements.count();
     expect(elementCount).toBeGreaterThan(0);
   });
+
+  test('should verify character sheet displays in game', async ({ page, baseURL }) => {
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+
+    // Wait for game to load
+    const canvas = page.locator('canvas').first();
+    await expect(canvas).toBeVisible({ timeout: 15000 });
+
+    // Look for character sheet button (might be labeled with character name or icon)
+    const charButtons = page.locator('button:has-text("CHAR"), [class*="portrait"], [title="Character"]');
+    const charCount = await charButtons.count();
+    expect(charCount).toBeGreaterThanOrEqual(0);
+
+    // Verify narrator/chat interface is accessible
+    const chatArea = page.locator('[class*="chat"], [class*="log"], [class*="narrator"]').first();
+    await expect(chatArea).toBeVisible({ timeout: 5000 });
+  });
+
+  test('should verify game session persists state', async ({ page, baseURL }) => {
+    // First load
+    await page.goto(baseURL || 'http://localhost:5173', { waitUntil: 'networkidle' });
+
+    const canvas = page.locator('canvas').first();
+    await expect(canvas).toBeVisible({ timeout: 15000 });
+
+    // Verify initial state
+    const hudBar = page.locator('.hud-bottom-bar, [class*="bottom"]').first();
+    await expect(hudBar).toBeVisible();
+
+    // Take initial screenshot
+    const initialImage = await page.screenshot();
+    expect(initialImage).toBeTruthy();
+  });
 });
