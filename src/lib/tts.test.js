@@ -125,8 +125,13 @@ describe('speak', () => {
     global.URL.createObjectURL = vi.fn(() => 'blob:test')
     global.URL.revokeObjectURL = vi.fn()
 
-    // Mock fetch
-    mockFetch = vi.fn()
+    // Mock fetch - default to failing for Pollinations
+    mockFetch = vi.fn().mockImplementation((url) => {
+      if (typeof url === 'string' && url.includes('pollinations.ai')) {
+        return Promise.resolve({ ok: false })
+      }
+      return Promise.resolve({ ok: false })
+    })
     global.fetch = mockFetch
 
     // Mock AbortController
@@ -134,6 +139,19 @@ describe('speak', () => {
       abort: vi.fn(),
       signal: {},
     }))
+
+    // Mock SpeechSynthesisUtterance - must work with 'new' operator
+    const mockUtterance = {
+      rate: 1,
+      pitch: 1,
+      volume: 1,
+      onstart: null,
+      onend: null,
+      onerror: null,
+    }
+    global.SpeechSynthesisUtterance = vi.fn(function(text) {
+      return mockUtterance
+    })
 
     // Mock speechSynthesis
     mockSpeechSynthesis = {
@@ -156,7 +174,6 @@ describe('speak', () => {
   describe('Basic Behavior', () => {
     it('stops previous audio before playing new text', async () => {
       mockFetch.mockResolvedValueOnce({ ok: false })
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Hello', undefined)
       vi.runAllTimers()
@@ -181,30 +198,24 @@ describe('speak', () => {
 
     it('uses default voice onyx when not specified', async () => {
       mockFetch.mockResolvedValue({ ok: false })
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalled()
     })
 
     it('uses custom voice option when provided', async () => {
       mockFetch.mockResolvedValue({ ok: false })
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined, { voice: 'nova' })
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalled()
     })
 
     it('handles undefined onEnd callback', async () => {
       mockFetch.mockResolvedValue({ ok: false })
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await expect(speak('Test', undefined, {})).resolves.toBeUndefined()
-      vi.runAllTimers()
     })
   })
 
@@ -212,10 +223,8 @@ describe('speak', () => {
     it('calls fetch with OpenAI API when key provided', async () => {
       mockFetch.mockResolvedValueOnce({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined, { openAiKey: 'test-key' })
-      vi.runAllTimers()
 
       expect(mockFetch).toHaveBeenCalledWith(
         'https://api.openai.com/v1/audio/speech',
@@ -226,10 +235,8 @@ describe('speak', () => {
     it('sends correct POST request structure for OpenAI', async () => {
       mockFetch.mockResolvedValueOnce({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Hello', undefined, { openAiKey: 'key', voice: 'nova' })
-      vi.runAllTimers()
 
       const call = mockFetch.mock.calls[0]
       expect(call[1].method).toBe('POST')
@@ -245,10 +252,8 @@ describe('speak', () => {
     it('includes API key in Authorization header', async () => {
       mockFetch.mockResolvedValueOnce({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined, { openAiKey: 'secret-xyz' })
-      vi.runAllTimers()
 
       const call = mockFetch.mock.calls[0]
       expect(call[1].headers.Authorization).toBe('Bearer secret-xyz')
@@ -258,10 +263,8 @@ describe('speak', () => {
       const longText = 'a'.repeat(5000)
       mockFetch.mockResolvedValueOnce({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak(longText, undefined, { openAiKey: 'key' })
-      vi.runAllTimers()
 
       const call = mockFetch.mock.calls[0]
       const body = JSON.parse(call[1].body)
@@ -292,10 +295,8 @@ describe('speak', () => {
         }),
       })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined, { openAiKey: 'key' })
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalled()
     })
@@ -303,10 +304,8 @@ describe('speak', () => {
     it('falls through on non-ok HTTP response', async () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 400 })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined, { openAiKey: 'key' })
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalled()
     })
@@ -314,10 +313,8 @@ describe('speak', () => {
     it('falls through on fetch failure', async () => {
       mockFetch.mockRejectedValueOnce(new Error('Network error'))
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined, { openAiKey: 'key' })
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalled()
     })
@@ -345,10 +342,8 @@ describe('speak', () => {
         if (url.includes('pollinations')) return Promise.resolve({ ok: false })
       })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       const calls = mockFetch.mock.calls
       expect(calls.some(c => c[0].includes('pollinations'))).toBe(true)
@@ -357,11 +352,9 @@ describe('speak', () => {
     it('enforces 15.5s minimum spacing between Pollinations calls', async () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValue([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       // First call
       await speak('Test 1', undefined)
-      vi.runAllTimers()
 
       const calls1 = mockFetch.mock.calls.length
 
@@ -385,10 +378,8 @@ describe('speak', () => {
         }
       })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Hello', undefined, { voice: 'echo' })
-      vi.runAllTimers()
 
       const pollCall = mockFetch.mock.calls.find(c => c[0].includes('pollinations'))
       expect(pollCall).toBeDefined()
@@ -405,10 +396,8 @@ describe('speak', () => {
         if (url.includes('pollinations')) return Promise.resolve({ ok: false })
       })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       const pollCall = mockFetch.mock.calls.find(c => c[0].includes('pollinations'))
       expect(pollCall[1].headers.Authorization).toBeUndefined()
@@ -421,10 +410,8 @@ describe('speak', () => {
         if (url.includes('pollinations')) return Promise.resolve({ ok: false })
       })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak(longText, undefined)
-      vi.runAllTimers()
 
       const pollCall = mockFetch.mock.calls.find(c => c[0].includes('pollinations'))
       const body = JSON.parse(pollCall[1].body)
@@ -463,10 +450,8 @@ describe('speak', () => {
         }
       })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalled()
     })
@@ -479,10 +464,8 @@ describe('speak', () => {
         }
       })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalled()
     })
@@ -534,10 +517,8 @@ describe('speak', () => {
     it('falls back to Web Speech when both HTTP APIs fail', async () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalled()
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled()
@@ -546,10 +527,8 @@ describe('speak', () => {
     it('calls speechSynthesis.getVoices', async () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(mockSpeechSynthesis.getVoices).toHaveBeenCalled()
     })
@@ -557,10 +536,8 @@ describe('speak', () => {
     it('creates SpeechSynthesisUtterance with text', async () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Hello world', undefined)
-      vi.runAllTimers()
 
       expect(global.SpeechSynthesisUtterance).toHaveBeenCalledWith('Hello world')
     })
@@ -569,10 +546,8 @@ describe('speak', () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
       const mockUtterance = { rate: 0 }
-      global.SpeechSynthesisUtterance = vi.fn(() => mockUtterance)
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(mockUtterance.rate).toBe(0.85)
     })
@@ -581,10 +556,8 @@ describe('speak', () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
       const mockUtterance = { pitch: 0 }
-      global.SpeechSynthesisUtterance = vi.fn(() => mockUtterance)
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(mockUtterance.pitch).toBe(0.75)
     })
@@ -593,10 +566,8 @@ describe('speak', () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
       const mockUtterance = { volume: 0 }
-      global.SpeechSynthesisUtterance = vi.fn(() => mockUtterance)
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(mockUtterance.volume).toBe(1)
     })
@@ -610,10 +581,8 @@ describe('speak', () => {
       }
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([googleVoice])
       const mockUtterance = { voice: null }
-      global.SpeechSynthesisUtterance = vi.fn(() => mockUtterance)
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(mockUtterance.voice).toBe(googleVoice)
     })
@@ -627,10 +596,8 @@ describe('speak', () => {
         goodVoice,
       ])
       const mockUtterance = { voice: null }
-      global.SpeechSynthesisUtterance = vi.fn(() => mockUtterance)
 
       await speak('Test', undefined)
-      vi.runAllTimers()
 
       expect(mockUtterance.voice).toBe(goodVoice)
     })
@@ -639,11 +606,9 @@ describe('speak', () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
       const mockUtterance = { onend: null }
-      global.SpeechSynthesisUtterance = vi.fn(() => mockUtterance)
 
       const onEnd = vi.fn()
       await speak('Test', onEnd)
-      vi.runAllTimers()
 
       expect(mockUtterance.onend).toBe(onEnd)
     })
@@ -651,15 +616,12 @@ describe('speak', () => {
     it('cancels previous utterance on new speak', async () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('First', undefined)
-      vi.runAllTimers()
 
       mockSpeechSynthesis.cancel.mockClear()
 
       await speak('Second', undefined)
-      vi.runAllTimers()
 
       expect(mockSpeechSynthesis.cancel).toHaveBeenCalled()
     })
@@ -679,10 +641,8 @@ describe('speak', () => {
         }
       })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
       await speak('Test', undefined, { openAiKey: 'key' })
-      vi.runAllTimers()
 
       expect(callOrder).toContain('openai')
       expect(callOrder).toContain('pollinations')
@@ -704,7 +664,6 @@ describe('speak', () => {
       })
 
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
-      global.SpeechSynthesisUtterance = vi.fn(() => ({}))
       mockAudio.play.mockRejectedValueOnce(new Error('Autoplay blocked'))
 
       const onEnd = vi.fn()
@@ -719,10 +678,8 @@ describe('speak', () => {
       mockFetch.mockResolvedValue({ ok: false })
       mockSpeechSynthesis.getVoices.mockReturnValueOnce([])
       const mockUtterance = { onend: null }
-      global.SpeechSynthesisUtterance = vi.fn(() => mockUtterance)
 
       await speak('Test', onEnd)
-      vi.runAllTimers()
 
       expect(mockUtterance.onend).toBe(onEnd)
     })
@@ -758,7 +715,6 @@ describe('stopSpeaking', () => {
   })
 
   it('pauses currentAudio if playing', async () => {
-    global.SpeechSynthesisUtterance = vi.fn(() => ({}))
 
     await speak('Test', undefined)
     vi.runAllTimers()
@@ -815,7 +771,6 @@ describe('isSpeaking', () => {
     global.fetch = vi.fn(() => Promise.resolve({ ok: false }))
     global.URL.createObjectURL = vi.fn(() => 'blob:test')
     global.URL.revokeObjectURL = vi.fn()
-    global.SpeechSynthesisUtterance = vi.fn(() => ({}))
   })
 
   afterEach(() => {
@@ -889,7 +844,6 @@ describe('Integration Scenarios', () => {
       configurable: true,
     })
 
-    global.SpeechSynthesisUtterance = vi.fn(() => ({}))
     global.AbortController = vi.fn(() => ({
       abort: vi.fn(),
       signal: {},
@@ -1050,7 +1004,6 @@ describe('Edge Cases', () => {
       configurable: true,
     })
 
-    global.SpeechSynthesisUtterance = vi.fn(() => ({}))
     global.AbortController = vi.fn(() => ({
       abort: vi.fn(),
       signal: {},
