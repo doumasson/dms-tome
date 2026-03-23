@@ -29,16 +29,18 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
   const [showWeaponPicker, setShowWeaponPicker] = useState(false)
   const [showSpellPicker, setShowSpellPicker] = useState(false)
   const [selectedWeapon, setSelectedWeapon] = useState(null)
+  const [showConsumablePicker, setShowConsumablePicker] = useState(false)
   const reachableTilesRef = useRef(new Set())
   const propCoverRef = useRef(new Set())
 
   // --- Escape to cancel targeting mode or close pickers ---
   useEffect(() => {
-    if (!targetingMode && !showWeaponPicker && !showSpellPicker) return
+    if (!targetingMode && !showWeaponPicker && !showSpellPicker && !showConsumablePicker) return
     const onKey = (e) => {
       if (e.key === 'Escape') {
         if (showWeaponPicker) { setShowWeaponPicker(false); return }
         if (showSpellPicker) { setShowSpellPicker(false); return }
+        if (showConsumablePicker) { setShowConsumablePicker(false); return }
         setTargetingMode(null)
         setSelectedWeapon(null)
         const layer = pixiRef.current?.getMovementRangeLayer?.()
@@ -47,7 +49,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [targetingMode, showWeaponPicker, showSpellPicker])
+  }, [targetingMode, showWeaponPicker, showSpellPicker, showConsumablePicker])
 
   // --- Combat camera lock (area camera mode only) ---
   // Compute bounds ONCE when combat starts, not on every combatant change.
@@ -277,9 +279,27 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       let totalDamageDealt = 0
       const logEntries = []
 
+      // Check if Help action granted advantage on this target
+      const hasHelpAdvantage = !!target.helpAdvantage
+      if (hasHelpAdvantage) {
+        // Consume the help advantage (one-time use)
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === target.id ? { ...c, helpAdvantage: false, helpGrantedBy: null } : c
+            ),
+          },
+        }))
+      }
+
       for (let strike = 0; strike < numHits; strike++) {
         const bonus = parseInt(weapon.bonus) || 0
-        const d20 = Math.floor(Math.random() * 20) + 1
+        let d20 = Math.floor(Math.random() * 20) + 1
+        if (hasHelpAdvantage && strike === 0) {
+          const d20b = Math.floor(Math.random() * 20) + 1
+          d20 = Math.max(d20, d20b) // advantage: take higher roll
+        }
         const total = d20 + bonus
         const isCrit = d20 === 20
         const hit = isCrit || total >= effectiveAC
@@ -302,6 +322,11 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
           ? `${active.name} → ${target.name}${strikeLabel}: HIT! d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}. ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}.`
           : `${active.name} → ${target.name}${strikeLabel}: MISS. d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}.`
         logEntries.push(entry)
+      }
+
+      // Attacking breaks Hidden condition
+      if (active.conditions?.includes('Hidden')) {
+        useStore.getState().removeEncounterCondition(active.id, 'Hidden')
       }
 
       // Consume action only for normal attacks (bonus attacks already consumed bonus action)
@@ -423,6 +448,43 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         })
         broadcastEncounterAction({ type: 'shove', attackerId: active.id, targetId: target.id, success: false })
       }
+      return true
+    }
+
+    // Help targeting — click an adjacent enemy to grant allies advantage
+    if (targetingMode === 'help' && inCombat) {
+      const target = encounter.combatants.find(c =>
+        c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position?.x === x && c.position?.y === y
+      )
+      if (!target) return true
+
+      const active = encounter.combatants[encounter.currentTurn]
+      if (!active?.position) return true
+
+      // Must be adjacent
+      const dx = Math.abs(active.position.x - target.position.x)
+      const dy = Math.abs(active.position.y - target.position.y)
+      if (dx > 1 || dy > 1) {
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Target must be adjacent (5 ft).' })
+        return true
+      }
+
+      const { useAction: consumeAction } = useStore.getState()
+      consumeAction(active.id)
+      // Mark the target as having advantage-against (next ally attack)
+      useStore.setState(state => ({
+        encounter: {
+          ...state.encounter,
+          combatants: state.encounter.combatants.map(c =>
+            c.id === target.id ? { ...c, helpAdvantage: true, helpGrantedBy: active.id } : c
+          ),
+        },
+      }))
+      setTargetingMode(null)
+      addNarratorMessage({ role: 'dm', speaker: 'Combat',
+        text: `${active.name} uses the Help action! The next attack against ${target.name} has advantage.`,
+      })
+      broadcastEncounterAction({ type: 'help', attackerId: active.id, targetId: target.id })
       return true
     }
 
@@ -680,6 +742,49 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       setTargetingMode('shove')
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select an adjacent target to shove. Press Escape to cancel.' })
       return
+    } else if (type === 'hide') {
+      // Hide action: Stealth check, success grants Hidden condition
+      const { useAction: consumeAction, addEncounterCondition: addCond } = useStore.getState()
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active) return
+      consumeAction(active.id)
+      const stats = active.stats || active.abilityScores || {}
+      const dexMod = Math.floor(((stats.dex ?? 10) - 10) / 2)
+      const level = active.level || 1
+      const prof = Math.ceil(level / 4) + 1
+      const skills = active.skills || []
+      const isProficient = skills.some(s => s === 'Stealth' || s === 'stealth')
+      const bonus = dexMod + (isProficient ? prof : 0)
+      const d20 = Math.floor(Math.random() * 20) + 1
+      const total = d20 + bonus
+      // Hidden if total beats enemy passive perceptions (DC 10-15 typical)
+      const dc = 12 // moderate difficulty
+      if (total >= dc) {
+        addCond(active.id, 'Hidden')
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} hides! Stealth: ${total} (d20: ${d20} + ${bonus}) vs DC ${dc}. Attacks against you have disadvantage.`
+        })
+        broadcastEncounterAction({ type: 'hide', id: active.id, success: true, total })
+      } else {
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} fails to hide. Stealth: ${total} (d20: ${d20} + ${bonus}) vs DC ${dc}.`
+        })
+        broadcastEncounterAction({ type: 'hide', id: active.id, success: false, total })
+      }
+      return
+    } else if (type === 'help') {
+      // Help action: enter targeting mode to select an ally's target
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active || active.actionsUsed) return
+      setTargetingMode('help')
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select an adjacent enemy to grant an ally advantage against. Press Escape to cancel.' })
+      return
+    } else if (type === 'use-item') {
+      // Open consumable picker
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active || active.actionsUsed) return
+      setShowConsumablePicker(true)
+      return
     } else if (type === 'move') {
       setTargetingMode(null) // Clear any active targeting so tile clicks route to movement
       addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Click a tile to move during combat.' })
@@ -822,6 +927,32 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     addNarratorMessage({ role: 'dm', speaker: 'System', text: `Attack with ${weapon.name}. Click a target. Press Escape to cancel.` })
   }, [addNarratorMessage])
 
+  // --- Consumable item used from picker ---
+  const handleConsumableUsed = useCallback((item) => {
+    setShowConsumablePicker(false)
+    const active = encounter.combatants?.[encounter.currentTurn]
+    if (!active) return
+
+    const { useAction: consumeAction } = useStore.getState()
+    consumeAction(active.id)
+
+    // Apply the item effect via the store
+    const { useItem } = useStore.getState()
+    const effect = useItem(item.instanceId)
+
+    let narration = `${active.name} uses ${item.name}.`
+    if (effect?.type === 'heal') {
+      // Re-read to get updated HP
+      const updated = useStore.getState().encounter.combatants?.find(c => c.id === active.id)
+      const hpNow = updated?.currentHp ?? active.currentHp
+      narration = `${active.name} drinks a ${item.name} and recovers HP! (now ${hpNow} HP)`
+    } else if (effect?.type === 'condition') {
+      narration = `${active.name} uses ${item.name} — ${effect.condition}!`
+    }
+    addNarratorMessage({ role: 'dm', speaker: 'Combat', text: narration })
+    broadcastEncounterAction({ type: 'use-item', id: active.id, itemName: item.name, effect })
+  }, [encounter, addNarratorMessage])
+
   return {
     targetingMode,
     setTargetingMode,
@@ -834,8 +965,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     propCoverRef,
     showWeaponPicker, setShowWeaponPicker,
     showSpellPicker, setShowSpellPicker,
+    showConsumablePicker, setShowConsumablePicker,
     handleSpellSelected,
     handleWeaponSelected,
+    handleConsumableUsed,
     selectedWeapon,
   }
 }

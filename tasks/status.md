@@ -257,6 +257,10 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Contested check module (`src/lib/contestedCheck.js`) — attacker Athletics vs defender Athletics/Acrobatics
 - [x] GRPL/SHOV buttons in CombatActionBar, adjacent-only targeting, multiplayer broadcast
 - [x] Chest/search/pickpocket loot items now added to player inventory (was narrated but not stored)
+- [x] Hide action — Stealth check, success grants Hidden condition (attacks have disadvantage); attacking breaks Hidden
+- [x] Help action — select adjacent enemy, grants advantage on next ally attack (consumed on use)
+- [x] Use Item action — ConsumablePickerModal shows inventory consumables, costs action, heals/applies effect, broadcast
+- [x] HDE/HELP/USE buttons in CombatActionBar with action economy enforcement
 - 288 tests, 0 failures.
 
 ---
@@ -288,3 +292,4 @@ _(Empty — add items as they come up)_
 - **2026-03-20:** Bug fixes + tech debt — LootScreen/LevelUpModal wired in V2, 6 broadcast handlers, useStore split (1784→20 lines), GameV2 split (1430→372 lines), bundle -41%.
 - **2026-03-20:** Phase 10 Living World — shop/merchant, minimap, status effects, ambient sound, NPC schedules, traps, weather, party formation, quest tracker. 252 tests, 15 commits.
 - **2026-03-22:** Grapple & Shove combat actions, loot→inventory bug fix. 288 tests.
+- **2026-03-22:** Hide, Help, Use Item combat actions. All standard 5e actions now functional in combat bar.

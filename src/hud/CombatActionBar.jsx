@@ -229,6 +229,22 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
             <span className="medallion-label">SHOV</span>
           </button>
           <button
+            className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canAct || !actionsLeft}
+            onClick={() => handleAction('help')}
+            title="Help — grant an ally advantage on their next attack against a target"
+          >
+            <span className="medallion-label">HELP</span>
+          </button>
+          <button
+            className={`medallion-btn small${(!canAct || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canAct || !actionsLeft}
+            onClick={() => handleAction('use-item')}
+            title="Use Item — drink a potion or use a consumable (costs action)"
+          >
+            <span className="medallion-label">USE</span>
+          </button>
+          <button
             className="medallion-btn small"
             onClick={() => handleAction('say')}
             title="Say"

@@ -273,6 +273,37 @@ export default function App() {
             store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: msg })
           }
           break
+        case 'hide':
+          if (payload.success) {
+            store.addEncounterCondition(payload.id, 'Hidden')
+          }
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: payload.success
+              ? `A combatant hides! (Stealth: ${payload.total})`
+              : `A combatant fails to hide. (Stealth: ${payload.total})`,
+          })
+          break
+        case 'help': {
+          useStore.setState(state => ({
+            encounter: {
+              ...state.encounter,
+              combatants: state.encounter.combatants.map(c =>
+                c.id === payload.targetId ? { ...c, helpAdvantage: true, helpGrantedBy: payload.attackerId } : c
+              ),
+            },
+          }))
+          const a2 = store.encounter.combatants?.find(c => c.id === payload.attackerId)
+          const t2 = store.encounter.combatants?.find(c => c.id === payload.targetId)
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${a2?.name || 'An ally'} uses Help! Next attack against ${t2?.name || 'a target'} has advantage.`,
+          })
+          break
+        }
+        case 'use-item':
+          store.addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `A combatant uses ${payload.itemName || 'an item'}.`,
+          })
+          break
       }
     });
 

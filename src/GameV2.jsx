@@ -17,6 +17,7 @@ import OAConfirmModal from './components/v2/OAConfirmModal'
 import TestCombatButton from './components/v2/TestCombatButton'
 import WeaponPickerModal from './hud/WeaponPickerModal'
 import SpellPickerModal from './hud/SpellPickerModal'
+import ConsumablePickerModal from './hud/ConsumablePickerModal'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -175,7 +176,8 @@ export default function GameV2({ onLeave }) {
     handleCombatTileClick, handleCombatAction, executeMoveWithOA,
     showWeaponPicker, setShowWeaponPicker,
     showSpellPicker, setShowSpellPicker,
-    handleSpellSelected, handleWeaponSelected, selectedWeapon,
+    showConsumablePicker, setShowConsumablePicker,
+    handleSpellSelected, handleWeaponSelected, handleConsumableUsed, selectedWeapon,
   } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM })
 
   const { handleAreaTransition } = useAreaTransition({
@@ -899,6 +901,13 @@ export default function GameV2({ onLeave }) {
           onSelect={handleSpellSelected}
           onClose={() => setShowSpellPicker(false)}
           cantripsOnly={!!encounter.combatants[encounter.currentTurn].leveledSpellCastThisTurn}
+        />
+      )}
+      {showConsumablePicker && inCombat && encounter.combatants?.[encounter.currentTurn] && (
+        <ConsumablePickerModal
+          character={encounter.combatants[encounter.currentTurn]}
+          onSelect={handleConsumableUsed}
+          onClose={() => setShowConsumablePicker(false)}
         />
       )}
       {activeShop && (
