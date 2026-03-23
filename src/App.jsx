@@ -304,6 +304,50 @@ export default function App() {
             text: `A combatant uses ${payload.itemName || 'an item'}.`,
           })
           break
+        case 'class-ability': {
+          const ca = store.encounter.combatants?.find(c => c.id === payload.id)
+          const aName = ca?.name || 'A combatant'
+          if (payload.ability === 'Action Surge') {
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, actionsUsed: false } : c
+              ) },
+            }))
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} uses Action Surge!` })
+          } else if (payload.ability === 'Rage') {
+            store.addEncounterCondition(payload.id, 'Raging')
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, rageBonus: payload.rageBonus || 2, rageTurns: 10 } : c
+              ) },
+            }))
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} enters a RAGE!` })
+          } else if (payload.ability === 'Reckless Attack') {
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, recklessAttack: true } : c
+              ) },
+            }))
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} attacks recklessly!` })
+          } else if (payload.ability === 'Cunning Action') {
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, disengaged: true, remainingMove: (c.remainingMove || 0) + Math.floor((c.speed || 30) / 5) } : c
+              ) },
+            }))
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} uses Cunning Action!` })
+          } else if (payload.ability === 'Divine Smite') {
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === payload.id ? { ...c, divineSmiteReady: true } : c
+              ) },
+            }))
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} channels Divine Smite!` })
+          } else {
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${aName} uses ${payload.ability}!` })
+          }
+          break
+        }
       }
     });
 

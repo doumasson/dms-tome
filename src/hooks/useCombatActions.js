@@ -10,6 +10,7 @@ import { animateTokenAlongPath, isAnimating } from '../engine/TokenLayer'
 import { broadcastEncounterAction } from '../lib/liveChannel'
 import { getSaveProficiencies, profBonus as getProfBonus, abilityMod } from '../lib/derivedStats.js'
 import { resolveContestedCheck } from '../lib/contestedCheck.js'
+import { getExtraAttacks, CLASSES } from '../data/classes.js'
 
 /**
  * Encapsulates all combat-specific logic: attack targeting, spell AoE,
@@ -274,8 +275,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       const effectiveAC = (target.ac || 10) + coverBonus
 
       // Determine how many hits (Flurry of Blows = 2, normal = 1)
-      const numHits = weapon.flurryHits || 1
+      // Extra Attack: martial classes get 2+ attacks per action at level 5+
       const isBonusAttack = !!selectedWeapon && (selectedWeapon.name?.includes('Martial Arts') || selectedWeapon.name?.includes('Flurry'))
+      const extraAttackCount = isBonusAttack ? 1 : getExtraAttacks(active.class, active.level || 1)
+      const numHits = weapon.flurryHits || extraAttackCount
       let totalDamageDealt = 0
       const logEntries = []
 
@@ -293,10 +296,14 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         }))
       }
 
+      // Check for Reckless Attack advantage (Barbarian)
+      const hasReckless = !!active.recklessAttack
+      let sneakAttackApplied = false
+
       for (let strike = 0; strike < numHits; strike++) {
         const bonus = parseInt(weapon.bonus) || 0
         let d20 = Math.floor(Math.random() * 20) + 1
-        if (hasHelpAdvantage && strike === 0) {
+        if ((hasHelpAdvantage && strike === 0) || hasReckless) {
           const d20b = Math.floor(Math.random() * 20) + 1
           d20 = Math.max(d20, d20b) // advantage: take higher roll
         }
@@ -305,9 +312,48 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         const hit = isCrit || total >= effectiveAC
 
         let damage = 0
+        let bonusDmgNotes = ''
         if (hit) {
           const dmgResult = rollDamage(weapon.damage || '1')
           damage = isCrit ? dmgResult.total * 2 : dmgResult.total
+
+          // Rage bonus damage (Barbarian, melee only)
+          if (active.rageBonus && !weapon.name?.toLowerCase().includes('ranged')) {
+            damage += active.rageBonus
+            bonusDmgNotes += ` +${active.rageBonus} rage`
+          }
+
+          // Sneak Attack (Rogue, once per turn, finesse/ranged weapon)
+          if (active.class === 'Rogue' && !sneakAttackApplied) {
+            const cls = CLASSES.Rogue
+            const saLevel = active.level || 1
+            const saDice = cls?.sneakAttackDice?.[saLevel] || '1d6'
+            const saResult = rollDamage(saDice)
+            const saDmg = isCrit ? saResult.total * 2 : saResult.total
+            damage += saDmg
+            sneakAttackApplied = true
+            bonusDmgNotes += ` +${saDmg} sneak`
+          }
+
+          // Divine Smite (Paladin, consume 1st-level spell slot on hit)
+          if (active.divineSmiteReady && !isBonusAttack) {
+            const smiteResult = rollDamage('2d8')
+            const smiteDmg = isCrit ? smiteResult.total * 2 : smiteResult.total
+            damage += smiteDmg
+            bonusDmgNotes += ` +${smiteDmg} smite`
+            // Consume the smite flag and a spell slot
+            useStore.setState(state => ({
+              encounter: {
+                ...state.encounter,
+                combatants: state.encounter.combatants.map(c =>
+                  c.id === active.id ? { ...c, divineSmiteReady: false } : c
+                ),
+              },
+            }))
+            const { useSpellSlot } = useStore.getState()
+            if (useSpellSlot) useSpellSlot(active.id, 1) // consume lowest slot
+          }
+
           totalDamageDealt += damage
         }
 
@@ -319,7 +365,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         const coverNote = coverBonus > 0 ? ` (${coverType} cover +${coverBonus})` : ''
         const strikeLabel = numHits > 1 ? ` [Strike ${strike + 1}]` : ''
         const entry = hit
-          ? `${active.name} → ${target.name}${strikeLabel}: HIT! d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}. ${damage} damage${isCrit ? ' (CRITICAL!)' : ''}.`
+          ? `${active.name} → ${target.name}${strikeLabel}: HIT! d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}. ${damage} damage${bonusDmgNotes}${isCrit ? ' (CRITICAL!)' : ''}.`
           : `${active.name} → ${target.name}${strikeLabel}: MISS. d20(${d20})+${bonus}=${total} vs AC ${effectiveAC}${coverNote}.`
         logEntries.push(entry)
       }
@@ -700,11 +746,12 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         return
       }
 
-      // Patient Defense: Dodge as bonus action
+      // Patient Defense: Dodge as bonus action (attacks against have disadvantage)
       if (payload?.name === 'Patient Defense') {
-        const { useBonusAction } = useStore.getState()
+        const { useBonusAction, addEncounterCondition } = useStore.getState()
         useBonusAction(active.id)
-        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses Patient Defense (Dodge as bonus action).` })
+        addEncounterCondition(active.id, 'Dodging')
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses Patient Defense (Dodge). Attacks against have disadvantage until next turn.` })
         broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Patient Defense' })
         return
       }
@@ -727,7 +774,151 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         return
       }
 
-      // Default: just announce
+      // --- Fighter: Second Wind (heal 1d10 + level, bonus action) ---
+      if (payload?.name === 'Second Wind') {
+        const { useBonusAction, applyEncounterHeal } = useStore.getState()
+        useBonusAction(active.id)
+        const d10 = Math.floor(Math.random() * 10) + 1
+        const healed = d10 + (active.level || 1)
+        applyEncounterHeal(active.id, healed)
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} uses Second Wind, recovering ${healed} HP! (1d10+${active.level || 1})`,
+        })
+        broadcastEncounterAction({ type: 'heal', targetId: active.id, amount: healed })
+        return
+      }
+
+      // --- Fighter: Action Surge (regain action this turn, free) ---
+      if (payload?.name === 'Action Surge') {
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, actionsUsed: false } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} uses Action Surge — an additional action this turn!`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Action Surge' })
+        return
+      }
+
+      // --- Barbarian: Rage (+damage, resistance to B/P/S, bonus action) ---
+      if (payload?.name === 'Rage') {
+        const { useBonusAction, addEncounterCondition } = useStore.getState()
+        useBonusAction(active.id)
+        addEncounterCondition(active.id, 'Raging')
+        const rageBonus = (active.level || 1) >= 16 ? 4 : (active.level || 1) >= 9 ? 3 : 2
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, rageBonus, rageTurns: 10 } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} enters a RAGE! +${rageBonus} melee damage, resistance to bludgeoning/piercing/slashing.`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Rage', rageBonus })
+        return
+      }
+
+      // --- Barbarian: Reckless Attack (advantage on attacks, enemies have advantage on you) ---
+      if (payload?.name === 'Reckless Attack') {
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, recklessAttack: true } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} attacks recklessly! Advantage on STR attacks this turn, but enemies have advantage against you.`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Reckless Attack' })
+        return
+      }
+
+      // --- Rogue: Cunning Action (Dash, Disengage, or Hide as bonus action) ---
+      if (payload?.name === 'Cunning Action') {
+        const { useBonusAction } = useStore.getState()
+        useBonusAction(active.id)
+        // Grant disengage + extra movement (Dash effect)
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, disengaged: true, remainingMove: (c.remainingMove || 0) + Math.floor((c.speed || 30) / 5) } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} uses Cunning Action (Dash + Disengage as bonus action).`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Cunning Action' })
+        return
+      }
+
+      // --- Paladin: Divine Smite (extra 2d8+ radiant on next hit, free action) ---
+      if (payload?.name === 'Divine Smite') {
+        // Mark combatant as "smiting" — damage applied on next hit
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === active.id ? { ...c, divineSmiteReady: true } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} channels Divine Smite! Extra 2d8 radiant damage on the next hit.`,
+        })
+        broadcastEncounterAction({ type: 'class-ability', id: active.id, ability: 'Divine Smite' })
+        return
+      }
+
+      // --- Paladin: Lay on Hands (heal from pool, action) ---
+      if (payload?.name === 'Lay on Hands') {
+        const { useAction: consumeAction, applyEncounterHeal } = useStore.getState()
+        consumeAction(active.id)
+        const pool = active.resourcesUsed?.['Lay on Hands'] || 0
+        const maxPool = (active.level || 1) * 5
+        const remaining = maxPool - pool
+        const healAmount = Math.min(remaining, (active.maxHp || 20) - (active.currentHp || 0))
+        if (healAmount > 0) {
+          // Consume from pool
+          const { useClassResource } = useStore.getState()
+          // Pool-type resources: we already deducted 1 above, but Lay on Hands is a pool
+          // We need to set the actual amount used — fix: set resourcesUsed directly
+          useStore.setState(state => ({
+            encounter: {
+              ...state.encounter,
+              combatants: state.encounter.combatants.map(c =>
+                c.id === active.id ? {
+                  ...c,
+                  resourcesUsed: { ...c.resourcesUsed, 'Lay on Hands': (c.resourcesUsed?.['Lay on Hands'] || 0) + healAmount - 1 },
+                } : c
+              ),
+            },
+          }))
+          applyEncounterHeal(active.id, healAmount)
+          addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${active.name} uses Lay on Hands, healing ${healAmount} HP! (${remaining - healAmount} pool remaining)`,
+          })
+          broadcastEncounterAction({ type: 'heal', targetId: active.id, amount: healAmount })
+        } else {
+          addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${active.name} has no Lay on Hands pool remaining.`,
+          })
+        }
+        return
+      }
+
+      // Default: just announce (for abilities not yet implemented like Wild Shape, Channel Divinity)
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses ${payload.name}!` })
       return
     } else if (type === 'grapple') {

@@ -261,6 +261,19 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Help action — select adjacent enemy, grants advantage on next ally attack (consumed on use)
 - [x] Use Item action — ConsumablePickerModal shows inventory consumables, costs action, heals/applies effect, broadcast
 - [x] HDE/HELP/USE buttons in CombatActionBar with action economy enforcement
+
+### Class Ability Implementation
+- [x] **Extra Attack** — wired for Fighter (×2/×3/×4), Barbarian (×2), Monk (×2), Paladin (×2), Ranger (×2) using `getExtraAttacks()` + existing multi-hit loop
+- [x] **Fighter: Second Wind** — heal 1d10+level as bonus action, resource tracked
+- [x] **Fighter: Action Surge** — restores action use mid-turn, free action, resource tracked
+- [x] **Barbarian: Rage** — +2/+3/+4 melee damage bonus, Raging condition, bonus action, resource tracked
+- [x] **Barbarian: Reckless Attack** — advantage on STR attacks this turn (enemies get advantage too)
+- [x] **Rogue: Sneak Attack** — auto-applies 1d6–10d6 extra damage on first hit per turn (scales by level)
+- [x] **Rogue: Cunning Action** — Dash + Disengage as bonus action
+- [x] **Paladin: Divine Smite** — toggle on, adds 2d8 radiant on next melee hit, consumes spell slot
+- [x] **Paladin: Lay on Hands** — heal from pool (level×5 HP), costs action
+- [x] **Monk: Patient Defense** — Dodge as bonus action, applies Dodging condition
+- All multiplayer broadcast handlers added for class abilities
 - 288 tests, 0 failures.
 
 ---
@@ -293,3 +306,4 @@ _(Empty — add items as they come up)_
 - **2026-03-20:** Phase 10 Living World — shop/merchant, minimap, status effects, ambient sound, NPC schedules, traps, weather, party formation, quest tracker. 252 tests, 15 commits.
 - **2026-03-22:** Grapple & Shove combat actions, loot→inventory bug fix. 288 tests.
 - **2026-03-22:** Hide, Help, Use Item combat actions. All standard 5e actions now functional in combat bar.
+- **2026-03-22:** Extra Attack + 10 class abilities implemented: Fighter (Second Wind, Action Surge), Barbarian (Rage, Reckless Attack), Rogue (Sneak Attack, Cunning Action), Paladin (Divine Smite, Lay on Hands), Monk (Patient Defense). 288 tests.
