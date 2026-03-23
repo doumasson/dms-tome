@@ -10,7 +10,7 @@ import './GameLayout.css';
  * Dark fantasy theme, gold accents, landscape-locked, mobile touch-friendly.
  */
 export default function GameLayout({ children }) {
-  const narratorMessages = useStore(s => s.narratorMessages || []);
+  const narratorMessages = useStore(s => s.narrator?.history || []);
   const addNarratorMessage = useStore(s => s.addNarratorMessage);
 
   const handleSendMessage = (text) => {
