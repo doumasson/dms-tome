@@ -83,6 +83,7 @@ const PartyStatus_        = lazy(() => import('./components/game/PartyStatus'))
 const RulesReference_     = lazy(() => import('./components/game/RulesReference'))
 const SkillsPanel_        = lazy(() => import('./components/game/SkillsPanel'))
 const SpellsPanel_        = lazy(() => import('./components/game/SpellsPanel'))
+const TurnManager_        = lazy(() => import('./components/game/TurnManager'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -184,6 +185,7 @@ export default function GameV2({ onLeave }) {
   const [showRulesReference, setShowRulesReference] = useState(false)
   const [showSkills, setShowSkills] = useState(false)
   const [showSpells, setShowSpells] = useState(false)
+  const [showTurnManager, setShowTurnManager] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1327,6 +1329,14 @@ export default function GameV2({ onLeave }) {
           <SpellsPanel_
             character={myCharacter}
             onClose={() => setShowSpells(false)}
+          />
+        </Suspense>
+      )}
+      {showTurnManager && inCombat && encounter.combatants?.[encounter.currentTurn] && (
+        <Suspense fallback={null}>
+          <TurnManager_
+            combatant={encounter.combatants[encounter.currentTurn]}
+            onClose={() => setShowTurnManager(false)}
           />
         </Suspense>
       )}
