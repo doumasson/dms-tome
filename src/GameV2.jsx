@@ -78,6 +78,7 @@ const ExplorationActions_ = lazy(() => import('./components/game/ExplorationActi
 const EnemyInfo_          = lazy(() => import('./components/game/EnemyInfo'))
 const InitiativeTracker_  = lazy(() => import('./components/game/InitiativeTracker'))
 const LevelUpPanel_       = lazy(() => import('./components/game/LevelUpPanel'))
+const PauseMenu_          = lazy(() => import('./components/game/PauseMenu'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -174,6 +175,7 @@ export default function GameV2({ onLeave }) {
   const [selectedEnemy, setSelectedEnemy] = useState(null)
   const [showInitiativeTracker, setShowInitiativeTracker] = useState(false)
   const [showLevelUpPanel, setShowLevelUpPanel] = useState(false)
+  const [showPauseMenu, setShowPauseMenu] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1274,6 +1276,17 @@ export default function GameV2({ onLeave }) {
             character={myCharacter}
             onConfirm={() => setShowLevelUpPanel(false)}
             onCancel={() => setShowLevelUpPanel(false)}
+          />
+        </Suspense>
+      )}
+      {showPauseMenu && (
+        <Suspense fallback={null}>
+          <PauseMenu_
+            onResume={() => setShowPauseMenu(false)}
+            onSettings={() => {}}
+            onHelp={() => {}}
+            onLeave={onLeave}
+            playerCount={partyMembers?.length || 1}
           />
         </Suspense>
       )}
