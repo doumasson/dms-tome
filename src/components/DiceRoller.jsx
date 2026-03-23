@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import useStore from '../store/useStore';
 
 const DICE_TYPES = [4, 6, 8, 10, 12, 20, 100];
@@ -45,7 +46,7 @@ export default function DiceRoller() {
     }
 
     const entry = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       die: selectedDie,
       count,
       rolls: displayRolls,

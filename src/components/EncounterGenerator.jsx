@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import useStore from '../store/useStore';
 import {
   MONSTERS,
@@ -170,7 +171,7 @@ export default function EncounterGenerator({ onClose }) {
 
     // Build tweakable monster entries
     const monsters = encounter.selected.map((m) => ({
-      _monsterId: crypto.randomUUID(),
+      _monsterId: uuidv4(),
       name: m.name,
       initiative: rollInitiative(estimateDexMod(m.ac)),
       hp: typeof m.hp === 'number' ? m.hp : rollDice(m.hp),

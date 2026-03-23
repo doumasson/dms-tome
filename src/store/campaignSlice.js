@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
 import { computeAcFromEquipped } from '../data/equipment';
@@ -123,7 +124,7 @@ export function createCampaignSlice(set, get) {
           characters: [
             ...state.campaign.characters,
             {
-              id: crypto.randomUUID(),
+              id: uuidv4(),
               name: char.name || 'New Character',
               race: char.race || '',
               class: char.class || '',
@@ -249,7 +250,7 @@ export function createCampaignSlice(set, get) {
     // === Saved Encounters ===
     saveEncounterGroup: (name, enemies) =>
       set((state) => {
-        const entry = { id: crypto.randomUUID(), name, enemies, savedAt: Date.now() };
+        const entry = { id: uuidv4(), name, enemies, savedAt: Date.now() };
         const savedEncounters = [entry, ...state.campaign.savedEncounters].slice(0, 20);
         get().saveSettingsToSupabase({ ...state.campaign, savedEncounters });
         return { campaign: { ...state.campaign, savedEncounters } };

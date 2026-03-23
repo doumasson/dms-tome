@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import lootTables from '../data/lootTables.json';
 import magicItems from '../data/magicItems.json';
 import { rollDamage } from './dice.js';
@@ -24,7 +25,7 @@ export function generateLoot(enemies, partySize) {
     const candidates = magicItems.filter(i => i.rarity === rarity);
     if (candidates.length > 0) {
       const pick = candidates[Math.floor(Math.random() * candidates.length)];
-      items.push({ ...pick, instanceId: crypto.randomUUID() });
+      items.push({ ...pick, instanceId: uuidv4() });
     }
   }
 

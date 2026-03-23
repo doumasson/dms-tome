@@ -1,6 +1,9 @@
 /**
  * UI slice — narrator/chat, session log, dice roller.
  */
+
+import { v4 as uuidv4 } from 'uuid';
+
 export function createUiSlice(set, get) {
   return {
     // === Narrator (AI DM) ===
@@ -12,14 +15,14 @@ export function createUiSlice(set, get) {
       set((state) => {
         const logEntry = msg.role === 'player'
           ? {
-              id: crypto.randomUUID(), timestamp: Date.now(),
+              id: uuidv4(), timestamp: Date.now(),
               type: 'narrator', icon: '\ud83d\udde3',
               title: msg.speaker || 'Player',
               detail: msg.text?.slice(0, 100),
             }
           : msg.rollRequest
             ? {
-                id: crypto.randomUUID(), timestamp: Date.now(),
+                id: uuidv4(), timestamp: Date.now(),
                 type: 'roll-request', icon: '\ud83c\udfb2',
                 title: `Roll ${msg.rollRequest.skill} \u2014 DC ${msg.rollRequest.dc}`,
                 detail: msg.rollRequest.character ? `For ${msg.rollRequest.character}` : null,
@@ -30,7 +33,7 @@ export function createUiSlice(set, get) {
             ...state.narrator,
             history: [
               ...state.narrator.history,
-              { id: crypto.randomUUID(), timestamp: Date.now(), ...msg },
+              { id: uuidv4(), timestamp: Date.now(), ...msg },
             ].slice(-50),
           },
           sessionLog: logEntry
@@ -48,7 +51,7 @@ export function createUiSlice(set, get) {
     addSessionEntry: (entry) =>
       set((state) => ({
         sessionLog: [
-          { id: crypto.randomUUID(), timestamp: Date.now(), ...entry },
+          { id: uuidv4(), timestamp: Date.now(), ...entry },
           ...state.sessionLog,
         ].slice(0, 120),
       })),
@@ -75,7 +78,7 @@ export function createUiSlice(set, get) {
           },
           sessionLog: [
             {
-              id: crypto.randomUUID(),
+              id: uuidv4(),
               timestamp: Date.now(),
               type: 'roll',
               icon: isNat ? '\u2b50' : isFail ? '\ud83d\udc80' : '\ud83c\udfb2',

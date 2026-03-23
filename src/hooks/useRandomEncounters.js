@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import useStore from '../store/useStore'
 import { rollRandomEncounter, generateRandomEncounter, calculateRandomEncounterLoot } from '../lib/randomEncounters'
 import { broadcastEncounterAction, broadcastNarratorMessage } from '../lib/liveChannel'
@@ -53,7 +54,7 @@ export function useRandomEncounters({
       role: 'dm',
       speaker: 'The Narrator',
       text: `${dmPrompt}\n\nYou notice ${enemies.map(e => e.originalName).join(', ')} ahead! Initiative?`,
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       timestamp: Date.now(),
     }
     addNarratorMessage(msg)

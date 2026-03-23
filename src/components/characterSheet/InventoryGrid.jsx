@@ -1,4 +1,5 @@
 import { useMemo, useState, useRef, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import useStore from '../../store/useStore';
 import { getSlotType } from '../../data/equipment';
 import { GridPacker, getItemSize } from '../../lib/inventoryGrid';
@@ -114,7 +115,7 @@ export default function InventoryGrid({ character, isOwn, onEquip, onDrop, onUse
   useEffect(() => {
     if (!isOwn) return;
     if (inventory.some(i => !i.instanceId)) {
-      updateMyCharacter({ inventory: inventory.map(i => i.instanceId ? i : { ...i, instanceId: crypto.randomUUID() }) });
+      updateMyCharacter({ inventory: inventory.map(i => i.instanceId ? i : { ...i, instanceId: uuidv4() }) });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

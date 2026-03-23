@@ -1,6 +1,8 @@
 // D&D 5e SRD Equipment Data
 // All SRD weapons and armor with accurate stats
 
+import { v4 as uuidv4 } from 'uuid';
+
 // ─── WEAPONS ─────────────────────────────────────────────────────────────────
 
 export const WEAPONS = [
@@ -755,5 +757,5 @@ export function getItem(name) {
 /** Default starting inventory for a new character. */
 export function getStartingInventory() {
   const potion = CONSUMABLES.find(c => c.id === 'healing-potion');
-  return [{ ...potion, instanceId: crypto.randomUUID(), quantity: 1 }];
+  return [{ ...potion, instanceId: uuidv4(), quantity: 1 }];
 }

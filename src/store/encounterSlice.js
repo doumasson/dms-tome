@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { triggerEnemyTurn, computeGruntAction, computeMinionAction } from '../lib/enemyAi';
 import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveChannel';
 import { getSaveProficiencies, profBonus as getProfBonus } from '../lib/derivedStats.js';
@@ -71,7 +72,7 @@ export function createEncounterSlice(set, get) {
         for (let i = 0; i < count; i++) {
           const label = count > 1 ? `${group.name} ${i + 1}` : group.name;
           combatants.push({
-            id: group.id || crypto.randomUUID(),
+            id: group.id || uuidv4(),
             name: label,
             type: 'enemy',
             isEnemy: true,
@@ -221,7 +222,7 @@ export function createEncounterSlice(set, get) {
         }
 
         combatants.push({
-          id: char.id || crypto.randomUUID(),
+          id: char.id || uuidv4(),
           name: char.name,
           type: 'player',
           class: resolvedClass,
@@ -388,7 +389,7 @@ export function createEncounterSlice(set, get) {
             role: 'dm',
             speaker: 'The Narrator',
             text: difficultyInfo.warning,
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             timestamp: Date.now(),
           };
           get().addNarratorMessage(msg);
@@ -401,7 +402,7 @@ export function createEncounterSlice(set, get) {
             role: 'dm',
             speaker: 'The Narrator',
             text: `[DM Note] ${difficultyInfo.scaling.reason} (Difficulty: ${difficultyInfo.difficulty})`,
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             timestamp: Date.now(),
           };
           get().addNarratorMessage(scalingMsg);
@@ -447,7 +448,7 @@ export function createEncounterSlice(set, get) {
         const msg = {
           role: 'dm', speaker: 'The Narrator',
           text: 'The party has been defeated. Darkness closes in... but fate is not yet done with you.',
-          id: crypto.randomUUID(), timestamp: Date.now(),
+          id: uuidv4(), timestamp: Date.now(),
         };
         get().addNarratorMessage(msg);
         broadcastNarratorMessage(msg);
@@ -739,7 +740,7 @@ export function createEncounterSlice(set, get) {
           log: [entry, ...state.encounter.log].slice(0, 30),
         },
         sessionLog: [
-          { id: crypto.randomUUID(), timestamp: Date.now(), type: 'combat', icon: '\u2694', title: entry, detail: null },
+          { id: uuidv4(), timestamp: Date.now(), type: 'combat', icon: '\u2694', title: entry, detail: null },
           ...state.sessionLog,
         ].slice(0, 120),
       })),
@@ -834,7 +835,7 @@ export function createEncounterSlice(set, get) {
       const reviveMsg = {
         role: 'dm', speaker: 'The Narrator',
         text: 'You wake up bruised but alive, the taste of dirt and blood in your mouth. Fate has granted you another chance...',
-        id: crypto.randomUUID(), timestamp: Date.now(),
+        id: uuidv4(), timestamp: Date.now(),
       };
       get().addNarratorMessage(reviveMsg);
       broadcastNarratorMessage(reviveMsg);
@@ -1231,7 +1232,7 @@ export function createEncounterSlice(set, get) {
           const msg = {
             role: 'dm', speaker: 'The Narrator',
             text: result.narrative,
-            id: crypto.randomUUID(), timestamp: Date.now(),
+            id: uuidv4(), timestamp: Date.now(),
           };
           get().addNarratorMessage(msg);
           broadcastNarratorMessage(msg);
@@ -1267,7 +1268,7 @@ export function createEncounterSlice(set, get) {
           } : null;
           const fallbackResult = computeGruntAction(active, encounter.combatants, collisionData, area?.width || 20, area?.height || 20);
           if (fallbackResult.narrative) {
-            const msg = { role: 'dm', speaker: 'The Narrator', text: fallbackResult.narrative, id: crypto.randomUUID(), timestamp: Date.now() };
+            const msg = { role: 'dm', speaker: 'The Narrator', text: fallbackResult.narrative, id: uuidv4(), timestamp: Date.now() };
             get().addNarratorMessage(msg);
             broadcastNarratorMessage(msg);
           }
@@ -1324,7 +1325,7 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
         const data = await res.json();
         const text = data.content?.[0]?.text?.trim();
         if (!text) return;
-        const msg = { role: 'dm', speaker: 'The Narrator', text, id: crypto.randomUUID(), timestamp: Date.now() };
+        const msg = { role: 'dm', speaker: 'The Narrator', text, id: uuidv4(), timestamp: Date.now() };
         get().addNarratorMessage(msg);
         broadcastNarratorMessage(msg);
       } catch (error) { console.warn('Combat narration failed:', error); }
@@ -1400,7 +1401,7 @@ Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice
     addCombatant: (combatant) =>
       set((state) => {
         const newCombatant = {
-          id: crypto.randomUUID(),
+          id: uuidv4(),
           name: combatant.name,
           initiative: Number(combatant.initiative) || 0,
           maxHp: Number(combatant.maxHp) || 10,

@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabase';
 import { computeDerivedStats } from '../lib/derivedStats.js';
 
@@ -88,7 +89,7 @@ export function createCharacterSlice(set, get) {
       const inventory = [...(myCharacter.inventory || [])];
       // Return currently equipped item to inventory
       if (equippedItems[slotName]) {
-        inventory.push({ ...equippedItems[slotName], instanceId: crypto.randomUUID() });
+        inventory.push({ ...equippedItems[slotName], instanceId: uuidv4() });
       }
       // Remove the item being equipped from inventory
       const idx = inventory.findIndex(i => i.instanceId === item.instanceId);
@@ -108,7 +109,7 @@ export function createCharacterSlice(set, get) {
       const equippedItems = { ...(myCharacter.equippedItems || {}) };
       const item = equippedItems[slotName];
       if (!item) return;
-      const inventory = [...(myCharacter.inventory || []), { ...item, instanceId: crypto.randomUUID() }];
+      const inventory = [...(myCharacter.inventory || []), { ...item, instanceId: uuidv4() }];
       equippedItems[slotName] = null;
       // Recompute all derived stats (AC, initiative, etc.) after unequip
       const updatedCharacterUnequip = { ...myCharacter, equippedItems, inventory };
@@ -157,7 +158,7 @@ export function createCharacterSlice(set, get) {
           return get().updateMyCharacter({ inventory });
         }
       }
-      inventory.push({ ...item, instanceId: crypto.randomUUID(), quantity: item.quantity || 1 });
+      inventory.push({ ...item, instanceId: uuidv4(), quantity: item.quantity || 1 });
       get().updateMyCharacter({ inventory });
     },
 

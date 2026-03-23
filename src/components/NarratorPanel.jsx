@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import useStore from '../store/useStore';
 import { styles } from './narratorStyles';
 import { supabase } from '../lib/supabase';
@@ -135,7 +136,7 @@ export default function NarratorPanel() {
       role: 'dm',
       speaker: 'The Narrator',
       text,
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       timestamp: Date.now(),
     };
     addNarratorMessage(msg);
@@ -261,7 +262,7 @@ export default function NarratorPanel() {
     saveLogRef.current = setTimeout(async () => {
       if (!activeCampaign?.id) return;
       const log = newHistory.slice(-50).map(({ id, role, speaker, text, rollRequest, timestamp }) => ({
-        id: id || crypto.randomUUID(), role, speaker, text, rollRequest,
+        id: id || uuidv4(), role, speaker, text, rollRequest,
         timestamp: timestamp || Date.now(),
       }));
       try {
@@ -327,7 +328,7 @@ export default function NarratorPanel() {
 
     const playerMsg = { role: 'player', speaker: myCharacter?.name || user?.name || 'Adventurer', text };
     addNarratorMessage(playerMsg);
-    broadcast({ ...playerMsg, id: crypto.randomUUID(), timestamp: Date.now() });
+    broadcast({ ...playerMsg, id: uuidv4(), timestamp: Date.now() });
 
     setLoading(true);
     try {
@@ -358,11 +359,11 @@ export default function NarratorPanel() {
         npcVoice,
       };
       addNarratorMessage(dmMsg);
-      broadcast({ ...dmMsg, id: crypto.randomUUID(), timestamp: Date.now() });
+      broadcast({ ...dmMsg, id: uuidv4(), timestamp: Date.now() });
       if (ttsEnabled) speak(result.narrative, null, { openAiKey: getOpenAiKey(user?.id), voice: npcVoice || 'onyx' });
 
       // Persist the updated log
-      const updated = [...narrator.history, playerMsg, { ...dmMsg, id: crypto.randomUUID(), timestamp: Date.now() }];
+      const updated = [...narrator.history, playerMsg, { ...dmMsg, id: uuidv4(), timestamp: Date.now() }];
       scheduleLogSave(updated);
 
       // AI-triggered combat start → opens battle map and auto-rolls initiative

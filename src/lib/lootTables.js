@@ -3,6 +3,8 @@
  * and character level. Implements official DMG loot tables with item rarities.
  */
 
+import { v4 as uuidv4 } from 'uuid';
+
 // Item rarity tiers
 export const ITEM_RARITY = {
   COMMON: 'common',
@@ -151,7 +153,7 @@ export function generateLoot(partyLevel, difficulty = 'Medium', partySize = 4) {
     if (item) {
       magicItems.push({
         ...item,
-        id: crypto.randomUUID(),
+        id: uuidv4(),
       });
     }
   }
@@ -163,7 +165,7 @@ export function generateLoot(partyLevel, difficulty = 'Medium', partySize = 4) {
     if (item) {
       magicItems.push({
         ...item,
-        id: crypto.randomUUID(),
+        id: uuidv4(),
       });
     }
   }
@@ -214,7 +216,7 @@ export function generateTreasureHoard(challengeRating) {
     if (item && remainingValue >= item.value) {
       magicItems.push({
         ...item,
-        id: crypto.randomUUID(),
+        id: uuidv4(),
       });
       remainingValue -= item.value;
     } else {

@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { calcHp, calcAc, buildAttacks, buildSpellSlots, buildFeatures, avatarUrl, profBonus } from './charBuilder';
 import { getRace, applyRacialBonuses } from '../data/races';
 import { CLASSES } from '../data/classes';
@@ -20,7 +21,7 @@ export function generateDemoCharacter(userName) {
   const starterItems = getStartingInventory();
   const allItems = starterItems.map(item => ({
     ...item,
-    instanceId: item.instanceId || crypto.randomUUID()
+    instanceId: item.instanceId || uuidv4()
   }));
 
   const equippedItems = {};
@@ -41,7 +42,7 @@ export function generateDemoCharacter(userName) {
     : ac;
 
   return {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     name: 'Demo Adventurer',
     class: cls,
     race,

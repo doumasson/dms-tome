@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useSyncExternalStore } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import useStore from '../../store/useStore';
 import { rollDamage } from '../../lib/dice';
 import { crToXp } from '../../lib/xpTable';
@@ -203,7 +204,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   function handleLogOnly(entry) { onLog(entry); }
 
   function handleNarrate(text) {
-    const msg = { role: 'dm', speaker: 'The Narrator', text, id: crypto.randomUUID(), timestamp: Date.now() };
+    const msg = { role: 'dm', speaker: 'The Narrator', text, id: uuidv4(), timestamp: Date.now() };
     addNarratorMessage(msg);
     broadcastNarratorMessage(msg);
   }
@@ -429,7 +430,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     // Record persistent area effect overlay (concentration spells with area)
     if (def.concentration && targeting && targeting.areaType !== 'single') {
       addEncounterEffect({
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         spellName: def.name,
         casterId: activeCombatant.id,
         concentration: true,

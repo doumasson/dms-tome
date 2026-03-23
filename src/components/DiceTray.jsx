@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import useStore from '../store/useStore';
 import { broadcastDiceRoll } from '../lib/liveChannel';
 import DiceAnimation from './DiceAnimation';
@@ -69,7 +70,7 @@ export default function DiceTray({ open, onClose }) {
     }
 
     const entry = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       die,
       count,
       rolls,

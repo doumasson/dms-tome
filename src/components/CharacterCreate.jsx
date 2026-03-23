@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabase';
 import { CLASSES } from '../data/classes';
 import { getRace, applyRacialBonuses } from '../data/races';
@@ -95,7 +96,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
     const gearItems = buildGearInventory(gearChoices, clsData);
     // Ensure every item has a stable instanceId for equip tracking
     const allItems = [...starterItems, ...gearItems].map(item =>
-      item.instanceId ? item : { ...item, instanceId: crypto.randomUUID() }
+      item.instanceId ? item : { ...item, instanceId: uuidv4() }
     );
 
     // Auto-equip: first weapon → mainHand, armor → chest, shield → offHand
@@ -115,7 +116,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       : ac;
 
     const character = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       name: name.trim(),
       class: cls,
       race,
