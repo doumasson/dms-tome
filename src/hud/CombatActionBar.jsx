@@ -213,6 +213,22 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
             <span className="medallion-label">DIS</span>
           </button>
           <button
+            className={`medallion-btn small${(!canAttack || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canAttack || !actionsLeft}
+            onClick={() => handleAction('grapple')}
+            title="Grapple — contested Athletics check, target becomes Grappled (speed 0)"
+          >
+            <span className="medallion-label">GRPL</span>
+          </button>
+          <button
+            className={`medallion-btn small${(!canAttack || !actionsLeft) ? ' disabled' : ''}`}
+            disabled={!canAttack || !actionsLeft}
+            onClick={() => handleAction('shove')}
+            title="Shove — push target 5ft or knock Prone"
+          >
+            <span className="medallion-label">SHOV</span>
+          </button>
+          <button
             className="medallion-btn small"
             onClick={() => handleAction('say')}
             title="Say"

@@ -251,6 +251,14 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 252 tests, 0 failures, 15 commits.
 - Spec: `docs/superpowers/specs/2026-03-20-phase10-living-world-design.md`
 
+### Combat & Interaction Fixes
+- [x] Grapple action — contested Athletics check, applies Grappled condition (speed 0), tracks grappler
+- [x] Shove action — contested Athletics check, pushes target 5ft or knocks Prone
+- [x] Contested check module (`src/lib/contestedCheck.js`) — attacker Athletics vs defender Athletics/Acrobatics
+- [x] GRPL/SHOV buttons in CombatActionBar, adjacent-only targeting, multiplayer broadcast
+- [x] Chest/search/pickpocket loot items now added to player inventory (was narrated but not stored)
+- 288 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -279,3 +287,4 @@ _(Empty — add items as they come up)_
 - **2026-03-20:** Phase 9 Gameplay Systems — inventory rewrite (Dark & Darker style grid), 38 magic items with attunement/charges/curses, derived stats, loot roll-off, death saves V2, rest system overhaul, gold persistence fix, day/night cycle, 14 new chunks (36 total). 197 tests, 13 commits.
 - **2026-03-20:** Bug fixes + tech debt — LootScreen/LevelUpModal wired in V2, 6 broadcast handlers, useStore split (1784→20 lines), GameV2 split (1430→372 lines), bundle -41%.
 - **2026-03-20:** Phase 10 Living World — shop/merchant, minimap, status effects, ambient sound, NPC schedules, traps, weather, party formation, quest tracker. 252 tests, 15 commits.
+- **2026-03-22:** Grapple & Shove combat actions, loot→inventory bug fix. 288 tests.

@@ -9,6 +9,7 @@ import { findPathEdge, getReachableTilesEdge } from '../lib/pathfinding'
 import { animateTokenAlongPath, isAnimating } from '../engine/TokenLayer'
 import { broadcastEncounterAction } from '../lib/liveChannel'
 import { getSaveProficiencies, profBonus as getProfBonus, abilityMod } from '../lib/derivedStats.js'
+import { resolveContestedCheck } from '../lib/contestedCheck.js'
 
 /**
  * Encapsulates all combat-specific logic: attack targeting, spell AoE,
@@ -323,6 +324,108 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       return true
     }
 
+    // Grapple targeting — contested Athletics vs Athletics/Acrobatics
+    if (targetingMode === 'grapple' && inCombat) {
+      const target = encounter.combatants.find(c =>
+        c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position?.x === x && c.position?.y === y
+      )
+      if (!target) return true
+
+      const active = encounter.combatants[encounter.currentTurn]
+      if (!active?.position) return true
+
+      // Must be adjacent (Chebyshev distance <= 1)
+      const dx = Math.abs(active.position.x - target.position.x)
+      const dy = Math.abs(active.position.y - target.position.y)
+      if (dx > 1 || dy > 1) {
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Target must be adjacent (5 ft).' })
+        return true
+      }
+
+      const { useAction: consumeAction, addEncounterCondition } = useStore.getState()
+      const result = resolveContestedCheck(active, target)
+      consumeAction(active.id)
+      setTargetingMode(null)
+
+      if (result.attackerTotal >= result.defenderTotal) {
+        addEncounterCondition(target.id, 'Grappled')
+        // Track who is grappling whom
+        useStore.setState(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              c.id === target.id ? { ...c, grappledBy: active.id } : c
+            ),
+          },
+        }))
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} grapples ${target.name}! Athletics ${result.attackerTotal} vs ${result.defenderSkill} ${result.defenderTotal} — Grappled! (speed 0)`,
+        })
+        broadcastEncounterAction({ type: 'grapple', attackerId: active.id, targetId: target.id, success: true, log: result })
+      } else {
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} fails to grapple ${target.name}. Athletics ${result.attackerTotal} vs ${result.defenderSkill} ${result.defenderTotal}.`,
+        })
+        broadcastEncounterAction({ type: 'grapple', attackerId: active.id, targetId: target.id, success: false, log: result })
+      }
+      return true
+    }
+
+    // Shove targeting — contested Athletics vs Athletics/Acrobatics
+    if (targetingMode === 'shove' && inCombat) {
+      const target = encounter.combatants.find(c =>
+        c.isEnemy && (c.currentHp ?? c.hp) > 0 && c.position?.x === x && c.position?.y === y
+      )
+      if (!target) return true
+
+      const active = encounter.combatants[encounter.currentTurn]
+      if (!active?.position) return true
+
+      const dx = Math.abs(active.position.x - target.position.x)
+      const dy = Math.abs(active.position.y - target.position.y)
+      if (dx > 1 || dy > 1) {
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Target must be adjacent (5 ft).' })
+        return true
+      }
+
+      const { useAction: consumeAction, addEncounterCondition: addCond, moveToken } = useStore.getState()
+      const result = resolveContestedCheck(active, target)
+      consumeAction(active.id)
+      setTargetingMode(null)
+
+      if (result.attackerTotal >= result.defenderTotal) {
+        // Shove: knock prone (default) — push 5ft away only if there's an open tile
+        const pushDir = { x: target.position.x - active.position.x, y: target.position.y - active.position.y }
+        const pushX = target.position.x + (pushDir.x || 0)
+        const pushY = target.position.y + (pushDir.y || 0)
+        const pushBlocked = zone?.cellBlocked?.[pushY * (zone.width || 0) + pushX] ||
+          encounter.combatants.some(c => c.position?.x === pushX && c.position?.y === pushY && (c.currentHp ?? c.hp) > 0)
+        const outOfBounds = pushX < 0 || pushY < 0 || pushX >= (zone?.width || 999) || pushY >= (zone?.height || 999)
+
+        if (!pushBlocked && !outOfBounds) {
+          // Push 5 feet
+          moveToken(target.id, pushX, pushY, 0)
+          addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${active.name} shoves ${target.name} back 5 feet! Athletics ${result.attackerTotal} vs ${result.defenderSkill} ${result.defenderTotal}.`,
+          })
+          broadcastEncounterAction({ type: 'shove', attackerId: active.id, targetId: target.id, success: true, effect: 'push', position: { x: pushX, y: pushY } })
+        } else {
+          // Can't push — knock prone instead
+          addCond(target.id, 'Prone')
+          addNarratorMessage({ role: 'dm', speaker: 'Combat',
+            text: `${active.name} shoves ${target.name} prone! Athletics ${result.attackerTotal} vs ${result.defenderSkill} ${result.defenderTotal}.`,
+          })
+          broadcastEncounterAction({ type: 'shove', attackerId: active.id, targetId: target.id, success: true, effect: 'prone' })
+        }
+      } else {
+        addNarratorMessage({ role: 'dm', speaker: 'Combat',
+          text: `${active.name} fails to shove ${target.name}. Athletics ${result.attackerTotal} vs ${result.defenderSkill} ${result.defenderTotal}.`,
+        })
+        broadcastEncounterAction({ type: 'shove', attackerId: active.id, targetId: target.id, success: false })
+      }
+      return true
+    }
+
     // Spell AoE targeting
     if (targetingMode?.type === 'spell' && inCombat) {
       const spell = targetingMode.spell
@@ -564,6 +667,18 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
       // Default: just announce
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} uses ${payload.name}!` })
+      return
+    } else if (type === 'grapple') {
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active || active.actionsUsed) return
+      setTargetingMode('grapple')
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select an adjacent target to grapple. Press Escape to cancel.' })
+      return
+    } else if (type === 'shove') {
+      const active = encounter.combatants?.[encounter.currentTurn]
+      if (!active || active.actionsUsed) return
+      setTargetingMode('shove')
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Select an adjacent target to shove. Press Escape to cancel.' })
       return
     } else if (type === 'move') {
       setTargetingMode(null) // Clear any active targeting so tile clicks route to movement

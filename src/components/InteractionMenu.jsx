@@ -43,6 +43,7 @@ export default function InteractionMenu({
   const myCharacter = useStore(s => s.myCharacter)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
   const addGold = useStore(s => s.addGold)
+  const addItemToInventory = useStore(s => s.addItemToInventory)
   const [result, setResult] = useState(null)
   const [selectedIdx, setSelectedIdx] = useState(0)
 
@@ -105,6 +106,8 @@ export default function InteractionMenu({
           })
           if (result.loot.gold) {
             addGold?.(result.loot.gold)
+          } else {
+            addItemToInventory?.(result.loot)
           }
           broadcastEncounterAction({ type: 'pickpocket', charName, npc: target.name, success: true, loot: lootDesc })
         } else {
@@ -132,7 +135,7 @@ export default function InteractionMenu({
           // Mark as unlocked and open
           target.locked = false
           const loot = generateChestLoot(target.lootTable)
-          showChestLoot(charName, target, loot, addNarratorMessage, addGold)
+          showChestLoot(charName, target, loot, addNarratorMessage, addGold, addItemToInventory)
           target.opened = true
           broadcastEncounterAction({ type: 'lockpick', id: target.id, success: true })
         } else {
@@ -155,7 +158,7 @@ export default function InteractionMenu({
           })
           target.locked = false
           const loot = generateChestLoot(target.lootTable)
-          showChestLoot(charName, target, loot, addNarratorMessage, addGold)
+          showChestLoot(charName, target, loot, addNarratorMessage, addGold, addItemToInventory)
           target.opened = true
           broadcastEncounterAction({ type: 'force-open', id: target.id, success: true })
         } else {
@@ -170,7 +173,7 @@ export default function InteractionMenu({
       }
       case 'open_chest': {
         const loot = generateChestLoot(target.lootTable)
-        showChestLoot(charName, target, loot, addNarratorMessage, addGold)
+        showChestLoot(charName, target, loot, addNarratorMessage, addGold, addItemToInventory)
         target.opened = true
         broadcastEncounterAction({ type: 'open-chest', id: target.id })
         setResult({ success: true, text: 'Opened!' })
@@ -190,6 +193,7 @@ export default function InteractionMenu({
           })
           for (const find of searchResult.finds) {
             if (find.gold) addGold?.(find.gold)
+            else addItemToInventory?.(find)
           }
           if (target.id) target.opened = true
           broadcastEncounterAction({ type: 'search', id: target.id, success: true, finds: findTexts })
@@ -204,7 +208,7 @@ export default function InteractionMenu({
         return
       }
     }
-  }, [myCharacter, addNarratorMessage, addGold, onTalk, onExit, onClose])
+  }, [myCharacter, addNarratorMessage, addGold, addItemToInventory, onTalk, onExit, onClose])
 
   if (actions.length === 0) return null
 
@@ -265,7 +269,7 @@ export default function InteractionMenu({
   )
 }
 
-function showChestLoot(charName, chest, loot, addNarratorMessage, addGold) {
+function showChestLoot(charName, chest, loot, addNarratorMessage, addGold, addItemToInventory) {
   const parts = []
   if (loot.gold > 0) {
     parts.push(`${loot.gold} gold`)
@@ -273,6 +277,7 @@ function showChestLoot(charName, chest, loot, addNarratorMessage, addGold) {
   }
   for (const item of loot.items) {
     parts.push(item.name)
+    addItemToInventory?.(item)
   }
   addNarratorMessage({
     role: 'dm', speaker: 'DM',

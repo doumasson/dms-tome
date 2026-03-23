@@ -235,6 +235,44 @@ export default function App() {
             store.clearStealthMode()
           }
           break
+        case 'grapple':
+          if (payload.success) {
+            store.addEncounterCondition(payload.targetId, 'Grappled')
+            useStore.setState(state => ({
+              encounter: {
+                ...state.encounter,
+                combatants: state.encounter.combatants.map(c =>
+                  c.id === payload.targetId ? { ...c, grappledBy: payload.attackerId } : c
+                ),
+              },
+            }))
+          }
+          if (payload.log) {
+            const a = store.encounter.combatants?.find(c => c.id === payload.attackerId)
+            const t = store.encounter.combatants?.find(c => c.id === payload.targetId)
+            const msg = payload.success
+              ? `${a?.name || 'Attacker'} grapples ${t?.name || 'target'}! (Grappled)`
+              : `${a?.name || 'Attacker'} fails to grapple ${t?.name || 'target'}.`
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: msg })
+          }
+          break
+        case 'shove':
+          if (payload.success) {
+            if (payload.effect === 'push' && payload.position) {
+              store.moveToken(payload.targetId, payload.position.x, payload.position.y, 0)
+            } else if (payload.effect === 'prone') {
+              store.addEncounterCondition(payload.targetId, 'Prone')
+            }
+          }
+          {
+            const a = store.encounter.combatants?.find(c => c.id === payload.attackerId)
+            const t = store.encounter.combatants?.find(c => c.id === payload.targetId)
+            const msg = payload.success
+              ? `${a?.name || 'Attacker'} shoves ${t?.name || 'target'} ${payload.effect === 'push' ? 'back 5 feet' : 'prone'}!`
+              : `${a?.name || 'Attacker'} fails to shove ${t?.name || 'target'}.`
+            store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: msg })
+          }
+          break
       }
     });
 
