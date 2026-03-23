@@ -303,7 +303,8 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Reputation changes from NPC interactions — NPCs can suggest reputation delta on conversation end with reason text, applied to store, broadcast to all players, shown in narrator log
 - [x] NPC quest offers — NPCs can offer quests during conversation (title, description, objectives), auto-added to player journal with NPC/faction metadata, inline acceptance UI
 - [x] Quest completion → Reputation gain — when faction-affiliated quest fully completed (all objectives done), player auto-gains +20 reputation, quest marked 'completed'
-- Reputation affects NPC greeting, willingness to help, prices (discounts/surcharges), and special favors
+- [x] Hostile faction encounters — approaching NPC with Hostile disposition (reputation <= -75) triggers combat instead of dialogue, NPC becomes enemy combatant
+- Reputation affects NPC greeting, willingness to help, prices (discounts/surcharges), special favors, and combat encounters
 - 327 tests, 0 failures.
 
 ---
@@ -344,3 +345,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Reputation changes from NPC interactions — NPCs can suggest reputation changes when wrapping up conversations. Changes show in inline panel with reason, applied to store, broadcast to all players, feed into narrator log. Makes faction system mechanically impactful. 327 tests.
 - **2026-03-22:** NPC quest offers auto-wired — NPCs can offer quests during conversations with title/description/objectives. Accepted quests auto-add to player journal with NPC/faction metadata. Complete gameplay loop: talk → quest offered → accept → complete → return for reward. 327 tests.
 - **2026-03-22:** Quest completion → Reputation gain — faction-affiliated quests auto-increase reputation (+20) when all objectives completed. Stacks with NPC conversation reputation changes for meaningful progression. 327 tests.
+- **2026-03-22:** Hostile faction encounters — NPCs from factions with Hostile player reputation (≤-75) initiate combat on sight instead of dialogue. Provides natural combat encounters in exploration based on player choices. 327 tests.
