@@ -1,4 +1,4 @@
-# DM's Tome — CLAUDE.md
+# DungeonMind — CLAUDE.md
 
 ## Agent Behavior
 
@@ -12,48 +12,48 @@
 
 ## What This Project Is
 
-**DM's Tome is a real D&D 5e multiplayer game where the Dungeon Master is AI.**
+**DungeonMind is a real SRD 5.1 multiplayer game where The Narrator is AI.**
 
-Players open a browser and play D&D together — no human DM required. The AI Dungeon Master narrates the story, voices NPCs, runs enemy combat, calls for skill checks, adjudicates rules, and advances the plot. 1–6 human players join via invite code.
+Players open a browser and play SRD 5.1 together — no human Narrator required. The AI Narrator narrates the story, voices NPCs, runs enemy combat, calls for skill checks, adjudicates rules, and advances the plot. 1–6 human players join via invite code.
 
 This is not a campaign manager or helper tool. This is a game.
 
 ## Critical Architecture
 
 ### Multiplayer-Only
-- **All players are human.** The AI is the DM, not a player.
+- **All players are human.** The AI is The Narrator, not a player.
 - **The host's client** runs in `dmMode` — handles AI enemy turns and broadcasts all AI-originated state changes via Supabase Realtime.
 - **All encounter state must be broadcast** to every client. Always call `broadcastEncounterAction` and `broadcastNarratorMessage` for AI-originated changes.
 - **If a feature only works for the host and not other players, it's broken.**
-- `dmMode` = "this client is the host running the AI DM" — NOT "solo play."
+- `dmMode` = "this client is the host running The Narrator" — NOT "solo play."
 
 ### North Star: Organic Living-World RPG
 A living world you explore — not a chatbot you type at.
 
 - Players move tokens freely on the scene map
 - Approaching an NPC/building triggers a contextual prompt organically
-- Combat erupts when the DM decides — tokens transition to combat grid
+- Combat erupts when The Narrator decides — tokens transition to combat grid
 - Victory fades back to world map; players continue exploring
 - If a feature feels like organic RPG gameplay, ship it. If it feels like a chatbot UI, rethink it.
 
 ### Product Layout
 - **Top ~55%:** Scene image (full-bleed, no white space) with grid overlay + tokens
-- **Bottom ~45%:** Narrator chat. Scene descriptions auto-post. Players type/speak actions. DM responds.
+- **Bottom ~45%:** Narrator chat. Scene descriptions auto-post. Players type/speak actions. The Narrator responds.
 - Each player has their own screen/device. All state syncs via Supabase Realtime.
 
-## D&D 5e Rules — Non-Negotiable
+## SRD 5.1 Rules — Non-Negotiable
 
 - Real 5e SRD rules. All 12 classes, all races, all spells, all monsters. No simplified mechanics.
 - **Action economy is sacred:** 1 action, 1 bonus action (if applicable), movement up to speed per turn. No two leveled spells in one turn. UI must prevent illegal actions.
 - **Spells are spatial:** Cone/line/sphere targeting via SVG overlays on the battle map. Player aims, confirms. Affected tokens auto-highlighted before confirmation.
-- **Players roll for themselves. DM rolls for enemies/NPCs.**
+- **Players roll for themselves. The Narrator rolls for enemies/NPCs.**
 - **Session persistence:** HP, spell slots, conditions, gold persist between sessions. Nothing resets on logout. Players must rest per 5e rules to recover.
 
 ## Tech Stack
 - React + Vite, Zustand (client state)
 - Supabase (auth, PostgreSQL, Realtime broadcast) — user data only
 - Vercel (hosting, auto-deploy on push)
-- Anthropic Claude API (`claude-haiku-4-5-20251001` for DM speed)
+- Anthropic Claude API (`claude-haiku-4-5-20251001` for Narrator speed)
 - Pollinations.ai (free scene + token image gen, no API key)
 - Web Speech API (TTS narration + push-to-talk)
 - Bundled SRD JSON (~2-3MB, all 5e free content — classes, races, spells, monsters, equipment)
@@ -93,7 +93,7 @@ Feature status, backlog, and priorities are tracked in `tasks/status.md`. **Read
 - Dark fantasy theme, gold accents (`#d4af37`), deep brown/black backgrounds
 - Scene image bleeds edge to edge — no white space visible
 - Big click targets (TV/tablet use at a table)
-- DM-only info: dashed red border, `rgba(200,80,80,0.8)` label
+- Narrator-only info: dashed red border, `rgba(200,80,80,0.8)` label
 - Spell/ability effects render on the scene image, not in a sidebar
 - Grid always visible; activates for turn-based movement in combat
 
