@@ -3,6 +3,7 @@ import { broadcastNarratorMessage, broadcastEncounterAction } from '../lib/liveC
 import { getSaveProficiencies, profBonus as getProfBonus } from '../lib/derivedStats.js';
 import { checkPhaseTransition } from '../lib/bossPhases.js';
 import { executeAbility, spawnMinions, isLegendaryAbility } from '../lib/abilityResolver.js';
+import { checkEncounterDifficulty } from '../lib/encounterScaling.js';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -367,6 +368,47 @@ export function createEncounterSlice(set, get) {
           },
         };
       }),
+
+    checkCombatDifficulty: () => {
+      const { encounter } = get();
+      const difficultyInfo = checkEncounterDifficulty(encounter);
+
+      if (difficultyInfo) {
+        // Mark warning as shown
+        set((state) => ({
+          encounter: {
+            ...state.encounter,
+            difficultyWarningShown: true,
+          },
+        }));
+
+        // Broadcast warning to all players
+        if (difficultyInfo.warning) {
+          const msg = {
+            role: 'dm',
+            speaker: 'Dungeon Master',
+            text: difficultyInfo.warning,
+            id: crypto.randomUUID(),
+            timestamp: Date.now(),
+          };
+          get().addNarratorMessage(msg);
+          broadcastNarratorMessage(msg);
+        }
+
+        // Suggest scaling if needed
+        if (difficultyInfo.scaling) {
+          const scalingMsg = {
+            role: 'dm',
+            speaker: 'Dungeon Master',
+            text: `[DM Note] ${difficultyInfo.scaling.reason} (Difficulty: ${difficultyInfo.difficulty})`,
+            id: crypto.randomUUID(),
+            timestamp: Date.now(),
+          };
+          get().addNarratorMessage(scalingMsg);
+          broadcastNarratorMessage(scalingMsg);
+        }
+      }
+    },
 
     // === Readied Action ===
     setReadiedAction: (combatantId, readiedAction) => {
