@@ -56,7 +56,6 @@ const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const CombatUI            = lazy(() => import('./components/game/CombatUI'))
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
-const SpellsPanel_        = lazy(() => import('./components/game/SpellsPanel'))
 const TurnManager_        = lazy(() => import('./components/game/TurnManager'))
 const Inventory_          = lazy(() => import('./components/game/Inventory'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
@@ -142,7 +141,6 @@ export default function GameV2({ onLeave }) {
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
-  const [showSpells, setShowSpells] = useState(false)
   const [showTurnManager, setShowTurnManager] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
@@ -1160,14 +1158,6 @@ export default function GameV2({ onLeave }) {
             currentTurnIndex={encounter.currentTurn || 0}
             onAction={handleCombatAction}
             onEndTurn={handleEndTurn}
-          />
-        </Suspense>
-      )}
-      {showSpells && myCharacter && (
-        <Suspense fallback={null}>
-          <SpellsPanel_
-            character={myCharacter}
-            onClose={() => setShowSpells(false)}
           />
         </Suspense>
       )}
