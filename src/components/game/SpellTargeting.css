@@ -1,0 +1,203 @@
+/* Spell Targeting Overlay */
+
+.spell-targeting-overlay {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: #1a1a1a;
+  border: 2px solid #d4af37;
+  border-radius: 4px;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+  max-width: 500px;
+  width: 100%;
+}
+
+/* Header */
+.targeting-header {
+  text-align: center;
+}
+
+.targeting-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #d4af37;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.spell-range {
+  font-size: 11px;
+  color: #999;
+  margin: 0;
+  font-family: 'Georgia', serif;
+}
+
+/* Targeting map */
+.targeting-map {
+  position: relative;
+  background: #0a0a0a;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  aspect-ratio: 1;
+  cursor: crosshair;
+  overflow: hidden;
+}
+
+.targeting-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.targeting-hint {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 10px;
+  color: #666;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 4px 8px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Affected targets */
+.affected-targets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(42, 42, 26, 0.5);
+  border-radius: 2px;
+}
+
+.targets-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.targets-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.no-targets {
+  color: #666;
+  margin: 0;
+  font-style: italic;
+}
+
+.target-item {
+  padding: 4px 8px;
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 2px;
+  color: #2ecc71;
+}
+
+/* Action buttons */
+.targeting-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cancel-btn,
+.confirm-btn {
+  padding: 10px 20px;
+  background: #d4af37;
+  color: #1a1a1a;
+  border: 1px solid #a0821d;
+  border-radius: 2px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn {
+  background: #555;
+  border-color: #666;
+  color: #e8d5a3;
+}
+
+.cancel-btn:hover {
+  background: #666;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background: #e8d5a3;
+  color: #0a0a0a;
+  transform: scale(1.05);
+}
+
+.confirm-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .spell-targeting-overlay {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .targeting-header h3 {
+    font-size: 16px;
+  }
+
+  .spell-range {
+    font-size: 10px;
+  }
+
+  .targets-label {
+    font-size: 10px;
+  }
+
+  .target-item {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .cancel-btn,
+  .confirm-btn {
+    flex: 1;
+    padding: 8px 16px;
+    font-size: 10px;
+  }
+}
+
+@media (max-height: 600px) {
+  .spell-targeting-overlay {
+    max-width: 100%;
+  }
+
+  .targeting-map {
+    aspect-ratio: 4 / 3;
+  }
+
+  .targets-list {
+    gap: 4px;
+  }
+
+  .target-item {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+}
