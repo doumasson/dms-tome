@@ -413,6 +413,22 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 26 new tests for difficulty calculations and scaling logic
 - 461 tests, 0 failures.
 
+### Minion Tactical Coordination ✅ COMPLETE
+- [x] Minion decision-making AI — Tactical priority system with tactical escalation
+- [x] Boss protection priority — Minions rush to defend boss when in danger (low HP or surrounded)
+- [x] Focus fire coordination — Minions focus on boss's current target to eliminate threats quickly
+- [x] Weakest target selection — Minions attack most wounded enemies to finish fights fast
+- [x] Flanking bonus calculation — Coordinated positioning grants +2 to attack rolls
+- [x] Tactical retreat system — Minions retreat/flee when boss dies or outnumbered badly
+- [x] Position-aware movement — Minions move intelligently toward objectives
+- [x] Combat integration — Minions identified by originalName field and routed to tactical coordinator
+- [x] Morale system — Minions retreat when critically wounded (< 20% HP) and losing
+- [x] Narrator immersion — Tactical descriptions for minion behavior and boss status
+- Boss fights now significantly more challenging with intelligent minion support
+- Minions protect boss, focus fire, and adapt to changing conditions
+- 19 new tests covering all tactical priorities, flanking, retreat logic
+- 480 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -430,6 +446,7 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-22:** Minion Tactical Coordination complete — Intelligent minion support with boss protection priority, focus fire, flanking bonuses, and tactical retreat. Minions identified and routed through tactical AI. Boss fights now significantly harder with coordinated minion support. 19 new tests. 480 tests passing.
 - **2026-03-22:** Dynamic Encounter Difficulty Warnings and Scaling complete — Party vs enemy power calculations, 5-tier difficulty ratings, context-aware warnings for Hard/Deadly encounters, auto-scaling suggestions, DM narrator integration. Teaches balance concepts and helps strategic decisions. 26 new tests. 461 tests passing.
 - **2026-03-22:** Boss Ability Execution in Combat complete — AI decides when to activate abilities, full effect resolution (damage/healing/conditions/minions), legendary action tracking, multiplayer broadcast. Bosses now escalate tactically through phases. Fixed flaky randomEncounters test. 435 tests passing.
 - **2026-03-22:** Multi-Phase Boss Encounters complete — HP-threshold-triggered phase transitions, ability execution, minion spawning, legendary action tracking, lair actions, AI prompt injection, phase UI indicator. 48 new tests. 435 tests passing.
