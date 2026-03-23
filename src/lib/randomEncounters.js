@@ -5,6 +5,7 @@
  */
 
 import { determineEncounterHazards, describeHazard } from './environmentalHazards.js'
+import { generateLoot } from './lootTables.js'
 
 // Encounter tables by area type and level (monsters by CR)
 const ENCOUNTER_TABLES = {
@@ -134,9 +135,13 @@ export function generateRandomEncounter(partyLevel, partySize, areaType = 'dunge
   const hazards = determineEncounterHazards(hazardProbability);
   const hazardDescriptions = hazards.map(h => describeHazard(h));
 
+  // Generate loot based on difficulty and party level
+  const loot = generateLoot(partyLevel, difficultyRating, partySize);
+
   return {
     enemies,
     hazards,
+    loot,
     dmPrompt: `Random encounter: ${selectedMonsters.join(', ')} (${difficultyRating})${hazardDescriptions.length > 0 ? '\n' + hazardDescriptions.join('\n') : ''}`,
     difficultyRating,
   };
@@ -144,6 +149,7 @@ export function generateRandomEncounter(partyLevel, partySize, areaType = 'dunge
 
 /**
  * Calculate loot for a random encounter (simpler than boss fights).
+ * @deprecated Use generateLoot from lootTables.js instead for better scaling
  * @param {Array} enemies — encounter enemies
  * @param {number} partySize — number of party members
  * @returns {object} { gold, items }
