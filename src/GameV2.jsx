@@ -66,6 +66,7 @@ const DefeatScreen        = lazy(() => import('./components/game/DefeatScreen'))
 const PreCombatMenu       = lazy(() => import('./components/game/PreCombatMenu'))
 const SessionResume       = lazy(() => import('./components/game/SessionResume'))
 const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'))
+const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -149,6 +150,7 @@ export default function GameV2({ onLeave }) {
   const [showSessionResume, setShowSessionResume] = useState(false)
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
+  const [showNarratorBar, setShowNarratorBar] = useState(true)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1137,6 +1139,19 @@ export default function GameV2({ onLeave }) {
             spell={pendingSpell}
             onConfirm={() => { setShowSpellTargeting(false); setPendingSpell(null) }}
             onCancel={() => { setShowSpellTargeting(false); setPendingSpell(null) }}
+          />
+        </Suspense>
+      )}
+      {showNarratorBar && (
+        <Suspense fallback={null}>
+          <NarratorBar
+            messages={useStore.getState().narrator?.history || []}
+            onSendMessage={(msg) => {
+              if (handleChatRef.current) {
+                handleChatRef.current(msg)
+              }
+            }}
+            isListening={false}
           />
         </Suspense>
       )}
