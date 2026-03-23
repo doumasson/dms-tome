@@ -14,13 +14,6 @@ import { isAnimating } from './engine/TokenLayer'
 import ChatBubble from './components/ChatBubble'
 import ApiKeySettings from './components/ApiKeySettings'
 import SkillCheckPanel from './components/SkillCheckPanel'
-import OAConfirmModal from './components/v2/OAConfirmModal'
-import TestCombatButton from './components/v2/TestCombatButton'
-import WeaponPickerModal from './hud/WeaponPickerModal'
-import SpellPickerModal from './hud/SpellPickerModal'
-import ConsumablePickerModal from './hud/ConsumablePickerModal'
-import ReadyActionModal from './hud/ReadyActionModal'
-import ReadyActionPrompt from './hud/ReadyActionPrompt'
 import HUD from './components/game/HUD'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
@@ -40,30 +33,10 @@ import { findPathEdge } from './lib/pathfinding'
 import { animateTokenAlongPath } from './engine/TokenLayer'
 import './hud/hud.css'
 
-const DiceTray            = lazy(() => import('./components/DiceTray'))
-const CharacterSheetModal = lazy(() => import('./components/characterSheet/CharacterSheetModal'))
-const RestModal           = lazy(() => import('./components/RestModal'))
-const NpcDialog           = lazy(() => import('./components/NpcDialog'))
-const StoryCutscene       = lazy(() => import('./components/StoryCutscene'))
-const JournalModal        = lazy(() => import('./components/JournalModal'))
-const LootScreen          = lazy(() => import('./components/LootScreen'))
-const LevelUpModal        = lazy(() => import('./components/LevelUpModal'))
-const VictoryScreen       = lazy(() => import('./components/game/VictoryScreen'))
-const DefeatScreen        = lazy(() => import('./components/game/DefeatScreen'))
-const PreCombatMenu       = lazy(() => import('./components/game/PreCombatMenu'))
-const SessionResume       = lazy(() => import('./components/game/SessionResume'))
-const SpellTargeting      = lazy(() => import('./components/game/SpellTargeting'))
+const GameLayout          = lazy(() => import('./components/game/GameLayout'))
 const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const CombatUI            = lazy(() => import('./components/game/CombatUI'))
-const GameLayout          = lazy(() => import('./components/game/GameLayout'))
-const Inventory_          = lazy(() => import('./components/game/Inventory'))
-const ShopPanel           = lazy(() => import('./components/ShopPanel'))
-const FormationPanel      = lazy(() => import('./components/FormationPanel'))
-const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
-const FactionReputation   = lazy(() => import('./components/FactionReputation'))
-const GameOverModal       = lazy(() => import('./components/GameOverModal'))
-const CombatDebugOverlay  = lazy(() => import('./hud/CombatDebugOverlay'))
-const WorldMap            = lazy(() => import('./hud/WorldMap'))
+const GameModalsRenderer  = lazy(() => import('./components/game/GameModalsRenderer'))
 
 // ─── D&D 5e XP thresholds (inlined from LevelUpModal to avoid static import) ──
 const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000]
@@ -921,244 +894,66 @@ export default function GameV2({ onLeave }) {
         onPortraitClick={(member) => setSheetChar(member)}
         activeMode={activeMode} onModeSelect={handleModeSelect}
       />
-      <Suspense fallback={null}>
-        <DiceTray open={toolPanel === 'dice'} onClose={() => setToolPanel(null)} />
-      </Suspense>
       <SkillCheckPanel />
-      {stealthMode?.active && (
-        <div style={{
-          position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)',
-          background: 'rgba(10,10,10,0.9)', border: '1px solid #44aa66',
-          borderRadius: 6, padding: '6px 18px', zIndex: 90,
-          fontFamily: 'Cinzel, serif', color: '#44aa66', fontSize: 13,
-          letterSpacing: 1, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 8,
-        }}>
-          <span style={{ fontSize: 16 }}>👁</span>
-          SNEAKING — Stealth: {stealthMode.stealthResult}
-        </div>
-      )}
-      {sheetChar && (
-        <Suspense fallback={null}>
-          <CharacterSheetModal character={sheetChar} onClose={() => { setSheetChar(null); setActiveMode(null) }} />
-        </Suspense>
-      )}
-      {activeMode === 'map' && (
-        <Suspense fallback={null}>
-          <WorldMap open={true} onClose={() => setActiveMode(null)} />
-        </Suspense>
-      )}
-      {activeMode === 'character' && sheetChar && (
-        <Suspense fallback={null}>
-          <CharacterSheetModal character={sheetChar} onClose={() => { setActiveMode(null) }} />
-        </Suspense>
-      )}
-      {activeMode === 'inventory' && myCharacter && (
-        <Suspense fallback={null}>
-          <Inventory_
-            items={myCharacter.inventory || []}
-            equipment={myCharacter.equipment || {}}
-            gold={myCharacter.gold || 0}
-            onEquip={() => {}}
-            onUse={() => {}}
-            onDrop={() => {}}
-            onClose={() => setActiveMode(null)}
-          />
-        </Suspense>
-      )}
-      {showApiSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowApiSettings(false)} />}
-      {showJournal && (
-        <Suspense fallback={null}>
-          <JournalModal onClose={() => setShowJournal(false)} />
-        </Suspense>
-      )}
-      {showFactions && (
-        <Suspense fallback={null}>
-          <FactionReputation onClose={() => setShowFactions(false)} />
-        </Suspense>
-      )}
-      {restProposal && (
-        <Suspense fallback={null}>
-          <RestModal
-            type={restProposal.type} proposedBy={restProposal.proposedBy}
-            partyMembers={[{ id: user?.id, name: myCharacter?.name || 'You' }]}
-            isHost={false}
-            onResolve={() => { advanceGameTime(restProposal.type === 'long' ? 8 : 1); setRestProposal(null) }}
-            onCancel={() => setRestProposal(null)}
-          />
-        </Suspense>
-      )}
-      {showInteractionMenu && !inCombat && (
-        <Suspense fallback={null}>
-          <InteractionMenu
-            playerPos={playerPos}
-            zone={zone}
-            onTalk={openNpcInteraction}
-            onExit={handleAreaTransition}
-            onClose={() => setShowInteractionMenu(false)}
-          />
-        </Suspense>
-      )}
       <Suspense fallback={null}>
-        {activeNpc && !activeNpc.isCutscene && <NpcDialog npc={activeNpc} onClose={() => setActiveNpc(null)} />}
-        {activeNpc && activeNpc.isCutscene && <StoryCutscene npc={activeNpc} pixiRef={pixiRef} onClose={() => setActiveNpc(null)} isWatching={false} />}
-        {!activeNpc && activeCutscene && activeCutscene.initiatorId !== user?.id && (
-          <StoryCutscene
-            npc={{ name: activeCutscene.npcName, criticalInfo: activeCutscene.criticalInfo, role: '' }}
-            pixiRef={pixiRef} onClose={() => {}} isWatching={true}
-          />
-        )}
+        <GameModalsRenderer
+          toolPanel={toolPanel} setToolPanel={setToolPanel}
+          sheetChar={sheetChar} setSheetChar={setSheetChar}
+          activeMode={activeMode} setActiveMode={setActiveMode}
+          showApiSettings={showApiSettings} setShowApiSettings={setShowApiSettings}
+          showJournal={showJournal} setShowJournal={setShowJournal}
+          showFactions={showFactions} setShowFactions={setShowFactions}
+          activeNpc={activeNpc} setActiveNpc={setActiveNpc}
+          activeShop={activeShop} setActiveShop={setActiveShop}
+          showFormation={showFormation} setShowFormation={setShowFormation}
+          showLevelUp={showLevelUp} setShowLevelUp={setShowLevelUp}
+          showInteractionMenu={showInteractionMenu} setShowInteractionMenu={setShowInteractionMenu}
+          showVictory={showVictory} setShowVictory={setShowVictory}
+          showDefeat={showDefeat} setShowDefeat={setShowDefeat}
+          showPreCombat={showPreCombat} setShowPreCombat={setShowPreCombat}
+          pendingCombatEnemies={pendingCombatEnemies}
+          showSessionResume={showSessionResume} setShowSessionResume={setShowSessionResume}
+          showSpellTargeting={showSpellTargeting} setShowSpellTargeting={setShowSpellTargeting}
+          pendingSpell={pendingSpell}
+          dismissedLevelRef={dismissedLevelRef}
+          stealthMode={stealthMode}
+          myCharacter={myCharacter}
+          activeMode_={activeMode}
+          restProposal={restProposal} setRestProposal={setRestProposal}
+          user={user}
+          activeCutscene={activeCutscene}
+          showWeaponPicker={showWeaponPicker} setShowWeaponPicker={setShowWeaponPicker}
+          showSpellPicker={showSpellPicker} setShowSpellPicker={setShowSpellPicker}
+          showConsumablePicker={showConsumablePicker} setShowConsumablePicker={setShowConsumablePicker}
+          showReadyModal={showReadyModal} setShowReadyModal={setShowReadyModal}
+          readyTriggerPrompt={readyTriggerPrompt}
+          encounter={encounter}
+          inCombat={inCombat}
+          campaign={campaign}
+          pendingLoot={pendingLoot} setPendingLoot={setPendingLoot}
+          applyLevelUp={applyLevelUp}
+          advanceGameTime={advanceGameTime}
+          openNpcInteraction={openNpcInteraction}
+          handleAreaTransition={handleAreaTransition}
+          handleCombatAction={handleCombatAction}
+          handleWeaponSelected={handleWeaponSelected}
+          handleSpellSelected={handleSpellSelected}
+          handleConsumableUsed={handleConsumableUsed}
+          executeReadiedAction={executeReadiedAction}
+          passReadiedAction={passReadiedAction}
+          executeMoveWithOA={executeMoveWithOA}
+          pendingOA={pendingOA} setPendingOA={setPendingOA}
+          startCombatFromMenu={startCombatFromMenu}
+          handleEndTurn={handleEndTurn}
+          playerPos={playerPos}
+          zone={zone}
+          pixiRef={pixiRef}
+          encounterRewards={encounterRewards}
+          showDebug={showDebug}
+          playerPosRef={playerPosRef}
+          onLeave={onLeave}
+        />
       </Suspense>
-      {showLevelUp && myCharacter && (
-        <Suspense fallback={null}>
-          <LevelUpModal
-            character={myCharacter}
-            onConfirm={(updates) => { applyLevelUp(updates); dismissedLevelRef.current = myCharacter.level; setShowLevelUp(false) }}
-            onCancel={() => { dismissedLevelRef.current = myCharacter.level; setShowLevelUp(false) }}
-          />
-        </Suspense>
-      )}
-      {pendingLoot && (
-        <Suspense fallback={null}>
-          <LootScreen enemies={pendingLoot.enemies} partySize={pendingLoot.partySize} onDone={() => setPendingLoot(null)} />
-        </Suspense>
-      )}
-      <OAConfirmModal
-        pendingOA={pendingOA}
-        onConfirm={() => { executeMoveWithOA(pendingOA); setPendingOA(null) }}
-        onCancel={() => setPendingOA(null)}
-      />
-      {showWeaponPicker && inCombat && encounter.combatants?.[encounter.currentTurn] && (
-        <WeaponPickerModal
-          attacks={encounter.combatants[encounter.currentTurn].attacks || []}
-          character={encounter.combatants[encounter.currentTurn]}
-          onSelect={handleWeaponSelected}
-          onClose={() => setShowWeaponPicker(false)}
-        />
-      )}
-      {showSpellPicker && inCombat && encounter.combatants?.[encounter.currentTurn] && (
-        <SpellPickerModal
-          character={encounter.combatants[encounter.currentTurn]}
-          spellSlots={encounter.combatants[encounter.currentTurn].spellSlots || {}}
-          onSelect={handleSpellSelected}
-          onClose={() => setShowSpellPicker(false)}
-          cantripsOnly={!!encounter.combatants[encounter.currentTurn].leveledSpellCastThisTurn}
-        />
-      )}
-      {showConsumablePicker && inCombat && encounter.combatants?.[encounter.currentTurn] && (
-        <ConsumablePickerModal
-          character={encounter.combatants[encounter.currentTurn]}
-          onSelect={handleConsumableUsed}
-          onClose={() => setShowConsumablePicker(false)}
-        />
-      )}
-      {showReadyModal && inCombat && encounter.combatants?.[encounter.currentTurn] && (
-        <ReadyActionModal
-          combatant={encounter.combatants[encounter.currentTurn]}
-          onConfirm={(readyData) => handleCombatAction('ready-confirm', readyData)}
-          onCancel={() => setShowReadyModal(false)}
-        />
-      )}
-      {readyTriggerPrompt && (
-        <ReadyActionPrompt
-          readiedAction={readyTriggerPrompt.readiedAction}
-          triggerDescription={readyTriggerPrompt.triggerDescription}
-          onExecute={executeReadiedAction}
-          onPass={passReadiedAction}
-        />
-      )}
-      {activeShop && (
-        <Suspense fallback={null}>
-          <ShopPanel
-            npc={activeShop.npc}
-            shopType={activeShop.shopType}
-            onClose={() => setActiveShop(null)}
-          />
-        </Suspense>
-      )}
-      {showFormation && (
-        <Suspense fallback={null}>
-          <FormationPanel onClose={() => setShowFormation(false)} />
-        </Suspense>
-      )}
-      {showDebug && (
-        <Suspense fallback={null}>
-          <CombatDebugOverlay />
-        </Suspense>
-      )}
-      {showDeathOptions && (
-        <Suspense fallback={null}>
-          <GameOverModal
-            onRevive={mercyRevive}
-            onLeave={() => { useStore.setState({ showDeathOptions: false }); onLeave() }}
-          />
-        </Suspense>
-      )}
-      {showVictory && (
-        <Suspense fallback={null}>
-          <VictoryScreen
-            encounter={encounter}
-            loot={{ items: [] }}
-            rewards={encounterRewards || { xp: 0, gold: 0 }}
-            onContinue={() => setShowVictory(false)}
-          />
-        </Suspense>
-      )}
-      {showDefeat && (
-        <Suspense fallback={null}>
-          <DefeatScreen
-            encounter={encounter}
-            defeats={encounter.combatants?.filter(c => c.type === 'player' && (c.currentHp ?? 0) <= 0) || []}
-            onRetry={() => { setShowDefeat(false); useStore.setState({ defeatReset: true }) }}
-            onContinue={() => { setShowDefeat(false); onLeave() }}
-          />
-        </Suspense>
-      )}
-      {showPreCombat && pendingCombatEnemies && (
-        <Suspense fallback={null}>
-          <PreCombatMenu
-            enemies={pendingCombatEnemies}
-            onSneak={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
-            onTalk={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
-            onPickpocket={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
-            onAmbush={() => startCombatFromMenu(pendingCombatEnemies)}
-            onCharge={() => startCombatFromMenu(pendingCombatEnemies)}
-            onCancel={() => { setShowPreCombat(false); setPendingCombatEnemies(null) }}
-          />
-        </Suspense>
-      )}
-      {showSessionResume && myCharacter && (
-        <Suspense fallback={null}>
-          <SessionResume
-            sessionData={{
-              campaignName: campaign?.title || 'Your Campaign',
-              lastSessionDate: myCharacter.lastPlayedAt || new Date().toISOString(),
-              currentLocation: zone?.title || 'Exploration'
-            }}
-            characters={[myCharacter]}
-            recap={`Your adventure continues... Character Level: ${myCharacter.level}, HP: ${myCharacter.currentHp || myCharacter.hp}/${myCharacter.hp}`}
-            onResume={() => setShowSessionResume(false)}
-          />
-        </Suspense>
-      )}
-      {showSpellTargeting && pendingSpell && inCombat && (
-        <Suspense fallback={null}>
-          <SpellTargeting
-            spell={pendingSpell}
-            onConfirm={() => { setShowSpellTargeting(false); setPendingSpell(null) }}
-            onCancel={() => { setShowSpellTargeting(false); setPendingSpell(null) }}
-          />
-        </Suspense>
-      )}
-      {inCombat && encounter.combatants && (
-        <Suspense fallback={null}>
-          <CombatUI
-            initiative={encounter.combatants || []}
-            currentTurnIndex={encounter.currentTurn || 0}
-            onAction={handleCombatAction}
-            onEndTurn={handleEndTurn}
-          />
-        </Suspense>
-      )}
     </GameLayout>
   )
 }
