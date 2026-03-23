@@ -73,6 +73,7 @@ const NPCDialogue         = lazy(() => import('./components/game/NPCDialogue'))
 const CharacterInventory_ = lazy(() => import('./components/game/CharacterInventory'))
 const CombatLog_          = lazy(() => import('./components/game/CombatLog'))
 const ConditionsPanel_    = lazy(() => import('./components/game/ConditionsPanel'))
+const EquipmentPanel_     = lazy(() => import('./components/game/EquipmentPanel'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
 const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
@@ -163,6 +164,7 @@ export default function GameV2({ onLeave }) {
   const [showCharacterInventory, setShowCharacterInventory] = useState(false)
   const [showCombatLog, setShowCombatLog] = useState(false)
   const [showConditions, setShowConditions] = useState(false)
+  const [showEquipment, setShowEquipment] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -1217,6 +1219,14 @@ export default function GameV2({ onLeave }) {
           <ConditionsPanel_
             activeConditions={myCharacter.conditions || []}
             onClose={() => setShowConditions(false)}
+          />
+        </Suspense>
+      )}
+      {showEquipment && myCharacter && (
+        <Suspense fallback={null}>
+          <EquipmentPanel_
+            character={myCharacter}
+            onClose={() => setShowEquipment(false)}
           />
         </Suspense>
       )}
