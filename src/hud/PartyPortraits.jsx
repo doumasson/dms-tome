@@ -166,7 +166,15 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
           }}>
             <div>HP: {hp}/{maxHp}</div>
             <div>AC: {member.ac || 10}</div>
-            <div>Spells: {member.spellSlots ? Object.values(member.spellSlots || {}).reduce((a, b) => a + b, 0) : 0}</div>
+            <div>Spells: {(() => {
+              if (!member.spellSlots || typeof member.spellSlots !== 'object') return 0
+              try {
+                const values = Object.values(member.spellSlots)
+                return values.reduce((a, b) => (typeof a === 'number' ? a : 0) + (typeof b === 'number' ? b : 0), 0)
+              } catch {
+                return 0
+              }
+            })()}</div>
           </div>
         )}
       </div>
