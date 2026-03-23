@@ -71,15 +71,25 @@ export default function CharacterSelect({ user, campaignId, onSelectExisting, on
 
   async function handleBring(char) {
     setSaving(true);
-    // Save to current campaign's campaign_members row
-    const { error: dbErr } = await supabase
-      .from('campaign_members')
-      .update({ character_data: char })
-      .eq('campaign_id', campaignId)
-      .eq('user_id', user.id);
-    setSaving(false);
-    if (dbErr) { setError('Failed to bring character. Please try again.'); return; }
-    onSelectExisting(char);
+    try {
+      // Save to current campaign's campaign_members row
+      const { error: dbErr } = await supabase
+        .from('campaign_members')
+        .update({ character_data: char })
+        .eq('campaign_id', campaignId)
+        .eq('user_id', user.id);
+      if (dbErr) {
+        setError('Failed to bring character. Please try again.');
+        setSaving(false);
+        return;
+      }
+      setSaving(false);
+      onSelectExisting(char);
+    } catch (err) {
+      console.error('Error bringing character:', err);
+      setError('An unexpected error occurred. Please try again.');
+      setSaving(false);
+    }
   }
 
   if (loading) {
