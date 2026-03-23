@@ -343,6 +343,19 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Integration — random encounters use proper loot tables based on difficulty
 - 358 tests, 0 failures.
 
+### Exploration Skill Checks ✅ COMPLETE
+- [x] d20 skill system — roll + modifier vs DC for exploration challenges (Perception, Investigation, Stealth, etc.)
+- [x] Ability score integration — skills mapped to abilities (Perception→WIS, Stealth→DEX, Investigation→INT)
+- [x] Proficiency support — proficiency bonus applied, expertise doubles proficiency for skill mastery
+- [x] 15+ scenarios — hidden passages, trap detection, locked doors, climbing, tracking, reading people, identifying magic
+- [x] Difficulty scaling — area level (1-5) increases challenge DC, prevents easy sequence breaking
+- [x] Critical success (20) — exceeds expectation: "You find something extra!", narrative boost
+- [x] Critical failure (1) — spectacular failure with consequences, dramatic roleplay
+- [x] Class skills — Rangers get Survival, Rogues get Stealth, Wizards get Arcana, all supported
+- [x] Narrative descriptions — dynamic text for success/failure based on scenario context
+- [x] Scenario generation — random challenges by area difficulty level
+- 372 tests, 0 failures.
+
 ---
 
 ## V1 — In Progress (legacy, preserved)
@@ -387,3 +400,4 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Random Encounter System — wandering monsters in dungeons (20% trigger), wilderness (15%), towns (10%). Encounters scale by party level, area type; 50+ monsters with D&D stats; CR-based difficulty rating (Easy/Medium/Hard/Deadly); automatic loot (gold + consumables). DM gets narrative prompt with monster names, can initiate combat or roleplay. Seamlessly integrated into exploration movement system. 336 tests.
 - **2026-03-22:** Environmental Combat Hazards — 10 dynamic battlefield effects (lava, fire, ice, poison, lightning, darkness, webs, collapse, blessed, cursed) create tactical challenges. Damage-based (2d6 lava, 1d6 fire, 1d4 poison, 1d8 lightning), save-based (ice/webs STR saves), status effects (darkness/cursed penalties, blessed boost). Distance-calculated, tile-based visualization. 30% spawn rate (50% deadly encounters). Integrated with random encounters. 346 tests.
 - **2026-03-22:** Comprehensive Loot Table System — official D&D 5e treasure generation by party level (1-20). 40+ magic items with rarities (Common/Uncommon/Rare/Very Rare/Legendary). Difficulty scaling: Easy 50%, Medium 100%, Hard 150%, Deadly 200%. Item drops scale L1 (10%) to L20 (100%). Boss treasure hoards 500gp–100kgp by CR. Party size scaling prevents overpowering. Integration with random encounters. 358 tests.
+- **2026-03-22:** Exploration Skill Checks — d20 skill system for non-combat world interaction. 15+ scenarios (hidden passages, traps, climbing, tracking, reading people, identifying magic). Perception (WIS), Stealth (DEX), Investigation (INT), Acrobatics, Survival, Arcana. Proficiency bonus applied, expertise doubles bonus for mastery. Critical success (20) finds extras, critical failure (1) spectacular consequences. Class-aware skill availability. Dynamic narrative text for results. Difficulty scales with area level. 372 tests.
