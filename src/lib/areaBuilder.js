@@ -1,6 +1,7 @@
 import { ChunkLibrary } from './chunkLibrary.js'
 import allChunks from '../data/chunks/index.js'
 import { buildDungeonArea } from './dungeonBuilder.js'
+import { generateInteractables } from './worldInteractions.js'
 import {
   resolvePositions, stampChunk, connectWithRoad,
   fillTerrain, buildUnifiedPalette, remapChunk,
@@ -368,6 +369,13 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     })
   }
 
+  // 12b. Generate interactable objects (chests, searchable spots)
+  const poisWithChunks = matchedPois.map(p => ({ ...p, chunk: p.chunk || {} }))
+  const interactables = generateInteractables(
+    { ...brief, pois: poisWithChunks },
+    buildings, positions, width, height, cellBlocked, seed
+  )
+
   // 13. Determine player start — first exit entry point or center
   const rawStart = brief.playerStart || (placedExits.length > 0
     ? { x: placedExits[0].x, y: placedExits[0].y === 0 ? 1 : placedExits[0].y }
@@ -395,6 +403,7 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     buildings,
     lightSources: allLightSources,
     exits: placedExits,
+    interactables,
     theme,
     generated: true,
   }

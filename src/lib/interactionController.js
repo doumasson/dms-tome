@@ -49,9 +49,60 @@ export function resolveHint(npc, storyFlags) {
   return npc.hints[0]?.text || npc.personality || ''
 }
 
+export function getAdjacentInteractable(playerPos, zone) {
+  if (!zone?.interactables) return null
+  for (const obj of zone.interactables) {
+    if (obj.opened) continue
+    const dx = Math.abs(playerPos.x - obj.position.x)
+    const dy = Math.abs(playerPos.y - obj.position.y)
+    if (dx <= 1 && dy <= 1 && !(dx === 0 && dy === 0)) {
+      return obj
+    }
+  }
+  return null
+}
+
+/**
+ * Get all available interactions at player position.
+ * Returns an array of { type, target } for the interaction menu.
+ */
+export function getAvailableInteractions(playerPos, zone) {
+  const results = []
+  const npc = getAdjacentNpc(playerPos, zone)
+  if (npc) {
+    results.push({ type: 'talk', target: npc })
+    // Pickpocket option for non-shop NPCs
+    if (!npc.shopType) {
+      results.push({ type: 'pickpocket', target: npc })
+    }
+  }
+  const interactable = getAdjacentInteractable(playerPos, zone)
+  if (interactable) {
+    if (interactable.type === 'chest') {
+      if (interactable.locked) {
+        results.push({ type: 'lockpick', target: interactable })
+        results.push({ type: 'force_open', target: interactable })
+      } else {
+        results.push({ type: 'open_chest', target: interactable })
+      }
+    } else if (interactable.type === 'searchable') {
+      results.push({ type: 'search', target: interactable })
+    }
+  }
+  const exit = getAdjacentExit(playerPos, zone)
+  if (exit) results.push({ type: 'exit', target: exit })
+  // Search is always available when nothing else is near
+  if (results.length === 0) {
+    results.push({ type: 'search_area', target: { dc: 14, label: 'Search Area' } })
+  }
+  return results
+}
+
 export function handleInteract(playerPos, zone) {
   const npc = getAdjacentNpc(playerPos, zone)
   if (npc) return { type: 'npc', target: npc }
+  const interactable = getAdjacentInteractable(playerPos, zone)
+  if (interactable) return { type: 'interactable', target: interactable }
   const exit = getAdjacentExit(playerPos, zone)
   if (exit) return { type: 'exit', target: exit }
   return null

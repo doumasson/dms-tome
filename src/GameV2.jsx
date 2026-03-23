@@ -8,7 +8,7 @@ import { loadApiKeyFromSupabase } from './lib/apiKeyVault'
 import { loadDefaultApiKey } from './lib/defaultApiKey'
 import { getClaudeApiKey } from './lib/claudeApi'
 import { checkEncounterProximity, buildEncounterPrompt } from './lib/encounterZones'
-import { handleInteract } from './lib/interactionController'
+import { handleInteract, getAvailableInteractions } from './lib/interactionController'
 import { isAnimating } from './engine/TokenLayer'
 import ChatBubble from './components/ChatBubble'
 import ApiKeySettings from './components/ApiKeySettings'
@@ -44,6 +44,7 @@ const LootScreen          = lazy(() => import('./components/LootScreen'))
 const LevelUpModal        = lazy(() => import('./components/LevelUpModal'))
 const ShopPanel           = lazy(() => import('./components/ShopPanel'))
 const FormationPanel      = lazy(() => import('./components/FormationPanel'))
+const InteractionMenu     = lazy(() => import('./components/InteractionMenu'))
 const CombatDebugOverlay  = lazy(() => import('./hud/CombatDebugOverlay'))
 const WorldMap            = lazy(() => import('./hud/WorldMap'))
 
@@ -111,6 +112,7 @@ export default function GameV2({ onLeave }) {
   const [worldTransform, setWorldTransform] = useState(null)
   const [showFormation, setShowFormation] = useState(false)
   const [showLevelUp, setShowLevelUp] = useState(false)
+  const [showInteractionMenu, setShowInteractionMenu] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -492,8 +494,8 @@ export default function GameV2({ onLeave }) {
   }, [currentAreaId, areas, areaLayers])
 
   useEffect(() => {
-    dialogOpenRef.current = !!activeNpc
-  }, [activeNpc])
+    dialogOpenRef.current = !!activeNpc || showInteractionMenu
+  }, [activeNpc, showInteractionMenu])
 
   // Sync world transform from PixiApp for chat bubble positioning
   useEffect(() => {
@@ -661,31 +663,39 @@ export default function GameV2({ onLeave }) {
   }, [playerPos, zone, inCombat, activeNpc])
 
   // --- Interaction handlers ---
+  const openNpcInteraction = useCallback((npc) => {
+    const busy = useStore.getState().npcBusy
+    if (busy && busy.npcName === npc.name) {
+      addNarratorMessage({ role: 'dm', speaker: 'System', text: `${npc.name} is speaking with ${busy.playerName}.` })
+      return
+    }
+    if (npc.shopType) {
+      setActiveShop({ npc, shopType: npc.shopType })
+    } else if (npc.critical && !useStore.getState().hasStoryFlag(npc.criticalFlag)) {
+      setActiveNpc({ ...npc, isCutscene: true })
+    } else {
+      setActiveNpc({ ...npc, isCutscene: false })
+    }
+  }, [addNarratorMessage])
+
   const handleInteractFn = useCallback(() => {
     if (isAnimating()) return
     if (inCombat) return
     const pos = playerPosRef.current
-    const result = handleInteract(pos, zone)
-    if (!result) return
+    const interactions = getAvailableInteractions(pos, zone)
 
-    if (result.type === 'npc') {
-      const npc = result.target
-      const busy = useStore.getState().npcBusy
-      if (busy && busy.npcName === npc.name) {
-        addNarratorMessage({ role: 'dm', speaker: 'System', text: `${npc.name} is speaking with ${busy.playerName}.` })
-        return
-      }
-      if (npc.shopType) {
-        setActiveShop({ npc, shopType: npc.shopType })
-      } else if (npc.critical && !useStore.getState().hasStoryFlag(npc.criticalFlag)) {
-        setActiveNpc({ ...npc, isCutscene: true })
-      } else {
-        setActiveNpc({ ...npc, isCutscene: false })
-      }
-    } else if (result.type === 'exit') {
-      handleAreaTransition(result.target)
+    // If the only interaction is exit or single talk, execute immediately
+    if (interactions.length === 0) return
+    if (interactions.length === 1) {
+      const { type, target } = interactions[0]
+      if (type === 'exit') { handleAreaTransition(target); return }
+      if (type === 'talk') { openNpcInteraction(target); return }
+      if (type === 'search_area') { setShowInteractionMenu(true); return }
     }
-  }, [zone, inCombat, addNarratorMessage, handleAreaTransition])
+
+    // Multiple options — show context menu
+    setShowInteractionMenu(true)
+  }, [zone, inCombat, handleAreaTransition, openNpcInteraction])
 
   handleInteractRef.current = handleInteractFn
 
@@ -831,6 +841,17 @@ export default function GameV2({ onLeave }) {
             isHost={false}
             onResolve={() => { advanceGameTime(restProposal.type === 'long' ? 8 : 1); setRestProposal(null) }}
             onCancel={() => setRestProposal(null)}
+          />
+        </Suspense>
+      )}
+      {showInteractionMenu && !inCombat && (
+        <Suspense fallback={null}>
+          <InteractionMenu
+            playerPos={playerPos}
+            zone={zone}
+            onTalk={openNpcInteraction}
+            onExit={handleAreaTransition}
+            onClose={() => setShowInteractionMenu(false)}
           />
         </Suspense>
       )}

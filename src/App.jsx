@@ -91,9 +91,26 @@ export default function App() {
       pendingInviteRef.current = localStorage.getItem('pendingInvite');
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) handleSession(session);
-      else setAppView('login');
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session) {
+        handleSession(session);
+      } else if (import.meta.env.VITE_DEV_AUTO_LOGIN === 'true') {
+        // Dev-only auto-login for testing — never ships in production
+        const email = import.meta.env.VITE_TEST_USER_EMAIL;
+        const password = import.meta.env.VITE_TEST_USER_PASSWORD;
+        if (email && password) {
+          const { error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) {
+            console.warn('[dev-auto-login] failed:', error.message);
+            setAppView('login');
+          }
+          // onAuthStateChange will fire SIGNED_IN and call handleSession
+        } else {
+          setAppView('login');
+        }
+      } else {
+        setAppView('login');
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {

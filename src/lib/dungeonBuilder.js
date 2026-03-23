@@ -418,8 +418,63 @@ export function buildDungeonArea(brief, seed = Date.now()) {
     buildings: [],
     lightSources,
     exits: placedExits,
+    interactables: generateDungeonInteractables(rooms, placedEnemies, width, height, seed),
     theme,
     lighting: 'dim',
     generated: true,
   }
+}
+
+/** Generate chests and searchable spots in dungeon rooms */
+function generateDungeonInteractables(rooms, enemies, width, height, seed) {
+  const interactables = []
+  let s = seed | 0
+  const rng = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff }
+
+  const enemyPositions = new Set(enemies.map(e => `${e.position.x},${e.position.y}`))
+
+  for (let i = 0; i < rooms.length; i++) {
+    const room = rooms[i]
+    const cx = room.x + Math.floor(room.width / 2)
+    const cy = room.y + Math.floor(room.height / 2)
+
+    // ~40% chance of chest per room
+    if (rng() < 0.4) {
+      const ox = Math.floor(rng() * Math.max(1, room.width - 2)) + 1
+      const oy = Math.floor(rng() * Math.max(1, room.height - 2)) + 1
+      const px = room.x + ox
+      const py = room.y + oy
+      if (!enemyPositions.has(`${px},${py}`) && px < width && py < height) {
+        const tier = rng() < 0.15 ? 'rare' : rng() < 0.4 ? 'uncommon' : 'common'
+        const locked = rng() < 0.5
+        interactables.push({
+          id: `chest_room_${i}`,
+          type: 'chest',
+          position: { x: px, y: py },
+          locked,
+          dc: locked ? (tier === 'rare' ? 18 : tier === 'uncommon' ? 15 : 12) : 0,
+          lootTable: tier,
+          opened: false,
+          label: locked ? 'Locked Chest' : 'Chest',
+        })
+      }
+    }
+
+    // ~30% chance of searchable spot
+    if (rng() < 0.3) {
+      const sx = room.x + 1 + Math.floor(rng() * Math.max(1, room.width - 2))
+      const sy = room.y + 1 + Math.floor(rng() * Math.max(1, room.height - 2))
+      if (!enemyPositions.has(`${sx},${sy}`) && sx < width && sy < height) {
+        interactables.push({
+          id: `search_room_${i}`,
+          type: 'searchable',
+          position: { x: sx, y: sy },
+          dc: 10 + Math.floor(rng() * 6),
+          opened: false,
+          label: 'Suspicious Debris',
+        })
+      }
+    }
+  }
+  return interactables
 }
