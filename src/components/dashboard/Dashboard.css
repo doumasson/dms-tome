@@ -1,0 +1,361 @@
+/* Campaign Dashboard */
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a1a 100%);
+  padding: 24px;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+  gap: 32px;
+}
+
+/* Header */
+.dashboard-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.dashboard-header h1 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #d4af37;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.dashboard-header p {
+  font-size: 18px;
+  color: #aaa;
+  font-family: 'Georgia', serif;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Campaigns section */
+.campaigns-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+/* Campaign grid */
+.campaigns-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Campaign card */
+.campaign-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(42, 42, 26, 0.6);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #e8d5a3;
+  min-height: 200px;
+}
+
+.campaign-card:hover {
+  background: rgba(42, 42, 26, 0.8);
+  border-color: rgba(212, 175, 55, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+}
+
+.campaign-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.campaign-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #d4af37;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.campaign-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ccc;
+  margin: 0;
+  flex: 1;
+  font-family: 'Georgia', serif;
+}
+
+.campaign-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  font-size: 11px;
+  color: #999;
+}
+
+.player-count,
+.last-played {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  background: rgba(26, 26, 26, 0.5);
+  border: 2px dashed rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.empty-state p {
+  font-size: 18px;
+  color: #d4af37;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.empty-desc {
+  font-size: 14px;
+  color: #999;
+  font-family: 'Georgia', serif;
+  margin: 0 !important;
+}
+
+/* Dashboard actions */
+.dashboard-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: #d4af37;
+  color: #1a1a1a;
+  border: 1px solid #a0821d;
+  border-radius: 4px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  background: #e8d5a3;
+  color: #0a0a0a;
+  transform: scale(1.05);
+}
+
+.action-btn:active {
+  transform: scale(0.98);
+}
+
+.action-icon {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* Join form */
+.join-form-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  padding: 16px;
+}
+
+.join-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  background: #1a1a1a;
+  border: 2px solid #d4af37;
+  border-radius: 4px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.join-input {
+  padding: 12px 16px;
+  background: #0a0a0a;
+  border: 1px solid #d4af37;
+  color: #e8d5a3;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 2px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.join-input::placeholder {
+  color: #555;
+}
+
+.join-input:focus {
+  outline: none;
+  border-color: #e8d5a3;
+  box-shadow: 0 0 12px rgba(232, 213, 163, 0.3);
+  background: #1a1a1a;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background: #555;
+  color: #e8d5a3;
+  border: 1px solid #666;
+  border-radius: 2px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: #666;
+}
+
+.submit-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background: #d4af37;
+  color: #1a1a1a;
+  border: 1px solid #a0821d;
+  border-radius: 2px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #e8d5a3;
+  color: #0a0a0a;
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+    gap: 24px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 32px;
+  }
+
+  .dashboard-header p {
+    font-size: 16px;
+  }
+
+  .campaigns-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .campaign-card {
+    padding: 16px;
+  }
+
+  .dashboard-actions {
+    gap: 12px;
+  }
+
+  .action-btn {
+    padding: 12px 20px;
+    font-size: 12px;
+    flex: 1;
+  }
+
+  .join-form {
+    padding: 24px;
+  }
+}
+
+@media (max-height: 600px) {
+  .campaign-card {
+    min-height: 150px;
+  }
+
+  .campaign-name {
+    font-size: 18px;
+  }
+
+  .campaign-desc {
+    font-size: 12px;
+  }
+}
