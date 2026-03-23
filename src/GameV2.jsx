@@ -410,22 +410,23 @@ export default function GameV2({ onLeave }) {
   }
 
   return (
-    <GameLayout>
-      <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
-      <HUD />
-      {nearbyNpcs.map(npc => (
-        <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
-      ))}
-      <GameHUD
-        zone={zone} areaTheme={zone?.theme}
-        onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn}
-        onAction={handleCombatAction} onSettings={() => setShowApiSettings(true)} onLeave={onLeave}
-        playerPos={playerPos} tokens={tokens} cameraRef={cameraRef}
-        onPortraitClick={(member) => setSheetChar(member)}
-        activeMode={activeMode} onModeSelect={handleModeSelect}
-      />
-      <SkillCheckPanel />
-      <Suspense fallback={null}>
+    <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c' }}>Loading...</div>}>
+      <GameLayout>
+        <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
+        <HUD />
+        {nearbyNpcs.map(npc => (
+          <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
+        ))}
+        <GameHUD
+          zone={zone} areaTheme={zone?.theme}
+          onTool={handleTool} onChat={handleChat} onEndTurn={handleEndTurn}
+          onAction={handleCombatAction} onSettings={() => setShowApiSettings(true)} onLeave={onLeave}
+          playerPos={playerPos} tokens={tokens} cameraRef={cameraRef}
+          onPortraitClick={(member) => setSheetChar(member)}
+          activeMode={activeMode} onModeSelect={handleModeSelect}
+        />
+        <SkillCheckPanel />
+        <Suspense fallback={null}>
         <GameModalsRenderer
           toolPanel={toolPanel} setToolPanel={setToolPanel}
           sheetChar={sheetChar} setSheetChar={setSheetChar}
@@ -485,6 +486,7 @@ export default function GameV2({ onLeave }) {
           onLeave={onLeave}
         />
       </Suspense>
-    </GameLayout>
+      </GameLayout>
+    </Suspense>
   )
 }
