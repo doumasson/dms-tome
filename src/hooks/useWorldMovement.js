@@ -7,6 +7,17 @@ import { animateTokenAlongPath, isAnimating } from '../engine/TokenLayer'
 import { broadcastTokenMove } from '../lib/liveChannel'
 import { playFootstep } from '../lib/ambientSounds'
 
+// Map area themes to footstep surface types
+function getSurface(theme) {
+  const map = {
+    dungeon: 'stone', cave: 'stone', crypt: 'stone', sewer: 'stone',
+    forest: 'grass', clearing: 'grass', swamp: 'grass', coastal: 'sand',
+    desert: 'sand', mountain: 'stone', graveyard: 'grass',
+    town: 'wood', village: 'wood', tavern: 'wood', marketplace: 'wood',
+  }
+  return map[theme] || 'stone'
+}
+
 /**
  * Handles non-combat world movement: click-to-move pathfinding, WASD/arrow
  * keyboard movement, and walkability data computation.
@@ -133,7 +144,7 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
         // Camera follows player during click-to-move walk
         if (cameraRef.current) cameraRef.current.centerOn(stepPos.x, stepPos.y, tileSize)
         playerPosRef.current = stepPos
-        playFootstep('stone')
+        playFootstep(getSurface(zone?.theme))
         setPlayerPos(stepPos) // Update fog/encounters each step
       }, () => {
         setPlayerPos({ x, y })
@@ -211,7 +222,7 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
       }
       const tileSize = zone?.tileSize || 32
       playerPosRef.current = { x: nx, y: ny }
-      playFootstep('stone')
+      playFootstep(getSurface(zone?.theme))
       setPlayerPos({ x: nx, y: ny }) // Update state immediately for fog/encounter/NPC proximity
       const path = [pos, { x: nx, y: ny }]
       animateTokenAlongPath('player', path, null, () => {

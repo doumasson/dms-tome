@@ -43,6 +43,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Add combat round counter — already exists in InitiativeStrip (R{round})
 - [x] Add quick action buttons — "Look around", "Search", "Sneak", "Listen" above chat input (exploration only)
 - [x] Add ambient theme particles — fireflies (forest), dust motes (dungeon), embers (town), wisps (graveyard/swamp), 13 theme configs
+- [x] Theme-aware footstep sounds — stone in dungeons/caves, grass in forests/swamps, wood in towns, sand in deserts/coastal
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
