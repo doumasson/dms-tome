@@ -1,0 +1,16 @@
+{
+  "project_name": "DungeonMind",
+  "repo_dir": "~/dms-tome",
+  "branch": "agent-dev",
+  "model": "claude-haiku-4-5-20251001",
+  "max_iterations": 50,
+  "pause_between_secs": 10,
+  "dev_port": 5173,
+  "memory_files": [
+    "CLAUDE.md", "AGENTS.md", "docs/ARCHITECTURE.md",
+    "tasks/status.md", "tasks/todo.md", "tasks/lessons.md"
+  ],
+  "allowed_tools": "Edit,Write,Read,Glob,Grep,Bash",
+  "screenshots_enabled": true,
+  "telegram_user": "5678604724"
+}

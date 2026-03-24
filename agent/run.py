@@ -1,30 +1,47 @@
 #!/usr/bin/env python3
-"""DungeonMind Autonomous Build Agent — builds game features, assets, and fixes.
-   NEVER writes tests. Uses Playwright screenshots as READ-ONLY visual feedback."""
+"""Autonomous Build Agent — config-driven, project-agnostic.
+   Point it at any repo with a CLAUDE.md and tasks/todo.md and let it build.
+   Uses Playwright screenshots as READ-ONLY visual feedback (if enabled).
+   NEVER writes tests."""
 
 import subprocess, json, time, os, sys, signal, datetime, urllib.request
 import tempfile
 from pathlib import Path
 
-REPO_DIR   = Path.home() / "dms-tome"
-LOG_DIR    = Path.home() / "agent-logs"
-SHOT_DIR   = Path.home() / "agent-screenshots"
+# ─── CONFIG ────────────────────────────────────────────────────────────────────
+
+AGENT_DIR = Path(__file__).parent
+CONFIG_PATH = AGENT_DIR / "config.json"
+
+def load_config():
+    if CONFIG_PATH.exists():
+        with open(CONFIG_PATH) as f:
+            return json.load(f)
+    return {}
+
+CFG = load_config()
+
+PROJECT_NAME   = CFG.get("project_name", "Project")
+REPO_DIR       = Path(os.path.expanduser(CFG.get("repo_dir", "~/project")))
+AGENT_BRANCH   = CFG.get("branch", "main")
+MODEL          = CFG.get("model", "claude-haiku-4-5-20251001")
+MAX_ITERATIONS = CFG.get("max_iterations", 50)
+PAUSE_BETWEEN  = CFG.get("pause_between_secs", 10)
+DEV_PORT       = CFG.get("dev_port", 5173)
+MEMORY_FILES   = CFG.get("memory_files", ["CLAUDE.md", "tasks/todo.md"])
+ALLOWED_TOOLS  = CFG.get("allowed_tools", "Edit,Write,Read,Glob,Grep,Bash")
+SCREENSHOTS_ON = CFG.get("screenshots_enabled", True)
+TELEGRAM_USER  = CFG.get("telegram_user", "")
+BUILD_CMD      = CFG.get("build_cmd", "npm run build")
+
+LOG_DIR  = Path.home() / "agent-logs"
+SHOT_DIR = Path.home() / "agent-screenshots"
 LOG_DIR.mkdir(exist_ok=True)
 SHOT_DIR.mkdir(exist_ok=True)
-PA_DB      = Path.home() / "pa/data/pa.db"
+PA_DB = Path.home() / "pa/data/pa.db"
 
-MEMORY_FILES = [
-    "CLAUDE.md", "AGENTS.md", "docs/ARCHITECTURE.md",
-    "tasks/status.md", "tasks/todo.md", "tasks/lessons.md",
-]
 
-MAX_ITERATIONS = 50
-PAUSE_BETWEEN  = 10
-AGENT_BRANCH   = "agent-dev"
-TELEGRAM_USER  = "5678604724"
-DEV_PORT       = 5173
-PLAYWRIGHT_BIN = str(Path.home() / "dms-tome/node_modules/playwright")
-
+# ─── LOGGING & NOTIFICATIONS ──────────────────────────────────────────────────
 
 def log(msg):
     ts = datetime.datetime.now().strftime("%H:%M:%S")
@@ -37,7 +54,7 @@ def log(msg):
 
 def notify(msg):
     token = os.environ.get("PA_TELEGRAM_TOKEN", "")
-    if not token:
+    if not token or not TELEGRAM_USER:
         return
     try:
         data = json.dumps({"chat_id": TELEGRAM_USER, "text": msg[:4000]}).encode()
@@ -49,6 +66,8 @@ def notify(msg):
     except Exception as e:
         log(f"  ! Telegram failed: {e}")
 
+
+# ─── SHELL HELPERS ─────────────────────────────────────────────────────────────
 
 def run(cmd, cwd=None, timeout=60):
     try:
@@ -67,8 +86,8 @@ def run_claude(prompt, resume_id=None):
         "--output-format", "json",
         "--max-turns", "200",
         "--dangerously-skip-permissions",
-        "--allowedTools", "Edit,Write,Read,Glob,Grep,Bash",
-        "--model", "claude-haiku-4-5-20251001",
+        "--allowedTools", ALLOWED_TOOLS,
+        "--model", MODEL,
     ]
     if resume_id:
         cmd += ["--resume", resume_id]
@@ -83,6 +102,8 @@ def run_claude(prompt, resume_id=None):
     except json.JSONDecodeError:
         return stdout, None
 
+
+# ─── MEMORY ────────────────────────────────────────────────────────────────────
 
 async def write_to_memory(run_id, iteration, build_status, screenshot_desc,
                           what_happened, files_changed, succeeded):
@@ -102,6 +123,8 @@ async def write_to_memory(run_id, iteration, build_status, screenshot_desc,
         log(f"  ! Memory write failed: {e}")
 
 
+# ─── GIT ───────────────────────────────────────────────────────────────────────
+
 def git_pull():
     run(["git", "checkout", AGENT_BRANCH])
     run(["git", "pull", "origin", AGENT_BRANCH])
@@ -117,10 +140,15 @@ def git_commit(msg):
         log("  ~ nothing to commit")
 
 
-def vite_build():
-    rc, out, err = run(["npm", "run", "build"], timeout=300)
+# ─── BUILD ─────────────────────────────────────────────────────────────────────
+
+def project_build():
+    parts = BUILD_CMD.split()
+    rc, out, err = run(parts, timeout=300)
     return rc == 0, (out + "\n" + err)[-1000:]
 
+
+# ─── PROJECT FILES ─────────────────────────────────────────────────────────────
 
 def read_memory():
     result = []
@@ -139,26 +167,35 @@ def read_todo():
     return "(no todo.md found)"
 
 
+# ─── SCREENSHOTS (read-only visual feedback) ──────────────────────────────────
+
 def take_screenshots(iteration):
-    """Read-only visual check. Agent CANNOT modify this function or the screenshot script.
-    Returns a text description of what the game looks like right now."""
+    """Spin up dev server, grab a headless screenshot, describe what's on screen.
+    The Claude agent CANNOT modify this — it's read-only visual feedback."""
+    if not SCREENSHOTS_ON:
+        return "Screenshots disabled in config."
+
+    playwright_bin = str(REPO_DIR / "node_modules" / "playwright")
+    if not Path(playwright_bin).exists():
+        return "Playwright not installed in project — skipping screenshots."
+
     log("  -> Taking screenshots...")
     shot_dir = SHOT_DIR / f"iter-{iteration:02d}"
     shot_dir.mkdir(exist_ok=True)
 
-    script = f"""
-const {{ chromium }} = require('{PLAYWRIGHT_BIN}');
-(async () => {{
-  const browser = await chromium.launch({{ headless: true }});
+    # Write a temporary node script — agent never sees or edits this
+    script_content = """
+const { chromium } = require('%PLAYWRIGHT%');
+(async () => {
+  const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
-  await page.setViewportSize({{ width: 1280, height: 800 }});
-  const result = {{ shots: [], errors: [], headings: [], buttons: [], url: '', title: '' }};
-  try {{
-    await page.goto('http://localhost:{DEV_PORT}', {{ waitUntil: 'networkidle', timeout: 20000 }});
+  await page.setViewportSize({ width: 1280, height: 800 });
+  const result = { shots: [], errors: [], headings: [], buttons: [], url: '', title: '' };
+  try {
+    await page.goto('http://localhost:%PORT%', { waitUntil: 'networkidle', timeout: 20000 });
     await page.waitForTimeout(3000);
-    await page.screenshot({{ path: '{shot_dir}/01-landing.png' }});
+    await page.screenshot({ path: '%SHOTDIR%/01-landing.png' });
     result.shots.push('01-landing.png');
-
     result.url = page.url();
     result.title = await page.title();
     result.headings = await page.evaluate(() =>
@@ -174,23 +211,16 @@ const {{ chromium }} = require('{PLAYWRIGHT_BIN}');
         .map(e => e.textContent.trim()).filter(t => t && t.length < 200)
     );
     result.errors = visErrors;
-
-    // Try to get console errors
-    const consoleErrors = [];
-    page.on('console', msg => {{
-      if (msg.type() === 'error') consoleErrors.push(msg.text());
-    }});
-    await page.waitForTimeout(2000);
-    result.consoleErrors = consoleErrors;
-
-  }} catch(e) {{ result.errors.push(e.message); }}
-  finally {{ await browser.close(); }}
+  } catch(e) { result.errors.push(e.message); }
+  finally { await browser.close(); }
   console.log(JSON.stringify(result));
-}})();
-"""
+})();
+""".replace('%PLAYWRIGHT%', playwright_bin.replace('\\', '/')
+   ).replace('%PORT%', str(DEV_PORT)
+   ).replace('%SHOTDIR%', str(shot_dir).replace('\\', '/'))
 
     script_path = Path(tempfile.mktemp(suffix=".js"))
-    script_path.write_text(script)
+    script_path.write_text(script_content)
 
     dev_proc = subprocess.Popen(
         ["npm", "run", "dev", "--", "--port", str(DEV_PORT), "--host"],
@@ -215,9 +245,7 @@ const {{ chromium }} = require('{PLAYWRIGHT_BIN}');
         desc += f"Buttons: {r.get('buttons', [])}. "
         if r.get("errors"):
             desc += f"VISIBLE ERRORS: {r['errors']}. "
-        if r.get("consoleErrors"):
-            desc += f"CONSOLE ERRORS: {r['consoleErrors'][:5]}. "
-        if not r.get("errors") and not r.get("consoleErrors"):
+        else:
             desc += "No errors detected. "
         log(f"  -> {desc[:200]}")
         return desc
@@ -232,40 +260,38 @@ const {{ chromium }} = require('{PLAYWRIGHT_BIN}');
 
 # ─── PROMPTS ───────────────────────────────────────────────────────────────────
 
-SYSTEM_RULES = """
-=== DUNGEONMIND BUILD AGENT — ABSOLUTE RULES ===
+SYSTEM_RULES = f"""
+=== {PROJECT_NAME.upper()} BUILD AGENT — ABSOLUTE RULES ===
 
-You are an autonomous build agent. You build game features, assets, and fixes.
+You are an autonomous build agent for {PROJECT_NAME}. You build features, assets, and fixes.
 
 ## NEVER DO THESE (violating any = wasted iteration):
-- NEVER write test files (.test.js, .spec.js)
-- NEVER run npx playwright, npx vitest, or npm test
+- NEVER write test files (.test.js, .spec.js, .test.py, etc.)
+- NEVER run test commands (playwright, vitest, pytest, jest, etc.)
 - NEVER modify the screenshot/playwright pipeline
 - NEVER spend an iteration on documentation, refactoring, or tooling alone
-- NEVER mark things done in markdown without writing actual game code
+- NEVER mark things done in markdown without writing actual code
 
 ## ALWAYS DO THESE:
 - Read tasks/todo.md — pick the top unchecked item
 - Read tasks/lessons.md — avoid repeating past mistakes
-- Build it in real source code (src/, public/, scripts/)
-- Run `npm run build` to verify it compiles
+- Build it in real source code
+- Run `{BUILD_CMD}` to verify it compiles
 - If the build fails, fix the build errors FIRST
 - Update tasks/status.md when you complete a feature
 - Check off the item in tasks/todo.md when done
 
 ## SCREENSHOTS (read-only visual feedback):
-You will receive a description of what the game looks like in the browser.
-Use this to understand the current state of the UI. DO NOT try to fix
-the screenshot pipeline — it is not your responsibility. Focus only on
-improving the actual game code based on what you see.
+You will receive a description of what the app looks like in the browser.
+Use this to understand the current state. DO NOT try to fix the screenshot
+pipeline — it is not your responsibility.
 
 ## COMPLETION FORMAT — end every response with:
-BUILT: src/path/to/file.jsx (or FIXED: description)
+BUILT: path/to/file (or FIXED: description)
 BUILD: PASS or FAIL
 COMMITTED: yes or no
 --- Response complete ---
 """
-
 
 PROMPT_TEMPLATE = SYSTEM_RULES + """
 === ITERATION {i} ===
@@ -279,47 +305,49 @@ PROMPT_TEMPLATE = SYSTEM_RULES + """
 {output}
 ```
 
-### What the game looks like right now (from screenshots):
+### What the app looks like right now (from screenshots):
 {screenshot_desc}
 
-### Project memory (CLAUDE.md, status.md, lessons.md):
+### Project memory:
 {memory}
 
 === YOUR TASK ===
 
 {task_instruction}
 
-ONE real code change per iteration. Build it. Verify with `npm run build`.
+ONE real code change per iteration. Build it. Verify with `""" + BUILD_CMD + """`.
 """
 
 TASK_BUILD_BROKEN = """The build is FAILING. Fix the build errors shown above.
-Do NOT add features — just make `npm run build` pass clean."""
+Do NOT add features — just make the build pass clean."""
 
 TASK_PICK_FROM_TODO = """Pick the top unchecked item from todo.md above.
 Build it. If the item is too large for one iteration, do the smallest
 meaningful piece and leave the rest for next iteration.
 
-Focus on shipping visible gameplay improvements — things a player would notice.
-Use the screenshot description to understand what the game currently looks like
-and what needs work."""
+Focus on shipping visible improvements — things a user would notice.
+Use the screenshot description to understand the current state."""
 
 
 # ─── MAIN LOOP ─────────────────────────────────────────────────────────────────
 
 def main():
     log("================================")
-    log("  DungeonMind Build Agent")
+    log(f"  {PROJECT_NAME} Build Agent")
+    log(f"  Repo: {REPO_DIR}")
+    log(f"  Branch: {AGENT_BRANCH}")
+    log(f"  Model: {MODEL}")
     log("================================")
 
     def handler(sig, frame):
         log("Interrupted...")
         git_commit("interrupted")
-        notify("DungeonMind Agent stopped.")
+        notify(f"{PROJECT_NAME} Agent stopped.")
         sys.exit(0)
     signal.signal(signal.SIGINT, handler)
 
     git_pull()
-    notify("DungeonMind Build Agent started")
+    notify(f"{PROJECT_NAME} Build Agent started ({MAX_ITERATIONS} iterations)")
 
     session_id = None
 
@@ -331,7 +359,7 @@ def main():
             git_pull()
 
         # Check build
-        build_ok, build_out = vite_build()
+        build_ok, build_out = project_build()
         log(f"Build: {'OK' if build_ok else 'FAILED'}")
 
         # Take screenshots if build passes
@@ -340,10 +368,7 @@ def main():
             screenshot_desc = take_screenshots(i)
 
         # Decide task
-        if not build_ok:
-            task_instruction = TASK_BUILD_BROKEN
-        else:
-            task_instruction = TASK_PICK_FROM_TODO
+        task_instruction = TASK_BUILD_BROKEN if not build_ok else TASK_PICK_FROM_TODO
 
         # Build prompt
         prompt = PROMPT_TEMPLATE.format(
@@ -379,7 +404,7 @@ def main():
 
         # Notify
         notify(
-            f"DungeonMind [{i}/{MAX_ITERATIONS}]\n"
+            f"{PROJECT_NAME} [{i}/{MAX_ITERATIONS}]\n"
             f"Build: {'OK' if build_ok else 'FAIL'}\n"
             f"{screenshot_desc[:150]}\n"
             f"{response[:200]}"
@@ -392,7 +417,7 @@ def main():
     log("Agent run complete.")
     log("================================")
     git_commit("agent run complete")
-    notify("DungeonMind Build Agent finished.")
+    notify(f"{PROJECT_NAME} Build Agent finished {MAX_ITERATIONS} iterations.")
 
 
 if __name__ == "__main__":
