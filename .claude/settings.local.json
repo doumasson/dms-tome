@@ -1,26 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "mcp__context7__query-docs",
-      "mcp__supabase__list_tables",
-      "mcp__playwright__browser_navigate",
-      "Bash(npx playwright:*)",
-      "mcp__playwright__browser_snapshot",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
       "Bash(wc -l src/**/*.jsx src/**/**/*.jsx src/**/**/**/*.jsx src/*.jsx)",
-      "Bash(find /c/Dev/dms-tome/src -type f \\\\\\(-name *.js -o -name *.jsx -o -name *.ts -o -name *.tsx -o -name *.json \\\\\\))",
-      "Bash(wc -l /c/Dev/dms-tome/src/components/*.jsx /c/Dev/dms-tome/src/lib/*.js /c/Dev/dms-tome/src/store/*.js)",
-      "mcp__plugin_claude-mem_mcp-search__smart_outline",
-      "Bash(xargs wc:*)",
-      "Bash(grep -r \"export\" src/lib/*.js)",
-      "WebSearch",
-      "mcp__plugin_claude-mem_mcp-search__get_observations",
-      "Bash(npm run:*)",
-      "Bash(npx vitest:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(unzip -l C:/Users/sheme/Downloads/OneDrive_1_3-18-2026.zip)",
-      "Bash(python:*)"
+      "Bash(node scripts/*:*)",
+      "Bash(python:*)",
+      "WebSearch",
+      "mcp__plugin_claude-mem_mcp-search__smart_outline",
+      "mcp__plugin_claude-mem_mcp-search__get_observations",
+      "mcp__context7__query-docs"
+    ],
+    "deny": [
+      "Bash(npx playwright:*)",
+      "Bash(npx vitest:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm test:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_snapshot"
     ]
   }
 }

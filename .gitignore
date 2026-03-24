@@ -36,3 +36,7 @@ public/tilesets/*.png
 public/tilesets/*.webp
 assets/manifest.json
 .claude/worktrees/
+
+# Test artifacts (agent-generated, not needed)
+test-results/
+.playwright-mcp/

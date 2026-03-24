@@ -1,14 +1,34 @@
 # DungeonMind — CLAUDE.md
 
-## Agent Behavior
+## Agent Behavior — READ THIS FIRST
 
-- **Simplicity first.** Minimal code impact. Find root causes, no temporary fixes.
-- **File size limit: ~400 lines per component.** Extract sub-components to `src/components/<domain>/`, helpers to `src/lib/`. Parent files are thin orchestrators. Run `wc -l` before committing.
-- **Autonomous bug fixing.** Given a bug report, just fix it. Point at logs/errors/failing tests, then resolve. Zero hand-holding.
-- **Always signal completion.** End every response with `--- Response complete ---`.
-- **Lessons file.** After ANY correction from the user, update `tasks/lessons.md` with the pattern. Review at session start.
+### ABSOLUTE RULES (never violate)
 
-> **Note:** Superpowers handles planning, brainstorming, TDD, subagent orchestration, and verification workflows. Don't duplicate those behaviors here — let the plugin drive them. User instructions in this file always override plugin behavior.
+1. **DO NOT WRITE TESTS.** No Playwright tests. No Vitest tests. No test files. No test iterations. The game has 1,111+ tests already — that's enough. Every iteration must produce **game code, assets, or bug fixes**. If you catch yourself writing a `.test.js` file or a `.spec.js` file, STOP and build a feature instead.
+2. **BUILD toward the vision.** Every iteration must move the game closer to the North Star (see below). Read `tasks/status.md` before each session to know what's done and what's needed.
+3. **Self-heal.** If the build breaks, fix it. If a feature you built causes errors, fix them. Don't move on leaving broken code behind. Run `npm run build` to verify before committing.
+4. **Simplicity first.** Minimal code impact. Find root causes, no temporary fixes.
+5. **File size limit: ~400 lines per component.** Extract sub-components to `src/components/<domain>/`, helpers to `src/lib/`. Parent files are thin orchestrators.
+6. **Autonomous bug fixing.** Given a bug report, just fix it. Point at logs/errors, then resolve. Zero hand-holding.
+7. **Always signal completion.** End every response with `--- Response complete ---`.
+8. **Lessons file.** After ANY correction from the user, update `tasks/lessons.md` with the pattern. Review at session start.
+
+### What an iteration looks like
+1. Read `tasks/status.md` and `tasks/todo.md` — understand current state
+2. Read `tasks/lessons.md` — don't repeat past mistakes
+3. Pick the highest-priority incomplete work (feature, fix, or asset)
+4. Build it in source code (`src/`, `public/`, `scripts/`)
+5. Run `npm run build` — verify it compiles
+6. Commit and push
+7. Update `tasks/status.md` with what you built
+8. Move to the next item
+
+### What NOT to do
+- Do NOT write tests (Playwright, Vitest, or any other test framework)
+- Do NOT refactor working code unless it's blocking a feature
+- Do NOT add documentation files unless asked
+- Do NOT spend iterations on tooling, CI, or infrastructure
+- Do NOT run `npx playwright` or `npx vitest` — just build the game
 
 ## What This Project Is
 

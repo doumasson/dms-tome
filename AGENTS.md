@@ -1,7 +1,9 @@
-# DM's Tome — AGENTS.md (Codex / Multi-Agent Context)
+# DungeonMind — AGENTS.md (Codex / Multi-Agent Context)
+
+> **CRITICAL: DO NOT WRITE TESTS.** No Playwright, no Vitest, no test files. Build game features, assets, and fixes ONLY. See CLAUDE.md for full rules.
 
 ## What This Project Is
-A browser-based D&D 5e multiplayer RPG where the AI is the Dungeon Master. Players explore a PixiJS tilemap world, fight enemies in turn-based combat, interact with AI-powered NPCs, and progress through procedurally generated campaigns.
+A browser-based D&D 5e multiplayer RPG where the AI is The Narrator. Players explore a PixiJS tilemap world, fight enemies in turn-based combat, interact with AI-powered NPCs, and progress through procedurally generated campaigns. The product name is **DungeonMind**. The AI is called **The Narrator** (never "Dungeon Master" or "DM" in user-facing text).
 
 ## Tech Stack
 - React + Vite, Zustand (client state)

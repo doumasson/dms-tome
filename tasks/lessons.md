@@ -1,5 +1,12 @@
 # Lessons Learned
 
+## NEVER Write Tests — Build Game Code Instead
+**Pattern:** Agent spends entire iterations writing Playwright or Vitest test files instead of building game features, assets, or fixes. 50 iterations produced 1,111 tests but left real gameplay polish and missing features untouched.
+
+**Rule:** NEVER create `.test.js` or `.spec.js` files. NEVER run `npx playwright` or `npx vitest`. The test suite is complete. Every iteration must produce game code in `src/`, assets in `public/`, or fixes to existing code. If you're about to write a test, STOP and ask: "What feature or fix should I build instead?" Then build that.
+
+**Detection:** If your commit message contains the word "test" and doesn't also contain "fix" or "feature", you've violated this rule.
+
 ## Combat Token Rendering Must Use Encounter State (Not Area Data)
 **Pattern:** `useMemo` for token list reads from `zone.enemies` (static area data) instead of `encounter.combatants` (live combat state). Tokens never visually update during combat.
 

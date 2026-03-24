@@ -1,42 +1,33 @@
-# Plan: Scene Transitions + NPC JSON + Saving Throw Broadcast + Procedural Map
+# Active Work — Agent Priority Queue
 
-## Features
+> Pick the top unchecked item. Build it. Check it off. Move to the next one.
+> **DO NOT WRITE TESTS.** Every iteration = game code, assets, or bug fixes.
 
-### 1. Scene Transitions
-Crossfade between old/new scene images instead of instant swap.
-- Keep prevImageUrl ref; when new image loads → fade old out, new in (~800ms)
-- Two absolutely-positioned img layers (old z:0, new z:1), SceneTitleCard stays z:2
-- Files: ScenePanel.jsx only
+## Priority 1: Polish & Fix What's Built
+- [ ] Run `npm run build` — fix any build errors or warnings
+- [ ] Audit all components over 400 lines — split oversized files (CharacterSheet.jsx 1168 lines, CreateCampaign.jsx 1019 lines, CombatPhase.jsx 908 lines, useCombatActions.js 1600 lines)
+- [ ] Fix any console errors visible during normal gameplay flow (create campaign → create character → enter game → explore → combat)
+- [ ] Verify multiplayer sync works end-to-end — host and player see the same state
 
-### 2. NPC Defined in Campaign JSON
-Named NPCs as stationary tokens on scene map with individual personalities.
-- Campaign JSON: scene.npcs[{ name, x, y, personality, portrait }] (x/y as 0-1 fractions)
-- Render NPC tokens (colored circle + name initial) on scene
-- Interaction zones at each NPC position; zone prompt includes NPC name + personality for DM context
-- Falls back to existing generic Explore zone if no scene.npcs
-- Files: ScenePanel.jsx + new NpcToken.jsx (~60 lines)
+## Priority 2: Gameplay Feel
+- [ ] Smooth token movement animations (not snapping tile to tile)
+- [ ] Scene image loading — show loading state while Pollinations generates, don't flash blank
+- [ ] Combat feedback — visual hit/miss/damage numbers floating above tokens
+- [ ] Sound effects for combat actions (hit, miss, spell cast, death)
+- [ ] Narrator text should stream in (typewriter effect), not appear all at once
 
-### 3. Saving Throw Broadcast
-When DM rolls saves, all players see results as a narrator message.
-- After rolling in SavingThrowPanel, call broadcastNarratorMessage with formatted results
-- Format: "DEX Save (DC 14) — Goblin: FAIL (8), Orc: PASS (16)"
-- Add onNarrate prop to SavingThrowPanel; CombatPhase passes broadcast + chat add
-- Files: SpellPanels.jsx, CombatPhase.jsx
+## Priority 3: Missing Game Features
+- [ ] Merchant/shop UI improvements — make it feel like a real RPG shop, not a list
+- [ ] Character portrait in-game — show the actual portrait, not just colored circles
+- [ ] Map variety — more curated chunks for different biomes/themes
+- [ ] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.)
+- [ ] Better NPC conversation — longer, more personality-driven dialogue
 
-### 4. Procedural Map Generator (JavaScript)
-Generate dungeon/town layouts that AI DM knows about spatially.
-- BSP algorithm in src/lib/mapGenerator.js → rooms + corridors grid data
-- Text description of map fed into DM system prompt context
-- SVG room outline overlay on scene (DM toggle)
-- NPCs/enemies default to room centers if x/y not specified
-- Files: src/lib/mapGenerator.js (new), src/components/MapOverlay.jsx (new)
+## Priority 4: Asset Generation
+- [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
+- [ ] Token/character sprites — generate unique sprites for player classes and common monsters
+- [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets
 
-### 5. Nano Banana Integration
-PENDING — need service URL/API docs from user's brother's account.
-
-## Order
-- [ ] Feature 1: Scene Transitions
-- [ ] Feature 2: NPC tokens
-- [ ] Feature 3: Saving throw broadcast
-- [ ] Feature 4: Procedural map
-- [ ] Commit + push + update CLAUDE.md
+## Blocked
+- [ ] Pitched roof visuals — waiting on slope/edge FA assets
+- [ ] Nano Banana / Deevid integration — waiting on API details
