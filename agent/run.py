@@ -603,16 +603,18 @@ def main():
         build_ok, build_out = project_build()
         log(f"Build: {'OK' if build_ok else 'FAILED'}")
 
-        # Take screenshots if build passes
-        screenshot_desc = "Build failed — fix build first"
-        if build_ok:
-            screenshot_desc = take_screenshots(i)
-
-        # Decide task based on state
+        # Take screenshots every 5th iteration (or first, or after build fix)
+        screenshot_interval = int(CFG.get("screenshot_interval", 5))
+        screenshot_desc = "Screenshots skipped this iteration — focus on building."
         if not build_ok:
+            screenshot_desc = "Build failed — fix build first"
             task_instruction = TASK_BUILD_BROKEN
-        elif "GAME" not in screenshot_desc and "canvas" not in screenshot_desc.lower():
-            task_instruction = TASK_FLOW_BLOCKED
+        elif i == 1 or i % screenshot_interval == 0:
+            screenshot_desc = take_screenshots(i)
+            if "GAME" not in screenshot_desc and "canvas" not in screenshot_desc.lower():
+                task_instruction = TASK_FLOW_BLOCKED
+            else:
+                task_instruction = TASK_PICK_FROM_TODO
         else:
             task_instruction = TASK_PICK_FROM_TODO
 
