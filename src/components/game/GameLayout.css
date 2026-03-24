@@ -25,6 +25,14 @@
 }
 
 
+/* Targeting mode — crosshair cursor during attack/spell targeting */
+.game-layout.targeting-mode .scene-area {
+  cursor: crosshair;
+}
+.game-layout.targeting-mode .scene-area canvas {
+  cursor: crosshair !important;
+}
+
 /* Mobile landscape adjustments */
 @media (max-height: 600px) {
   .narrator-bar {

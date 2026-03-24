@@ -456,7 +456,7 @@ export default function GameV2({ onLeave }) {
   // Early return for zone/character already handled above — proceed with game render
   return (
     <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c' }}>Loading...</div>}>
-      <GameLayout>
+      <GameLayout targeting={!!targetingMode}>
         <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
         <WeatherOverlay />
         <DayNightOverlay />

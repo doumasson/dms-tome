@@ -5,9 +5,9 @@ import './GameLayout.css';
  * The BottomBar (HUD) overlays the bottom with session log, actions, portraits.
  * No separate NarratorBar — chat is in the HUD's SessionLog.
  */
-export default function GameLayout({ children }) {
+export default function GameLayout({ children, targeting }) {
   return (
-    <div className="game-layout">
+    <div className={`game-layout${targeting ? ' targeting-mode' : ''}`}>
       <div className="scene-area">
         {children}
       </div>
