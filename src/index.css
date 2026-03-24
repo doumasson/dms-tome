@@ -453,3 +453,35 @@ textarea {
     margin: 4px;
   }
 }
+
+/* === Override Supabase Auth UI — force dark fantasy theme === */
+[class*="supabase-auth"],
+[class*="sbui-"],
+[class*="auth-widget"],
+.supabase-auth-ui_ui-container,
+[data-supabase-auth-ui] {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Force any iframe or embedded auth to have dark bg */
+iframe[src*="supabase"] {
+  background: var(--bg-primary) !important;
+  color-scheme: dark !important;
+}
+
+/* Catch any white-background containers from third-party auth */
+div[class*="qrCode"],
+div[class*="qr-code"],
+div[class*="QrCode"] {
+  background: var(--bg-secondary) !important;
+  border-radius: var(--radius-md);
+  padding: 8px;
+}
+
+div[class*="qrCode"] canvas,
+div[class*="qr-code"] canvas,
+div[class*="QrCode"] canvas {
+  border-radius: var(--radius-sm);
+}

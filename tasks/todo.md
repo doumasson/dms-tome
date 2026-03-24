@@ -35,7 +35,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [ ] Verify the shop works — buy/sell items
 
 ### UI Polish
-- [ ] Every screen matches dark fantasy theme per DESIGN RULES
-- [ ] No white backgrounds, no unstyled default elements
+- [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
+- [x] No white backgrounds, no unstyled default elements — forced dark theme on QR code containers and auth widgets
 - [ ] All text readable — proper contrast, proper sizing
 - [ ] Mobile-friendly — 44px tap targets, works at 375px landscape
