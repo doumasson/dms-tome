@@ -149,6 +149,29 @@ export function useGameEffects({
     }
   }, [myCharacter?.xp, myCharacter?.level, setShowLevelUp])
 
+  // Watch for story milestones being achieved — trigger cinematic when a storyFlag matches a milestone
+  const storyFlags = useStore(s => s.storyFlags)
+  const setActiveCutscene = useStore(s => s.setActiveCutscene)
+  const triggeredMilestonesRef = useRef(new Set())
+  useEffect(() => {
+    if (!campaign?.storyMilestones?.length || !storyFlags?.size) return
+    for (const milestone of campaign.storyMilestones) {
+      const flagName = typeof milestone === 'string' ? milestone : milestone?.name
+      if (!flagName || triggeredMilestonesRef.current.has(flagName)) continue
+      if (storyFlags.has(flagName)) {
+        triggeredMilestonesRef.current.add(flagName)
+        // Trigger cinematic for this milestone
+        setActiveCutscene({
+          title: flagName,
+          text: typeof milestone === 'object' ? milestone.description : `The party has reached a milestone: ${flagName}`,
+          type: 'milestone',
+        })
+        addNarratorMessage({ role: 'dm', speaker: 'The Narrator', text: `Story milestone achieved: ${flagName}` })
+        break // one milestone per render cycle
+      }
+    }
+  }, [storyFlags, campaign?.storyMilestones])
+
   // Show session resume on first load if resuming campaign
   useEffect(() => {
     if (myCharacter && zone && campaign && !sessionResumeShownRef.current && !inCombat) {
