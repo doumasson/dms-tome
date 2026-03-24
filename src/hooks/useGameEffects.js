@@ -295,16 +295,12 @@ export function useGameEffects({
   // Load API key from env var / localStorage / Supabase on mount
   useEffect(() => {
     const campaignId = campaign?.id || useStore.getState().activeCampaign?.id
-    if (!sessionApiKey) {
-      loadDefaultApiKey().then(defaultKey => {
-        if (defaultKey) {
-          useStore.getState().setSessionApiKey(defaultKey)
-          setApiKeyLoaded(true)
-          if (isDM && campaignId) broadcastEncounterAction({ type: 'api-key-sync' })
-        }
-      })
-    }
-    if (!sessionApiKey && user?.id) {
+
+    // If we already have a key, mark loaded and bail
+    if (sessionApiKey) { setApiKeyLoaded(true); return }
+
+    // Try local key first (synchronous)
+    if (user?.id) {
       const localKey = getClaudeApiKey(user.id)
       if (localKey) {
         useStore.getState().setSessionApiKey(localKey)
@@ -313,26 +309,29 @@ export function useGameEffects({
         return
       }
     }
-    if (!campaignId || !user?.id) {
-      if (sessionApiKey) setApiKeyLoaded(true)
-      return
-    }
-    if (isDM) {
-      loadApiKeyFromSupabase(campaignId, user.id).then(key => {
-        if (key) useStore.getState().setSessionApiKey(key)
+
+    // Primary path: load platform default key, then fall back to campaign/broadcast
+    loadDefaultApiKey().then(async (defaultKey) => {
+      if (defaultKey) {
+        useStore.getState().setSessionApiKey(defaultKey)
         setApiKeyLoaded(true)
-      }).catch(() => setApiKeyLoaded(true))
-    } else {
-      broadcastEncounterAction({ type: 'request-api-key' })
-      const warningTimer = setTimeout(() => {
-        addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Waiting for DM to share API key...' })
-      }, 5000)
-      const timer = setTimeout(() => setApiKeyLoaded(true), 15000)
-      const unsub = useStore.subscribe((state) => {
-        if (state.sessionApiKey) { clearTimeout(warningTimer); clearTimeout(timer); setApiKeyLoaded(true) }
-      })
-      return () => { clearTimeout(warningTimer); clearTimeout(timer); unsub() }
-    }
+        if (isDM && campaignId) broadcastEncounterAction({ type: 'api-key-sync' })
+        return
+      }
+      // No platform default — try campaign-specific key (DM) or request from DM (player)
+      if (!campaignId || !user?.id) { setApiKeyLoaded(true); return }
+      if (isDM) {
+        try {
+          const key = await loadApiKeyFromSupabase(campaignId, user.id)
+          if (key) useStore.getState().setSessionApiKey(key)
+        } catch {}
+        setApiKeyLoaded(true)
+      } else {
+        // Non-DM: request key from DM via broadcast, with timeout fallback
+        broadcastEncounterAction({ type: 'request-api-key' })
+        setApiKeyLoaded(true) // Don't block non-DM players with ApiKeyGate
+      }
+    }).catch(() => setApiKeyLoaded(true))
   }, [campaign?.id, user?.id, isDM, sessionApiKey, addNarratorMessage])
 
   // World load timeout
