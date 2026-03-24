@@ -15,6 +15,7 @@ import BattleMap, { buildTypeIndex } from './BattleMap';
 import TurnAnnouncement from '../TurnAnnouncement';
 import CombatantRow from './CombatantRow';
 import AttackPanel from './AttackPanel';
+import FloatingDamageNumber from './FloatingDamageNumber';
 import { SavingThrowPanel, AoEPanel, ConcentratePanel, SpellSelectPanel } from './SpellPanels';
 import { btn, apStyle, MAP_W, MAP_H, CELL_PX } from './combatStyles';
 
@@ -39,6 +40,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const [showLoot, setShowLoot] = useState(false);
   const [activeSpell, setActiveSpell] = useState(null);
   const [mobileTab, setMobileTab] = useState('battle'); // 'party' | 'battle' | 'actions'
+  const [floatingNumbers, setFloatingNumbers] = useState([]); // { id, x, y, value, type, time }
   const logRef = useRef();
   const winWidth = useWindowWidth();
   const isMobile = winWidth < 640;
@@ -71,6 +73,35 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = 0;
   }, [log.length]);
+
+  // Clean up old floating numbers after animation completes
+  useEffect(() => {
+    if (floatingNumbers.length === 0) return;
+    const timer = setTimeout(() => {
+      const now = Date.now();
+      setFloatingNumbers(prev => prev.filter(f => now - f.time < 1100)); // 1000ms animation + 100ms buffer
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [floatingNumbers]);
+
+  function addFloatingNumber(combatantId, value, type = 'damage') {
+    const combatant = combatants.find(c => c.id === combatantId);
+    if (!combatant || !combatant.position) return;
+
+    // Convert grid position to pixel position on the battle map
+    const x = combatant.position.x * cellPx + cellPx / 2;
+    const y = combatant.position.y * cellPx + cellPx / 2;
+
+    const floatingNum = {
+      id: uuidv4(),
+      x,
+      y,
+      value,
+      type,
+      time: Date.now(),
+    };
+    setFloatingNumbers(prev => [...prev, floatingNum]);
+  }
 
   // Auto-trigger AI enemy turns
   useEffect(() => {
@@ -170,12 +201,26 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   }
 
   function handleHpChange(id, delta) {
-    if (delta < 0) onDamage(id, -delta);
-    else onHeal(id, delta);
+    if (delta < 0) {
+      const damage = -delta;
+      onDamage(id, damage);
+      addFloatingNumber(id, damage, 'damage');
+    } else {
+      onHeal(id, delta);
+      addFloatingNumber(id, delta, 'heal');
+    }
   }
 
   function handleAttackResolve(targetId, damage, logEntry) {
-    if (targetId) onDamage(targetId, damage);
+    if (targetId) {
+      onDamage(targetId, damage);
+      const hit = logEntry.includes('HIT') || logEntry.includes('hit') || damage > 0;
+      if (hit && damage > 0) {
+        addFloatingNumber(targetId, damage, 'damage');
+      } else if (!hit) {
+        addFloatingNumber(targetId, 0, 'miss');
+      }
+    }
     onLog(logEntry);
     // Narrate the attack result (fire-and-forget)
     if (activeCombatant && sessionApiKey) {
@@ -187,7 +232,10 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   }
 
   function handleAoEApply(applications, total, dmgType) {
-    applications.forEach(({ id, amount }) => onDamage(id, amount));
+    applications.forEach(({ id, amount }) => {
+      onDamage(id, amount);
+      addFloatingNumber(id, amount, 'damage');
+    });
     const summary = applications
       .map(({ id, amount }) => {
         const c = combatants.find(x => x.id === id);
@@ -581,6 +629,12 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           <div style={{ position: 'relative', display: 'inline-block' }}>
             <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
             <SpellEffectLayer effects={activeEffects} cellPx={cellPx} mapW={MAP_W} mapH={MAP_H} />
+            {/* Floating damage/heal numbers */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+              {floatingNumbers.map(fn => (
+                <FloatingDamageNumber key={fn.id} x={fn.x} y={fn.y} value={fn.value} type={fn.type} duration={1000} />
+              ))}
+            </div>
           </div>
           <TurnAnnouncement
             name={activeCombatant?.name}
@@ -746,6 +800,12 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           <div style={{ position: 'relative', display: 'inline-block' }}>
             <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
             <SpellEffectLayer effects={activeEffects} cellPx={cellPx} mapW={MAP_W} mapH={MAP_H} />
+            {/* Floating damage/heal numbers */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+              {floatingNumbers.map(fn => (
+                <FloatingDamageNumber key={fn.id} x={fn.x} y={fn.y} value={fn.value} type={fn.type} duration={1000} />
+              ))}
+            </div>
           </div>
           <TurnAnnouncement
             name={activeCombatant?.name}
