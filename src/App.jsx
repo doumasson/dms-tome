@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { supabase } from './lib/supabase';
-import { setLiveChannel, broadcastApiKeySync } from './lib/liveChannel';
+import { setLiveChannel, setLocalUserId, broadcastApiKeySync } from './lib/liveChannel';
 import { decryptApiKey } from './lib/apiKeyVault';
 import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
@@ -507,8 +507,12 @@ export default function App() {
     });
 
     // AI DM narrator messages (enemy turns, auto-events) → all players
+    // Skip if this message was sent by the local client (prevents duplicates from echo)
     ch.on('broadcast', { event: 'narrator-message' }, ({ payload }) => {
-      if (payload?.text) useStore.getState().addNarratorMessage(payload);
+      if (!payload?.text) return;
+      const myId = useStore.getState().user?.id;
+      if (payload._senderId && payload._senderId === myId) return;
+      useStore.getState().addNarratorMessage(payload);
     });
 
     // Area transition sync (host → players for V2 world map)
@@ -601,6 +605,7 @@ export default function App() {
     ch.subscribe(status => setLiveConnected(status === 'SUBSCRIBED'));
 
     setLiveChannel(ch);
+    setLocalUserId(user?.id || null);
     channelRef.current = ch;
 
     return () => {

@@ -57,7 +57,7 @@
 ### Multiplayer & Sync
 - [x] Token movement broadcast: one player moves → all other players see the token move smoothly. Find and fix.
 - [x] Combat sync: DM client runs enemy AI → damage/conditions broadcast → all clients update HP bars and conditions simultaneously. Find and fix.
-- [ ] Narrator sync: AI narrator message appears for ALL players at the same time, not just the host. Find and fix.
+- [x] Narrator sync: AI narrator message appears for ALL players at the same time, not just the host. Find and fix.
 
 ### Voice & Audio
 - [ ] TTS narration: verify narrator messages are spoken aloud (OpenAI TTS → Pollinations fallback → Web Speech). Find and fix.

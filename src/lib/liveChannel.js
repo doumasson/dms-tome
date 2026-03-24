@@ -1,8 +1,13 @@
 // Module-level singleton — lets DiceTray broadcast without prop drilling
 let _channel = null;
+let _localUserId = null;
 
 export function setLiveChannel(ch) {
   _channel = ch;
+}
+
+export function setLocalUserId(id) {
+  _localUserId = id;
 }
 
 export function broadcastDiceRoll(entry) {
@@ -53,7 +58,8 @@ export function broadcastFogToggle(sceneKey, enabled) {
 
 // Narrator message from DM AI (enemy turns, auto-events) → all players
 export function broadcastNarratorMessage(msg) {
-  _channel?.send({ type: 'broadcast', event: 'narrator-message', payload: msg });
+  // Include _senderId so the receiver can skip its own echoed messages (prevents duplicates)
+  _channel?.send({ type: 'broadcast', event: 'narrator-message', payload: { ...msg, _senderId: _localUserId } });
 }
 
 // DM appended AI-generated continuation scenes → all players
