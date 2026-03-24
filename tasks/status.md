@@ -236,6 +236,7 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] useStore.js split into 6 domain slices (1,784→20 lines orchestrator)
 - [x] GameV2.jsx split into 8 hooks + 2 components (1,430→372 lines)
 - [x] Bundle size reduced 41% via lazy loading (1,671→980 kB)
+- [x] useCombatActions.js refactored — extracted class ability handlers (1600→1204 lines), created `src/lib/classAbilityHandlers.js` (402 lines)
 - 196 tests, 0 failures. Build 458ms.
 
 ### Phase 10: Living World ✅ COMPLETE
