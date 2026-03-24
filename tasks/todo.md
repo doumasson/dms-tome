@@ -19,8 +19,8 @@
 ## Priority 3: Missing Game Features
 - [x] Merchant/shop UI improvements — make it feel like a real RPG shop, not a list (featured items section, rarity glow effects, item counts, hover animations)
 - [x] Character portrait in-game — show the actual portrait, not just colored circles (added portrait generation for enemies)
-- [ ] Map variety — more curated chunks for different biomes/themes
-- [x] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.) (created SpellAnimation component with 6 spell types)
+- [x] Map variety — more curated chunks for different biomes/themes (6 biome templates: mountain, desert, coastal, swamp, graveyard, marketplace)
+- [x] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.) (7 effect types, integrated into CombatPhase with floating damage numbers on spell casts)
 - [ ] Better NPC conversation — longer, more personality-driven dialogue
 
 ## Priority 4: Asset Generation

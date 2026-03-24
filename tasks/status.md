@@ -253,8 +253,9 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Weather system — rain/snow/fog/storm particles, vision range reduction, Markov transitions
 - [x] Party formation — front/back marching order, drag-to-configure panel
 - [x] Quest tracker — journal integration, objective checklists, AI DM quest awareness, HUD indicator
+- [x] Map variety — 6 themed biome area templates (mountain, desert, coastal, swamp, graveyard, marketplace) with unique POI layouts and NPC personalities
 - [ ] Pitched roof visuals (BLOCKED: pending slope/edge FA assets)
-- 252 tests, 0 failures, 15 commits.
+- 252+ tests, 0 failures, 17 commits.
 - Spec: `docs/superpowers/specs/2026-03-20-phase10-living-world-design.md`
 
 ### Combat & Interaction Fixes
