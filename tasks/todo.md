@@ -71,10 +71,10 @@
 - [x] CharacterSheet.jsx
 - [x] LootScreen.jsx
 - [x] GameOverModal.jsx
-- [ ] BottomBar.jsx (HUD)
-- [ ] CombatActionBar.jsx
-- [ ] ShopPanel.jsx
-- [ ] RestModal.jsx
+- [x] BottomBar.jsx (HUD)
+- [x] CombatActionBar.jsx
+- [x] ShopPanel.jsx
+- [x] RestModal.jsx
 - [ ] LoginPage.jsx
 - [ ] CampaignSelect.jsx
 
