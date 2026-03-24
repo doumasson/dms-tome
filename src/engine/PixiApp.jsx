@@ -402,7 +402,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
     // Add a marker for each revealed trap
     for (const trap of traps) {
-      if (!trap.revealed || trap.triggered) continue
+      if (!trap.position || !trap.revealed || trap.triggered) continue
       const marker = new PIXI.Graphics()
       const px = trap.position.x * tileSize
       const py = trap.position.y * tileSize

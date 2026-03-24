@@ -213,6 +213,7 @@ export default function GameV2({ onLeave }) {
   // --- Major game effects (combat, level-up, session resume, encounters, API key loading, etc.) ---
   const {
     apiKeyLoaded: effectsApiKeyLoaded,
+    setApiKeyLoaded,
     worldLoadError: effectsWorldLoadError,
     handleChatRef: effectsHandleChatRef,
     handleInteractRef: effectsHandleInteractRef,

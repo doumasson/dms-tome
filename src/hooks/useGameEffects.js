@@ -355,6 +355,7 @@ export function useGameEffects({
 
   return {
     apiKeyLoaded,
+    setApiKeyLoaded,
     worldLoadError,
     handleChatRef,
     handleInteractRef,

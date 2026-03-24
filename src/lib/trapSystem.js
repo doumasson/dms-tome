@@ -22,7 +22,7 @@ export function canDetectTrap(passivePerception, trapDC) {
  * @returns {{ triggered: boolean, trap: object }}
  */
 export function checkTrapTrigger(trap, playerPos) {
-  if (trap.triggered) {
+  if (!trap?.position || trap.triggered) {
     return { triggered: false, trap }
   }
 

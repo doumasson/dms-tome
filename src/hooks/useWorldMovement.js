@@ -58,7 +58,7 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
     }
     const traps = _z?.traps || []
     for (const trap of traps) {
-      if (trap.triggered || trap.revealed) continue
+      if (!trap.position || trap.triggered || trap.revealed) continue
       const dist = Math.max(Math.abs(newPos.x - trap.position.x), Math.abs(newPos.y - trap.position.y))
       const pp = getPassivePerception(_c)
       if (dist <= 2 && canDetectTrap(pp, trap.dc)) {
