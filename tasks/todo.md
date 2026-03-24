@@ -32,7 +32,7 @@
 ## Priority 5: Atmosphere & Immersion
 - [x] Ambient background music — procedural Web Audio API drone/pad moods (exploration, combat, mystery, tavern, danger), auto-switches on combat state, HUD toggle + volume control, localStorage persistence
 - [x] Day/night visual cycle — DayNightOverlay component with smooth hour-based tint interpolation (dawn golden, dusk orange, night deep blue), TimeDisplay clock in HUD showing time-of-day icon + formatted time
-- [ ] Weather effects — rain/snow/fog particle overlay on scenes
+- [x] Weather effects — Canvas2D particle overlay for rain, heavy_rain, storm, snow, fog, ash; reads from store weather system with automatic transitions; integrated into GameV2
 - [ ] Ambient sound effects — footsteps, door creaks, torch crackle during exploration
 
 ## Priority 6: Asset Generation (blocked — needs external image API)
