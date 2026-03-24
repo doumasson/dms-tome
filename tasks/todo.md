@@ -30,7 +30,7 @@
 - [x] KeyboardHelp overlay — parchment scroll with curled edges, filigree corners, organized columns, ornate kbd keys
 - [x] LoadingTips — dark vignette backdrop, ornate SVG bars, Cinzel Decorative label, Crimson Text tip
 - [x] AutoSaveIndicator — SVG rune spinner, checkmark/X states, subtle HUD glow, Cinzel text
-- [ ] XP bar — ornate progress bar with level badge, not a plain rectangle
+- [x] XP bar — SVG shield level badge, ornate bar with notches/end caps, gold shimmer animation
 - [ ] Encounter difficulty badge — styled like a seal/sigil
 - [ ] Minimap — ornate border frame, parchment background, compass rose
 - [ ] Bestiary — style as a leather-bound monster manual

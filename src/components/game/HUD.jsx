@@ -186,36 +186,134 @@ function SessionTimer() {
   );
 }
 
+/* PLACEHOLDER ART: needs real dark fantasy assets for production */
 function XpBar({ character }) {
   if (!character) return null;
   const xp = character.xp ?? 0;
   const level = character.level ?? 1;
-  if (level >= 20) {
-    return (
-      <div className="hud-section hud-xp">
-        <div className="xp-label">Lv {level}</div>
-        <div className="xp-text" style={{ color: '#ffd700' }}>MAX</div>
-      </div>
-    );
-  }
-  const currentLevelXp = xpForLevel(level);
-  const nextLevelXp = xpForLevel(level + 1);
+  const isMax = level >= 20;
+  const currentLevelXp = isMax ? 0 : xpForLevel(level);
+  const nextLevelXp = isMax ? 0 : xpForLevel(level + 1);
   const xpIntoLevel = xp - currentLevelXp;
   const xpNeeded = nextLevelXp - currentLevelXp;
-  const pct = xpNeeded > 0 ? Math.max(0, Math.min(1, xpIntoLevel / xpNeeded)) : 1;
+  const pct = isMax ? 1 : (xpNeeded > 0 ? Math.max(0, Math.min(1, xpIntoLevel / xpNeeded)) : 1);
 
   return (
-    <div className="hud-section hud-xp">
-      <div className="xp-header">
-        <span className="xp-label">Lv {level}</span>
-        <span className="xp-text">{xp.toLocaleString()} / {nextLevelXp.toLocaleString()} XP</span>
+    <div style={xpS.wrap}>
+      {/* Ornate level badge */}
+      <div style={xpS.badge}>
+        <svg width="32" height="32" viewBox="0 0 32 32" style={xpS.badgeSvg}>
+          {/* Shield shape */}
+          <path d="M16,2 L28,8 L28,18 Q28,26 16,30 Q4,26 4,18 L4,8 Z"
+            fill="rgba(16,12,6,0.95)" stroke="#d4af37" strokeWidth="1.2" />
+          <path d="M16,4 L26,9 L26,17.5 Q26,24.5 16,28 Q6,24.5 6,17.5 L6,9 Z"
+            fill="none" stroke="rgba(212,175,55,0.2)" strokeWidth="0.6" />
+        </svg>
+        <span style={xpS.badgeText}>{level}</span>
       </div>
-      <div className="xp-bar-track">
-        <div className="xp-bar-fill" style={{ width: `${pct * 100}%` }} />
+
+      {/* Bar area */}
+      <div style={xpS.barArea}>
+        {/* XP text */}
+        <div style={xpS.xpHeader}>
+          <span style={xpS.xpLabelText}>Level {level}</span>
+          <span style={xpS.xpAmount}>
+            {isMax ? 'MAX' : `${xpIntoLevel.toLocaleString()} / ${xpNeeded.toLocaleString()}`}
+          </span>
+        </div>
+
+        {/* Ornate bar track */}
+        <div style={xpS.track}>
+          {/* Fill */}
+          <div style={{ ...xpS.fill, width: `${pct * 100}%` }}>
+            {/* Shimmer effect */}
+            <div style={xpS.shimmer} />
+          </div>
+          {/* Notch marks at 25%, 50%, 75% */}
+          <div style={{ ...xpS.notch, left: '25%' }} />
+          <div style={{ ...xpS.notch, left: '50%' }} />
+          <div style={{ ...xpS.notch, left: '75%' }} />
+          {/* End caps */}
+          <div style={xpS.capLeft} />
+          <div style={xpS.capRight} />
+        </div>
       </div>
+
+      <style>{`
+        @keyframes xpShimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(200%); }
+        }
+      `}</style>
     </div>
   );
 }
+
+const xpS = {
+  wrap: {
+    display: 'flex', alignItems: 'center', gap: 4, minWidth: 110,
+  },
+  badge: {
+    position: 'relative', width: 32, height: 32, flexShrink: 0,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    filter: 'drop-shadow(0 0 4px rgba(212,175,55,0.25))',
+  },
+  badgeSvg: { position: 'absolute', inset: 0 },
+  badgeText: {
+    position: 'relative', zIndex: 1,
+    fontFamily: '"Cinzel", serif', fontSize: '0.7rem',
+    fontWeight: 700, color: '#d4af37',
+    textShadow: '0 0 5px rgba(212,175,55,0.4)',
+    marginTop: 1,
+  },
+  barArea: { flex: 1, minWidth: 0 },
+  xpHeader: {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+    marginBottom: 2, gap: 6,
+  },
+  xpLabelText: {
+    fontFamily: '"Cinzel", serif', fontSize: '0.5rem',
+    fontWeight: 700, color: '#d4af37', letterSpacing: '0.06em',
+  },
+  xpAmount: {
+    fontFamily: '"Crimson Text", Georgia, serif', fontSize: '0.48rem',
+    color: 'rgba(212,175,55,0.5)', fontWeight: 600,
+  },
+  track: {
+    position: 'relative', height: 7,
+    background: 'linear-gradient(180deg, rgba(0,0,0,0.5), rgba(20,15,8,0.6))',
+    border: '1px solid rgba(212,175,55,0.25)',
+    borderRadius: 3, overflow: 'hidden',
+    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.5)',
+  },
+  fill: {
+    position: 'absolute', top: 0, left: 0, bottom: 0,
+    background: 'linear-gradient(180deg, #e8c44a 0%, #c9a84c 40%, #a08030 100%)',
+    borderRadius: 2,
+    transition: 'width 0.6s ease',
+    boxShadow: '0 0 6px rgba(212,175,55,0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+    overflow: 'hidden',
+  },
+  shimmer: {
+    position: 'absolute', top: 0, left: 0, width: '40%', height: '100%',
+    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)',
+    animation: 'xpShimmer 2.5s ease-in-out infinite',
+  },
+  notch: {
+    position: 'absolute', top: 0, bottom: 0, width: 1,
+    background: 'rgba(0,0,0,0.3)', zIndex: 2,
+  },
+  capLeft: {
+    position: 'absolute', top: -1, left: -1, bottom: -1, width: 3,
+    background: 'linear-gradient(180deg, rgba(212,175,55,0.3), rgba(160,128,48,0.2))',
+    borderRadius: '3px 0 0 3px', zIndex: 3,
+  },
+  capRight: {
+    position: 'absolute', top: -1, right: -1, bottom: -1, width: 3,
+    background: 'linear-gradient(180deg, rgba(212,175,55,0.3), rgba(160,128,48,0.2))',
+    borderRadius: '0 3px 3px 0', zIndex: 3,
+  },
+};
 
 function MusicToggle() {
   const [enabled, setEnabled] = useState(() => localStorage.getItem('dm-music') !== 'off');
