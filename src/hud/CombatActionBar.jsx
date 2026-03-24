@@ -99,11 +99,13 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   function handleAction(type, payload) {
     playStoneClick()
     if (type === 'dash') {
-      dashAction()
+      dashAction(active.id)
       return
     }
     if (type === 'dodge') {
-      useAction()
+      useAction(active.id)
+      useStore.getState().addEncounterCondition(active.id, 'Dodging')
+      useStore.getState().addEncounterLog(`${active.name} takes the Dodge action.`)
       return
     }
     onAction?.(type, payload)
