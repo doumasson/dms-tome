@@ -41,7 +41,7 @@
 > Every screen must be styled per DESIGN RULES. Fix any bugs found.
 > Read CLAUDE.md "Business Model" section — NO API key gate for normal users.
 
-- [ ] Campaign creation flow — Create New Campaign, every step styled and working. AI generation uses platform default API key from app_config table.
+- [x] Campaign creation flow — ornate card with filigree corners, numbered step indicators, platform default API key, all 4 steps styled
 - [ ] Character creation flow — full builder: race, class, abilities, spells, identity. Style every step.
 - [ ] Verify: new player sees NO ApiKeyGate (platform provides default key)
 - [ ] Combat initiation — exploration to combat works end to end

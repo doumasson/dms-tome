@@ -484,17 +484,57 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   return (
     <div style={styles.page}>
       <div style={styles.card}>
+        {/* Corner filigree accents */}
+        <svg width="24" height="24" viewBox="0 0 24 24" style={{ position: 'absolute', top: 8, left: 8, pointerEvents: 'none' }}>
+          <path d="M0,0 Q12,1 22,22" stroke="#d4af37" strokeWidth="1" fill="none" opacity="0.3" />
+          <circle cx="2" cy="2" r="1.5" fill="#d4af37" opacity="0.35" />
+        </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" style={{ position: 'absolute', top: 8, right: 8, pointerEvents: 'none', transform: 'scaleX(-1)' }}>
+          <path d="M0,0 Q12,1 22,22" stroke="#d4af37" strokeWidth="1" fill="none" opacity="0.3" />
+          <circle cx="2" cy="2" r="1.5" fill="#d4af37" opacity="0.35" />
+        </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" style={{ position: 'absolute', bottom: 8, left: 8, pointerEvents: 'none', transform: 'scaleY(-1)' }}>
+          <path d="M0,0 Q12,1 22,22" stroke="#d4af37" strokeWidth="1" fill="none" opacity="0.3" />
+          <circle cx="2" cy="2" r="1.5" fill="#d4af37" opacity="0.35" />
+        </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" style={{ position: 'absolute', bottom: 8, right: 8, pointerEvents: 'none', transform: 'scale(-1,-1)' }}>
+          <path d="M0,0 Q12,1 22,22" stroke="#d4af37" strokeWidth="1" fill="none" opacity="0.3" />
+          <circle cx="2" cy="2" r="1.5" fill="#d4af37" opacity="0.35" />
+        </svg>
+
         {/* Back button */}
         <button onClick={step > 1 && step < 4 ? () => setStep(s => s - 1) : onBack} style={styles.backBtn}>
           ← {step > 1 && step < 4 ? 'Back' : 'All Campaigns'}
         </button>
 
-        {/* Progress — 3 dots (steps 1, 2, 3 don't show generating/success) */}
+        {/* Progress — ornate step indicators */}
         {step <= 2 && (
           <div style={styles.progress}>
-            {[1,2,3].map(s => (
-              <div key={s} style={{ ...styles.dot, background: s <= step ? 'var(--gold)' : 'var(--border-color)' }} />
+            {[
+              { n: 1, label: 'Concept' },
+              { n: 2, label: 'Details' },
+              { n: 3, label: 'Forge' },
+            ].map(({ n, label }) => (
+              <div key={n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: n <= step ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
+                  border: `1.5px solid ${n <= step ? '#d4af37' : 'rgba(100,80,50,0.3)'}`,
+                  fontFamily: '"Cinzel", serif', fontSize: '0.6rem', fontWeight: 700,
+                  color: n <= step ? '#d4af37' : 'rgba(100,80,50,0.4)',
+                  boxShadow: n <= step ? '0 0 8px rgba(212,175,55,0.15)' : 'none',
+                  transition: 'all 0.3s',
+                }}>{n}</div>
+                <span style={{
+                  fontFamily: '"Cinzel", serif', fontSize: '0.42rem',
+                  color: n <= step ? 'rgba(212,175,55,0.6)' : 'rgba(100,80,50,0.3)',
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                }}>{label}</span>
+              </div>
             ))}
+            {/* Connecting lines between dots */}
+            <div style={{ position: 'absolute', top: 14, left: '25%', right: '25%', height: 1, background: `linear-gradient(90deg, ${step >= 2 ? 'rgba(212,175,55,0.3)' : 'rgba(100,80,50,0.15)'}, ${step >= 3 ? 'rgba(212,175,55,0.3)' : 'rgba(100,80,50,0.15)'})`, zIndex: 0 }} />
           </div>
         )}
 
@@ -700,13 +740,22 @@ const styles = {
     boxSizing: 'border-box',
   },
   card: {
-    background: 'linear-gradient(180deg, #211408 0%, #180f08 100%)',
-    border: '1px solid var(--border-gold)',
-    borderRadius: 16,
+    position: 'relative',
+    background: `
+      radial-gradient(ellipse at 30% 20%, rgba(50,35,12,0.25) 0%, transparent 50%),
+      linear-gradient(170deg, #241a0c 0%, #1a1208 40%, #14100a 100%)
+    `,
+    border: '2px solid rgba(212,175,55,0.35)',
+    borderRadius: 14,
     padding: '36px 40px',
     maxWidth: 620,
     width: '100%',
-    boxShadow: '0 8px 40px rgba(0,0,0,0.7)',
+    boxShadow: `
+      0 12px 48px rgba(0,0,0,0.8),
+      0 0 24px rgba(212,175,55,0.04),
+      inset 0 1px 0 rgba(212,175,55,0.1),
+      inset 0 0 30px rgba(0,0,0,0.2)
+    `,
   },
   backBtn: {
     background: 'transparent',
@@ -719,8 +768,10 @@ const styles = {
     display: 'block',
   },
   progress: {
+    position: 'relative',
     display: 'flex',
-    gap: 8,
+    justifyContent: 'center',
+    gap: 32,
     marginBottom: 28,
   },
   dot: {
