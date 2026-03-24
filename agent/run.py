@@ -274,34 +274,88 @@ def take_screenshots(iteration):
     shot_dir.mkdir(exist_ok=True)
 
     # Write a temporary node script — agent never sees or edits this
+    # This navigates the FULL flow: login → dashboard → campaign → character → game
     script_content = """
 const { chromium } = require('%PLAYWRIGHT%');
+
+async function snap(page, name, dir, result) {
+  await page.screenshot({ path: dir + '/' + name + '.png' });
+  result.shots.push(name + '.png');
+}
+
+async function getPageInfo(page) {
+  const headings = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('h1,h2,h3'))
+      .map(e => e.textContent.trim()).filter(t => t).slice(0, 10)
+  );
+  const buttons = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('button'))
+      .map(e => e.textContent.trim()).filter(t => t && t.length < 40).slice(0, 20)
+  );
+  const errors = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('.error,[class*="error"],[class*="Error"]'))
+      .map(e => e.textContent.trim()).filter(t => t && t.length < 200)
+  );
+  const canvas = await page.$('canvas');
+  return { headings, buttons, errors, hasCanvas: !!canvas };
+}
+
 (async () => {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   await page.setViewportSize({ width: 1280, height: 800 });
-  const result = { shots: [], errors: [], headings: [], buttons: [], url: '', title: '' };
+  const result = { shots: [], screens: [], errors: [], finalScreen: 'unknown', hasCanvas: false };
+  const dir = '%SHOTDIR%';
   try {
-    await page.goto('http://localhost:%PORT%', { waitUntil: 'networkidle', timeout: 20000 });
+    // Step 1: Load app (auto-login via env vars)
+    await page.goto('http://localhost:%PORT%', { waitUntil: 'networkidle', timeout: 25000 });
     await page.waitForTimeout(3000);
-    await page.screenshot({ path: '%SHOTDIR%/01-landing.png' });
-    result.shots.push('01-landing.png');
-    result.url = page.url();
-    result.title = await page.title();
-    result.headings = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('h1,h2,h3'))
-        .map(e => e.textContent.trim()).filter(t => t).slice(0, 10)
-    );
-    result.buttons = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('button'))
-        .map(e => e.textContent.trim()).filter(t => t && t.length < 40).slice(0, 20)
-    );
-    const visErrors = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('.error,[class*="error"],[class*="Error"]'))
-        .map(e => e.textContent.trim()).filter(t => t && t.length < 200)
-    );
-    result.errors = visErrors;
-  } catch(e) { result.errors.push(e.message); }
+    let info = await getPageInfo(page);
+    await snap(page, '01-after-login', dir, result);
+    result.screens.push({ step: 'login', headings: info.headings, buttons: info.buttons, errors: info.errors });
+
+    // Step 2: Click first campaign card (or any clickable campaign)
+    const campaignCard = await page.$('[class*="campaign" i], [class*="card" i], button:has-text("Play"), button:has-text("Enter"), button:has-text("Continue")');
+    if (campaignCard) {
+      await campaignCard.click();
+      await page.waitForTimeout(3000);
+      info = await getPageInfo(page);
+      await snap(page, '02-after-campaign', dir, result);
+      result.screens.push({ step: 'campaign', headings: info.headings, buttons: info.buttons, errors: info.errors });
+    }
+
+    // Step 3: Click character / play button
+    const charBtn = await page.$('button:has-text("Play"), button:has-text("Select"), button:has-text("Enter"), button:has-text("Start"), [class*="character" i]');
+    if (charBtn) {
+      await charBtn.click();
+      await page.waitForTimeout(4000);
+      info = await getPageInfo(page);
+      await snap(page, '03-after-character', dir, result);
+      result.screens.push({ step: 'character', headings: info.headings, buttons: info.buttons, errors: info.errors });
+    }
+
+    // Step 4: Final state — check for canvas (PixiJS game)
+    await page.waitForTimeout(2000);
+    info = await getPageInfo(page);
+    await snap(page, '04-final', dir, result);
+    result.hasCanvas = info.hasCanvas;
+    result.screens.push({ step: 'final', headings: info.headings, buttons: info.buttons, errors: info.errors, hasCanvas: info.hasCanvas });
+
+    // Determine where we ended up
+    if (info.hasCanvas) {
+      result.finalScreen = 'GAME (PixiJS canvas visible)';
+    } else if (info.buttons.some(b => /play|enter|select|start/i.test(b))) {
+      result.finalScreen = 'CHARACTER SELECT';
+    } else if (info.headings.some(h => /campaign/i.test(h))) {
+      result.finalScreen = 'DASHBOARD';
+    } else {
+      result.finalScreen = 'UNKNOWN - headings: ' + info.headings.join(', ');
+    }
+
+    // Collect all errors across screens
+    result.errors = result.screens.flatMap(s => s.errors || []);
+
+  } catch(e) { result.errors.push('Navigation error: ' + e.message); }
   finally { await browser.close(); }
   console.log(JSON.stringify(result));
 })();
@@ -330,14 +384,17 @@ const { chromium } = require('%PLAYWRIGHT%');
         except Exception:
             return "Screenshot parse failed"
 
-        desc = f"Page title: '{r.get('title', '?')}' URL: {r.get('url', '?')}. "
-        desc += f"Headings: {r.get('headings', [])}. "
-        desc += f"Buttons: {r.get('buttons', [])}. "
-        if r.get("errors"):
-            desc += f"VISIBLE ERRORS: {r['errors']}. "
-        else:
-            desc += "No errors detected. "
-        log(f"  -> {desc[:200]}")
+        desc = f"FINAL SCREEN: {r.get('finalScreen', 'unknown')}. "
+        desc += f"Canvas/game visible: {r.get('hasCanvas', False)}. "
+        screens = r.get('screens', [])
+        for s in screens:
+            desc += f"\n  [{s.get('step', '?')}] headings={s.get('headings', [])} buttons={s.get('buttons', [])[:8]}"
+            if s.get('errors'):
+                desc += f" ERRORS={s['errors']}"
+        all_errors = r.get('errors', [])
+        if all_errors:
+            desc += f"\nALL ERRORS: {all_errors}"
+        log(f"  -> {desc[:300]}")
         return desc
     finally:
         dev_proc.terminate()
@@ -351,35 +408,35 @@ const { chromium } = require('%PLAYWRIGHT%');
 # ─── PROMPTS ───────────────────────────────────────────────────────────────────
 
 SYSTEM_RULES = f"""
-=== {PROJECT_NAME.upper()} BUILD AGENT — ABSOLUTE RULES ===
+=== {PROJECT_NAME.upper()} BUILD AGENT — YOU ARE AN AUTONOMOUS SOFTWARE ENGINEER ===
 
-You are an autonomous build agent for {PROJECT_NAME}. You build features, assets, and fixes.
+You are a senior software engineer building {PROJECT_NAME} autonomously.
+You read the todo list, pick work, write real code, and ship it. Every iteration.
 
-## NEVER DO THESE (violating any = wasted iteration):
-- NEVER write test files (.test.js, .spec.js, .test.py, etc.)
-- NEVER run test commands (playwright, vitest, pytest, jest, etc.)
-- NEVER modify the screenshot/playwright pipeline
-- NEVER spend an iteration on documentation, refactoring, or tooling alone
-- NEVER mark things done in markdown without writing actual code
+## RULES:
+1. Read tasks/todo.md — pick the TOP unchecked item
+2. Read tasks/lessons.md — don't repeat past mistakes
+3. WRITE CODE. Real source files in src/, public/, scripts/
+4. Run `{BUILD_CMD}` — if it fails, fix it
+5. Check off what you completed in tasks/todo.md
+6. Update tasks/status.md when features are done
+7. NEVER write test files. NEVER run test commands.
+8. NEVER spend an iteration just verifying or confirming things work.
+   If the build passes and screenshots show no errors, BUILD THE NEXT FEATURE.
+9. NEVER repeat work from a previous iteration. Check the history.
 
-## ALWAYS DO THESE:
-- Read tasks/todo.md — pick the top unchecked item
-- Read tasks/lessons.md — avoid repeating past mistakes
-- Build it in real source code
-- Run `{BUILD_CMD}` to verify it compiles
-- If the build fails, fix the build errors FIRST
-- Update tasks/status.md when you complete a feature
-- Check off the item in tasks/todo.md when done
+## SCREENSHOTS:
+You get a description of what the app looks like at each screen:
+login → dashboard → campaign → character select → game.
+Use this to understand the current state. If the flow is BLOCKED at a screen
+(e.g. no campaign appears, character select broken), fix THAT first.
+If the game is reachable and working, focus on todo.md features.
+DO NOT modify the screenshot pipeline.
 
-## SCREENSHOTS (read-only visual feedback):
-You will receive a description of what the app looks like in the browser.
-Use this to understand the current state. DO NOT try to fix the screenshot
-pipeline — it is not your responsibility.
-
-## COMPLETION FORMAT — end every response with:
-BUILT: path/to/file (or FIXED: description)
+## COMPLETION FORMAT:
+BUILT: path/to/file
+WHAT: one-line description of what you built
 BUILD: PASS or FAIL
-COMMITTED: yes or no
 --- Response complete ---
 """
 
@@ -423,17 +480,24 @@ note what the error was and what fixed it — this helps you fix it faster next 
 """
 
 TASK_BUILD_BROKEN = """The build is FAILING. Fix the build errors shown above.
-Check the "Known fixes" section — you may have fixed this exact error before.
-Do NOT add features — just make the build pass clean.
-After fixing, note what the error was and what fixed it in tasks/lessons.md."""
+Check "Known fixes" — you may have fixed this before.
+Just make the build pass. Then the next iteration will build features."""
 
-TASK_PICK_FROM_TODO = """Pick the top unchecked item from todo.md above.
-Check "Recent iteration history" to avoid repeating work already done.
-Build it. If the item is too large for one iteration, do the smallest
-meaningful piece and leave the rest for next iteration.
+TASK_FLOW_BLOCKED = """The screenshot shows the app is STUCK and not reaching the game.
+Look at the screen descriptions. Fix whatever is blocking the flow:
+- If stuck on login: check auth / auto-login env vars
+- If stuck on dashboard: ensure test campaign exists and is clickable
+- If stuck on character select: ensure test character exists
+Fix the BLOCKING issue so the game screen is reachable."""
 
-Focus on shipping visible improvements — things a user would notice.
-Use the screenshot description to understand the current state."""
+TASK_PICK_FROM_TODO = """The game is reachable and working. Now BUILD FEATURES.
+
+Pick the TOP unchecked item from todo.md. Do NOT skip items.
+Write real code. Make a visible change a player would notice.
+If the item is big, do the smallest meaningful piece.
+
+DO NOT spend this iteration verifying, confirming, or summarizing.
+WRITE CODE. Ship something."""
 
 
 # ─── MAIN LOOP ─────────────────────────────────────────────────────────────────
@@ -476,8 +540,13 @@ def main():
         if build_ok:
             screenshot_desc = take_screenshots(i)
 
-        # Decide task
-        task_instruction = TASK_BUILD_BROKEN if not build_ok else TASK_PICK_FROM_TODO
+        # Decide task based on state
+        if not build_ok:
+            task_instruction = TASK_BUILD_BROKEN
+        elif "GAME" not in screenshot_desc and "canvas" not in screenshot_desc.lower():
+            task_instruction = TASK_FLOW_BLOCKED
+        else:
+            task_instruction = TASK_PICK_FROM_TODO
 
         # ─── SELF-LEARNING: read from memory DB ───
         lessons = asyncio.run(get_lessons()) or "(none yet)"
