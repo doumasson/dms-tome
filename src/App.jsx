@@ -510,9 +510,12 @@ export default function App() {
     ch.on('broadcast', { event: 'area-transition' }, ({ payload }) => {
       if (!useStore.getState().isDM) {
         const { areaId, entryPoint } = payload;
-        const { activateArea } = useStore.getState();
+        const { activateArea, setPlayerPos } = useStore.getState();
         activateArea(areaId);
-        // entryPoint will be picked up by GameV2 via store change
+        // Apply entry point so non-host players spawn at the correct position
+        if (entryPoint && typeof entryPoint.x === 'number') {
+          setPlayerPos(entryPoint);
+        }
       }
     });
 
