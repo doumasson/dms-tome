@@ -410,24 +410,6 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
             bonusDmgNotes += ` +${hmResult.total} hunter`
           }
 
-          // Bardic Inspiration bonus on attack roll (consume the die)
-          if (active.bardicInspiration && !hit) {
-            const biResult = rollDamage(`1${active.bardicInspiration}`)
-            const newTotal = total + biResult.total
-            if (newTotal >= effectiveAC) {
-              hit = true
-              damage = rollDamage(weapon.damage || '1').total
-              if (isCrit) damage *= 2
-              bonusDmgNotes += ` (Bardic +${biResult.total} turned miss→hit)`
-              // Consume inspiration
-              useStore.setState(state => ({
-                encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
-                  c.id === active.id ? { ...c, bardicInspiration: null } : c
-                ) },
-              }))
-            }
-          }
-
           totalDamageDealt += damage
 
           // Stunning Strike resolution (Monk, on hit, target CON save or Stunned)
@@ -445,6 +427,25 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
             useStore.setState(state => ({
               encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
                 c.id === active.id ? { ...c, stunningStrikeReady: false } : c
+              ) },
+            }))
+          }
+        }
+
+        // Bardic Inspiration: on a miss, add inspiration die to attack roll — may turn it into a hit
+        if (!hit && active.bardicInspiration) {
+          const biResult = rollDamage(`1${active.bardicInspiration}`)
+          const newTotal = total + biResult.total
+          if (newTotal >= effectiveAC) {
+            hit = true
+            damage = rollDamage(weapon.damage || '1').total
+            if (isCrit) damage *= 2
+            totalDamageDealt += damage
+            bonusDmgNotes += ` (Bardic +${biResult.total} turned miss→hit)`
+            // Consume inspiration
+            useStore.setState(state => ({
+              encounter: { ...state.encounter, combatants: state.encounter.combatants.map(c =>
+                c.id === active.id ? { ...c, bardicInspiration: null } : c
               ) },
             }))
           }
