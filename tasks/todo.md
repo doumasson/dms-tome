@@ -42,7 +42,7 @@
 - [x] Stealth/sneaking: Hide action → Stealth check → Hidden condition → approaching enemies undetected → surprise round if successful. Find and fix.
 
 ### Inventory & Equipment
-- [ ] Inventory grid: open CharacterSheet → inventory shows items with spatial grid → drag-and-drop works → weight/encumbrance updates. Find and fix.
+- [x] Inventory grid: open CharacterSheet → inventory shows items with spatial grid → drag-and-drop works → weight/encumbrance updates. Find and fix.
 - [ ] Equipment: equip weapon → AC/attack bonus updates in derived stats → unequip reflects correctly. Find and fix.
 - [ ] Item use in combat: Use Item action → consumable picker → healing potion heals → item consumed from inventory → broadcast to other players. Find and fix.
 - [ ] Loot: defeat enemies → LootScreen appears → gold split → item drops → roll-off for magic items → items added to inventory. Find and fix.

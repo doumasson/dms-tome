@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabase';
 import { computeDerivedStats } from '../lib/derivedStats.js';
 import { triggerLootAnimation } from '../components/game/LootAnimation';
+import { broadcastEncounterAction } from '../lib/liveChannel';
 
 /**
  * Character slice — player-owned characters, equipment, inventory, gold, XP.
@@ -197,14 +198,16 @@ export function createCharacterSlice(set, get) {
         }
         const newHp = Math.min((myCharacter.currentHp || 0) + healed, myCharacter.maxHp || 0);
         changes.currentHp = newHp;
-        // Also update combatant HP if in combat
+        // Also update combatant HP if in combat — use applyEncounterHeal for
+        // proper floating numbers and multiplayer broadcast
         if (encounter.phase !== 'idle') {
-          const combatants = encounter.combatants.map(c =>
-            (c.id === myCharacter.id || c.name === myCharacter.name)
-              ? { ...c, currentHp: Math.min(c.currentHp + healed, c.maxHp) }
-              : c
-          );
-          set(state => ({ encounter: { ...state.encounter, combatants } }));
+          const combatantId = encounter.combatants.find(c =>
+            c.id === myCharacter.id || c.name === myCharacter.name
+          )?.id;
+          if (combatantId) {
+            get().applyEncounterHeal(combatantId, healed);
+            broadcastEncounterAction({ type: 'heal', targetId: combatantId, amount: healed, userId: get().user?.id || 'system' });
+          }
         }
       }
 
