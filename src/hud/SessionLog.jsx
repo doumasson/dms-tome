@@ -162,6 +162,33 @@ export default function SessionLog({ onChat, tab, setTab }) {
           )}
         </div>
         {tab === 'chat' && (
+          <>
+          {!inCombat && (
+            <div style={{ display: 'flex', gap: 3, padding: '2px 6px 0', flexWrap: 'wrap' }}>
+              {[
+                { label: 'Look around', action: 'I look around and describe what I see.' },
+                { label: 'Search', action: 'I search the area for anything useful — hidden items, traps, or clues.' },
+                { label: 'Sneak', action: 'I try to move stealthily, staying in the shadows.' },
+                { label: 'Listen', action: 'I stop and listen carefully for any sounds nearby.' },
+              ].map(qa => (
+                <button
+                  key={qa.label}
+                  type="button"
+                  onClick={() => onChat?.(qa.action)}
+                  style={{
+                    padding: '2px 8px', fontSize: 9, fontFamily: "'Cinzel', serif",
+                    background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)',
+                    color: '#a89060', borderRadius: 3, cursor: 'pointer', minHeight: 0,
+                    letterSpacing: '0.5px', transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={e => { e.target.style.color = '#d4af37'; e.target.style.borderColor = 'rgba(201,168,76,0.5)' }}
+                  onMouseLeave={e => { e.target.style.color = '#a89060'; e.target.style.borderColor = 'rgba(201,168,76,0.2)' }}
+                >
+                  {qa.label}
+                </button>
+              ))}
+            </div>
+          )}
           <form onSubmit={handleChatSubmit} className="hud-chat-form">
             <input
               ref={chatInputRef}
@@ -198,6 +225,7 @@ export default function SessionLog({ onChat, tab, setTab }) {
             )}
             <button type="submit" className="hud-chat-go-btn">GO</button>
           </form>
+          </>
         )}
       </div>
     </div>

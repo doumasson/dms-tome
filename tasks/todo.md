@@ -40,7 +40,8 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Add keyboard shortcut overlay — already built (KeyboardHelp.jsx, press ? to toggle parchment scroll overlay)
 - [x] Improve enemy AI narration — already wired (result.narrative posted as narrator message + broadcast in runEnemyTurn)
 - [x] Add portrait fallback — onError hides broken img, shows styled initial letter in class color with glow
-- [ ] Add combat round counter — display "Round N" in the initiative strip during combat
+- [x] Add combat round counter — already exists in InitiativeStrip (R{round})
+- [x] Add quick action buttons — "Look around", "Search", "Sneak", "Listen" above chat input (exploration only)
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
