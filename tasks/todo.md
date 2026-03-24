@@ -60,7 +60,7 @@
 - [x] Narrator sync: AI narrator message appears for ALL players at the same time, not just the host. Find and fix.
 
 ### Voice & Audio
-- [ ] TTS narration: verify narrator messages are spoken aloud (OpenAI TTS → Pollinations fallback → Web Speech). Find and fix.
+- [x] TTS narration: verify narrator messages are spoken aloud (OpenAI TTS → Pollinations fallback → Web Speech). Find and fix.
 - [ ] Ambient audio: verify music plays for area themes, switches on combat, mute toggle works. Find and fix.
 
 ## Priority 2: UI AUDIT — ONE FILE PER ITERATION

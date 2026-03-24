@@ -5,6 +5,7 @@ import { decryptApiKey } from './lib/apiKeyVault';
 import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
+import { speak } from './lib/tts';
 import { receiveEmote } from './components/game/EmoteSystem';
 import { receivePing } from './components/game/PingSystem';
 import LoginPage from './components/LoginPage';
@@ -513,6 +514,10 @@ export default function App() {
       const myId = useStore.getState().user?.id;
       if (payload._senderId && payload._senderId === myId) return;
       useStore.getState().addNarratorMessage(payload);
+      // TTS: speak DM messages aloud for non-host players
+      if (payload.role === 'dm') {
+        speak(payload.text, null, { voice: payload.npcVoice || 'onyx' });
+      }
     });
 
     // Area transition sync (host → players for V2 world map)
