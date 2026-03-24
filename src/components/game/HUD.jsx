@@ -16,6 +16,7 @@ export default function HUD() {
   const encounter = useStore(s => s.encounter);
   const rollDeathSave = useStore(s => s.rollDeathSave);
   const inCombat = encounter?.phase === 'combat';
+  const [collapsed, setCollapsed] = useState(false);
 
   if (!myCharacter) return null;
 
@@ -48,8 +49,17 @@ export default function HUD() {
   const deathSaves = combatant?.deathSaves || { successes: 0, failures: 0, stable: false };
 
   return (
-    <div className="hud-container">
-      {/* HP Bar */}
+    <div className={`hud-container ${collapsed ? 'hud-collapsed' : ''}`}>
+      {/* Collapse toggle */}
+      <button
+        className="hud-collapse-btn"
+        onClick={() => setCollapsed(c => !c)}
+        title={collapsed ? 'Expand HUD' : 'Collapse HUD'}
+      >
+        {collapsed ? '▶' : '◀'}
+      </button>
+
+      {/* HP Bar — always visible */}
       <div className="hud-section hud-hp">
         <div className="hp-label">HP</div>
         <div className="hp-bar-wrapper">
@@ -74,6 +84,8 @@ export default function HUD() {
         </div>
       </div>
 
+      {/* Collapsible sections */}
+      <div className="hud-collapsible">
       {/* XP Progress Bar */}
       <XpBar character={myCharacter} />
 
@@ -122,6 +134,8 @@ export default function HUD() {
         <SessionTimer />
         <MusicToggle />
       </div>
+
+      </div>{/* end hud-collapsible */}
 
       {/* Death Saves (when dying) */}
       {dying && (

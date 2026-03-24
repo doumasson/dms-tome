@@ -439,3 +439,68 @@
   transition: width 0.5s ease;
   box-shadow: 0 0 4px rgba(255, 215, 0, 0.3);
 }
+
+/* === HUD Collapse Button === */
+.hud-collapse-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  min-height: 22px !important;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: rgba(212, 175, 55, 0.5);
+  font-size: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 0;
+  transition: all 0.2s;
+}
+.hud-collapse-btn:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  color: #d4af37;
+}
+
+/* Collapsible section transition */
+.hud-collapsible {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+  max-height: 500px;
+  opacity: 1;
+}
+
+.hud-collapsed .hud-collapsible {
+  max-height: 0;
+  opacity: 0;
+  gap: 0;
+}
+
+.hud-collapsed {
+  min-width: 120px !important;
+}
+
+/* Auto-collapse on very narrow screens */
+@media (max-width: 480px) {
+  .hud-container {
+    min-width: 120px;
+    padding: 8px;
+    gap: 8px;
+  }
+  .hud-collapse-btn {
+    display: flex;
+  }
+}
+
+@media (min-width: 481px) {
+  .hud-collapse-btn {
+    display: flex;
+  }
+}

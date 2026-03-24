@@ -52,7 +52,7 @@
 - [x] All new components work at 375px landscape — compact HUD, scaled minimap, tighter spacing at max-height:420px
 - [x] All buttons/panels have 44px+ tap targets — enforced in design rules, all buttons minHeight 44px+
 - [x] Drawer/sheet pattern — BottomSheet component: bottom drawer on small screens, centered modal on large, drag handle, slide-up animation
-- [ ] HUD collapses properly on narrow screens
+- [x] HUD collapses properly — toggle button hides XP/spells/conditions/time, HP+AC always visible, animated transition
 
 ## Priority 4: Review & Fix Existing Code
 > Not just new stuff — review OLD components and screens for quality.
