@@ -231,6 +231,18 @@ export default function App() {
         case 'skill-check-result':
           store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })
           break
+        case 'reputation-change':
+          if (payload.faction && typeof payload.delta === 'number') {
+            store.adjustFactionReputation(payload.faction, payload.delta)
+            store.addNarratorMessage({ role: 'system', speaker: 'Reputation', text: `${payload.characterName || 'Party'} ${payload.delta > 0 ? 'gained' : 'lost'} ${Math.abs(payload.delta)} reputation with ${payload.faction}.` })
+          }
+          break
+        case 'quest-accepted':
+          if (payload.quest) {
+            store.addQuest(payload.quest)
+            store.addNarratorMessage({ role: 'system', speaker: 'Quest Added', text: payload.quest.title || 'New quest accepted' })
+          }
+          break
         case 'stealth-mode':
           if (payload.active) {
             store.setStealthMode({ active: true, stealthResult: payload.stealthResult, enemyPositions: [], zoneEnemies: [] })
