@@ -5,6 +5,7 @@ import { rollDamage } from '../../lib/dice';
 import { crToXp } from '../../lib/xpTable';
 import { broadcastPlayerMove, broadcastNarratorMessage, broadcastEncounterAction } from '../../lib/liveChannel';
 import { COMBAT_SPELLS } from '../../lib/combatSpells';
+import { playHitSound, playMissSound, playDeathSound, playSpellSound } from '../../lib/soundEffects';
 import PartyPanel from '../PartyPanel';
 import CharDetailPanel from '../CharDetailPanel';
 import ActionPanel from '../ActionPanel';
@@ -116,6 +117,20 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       time: Date.now(),
     };
     setFloatingNumbers(prev => [...prev, floatingNum]);
+
+    // Play sound effect based on type
+    if (type === 'miss') {
+      playMissSound();
+    } else if (type === 'damage' && value > 0) {
+      playHitSound();
+      // Check if target dies (HP <= 0)
+      const updatedCombatant = combatants.find(c => c.id === combatantId);
+      if (updatedCombatant && updatedCombatant.currentHp <= 0) {
+        setTimeout(() => playDeathSound(), 200); // Delay death sound slightly
+      }
+    } else if (type === 'heal') {
+      // Healing doesn't get a special sound currently, but could add one
+    }
   }
 
   // Auto-trigger AI enemy turns
