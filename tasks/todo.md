@@ -33,7 +33,7 @@
 - [x] Ambient background music — procedural Web Audio API drone/pad moods (exploration, combat, mystery, tavern, danger), auto-switches on combat state, HUD toggle + volume control, localStorage persistence
 - [x] Day/night visual cycle — DayNightOverlay component with smooth hour-based tint interpolation (dawn golden, dusk orange, night deep blue), TimeDisplay clock in HUD showing time-of-day icon + formatted time
 - [x] Weather effects — Canvas2D particle overlay for rain, heavy_rain, storm, snow, fog, ash; reads from store weather system with automatic transitions; integrated into GameV2
-- [ ] Ambient sound effects — footsteps, door creaks, torch crackle during exploration
+- [x] Ambient sound effects — procedural footsteps (4 surface types) on movement, door creak on area transitions, coin jingle on purchases, chest open sound, torch crackle + wind ambient loops
 
 ## Priority 6: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)

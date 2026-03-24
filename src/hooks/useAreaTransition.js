@@ -4,6 +4,7 @@ import { buildAreaFromBrief } from '../lib/areaBuilder.js'
 import { saveArea } from '../lib/areaStorage.js'
 import { broadcastAreaTransition } from '../lib/liveChannel'
 import { playZoneTransition } from '../engine/ZoneTransition'
+import { playDoorCreak } from '../lib/ambientSounds'
 import { safeguardSpawn } from '../lib/gridUtils.js'
 
 /**
@@ -95,6 +96,7 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
 
     const app = pixiRef.current?.getApp()
     if (app) {
+      playDoorCreak()
       playZoneTransition(app, () => {
         activateArea(targetId)
         setPlayerPos(entry)

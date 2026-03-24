@@ -5,6 +5,7 @@ import { findPath, findPathLegacy, buildWalkabilityGrid, findPathEdge } from '..
 import { getBlockingSet } from '../engine/tileAtlas'
 import { animateTokenAlongPath, isAnimating } from '../engine/TokenLayer'
 import { broadcastTokenMove } from '../lib/liveChannel'
+import { playFootstep } from '../lib/ambientSounds'
 
 /**
  * Handles non-combat world movement: click-to-move pathfinding, WASD/arrow
@@ -119,6 +120,7 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
         // Camera follows player during click-to-move walk
         if (cameraRef.current) cameraRef.current.centerOn(stepPos.x, stepPos.y, tileSize)
         playerPosRef.current = stepPos
+        playFootstep('stone')
         setPlayerPos(stepPos) // Update fog/encounters each step
       }, () => {
         setPlayerPos({ x, y })
@@ -196,6 +198,7 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
       }
       const tileSize = zone?.tileSize || 32
       playerPosRef.current = { x: nx, y: ny }
+      playFootstep('stone')
       setPlayerPos({ x: nx, y: ny }) // Update state immediately for fog/encounter/NPC proximity
       const path = [pos, { x: nx, y: ny }]
       animateTokenAlongPath('player', path, null, () => {

@@ -7,6 +7,7 @@ import useStore from '../store/useStore'
 import { buyItem, sellItem, canBuy, calculateSellPrice } from '../lib/shopSystem'
 import shopInventories from '../data/shopInventories.json'
 import { getDisposition } from '../lib/factionSystem'
+import { playCoinSound } from '../lib/ambientSounds'
 
 // Categorize items by type
 function categorizeItems(items) {
@@ -275,6 +276,7 @@ export default function ShopPanel({ npc, shopType, onClose }) {
     }
     addItemToInventory(item)
     addGold(-item.price)
+    playCoinSound()
     showToast(`Purchased ${item.name} for ${item.price} gp`)
   }
 
