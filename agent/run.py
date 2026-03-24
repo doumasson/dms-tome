@@ -338,22 +338,35 @@ async function audit(page) {
     }
 
     // === STEP 2: CAMPAIGN — click it (seed script ensures it exists) ===
-    let card = await page.$('button.campaign-card');
-    if (!card) {
-      // Wait a bit more — Supabase query might be slow
-      await page.waitForTimeout(3000);
-      card = await page.$('button.campaign-card');
+    // CampaignSelect uses inline styles (no CSS class). Click the first button
+    // that looks like a campaign card (not nav buttons like Sign Out/Create/Join).
+    async function findAndClickCampaign() {
+      return await page.evaluate(() => {
+        const skip = ['sign out','create','join','settings','⚙','invite','copy code'];
+        const buttons = Array.from(document.querySelectorAll('button'));
+        for (const btn of buttons) {
+          const t = btn.textContent.trim().toLowerCase();
+          if (t.length > 5 && !skip.some(w => t.includes(w)) && !btn.querySelector('svg')) {
+            btn.click();
+            return btn.textContent.trim().substring(0, 40);
+          }
+        }
+        return null;
+      });
     }
-    if (!card) {
+    let clicked = await findAndClickCampaign();
+    if (!clicked) {
+      await page.waitForTimeout(4000);
+      clicked = await findAndClickCampaign();
+    }
+    if (!clicked) {
       info = await audit(page);
       await snap(page, '02-no-campaign', result);
       result.screens.push({ step: 'no_campaign', ...info });
-      result.finalScreen = 'DASHBOARD_NO_CAMPAIGN: seed script may have failed — check agent logs. Dashboard shows: ' + info.headings.join(', ') + ' | buttons: ' + info.buttons.slice(0, 5).join(', ');
+      result.finalScreen = 'DASHBOARD_NO_CAMPAIGN: buttons found: ' + info.buttons.join(', ');
       throw new Error('stop');
     }
-
-    result.actions.push('CLICKING_CAMPAIGN');
-    await card.click();
+    result.actions.push('CLICKED_CAMPAIGN: ' + clicked);
     await page.waitForTimeout(4000);
     info = await audit(page);
     await snap(page, '02-after-campaign', result);

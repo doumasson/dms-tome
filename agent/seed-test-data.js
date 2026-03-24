@@ -7,12 +7,13 @@
  * Requires: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY,
  *           VITE_TEST_USER_EMAIL, VITE_TEST_USER_PASSWORD in .env
  */
-const { createClient } = require('@supabase/supabase-js');
 const fs = require('fs');
 const path = require('path');
+// Load supabase from the project's node_modules (script runs from repo root)
+const { createClient } = require(path.join(process.cwd(), 'node_modules', '@supabase', 'supabase-js', 'dist', 'index.cjs'));
 
-// Load .env
-const envPath = path.join(__dirname, '..', '.env');
+// Load .env from the project root (cwd)
+const envPath = path.join(process.cwd(), '.env');
 if (fs.existsSync(envPath)) {
   fs.readFileSync(envPath, 'utf8').split('\n').forEach(line => {
     const [key, ...val] = line.split('=');
