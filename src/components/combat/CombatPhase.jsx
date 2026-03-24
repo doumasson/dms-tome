@@ -180,6 +180,47 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [encounter.currentTurn, encounter.phase]);
 
+  // Combat keyboard shortcuts
+  useEffect(() => {
+    function handleKeyDown(e) {
+      // Don't intercept if typing in an input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+
+      switch (e.key) {
+        case 'Escape':
+          setPanel(null);
+          setActiveSpell(null);
+          setSelectedToken(null);
+          break;
+        case 'e':
+        case 'E':
+          if (canAct && !panel) { e.preventDefault(); onNextTurn(); }
+          break;
+        case 'a':
+        case 'A':
+          if (canAct && !panel && activeCombatant) { e.preventDefault(); setPanel('attack'); }
+          break;
+        case 's':
+        case 'S':
+          if (canAct && !panel && activeCombatant) { e.preventDefault(); setPanel('spell_select'); }
+          break;
+        default:
+          // 1-9 to select combatant by initiative order
+          if (e.key >= '1' && e.key <= '9' && !panel) {
+            const idx = parseInt(e.key) - 1;
+            if (idx < combatants.length) {
+              e.preventDefault();
+              const c = combatants[idx];
+              setSelectedToken(prev => prev === c.id ? null : c.id);
+            }
+          }
+          break;
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [canAct, panel, activeCombatant, combatants, onNextTurn]);
+
   function handleTokenClick(id) {
     setSelectedToken(prev => prev === id ? null : id);
     setPanel(null);
@@ -712,6 +753,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
               {!dmMode && myCharacter && (activeCombatant.name === myCharacter?.name || activeCombatant.id === myCharacter?.id)
                 ? ' · Tap your token then a cell'
                 : !dmMode ? ' · Waiting for your turn' : ' · Tap token · tap cell'}
+              {!isMobile && <span style={{ opacity: 0.5, marginLeft: 8 }}>Keys: A=Attack S=Spell E=End Esc=Cancel</span>}
             </>
           ) : 'Tap token · tap cell to move'}
         </div>

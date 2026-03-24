@@ -23,9 +23,15 @@
 - [x] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.) (7 effect types, integrated into CombatPhase with floating damage numbers on spell casts)
 - [x] Better NPC conversation — longer, more personality-driven dialogue (rich personality descriptions, enhanced system prompt encouraging depth)
 
-## Priority 4: Asset Generation
+## Priority 4: Gameplay Polish
+- [x] Combat keyboard shortcuts — A=Attack, S=Spell, E=End Turn, Esc=Cancel, 1-9=Select combatant
+- [ ] Conditions/status effect icons on tokens (poisoned, blessed, etc.)
+- [ ] Rest mechanics UI (short rest / long rest buttons with proper 5e recovery)
+- [ ] Initiative tracker visual improvements
+
+## Priority 5: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
-- [ ] Token/character sprites — generate unique sprites for player classes and common monsters
+- [ ] Token/character sprites — already using Pollinations for portraits
 - [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets
 
 ## Blocked
