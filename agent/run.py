@@ -103,7 +103,7 @@ def run_claude(prompt, resume_id=None):
         return stdout, None
 
 
-# ─── MEMORY ────────────────────────────────────────────────────────────────────
+# ─── MEMORY (self-learning system) ─────────────────────────────────────────────
 
 async def write_to_memory(run_id, iteration, build_status, screenshot_desc,
                           what_happened, files_changed, succeeded):
@@ -121,6 +121,86 @@ async def write_to_memory(run_id, iteration, build_status, screenshot_desc,
             await db.commit()
     except Exception as e:
         log(f"  ! Memory write failed: {e}")
+
+
+async def save_fix(error_sig, fix_text, file_affected=""):
+    """When the agent fixes a build error, remember the error→fix mapping."""
+    try:
+        import aiosqlite
+        async with aiosqlite.connect(PA_DB) as db:
+            await db.execute(
+                """INSERT INTO agent_fixes
+                   (error_signature, fix_that_worked, file_affected, last_used)
+                   VALUES (?, ?, ?, ?)
+                   ON CONFLICT(error_signature) DO UPDATE SET
+                   fix_that_worked=excluded.fix_that_worked,
+                   times_applied=times_applied+1,
+                   last_used=excluded.last_used""",
+                (error_sig[:200], fix_text[:500], file_affected,
+                 datetime.datetime.now().isoformat()),
+            )
+            await db.commit()
+        log(f"  -> Saved fix: {error_sig[:60]}...")
+    except Exception as e:
+        log(f"  ! Fix save failed: {e}")
+
+
+async def get_known_fixes(error_output):
+    """Check if we've seen this error before and know how to fix it."""
+    try:
+        import aiosqlite
+        async with aiosqlite.connect(PA_DB) as db:
+            db.row_factory = aiosqlite.Row
+            # Search for matching error signatures
+            rows = await db.execute_fetchall(
+                "SELECT error_signature, fix_that_worked, times_applied FROM agent_fixes ORDER BY times_applied DESC LIMIT 20"
+            )
+            matches = []
+            error_lower = error_output.lower()
+            for r in rows:
+                if r["error_signature"].lower() in error_lower or any(
+                    word in error_lower for word in r["error_signature"].lower().split()[:3]
+                ):
+                    matches.append(f"- KNOWN FIX ({r['times_applied']}x): {r['error_signature'][:80]} -> {r['fix_that_worked'][:100]}")
+            return "\n".join(matches[:5]) if matches else ""
+    except Exception:
+        return ""
+
+
+async def get_lessons():
+    """Read all lessons from the database."""
+    try:
+        import aiosqlite
+        async with aiosqlite.connect(PA_DB) as db:
+            db.row_factory = aiosqlite.Row
+            rows = await db.execute_fetchall(
+                "SELECT lesson, source FROM agent_lessons ORDER BY id DESC LIMIT 30"
+            )
+            if rows:
+                return "\n".join(f"- [{r['source']}] {r['lesson']}" for r in rows)
+            return ""
+    except Exception:
+        return ""
+
+
+async def get_recent_iterations(n=5):
+    """Read recent iteration history so the agent doesn't repeat itself."""
+    try:
+        import aiosqlite
+        async with aiosqlite.connect(PA_DB) as db:
+            db.row_factory = aiosqlite.Row
+            rows = await db.execute_fetchall(
+                "SELECT iteration, build_status, what_happened FROM agent_iterations ORDER BY id DESC LIMIT ?",
+                (n,)
+            )
+            if rows:
+                return "\n".join(
+                    f"- iter {r['iteration']} [{r['build_status']}]: {r['what_happened'][:120]}"
+                    for r in rows
+                )
+            return ""
+    except Exception:
+        return ""
 
 
 # ─── GIT ───────────────────────────────────────────────────────────────────────
@@ -308,6 +388,15 @@ PROMPT_TEMPLATE = SYSTEM_RULES + """
 ### What the app looks like right now (from screenshots):
 {screenshot_desc}
 
+### Lessons learned (from database — DO NOT repeat these mistakes):
+{lessons}
+
+### Known fixes for past errors:
+{known_fixes}
+
+### Recent iteration history (do NOT repeat the same work):
+{recent_history}
+
 ### Project memory:
 {memory}
 
@@ -316,12 +405,20 @@ PROMPT_TEMPLATE = SYSTEM_RULES + """
 {task_instruction}
 
 ONE real code change per iteration. Build it. Verify with `""" + BUILD_CMD + """`.
+
+## SELF-LEARNING:
+After completing your work, if you learned something new that would help
+future iterations, append it to tasks/lessons.md. If you fixed a build error,
+note what the error was and what fixed it — this helps you fix it faster next time.
 """
 
 TASK_BUILD_BROKEN = """The build is FAILING. Fix the build errors shown above.
-Do NOT add features — just make the build pass clean."""
+Check the "Known fixes" section — you may have fixed this exact error before.
+Do NOT add features — just make the build pass clean.
+After fixing, note what the error was and what fixed it in tasks/lessons.md."""
 
 TASK_PICK_FROM_TODO = """Pick the top unchecked item from todo.md above.
+Check "Recent iteration history" to avoid repeating work already done.
 Build it. If the item is too large for one iteration, do the smallest
 meaningful piece and leave the rest for next iteration.
 
@@ -349,7 +446,9 @@ def main():
     git_pull()
     notify(f"{PROJECT_NAME} Build Agent started ({MAX_ITERATIONS} iterations)")
 
+    import asyncio, uuid
     session_id = None
+    prev_build_ok = True  # Track if last iteration had a broken build
 
     for i in range(1, MAX_ITERATIONS + 1):
         log(f"\n--- ITERATION {i}/{MAX_ITERATIONS} ---")
@@ -370,6 +469,14 @@ def main():
         # Decide task
         task_instruction = TASK_BUILD_BROKEN if not build_ok else TASK_PICK_FROM_TODO
 
+        # ─── SELF-LEARNING: read from memory DB ───
+        lessons = asyncio.run(get_lessons()) or "(none yet)"
+        recent_history = asyncio.run(get_recent_iterations(5)) or "(first run)"
+        known_fixes = ""
+        if not build_ok:
+            known_fixes = asyncio.run(get_known_fixes(build_out)) or "(no matching fixes in database)"
+        log(f"  Lessons: {len(lessons.splitlines())} | History: {len(recent_history.splitlines())} entries")
+
         # Build prompt
         prompt = PROMPT_TEMPLATE.format(
             i=i,
@@ -377,6 +484,9 @@ def main():
             build="PASS" if build_ok else "FAIL",
             output=build_out[-500:],
             screenshot_desc=screenshot_desc[:600],
+            lessons=lessons[:1500],
+            known_fixes=known_fixes[:500],
+            recent_history=recent_history[:1000],
             memory=read_memory()[:4000],
             task_instruction=task_instruction,
         )
@@ -387,8 +497,7 @@ def main():
             session_id = new_session
         log(f"Response: {response[:200]}...")
 
-        # Record to memory DB
-        import asyncio, uuid
+        # ─── SELF-LEARNING: save what happened ───
         asyncio.run(write_to_memory(
             run_id=str(uuid.uuid4())[:8],
             iteration=i,
@@ -398,6 +507,16 @@ def main():
             files_changed="",
             succeeded=build_ok,
         ))
+
+        # If build was broken and now it's fixed, save the error→fix mapping
+        if not prev_build_ok:
+            new_build_ok, _ = project_build()
+            if new_build_ok:
+                error_sig = build_out[:200].strip()
+                asyncio.run(save_fix(error_sig, response[:300]))
+                log("  -> Self-healed! Fix saved to memory.")
+
+        prev_build_ok = build_ok
 
         # Commit whatever Claude built
         git_commit(f"iteration {i}")
