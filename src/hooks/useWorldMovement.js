@@ -74,10 +74,20 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
         const effect = resolveTrapEffect(trap, _c, formation)
         const isBackLine = formation?.back?.includes(_c?.id) || formation?.back?.includes(_c?.name)
         const advNote = isBackLine ? ' (back line — advantage on save!)' : ''
-        _a({ role: 'dm', speaker: 'DM', text: effect.description + advNote })
+        const saveInfo = effect.saved
+          ? ` Save: ${effect.saveRoll} — saved!`
+          : ` Save: ${effect.saveRoll} — failed!${effect.damage > 0 ? ` ${effect.damage} damage!` : ''}${effect.condition ? ` (${effect.condition})` : ''}`
+        _a({ role: 'dm', speaker: 'DM', text: (effect.description || 'A trap triggers!') + advNote + saveInfo })
         if (effect.damage > 0 && _c) {
           const currentHp = _c.currentHp ?? _c.hp ?? 0
           _u({ currentHp: Math.max(0, currentHp - effect.damage) })
+        }
+        // Apply trap conditions (Poisoned, Restrained, etc.) to the character
+        if (effect.condition && _c) {
+          const conditions = _c.conditions || []
+          if (!conditions.includes(effect.condition)) {
+            _u({ conditions: [...conditions, effect.condition] })
+          }
         }
       }
     }
