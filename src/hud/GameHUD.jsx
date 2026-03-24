@@ -69,7 +69,7 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
               boxShadow: `0 0 4px ${isSafe ? '#44aa66' : '#cc3333'}88`,
               marginRight: 4, verticalAlign: 'middle',
             }} />
-            {isSafe ? 'SAFE' : 'DANGER'} · {npcCount} NPC{npcCount !== 1 ? 's' : ''}
+            {isSafe ? 'SAFE' : 'DANGER'} · {npcCount} NPC{npcCount !== 1 ? 's' : ''}{activeQuestCount > 0 ? ` · 📜${activeQuestCount}` : ''}
           </span>
         </div>
         {/* CENTER: clock-style progress bar */}
