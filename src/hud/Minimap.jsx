@@ -131,11 +131,22 @@ export default function Minimap({ playerPos, tokens, cameraRef }) {
           ctx.arc(px, py, 2, 0, Math.PI * 2)
           ctx.fill()
         } else if (token.isNpc) {
-          // NPC — blue dot
+          // NPC — blue dot with name label
           ctx.fillStyle = '#4499dd'
           ctx.beginPath()
           ctx.arc(px, py, 2, 0, Math.PI * 2)
           ctx.fill()
+          // Show name if near player (within 8 tiles on minimap)
+          if (playerPos && token.name) {
+            const dist = Math.abs(token.x - playerPos.x) + Math.abs(token.y - playerPos.y)
+            if (dist <= 8) {
+              ctx.fillStyle = '#4499dd'
+              ctx.font = '6px Cinzel, sans-serif'
+              ctx.textAlign = 'left'
+              ctx.textBaseline = 'middle'
+              ctx.fillText(token.name.slice(0, 12), px + 4, py)
+            }
+          }
         }
       }
     }
