@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import useStore from '../../store/useStore';
 import { setMood, stopMusic, setMusicVolume, getMusicState } from '../../lib/ambientMusic';
 import { TimeDisplay } from './DayNightOverlay';
+import { xpForLevel } from '../LevelUpModal';
 import './HUD.css';
 
 /**
@@ -72,6 +73,9 @@ export default function HUD() {
           <div className="ac-value">{ac}</div>
         </div>
       </div>
+
+      {/* XP Progress Bar */}
+      <XpBar character={myCharacter} />
 
       {/* Spell Slots */}
       {slotLevels.length > 0 && (
@@ -149,6 +153,37 @@ export default function HUD() {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function XpBar({ character }) {
+  if (!character) return null;
+  const xp = character.xp ?? 0;
+  const level = character.level ?? 1;
+  if (level >= 20) {
+    return (
+      <div className="hud-section hud-xp">
+        <div className="xp-label">Lv {level}</div>
+        <div className="xp-text" style={{ color: '#ffd700' }}>MAX</div>
+      </div>
+    );
+  }
+  const currentLevelXp = xpForLevel(level);
+  const nextLevelXp = xpForLevel(level + 1);
+  const xpIntoLevel = xp - currentLevelXp;
+  const xpNeeded = nextLevelXp - currentLevelXp;
+  const pct = xpNeeded > 0 ? Math.max(0, Math.min(1, xpIntoLevel / xpNeeded)) : 1;
+
+  return (
+    <div className="hud-section hud-xp">
+      <div className="xp-header">
+        <span className="xp-label">Lv {level}</span>
+        <span className="xp-text">{xp.toLocaleString()} / {nextLevelXp.toLocaleString()} XP</span>
+      </div>
+      <div className="xp-bar-track">
+        <div className="xp-bar-fill" style={{ width: `${pct * 100}%` }} />
+      </div>
     </div>
   );
 }

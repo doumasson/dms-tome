@@ -397,3 +397,45 @@
   background: #d4af37;
   cursor: pointer;
 }
+
+/* XP Progress Bar */
+.hud-xp {
+  min-width: 100px;
+}
+
+.xp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.xp-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #d4af37;
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+.xp-text {
+  font-size: 8px;
+  color: rgba(212, 175, 55, 0.5);
+  font-weight: 600;
+}
+
+.xp-bar-track {
+  height: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a84c 0%, #ffd700 100%);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  box-shadow: 0 0 4px rgba(255, 215, 0, 0.3);
+}

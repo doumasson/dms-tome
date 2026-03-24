@@ -53,7 +53,13 @@
 - [x] Auto-save indicator — AutoSaveIndicator component with spinning/checkmark/error states, hooked into saveCampaignToSupabase and saveSettingsToSupabase, auto-fades after 2s, positioned top-right
 - [x] Ping system — Ctrl+Click places animated waypoint marker with expanding ring, bouncing arrow, player name label; broadcast to all players via encounter-action channel; per-player color coding; 4s auto-fade
 
-## Priority 9: Asset Generation (blocked — needs external image API)
+## Priority 9: Core RPG Systems
+- [x] XP progress bar — XpBar component in HUD showing current level, XP count, XP-to-next-level, gold gradient progress bar; MAX indicator at level 20; uses SRD 5e XP thresholds
+- [ ] Encounter difficulty indicator — show Easy/Medium/Hard/Deadly rating before and during combat based on party level vs enemy CR
+- [ ] Loading screen tips — show random gameplay tips during area transitions and loading
+- [ ] Crafting system — combine materials found in loot to create potions, scrolls, and basic gear
+
+## Priority 10: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
 - [ ] Token/character sprites — already using Pollinations for portraits
 - [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets
