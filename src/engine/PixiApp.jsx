@@ -9,6 +9,7 @@ import { TileAtlasV2 } from './tileAtlasV2'
 import { WallRenderer } from './WallRenderer'
 import { renderLighting, clearLighting } from './LightingLayer'
 import { updateWeather, clearWeather } from './WeatherRenderer.js'
+import { updateAmbientParticles } from './AmbientParticles.js'
 import { updateStatusEffects } from './StatusEffectRenderer.js'
 import { applyDayNightTint } from './DayNightFilter.js'
 import { getTimeOfDay } from '../lib/gameTime.js'
@@ -101,12 +102,14 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         fog: new PIXI.Container(),
         exits: new PIXI.Container(),
         weather: new PIXI.Container(),  // screen-space particles — rendered above world (on stage)
+        ambient: new PIXI.Container(),  // screen-space ambient particles (fireflies, dust, embers)
       }
       // All world layers go inside the scaled world container
-      const { weather: weatherLayer, ...worldLayers } = layers
+      const { weather: weatherLayer, ambient: ambientLayer, ...worldLayers } = layers
       Object.values(worldLayers).forEach(l => world.addChild(l))
-      // Weather is screen-space: not scaled with camera, sits above world on stage
+      // Weather + ambient are screen-space: not scaled with camera, sit above world on stage
       app.stage.addChild(weatherLayer)
+      app.stage.addChild(ambientLayer)
       layers.lighting.blendMode = 'add'
       stageLayersRef.current = layers
 
@@ -276,6 +279,12 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         if (weatherLayer) {
           updateWeather(weatherLayer, weatherType, app.screen.width, app.screen.height, ticker.deltaMS)
         }
+      }
+
+      // Ambient theme particles (fireflies, dust, embers)
+      const ambientLayer = stageLayersRef.current.ambient
+      if (ambientLayer) {
+        updateAmbientParticles(ambientLayer, zone.theme, ticker.deltaMS, app.screen.width, app.screen.height)
       }
 
       if (zone.layers?.roof) {
