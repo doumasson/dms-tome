@@ -20,6 +20,7 @@ import KeyboardHelp from './components/game/KeyboardHelp'
 import PartyHealthBars from './components/game/PartyHealthBars'
 import EmoteSystem from './components/game/EmoteSystem'
 import AutoSaveIndicator from './components/game/AutoSaveIndicator'
+import PingSystem from './components/game/PingSystem'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -438,6 +439,7 @@ export default function GameV2({ onLeave }) {
         <PartyHealthBars />
         <EmoteSystem />
         <AutoSaveIndicator />
+        <PingSystem worldTransform={worldTransform} />
         {nearbyNpcs.map(npc => (
           <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
         ))}

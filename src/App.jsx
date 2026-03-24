@@ -6,6 +6,7 @@ import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
 import { receiveEmote } from './components/game/EmoteSystem';
+import { receivePing } from './components/game/PingSystem';
 import LoginPage from './components/LoginPage';
 import CampaignSelect from './components/CampaignSelect';
 import ApiKeySettings from './components/ApiKeySettings';
@@ -446,6 +447,9 @@ export default function App() {
         }
         case 'emote':
           receiveEmote(payload.playerName, payload.emoji);
+          break
+        case 'ping':
+          receivePing(payload.playerName, payload.screenX, payload.screenY, payload.color);
           break
       }
     });

@@ -51,7 +51,7 @@
 - [x] Party health bars — PartyHealthBars component showing compact HP bars for all party members, portrait circles, name labels, condition dots, dead overlay, live HP from combat combatants, positioned bottom-left
 - [x] Emote/reaction system — EmoteSystem component with 10 emotes (attack, defend, haha, nice, scared, roll, rip, fire, love, gg), floating emoji animations, broadcast to all players via encounter-action channel, picker grid, player name labels
 - [x] Auto-save indicator — AutoSaveIndicator component with spinning/checkmark/error states, hooked into saveCampaignToSupabase and saveSettingsToSupabase, auto-fades after 2s, positioned top-right
-- [ ] Ping system — click map to place a waypoint marker visible to all players
+- [x] Ping system — Ctrl+Click places animated waypoint marker with expanding ring, bouncing arrow, player name label; broadcast to all players via encounter-action channel; per-player color coding; 4s auto-fade
 
 ## Priority 9: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
