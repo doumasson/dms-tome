@@ -69,7 +69,7 @@
 - [x] NarratorPanel.jsx
 - [x] NpcConversation.jsx
 - [x] CharacterSheet.jsx
-- [ ] LootScreen.jsx
+- [x] LootScreen.jsx
 - [ ] GameOverModal.jsx
 - [ ] BottomBar.jsx (HUD)
 - [ ] CombatActionBar.jsx

@@ -250,7 +250,9 @@ export default function LootScreen({ enemies, partySize, onDone }) {
         )}
 
         {/* Continue */}
-        <button style={s.continueBtn} onClick={onDone}>
+        <button style={s.continueBtn} onClick={onDone}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.6)'; e.currentTarget.style.color = '#d4af37'; e.currentTarget.style.background = 'rgba(212,175,55,0.08)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.25)'; e.currentTarget.style.color = 'rgba(200,180,140,0.6)'; e.currentTarget.style.background = 'transparent'; }}>
           Continue Adventure →
         </button>
       </div>
