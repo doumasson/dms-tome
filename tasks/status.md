@@ -254,6 +254,7 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Party formation — front/back marching order, drag-to-configure panel
 - [x] Quest tracker — journal integration, objective checklists, AI DM quest awareness, HUD indicator
 - [x] Map variety — 6 themed biome area templates (mountain, desert, coastal, swamp, graveyard, marketplace) with unique POI layouts and NPC personalities
+- [x] Better NPC conversation — richer personality descriptions (appearance, backstory, motivations) + system prompt encourages longer, personality-driven dialogue (2-6 sentences vs strict 2-3)
 - [ ] Pitched roof visuals (BLOCKED: pending slope/edge FA assets)
 - 252+ tests, 0 failures, 17 commits.
 - Spec: `docs/superpowers/specs/2026-03-20-phase10-living-world-design.md`

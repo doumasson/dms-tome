@@ -21,7 +21,7 @@
 - [x] Character portrait in-game — show the actual portrait, not just colored circles (added portrait generation for enemies)
 - [x] Map variety — more curated chunks for different biomes/themes (6 biome templates: mountain, desert, coastal, swamp, graveyard, marketplace)
 - [x] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.) (7 effect types, integrated into CombatPhase with floating damage numbers on spell casts)
-- [ ] Better NPC conversation — longer, more personality-driven dialogue
+- [x] Better NPC conversation — longer, more personality-driven dialogue (rich personality descriptions, enhanced system prompt encouraging depth)
 
 ## Priority 4: Asset Generation
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
