@@ -6,7 +6,7 @@ import { crToXp } from '../../lib/xpTable';
 import { broadcastPlayerMove, broadcastNarratorMessage, broadcastEncounterAction } from '../../lib/liveChannel';
 import { COMBAT_SPELLS } from '../../lib/combatSpells';
 import { getSpellSaveDC } from '../../lib/spellCasting';
-import { playHitSound, playMissSound, playDeathSound, playSpellSound } from '../../lib/soundEffects';
+import { playHitSound, playMissSound, playDeathSound, playSpellSound, playHealSound } from '../../lib/soundEffects';
 import PartyPanel from '../PartyPanel';
 import CharDetailPanel from '../CharDetailPanel';
 import ActionPanel from '../ActionPanel';
@@ -158,7 +158,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
         setTimeout(() => playDeathSound(), 200); // Delay death sound slightly
       }
     } else if (type === 'heal') {
-      // Healing doesn't get a special sound currently, but could add one
+      playHealSound();
     }
   }
 

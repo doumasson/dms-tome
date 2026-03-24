@@ -115,6 +115,49 @@ export function playSpellSound() {
 }
 
 /**
+ * Play a heal sound (gentle rising chime)
+ */
+export function playHealSound() {
+  try {
+    const ctx = getAudioContext();
+    const now = ctx.currentTime;
+    const duration = 0.4;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + duration * 0.6);
+    osc.frequency.exponentialRampToValueAtTime(660, now + duration);
+
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.linearRampToValueAtTime(0.25, now + duration * 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+    osc.start(now);
+    osc.stop(now + duration);
+
+    // Harmonic shimmer
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(880, now);
+    osc2.frequency.exponentialRampToValueAtTime(1320, now + duration);
+    gain2.gain.setValueAtTime(0.08, now);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + duration);
+    osc2.start(now);
+    osc2.stop(now + duration);
+  } catch (e) {
+    console.log('Sound not available:', e.message);
+  }
+}
+
+/**
  * Play a death sound (low descending tone)
  */
 export function playDeathSound() {

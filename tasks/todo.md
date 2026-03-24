@@ -60,6 +60,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Enhanced "Your Turn" banner — gold pulsing glow, larger text with ⚔ icon when it's player's turn in combat
 - [x] Combat action economy display — shows ● ACTION / ● BONUS / ● movement ft / timer above action buttons
 - [x] Minimap compass rose + area name — N/S/E/W indicator in corner, area name label at bottom
+- [x] Heal sound effect — gentle rising chime with harmonic shimmer plays on heal events in combat
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
