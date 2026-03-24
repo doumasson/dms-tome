@@ -14,10 +14,8 @@ Fixed: Region-based dedup (6x6 tiles), 60s cooldown, reduced rates (5% dungeon /
 ### ~~Bug 2: No enemy tokens spawned on map~~ ✅ FIXED
 Fixed: Random encounters now provide `startCombatWithZoneEnemies` function with positioned enemies near player. Narrator chat and stealth handlers can now trigger combat with actual token placement via `startEncounter`.
 
-### Bug 3: Narrator float bar is enormous
-There's a huge gold-bordered bar spanning most of the screen width in the middle of the game view. This is either the NarratorFloat, an interaction zone overlay, or the character name display. It should be small and unobtrusive — a small floating text, not a screen-blocking banner.
-- Find what renders that wide gold bar
-- Make it compact — small text, positioned unobtrusively, not blocking the game view
+### ~~Bug 3: Narrator float bar is enormous~~ ✅ FIXED
+Fixed: Replaced 65%-width OrnateFrame stone-panel with a compact 360px max tooltip-style float at top-center. Subtle dark bg, thin gold border, small text, non-interactive.
 
 ### Bug 4: Narrator/chat panel takes too much vertical space
 The bottom parchment panel (narrator chat + log) takes up ~50% of the screen. Per ARCHITECTURE.md the layout should be:

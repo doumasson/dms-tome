@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import useStore from '../store/useStore'
-import OrnateFrame from './OrnateFrame'
 
 export default function NarratorFloat() {
   const history = useStore(s => s.narrator?.history) || []
@@ -41,24 +40,20 @@ export default function NarratorFloat() {
 
   return (
     <div style={{
-      position: 'absolute', bottom: 170, left: '50%', transform: 'translateX(-50%)',
-      maxWidth: '65%', zIndex: 20,
+      position: 'absolute', top: 48, left: '50%', transform: 'translateX(-50%)',
+      maxWidth: 360, width: 'auto', zIndex: 20,
+      pointerEvents: 'none',
+      animation: 'fadeIn 0.3s ease',
     }}>
-      <div className="hud-narrator stone-panel" style={{ position: 'relative' }}>
-        <OrnateFrame size={12} stroke="#c9a84c" weight={1.5} jeweled={false} />
-        {/* Side flourishes */}
-        <svg style={{ position: 'absolute', left: -18, top: '50%', transform: 'translateY(-50%)' }} width="18" height="50" viewBox="0 0 18 50">
-          <path d="M16,0 Q6,8 14,16 Q4,25 14,34 Q6,42 16,50" fill="none" stroke="#c9a84c" strokeWidth="1.8" opacity="0.45"/>
-          <circle cx="14" cy="25" r="3" fill="#c9a84c" opacity="0.35"/>
-          <circle cx="14" cy="25" r="1.2" fill="#08060c"/>
-        </svg>
-        <svg style={{ position: 'absolute', right: -18, top: '50%', transform: 'translateY(-50%) scaleX(-1)' }} width="18" height="50" viewBox="0 0 18 50">
-          <path d="M16,0 Q6,8 14,16 Q4,25 14,34 Q6,42 16,50" fill="none" stroke="#c9a84c" strokeWidth="1.8" opacity="0.45"/>
-          <circle cx="14" cy="25" r="3" fill="#c9a84c" opacity="0.35"/>
-          <circle cx="14" cy="25" r="1.2" fill="#08060c"/>
-        </svg>
-        <div className="hud-narrator-text">
-          {lastDm.speaker && <span className="hud-narrator-name">{lastDm.speaker}: </span>}
+      <div style={{
+        background: 'rgba(10, 8, 6, 0.85)',
+        border: '1px solid rgba(201, 168, 76, 0.4)',
+        borderRadius: 6,
+        padding: '6px 14px',
+        backdropFilter: 'blur(4px)',
+      }}>
+        <div className="hud-narrator-text" style={{ fontSize: 11 }}>
+          {lastDm.speaker && <span className="hud-narrator-name" style={{ fontSize: 10 }}>{lastDm.speaker}: </span>}
           {displayedText}
         </div>
       </div>
