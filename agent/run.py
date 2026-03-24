@@ -402,6 +402,24 @@ async function getPageInfo(page) {
       result.finalScreen = 'STUCK: no canvas, no errors. Headings: ' + info.headings.join(', ') + '. Buttons: ' + info.buttons.slice(0, 5).join(', ');
     }
 
+    // Check for unstyled/default elements (white backgrounds, no borders)
+    const styleIssues = await page.evaluate(() => {
+      const issues = [];
+      document.querySelectorAll('div, button, panel, section').forEach(el => {
+        const style = window.getComputedStyle(el);
+        const bg = style.backgroundColor;
+        if (bg === 'rgb(255, 255, 255)' || bg === 'white') {
+          const tag = el.tagName.toLowerCase();
+          const cls = el.className?.toString()?.substring(0, 30) || '';
+          issues.push('WHITE_BG: ' + tag + '.' + cls);
+        }
+      });
+      return issues.slice(0, 5);
+    });
+    if (styleIssues.length > 0) {
+      result.styleIssues = styleIssues;
+    }
+
     result.errors = result.screens.flatMap(s => s.errors || []);
     result.consoleErrors = consoleErrors.slice(0, 5);
 
@@ -447,7 +465,10 @@ async function getPageInfo(page) {
         console_errors = r.get('consoleErrors', [])
         if console_errors:
             desc += f"\nCONSOLE ERRORS: {console_errors}"
-        log(f"  -> {desc[:400]}")
+        style_issues = r.get('styleIssues', [])
+        if style_issues:
+            desc += f"\nSTYLE ISSUES (white/unstyled elements): {style_issues}"
+        log(f"  -> {desc[:500]}")
         return desc
     finally:
         dev_proc.terminate()
@@ -478,12 +499,13 @@ You read the todo list, pick work, write real code, and ship it. Every iteration
    If the build passes and screenshots show no errors, BUILD THE NEXT FEATURE.
 9. NEVER repeat work from a previous iteration. Check the history.
 
-## SCREENSHOTS:
-You get a description of what the app looks like at each screen:
-login → dashboard → campaign → character select → game.
-Use this to understand the current state. If the flow is BLOCKED at a screen
-(e.g. no campaign appears, character select broken), fix THAT first.
-If the game is reachable and working, focus on todo.md features.
+## SCREENSHOTS (visual feedback EVERY iteration):
+You get a description of what the app looks like at each screen.
+The screenshots tell you what's ACTUALLY rendering — not just what compiles.
+- If the flow is BLOCKED (error boundary, missing data), fix THAT first
+- If a component looks unstyled/broken in screenshots, fix THAT
+- UI/UX matters as much as functionality — a feature that works but looks
+  like default HTML is NOT done. It must match the dark fantasy design rules.
 DO NOT modify the screenshot pipeline.
 
 ## COMPLETION FORMAT:
@@ -603,20 +625,16 @@ def main():
         build_ok, build_out = project_build()
         log(f"Build: {'OK' if build_ok else 'FAILED'}")
 
-        # Take screenshots every 5th iteration (or first, or after build fix)
-        screenshot_interval = int(CFG.get("screenshot_interval", 5))
-        screenshot_desc = "Screenshots skipped this iteration — focus on building."
+        # Take screenshots EVERY iteration — the agent must SEE what it builds
         if not build_ok:
             screenshot_desc = "Build failed — fix build first"
             task_instruction = TASK_BUILD_BROKEN
-        elif i == 1 or i % screenshot_interval == 0:
+        else:
             screenshot_desc = take_screenshots(i)
             if "GAME" not in screenshot_desc and "canvas" not in screenshot_desc.lower():
                 task_instruction = TASK_FLOW_BLOCKED
             else:
                 task_instruction = TASK_PICK_FROM_TODO
-        else:
-            task_instruction = TASK_PICK_FROM_TODO
 
         # ─── SELF-LEARNING: read from memory DB ───
         lessons = asyncio.run(get_lessons()) or "(none yet)"
