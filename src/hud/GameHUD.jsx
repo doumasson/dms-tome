@@ -82,8 +82,14 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
             <span className="hud-time-text">{timeText}</span>
           </div>
         </div>
-        {/* RIGHT: tabs + invite, leave, icon buttons + sound */}
+        {/* RIGHT: player count + invite, leave, icon buttons + sound */}
         <div className="hud-top-bar-right">
+          <span style={{
+            fontSize: 9, fontFamily: "'Cinzel', serif", color: '#8a7a5a',
+            letterSpacing: '0.5px', marginRight: 2,
+          }} title={`${playerCount} player${playerCount !== 1 ? 's' : ''} connected`}>
+            👤{playerCount}
+          </span>
           <button className="hud-top-bar-btn" onClick={handleCopyInvite} title="Copy invite link">
             {copied ? 'COPIED' : 'INVITE'}
           </button>

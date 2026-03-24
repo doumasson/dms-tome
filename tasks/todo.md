@@ -71,6 +71,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] NPC faction badge on tokens — colored dot (red=hostile, green=friendly, gold=revered) on NPC map tokens based on faction reputation
 - [x] Rest narrator notification — short/long rest completion posts narrator message to chat (visible to all players)
 - [x] Condition effect descriptions — when conditions applied in combat, log entry shows mechanical effect (e.g. "Stunned — Cannot move or act")
+- [x] Player count in top bar — 👤N shows connected player count next to invite button with tooltip
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
