@@ -237,8 +237,8 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
       cam.update(ticker.deltaMS)
       world.scale.set(cam.zoom)
-      world.x = -cam.x * cam.zoom
-      world.y = -cam.y * cam.zoom
+      world.x = -cam.x * cam.zoom + (cam.shakeOffsetX || 0)
+      world.y = -cam.y * cam.zoom + (cam.shakeOffsetY || 0)
 
       // Calculate visible bounds in world-space pixels
       const viewW = app.screen.width

@@ -38,6 +38,13 @@ class Camera {
     // Smooth center target (world px)
     this._targetX = null;
     this._targetY = null;
+
+    // Screen shake state
+    this._shakeIntensity = 0;
+    this._shakeDuration = 0;
+    this._shakeElapsed = 0;
+    this.shakeOffsetX = 0;
+    this.shakeOffsetY = 0;
   }
 
   // ---------------------------------------------------------------------------
@@ -218,6 +225,33 @@ class Camera {
         this._targetY = null;
       }
     }
+
+    // --- Screen shake ---
+    if (this._shakeDuration > 0) {
+      this._shakeElapsed += dtMs;
+      if (this._shakeElapsed >= this._shakeDuration) {
+        this._shakeDuration = 0;
+        this.shakeOffsetX = 0;
+        this.shakeOffsetY = 0;
+      } else {
+        const progress = this._shakeElapsed / this._shakeDuration;
+        const decay = 1 - progress; // intensity decays linearly
+        const intensity = this._shakeIntensity * decay;
+        this.shakeOffsetX = (Math.random() * 2 - 1) * intensity;
+        this.shakeOffsetY = (Math.random() * 2 - 1) * intensity;
+      }
+    }
+  }
+
+  /**
+   * Trigger a screen shake effect.
+   * @param {number} intensity - max pixel offset (e.g. 4 for light, 8 for heavy)
+   * @param {number} duration - shake duration in ms (e.g. 200-400)
+   */
+  shake(intensity = 6, duration = 300) {
+    this._shakeIntensity = intensity;
+    this._shakeDuration = duration;
+    this._shakeElapsed = 0;
   }
 
   // ---------------------------------------------------------------------------

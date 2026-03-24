@@ -200,6 +200,22 @@ export default function GameV2({ onLeave }) {
 
   useRandomEncounters({ playerPos, inCombat, isDM, zone })
 
+  // Screen shake on combat damage — watch damage events, trigger camera shake
+  const damageEventsLen = useStore(s => s.damageEvents?.length || 0)
+  const shakeCountRef = useRef(0)
+  useEffect(() => {
+    if (damageEventsLen <= shakeCountRef.current) return
+    const events = useStore.getState().damageEvents || []
+    const newEvents = events.slice(shakeCountRef.current)
+    shakeCountRef.current = damageEventsLen
+    const cam = pixiRef.current?.getCamera?.()
+    if (!cam?.shake) return
+    for (const evt of newEvents) {
+      if (evt.type === 'damage' && evt.amount >= 10) cam.shake(8, 350) // heavy hit
+      else if (evt.type === 'damage' && evt.amount > 0) cam.shake(4, 200) // light hit
+    }
+  }, [damageEventsLen])
+
   const {
     targetingMode, pendingOA, setPendingOA,
     handleCombatTileClick, handleCombatAction, executeMoveWithOA,
