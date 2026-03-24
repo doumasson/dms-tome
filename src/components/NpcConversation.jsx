@@ -45,6 +45,7 @@ export default function NpcConversation({
   // Social skill check state
   const [pendingRoll, setPendingRoll] = useState(null) // { skill, dc, reason }
   const [rollResult, setRollResult] = useState(null)    // { d20, total, pass, skill }
+  const [suggestions, setSuggestions] = useState([])     // AI-suggested player responses
 
   // Reputation change state
   const [pendingRepChange, setPendingRepChange] = useState(null) // { faction, delta, reason }
@@ -119,6 +120,13 @@ export default function NpcConversation({
       const npcMsg = { role: 'npc', speaker: npc.name, text: dialogue }
       setMessages(prev => [...prev, npcMsg])
 
+      // Capture AI-suggested player responses
+      if (Array.isArray(result?.suggestions) && result.suggestions.length > 0) {
+        setSuggestions(result.suggestions.slice(0, 3))
+      } else {
+        setSuggestions([])
+      }
+
       // Check for social skill check request
       if (result?.rollRequest && result.rollRequest.skill && result.rollRequest.dc) {
         setPendingRoll(result.rollRequest)
@@ -173,6 +181,7 @@ export default function NpcConversation({
     const updated = [...messages, playerMsg]
     setMessages(updated)
     setInput('')
+    setSuggestions([])
 
     const newCount = promptCount + 1
     setPromptCount(newCount)
@@ -406,6 +415,33 @@ export default function NpcConversation({
           }}>
             Accept Quest
           </button>
+        </div>
+      )}
+
+      {/* AI-suggested dialogue choices */}
+      {suggestions.length > 0 && !disabled && !hardLimited && !pendingRoll && !rollResult && !pendingRepChange && !pendingQuestOffer && (
+        <div style={{
+          display: 'flex', flexWrap: 'wrap', gap: 6, padding: '8px 12px',
+          borderTop: '1px solid rgba(201,168,76,0.2)', background: 'rgba(20,16,12,0.6)',
+        }}>
+          {suggestions.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => handleSend(s)}
+              disabled={loading}
+              style={{
+                flex: '1 1 auto', minWidth: 0, padding: '6px 12px',
+                background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
+                borderRadius: 4, color: '#d4af37', cursor: 'pointer',
+                fontFamily: 'Cinzel, serif', fontSize: 11, textAlign: 'center',
+                transition: 'background 0.2s, border-color 0.2s',
+              }}
+              onMouseEnter={e => { e.target.style.background = 'rgba(201,168,76,0.25)'; e.target.style.borderColor = 'rgba(201,168,76,0.6)' }}
+              onMouseLeave={e => { e.target.style.background = 'rgba(201,168,76,0.1)'; e.target.style.borderColor = 'rgba(201,168,76,0.3)' }}
+            >
+              {s}
+            </button>
+          ))}
         </div>
       )}
 
