@@ -158,6 +158,48 @@ export function playHealSound() {
 }
 
 /**
+ * Play a combat start sound (dramatic war horn)
+ */
+export function playCombatStartSound() {
+  try {
+    const ctx = getAudioContext();
+    const now = ctx.currentTime;
+    const duration = 0.6;
+
+    // Low war horn drone
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(110, now);
+    osc.frequency.linearRampToValueAtTime(130, now + duration * 0.3);
+    osc.frequency.linearRampToValueAtTime(110, now + duration);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.linearRampToValueAtTime(0.25, now + duration * 0.2);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+    osc.start(now);
+    osc.stop(now + duration);
+
+    // Higher overtone for brightness
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(220, now);
+    osc2.frequency.linearRampToValueAtTime(260, now + duration * 0.3);
+    osc2.frequency.linearRampToValueAtTime(220, now + duration);
+    gain2.gain.setValueAtTime(0.1, now);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + duration);
+    osc2.start(now);
+    osc2.stop(now + duration);
+  } catch (e) {
+    console.log('Sound not available:', e.message);
+  }
+}
+
+/**
  * Play a death sound (low descending tone)
  */
 export function playDeathSound() {

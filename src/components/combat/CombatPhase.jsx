@@ -6,7 +6,7 @@ import { crToXp } from '../../lib/xpTable';
 import { broadcastPlayerMove, broadcastNarratorMessage, broadcastEncounterAction } from '../../lib/liveChannel';
 import { COMBAT_SPELLS } from '../../lib/combatSpells';
 import { getSpellSaveDC } from '../../lib/spellCasting';
-import { playHitSound, playMissSound, playDeathSound, playSpellSound, playHealSound } from '../../lib/soundEffects';
+import { playHitSound, playMissSound, playDeathSound, playSpellSound, playHealSound, playCombatStartSound } from '../../lib/soundEffects';
 import PartyPanel from '../PartyPanel';
 import CharDetailPanel from '../CharDetailPanel';
 import ActionPanel from '../ActionPanel';
@@ -79,6 +79,15 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = 0;
   }, [log.length]);
+
+  // Play combat start sound on first render (combat just started)
+  const combatStartedRef = useRef(false);
+  useEffect(() => {
+    if (!combatStartedRef.current && encounter.phase === 'combat') {
+      combatStartedRef.current = true;
+      playCombatStartSound();
+    }
+  }, [encounter.phase]);
 
   // Watch store damage events to spawn floating numbers for ALL clients (including non-host)
   const damageEvents = useStore(s => s.damageEvents);
