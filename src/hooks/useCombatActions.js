@@ -989,7 +989,14 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         speaker: 'Combat',
         text: `Opportunity Attack: ${enemy.name} attacks ${active.name} — ${hitStr} (d20: ${result.d20}, total: ${result.total})`,
       })
-      broadcastEncounterAction({ type: 'oa-resolve', attackerId: enemy.id, targetId: active.id, result })
+      broadcastEncounterAction({
+        type: 'opportunity-attack',
+        attackerId: enemy.id,
+        targetId: active.id,
+        hit: result.hit,
+        damage: result.damage,
+        log: `Opportunity Attack: ${enemy.name} attacks ${active.name} — ${hitStr} (d20: ${result.d20}, total: ${result.total})`,
+      })
       if (result.hit && result.damage > 0) {
         applyDmg(active.id, result.damage)
         const currentHp = (active.currentHp ?? active.hp) - result.damage
