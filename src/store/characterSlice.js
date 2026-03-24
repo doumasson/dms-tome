@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabase';
 import { computeDerivedStats } from '../lib/derivedStats.js';
+import { triggerLootAnimation } from '../components/game/LootAnimation';
 
 /**
  * Character slice — player-owned characters, equipment, inventory, gold, XP.
@@ -150,6 +151,10 @@ export function createCharacterSlice(set, get) {
       const { myCharacter } = get();
       if (!myCharacter) return;
       const inventory = [...(myCharacter.inventory || [])];
+      // Trigger loot pickup animation (center screen → inventory)
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      triggerLootAnimation(item.name || 'Item', cx, cy);
       // Stack consumables by id
       if (item.type === 'consumable' || item.id) {
         const existing = inventory.find(i => i.id === item.id);

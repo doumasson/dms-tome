@@ -39,7 +39,7 @@
 - [x] Minimap — Canvas2D corner minimap showing terrain/walls, player dot with white outline, NPC markers, exit markers, enemy markers in combat, area name header, collapsible with click toggle, legend
 - [x] Quest tracker — collapsible left-side panel showing active quests with checkable objectives, quest giver info, completion progress, active/all filter, supports both store quests and legacy campaign questObjectives
 - [x] Party formation — FormationPanel already existed with front/back line UI; wired formation into trap system so back-line members get advantage (roll twice, take higher) on trap saves, with narrator message noting formation benefit
-- [ ] Loot pickup animation — items fly from ground to inventory with sparkle effect
+- [x] Loot pickup animation — LootAnimation component with flying item icon, sparkle trail particles, item name toast; auto-triggers from addItemToInventory store action; CSS keyframe arc animation from screen center to inventory position
 
 ## Priority 7: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)

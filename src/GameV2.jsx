@@ -15,6 +15,7 @@ import DayNightOverlay, { TimeDisplay } from './components/game/DayNightOverlay'
 import WeatherOverlay from './components/game/WeatherOverlay'
 import Minimap from './components/game/Minimap'
 import QuestTracker from './components/game/QuestTracker'
+import LootAnimation from './components/game/LootAnimation'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -428,6 +429,7 @@ export default function GameV2({ onLeave }) {
         <HUD />
         <Minimap playerPos={playerPos} zone={zone} inCombat={inCombat} />
         <QuestTracker />
+        <LootAnimation />
         {nearbyNpcs.map(npc => (
           <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
         ))}
