@@ -61,7 +61,7 @@
 
 ### Voice & Audio
 - [x] TTS narration: verify narrator messages are spoken aloud (OpenAI TTS → Pollinations fallback → Web Speech). Find and fix.
-- [ ] Ambient audio: verify music plays for area themes, switches on combat, mute toggle works. Find and fix.
+- [x] Ambient audio: verify music plays for area themes, switches on combat, mute toggle works. Find and fix.
 
 ## Priority 2: UI AUDIT — ONE FILE PER ITERATION
 > Read the file. Fix styling issues. Make it match the dark fantasy theme.
