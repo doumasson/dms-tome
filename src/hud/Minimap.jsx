@@ -86,6 +86,31 @@ export default function Minimap({ playerPos, tokens, cameraRef }) {
       ctx.fillRect(0, 0, W, H)
     }
 
+    // Draw compass rose (top-right corner)
+    const compassX = W - 12
+    const compassY = 12
+    ctx.fillStyle = '#c9a84c'
+    ctx.font = 'bold 7px Cinzel, serif'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText('N', compassX, compassY - 7)
+    ctx.globalAlpha = 0.4
+    ctx.fillText('S', compassX, compassY + 7)
+    ctx.fillText('W', compassX - 7, compassY)
+    ctx.fillText('E', compassX + 7, compassY)
+    ctx.globalAlpha = 1.0
+
+    // Draw area name (bottom-left)
+    if (zone.name) {
+      ctx.fillStyle = 'rgba(0,0,0,0.6)'
+      ctx.fillRect(0, H - 12, W, 12)
+      ctx.fillStyle = '#c9a84c'
+      ctx.font = '7px Cinzel, serif'
+      ctx.textAlign = 'left'
+      ctx.textBaseline = 'bottom'
+      ctx.fillText(zone.name.slice(0, 25), 3, H - 2)
+    }
+
     // Draw tokens
     if (tokens) {
       for (const token of tokens) {
