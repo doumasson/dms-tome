@@ -3,73 +3,59 @@
 > Pick the top unchecked item. Build it. Check it off. Move to the next one.
 > **DO NOT WRITE TESTS.** Every iteration = game code, assets, or bug fixes.
 
-## Priority 1: Polish & Fix What's Built
-- [x] Run `npm run build` — fix any build errors or warnings (passing at 962ms)
-- [x] Audit all components over 400 lines — split oversized files (7 major refactors: useCombatActions 1600→1204, CharacterSheet 1168→1011, CreateCampaign 1019→832, CampaignImporter 890→725, LevelUpModal 588→542, DiceTray 401→385, InventoryGrid 408→344)
-- [x] Fix any console errors visible during normal gameplay flow (setApiKeyLoaded export, trap position null checks)
-- [x] Verify multiplayer sync works end-to-end — host and player see the same state (verified 159+ broadcast calls, isDM gating for AI, state syncing comprehensive)
+## DESIGN RULES — EVERY UI COMPONENT MUST FOLLOW THESE
+- Dark fantasy theme: Baldur's Gate 2 / Icewind Dale inspired
+- Gold accents (#c9a84c / #d4af37), deep brown/black backgrounds (#1a1006, #0d0a04)
+- Ornate borders, stone/metal textures via CSS (gradients, box-shadows)
+- SVG filigree and decorative elements where appropriate
+- All text uses fantasy fonts (Cinzel for headers, serif for body)
+- Mobile-first: all touch targets minimum 44x44px, works in landscape
+- No white backgrounds, no flat/modern UI, no default browser styles
+- Every new component needs BOTH functionality AND styled UI
+- These are PLACEHOLDER styles — mark every component with a comment:
+  `/* PLACEHOLDER ART: needs real dark fantasy assets for production */`
+- Big click targets for tablet/TV play at a table
 
-## Priority 2: Gameplay Feel
-- [x] Smooth token movement animations (not snapping tile to tile) — implemented TweenEngine with easing, hooked to combat token movement
-- [x] Scene image loading — show loading state while Pollinations generates, don't flash blank (already implemented: skeleton shimmer + spinner)
-- [x] Combat feedback — visual hit/miss/damage numbers floating above tokens (already implemented: FloatingDamageNumber component)
-- [x] Sound effects for combat actions (hit, miss, spell cast, death) — implemented procedural Web Audio API sounds (hit, miss, death on damage events)
-- [x] Narrator text should stream in (typewriter effect), not appear all at once — implemented TypewriterText component, applies to last DM message only
+## Priority 1: UI/UX Polish on Existing Features (CRITICAL — DO THIS FIRST)
+> You built 20+ new components. They work but need proper dark fantasy styling.
+> Go through EACH ONE and make the UI match the DESIGN RULES above.
+> One component per iteration. Style it properly, then move on.
 
-## Priority 3: Missing Game Features
-- [x] Merchant/shop UI improvements — make it feel like a real RPG shop, not a list (featured items section, rarity glow effects, item counts, hover animations)
-- [x] Character portrait in-game — show the actual portrait, not just colored circles (added portrait generation for enemies)
-- [x] Map variety — more curated chunks for different biomes/themes (6 biome templates: mountain, desert, coastal, swamp, graveyard, marketplace)
-- [x] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.) (7 effect types, integrated into CombatPhase with floating damage numbers on spell casts)
-- [x] Better NPC conversation — longer, more personality-driven dialogue (rich personality descriptions, enhanced system prompt encouraging depth)
+- [ ] CombatRecap / VictoryScreen — ornate parchment background, gold borders, fantasy typography
+- [ ] Tooltip system — dark semi-transparent panel with gold border, readable on dark backgrounds
+- [ ] PartyHealthBars — BG2/Icewind Dale portrait bar style, ornate frames around portraits
+- [ ] EmoteSystem — magical feel (particle trails, fade glow), dark themed picker
+- [ ] PingSystem — magical beacon marker, not a generic circle
+- [ ] CraftingPanel — RPG workbench feel, ingredient slots with ornate borders, spellbook-style recipe list
+- [ ] KeyboardHelp overlay — parchment scroll background, organized columns
+- [ ] LoadingTips — dark vignette background, ornate text framing
+- [ ] AutoSaveIndicator — subtle, non-intrusive, matches HUD style
+- [ ] XP bar — ornate progress bar with level badge, not a plain rectangle
+- [ ] Encounter difficulty badge — styled like a seal/sigil
+- [ ] Minimap — ornate border frame, parchment background, compass rose
+- [ ] Bestiary — style as a leather-bound monster manual
+- [ ] Area map overview — parchment map style with wax seal markers
 
-## Priority 4: Gameplay Polish
-- [x] Combat keyboard shortcuts — A=Attack, S=Spell, E=End Turn, Esc=Cancel, 1-9=Select combatant
-- [x] Conditions/status effect icons on tokens (poisoned, blessed, etc.) — badge icons with colored borders for all 14 SRD conditions + 5 extra (Burning, Frozen, Blessed, Hasted, Hexed), concentration ring, prone/invisible special effects
-- [x] Rest mechanics UI (short rest / long rest buttons with proper 5e recovery) — already implemented: RestModal with party voting, hit dice spending, short/long rest recovery, PartySidebar buttons
-- [x] Initiative tracker visual improvements — TurnOrderBar component with portrait circles, HP ring arcs, initiative badges, condition icons, active turn arrow animation, auto-scroll to active combatant
+## Priority 2: Core Gameplay Flow
+- [ ] Campaign selection — verify the test campaign loads (screenshots show "no campaigns found")
+- [ ] Character select → game transition — no error boundary crashes
+- [ ] Combat initiation — exploration → combat works end to end
+- [ ] Rest system — short/long rest UI styled and functional
+- [ ] Death saves — dying/dead flow with proper visual feedback
 
-## Priority 5: Atmosphere & Immersion
-- [x] Ambient background music — procedural Web Audio API drone/pad moods (exploration, combat, mystery, tavern, danger), auto-switches on combat state, HUD toggle + volume control, localStorage persistence
-- [x] Day/night visual cycle — DayNightOverlay component with smooth hour-based tint interpolation (dawn golden, dusk orange, night deep blue), TimeDisplay clock in HUD showing time-of-day icon + formatted time
-- [x] Weather effects — Canvas2D particle overlay for rain, heavy_rain, storm, snow, fog, ash; reads from store weather system with automatic transitions; integrated into GameV2
-- [x] Ambient sound effects — procedural footsteps (4 surface types) on movement, door creak on area transitions, coin jingle on purchases, chest open sound, torch crackle + wind ambient loops
+## Priority 3: Mobile & Responsive
+- [ ] All new components work at 375px landscape
+- [ ] All buttons/panels have 44px+ tap targets
+- [ ] Drawer/sheet pattern on small screens instead of overlapping modals
+- [ ] HUD collapses properly on narrow screens
 
-## Priority 6: World & Navigation
-- [x] Minimap — Canvas2D corner minimap showing terrain/walls, player dot with white outline, NPC markers, exit markers, enemy markers in combat, area name header, collapsible with click toggle, legend
-- [x] Quest tracker — collapsible left-side panel showing active quests with checkable objectives, quest giver info, completion progress, active/all filter, supports both store quests and legacy campaign questObjectives
-- [x] Party formation — FormationPanel already existed with front/back line UI; wired formation into trap system so back-line members get advantage (roll twice, take higher) on trap saves, with narrator message noting formation benefit
-- [x] Loot pickup animation — LootAnimation component with flying item icon, sparkle trail particles, item name toast; auto-triggers from addItemToInventory store action; CSS keyframe arc animation from screen center to inventory position
+## Priority 4: Integration & Wiring
+- [ ] Verify ALL new components are reachable in normal gameplay
+- [ ] CraftingPanel uses real inventory items
+- [ ] EmoteSystem broadcasts via Supabase Realtime
+- [ ] PingSystem broadcasts via Supabase Realtime
+- [ ] AutoSave actually persists to Supabase
 
-## Priority 7: UI & Information
-- [x] Tooltip system — reusable Tooltip component with positioned popups, ItemTooltip/SpellTooltip/ConditionTooltip formatters; integrated into CombatantRow condition badges; dark fantasy styled with fade-in animation
-- [x] Faction reputation display — already implemented: FactionReputation.jsx with reputation bars, disposition labels, color-coded standings, wired into GameModalsRenderer via 'faction' tool button
-- [x] Combat recap — CombatRecap component parses combat log for per-character stats (damage, healing, kills, hits, misses, spells, crits, damage taken), MVP highlight, integrated into VictoryScreen
-- [x] Keyboard shortcut help — KeyboardHelp overlay triggered by ? key, shows Movement/Combat/Interaction/UI categories with styled kbd elements, Esc to close, skip when typing in inputs
-
-## Priority 8: Multiplayer & Social
-- [x] Party health bars — PartyHealthBars component showing compact HP bars for all party members, portrait circles, name labels, condition dots, dead overlay, live HP from combat combatants, positioned bottom-left
-- [x] Emote/reaction system — EmoteSystem component with 10 emotes (attack, defend, haha, nice, scared, roll, rip, fire, love, gg), floating emoji animations, broadcast to all players via encounter-action channel, picker grid, player name labels
-- [x] Auto-save indicator — AutoSaveIndicator component with spinning/checkmark/error states, hooked into saveCampaignToSupabase and saveSettingsToSupabase, auto-fades after 2s, positioned top-right
-- [x] Ping system — Ctrl+Click places animated waypoint marker with expanding ring, bouncing arrow, player name label; broadcast to all players via encounter-action channel; per-player color coding; 4s auto-fade
-
-## Priority 9: Core RPG Systems
-- [x] XP progress bar — XpBar component in HUD showing current level, XP count, XP-to-next-level, gold gradient progress bar; MAX indicator at level 20; uses SRD 5e XP thresholds
-- [x] Encounter difficulty indicator — encounterDifficulty.js calculates Easy/Medium/Hard/Deadly from party levels vs enemy CRs with SRD multipliers; color-coded badge shown in TurnOrderBar during combat; auto-updates as enemies die
-- [x] Loading screen tips — LoadingTips component with 25 gameplay tips, shows random tip on area transitions, 3s fade-in/fade-out animation, centered bottom overlay
-- [x] Crafting system — 10 material types, 8 recipes (potions, scrolls, oils, caltrops), skill check DC system, ingredient consumption, CraftingPanel UI with material counts/recipe cards/craft button, wired to 'craft' tool handler
-
-## Priority 10: World Building
-- [x] Area map overview — SVG node graph showing connected areas with theme icons, dashed connection lines with labels, current area glow animation, visited/unvisited markers, BFS layout, accessible via 'worldmap' tool handler
-- [x] Bestiary — Bestiary component with split-view list/detail, monster portraits, ability scores, attacks, CR/AC/HP/speed badges, search filter, encounter count; auto-logs enemies when combat starts via encounterSlice; stored in storySlice
-- [ ] Session timer — show real-time session duration in HUD
-- [ ] Damage type resistance display — show enemy resistances/immunities in combat tooltips
-
-## Priority 11: Asset Generation (blocked — needs external image API)
-- [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
-- [ ] Token/character sprites — already using Pollinations for portraits
-- [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets
-
-## Blocked
-- [ ] Pitched roof visuals — waiting on slope/edge FA assets
-- [ ] Nano Banana / Deevid integration — waiting on API details
+## Priority 5: Asset Report
+- [ ] Generate `tasks/asset-report.md` listing ALL assets needed for production:
+  tiles, tokens, UI art, effects, portraits, audio — the full art checklist
