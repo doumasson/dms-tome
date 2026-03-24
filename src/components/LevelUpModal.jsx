@@ -129,10 +129,15 @@ export default function LevelUpModal({ character, onConfirm, onCancel }) {
     // If CON increased via ASI, retroactively gain 1 HP per level (5e rule)
     const conHpBonus = conModChanged ? (newConMod - conMod) * newLevel : 0;
 
+    const newMaxHp = finalHp + conHpBonus;
+    // currentHp gains the same amount as maxHp (level-up heals the difference)
+    const hpIncrease = newMaxHp - (character.maxHp || 0);
+    const newCurrentHp = Math.min(newMaxHp, (character.currentHp ?? character.hp ?? 0) + Math.max(0, hpIncrease));
     onConfirm({
       level: newLevel,
-      maxHp: finalHp + conHpBonus,
-      hp: finalHp + conHpBonus,
+      maxHp: newMaxHp,
+      hp: newMaxHp,
+      currentHp: newCurrentHp,
       spellSlots: Object.keys(newSlots).length > 0 ? newSlots : character.spellSlots,
       features: allFeaturesNew,
       spells: updatedSpells,

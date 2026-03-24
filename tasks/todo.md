@@ -49,7 +49,7 @@
 - [x] Crafting: open CraftingPanel → materials from inventory shown → select recipe → skill check → item created and added to inventory. Find and fix.
 
 ### Progression & Economy
-- [ ] Level up: trace XP threshold → LevelUpModal trigger → HP roll/average choice → new features → spell slot increase → cantrip/spell selection for casters. Find and fix.
+- [x] Level up: trace XP threshold → LevelUpModal trigger → HP roll/average choice → new features → spell slot increase → cantrip/spell selection for casters. Find and fix.
 - [ ] Rest system: short rest → hit dice spending → HP recovery. Long rest → full HP + spell slot restore + hit dice recovery. Dungeon blocks long rest. Find and fix.
 - [ ] Shop/merchant: open shop → browse items → buy (gold deducted) → sell at 50% → faction reputation affects prices → premium items for friendly factions. Find and fix.
 - [ ] Gold persistence: verify gold survives combat rewards, purchases, and session reload. No race conditions on multi-player gold split. Find and fix.
