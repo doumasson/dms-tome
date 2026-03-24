@@ -153,6 +153,11 @@ export default function SessionLog({ onChat, tab, setTab }) {
               >
                 <span className="hud-chat-speaker">
                   {msg.speaker || (msg.role === 'dm' ? 'DM' : 'You')}
+                  {msg.timestamp && (
+                    <span style={{ fontSize: 7, color: '#5a4a3a', marginLeft: 4, fontWeight: 400 }}>
+                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  )}
                 </span>
                 <span className="hud-chat-text">{msg.text}</span>
               </div>

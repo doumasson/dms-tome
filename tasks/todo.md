@@ -74,6 +74,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Player count in top bar — 👤N shows connected player count next to invite button with tooltip
 - [x] Welcome message for new players — Narrator greets by name/class, mentions zone, teaches WASD/E/? controls on first load
 - [x] Enemy death flash — red tint flash for 120ms then 400ms fade to 25% opacity when enemy drops to 0 HP
+- [x] Chat message timestamps — HH:MM shown next to speaker name in chat tab, subtle muted color
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
