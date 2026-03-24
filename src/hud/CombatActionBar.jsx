@@ -148,6 +148,25 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
 
   return (
     <div className="hud-combat-bar stone-panel" style={{ padding: '4px 8px', display: 'flex', flexDirection: 'column' }}>
+      {/* Action economy status — shows remaining actions/bonus/movement */}
+      <div style={{
+        display: 'flex', justifyContent: 'center', gap: 10, padding: '2px 0 4px',
+        fontSize: 8, fontFamily: "'Cinzel', serif", letterSpacing: '0.5px',
+        borderBottom: '1px solid rgba(201,168,76,0.12)', marginBottom: 3,
+      }}>
+        <span style={{ color: actionsLeft ? '#44cc66' : '#665544' }}>
+          {actionsLeft ? '● ACTION' : '○ ACTION'}
+        </span>
+        <span style={{ color: bonusLeft ? '#44cc66' : '#665544' }}>
+          {bonusLeft ? '● BONUS' : '○ BONUS'}
+        </span>
+        <span style={{ color: canMove && moveLeft > 0 ? '#44cc66' : '#665544' }}>
+          ● {moveLeft * 5}ft
+        </span>
+        <span style={{ color: timeLeft <= 10 ? '#cc3333' : '#887755', fontFamily: 'monospace' }}>
+          {timeLeft}s
+        </span>
+      </div>
       {/* Scrollable action area */}
       <div style={{ flex: 1, overflow: 'auto', maxHeight: 100 }}>
         {/* Class resource bar */}

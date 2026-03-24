@@ -58,6 +58,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Auto-narrate area entry — Narrator describes scene on area transition (theme flavor + nearby NPCs), broadcast to all players
 - [x] Combat victory summary — "N enemies defeated (names) in M rounds. X wounded." replaces generic "Victory!" message
 - [x] Enhanced "Your Turn" banner — gold pulsing glow, larger text with ⚔ icon when it's player's turn in combat
+- [x] Combat action economy display — shows ● ACTION / ● BONUS / ● movement ft / timer above action buttons
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
