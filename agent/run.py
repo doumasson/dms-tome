@@ -275,7 +275,8 @@ def take_screenshots(iteration):
     shot_dir.mkdir(exist_ok=True)
 
     # Write a temporary node script — agent never sees or edits this
-    # This navigates the FULL flow: login → dashboard → campaign → character → game
+    # Navigates: login → dashboard → campaign → character select → game
+    # Uses EXACT selectors from the actual React components
     script_content = """
 const { chromium } = require('%PLAYWRIGHT%');
 
@@ -293,10 +294,17 @@ async function getPageInfo(page) {
     Array.from(document.querySelectorAll('button'))
       .map(e => e.textContent.trim()).filter(t => t && t.length < 40).slice(0, 20)
   );
-  const errors = await page.evaluate(() =>
-    Array.from(document.querySelectorAll('.error,[class*="error"],[class*="Error"]'))
-      .map(e => e.textContent.trim()).filter(t => t && t.length < 200)
-  );
+  const errors = await page.evaluate(() => {
+    // Check for error boundary "Something went wrong"
+    const allText = document.body.innerText || '';
+    const found = [];
+    if (allText.includes('Something went wrong')) found.push('ERROR BOUNDARY: Something went wrong');
+    document.querySelectorAll('.error,[class*="error"],[class*="Error"]').forEach(e => {
+      const t = e.textContent.trim();
+      if (t && t.length < 200) found.push(t);
+    });
+    return found;
+  });
   const canvas = await page.$('canvas');
   return { headings, buttons, errors, hasCanvas: !!canvas };
 }
@@ -307,56 +315,95 @@ async function getPageInfo(page) {
   await page.setViewportSize({ width: 1280, height: 800 });
   const result = { shots: [], screens: [], errors: [], finalScreen: 'unknown', hasCanvas: false };
   const dir = '%SHOTDIR%';
+
+  // Capture console errors
+  const consoleErrors = [];
+  page.on('console', msg => {
+    if (msg.type() === 'error') consoleErrors.push(msg.text().substring(0, 200));
+  });
+  page.on('pageerror', err => consoleErrors.push('UNCAUGHT: ' + err.message.substring(0, 200)));
+
   try {
-    // Step 1: Load app (auto-login via env vars)
+    // Step 1: Load app (auto-login via VITE_DEV_AUTO_LOGIN env vars)
     await page.goto('http://localhost:%PORT%', { waitUntil: 'networkidle', timeout: 25000 });
     await page.waitForTimeout(3000);
     let info = await getPageInfo(page);
-    await snap(page, '01-after-login', dir, result);
-    result.screens.push({ step: 'login', headings: info.headings, buttons: info.buttons, errors: info.errors });
+    await snap(page, '01-dashboard', dir, result);
+    result.screens.push({ step: 'dashboard', headings: info.headings, buttons: info.buttons, errors: info.errors });
 
-    // Step 2: Click first campaign card (or any clickable campaign)
-    const campaignCard = await page.$('[class*="campaign" i], [class*="card" i], button:has-text("Play"), button:has-text("Enter"), button:has-text("Continue")');
-    if (campaignCard) {
-      await campaignCard.click();
-      await page.waitForTimeout(3000);
-      info = await getPageInfo(page);
-      await snap(page, '02-after-campaign', dir, result);
-      result.screens.push({ step: 'campaign', headings: info.headings, buttons: info.buttons, errors: info.errors });
+    if (info.errors.length > 0) {
+      result.finalScreen = 'DASHBOARD (with errors)';
+      result.errors = info.errors;
+      result.consoleErrors = consoleErrors.slice(0, 5);
+      console.log(JSON.stringify(result));
+      await browser.close();
+      return;
     }
 
-    // Step 3: Click character / play button
-    const charBtn = await page.$('button:has-text("Play"), button:has-text("Select"), button:has-text("Enter"), button:has-text("Start"), [class*="character" i]');
-    if (charBtn) {
-      await charBtn.click();
-      await page.waitForTimeout(4000);
-      info = await getPageInfo(page);
-      await snap(page, '03-after-character', dir, result);
-      result.screens.push({ step: 'character', headings: info.headings, buttons: info.buttons, errors: info.errors });
+    // Step 2: Click first campaign card — exact selector: button.campaign-card
+    const campaignCard = await page.$('button.campaign-card');
+    if (!campaignCard) {
+      result.finalScreen = 'DASHBOARD (no campaigns found — button.campaign-card missing)';
+      result.consoleErrors = consoleErrors.slice(0, 5);
+      console.log(JSON.stringify(result));
+      await browser.close();
+      return;
+    }
+    await campaignCard.click();
+    await page.waitForTimeout(4000);
+    info = await getPageInfo(page);
+    await snap(page, '02-after-campaign-click', dir, result);
+    result.screens.push({ step: 'after_campaign', headings: info.headings, buttons: info.buttons, errors: info.errors });
+
+    if (info.errors.length > 0) {
+      result.finalScreen = 'CAMPAIGN CRASHED: ' + info.errors.join('; ');
+      result.errors = info.errors;
+      result.consoleErrors = consoleErrors.slice(0, 5);
+      console.log(JSON.stringify(result));
+      await browser.close();
+      return;
     }
 
-    // Step 4: Final state — check for canvas (PixiJS game)
+    // Step 3: Character select — look for "Choose Your Champion" heading
+    const isCharSelect = info.headings.some(h => /champion|character/i.test(h)) ||
+                         info.buttons.some(b => /create.*character|new.*character/i.test(b));
+    if (isCharSelect) {
+      // Click first character card (div with onClick in character list)
+      const charCard = await page.$('div[style*="cursor: pointer"][style*="#1a1006"]');
+      if (charCard) {
+        await charCard.click();
+        await page.waitForTimeout(5000);
+        info = await getPageInfo(page);
+        await snap(page, '03-after-character', dir, result);
+        result.screens.push({ step: 'after_character', headings: info.headings, buttons: info.buttons, errors: info.errors });
+      } else {
+        result.finalScreen = 'CHARACTER SELECT (no existing characters to click)';
+        result.consoleErrors = consoleErrors.slice(0, 5);
+        console.log(JSON.stringify(result));
+        await browser.close();
+        return;
+      }
+    }
+
+    // Step 4: Check final state
     await page.waitForTimeout(2000);
     info = await getPageInfo(page);
     await snap(page, '04-final', dir, result);
     result.hasCanvas = info.hasCanvas;
     result.screens.push({ step: 'final', headings: info.headings, buttons: info.buttons, errors: info.errors, hasCanvas: info.hasCanvas });
 
-    // Determine where we ended up
     if (info.hasCanvas) {
       result.finalScreen = 'GAME (PixiJS canvas visible)';
-    } else if (info.buttons.some(b => /play|enter|select|start/i.test(b))) {
-      result.finalScreen = 'CHARACTER SELECT';
-    } else if (info.headings.some(h => /campaign/i.test(h))) {
-      result.finalScreen = 'DASHBOARD';
+    } else if (info.errors.length > 0) {
+      result.finalScreen = 'GAME SCREEN ERROR: ' + info.errors.join('; ');
     } else {
-      result.finalScreen = 'UNKNOWN - headings: ' + info.headings.join(', ');
+      result.finalScreen = 'STUCK: no canvas, no errors. Headings: ' + info.headings.join(', ') + '. Buttons: ' + info.buttons.slice(0, 5).join(', ');
     }
 
-    // Collect all errors across screens
     result.errors = result.screens.flatMap(s => s.errors || []);
+    result.consoleErrors = consoleErrors.slice(0, 5);
 
-  } catch(e) { result.errors.push('Navigation error: ' + e.message); }
+  } catch(e) { result.errors.push('Navigation error: ' + e.message); result.consoleErrors = consoleErrors.slice(0, 5); }
   finally { await browser.close(); }
   console.log(JSON.stringify(result));
 })();
@@ -394,8 +441,11 @@ async function getPageInfo(page) {
                 desc += f" ERRORS={s['errors']}"
         all_errors = r.get('errors', [])
         if all_errors:
-            desc += f"\nALL ERRORS: {all_errors}"
-        log(f"  -> {desc[:300]}")
+            desc += f"\nUI ERRORS: {all_errors}"
+        console_errors = r.get('consoleErrors', [])
+        if console_errors:
+            desc += f"\nCONSOLE ERRORS: {console_errors}"
+        log(f"  -> {desc[:400]}")
         return desc
     finally:
         dev_proc.terminate()
@@ -482,11 +532,16 @@ Check "Known fixes" — you may have fixed this before.
 Just make the build pass. Then the next iteration will build features."""
 
 TASK_FLOW_BLOCKED = """The screenshot shows the app is STUCK and not reaching the game.
-Look at the screen descriptions. Fix whatever is blocking the flow:
-- If stuck on login: check auth / auto-login env vars
-- If stuck on dashboard: ensure test campaign exists and is clickable
-- If stuck on character select: ensure test character exists
-Fix the BLOCKING issue so the game screen is reachable."""
+Look at the screen descriptions and CONSOLE ERRORS. Fix whatever is blocking:
+- If "Something went wrong" or error boundary: find the crash in the component, fix it
+- If stuck on dashboard: the test campaign may not load from Supabase
+- If stuck on character select: the test character may not load
+- If no canvas: the game view component may have a rendering error
+
+CRITICAL: The app works for real human users via Discord OAuth login.
+DO NOT change the auth flow, login UI, or Supabase config.
+The test uses VITE_DEV_AUTO_LOGIN with email/password — that's a separate path.
+Fix the CRASH, not the auth. Read the console errors for the actual exception."""
 
 TASK_PICK_FROM_TODO = """The game is reachable and working. Now BUILD FEATURES.
 
