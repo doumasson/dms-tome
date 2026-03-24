@@ -77,14 +77,41 @@ export function useRandomEncounters({
     addNarratorMessage(msg)
     broadcastNarratorMessage(msg)
 
+    // Position enemies near the player
+    const enemiesWithPositions = enemies.map((e, i) => ({
+      ...e,
+      position: {
+        x: playerPos.x + 3 + (i % 3),
+        y: playerPos.y - 1 + Math.floor(i / 3),
+      },
+      startPosition: {
+        x: playerPos.x + 3 + (i % 3),
+        y: playerPos.y - 1 + Math.floor(i / 3),
+      },
+    }))
+
+    // Create the combat start function that other systems (narrator chat, stealth) expect
+    const startCombatWithZoneEnemies = () => {
+      const { startEncounter, partyMembers: pm } = useStore.getState()
+      if (startEncounter) {
+        startEncounter(enemiesWithPositions, pm, true, { hazards })
+        broadcastEncounterAction({
+          type: 'start-encounter',
+          enemies: enemiesWithPositions,
+          hazards,
+        })
+      }
+    }
+
     // Store encounter data for DM to decide how to proceed
     useStore.setState({
       pendingEncounterData: {
-        enemies,
+        enemies: enemiesWithPositions,
         hazards,
         difficulty: difficultyRating,
         dmPrompt,
         loot: calculateRandomEncounterLoot(enemies, partyMembers.length),
+        startCombatWithZoneEnemies,
       },
     })
   }, [playerPos, inCombat, isDM, zone])

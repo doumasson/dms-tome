@@ -11,10 +11,8 @@
 ### ~~Bug 1: Random encounters spam on every tile move~~ ✅ FIXED
 Fixed: Region-based dedup (6x6 tiles), 60s cooldown, reduced rates (5% dungeon / 3% wilderness / 0% town), skip if pending encounter exists.
 
-### Bug 2: No enemy tokens spawned on map
-Random encounters fire messages ("You notice Goblin ahead!") but no enemy tokens actually appear on the tilemap. The encounter system creates narrator messages but doesn't place enemies on the grid.
-- Trace: random encounter triggers → startEncounter → enemy combatants should appear as red tokens on the PixiJS canvas
-- Find where enemy token placement fails and fix it
+### ~~Bug 2: No enemy tokens spawned on map~~ ✅ FIXED
+Fixed: Random encounters now provide `startCombatWithZoneEnemies` function with positioned enemies near player. Narrator chat and stealth handlers can now trigger combat with actual token placement via `startEncounter`.
 
 ### Bug 3: Narrator float bar is enormous
 There's a huge gold-bordered bar spanning most of the screen width in the middle of the game view. This is either the NarratorFloat, an interaction zone overlay, or the character name display. It should be small and unobtrusive — a small floating text, not a screen-blocking banner.
