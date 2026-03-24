@@ -67,7 +67,7 @@
 > Read the file. Fix styling issues. Make it match the dark fantasy theme.
 
 - [x] NarratorPanel.jsx
-- [ ] NpcConversation.jsx
+- [x] NpcConversation.jsx
 - [ ] CharacterSheet.jsx
 - [ ] LootScreen.jsx
 - [ ] GameOverModal.jsx

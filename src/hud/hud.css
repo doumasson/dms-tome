@@ -973,11 +973,32 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding: 8px 12px;
+  border-radius: 4px;
 }
 
-.npc-conv-npc { text-align: left; }
-.npc-conv-player { text-align: right; }
-.npc-conv-system { text-align: center; font-style: italic; }
+.npc-conv-npc {
+  text-align: left;
+  background: rgba(212,175,55,0.04);
+  border-left: 3px solid rgba(212,175,55,0.3);
+  align-self: stretch;
+}
+.npc-conv-player {
+  text-align: right;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px 2px 8px 8px;
+  max-width: 75%;
+  align-self: flex-end;
+}
+.npc-conv-system {
+  text-align: center;
+  font-style: italic;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.15);
+  align-self: center;
+  max-width: 85%;
+}
 
 .npc-conv-speaker {
   font-family: var(--font-heading);
