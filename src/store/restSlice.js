@@ -42,6 +42,10 @@ export function createRestSlice(set, get) {
           },
         };
       });
+      // Notify all players via narrator
+      const charName = get().myCharacter?.name || 'The party'
+      const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} takes a short rest. Class resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
+      get().addNarratorMessage?.(msg)
       get().saveCampaignToSupabase();
     },
 
@@ -158,6 +162,10 @@ export function createRestSlice(set, get) {
           },
         };
       });
+      // Notify all players via narrator
+      const charName = get().myCharacter?.name || 'The party'
+      const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} completes a long rest. Full HP, spell slots, and resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
+      get().addNarratorMessage?.(msg)
       get().saveCampaignToSupabase();
       get().saveSettingsToSupabase();
     },

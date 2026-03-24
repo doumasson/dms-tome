@@ -69,6 +69,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Gold display in HUD — shows 🪙 N gp below character identity, always visible without opening inventory
 - [x] NPC name labels on minimap — blue name text appears next to NPC dots when player within 8 tiles
 - [x] NPC faction badge on tokens — colored dot (red=hostile, green=friendly, gold=revered) on NPC map tokens based on faction reputation
+- [x] Rest narrator notification — short/long rest completion posts narrator message to chat (visible to all players)
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
