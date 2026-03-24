@@ -9,6 +9,7 @@ import { getOpenAiKey } from '../lib/dalleApi';
 import { ambient } from '../lib/ambientAudio';
 import { getClaudeApiKey } from '../lib/claudeApi';
 import { broadcastSceneChange, broadcastStartCombat } from '../lib/liveChannel';
+import TypewriterText from './TypewriterText';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const SPEECH_SUPPORTED = !!SpeechRecognition;
@@ -502,7 +503,11 @@ export default function NarratorPanel() {
             {SPEECH_SUPPORTED && canSpeak ? ' Hold 🎤 to speak, or enable Hey DM mode.' : ''}
           </p>
         )}
-        {narrator.history.map((msg, i) => (
+        {narrator.history.map((msg, i) => {
+          // Check if this is the last message and it's from the DM
+          const isLastDmMessage = msg.role === 'dm' && i === narrator.history.length - 1;
+
+          return (
           <div key={msg.id || i} style={msg.role === 'dm' ? styles.dmBubble : styles.playerBubble}>
             {msg.role === 'dm' ? (
               // Only show DM label when preceded by a player message (avoids repetition)
@@ -512,7 +517,13 @@ export default function NarratorPanel() {
             ) : (
               <span style={styles.playerLabel}>⚔ {msg.speaker}</span>
             )}
-            <p style={styles.bubbleText}>{msg.text}</p>
+            <p style={styles.bubbleText}>
+              {isLastDmMessage ? (
+                <TypewriterText text={msg.text} speed={20} />
+              ) : (
+                msg.text
+              )}
+            </p>
             {msg.rollRequest && (
               <button
                 style={{
@@ -566,7 +577,8 @@ export default function NarratorPanel() {
               </button>
             )}
           </div>
-        ))}
+          );
+        })}
         {loading && (
           <div style={styles.dmBubble}>
             <p style={{ ...styles.bubbleText, opacity: 0.4, fontStyle: 'italic' }}>The Narrator stirs…</p>
