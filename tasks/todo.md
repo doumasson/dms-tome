@@ -6,7 +6,7 @@
 ## Priority 1: Polish & Fix What's Built
 - [x] Run `npm run build` — fix any build errors or warnings (passing at 962ms)
 - [x] Audit all components over 400 lines — split oversized files (7 major refactors: useCombatActions 1600→1204, CharacterSheet 1168→1011, CreateCampaign 1019→832, CampaignImporter 890→725, LevelUpModal 588→542, DiceTray 401→385, InventoryGrid 408→344)
-- [ ] Fix any console errors visible during normal gameplay flow (create campaign → create character → enter game → explore → combat)
+- [x] Fix any console errors visible during normal gameplay flow (setApiKeyLoaded export, trap position null checks)
 - [ ] Verify multiplayer sync works end-to-end — host and player see the same state
 
 ## Priority 2: Gameplay Feel
