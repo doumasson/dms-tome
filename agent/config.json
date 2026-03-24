@@ -4,7 +4,7 @@
   "branch": "agent-dev",
   "model": "claude-haiku-4-5-20251001",
   "max_iterations": 50,
-  "max_turns": 30,
+  "max_turns": 75,
   "pause_between_secs": 10,
   "dev_port": 5173,
   "memory_files": [

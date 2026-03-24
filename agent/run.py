@@ -103,7 +103,7 @@ def run_claude(prompt, resume_id=None):
     if resume_id:
         cmd += ["--resume", resume_id]
     log("  -> Invoking Claude Code...")
-    rc, stdout, stderr = run(cmd, timeout=1200)  # 20 min max
+    rc, stdout, stderr = run(cmd, timeout=2400)  # 40 min — let it work
     if rc != 0 and not stdout:
         log(f"  X Claude error: {stderr[:300]}")
         return f"ERROR: {stderr[:300]}", None
@@ -472,8 +472,8 @@ PROMPT_TEMPLATE = SYSTEM_RULES + """
 
 {task_instruction}
 
-ONE code change per iteration. You have 30 tool calls max — be efficient.
-Don't read every file. Read only what you need. Fix or build ONE thing. Verify with `""" + BUILD_CMD + """`.
+ONE code change per iteration. Be efficient — read only files you need.
+Fix or build ONE thing, then verify with `""" + BUILD_CMD + """`.
 If you learned something new, append ONE line to tasks/lessons.md.
 """
 
