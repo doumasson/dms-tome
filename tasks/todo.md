@@ -21,7 +21,7 @@
 > These are the core gameplay loops — every one must work end to end.
 
 ### Campaign & Character Creation
-- [ ] Campaign creation end-to-end: CreateCampaign.jsx → each wizard step → AI generation (must use platform default API key from app_config, NOT require BYOK) → save to Supabase → redirect to new campaign. Find and fix a real bug.
+- [x] Campaign creation end-to-end: CreateCampaign.jsx → each wizard step → AI generation (must use platform default API key from app_config, NOT require BYOK) → save to Supabase → redirect to new campaign. Find and fix a real bug.
 - [ ] Character creation end-to-end: race select → class select → ability scores (standard array, point buy, 4d6 drop lowest) → spell selection for casters → background/identity → save to Supabase → enter game with new character. Find and fix a real bug.
 
 ### Combat System

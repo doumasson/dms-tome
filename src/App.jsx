@@ -754,7 +754,8 @@ export default function App() {
     // Use getState() to avoid stale closure — setUser() above hasn't re-rendered yet
     const freshUserId = useStore.getState().user?.id;
 
-    // Ensure user has a campaign_members row (required for character selection to work)
+    // Ensure user has a campaign_members row (required for character selection to work).
+    // Use ignoreDuplicates so we never overwrite an existing 'dm' role with 'player'.
     if (freshUserId) {
       await supabase
         .from('campaign_members')
@@ -762,9 +763,9 @@ export default function App() {
           {
             campaign_id: campaignRecord.id,
             user_id: freshUserId,
-            role: 'player',
+            role: freshUserId === campaignRecord.dm_user_id ? 'dm' : 'player',
           },
-          { onConflict: 'campaign_id,user_id' }
+          { onConflict: 'campaign_id,user_id', ignoreDuplicates: true }
         )
         .select()
         .maybeSingle();

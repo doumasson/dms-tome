@@ -719,7 +719,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               </button>
             </div>
             <p style={styles.inviteCodeLabel}>Invite Code: <strong style={{ color: 'var(--gold)', fontFamily: 'monospace', letterSpacing: '0.1em' }}>{createdCampaign.invite_code}</strong></p>
-            <button onClick={() => onDone(createdCampaign)} style={styles.createBtn}>
+            <button onClick={() => onDone({ ...createdCampaign, userRole: 'dm' })} style={styles.createBtn}>
               Enter Campaign →
             </button>
           </div>
