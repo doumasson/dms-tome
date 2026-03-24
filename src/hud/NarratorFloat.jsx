@@ -10,6 +10,27 @@ export default function NarratorFloat() {
 
   // Auto-hide after 8 seconds
   const [visible, setVisible] = useState(true)
+  const [displayedText, setDisplayedText] = useState('')
+
+  // Typewriter effect: show 1 character per 25ms
+  useEffect(() => {
+    if (!lastDm?.text) {
+      setDisplayedText('')
+      return
+    }
+
+    setDisplayedText('') // Reset when message changes
+    let charIndex = 0
+    const interval = setInterval(() => {
+      charIndex++
+      setDisplayedText(lastDm.text.substring(0, charIndex))
+      if (charIndex >= lastDm.text.length) clearInterval(interval)
+    }, 25)
+
+    return () => clearInterval(interval)
+  }, [lastDm?.text])
+
+  // Auto-hide after 8 seconds
   useEffect(() => {
     setVisible(true)
     const t = setTimeout(() => setVisible(false), 8000)
@@ -38,7 +59,7 @@ export default function NarratorFloat() {
         </svg>
         <div className="hud-narrator-text">
           {lastDm.speaker && <span className="hud-narrator-name">{lastDm.speaker}: </span>}
-          {lastDm.text}
+          {displayedText}
         </div>
       </div>
     </div>
