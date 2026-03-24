@@ -52,6 +52,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Fix enemy info panel — was reading enemy.hp instead of enemy.currentHp (showed 0/NaN). Added CR display, HP color scaling, condition badges
 - [x] Wire damage type through combat — applyEncounterDamage now accepts damageType param, weapon attacks pass weapon.damageType to floating numbers
 - [x] XP gain notification toast — gold "+N XP" with level progress bar, auto-fades after 2.5s
+- [x] Gold gain notification — "+N Gold" shown alongside XP in the same toast, watches myCharacter.gold changes
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
