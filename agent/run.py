@@ -8,6 +8,16 @@ import subprocess, json, time, os, sys, signal, datetime, urllib.request
 import tempfile
 from pathlib import Path
 
+# ─── ENSURE PATH ──────────────────────────────────────────────────────────────
+# When launched from systemd/Popen, ~/.local/bin may not be on PATH
+_extra_paths = [
+    str(Path.home() / ".local" / "bin"),
+    str(Path.home() / ".npm-global" / "bin"),
+]
+for p in _extra_paths:
+    if p not in os.environ.get("PATH", ""):
+        os.environ["PATH"] = p + os.pathsep + os.environ.get("PATH", "")
+
 # ─── CONFIG ────────────────────────────────────────────────────────────────────
 
 AGENT_DIR = Path(__file__).parent
