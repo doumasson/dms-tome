@@ -454,7 +454,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
         if (hit && damage > 0) {
           const { applyEncounterDamage: applyDmg } = useStore.getState()
-          applyDmg(target.id || target.name, damage)
+          applyDmg(target.id || target.name, damage, weapon.damageType || undefined)
         }
 
         const coverNote = coverBonus > 0 ? ` (${coverType} cover +${coverBonus})` : ''

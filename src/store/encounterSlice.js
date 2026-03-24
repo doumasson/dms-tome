@@ -541,7 +541,7 @@ export function createEncounterSlice(set, get) {
       });
     },
 
-    applyEncounterDamage: (targetId, amount) => {
+    applyEncounterDamage: (targetId, amount, damageType) => {
       let concentrationBroke = false;
       set((state) => {
         const target = state.encounter.combatants.find(c => c.id === targetId);
@@ -610,7 +610,7 @@ export function createEncounterSlice(set, get) {
         };
       });
       // Emit damage event so CombatPhase can show floating numbers (works for all clients)
-      set(s => ({ damageEvents: [...s.damageEvents, { targetId, amount, type: amount > 0 ? 'damage' : 'miss', timestamp: Date.now() }] }));
+      set(s => ({ damageEvents: [...s.damageEvents, { targetId, amount, type: damageType || (amount > 0 ? 'damage' : 'miss'), timestamp: Date.now() }] }));
       // Broadcast concentration break so all clients clear it
       if (concentrationBroke) {
         broadcastEncounterAction({ type: 'clear-concentration', id: targetId, userId: get().user?.id || 'system' });

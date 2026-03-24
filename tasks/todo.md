@@ -50,6 +50,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] HUD character identity header — shows name, level, class with class-colored initial badge and glow
 - [x] Damage type colors — floating numbers colored per damage type (fire=orange, cold=blue, etc.) + crit indicator with glow
 - [x] Fix enemy info panel — was reading enemy.hp instead of enemy.currentHp (showed 0/NaN). Added CR display, HP color scaling, condition badges
+- [x] Wire damage type through combat — applyEncounterDamage now accepts damageType param, weapon attacks pass weapon.damageType to floating numbers
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
