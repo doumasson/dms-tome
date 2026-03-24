@@ -8,21 +8,40 @@ export function createRestSlice(set, get) {
   return {
     shortRest: () => {
       // Restore short-rest class resources (HP recovery happens via spendHitDie calls)
-      set((state) => ({
-        campaign: {
-          ...state.campaign,
-          characters: state.campaign.characters.map((c) => {
-            const defs = getClassResources(c.class, c.level, c.stats);
-            const restored = { ...c.resourcesUsed };
+      set((state) => {
+        const updatedChars = state.campaign.characters.map((c) => {
+          const defs = getClassResources(c.class, c.level, c.stats);
+          const restored = { ...c.resourcesUsed };
+          defs.filter(r => r.resetOn === 'short').forEach(r => { restored[r.name] = 0; });
+          return { ...c, resourcesUsed: restored };
+        });
+
+        // Also update myCharacter so the HUD reflects restored resources immediately
+        let updatedMyChar = state.myCharacter;
+        if (state.myCharacter) {
+          const match = updatedChars.find(c =>
+            c.id === state.myCharacter.id || c.name === state.myCharacter.name
+          );
+          if (match) {
+            updatedMyChar = { ...state.myCharacter, resourcesUsed: match.resourcesUsed };
+          } else {
+            // myCharacter not in campaign.characters — restore directly
+            const defs = getClassResources(state.myCharacter.class, state.myCharacter.level, state.myCharacter.stats);
+            const restored = { ...state.myCharacter.resourcesUsed };
             defs.filter(r => r.resetOn === 'short').forEach(r => { restored[r.name] = 0; });
-            return { ...c, resourcesUsed: restored };
-          }),
-        },
-        encounter: {
-          ...get().encounter,
-          log: ['\ud83c\udf19 Short rest \u2014 short-rest resources restored.', ...get().encounter.log].slice(0, 30),
-        },
-      }));
+            updatedMyChar = { ...state.myCharacter, resourcesUsed: restored };
+          }
+        }
+
+        return {
+          myCharacter: updatedMyChar,
+          campaign: { ...state.campaign, characters: updatedChars },
+          encounter: {
+            ...state.encounter,
+            log: ['\ud83c\udf19 Short rest \u2014 short-rest resources restored.', ...state.encounter.log].slice(0, 30),
+          },
+        };
+      });
       get().saveCampaignToSupabase();
     },
 
