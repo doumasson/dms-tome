@@ -8,12 +8,8 @@
 
 ## CRITICAL BUGS — FIX THESE FIRST (game is broken)
 
-### Bug 1: Random encounters spam on every tile move
-The random encounter system fires on EVERY movement step. A player walks 5 tiles and gets 5 encounter prompts. This makes the game unplayable.
-- Find `useRandomEncounters` or the movement handler that triggers encounters
-- The encounter check should fire ONCE per area entry or on a low % chance per move (like 5-10%), not every tile
-- Encounters that fire should ONLY happen if the AI narrator decides to start one, not automatically
-- Fix the trigger rate. Verify by walking around — should be rare, not every step.
+### ~~Bug 1: Random encounters spam on every tile move~~ ✅ FIXED
+Fixed: Region-based dedup (6x6 tiles), 60s cooldown, reduced rates (5% dungeon / 3% wilderness / 0% town), skip if pending encounter exists.
 
 ### Bug 2: No enemy tokens spawned on map
 Random encounters fire messages ("You notice Goblin ahead!") but no enemy tokens actually appear on the tilemap. The encounter system creates narrator messages but doesn't place enemies on the grid.

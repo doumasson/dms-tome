@@ -69,13 +69,14 @@ const MONSTER_STATS = {
 
 /**
  * Roll a d100 to check for random encounter.
- * Chance increases in dangerous areas: 10% in town, 15% in wilderness, 20% in dungeon.
+ * Low chance per check — combined with region dedup + cooldown in the hook,
+ * this means encounters happen roughly once every few minutes of exploration.
  * @param {string} areaType — 'dungeon', 'wilderness', or 'town'
  * @returns {boolean} true if encounter triggered
  */
 export function rollRandomEncounter(areaType = 'dungeon') {
   const roll = Math.random() * 100;
-  const threshold = areaType === 'dungeon' ? 20 : areaType === 'wilderness' ? 15 : 10;
+  const threshold = areaType === 'dungeon' ? 5 : areaType === 'wilderness' ? 3 : 0;
   return roll <= threshold;
 }
 
