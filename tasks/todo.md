@@ -1,7 +1,11 @@
 # Active Work — Agent Priority Queue
 
-> Pick the top unchecked item. Build it. Check it off. Move to the next one.
-> **DO NOT WRITE TESTS.** Every iteration = game code, assets, or bug fixes.
+> **RULES FOR MARKING ITEMS DONE:**
+> - You can ONLY check off an item if you WROTE CODE in this iteration to fix/build it
+> - Reading a file and deciding "it looks fine" is NOT done — find a real issue and fix it
+> - If it's a flow (creation, combat, rest): trace the code path, find a real bug, fix it
+> - ONE item per iteration. ONE commit. Do not batch-check items.
+> - **DO NOT WRITE TESTS.** Every iteration = game code, assets, or bug fixes.
 
 ## DESIGN RULES — EVERY UI COMPONENT MUST FOLLOW THESE
 - Dark fantasy theme: Baldur's Gate 2 / Icewind Dale inspired
@@ -11,64 +15,47 @@
 - All text uses fantasy fonts (Cinzel for headers, serif for body)
 - Mobile-first: all touch targets minimum 44x44px, works in landscape
 - No white backgrounds, no flat/modern UI, no default browser styles
-- Every new component needs BOTH functionality AND styled UI
-- These are PLACEHOLDER styles — mark every component with a comment:
-  `/* PLACEHOLDER ART: needs real dark fantasy assets for production */`
-- Big click targets for tablet/TV play at a table
+- These are PLACEHOLDER styles — mark with `/* PLACEHOLDER ART: needs real assets */`
 
-## Priority 1: UI/UX Polish on Existing Features (CRITICAL — DO THIS FIRST)
-> You built 20+ new components. They work but need proper dark fantasy styling.
-> Go through EACH ONE and make the UI match the DESIGN RULES above.
-> One component per iteration. Style it properly, then move on.
+## Priority 1: Functional Testing — TRACE EACH FLOW IN CODE, FIND BUGS, FIX THEM
+> Do NOT rubber-stamp these. Read the actual code. Find a real bug. Fix it.
 
-- [x] CombatRecap / VictoryScreen — ornate dark fantasy styling: gold gradient borders, Cinzel Decorative headers, textured backgrounds, inset shadows, stat badges with dark panels, 44px+ touch targets
-- [x] Tooltip system — ornate dark fantasy panel: double gold borders, corner filigree accents, SVG arrow, Cinzel headers, Crimson Text body, gold dividers, inset glow, rarity-colored item names, spell stat icons
-- [x] PartyHealthBars — BG2/Icewind Dale portrait bar style: ornate gold-framed portraits with corner accents, chiseled HP bars with notch marks, Cinzel names, gradient fills, condition badges with icons
-- [x] EmoteSystem — magical feel (particle trails, fade glow), dark themed picker
-- [x] PingSystem — magical beacon marker: SVG rune circle, vertical energy beam, spark particles, gem center
-- [x] CraftingPanel — RPG workbench: ornate ingredient slots with corner notches, spellbook recipes, filigree corners, gold dividers
-- [x] KeyboardHelp overlay — parchment scroll with curled edges, filigree corners, organized columns, ornate kbd keys
-- [x] LoadingTips — dark vignette backdrop, ornate SVG bars, Cinzel Decorative label, Crimson Text tip
-- [x] AutoSaveIndicator — SVG rune spinner, checkmark/X states, subtle HUD glow, Cinzel text
-- [x] XP bar — SVG shield level badge, ornate bar with notches/end caps, gold shimmer animation
-- [x] Encounter difficulty badge — SVG scalloped wax seal with tick marks, color-coded per difficulty, used in Victory/Defeat screens
-- [x] Minimap — ornate double gold frame, parchment gradient, SVG compass rose, corner filigree, 44px collapsed button
-- [x] Bestiary — leather-bound book: spine accent, corner studs, split page layout, ornate stat boxes, Cinzel Decorative headers
-- [x] Area map overview — parchment map with wax seal node markers, scalloped edges, trail lines, filigree corners
+- [ ] Campaign creation: read CreateCampaign.jsx. Trace every step. Does AI generation use the platform default API key? Does it save to Supabase? Does it redirect to the new campaign? Find and fix a real issue.
+- [ ] Character creation: read the CharacterCreate flow. Race → class → abilities → spells → identity. Does each step save correctly? Can you enter the game with the new character? Find and fix a real issue.
+- [ ] Combat flow: read useCombatActions, encounterSlice, enemyAi. What happens when player walks near enemies? Does encounter trigger? Initiative? Turns? Enemy AI? Find and fix a real issue.
+- [ ] Rest system: read RestModal. Does short rest heal with hit dice? Long rest restore spell slots? Find and fix a real issue.
+- [ ] Death saves: read what happens at 0 HP. Does UI appear? Do saves track? Does healing revive? Find and fix a real issue.
+- [ ] NPC interaction: read interactionController, NpcConversation. Does walking near NPC trigger dialog? Does AI respond? Skill checks work? Find and fix a real issue.
+- [ ] Inventory/equipment: read CharacterSheet. Can you equip? Does AC update? Drag-and-drop? Find and fix a real issue.
+- [ ] Level up: read LevelUpModal. XP threshold triggers it? Can you pick features/spells? Find and fix a real issue.
 
-## Priority 2: Campaign & Character Creation (full new-user flow)
-> Delete the test campaign/character, then go through creation from scratch.
-> Every screen must be styled per DESIGN RULES. Fix any bugs found.
-> Read CLAUDE.md "Business Model" section — NO API key gate for normal users.
+## Priority 2: Old UI Audit — READ EACH FILE, FIX STYLING
+> One file per iteration. Actually read the JSX. Fix what's wrong.
 
-- [x] Campaign creation flow — ornate card with filigree corners, numbered step indicators, platform default API key, all 4 steps styled
-- [x] Character creation flow — ornate card frame with filigree corners, layered gradient background, full 7-step builder already styled
-- [x] Verify: no ApiKeyGate — fixed race condition in key loading, platform default key loads first, non-DM players never blocked
-- [x] Combat initiation — zone triggers, AI narrator startCombat, random encounters, stealth ambush all wired end-to-end
-- [x] Rest system — RestModal with majority vote, hit dice spending, timer bar, short/long rest functional
-- [x] Death saves — ornate SVG pip indicators with check/X marks, Cinzel labels, pulse animation, gradient panel, styled buttons
+- [ ] src/components/NarratorPanel.jsx — is chat styled dark fantasy? Readable? Gold accents?
+- [ ] src/components/NpcConversation.jsx — dialog box ornate? Skill check UI styled?
+- [ ] src/components/CharacterSheet.jsx — two-pane polished? Equipment slots styled?
+- [ ] src/components/game/LootScreen.jsx — post-combat loot UI themed?
+- [ ] src/components/game/GameOverModal.jsx — defeat screen styled?
+- [ ] src/hud/BottomBar.jsx — main HUD bar ornate and consistent?
+- [ ] src/hud/CombatActionBar.jsx — action buttons styled? Touch-friendly?
+- [ ] src/components/game/ShopPanel.jsx — merchant UI polished?
+- [ ] src/components/game/RestModal.jsx — rest UI themed?
+- [ ] src/components/LoginPage.jsx — login screen dark fantasy?
+- [ ] src/components/CampaignSelect.jsx — campaign cards ornate?
 
-## Priority 3: Mobile & Responsive
-- [x] All new components work at 375px landscape — compact HUD, scaled minimap, tighter spacing at max-height:420px
-- [x] All buttons/panels have 44px+ tap targets — enforced in design rules, all buttons minHeight 44px+
-- [x] Drawer/sheet pattern — BottomSheet component: bottom drawer on small screens, centered modal on large, drag handle, slide-up animation
-- [x] HUD collapses properly — toggle button hides XP/spells/conditions/time, HP+AC always visible, animated transition
+## Priority 3: Integration Verification — CHECK REAL DATA
+- [ ] CraftingPanel — real inventory items or hardcoded?
+- [ ] EmoteSystem — actually broadcasts via Supabase?
+- [ ] PingSystem — actually broadcasts via Supabase?
+- [ ] AutoSave — actually calls saveCampaignToSupabase?
+- [ ] Bestiary — actually logs monsters during gameplay?
+- [ ] Quest tracker — reads real quest data from store?
 
-## Priority 4: Review & Fix Existing Code
-> Not just new stuff — review OLD components and screens for quality.
-- [x] Audit src/components/ — all files use dark theme, no white backgrounds, Cinzel fonts, gold accents throughout
-- [x] Audit src/hud/ — HUD uses FiligreeBar, OrnateFrame, stone-panel classes, 36KB hud.css, all themed
-- [x] Check all modals/overlays — VictoryScreen, DefeatScreen, RestModal, LevelUp all use dark fantasy styling
-- [x] Review NarratorPanel — uses narratorStyles.js with Cinzel, gold gradients, dark panels, polished layout
-- [x] Check CreateCampaign and CharacterCreate — both have filigree corners, gradient cards, ornate step indicators
-- [x] Console warnings/errors — build clean (only chunk size warning), no missing keys, no deprecated APIs
-
-## Priority 5: Integration & Wiring
-- [x] Verify ALL new components reachable — all imported and rendered in GameV2, tool handlers wire CraftingPanel/Bestiary/AreaMap
-- [x] CraftingPanel uses real inventory — consumes from myCharacter.inventory via MATERIALS/RECIPES system
-- [x] EmoteSystem broadcasts via Supabase Realtime — uses broadcastEncounterAction({ type: 'emote' })
-- [x] PingSystem broadcasts via Supabase Realtime — uses broadcastEncounterAction({ type: 'ping' })
-- [x] AutoSave persists to Supabase — campaignSlice calls saveSettingsToSupabase/saveSessionStateToSupabase with notifySave hooks
+## Priority 4: Mobile & Responsive
+- [ ] All panels work at 375px landscape viewport
+- [ ] All buttons 44px+ tap targets
+- [ ] Modals use BottomSheet pattern on mobile
 
 ## Priority 5: Asset Report
-- [x] Generated `tasks/asset-report.md` — complete checklist: 8 tile atlases, 23 UI images, 6 CSS textures, 30+ token sprites, 20 SFX, 8 music tracks
+- [ ] Generate `tasks/asset-report.md` — full production art checklist
