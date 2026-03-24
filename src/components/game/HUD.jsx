@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import useStore from '../../store/useStore';
 import { setMood, stopMusic, setMusicVolume, getMusicState } from '../../lib/ambientMusic';
 import { TimeDisplay } from './DayNightOverlay';
@@ -116,9 +116,10 @@ export default function HUD() {
         </div>
       )}
 
-      {/* Time & Music */}
+      {/* Time, Session & Music */}
       <div className="hud-section" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <TimeDisplay />
+        <SessionTimer />
         <MusicToggle />
       </div>
 
@@ -153,6 +154,34 @@ export default function HUD() {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function SessionTimer() {
+  const [elapsed, setElapsed] = useState(0);
+  const startRef = useRef(Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const hrs = Math.floor(elapsed / 3600);
+  const mins = Math.floor((elapsed % 3600) / 60);
+  const secs = elapsed % 60;
+  const display = hrs > 0
+    ? `${hrs}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+    : `${mins}:${String(secs).padStart(2, '0')}`;
+
+  return (
+    <div style={{
+      fontSize: '0.55rem', color: 'rgba(255,255,255,0.25)',
+      fontFamily: 'monospace', letterSpacing: '0.5px',
+    }} title="Session duration">
+      {display}
     </div>
   );
 }
