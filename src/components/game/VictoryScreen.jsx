@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import CombatRecap from './CombatRecap';
 import './VictoryScreen.css';
 
 /**
@@ -152,6 +153,11 @@ export default function VictoryScreen({
               <span className="reward-value">{goldEarned} gp</span>
             </div>
           </div>
+        </div>
+
+        {/* Combat Recap */}
+        <div style={{ padding: '0 8px', marginBottom: 12 }}>
+          <CombatRecap encounter={encounter} rounds={encounter.round || 1} />
         </div>
 
         {/* Footer */}

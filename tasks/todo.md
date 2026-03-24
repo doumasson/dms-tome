@@ -43,8 +43,8 @@
 
 ## Priority 7: UI & Information
 - [x] Tooltip system — reusable Tooltip component with positioned popups, ItemTooltip/SpellTooltip/ConditionTooltip formatters; integrated into CombatantRow condition badges; dark fantasy styled with fade-in animation
-- [ ] Faction reputation display — show faction standings in a UI panel
-- [ ] Combat recap — post-combat summary showing damage dealt, heals, kills per character
+- [x] Faction reputation display — already implemented: FactionReputation.jsx with reputation bars, disposition labels, color-coded standings, wired into GameModalsRenderer via 'faction' tool button
+- [x] Combat recap — CombatRecap component parses combat log for per-character stats (damage, healing, kills, hits, misses, spells, crits, damage taken), MVP highlight, integrated into VictoryScreen
 - [ ] Keyboard shortcut help — press ? to see all available shortcuts
 
 ## Priority 8: Asset Generation (blocked — needs external image API)
