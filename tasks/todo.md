@@ -47,6 +47,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Area name announcement — BG-style gold text appears on zone entry, holds 2.5s, fades out with ornamental line
 - [x] Screen shake on combat hits — light shake (4px/200ms) on hits, heavy shake (8px/350ms) on 10+ damage
 - [x] Initiative strip upgrade — character initials with class colors, HP pip bars, active glow, name+HP tooltips
+- [x] HUD character identity header — shows name, level, class with class-colored initial badge and glow
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds

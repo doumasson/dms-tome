@@ -5,10 +5,17 @@ import { TimeDisplay } from './DayNightOverlay';
 import { xpForLevel } from '../LevelUpModal';
 import './HUD.css';
 
+const CLASS_GLOW = {
+  Fighter: '#4499dd', Barbarian: '#cc5544', Paladin: '#eedd44',
+  Ranger: '#44aa66', Rogue: '#cc7722', Monk: '#88bbcc',
+  Wizard: '#6644cc', Sorcerer: '#aa55bb', Warlock: '#885599',
+  Cleric: '#44aa66', Druid: '#558833', Bard: '#cc7799',
+}
+
 /**
  * HUD Component - Character Status Display
  * Positioned in top-left of map area
- * Shows: HP bar, AC badge, spell slots, conditions
+ * Shows: Name, class, HP bar, AC badge, spell slots, conditions
  * CSS styling only, no external images
  */
 export default function HUD() {
@@ -58,6 +65,41 @@ export default function HUD() {
       >
         {collapsed ? '▶' : '◀'}
       </button>
+
+      {/* Character identity header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 8,
+        marginBottom: 4, padding: '0 2px',
+      }}>
+        <div style={{
+          width: 22, height: 22, borderRadius: 3,
+          background: `linear-gradient(135deg, ${CLASS_GLOW[myCharacter.class] || '#4499dd'}33, transparent)`,
+          border: `1px solid ${CLASS_GLOW[myCharacter.class] || '#4499dd'}66`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: "'Cinzel Decorative', serif",
+          fontSize: 11, fontWeight: 700,
+          color: CLASS_GLOW[myCharacter.class] || '#4499dd',
+          textShadow: `0 0 6px ${CLASS_GLOW[myCharacter.class] || '#4499dd'}55`,
+          flexShrink: 0,
+        }}>
+          {(myCharacter.name || '?')[0].toUpperCase()}
+        </div>
+        <div style={{ overflow: 'hidden', flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontFamily: "'Cinzel', serif", fontSize: 10, fontWeight: 700,
+            color: '#e8d5a3', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            lineHeight: 1.1,
+          }}>
+            {myCharacter.name || 'Hero'}
+          </div>
+          <div style={{
+            fontFamily: "'Cinzel', serif", fontSize: 8, color: '#8a7a5a',
+            letterSpacing: '0.5px', lineHeight: 1.1,
+          }}>
+            Lv{myCharacter.level || 1} {myCharacter.class || 'Adventurer'}
+          </div>
+        </div>
+      </div>
 
       {/* HP Bar — always visible */}
       <div className="hud-section hud-hp">
