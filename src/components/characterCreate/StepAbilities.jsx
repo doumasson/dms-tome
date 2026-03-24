@@ -81,10 +81,16 @@ export default function StepAbilities({ race, cls, baseStats, setBaseStats, meth
     setPickTarget(stat);
   }
 
-  // Standard array
-  function assignStandard(val) {
+  // Standard array — supports swapping when clicking an already-used value
+  function assignStandard(val, usedByStat) {
     if (!assignTarget) return;
-    setBaseStats({ ...baseStats, [assignTarget]: val });
+    if (usedByStat && usedByStat !== assignTarget) {
+      // Swap: give the other stat whatever assignTarget currently has
+      const targetOldVal = baseStats[assignTarget];
+      setBaseStats({ ...baseStats, [assignTarget]: val, [usedByStat]: targetOldVal });
+    } else {
+      setBaseStats({ ...baseStats, [assignTarget]: val });
+    }
     setAssignTarget(null);
   }
 
@@ -122,8 +128,8 @@ export default function StepAbilities({ race, cls, baseStats, setBaseStats, meth
               return (
                 <button
                   key={i}
-                  style={{ ...s.arrayValBtn, ...(assignTarget && !usedBy ? s.arrayValBtnAvail : {}), ...(usedBy ? s.arrayValBtnUsed : {}) }}
-                  onClick={() => assignTarget && !usedBy ? assignStandard(val) : null}
+                  style={{ ...s.arrayValBtn, ...(assignTarget && (!usedBy || usedBy !== assignTarget) ? s.arrayValBtnAvail : {}), ...(usedBy && !assignTarget ? s.arrayValBtnUsed : {}) }}
+                  onClick={() => assignTarget ? assignStandard(val, usedBy) : null}
                 >
                   {val}
                   {usedBy && <div style={s.arrayValUsedLabel}>{STAT_LABELS[usedBy]}</div>}
