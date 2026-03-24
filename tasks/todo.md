@@ -66,7 +66,7 @@
 ## Priority 2: UI AUDIT — ONE FILE PER ITERATION
 > Read the file. Fix styling issues. Make it match the dark fantasy theme.
 
-- [ ] NarratorPanel.jsx
+- [x] NarratorPanel.jsx
 - [ ] NpcConversation.jsx
 - [ ] CharacterSheet.jsx
 - [ ] LootScreen.jsx

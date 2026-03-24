@@ -140,7 +140,7 @@ export const styles = {
     border: '1px solid rgba(212,175,55,0.5)', borderRadius: 6,
     cursor: 'pointer', textAlign: 'left', animation: 'goldPulse 2.2s infinite',
   },
-  rollBtnIcon: { display: 'none' },
+  rollBtnIcon: { fontSize: '1.6rem', flexShrink: 0 },
   rollBtnText: { flex: 1, lineHeight: 1.4 },
   rollBtnCta: {
     display: 'flex', flexDirection: 'column', alignItems: 'center',
