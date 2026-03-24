@@ -773,7 +773,31 @@ export function createEncounterSlice(set, get) {
       }))
     },
 
-    addEncounterCondition: (id, condition) =>
+    addEncounterCondition: (id, condition) => {
+      const CONDITION_DESC = {
+        Poisoned: 'Disadvantage on attacks and ability checks',
+        Stunned: 'Cannot move or act, auto-fail STR/DEX saves',
+        Paralyzed: 'Cannot move or act, attacks within 5ft auto-crit',
+        Frightened: 'Disadvantage on attacks while source visible',
+        Charmed: 'Cannot attack the charmer',
+        Blinded: 'Attacks have disadvantage, enemies have advantage',
+        Restrained: 'Speed 0, attacks have disadvantage',
+        Prone: 'Melee attacks have advantage, ranged disadvantage',
+        Grappled: 'Speed reduced to 0',
+        Invisible: 'Attacks have advantage, enemies have disadvantage',
+        Concentrating: 'Maintaining a spell effect',
+        Dodging: 'Attacks against have disadvantage',
+        Hidden: 'Enemies cannot see you',
+        Turned: 'Must flee from the source',
+        Raging: '+2 melee damage, resistance to physical',
+      }
+      const target = get().encounter.combatants?.find(c => c.id === id)
+      if (target && !target.conditions?.includes(condition)) {
+        const desc = CONDITION_DESC[condition]
+        if (desc) {
+          get().addEncounterLog(`⚡ ${target.name}: ${condition} — ${desc}`)
+        }
+      }
       set((state) => ({
         encounter: {
           ...state.encounter,
@@ -783,7 +807,8 @@ export function createEncounterSlice(set, get) {
               : c
           ),
         },
-      })),
+      }))
+    },
 
     removeEncounterCondition: (id, condition) =>
       set((state) => ({
