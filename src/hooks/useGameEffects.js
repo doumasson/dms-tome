@@ -182,6 +182,22 @@ export function useGameEffects({
     }
   }, [myCharacter?.id, zone?.id, campaign?.id, inCombat, setShowSessionResume])
 
+  // Welcome message for new players on first load
+  const welcomeShownRef = useRef(false)
+  useEffect(() => {
+    if (welcomeShownRef.current || !myCharacter?.name || !zone?.name || inCombat) return
+    if (myCharacter.xp > 0) return // returning player, skip welcome
+    welcomeShownRef.current = true
+    const charClass = myCharacter.class || 'adventurer'
+    const msg = {
+      role: 'dm', speaker: 'The Narrator',
+      text: `Welcome, ${myCharacter.name} the ${charClass}. You find yourself in ${zone.name}. Use WASD or click to move, E to interact with NPCs, and press ? for all keyboard shortcuts. Your adventure begins now.`,
+      id: crypto.randomUUID?.() || Date.now().toString(),
+      timestamp: Date.now(),
+    }
+    addNarratorMessage(msg)
+  }, [myCharacter?.name, zone?.name, inCombat])
+
   // Track player movement
   useEffect(() => {
     if (prevPlayerPosRef.current && (prevPlayerPosRef.current.x !== playerPos.x || prevPlayerPosRef.current.y !== playerPos.y)) {
