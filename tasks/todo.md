@@ -26,8 +26,8 @@
 ## Priority 4: Gameplay Polish
 - [x] Combat keyboard shortcuts — A=Attack, S=Spell, E=End Turn, Esc=Cancel, 1-9=Select combatant
 - [x] Conditions/status effect icons on tokens (poisoned, blessed, etc.) — badge icons with colored borders for all 14 SRD conditions + 5 extra (Burning, Frozen, Blessed, Hasted, Hexed), concentration ring, prone/invisible special effects
-- [ ] Rest mechanics UI (short rest / long rest buttons with proper 5e recovery)
-- [ ] Initiative tracker visual improvements
+- [x] Rest mechanics UI (short rest / long rest buttons with proper 5e recovery) — already implemented: RestModal with party voting, hit dice spending, short/long rest recovery, PartySidebar buttons
+- [x] Initiative tracker visual improvements — TurnOrderBar component with portrait circles, HP ring arcs, initiative badges, condition icons, active turn arrow animation, auto-scroll to active combatant
 
 ## Priority 5: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)

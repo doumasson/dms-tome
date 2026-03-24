@@ -19,6 +19,7 @@ import AttackPanel from './AttackPanel';
 import FloatingDamageNumber from './FloatingDamageNumber';
 import SpellAnimation from '../SpellAnimation';
 import { SavingThrowPanel, AoEPanel, ConcentratePanel, SpellSelectPanel } from './SpellPanels';
+import TurnOrderBar from './TurnOrderBar';
 import { btn, apStyle, MAP_W, MAP_H, CELL_PX } from './combatStyles';
 
 function useWindowWidth() {
@@ -706,12 +707,16 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   if (isMobile) {
 
     const battleContent = (
-      <div style={{ padding: '8px 0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.82rem', color: 'var(--gold)', fontWeight: 700, fontFamily: "'Cinzel', Georgia, serif" }}>Round {round}</span>
-          {activeCombatant && <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Turn: <strong>{activeCombatant.name}</strong></span>}
-          {(allEnemiesDead || partyDead) && (
-            <>
+      <div style={{ padding: '0' }}>
+        <TurnOrderBar
+          combatants={combatants}
+          currentTurn={currentTurn}
+          round={round}
+          onTokenClick={handleTokenClick}
+        />
+        <div style={{ padding: '8px 0' }}>
+        {(allEnemiesDead || partyDead) && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
               <span style={{ fontSize: '0.78rem', color: allEnemiesDead ? '#2ecc71' : '#e74c3c', fontWeight: 700 }}>
                 {allEnemiesDead ? '🏆 Victory!' : '💀 Defeated!'}
               </span>
@@ -720,8 +725,8 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
                   ✕ End Combat
                 </button>
               )}
-            </>
-          )}
+          </div>
+        )}
         </div>
         <div style={{ overflowX: 'auto', position: 'relative' }}>
           <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -861,13 +866,15 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     <div style={{ display: 'flex', gap: 8, padding: '0 8px', height: '100%', alignItems: 'flex-start' }}>
 
       {/* Left: Initiative tracker */}
-      <div style={{ width: isTablet ? 150 : 180, flexShrink: 0, overflowY: 'auto', maxHeight: 'calc(55vh - 20px)' }}>
-        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.08em', fontFamily: "'Cinzel', Georgia, serif", marginBottom: 6, padding: '0 2px' }}>
-          INITIATIVE — Round {round}
-        </div>
-        {initiativeList}
+      <div style={{ width: isTablet ? 160 : 190, flexShrink: 0, overflowY: 'auto', maxHeight: 'calc(55vh - 20px)' }}>
+        <TurnOrderBar
+          combatants={combatants}
+          currentTurn={currentTurn}
+          round={round}
+          onTokenClick={handleTokenClick}
+        />
         {dmMode && (
-          <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4, padding: '0 6px' }}>
             <button onClick={onShortRest} style={{ ...btn.ghost, fontSize: '0.65rem', padding: '4px 6px' }}>🌙 Short Rest</button>
             <button onClick={onLongRest} style={{ ...btn.ghost, fontSize: '0.65rem', padding: '4px 6px', color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)' }}>☀️ Long Rest</button>
           </div>
