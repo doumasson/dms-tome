@@ -325,9 +325,9 @@ async function audit(page) {
   page.on('pageerror', err => consoleErrors.push('UNCAUGHT: ' + err.message.substring(0, 200)));
 
   try {
-    // === STEP 1: LOAD & LOGIN ===
+    // === STEP 1: LOAD & LOGIN (wait for auth + data fetch) ===
     await page.goto('http://localhost:%PORT%', { waitUntil: 'networkidle', timeout: 25000 });
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(5000);  // Extra time for auto-login + Supabase campaign fetch
     let info = await audit(page);
     await snap(page, '01-dashboard', result);
     result.screens.push({ step: 'dashboard', ...info });
@@ -342,22 +342,31 @@ async function audit(page) {
     // that looks like a campaign card (not nav buttons like Sign Out/Create/Join).
     async function findAndClickCampaign() {
       return await page.evaluate(() => {
-        const skip = ['sign out','create','join','settings','⚙','invite','copy code'];
+        const skip = ['sign out','create new','join campaign','⚙','copy','invite'];
         const buttons = Array.from(document.querySelectorAll('button'));
+        const allBtnTexts = buttons.map(b => b.textContent.trim().substring(0, 50));
+        // Find a campaign card: any button that's not a nav action
         for (const btn of buttons) {
           const t = btn.textContent.trim().toLowerCase();
-          if (t.length > 5 && !skip.some(w => t.includes(w)) && !btn.querySelector('svg')) {
+          if (t.length > 2 && !skip.some(w => t.includes(w))) {
             btn.click();
-            return btn.textContent.trim().substring(0, 40);
+            return { clicked: btn.textContent.trim().substring(0, 40), allButtons: allBtnTexts };
           }
         }
-        return null;
+        return { clicked: null, allButtons: allBtnTexts };
       });
     }
-    let clicked = await findAndClickCampaign();
+    let clickResult = await findAndClickCampaign();
+    let clicked = clickResult?.clicked;
     if (!clicked) {
-      await page.waitForTimeout(4000);
-      clicked = await findAndClickCampaign();
+      // Campaign data might not have loaded yet — wait and retry
+      result.actions.push('RETRY_WAIT: buttons=' + JSON.stringify(clickResult?.allButtons || []));
+      await page.waitForTimeout(5000);
+      // Reload page to trigger fresh fetch
+      await page.reload({ waitUntil: 'networkidle', timeout: 20000 });
+      await page.waitForTimeout(5000);
+      clickResult = await findAndClickCampaign();
+      clicked = clickResult?.clicked;
     }
     if (!clicked) {
       info = await audit(page);
