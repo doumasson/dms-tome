@@ -102,6 +102,20 @@ export function createCharacterSlice(set, get) {
       const derivedEquip = computeDerivedStats(updatedCharacterEquip);
       const updates = { equippedItems, inventory, ac: derivedEquip.ac, derivedStats: derivedEquip };
       get().updateMyCharacter(updates);
+      // Sync AC to combat combatant if in combat
+      const { encounter } = get();
+      if (encounter.phase !== 'idle') {
+        set(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              (c.id === myCharacter.id || c.name === myCharacter.name)
+                ? { ...c, ac: derivedEquip.ac }
+                : c
+            ),
+          },
+        }));
+      }
     },
 
     // Move equipped item back to inventory
@@ -118,6 +132,20 @@ export function createCharacterSlice(set, get) {
       const derivedUnequip = computeDerivedStats(updatedCharacterUnequip);
       const updates = { equippedItems, inventory, ac: derivedUnequip.ac, derivedStats: derivedUnequip };
       get().updateMyCharacter(updates);
+      // Sync AC to combat combatant if in combat
+      const { encounter } = get();
+      if (encounter.phase !== 'idle') {
+        set(state => ({
+          encounter: {
+            ...state.encounter,
+            combatants: state.encounter.combatants.map(c =>
+              (c.id === myCharacter.id || c.name === myCharacter.name)
+                ? { ...c, ac: derivedUnequip.ac }
+                : c
+            ),
+          },
+        }));
+      }
     },
 
     // Attune to a magic item (max 3 attuned items at once)
