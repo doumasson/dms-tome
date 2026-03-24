@@ -337,57 +337,18 @@ async function audit(page) {
       throw new Error('stop');
     }
 
-    // === STEP 2: CAMPAIGN — find or create ===
+    // === STEP 2: CAMPAIGN — click it (seed script ensures it exists) ===
     let card = await page.$('button.campaign-card');
     if (!card) {
-      result.actions.push('NO_CAMPAIGN_FOUND — clicking Create');
-      // Click "+ Create New Campaign"
-      const createBtn = await page.$('button:has-text("Create New Campaign"), button:has-text("Create")');
-      if (createBtn) {
-        await createBtn.click();
-        await page.waitForTimeout(2000);
-        info = await audit(page);
-        await snap(page, '02a-create-campaign', result);
-        result.screens.push({ step: 'create_campaign_ui', ...info });
-
-        // Look for Quick Start / demo campaign option
-        const quickStart = await page.$('button:has-text("Quick Start"), [class*="quick"], [class*="demo"]');
-        if (quickStart) {
-          result.actions.push('CLICKING_QUICK_START');
-          await quickStart.click();
-          await page.waitForTimeout(5000);
-        } else {
-          // Try the AI generate tab if available
-          const genTab = await page.$('button:has-text("Generate"), button:has-text("AI")');
-          if (genTab) {
-            result.actions.push('CLICKING_AI_GENERATE');
-            await genTab.click();
-            await page.waitForTimeout(2000);
-            // Fill in minimal campaign details and submit
-            const nameInput = await page.$('input[placeholder*="name" i], input[placeholder*="title" i]');
-            if (nameInput) await nameInput.fill('Agent Test Campaign');
-            const submitBtn = await page.$('button[type="submit"], button:has-text("Create"), button:has-text("Generate")');
-            if (submitBtn) {
-              await submitBtn.click();
-              await page.waitForTimeout(10000); // AI generation takes time
-            }
-          } else {
-            result.actions.push('NO_CREATE_METHOD_FOUND');
-          }
-        }
-        // Navigate back to dashboard to find the campaign
-        await page.goto('http://localhost:%PORT%', { waitUntil: 'networkidle', timeout: 20000 });
-        await page.waitForTimeout(3000);
-        card = await page.$('button.campaign-card');
-      }
+      // Wait a bit more — Supabase query might be slow
+      await page.waitForTimeout(3000);
+      card = await page.$('button.campaign-card');
     }
-
     if (!card) {
       info = await audit(page);
       await snap(page, '02-no-campaign', result);
       result.screens.push({ step: 'no_campaign', ...info });
-      result.finalScreen = 'DASHBOARD_NO_CAMPAIGN: could not find or create a campaign';
-      result.actions.push('FAILED_TO_GET_CAMPAIGN');
+      result.finalScreen = 'DASHBOARD_NO_CAMPAIGN: seed script may have failed — check agent logs. Dashboard shows: ' + info.headings.join(', ') + ' | buttons: ' + info.buttons.slice(0, 5).join(', ');
       throw new Error('stop');
     }
 
@@ -403,29 +364,24 @@ async function audit(page) {
       throw new Error('stop');
     }
 
-    // === STEP 3: CHARACTER — find or create ===
+    // === STEP 3: CHARACTER — click it (seed script ensures it exists) ===
     const isCharSelect = info.headings.some(h => /champion|character/i.test(h));
     if (isCharSelect) {
-      // Try clicking existing character
       const charCard = await page.$('div[style*="cursor: pointer"][style*="#1a1006"]');
       if (charCard) {
-        result.actions.push('CLICKING_EXISTING_CHARACTER');
+        result.actions.push('CLICKING_CHARACTER');
         await charCard.click();
         await page.waitForTimeout(5000);
       } else {
-        result.actions.push('NO_CHARACTER_FOUND — creating one');
-        // Click create new character
-        const createChar = await page.$('button:has-text("Create"), button:has-text("New Character"), button:has-text("Forge")');
-        if (createChar) {
-          await createChar.click();
-          await page.waitForTimeout(3000);
+        // Character might already be selected if campaign_members has character_data
+        // Wait and check if we auto-advanced
+        await page.waitForTimeout(3000);
+        const stillCharSelect = (await audit(page)).headings.some(h => /champion|character/i.test(h));
+        if (stillCharSelect) {
           info = await audit(page);
-          await snap(page, '03a-create-character', result);
-          result.screens.push({ step: 'create_character_ui', ...info });
-          result.finalScreen = 'CHARACTER_CREATION: agent needs to complete character creation flow';
-          throw new Error('stop');
-        } else {
-          result.finalScreen = 'CHARACTER_SELECT_STUCK: no characters and no create button found';
+          await snap(page, '03-no-character', result);
+          result.screens.push({ step: 'no_character', ...info });
+          result.finalScreen = 'CHARACTER_SELECT_STUCK: seed script created character but UI does not show it. Buttons: ' + info.buttons.join(', ');
           throw new Error('stop');
         }
       }
@@ -673,6 +629,17 @@ def main():
     signal.signal(signal.SIGINT, handler)
 
     git_pull()
+
+    # Seed test data (campaign + character) — idempotent, only creates if missing
+    seed_script = AGENT_DIR / "seed-test-data.js"
+    if seed_script.exists():
+        log("  -> Seeding test data...")
+        rc, out, err = run(["node", str(seed_script)], cwd=REPO_DIR, timeout=30)
+        if rc == 0:
+            log(f"  -> Seed: {out.strip()}")
+        else:
+            log(f"  ! Seed failed: {err[:200]}")
+
     notify(f"{PROJECT_NAME} Build Agent started ({MAX_ITERATIONS} iterations)")
 
     import asyncio, uuid
