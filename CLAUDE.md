@@ -106,6 +106,27 @@ A living world you explore — not a chatbot you type at.
 }
 ```
 
+## Business Model & API Key Architecture — CRITICAL
+
+**The player NEVER needs their own API key to play.** The platform provides a default key.
+
+### How API keys work:
+1. **Platform default key** — stored in Supabase `app_config` table as `default_claude_api_key`. Loaded by `src/lib/defaultApiKey.js`. This is the owner's key — ALL players use it by default. No ApiKeyGate, no friction.
+2. **BYOK (Bring Your Own Key)** — optional override in Settings for power users who want their own key. Stored encrypted per-campaign. Falls back to platform default if no BYOK.
+3. **Priority**: platform default > BYOK campaign key > encrypted campaign key > ApiKeyGate (last resort only)
+
+### Rules:
+- The ApiKeyGate should ONLY appear if there is NO platform default key AND no campaign key. In normal operation it should NEVER appear.
+- New players should go: Sign in → Create/Join Campaign → Create Character → Play. Zero API key friction.
+- Campaign creation uses Claude Sonnet (paid by platform owner, not the player).
+- In-game narrator uses Claude Haiku (cheap, fast, paid by platform owner).
+- The `app_config` table must have a `default_claude_api_key` row for production.
+
+### For the build agent:
+- The test user should use the platform default key from `app_config`
+- If `app_config` doesn't have the key, the ApiKeyGate will block — fix by adding the key to the table
+- The agent should NEVER modify the API key system to bypass the gate — the gate is correct behavior when no key exists
+
 ## Project State
 Feature status, backlog, and priorities are tracked in `tasks/status.md`. **Read it before planning new work or assessing what exists.** Update it when features are completed, changed, or added to backlog.
 

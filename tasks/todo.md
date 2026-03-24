@@ -36,10 +36,15 @@
 - [ ] Bestiary — style as a leather-bound monster manual
 - [ ] Area map overview — parchment map style with wax seal markers
 
-## Priority 2: Core Gameplay Flow
-- [ ] Campaign selection — verify the test campaign loads (screenshots show "no campaigns found")
-- [ ] Character select → game transition — no error boundary crashes
-- [ ] Combat initiation — exploration → combat works end to end
+## Priority 2: Campaign & Character Creation (full new-user flow)
+> Delete the test campaign/character, then go through creation from scratch.
+> Every screen must be styled per DESIGN RULES. Fix any bugs found.
+> Read CLAUDE.md "Business Model" section — NO API key gate for normal users.
+
+- [ ] Campaign creation flow — Create New Campaign, every step styled and working. AI generation uses platform default API key from app_config table.
+- [ ] Character creation flow — full builder: race, class, abilities, spells, identity. Style every step.
+- [ ] Verify: new player sees NO ApiKeyGate (platform provides default key)
+- [ ] Combat initiation — exploration to combat works end to end
 - [ ] Rest system — short/long rest UI styled and functional
 - [ ] Death saves — dying/dead flow with proper visual feedback
 

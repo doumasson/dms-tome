@@ -12,13 +12,17 @@ const path = require('path');
 // Load supabase from the project's node_modules (script runs from repo root)
 const { createClient } = require(path.join(process.cwd(), 'node_modules', '@supabase', 'supabase-js', 'dist', 'index.cjs'));
 
-// Load .env from the project root (cwd)
+// Load .env from the project root (cwd) AND PA .env for the API key
 const envPath = path.join(process.cwd(), '.env');
-if (fs.existsSync(envPath)) {
-  fs.readFileSync(envPath, 'utf8').split('\n').forEach(line => {
-    const [key, ...val] = line.split('=');
-    if (key && val.length) process.env[key.trim()] = val.join('=').trim();
-  });
+const paEnvPath = path.join(require('os').homedir(), 'pa', '.env');
+// Load both env files — PA env has the API key, project env has Supabase
+for (const ep of [paEnvPath, envPath]) {
+  if (fs.existsSync(ep)) {
+    fs.readFileSync(ep, 'utf8').split('\n').forEach(line => {
+      const [key, ...val] = line.split('=');
+      if (key && val.length) process.env[key.trim()] = val.join('=').trim();
+    });
+  }
 }
 
 const supabase = createClient(
@@ -106,6 +110,21 @@ async function main() {
 
   const userId = (await supabase.auth.getUser()).data.user.id;
   console.error(`Authenticated as ${userId}`);
+
+  // 1b. Ensure platform default API key exists in app_config
+  // This is the owner's key — all players use it by default (no ApiKeyGate)
+  const platformKey = process.env.PA_CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY || '';
+  if (platformKey) {
+    const { error: configErr } = await supabase
+      .from('app_config')
+      .upsert({ key: 'default_claude_api_key', value: platformKey }, { onConflict: 'key' });
+    if (configErr) {
+      // Table might not exist — try creating it
+      console.error(`app_config upsert note: ${configErr.message} (may need table creation)`);
+    } else {
+      console.error('Platform default API key set in app_config');
+    }
+  }
 
   // 2. Ensure profile exists
   await supabase.from('profiles').upsert({
