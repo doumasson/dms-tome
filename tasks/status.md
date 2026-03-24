@@ -595,3 +595,23 @@ _(Empty — add items as they come up)_
 - [x] **HUD collapse** — toggle button hides non-essential sections, HP+AC always visible
 - [x] **Asset report** — `tasks/asset-report.md` cataloging all production art needs
 - Build: PASS, ~1021 kB bundle (gzip 293 kB). 1111 tests.
+
+### Session: Bug Fixes + Polish (March 2026)
+- [x] **Random encounter spam fix** — region-based dedup (6x6), 60s cooldown, reduced rates (5%/3%/0%)
+- [x] **Enemy token spawning** — random encounters now provide startCombatWithZoneEnemies with positioned enemies
+- [x] **Narrator float shrunk** — 65%-width ornate panel → 360px compact tooltip at top-center
+- [x] **Layout fix** — removed duplicate NarratorBar, map now full viewport, HUD overlays bottom
+- [x] **HUD overlap fix** — removed duplicate Minimap, repositioned HUD/health bars/quest tracker
+- [x] **Dark theme enforcement** — CSS overrides for Supabase auth UI white backgrounds
+- [x] **Text contrast fix** — 6 low-contrast HUD text colors raised for readability
+- [x] **Mobile responsive** — phone: 44px tap targets, hidden minimap. Landscape: 120px bottom bar
+- [x] **Area transition text** — gold Cinzel area name displayed during fade-to-black zone transition
+- [x] **Portrait fallback** — onError shows styled initial letter when Pollinations 422s
+- [x] **Quick action buttons** — "Look around", "Search", "Sneak", "Listen" above chat input
+- [x] **Ambient particles** — fireflies (forest), dust (dungeon), embers (town), wisps (graveyard) — 13 themes
+- [x] **Theme-aware footsteps** — stone/grass/wood/sand per area theme
+- [x] **Area name announcement** — BG-style gold text on zone entry, 2.5s hold, fade out
+- [x] **Screen shake** — light shake (4px) on hits, heavy (8px) on 10+ damage
+- [x] **Initiative strip upgrade** — character initials with class colors, HP pips, active glow
+- [x] **HUD character identity** — name, level, class header with class-colored initial badge
+- Build: PASS, ~1030 kB bundle (gzip 296 kB).
