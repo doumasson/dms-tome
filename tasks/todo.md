@@ -51,7 +51,7 @@
 ## Priority 3: Mobile & Responsive
 - [x] All new components work at 375px landscape — compact HUD, scaled minimap, tighter spacing at max-height:420px
 - [x] All buttons/panels have 44px+ tap targets — enforced in design rules, all buttons minHeight 44px+
-- [ ] Drawer/sheet pattern on small screens instead of overlapping modals
+- [x] Drawer/sheet pattern — BottomSheet component: bottom drawer on small screens, centered modal on large, drag handle, slide-up animation
 - [ ] HUD collapses properly on narrow screens
 
 ## Priority 4: Review & Fix Existing Code

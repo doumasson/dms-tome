@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import useStore from '../../store/useStore';
+import BottomSheet from './BottomSheet';
 
 /* PLACEHOLDER ART: needs real dark fantasy assets for production */
 
@@ -23,8 +24,8 @@ export default function Bestiary({ onClose }) {
   const selectedMonster = selected ? bestiary.find(m => m.id === selected || m.name === selected) : null;
 
   return (
-    <div style={S.overlay} onClick={onClose}>
-      <div style={S.book} onClick={e => e.stopPropagation()}>
+    <BottomSheet onClose={onClose} maxWidth={680}>
+      <div style={S.book}>
         {/* Book spine accent */}
         <div style={S.spine} />
 
@@ -123,7 +124,7 @@ export default function Bestiary({ onClose }) {
           100% { transform: scale(1) rotateY(0); opacity: 1; }
         }
       `}</style>
-    </div>
+    </BottomSheet>
   );
 }
 
@@ -227,12 +228,6 @@ function BookStud({ pos }) {
 }
 
 const S = {
-  overlay: {
-    position: 'fixed', inset: 0, zIndex: 1100,
-    background: 'rgba(0,0,0,0.88)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    backdropFilter: 'blur(2px)',
-  },
   book: {
     position: 'relative',
     /* Leather texture via layered gradients */
@@ -244,7 +239,7 @@ const S = {
     border: '2px solid rgba(212,175,55,0.35)',
     borderRadius: 10,
     padding: '20px 22px 16px',
-    maxWidth: 680, width: '96vw', maxHeight: '86vh',
+    width: '100%', maxHeight: '86vh',
     display: 'flex', flexDirection: 'column',
     boxShadow: `
       0 12px 48px rgba(0,0,0,0.9),
