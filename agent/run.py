@@ -91,10 +91,11 @@ def run(cmd, cwd=None, timeout=60):
 
 
 def run_claude(prompt, resume_id=None):
+    max_turns = str(CFG.get("max_turns", 30))
     cmd = [
         "claude", "-p", prompt,
         "--output-format", "json",
-        "--max-turns", "200",
+        "--max-turns", max_turns,
         "--dangerously-skip-permissions",
         "--allowedTools", ALLOWED_TOOLS,
         "--model", MODEL,
@@ -102,7 +103,7 @@ def run_claude(prompt, resume_id=None):
     if resume_id:
         cmd += ["--resume", resume_id]
     log("  -> Invoking Claude Code...")
-    rc, stdout, stderr = run(cmd, timeout=2400)
+    rc, stdout, stderr = run(cmd, timeout=1200)  # 20 min max
     if rc != 0 and not stdout:
         log(f"  X Claude error: {stderr[:300]}")
         return f"ERROR: {stderr[:300]}", None
@@ -471,12 +472,9 @@ PROMPT_TEMPLATE = SYSTEM_RULES + """
 
 {task_instruction}
 
-ONE real code change per iteration. Build it. Verify with `""" + BUILD_CMD + """`.
-
-## SELF-LEARNING:
-After completing your work, if you learned something new that would help
-future iterations, append it to tasks/lessons.md. If you fixed a build error,
-note what the error was and what fixed it — this helps you fix it faster next time.
+ONE code change per iteration. You have 30 tool calls max — be efficient.
+Don't read every file. Read only what you need. Fix or build ONE thing. Verify with `""" + BUILD_CMD + """`.
+If you learned something new, append ONE line to tasks/lessons.md.
 """
 
 TASK_BUILD_BROKEN = """The build is FAILING. Fix the build errors shown above.
