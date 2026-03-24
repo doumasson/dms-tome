@@ -42,7 +42,7 @@ export function useRandomEncounters({
     const partyLevel = Math.round(partyMembers.reduce((s, m) => s + (m.level || 1), 0) / partyMembers.length)
 
     // Generate encounter
-    const { enemies, dmPrompt, difficultyRating } = generateRandomEncounter(
+    const { enemies, dmPrompt, difficultyRating, hazards } = generateRandomEncounter(
       partyLevel,
       partyMembers.length,
       areaType
