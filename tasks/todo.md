@@ -32,7 +32,7 @@
 - [x] Class abilities in combat: verify Extra Attack (Fighter), Sneak Attack (Rogue), Rage (Barbarian), Divine Smite (Paladin), Wild Shape (Druid) actually fire and calculate correctly. Find and fix.
 - [x] Action economy: verify action/bonus action/movement tracking per turn. Can player use Dash? Dodge? Disengage? Does end turn advance properly? Find and fix.
 - [x] Opportunity attacks: trace what happens when a token moves away from an enemy. Does the popup appear? Does disengage prevent it? Find and fix.
-- [ ] Death saves: trace HP hitting 0 → death save UI → success/failure tracking → stabilize → healing revival. Find and fix.
+- [x] Death saves: trace HP hitting 0 → death save UI → success/failure tracking → stabilize → healing revival. Find and fix.
 
 ### Exploration & World
 - [ ] NPC interaction: walk near NPC → interaction hint → press E or click → NPC dialog opens → AI narrator voices the NPC in character → skill checks (Persuasion/Intimidation) → reputation change. Find and fix.

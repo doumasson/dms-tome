@@ -82,16 +82,29 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
   const isProne = conditions.has('Prone')
 
   const isDead = active && (active.currentHp ?? 0) <= 0
-  const isDying = isDead && (active.deathSaves?.failures ?? 0) < 3
+  const isStable = isDead && active.deathSaves?.stable
+  const isDying = isDead && (active.deathSaves?.failures ?? 0) < 3 && !isStable
 
-  // Dead players can only do death saves — block all other actions
-  if (isDead && !isDying) {
+  // Dead players (3 failed saves) — can only end turn
+  if (isDead && !isDying && !isStable) {
     return (
       <div className="hud-combat-bar stone-panel">
         <div style={{ textAlign: 'center', color: '#cc3333', fontSize: 12, fontWeight: 700, padding: '12px 0' }}>
           ☠ DEAD
         </div>
         <button className="medallion-btn danger" onClick={() => { playStoneClick(); onEndTurn() }}>END</button>
+      </div>
+    )
+  }
+
+  // Stabilized — unconscious at 0 HP, no death saves needed, just end turn
+  if (isStable) {
+    return (
+      <div className="hud-combat-bar stone-panel">
+        <div style={{ textAlign: 'center', color: '#2ecc71', fontSize: 12, fontWeight: 700, padding: '12px 0' }}>
+          ✦ STABLE — Unconscious at 0 HP
+        </div>
+        <button className="medallion-btn" onClick={() => { playStoneClick(); onEndTurn() }}>END TURN</button>
       </div>
     )
   }
