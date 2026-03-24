@@ -46,7 +46,7 @@
 - [x] Equipment: equip weapon → AC/attack bonus updates in derived stats → unequip reflects correctly. Find and fix.
 - [x] Item use in combat: Use Item action → consumable picker → healing potion heals → item consumed from inventory → broadcast to other players. Find and fix.
 - [x] Loot: defeat enemies → LootScreen appears → gold split → item drops → roll-off for magic items → items added to inventory. Find and fix.
-- [ ] Crafting: open CraftingPanel → materials from inventory shown → select recipe → skill check → item created and added to inventory. Find and fix.
+- [x] Crafting: open CraftingPanel → materials from inventory shown → select recipe → skill check → item created and added to inventory. Find and fix.
 
 ### Progression & Economy
 - [ ] Level up: trace XP threshold → LevelUpModal trigger → HP roll/average choice → new features → spell slot increase → cantrip/spell selection for casters. Find and fix.
