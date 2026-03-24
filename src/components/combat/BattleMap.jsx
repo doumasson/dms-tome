@@ -93,7 +93,7 @@ export function Token({ combatant, colorIndex, isSelected, isActive, onClick, ce
 export default function BattleMap({
   combatants, selectedToken, activeCombatantId,
   onCellClick, onTokenClick,
-  cellPx = CELL_PX, sceneImageUrl,
+  cellPx = CELL_PX, sceneImageUrl, sceneImageLoaded = true,
   fogEnabled = false,
 }) {
   const posMap = {};
@@ -118,6 +118,7 @@ export default function BattleMap({
 
   return (
     <div style={{
+      position: 'relative',
       display: 'grid',
       gridTemplateColumns: `repeat(${MAP_W}, ${cellPx}px)`,
       gridTemplateRows: `repeat(${MAP_H}, ${cellPx}px)`,
@@ -184,6 +185,30 @@ export default function BattleMap({
           </div>
         );
       })}
+      {/* Loading overlay while scene image is fetching */}
+      {hasImage && !sceneImageLoaded && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'rgba(0,0,0,0.6)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          borderRadius: 4, zIndex: 10,
+        }}>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          <div style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+            color: '#d4af37', fontSize: 14, fontWeight: 600,
+          }}>
+            <div style={{
+              width: 32, height: 32,
+              border: '2px solid rgba(212,175,55,0.3)',
+              borderTopColor: '#d4af37',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+            }} />
+            Loading scene...
+          </div>
+        </div>
+      )}
     </div>
   );
 }

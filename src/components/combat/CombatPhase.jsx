@@ -41,6 +41,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const [activeSpell, setActiveSpell] = useState(null);
   const [mobileTab, setMobileTab] = useState('battle'); // 'party' | 'battle' | 'actions'
   const [floatingNumbers, setFloatingNumbers] = useState([]); // { id, x, y, value, type, time }
+  const [sceneImageLoaded, setSceneImageLoaded] = useState(false);
   const logRef = useRef();
   const winWidth = useWindowWidth();
   const isMobile = winWidth < 640;
@@ -83,6 +84,20 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     }, 100);
     return () => clearTimeout(timer);
   }, [floatingNumbers]);
+
+  // Pre-load scene image to show loading state while Pollinations generates
+  useEffect(() => {
+    if (!battleSceneUrl) {
+      setSceneImageLoaded(false);
+      return;
+    }
+    setSceneImageLoaded(false);
+    const img = new Image();
+    img.onload = () => setSceneImageLoaded(true);
+    img.onerror = () => setSceneImageLoaded(true); // Show map even if image fails
+    img.src = battleSceneUrl;
+    return () => { img.onload = null; img.onerror = null; };
+  }, [battleSceneUrl]);
 
   function addFloatingNumber(combatantId, value, type = 'damage') {
     const combatant = combatants.find(c => c.id === combatantId);
@@ -627,7 +642,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
         </div>
         <div style={{ overflowX: 'auto', position: 'relative' }}>
           <div style={{ position: 'relative', display: 'inline-block' }}>
-            <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
+            <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} sceneImageLoaded={sceneImageLoaded} fogEnabled={combatFogEnabled} />
             <SpellEffectLayer effects={activeEffects} cellPx={cellPx} mapW={MAP_W} mapH={MAP_H} />
             {/* Floating damage/heal numbers */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
@@ -798,7 +813,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
 
         <div style={{ overflowX: 'auto', position: 'relative' }}>
           <div style={{ position: 'relative', display: 'inline-block' }}>
-            <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} fogEnabled={combatFogEnabled} />
+            <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} sceneImageLoaded={sceneImageLoaded} fogEnabled={combatFogEnabled} />
             <SpellEffectLayer effects={activeEffects} cellPx={cellPx} mapW={MAP_W} mapH={MAP_H} />
             {/* Floating damage/heal numbers */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
