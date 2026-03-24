@@ -38,4 +38,4 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
 - [x] No white backgrounds, no unstyled default elements — forced dark theme on QR code containers and auth widgets
 - [x] All text readable — fixed 5 low-contrast text colors in HUD (economy dots, turn subtitle, combat buttons, text-primary, text-log variables)
-- [ ] Mobile-friendly — 44px tap targets, works at 375px landscape
+- [x] Mobile-friendly — phone: 44px tap targets on all buttons, hide minimap/time bar, drawer bottom bar. Landscape: compact 120px bottom bar, scaled minimap, smaller portraits.

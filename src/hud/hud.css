@@ -1457,6 +1457,27 @@
   .hud-combat-btn { min-height: 48px; }
   .hud-combat-btn-sm { min-height: 44px; }
   .hud-tool-btn { min-height: 44px; min-width: 44px; }
+  .hud-top-bar { height: 44px; padding: 0 8px; }
+  .hud-top-bar-btn { min-height: 32px; padding: 4px 8px; font-size: 8px; }
+  .hud-top-bar-icon-btn { min-height: 44px; min-width: 44px; padding: 6px; }
+  .hud-top-bar-icon-btn img { width: 28px; height: 28px; }
+  .hud-top-bar-center { display: none; }
+  .hud-zone-info-inline { display: none; }
+  .hud-minimap { display: none; }
+}
+
+/* ── Landscape phone (375px height) ── */
+@media (max-height: 420px) {
+  .hud-bottom-bar { height: 120px; padding: 4px 8px 2px; }
+  .hud-top-bar { height: 36px; }
+  .hud-top-bar-left { gap: 4px; }
+  .hud-zone-name-inline { font-size: 9px; }
+  .hud-top-bar-center { display: none; }
+  .hud-minimap { transform: scale(0.65); transform-origin: top right; }
+  .hud-portrait { width: 28px; height: 36px; }
+  .hud-portrait-name { font-size: 6px; }
+  .hud-combat-btn { height: 28px; min-height: 28px; font-size: 7px; }
+  .hud-combat-btn-sm { height: 22px; min-height: 22px; font-size: 7px; }
 }
 
 /* Hidden by default, shown on phone */
