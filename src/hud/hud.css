@@ -770,6 +770,21 @@
   pointer-events: auto;
 }
 
+.hud-turn-mine {
+  border-left-color: #d4af37;
+  background: rgba(20, 16, 6, 0.95);
+  animation: yourTurnPulse 1.5s ease-in-out infinite;
+}
+.hud-turn-mine .hud-turn-title {
+  color: #d4af37;
+  font-size: 14px;
+  text-shadow: 0 0 8px rgba(212,175,55,0.4);
+}
+@keyframes yourTurnPulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(212,175,55,0.2); }
+  50% { box-shadow: 0 0 16px rgba(212,175,55,0.5); }
+}
+
 .hud-turn-title {
   font-family: var(--font-heading);
   font-size: 12px;

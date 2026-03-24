@@ -107,8 +107,8 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
       {/* Turn banner (combat only) — zone info is now in top bar */}
       {inCombat && (
         <>
-          <div className="hud-turn-banner">
-            <div className="hud-turn-title">{isMyTurn ? 'Your Turn' : `${activeCombatant?.name || '...'}'s Turn`}</div>
+          <div className={`hud-turn-banner${isMyTurn ? ' hud-turn-mine' : ''}`}>
+            <div className="hud-turn-title">{isMyTurn ? '⚔ YOUR TURN' : `${activeCombatant?.name || '...'}'s Turn`}</div>
             <div className="hud-turn-sub">{activeCombatant?.name} · {activeCombatant?.class || 'Enemy'}</div>
           </div>
           <InitiativeStrip />

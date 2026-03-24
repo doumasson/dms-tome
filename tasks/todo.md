@@ -57,6 +57,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Danger level indicator — colored dot (green/red) with glow next to SAFE/DANGER text in top bar
 - [x] Auto-narrate area entry — Narrator describes scene on area transition (theme flavor + nearby NPCs), broadcast to all players
 - [x] Combat victory summary — "N enemies defeated (names) in M rounds. X wounded." replaces generic "Victory!" message
+- [x] Enhanced "Your Turn" banner — gold pulsing glow, larger text with ⚔ icon when it's player's turn in combat
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
