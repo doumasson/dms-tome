@@ -37,7 +37,7 @@
 
 ## Priority 6: World & Navigation
 - [x] Minimap — Canvas2D corner minimap showing terrain/walls, player dot with white outline, NPC markers, exit markers, enemy markers in combat, area name header, collapsible with click toggle, legend
-- [ ] Quest tracker — persistent sidebar showing active quest objectives
+- [x] Quest tracker — collapsible left-side panel showing active quests with checkable objectives, quest giver info, completion progress, active/all filter, supports both store quests and legacy campaign questObjectives
 - [ ] Party formation — drag to reorder marching order, affects who gets hit by traps first
 - [ ] Loot pickup animation — items fly from ground to inventory with sparkle effect
 
