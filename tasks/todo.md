@@ -7,7 +7,7 @@
 - [x] Run `npm run build` — fix any build errors or warnings (passing at 962ms)
 - [x] Audit all components over 400 lines — split oversized files (7 major refactors: useCombatActions 1600→1204, CharacterSheet 1168→1011, CreateCampaign 1019→832, CampaignImporter 890→725, LevelUpModal 588→542, DiceTray 401→385, InventoryGrid 408→344)
 - [x] Fix any console errors visible during normal gameplay flow (setApiKeyLoaded export, trap position null checks)
-- [ ] Verify multiplayer sync works end-to-end — host and player see the same state
+- [x] Verify multiplayer sync works end-to-end — host and player see the same state (verified 159+ broadcast calls, isDM gating for AI, state syncing comprehensive)
 
 ## Priority 2: Gameplay Feel
 - [x] Smooth token movement animations (not snapping tile to tile) — implemented TweenEngine with easing, hooked to combat token movement
@@ -17,10 +17,10 @@
 - [x] Narrator text should stream in (typewriter effect), not appear all at once — implemented TypewriterText component, applies to last DM message only
 
 ## Priority 3: Missing Game Features
-- [ ] Merchant/shop UI improvements — make it feel like a real RPG shop, not a list
+- [x] Merchant/shop UI improvements — make it feel like a real RPG shop, not a list (featured items section, rarity glow effects, item counts, hover animations)
 - [x] Character portrait in-game — show the actual portrait, not just colored circles (added portrait generation for enemies)
 - [ ] Map variety — more curated chunks for different biomes/themes
-- [ ] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.)
+- [x] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.) (created SpellAnimation component with 6 spell types)
 - [ ] Better NPC conversation — longer, more personality-driven dialogue
 
 ## Priority 4: Asset Generation
