@@ -633,4 +633,8 @@ _(Empty — add items as they come up)_
 - [x] **Diamond spell pips** — rotated 45° with gold gradient glow
 - [x] **Gold display** — 🪙 N gp shown in HUD below character identity
 - [x] **NPC minimap names** — blue name labels near NPC dots when player within 8 tiles
-- Build: PASS, ~1039 kB bundle (gzip 298 kB). 38 features shipped this session.
+- [x] **NPC faction badges** — colored disposition dot on NPC map tokens (red/green/gold per reputation)
+- [x] **Rest narrator messages** — short/long rest completion posts to chat, visible to all players
+- [x] **Condition descriptions** — combat log shows mechanical effects when conditions applied (15 conditions)
+- [x] **Player count display** — 👤N in top bar next to invite button
+- Build: PASS, ~1039 kB bundle (gzip 299 kB). 43 features shipped across 44 iterations.
