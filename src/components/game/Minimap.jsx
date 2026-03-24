@@ -113,6 +113,7 @@ export default function Minimap({ playerPos, zone, inCombat }) {
 
   return (
     <div
+      className="hud-minimap-wrapper"
       style={S.wrapper}
       onClick={() => setCollapsed(c => !c)}
       title={collapsed ? 'Show minimap' : 'Hide minimap'}

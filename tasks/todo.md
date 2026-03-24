@@ -49,8 +49,8 @@
 - [x] Death saves — ornate SVG pip indicators with check/X marks, Cinzel labels, pulse animation, gradient panel, styled buttons
 
 ## Priority 3: Mobile & Responsive
-- [ ] All new components work at 375px landscape
-- [ ] All buttons/panels have 44px+ tap targets
+- [x] All new components work at 375px landscape — compact HUD, scaled minimap, tighter spacing at max-height:420px
+- [x] All buttons/panels have 44px+ tap targets — enforced in design rules, all buttons minHeight 44px+
 - [ ] Drawer/sheet pattern on small screens instead of overlapping modals
 - [ ] HUD collapses properly on narrow screens
 
