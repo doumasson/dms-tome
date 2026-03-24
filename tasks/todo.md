@@ -25,7 +25,7 @@
 
 ## Priority 4: Gameplay Polish
 - [x] Combat keyboard shortcuts — A=Attack, S=Spell, E=End Turn, Esc=Cancel, 1-9=Select combatant
-- [ ] Conditions/status effect icons on tokens (poisoned, blessed, etc.)
+- [x] Conditions/status effect icons on tokens (poisoned, blessed, etc.) — badge icons with colored borders for all 14 SRD conditions + 5 extra (Burning, Frozen, Blessed, Hasted, Hexed), concentration ring, prone/invisible special effects
 - [ ] Rest mechanics UI (short rest / long rest buttons with proper 5e recovery)
 - [ ] Initiative tracker visual improvements
 
