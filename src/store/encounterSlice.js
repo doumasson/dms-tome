@@ -28,6 +28,7 @@ function makePortraitUrl(name, race, cls) {
 export function createEncounterSlice(set, get) {
   return {
     // === Encounter (unified scene + combat) ===
+    damageEvents: [],  // [{ targetId, amount, type, timestamp }] — consumed by CombatPhase for floating numbers
     encounter: {
       phase: 'idle',       // 'idle' | 'initiative' | 'combat'
       combatants: [],      // See startEncounter for shape
@@ -608,6 +609,8 @@ export function createEncounterSlice(set, get) {
           },
         };
       });
+      // Emit damage event so CombatPhase can show floating numbers (works for all clients)
+      set(s => ({ damageEvents: [...s.damageEvents, { targetId, amount, type: amount > 0 ? 'damage' : 'miss', timestamp: Date.now() }] }));
       // Broadcast concentration break so all clients clear it
       if (concentrationBroke) {
         broadcastEncounterAction({ type: 'clear-concentration', id: targetId, userId: get().user?.id || 'system' });
@@ -628,7 +631,7 @@ export function createEncounterSlice(set, get) {
       }
     },
 
-    applyEncounterHeal: (targetId, amount) =>
+    applyEncounterHeal: (targetId, amount) => {
       set((state) => {
         let revivalLog = null;
         const combatants = state.encounter.combatants.map((c) => {
@@ -648,7 +651,10 @@ export function createEncounterSlice(set, get) {
               : state.encounter.log,
           },
         };
-      }),
+      });
+      // Emit heal event for floating numbers
+      set(s => ({ damageEvents: [...s.damageEvents, { targetId, amount, type: 'heal', timestamp: Date.now() }] }));
+    },
 
     // Apply a pre-computed death save result (used for multiplayer sync — caller rolls d20)
     applyDeathSaveResult: (id, roll) =>

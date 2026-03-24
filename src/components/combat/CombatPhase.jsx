@@ -79,6 +79,21 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     if (logRef.current) logRef.current.scrollTop = 0;
   }, [log.length]);
 
+  // Watch store damage events to spawn floating numbers for ALL clients (including non-host)
+  const damageEvents = useStore(s => s.damageEvents);
+  const processedCountRef = useRef(0);
+  useEffect(() => {
+    if (damageEvents.length <= processedCountRef.current) return;
+    const newEvents = damageEvents.slice(processedCountRef.current);
+    processedCountRef.current = damageEvents.length;
+    newEvents.forEach(evt => addFloatingNumber(evt.targetId, evt.amount, evt.type));
+    // Trim the array after processing to avoid unbounded growth
+    if (damageEvents.length > 20) {
+      useStore.setState({ damageEvents: damageEvents.slice(-5) });
+      processedCountRef.current = 5;
+    }
+  }, [damageEvents]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Clean up old floating numbers after animation completes
   useEffect(() => {
     if (floatingNumbers.length === 0) return;
@@ -288,22 +303,17 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     if (delta < 0) {
       const damage = -delta;
       onDamage(id, damage);
-      addFloatingNumber(id, damage, 'damage');
+      // Floating number spawned by store lastDamageEvent
     } else {
       onHeal(id, delta);
-      addFloatingNumber(id, delta, 'heal');
+      // Floating number spawned by store lastDamageEvent
     }
   }
 
   function handleAttackResolve(targetId, damage, logEntry) {
     if (targetId) {
       onDamage(targetId, damage);
-      const hit = logEntry.includes('HIT') || logEntry.includes('hit') || damage > 0;
-      if (hit && damage > 0) {
-        addFloatingNumber(targetId, damage, 'damage');
-      } else if (!hit) {
-        addFloatingNumber(targetId, 0, 'miss');
-      }
+      // Floating numbers spawned by store lastDamageEvent (works for all clients)
     }
     onLog(logEntry);
     // Narrate the attack result (fire-and-forget)
@@ -318,7 +328,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   function handleAoEApply(applications, total, dmgType) {
     applications.forEach(({ id, amount }) => {
       onDamage(id, amount);
-      addFloatingNumber(id, amount, 'damage');
+      // Floating number spawned by store lastDamageEvent
     });
     const summary = applications
       .map(({ id, amount }) => {
@@ -544,15 +554,15 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     } else {
       const rolled = rollDamage(def.damage);
       if (isHealing) {
-        hitCombatants.forEach(c => { onHeal(c.id, rolled.total); addFloatingNumber(c.id, rolled.total, 'heal'); });
+        hitCombatants.forEach(c => { onHeal(c.id, rolled.total); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
         onLog(`💚 ${activeCombatant?.name} casts ${def.name} → heals ${names} for ${rolled.total} HP`);
       } else if (def.save) {
-        hitCombatants.forEach(c => { onDamage(c.id, rolled.total); addFloatingNumber(c.id, rolled.total, 'damage'); });
+        hitCombatants.forEach(c => { onDamage(c.id, rolled.total); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
         onLog(`🔥 ${activeCombatant?.name} casts ${def.name} (${def.damageType} DC${def.save ? ' ??' : ''}) → ${rolled.total} dmg [${rolled.display}] · ${names} — roll ${def.save.toUpperCase()} saves (½ on success)`);
       } else {
-        hitCombatants.forEach(c => { onDamage(c.id, rolled.total); addFloatingNumber(c.id, rolled.total, 'damage'); });
+        hitCombatants.forEach(c => { onDamage(c.id, rolled.total); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
         onLog(`✨ ${activeCombatant?.name} casts ${def.name} → ${rolled.total} ${def.damageType} dmg [${rolled.display}] → ${names}`);
       }
