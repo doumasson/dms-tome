@@ -22,7 +22,7 @@
 > One component per iteration. Style it properly, then move on.
 
 - [x] CombatRecap / VictoryScreen — ornate dark fantasy styling: gold gradient borders, Cinzel Decorative headers, textured backgrounds, inset shadows, stat badges with dark panels, 44px+ touch targets
-- [ ] Tooltip system — dark semi-transparent panel with gold border, readable on dark backgrounds
+- [x] Tooltip system — ornate dark fantasy panel: double gold borders, corner filigree accents, SVG arrow, Cinzel headers, Crimson Text body, gold dividers, inset glow, rarity-colored item names, spell stat icons
 - [ ] PartyHealthBars — BG2/Icewind Dale portrait bar style, ornate frames around portraits
 - [ ] EmoteSystem — magical feel (particle trails, fade glow), dark themed picker
 - [ ] PingSystem — magical beacon marker, not a generic circle
