@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import DifficultyBadge from './DifficultyBadge';
 import './DefeatScreen.css';
 
 /**
@@ -43,11 +44,9 @@ export default function DefeatScreen({
             <span className="stat-label">Enemies</span>
             <span className="stat-value">{enemies.length}</span>
           </div>
-          <div className="summary-stat">
+          <div className="summary-stat" style={{ alignItems: 'center' }}>
             <span className="stat-label">Difficulty</span>
-            <span className="stat-value" style={{ color: getDifficultyColor(encounterDifficulty) }}>
-              {encounterDifficulty}
-            </span>
+            <DifficultyBadge difficulty={encounterDifficulty} size="small" />
           </div>
           <div className="summary-stat">
             <span className="stat-label">Defeated</span>

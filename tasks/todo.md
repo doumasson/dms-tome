@@ -31,7 +31,7 @@
 - [x] LoadingTips — dark vignette backdrop, ornate SVG bars, Cinzel Decorative label, Crimson Text tip
 - [x] AutoSaveIndicator — SVG rune spinner, checkmark/X states, subtle HUD glow, Cinzel text
 - [x] XP bar — SVG shield level badge, ornate bar with notches/end caps, gold shimmer animation
-- [ ] Encounter difficulty badge — styled like a seal/sigil
+- [x] Encounter difficulty badge — SVG scalloped wax seal with tick marks, color-coded per difficulty, used in Victory/Defeat screens
 - [ ] Minimap — ornate border frame, parchment background, compass rose
 - [ ] Bestiary — style as a leather-bound monster manual
 - [ ] Area map overview — parchment map style with wax seal markers

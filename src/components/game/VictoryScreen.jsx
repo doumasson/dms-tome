@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CombatRecap from './CombatRecap';
+import DifficultyBadge from './DifficultyBadge';
 import './VictoryScreen.css';
 
 /**
@@ -50,11 +51,9 @@ export default function VictoryScreen({
             <span className="stat-label">Enemies Defeated</span>
             <span className="stat-value">{totalEnemies}</span>
           </div>
-          <div className="summary-stat">
+          <div className="summary-stat" style={{ alignItems: 'center' }}>
             <span className="stat-label">Difficulty</span>
-            <span className="stat-value" style={{ color: getDifficultyColor(encounterDifficulty) }}>
-              {encounterDifficulty}
-            </span>
+            <DifficultyBadge difficulty={encounterDifficulty} size="small" />
           </div>
           <div className="summary-stat">
             <span className="stat-label">XP Earned</span>
