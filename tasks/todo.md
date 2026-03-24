@@ -45,7 +45,7 @@
 - [x] Tooltip system — reusable Tooltip component with positioned popups, ItemTooltip/SpellTooltip/ConditionTooltip formatters; integrated into CombatantRow condition badges; dark fantasy styled with fade-in animation
 - [x] Faction reputation display — already implemented: FactionReputation.jsx with reputation bars, disposition labels, color-coded standings, wired into GameModalsRenderer via 'faction' tool button
 - [x] Combat recap — CombatRecap component parses combat log for per-character stats (damage, healing, kills, hits, misses, spells, crits, damage taken), MVP highlight, integrated into VictoryScreen
-- [ ] Keyboard shortcut help — press ? to see all available shortcuts
+- [x] Keyboard shortcut help — KeyboardHelp overlay triggered by ? key, shows Movement/Combat/Interaction/UI categories with styled kbd elements, Esc to close, skip when typing in inputs
 
 ## Priority 8: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
