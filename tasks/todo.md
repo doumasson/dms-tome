@@ -37,8 +37,10 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 ## New Feature Work
 - [x] Add combat feedback sounds — already wired (playHitSound/playMissSound/playDeathSound/playSpellSound in CombatPhase)
 - [x] Add area transition loading screen — area name displayed in gold Cinzel text during fade-to-black transition
-- [ ] Add keyboard shortcut overlay — show all keybinds when pressing ? in-game
-- [ ] Improve enemy AI narration — AI should describe enemy actions in the session log, not just show damage numbers
+- [x] Add keyboard shortcut overlay — already built (KeyboardHelp.jsx, press ? to toggle parchment scroll overlay)
+- [x] Improve enemy AI narration — already wired (result.narrative posted as narrator message + broadcast in runEnemyTurn)
+- [x] Add portrait fallback — onError hides broken img, shows styled initial letter in class color with glow
+- [ ] Add combat round counter — display "Round N" in the initiative strip during combat
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds

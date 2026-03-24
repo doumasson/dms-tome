@@ -103,11 +103,23 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
         <div className={`portrait-frame${isSelected ? ' selected' : ''}`}
           style={{ width: w, height: h }}>
           <img src="/ui/portrait-frame.png" className="portrait-frame-img" alt="" draggable={false} />
-          {/* Portrait image (if available) */}
-          {member.portrait && (
+          {/* Portrait image with fallback initial */}
+          {member.portrait ? (
             <img src={member.portrait} alt={member.name}
+              onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex' }}
               style={{ position: 'absolute', inset: 6, width: 'calc(100% - 12px)', height: 'calc(100% - 12px)', objectFit: 'cover', imageRendering: 'crisp-edges', zIndex: 3 }} />
-          )}
+          ) : null}
+          <div style={{
+            display: member.portrait ? 'none' : 'flex',
+            position: 'absolute', inset: 6, zIndex: 3,
+            alignItems: 'center', justifyContent: 'center',
+            background: `linear-gradient(135deg, ${color}33, ${color}11)`,
+            fontFamily: "'Cinzel Decorative', serif",
+            fontSize: isSmall ? 16 : 24, fontWeight: 700,
+            color, textShadow: `0 0 8px ${color}66`,
+          }}>
+            {(member.name || '?')[0].toUpperCase()}
+          </div>
           {/* HP tinting overlay */}
           <div className={`portrait-hp-tint ${hpTintClass}`} />
           {/* Status effect condition pips */}
