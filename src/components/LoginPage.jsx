@@ -28,7 +28,7 @@ export default function LoginPage({ inviteCode }) {
       <div style={styles.card}>
         <D20Icon />
         <h1 style={styles.title}>DungeonMind</h1>
-        <p style={styles.subtitle}>SRD 5.1 Campaign Manager</p>
+        <p style={styles.subtitle}>Your AI Narrator Awaits</p>
 
         {inviteCode && (
           <div style={styles.inviteBanner}>

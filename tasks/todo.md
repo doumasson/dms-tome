@@ -75,7 +75,7 @@
 - [x] CombatActionBar.jsx
 - [x] ShopPanel.jsx
 - [x] RestModal.jsx
-- [ ] LoginPage.jsx
+- [x] LoginPage.jsx
 - [ ] CampaignSelect.jsx
 
 ## Priority 3: Integration & Mobile
