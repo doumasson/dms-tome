@@ -25,7 +25,7 @@
 - [x] Character creation end-to-end: race select → class select → ability scores (standard array, point buy, 4d6 drop lowest) → spell selection for casters → background/identity → save to Supabase → enter game with new character. Find and fix a real bug.
 
 ### Combat System
-- [ ] Combat trigger: trace what happens when player token moves near enemies. encounterZones → AI narrator prompt → startEncounter. Does initiative roll correctly? Find and fix.
+- [x] Combat trigger: trace what happens when player token moves near enemies. encounterZones → AI narrator prompt → startEncounter. Does initiative roll correctly? Find and fix.
 - [ ] Melee attack: trace Attack button → target selection → hit/miss roll → damage calculation → HP update → floating damage number → enemy death at 0 HP. Find and fix.
 - [ ] Spell casting: trace Cast button → spell selection → AoE targeting overlay → save DCs → damage/healing resolution → spell slot consumption → concentration tracking. Find and fix.
 - [ ] Enemy AI turn: trace enemyAi.js → computeGruntAction/boss AI → pathfinding to player → attack resolution → damage broadcast to all clients. Find and fix.

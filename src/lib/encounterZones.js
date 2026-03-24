@@ -9,10 +9,14 @@ export function checkEncounterProximity(playerPos, zones, storyFlags = new Set()
   for (const zone of zones) {
     if (zone.triggered) continue
     if (zone.storyFlag && !storyFlags.has(zone.storyFlag)) continue
+    // Guard: skip zones with no valid center
+    if (!zone.center || zone.center.x == null || zone.center.y == null) continue
     const dx = playerPos.x - zone.center.x
     const dy = playerPos.y - zone.center.y
     const dist = Math.sqrt(dx * dx + dy * dy)
-    if (dist <= zone.triggerRadius) return zone
+    // Default triggerRadius to 5 tiles if not set (standard encounter range)
+    const radius = zone.triggerRadius ?? 5
+    if (dist <= radius) return zone
   }
   return null
 }
