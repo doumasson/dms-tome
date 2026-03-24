@@ -21,7 +21,7 @@
 > Go through EACH ONE and make the UI match the DESIGN RULES above.
 > One component per iteration. Style it properly, then move on.
 
-- [ ] CombatRecap / VictoryScreen — ornate parchment background, gold borders, fantasy typography
+- [x] CombatRecap / VictoryScreen — ornate dark fantasy styling: gold gradient borders, Cinzel Decorative headers, textured backgrounds, inset shadows, stat badges with dark panels, 44px+ touch targets
 - [ ] Tooltip system — dark semi-transparent panel with gold border, readable on dark backgrounds
 - [ ] PartyHealthBars — BG2/Icewind Dale portrait bar style, ornate frames around portraits
 - [ ] EmoteSystem — magical feel (particle trails, fade glow), dark themed picker
