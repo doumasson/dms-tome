@@ -64,6 +64,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Combat start war horn — dramatic sawtooth drone plays when combat begins, signals exploration→combat transition
 - [x] Combat log color-coding — auto-detect hit/miss/heal/spell/save/crit from log text, set proper type+icon for CSS color classes
 - [x] Targeting crosshair cursor — cursor changes to crosshair when in attack/spell targeting mode on the game canvas
+- [x] Low HP warning vignette — red edge pulse when player HP below 25%, creates urgency without blocking gameplay
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
