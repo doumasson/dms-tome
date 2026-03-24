@@ -614,4 +614,14 @@ _(Empty — add items as they come up)_
 - [x] **Screen shake** — light shake (4px) on hits, heavy (8px) on 10+ damage
 - [x] **Initiative strip upgrade** — character initials with class colors, HP pips, active glow
 - [x] **HUD character identity** — name, level, class header with class-colored initial badge
-- Build: PASS, ~1030 kB bundle (gzip 296 kB).
+- [x] **Damage type colors** — floating numbers colored per 5e damage type (fire/cold/necrotic/etc) + crit glow
+- [x] **Enemy info panel fix** — was reading wrong HP field, added CR display, condition badges
+- [x] **Damage type wiring** — applyEncounterDamage passes weapon.damageType to floating numbers
+- [x] **XP + Gold notification** — toast shows "+N XP" with progress bar and "+N Gold" on reward
+- [x] **Interaction prompt** — "E — Talk to [NPC]" / "E — Enter [Exit]" when player within 2 tiles
+- [x] **Danger level dot** — colored dot (green/red) with glow next to SAFE/DANGER in top bar
+- [x] **Auto-narrate area entry** — Narrator describes scene on transition (14 theme flavors + NPCs)
+- [x] **Combat victory summary** — enemy count, names, rounds taken, casualties in victory message
+- [x] **Enhanced "Your Turn"** — gold pulse, larger text, ⚔ icon when player's combat turn
+- [x] **Action economy display** — ● ACTION / ● BONUS / movement ft / timer above combat buttons
+- Build: PASS, ~1037 kB bundle (gzip 298 kB). 28 features shipped this session.
