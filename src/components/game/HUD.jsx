@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import useStore from '../../store/useStore';
 import { setMood, stopMusic, setMusicVolume, getMusicState } from '../../lib/ambientMusic';
+import { TimeDisplay } from './DayNightOverlay';
 import './HUD.css';
 
 /**
@@ -111,8 +112,11 @@ export default function HUD() {
         </div>
       )}
 
-      {/* Music Toggle */}
-      <MusicToggle />
+      {/* Time & Music */}
+      <div className="hud-section" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <TimeDisplay />
+        <MusicToggle />
+      </div>
 
       {/* Death Saves (when dying) */}
       {dying && (

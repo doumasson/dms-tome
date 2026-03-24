@@ -31,7 +31,7 @@
 
 ## Priority 5: Atmosphere & Immersion
 - [x] Ambient background music — procedural Web Audio API drone/pad moods (exploration, combat, mystery, tavern, danger), auto-switches on combat state, HUD toggle + volume control, localStorage persistence
-- [ ] Day/night visual cycle — tint overlay changes based on game time
+- [x] Day/night visual cycle — DayNightOverlay component with smooth hour-based tint interpolation (dawn golden, dusk orange, night deep blue), TimeDisplay clock in HUD showing time-of-day icon + formatted time
 - [ ] Weather effects — rain/snow/fog particle overlay on scenes
 - [ ] Ambient sound effects — footsteps, door creaks, torch crackle during exploration
 

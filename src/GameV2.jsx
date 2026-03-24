@@ -11,6 +11,7 @@ import ChatBubble from './components/ChatBubble'
 import ApiKeySettings from './components/ApiKeySettings'
 import SkillCheckPanel from './components/SkillCheckPanel'
 import HUD from './components/game/HUD'
+import DayNightOverlay, { TimeDisplay } from './components/game/DayNightOverlay'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -419,6 +420,7 @@ export default function GameV2({ onLeave }) {
     <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c' }}>Loading...</div>}>
       <GameLayout>
         <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
+        <DayNightOverlay />
         <HUD />
         {nearbyNpcs.map(npc => (
           <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
