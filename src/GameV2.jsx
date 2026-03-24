@@ -26,6 +26,7 @@ import CraftingPanel from './components/game/CraftingPanel'
 import AreaMapOverview from './components/game/AreaMapOverview'
 import Bestiary from './components/game/Bestiary'
 import AreaNameAnnounce from './components/game/AreaNameAnnounce'
+import XpNotification from './components/game/XpNotification'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -468,6 +469,7 @@ export default function GameV2({ onLeave }) {
         <PingSystem worldTransform={worldTransform} />
         <LoadingTips />
         <AreaNameAnnounce />
+        <XpNotification />
         {showCrafting && <CraftingPanel onClose={() => setShowCrafting(false)} />}
         {showAreaMap && <AreaMapOverview onClose={() => setShowAreaMap(false)} />}
         {showBestiary && <Bestiary onClose={() => setShowBestiary(false)} />}
