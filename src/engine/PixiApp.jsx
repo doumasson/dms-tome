@@ -13,6 +13,7 @@ import { updateStatusEffects } from './StatusEffectRenderer.js'
 import { applyDayNightTint } from './DayNightFilter.js'
 import { getTimeOfDay } from '../lib/gameTime.js'
 import useStore from '../store/useStore.js'
+import { TweenEngine } from './TweenEngine'
 
 // Atlas manifest files that ship with the build (JSON only — images loaded at runtime)
 const ATLAS_NAMES = [
@@ -24,6 +25,7 @@ const ATLAS_NAMES = [
 export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, onNpcClick, inCombat, camera, roofManager }, ref) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
+  const tweenEngineRef = useRef(null)
   const stageLayersRef = useRef({})
   const worldRef = useRef(null)
   const onTileClickRef = useRef(onTileClick)
@@ -47,6 +49,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
   useImperativeHandle(ref, () => ({
     getApp: () => appRef.current,
+    getTweenEngine: () => tweenEngineRef.current,
     getWorldTransform: () => {
       const w = worldRef.current
       if (!w) return null
@@ -76,6 +79,9 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       if (destroyed) return
 
       containerRef.current.appendChild(app.canvas)
+
+      // Initialize tween engine with ticker
+      tweenEngineRef.current = new TweenEngine(app.ticker)
 
       // World container — all tile layers go inside, we scale this to fit viewport
       const world = new PIXI.Container()

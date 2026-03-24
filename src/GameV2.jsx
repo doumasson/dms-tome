@@ -17,6 +17,7 @@ import { useAmbientAudio } from './hooks/useAmbientAudio'
 import { useFogOfWar } from './hooks/useFogOfWar'
 import { useRoofManager } from './hooks/useRoofManager'
 import { useCombatActions } from './hooks/useCombatActions'
+import { useCombatTokenAnimation } from './hooks/useCombatTokenAnimation'
 import { useAreaTransition } from './hooks/useAreaTransition'
 import { useWorldMovement } from './hooks/useWorldMovement'
 import { useStealthMode } from './hooks/useStealthMode'
@@ -192,6 +193,9 @@ export default function GameV2({ onLeave }) {
     executeReadiedAction, passReadiedAction,
     handleSpellSelected, handleWeaponSelected, handleConsumableUsed, selectedWeapon,
   } = useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionApiKey, addNarratorMessage, narrateCombatAction, inCombat, isDM, setShowSpellTargeting, setPendingSpell })
+
+  // Animate combat token movements
+  useCombatTokenAnimation(pixiRef)
 
   const { handleAreaTransition } = useAreaTransition({
     area, areas, areaBriefs, inCombat, campaign, pixiRef,
