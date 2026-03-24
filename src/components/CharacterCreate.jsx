@@ -201,6 +201,16 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
   return (
     <div style={s.page}>
       <div style={s.card}>
+        {/* Corner filigree accents */}
+        {['top:6px;left:6px', 'top:6px;right:6px;transform:scaleX(-1)', 'bottom:6px;left:6px;transform:scaleY(-1)', 'bottom:6px;right:6px;transform:scale(-1,-1)'].map((pos, i) => {
+          const st = Object.fromEntries(pos.split(';').map(p => { const [k,v] = p.split(':'); return [k,v]; }));
+          return (
+            <svg key={i} width="22" height="22" viewBox="0 0 22 22" style={{ position: 'absolute', ...st, pointerEvents: 'none', zIndex: 1 }}>
+              <path d="M0,0 Q11,1 20,20" stroke="#d4af37" strokeWidth="1" fill="none" opacity="0.3" />
+              <circle cx="1.5" cy="1.5" r="1.3" fill="#d4af37" opacity="0.3" />
+            </svg>
+          );
+        })}
 
         {/* Fixed top section */}
         <div style={s.cardTop}>

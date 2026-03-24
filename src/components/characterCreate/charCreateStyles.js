@@ -10,12 +10,26 @@ export const s = {
     minHeight: 0,
   },
   card: {
+    position: 'relative',
     width: '100%',
     maxWidth: 820,
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
     minHeight: 0,
+    background: `
+      radial-gradient(ellipse at 30% 15%, rgba(50,35,12,0.2) 0%, transparent 50%),
+      linear-gradient(170deg, rgba(22,17,8,0.98) 0%, rgba(14,11,6,0.99) 100%)
+    `,
+    border: '2px solid rgba(212,175,55,0.25)',
+    borderRadius: 12,
+    boxShadow: `
+      0 8px 40px rgba(0,0,0,0.6),
+      0 0 20px rgba(212,175,55,0.03),
+      inset 0 1px 0 rgba(212,175,55,0.08),
+      inset 0 0 30px rgba(0,0,0,0.15)
+    `,
+    overflow: 'hidden',
   },
 
   // ── Top bar (cancel + title + dots) ──────────────────────────────────────
