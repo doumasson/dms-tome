@@ -44,9 +44,9 @@
 - [x] Campaign creation flow — ornate card with filigree corners, numbered step indicators, platform default API key, all 4 steps styled
 - [x] Character creation flow — ornate card frame with filigree corners, layered gradient background, full 7-step builder already styled
 - [x] Verify: no ApiKeyGate — fixed race condition in key loading, platform default key loads first, non-DM players never blocked
-- [ ] Combat initiation — exploration to combat works end to end
-- [ ] Rest system — short/long rest UI styled and functional
-- [ ] Death saves — dying/dead flow with proper visual feedback
+- [x] Combat initiation — zone triggers, AI narrator startCombat, random encounters, stealth ambush all wired end-to-end
+- [x] Rest system — RestModal with majority vote, hit dice spending, timer bar, short/long rest functional
+- [x] Death saves — ornate SVG pip indicators with check/X marks, Cinzel labels, pulse animation, gradient panel, styled buttons
 
 ## Priority 3: Mobile & Responsive
 - [ ] All new components work at 375px landscape

@@ -57,53 +57,143 @@ function ConditionPicker({ combatantId, conditions, onAdd, onRemove }) {
   );
 }
 
+/* PLACEHOLDER ART: needs real dark fantasy assets for production */
 function DeathSaveTracker({ combatant, isActiveTurn, onRollSave, onStabilize }) {
   const { successes, failures, stable } = combatant.deathSaves || { successes: 0, failures: 0, stable: false };
   const isDead = failures >= 3;
 
+  const borderColor = isDead ? '#922b21' : stable ? '#1e8449' : 'rgba(231,76,60,0.5)';
+  const glowColor = isDead ? 'rgba(231,76,60,0.15)' : stable ? 'rgba(46,204,113,0.1)' : 'rgba(243,156,18,0.1)';
+
   return (
-    <div style={{ marginTop: 6, padding: '6px 8px', background: '#0f0804', border: `1px solid ${isDead ? '#922b21' : stable ? '#1e8449' : 'rgba(231,76,60,0.4)'}`, borderRadius: 5 }}>
-      <div style={{ fontSize: '0.7rem', color: isDead ? '#e74c3c' : stable ? '#2ecc71' : '#f39c12', fontWeight: 700, marginBottom: 4, letterSpacing: '0.06em' }}>
-        {isDead ? '💀 DEAD' : stable ? '💤 STABLE' : '⚠ DYING'}
+    <div style={{
+      marginTop: 6, padding: '8px 10px',
+      background: `linear-gradient(180deg, rgba(15,8,4,0.95), rgba(10,6,2,0.98))`,
+      border: `1px solid ${borderColor}`,
+      borderRadius: 6,
+      boxShadow: `0 2px 8px rgba(0,0,0,0.4), inset 0 0 12px ${glowColor}`,
+    }}>
+      {/* Status header with icon */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 6,
+        marginBottom: isDead || stable ? 0 : 6,
+      }}>
+        <span style={{ fontSize: '1rem' }}>{isDead ? '💀' : stable ? '💤' : '⚠️'}</span>
+        <span style={{
+          fontFamily: '"Cinzel", serif',
+          fontSize: '0.68rem',
+          fontWeight: 700,
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          color: isDead ? '#e74c3c' : stable ? '#2ecc71' : '#f39c12',
+          textShadow: `0 0 6px ${isDead ? 'rgba(231,76,60,0.3)' : stable ? 'rgba(46,204,113,0.3)' : 'rgba(243,156,18,0.3)'}`,
+        }}>
+          {isDead ? 'Dead' : stable ? 'Stable' : 'Dying'}
+        </span>
+        {/* Pulse indicator for dying */}
+        {!isDead && !stable && (
+          <div style={{
+            width: 6, height: 6, borderRadius: '50%',
+            background: '#f39c12',
+            boxShadow: '0 0 6px rgba(243,156,18,0.6)',
+            animation: 'deathPulse 1.2s ease-in-out infinite',
+          }} />
+        )}
       </div>
+
       {!isDead && !stable && (
         <>
-          <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
+          {/* Save pips — ornate circles */}
+          <div style={{ display: 'flex', gap: 16, marginBottom: 8 }}>
             <div>
-              <div style={{ fontSize: '0.65rem', color: '#2ecc71', marginBottom: 2 }}>Successes</div>
-              <div style={{ display: 'flex', gap: 3 }}>
+              <div style={{
+                fontFamily: '"Cinzel", serif',
+                fontSize: '0.55rem', color: 'rgba(46,204,113,0.6)',
+                marginBottom: 3, letterSpacing: '0.08em', fontWeight: 600,
+              }}>Saves</div>
+              <div style={{ display: 'flex', gap: 4 }}>
                 {[0, 1, 2].map(i => (
-                  <div key={i} style={{ width: 12, height: 12, borderRadius: '50%', background: i < successes ? '#2ecc71' : '#1a1006', border: '1px solid #2ecc71' }} />
+                  <svg key={i} width="16" height="16" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="6" fill={i < successes ? '#2ecc71' : 'rgba(16,10,4,0.8)'}
+                      stroke={i < successes ? '#2ecc71' : 'rgba(46,204,113,0.3)'}
+                      strokeWidth="1.2" />
+                    {i < successes && (
+                      <polyline points="5,8 7,10.5 11,5.5" fill="none" stroke="#0a0604" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    )}
+                  </svg>
                 ))}
               </div>
             </div>
             <div>
-              <div style={{ fontSize: '0.65rem', color: '#e74c3c', marginBottom: 2 }}>Failures</div>
-              <div style={{ display: 'flex', gap: 3 }}>
+              <div style={{
+                fontFamily: '"Cinzel", serif',
+                fontSize: '0.55rem', color: 'rgba(231,76,60,0.6)',
+                marginBottom: 3, letterSpacing: '0.08em', fontWeight: 600,
+              }}>Fails</div>
+              <div style={{ display: 'flex', gap: 4 }}>
                 {[0, 1, 2].map(i => (
-                  <div key={i} style={{ width: 12, height: 12, borderRadius: '50%', background: i < failures ? '#e74c3c' : '#1a1006', border: '1px solid #e74c3c' }} />
+                  <svg key={i} width="16" height="16" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="6" fill={i < failures ? '#e74c3c' : 'rgba(16,10,4,0.8)'}
+                      stroke={i < failures ? '#e74c3c' : 'rgba(231,76,60,0.3)'}
+                      strokeWidth="1.2" />
+                    {i < failures && (
+                      <g stroke="#0a0604" strokeWidth="1.5" strokeLinecap="round">
+                        <line x1="5.5" y1="5.5" x2="10.5" y2="10.5" />
+                        <line x1="10.5" y1="5.5" x2="5.5" y2="10.5" />
+                      </g>
+                    )}
+                  </svg>
                 ))}
               </div>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 5 }}>
+
+          {/* Action buttons */}
+          <div style={{ display: 'flex', gap: 6 }}>
             <button
               onClick={(e) => { e.stopPropagation(); onRollSave(combatant.id); }}
               disabled={!isActiveTurn}
               title={isActiveTurn ? 'Roll death saving throw' : "Only on this combatant's turn"}
-              style={{ ...miniBtn, color: isActiveTurn ? '#f39c12' : 'var(--text-muted)', opacity: isActiveTurn ? 1 : 0.5, fontSize: '0.7rem' }}
+              style={{
+                ...miniBtn,
+                fontFamily: '"Cinzel", serif',
+                fontSize: '0.65rem', fontWeight: 700,
+                color: isActiveTurn ? '#f39c12' : 'rgba(180,150,100,0.3)',
+                background: isActiveTurn ? 'rgba(243,156,18,0.1)' : 'transparent',
+                border: `1px solid ${isActiveTurn ? 'rgba(243,156,18,0.4)' : 'rgba(100,80,50,0.2)'}`,
+                borderRadius: 5, padding: '6px 12px',
+                opacity: isActiveTurn ? 1 : 0.5,
+                cursor: isActiveTurn ? 'pointer' : 'not-allowed',
+                minHeight: 32,
+              }}
             >
               🎲 Roll Save
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); onStabilize(combatant.id); }}
-              style={{ ...miniBtn, color: '#2ecc71', fontSize: '0.7rem' }}
+              style={{
+                ...miniBtn,
+                fontFamily: '"Cinzel", serif',
+                fontSize: '0.65rem', fontWeight: 700,
+                color: '#5dbd84',
+                background: 'rgba(46,204,113,0.08)',
+                border: '1px solid rgba(46,204,113,0.3)',
+                borderRadius: 5, padding: '6px 12px',
+                minHeight: 32,
+              }}
             >
               ✚ Stabilize
             </button>
           </div>
         </>
       )}
+
+      <style>{`
+        @keyframes deathPulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.4; transform: scale(0.7); }
+        }
+      `}</style>
     </div>
   );
 }
