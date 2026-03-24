@@ -68,6 +68,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Diamond spell slot pips — rotated 45° diamond shape with gold gradient glow, smooth transition on use
 - [x] Gold display in HUD — shows 🪙 N gp below character identity, always visible without opening inventory
 - [x] NPC name labels on minimap — blue name text appears next to NPC dots when player within 8 tiles
+- [x] NPC faction badge on tokens — colored dot (red=hostile, green=friendly, gold=revered) on NPC map tokens based on faction reputation
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds

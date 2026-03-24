@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import useStore from '../store/useStore'
+import { getDisposition } from '../lib/factionSystem'
 
 const CLASS_COLORS = {
   Fighter: 0x4499dd, Barbarian: 0xcc5544, Paladin: 0xeedd44,
@@ -13,6 +14,7 @@ export function useGameTokens({
   partyMembers, defeatedEnemies, currentAreaId,
 }) {
   const areaTokenPositions = useStore(s => s.areaTokenPositions);
+  const factionRep = useStore(s => s.factionReputation) || {};
   const tokens = useMemo(() => {
     if (!zone) return []
     const t = []
@@ -67,12 +69,16 @@ export function useGameTokens({
       if (zone.npcs) {
         zone.npcs.forEach(npc => {
           if (!npc.position) return
+          const npcFaction = npc.faction
+          const rep = npcFaction ? (factionRep[npcFaction] ?? 0) : 0
+          const disposition = npcFaction ? getDisposition(rep) : null
           t.push({
             id: npc.name, name: npc.name,
             x: npc.position.x, y: npc.position.y,
             color: 0x1a1208,
             borderColor: npc.questRelevant ? 0xc9a84c : 0x8a7a52,
             isNpc: true, questRelevant: npc.questRelevant,
+            disposition,
           })
         })
       }

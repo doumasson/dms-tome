@@ -70,6 +70,18 @@ export function renderTokens(container, tokens, tileSizeOverride) {
       group.addChild(bang)
     }
 
+    // Faction disposition indicator for NPCs
+    if (token.isNpc && token.disposition) {
+      const dispColors = { Hostile: 0xcc2222, Unfriendly: 0xcc6622, Neutral: 0x888844, Friendly: 0x44aa66, Revered: 0xd4af37 }
+      const dispColor = dispColors[token.disposition] || 0x888844
+      const indicator = new PIXI.Graphics()
+      indicator.circle(-radius * 0.7, -radius * 0.7, 4 * scale)
+      indicator.fill({ color: dispColor })
+      indicator.circle(-radius * 0.7, -radius * 0.7, 4 * scale)
+      indicator.stroke({ width: 1, color: 0x000000, alpha: 0.5 })
+      group.addChild(indicator)
+    }
+
     // Name label below token
     const nameLabel = new PIXI.Text({
       text: token.name || '',
