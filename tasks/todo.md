@@ -36,7 +36,7 @@
 
 ### Exploration & World
 - [x] NPC interaction: walk near NPC → interaction hint → press E or click → NPC dialog opens → AI narrator voices the NPC in character → skill checks (Persuasion/Intimidation) → reputation change. Find and fix.
-- [ ] NPC quest offers: NPC can offer quests during dialog → quest appears in journal → objectives trackable → completion triggers reputation gain. Find and fix.
+- [x] NPC quest offers: NPC can offer quests during dialog → quest appears in journal → objectives trackable → completion triggers reputation gain. Find and fix.
 - [ ] Area transitions: walk to exit → pre-generation of next area → fade transition → spawn at entry point in new area → area data loads correctly. Find and fix.
 - [ ] Trap detection: walk over trapped tile → passive Perception check → trap triggers if failed → damage/condition applied → trap visually revealed. Find and fix.
 - [ ] Stealth/sneaking: Hide action → Stealth check → Hidden condition → approaching enemies undetected → surprise round if successful. Find and fix.

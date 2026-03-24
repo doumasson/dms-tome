@@ -285,6 +285,13 @@ export default function NpcConversation({
     // Add to store
     addQuest(quest)
 
+    // Broadcast to all other players so quests sync in multiplayer
+    broadcastEncounterAction({
+      type: 'quest-accepted',
+      quest,
+      characterName: myCharacter?.name || 'Party',
+    })
+
     // Add to narrator log
     addNarratorMessage({
       role: 'system',
