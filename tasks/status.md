@@ -637,4 +637,9 @@ _(Empty — add items as they come up)_
 - [x] **Rest narrator messages** — short/long rest completion posts to chat, visible to all players
 - [x] **Condition descriptions** — combat log shows mechanical effects when conditions applied (15 conditions)
 - [x] **Player count display** — 👤N in top bar next to invite button
-- Build: PASS, ~1039 kB bundle (gzip 299 kB). 43 features shipped across 44 iterations.
+- [x] **Welcome message** — Narrator greets new players by name/class, teaches WASD/E/? controls
+- [x] **Enemy death flash** — red tint then 400ms fade on kill
+- [x] **Chat timestamps** — HH:MM next to speaker name in chat
+- [x] **Quest count in zone bar** — 📜N when active quests exist
+- [x] **Context-aware placeholder** — "Declare your action..." in combat, "What do you do?" in exploration
+- Build: PASS, ~1040 kB bundle (gzip 299 kB). **49 features shipped across 50 iterations.**
