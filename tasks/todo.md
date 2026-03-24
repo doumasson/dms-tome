@@ -26,7 +26,7 @@
 - [x] PartyHealthBars — BG2/Icewind Dale portrait bar style: ornate gold-framed portraits with corner accents, chiseled HP bars with notch marks, Cinzel names, gradient fills, condition badges with icons
 - [x] EmoteSystem — magical feel (particle trails, fade glow), dark themed picker
 - [x] PingSystem — magical beacon marker: SVG rune circle, vertical energy beam, spark particles, gem center
-- [ ] CraftingPanel — RPG workbench feel, ingredient slots with ornate borders, spellbook-style recipe list
+- [x] CraftingPanel — RPG workbench: ornate ingredient slots with corner notches, spellbook recipes, filigree corners, gold dividers
 - [ ] KeyboardHelp overlay — parchment scroll background, organized columns
 - [ ] LoadingTips — dark vignette background, ornate text framing
 - [ ] AutoSaveIndicator — subtle, non-intrusive, matches HUD style
