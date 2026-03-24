@@ -244,7 +244,7 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 196+ tests, 0 failures. Build 962ms.
 
 ### Phase 10: Living World ✅ COMPLETE
-- [x] Shop/merchant system — template stock + AI specials, buy/sell at 50%, gold-based economy
+- [x] Shop/merchant system — template stock + AI specials, buy/sell at 50%, gold-based economy; UI enhanced with featured items section, rarity-based glow effects, item count badges, smooth hover animations
 - [x] Minimap — HTML5 Canvas overlay, fog-aware, token dots, click-to-pan
 - [x] Status effect visuals — condition tint dots + concentration rings on combat tokens
 - [x] Ambient sound — theme-based audio, combat crossfade, mute toggle
