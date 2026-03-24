@@ -76,14 +76,14 @@
 - [x] ShopPanel.jsx
 - [x] RestModal.jsx
 - [x] LoginPage.jsx
-- [ ] CampaignSelect.jsx
+- [x] CampaignSelect.jsx
 
 ## Priority 3: Integration & Mobile
-- [ ] Verify CraftingPanel reads real inventory
-- [ ] Verify EmoteSystem/PingSystem broadcast via Supabase
-- [ ] Verify AutoSave persists to Supabase
-- [ ] All panels work at 375px landscape
-- [ ] All buttons 44px+ tap targets
+- [x] Verify CraftingPanel reads real inventory
+- [x] Verify EmoteSystem/PingSystem broadcast via Supabase
+- [x] Verify AutoSave persists to Supabase
+- [x] All panels work at 375px landscape
+- [x] All buttons 44px+ tap targets
 
 ## Priority 4: Asset Report
 - [ ] Generate `tasks/asset-report.md` — every sprite, texture, icon, sound needed for production
