@@ -91,15 +91,17 @@ def run(cmd, cwd=None, timeout=60):
 
 
 def run_claude(prompt, resume_id=None):
-    max_turns = str(CFG.get("max_turns", 30))
+    max_turns = str(CFG.get("max_turns", 200))
     cmd = [
         "claude", "-p", prompt,
         "--output-format", "json",
         "--max-turns", max_turns,
         "--dangerously-skip-permissions",
         "--allowedTools", ALLOWED_TOOLS,
-        "--model", MODEL,
     ]
+    # Only add --model if explicitly set and not "subscription" (default uses Claude subscription)
+    if MODEL and MODEL != "subscription":
+        cmd += ["--model", MODEL]
     if resume_id:
         cmd += ["--resume", resume_id]
     log("  -> Invoking Claude Code...")

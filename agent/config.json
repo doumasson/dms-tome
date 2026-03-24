@@ -2,7 +2,7 @@
   "project_name": "DungeonMind",
   "repo_dir": "~/dms-tome",
   "branch": "agent-dev",
-  "model": "claude-haiku-4-5-20251001",
+  "model": "subscription",
   "max_iterations": 50,
   "max_turns": 200,
   "pause_between_secs": 10,
