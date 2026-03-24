@@ -28,7 +28,7 @@
 - [x] PingSystem — magical beacon marker: SVG rune circle, vertical energy beam, spark particles, gem center
 - [x] CraftingPanel — RPG workbench: ornate ingredient slots with corner notches, spellbook recipes, filigree corners, gold dividers
 - [x] KeyboardHelp overlay — parchment scroll with curled edges, filigree corners, organized columns, ornate kbd keys
-- [ ] LoadingTips — dark vignette background, ornate text framing
+- [x] LoadingTips — dark vignette backdrop, ornate SVG bars, Cinzel Decorative label, Crimson Text tip
 - [ ] AutoSaveIndicator — subtle, non-intrusive, matches HUD style
 - [ ] XP bar — ornate progress bar with level badge, not a plain rectangle
 - [ ] Encounter difficulty badge — styled like a seal/sigil
