@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import useStore from '../store/useStore'
 
 const CLASS_COLORS = {
   Fighter: 0x4499dd, Barbarian: 0xcc5544, Paladin: 0xeedd44,
@@ -11,6 +12,7 @@ export function useGameTokens({
   zone, playerPos, myCharacter, inCombat, encounter, activeNpc,
   partyMembers, defeatedEnemies, currentAreaId,
 }) {
+  const areaTokenPositions = useStore(s => s.areaTokenPositions);
   const tokens = useMemo(() => {
     if (!zone) return []
     const t = []
@@ -44,6 +46,24 @@ export function useGameTokens({
         borderColor: CLASS_COLORS[myCharacter?.class] || 0x4499dd,
         isNpc: false,
       })
+      // Render other multiplayer party members from broadcast positions
+      const areaPositions = areaTokenPositions?.[currentAreaId] || {}
+      const userId = useStore.getState().user?.id
+      if (partyMembers?.length) {
+        partyMembers.forEach(member => {
+          if (member.name === myCharacter?.name || member.id === myCharacter?.id) return // skip self
+          const pos = areaPositions[member.userId] || areaPositions[member.id]
+          if (!pos) return
+          t.push({
+            id: member.userId || member.id || member.name,
+            name: member.name,
+            x: pos.x, y: pos.y,
+            color: 0x0c1828,
+            borderColor: CLASS_COLORS[member.class] || 0x44aa66,
+            isNpc: false,
+          })
+        })
+      }
       if (zone.npcs) {
         zone.npcs.forEach(npc => {
           if (!npc.position) return

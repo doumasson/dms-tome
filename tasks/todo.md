@@ -55,7 +55,7 @@
 - [x] Gold persistence: verify gold survives combat rewards, purchases, and session reload. No race conditions on multi-player gold split. Find and fix.
 
 ### Multiplayer & Sync
-- [ ] Token movement broadcast: one player moves → all other players see the token move smoothly. Find and fix.
+- [x] Token movement broadcast: one player moves → all other players see the token move smoothly. Find and fix.
 - [ ] Combat sync: DM client runs enemy AI → damage/conditions broadcast → all clients update HP bars and conditions simultaneously. Find and fix.
 - [ ] Narrator sync: AI narrator message appears for ALL players at the same time, not just the host. Find and fix.
 
