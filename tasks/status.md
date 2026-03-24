@@ -238,8 +238,10 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Bundle size reduced 41% via lazy loading (1,671→980 kB)
 - [x] useCombatActions.js refactored — extracted class ability handlers (1600→1204 lines), created `src/lib/classAbilityHandlers.js` (402 lines)
 - [x] CharacterSheet.jsx refactored — extracted UI sub-components (1168→1011 lines), created `src/components/CharacterSheetEditors.jsx` (229 lines)
+- [x] CreateCampaign.jsx, CampaignImporter.jsx, LevelUpModal.jsx, DiceTray.jsx, InventoryGrid.jsx refactored — 5 more components split, ~1031 total lines extracted
+- [x] Smooth combat token animations — TweenEngine with easing functions, hooked to combat movements (150-400ms based on distance)
 - [x] Scene image loading UI — spinner overlay while Pollinations generates, prevents blank map flash
-- 196 tests, 0 failures. Build 913ms.
+- 196+ tests, 0 failures. Build 962ms.
 
 ### Phase 10: Living World ✅ COMPLETE
 - [x] Shop/merchant system — template stock + AI specials, buy/sell at 50%, gold-based economy

@@ -4,13 +4,13 @@
 > **DO NOT WRITE TESTS.** Every iteration = game code, assets, or bug fixes.
 
 ## Priority 1: Polish & Fix What's Built
-- [ ] Run `npm run build` — fix any build errors or warnings
-- [ ] Audit all components over 400 lines — split oversized files (CharacterSheet.jsx 1168 lines, CreateCampaign.jsx 1019 lines, CombatPhase.jsx 908 lines, useCombatActions.js 1600 lines)
+- [x] Run `npm run build` — fix any build errors or warnings (passing at 962ms)
+- [x] Audit all components over 400 lines — split oversized files (7 major refactors: useCombatActions 1600→1204, CharacterSheet 1168→1011, CreateCampaign 1019→832, CampaignImporter 890→725, LevelUpModal 588→542, DiceTray 401→385, InventoryGrid 408→344)
 - [ ] Fix any console errors visible during normal gameplay flow (create campaign → create character → enter game → explore → combat)
 - [ ] Verify multiplayer sync works end-to-end — host and player see the same state
 
 ## Priority 2: Gameplay Feel
-- [ ] Smooth token movement animations (not snapping tile to tile)
+- [x] Smooth token movement animations (not snapping tile to tile) — implemented TweenEngine with easing, hooked to combat token movement
 - [ ] Scene image loading — show loading state while Pollinations generates, don't flash blank
 - [ ] Combat feedback — visual hit/miss/damage numbers floating above tokens
 - [ ] Sound effects for combat actions (hit, miss, spell cast, death)
