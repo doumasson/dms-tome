@@ -1,89 +1,58 @@
 # Active Work — Agent Priority Queue
 
-> **RULES FOR MARKING ITEMS DONE:**
-> - You can ONLY check off an item if you WROTE CODE to fix a real bug you found
-> - Trace the code path. Find where it breaks. Fix it. One bug per iteration.
+> **RULES:**
+> - You can ONLY check off an item if you WROTE CODE to fix it
 > - ONE item per iteration. ONE commit.
 > - **DO NOT WRITE TESTS.** Fix real game code only.
+> - If Playwright shows the game is broken, fix THAT before anything else.
 
-## DESIGN RULES — EVERY SCREEN MUST FOLLOW THESE
-- Dark fantasy: BG2 / Icewind Dale inspired
-- Gold accents (#c9a84c), deep brown/black backgrounds (#1a1006)
-- Ornate borders, stone/metal CSS textures, SVG filigree
-- Cinzel for headers, serif for body, fantasy fonts only
-- Mobile-first: 44px+ touch targets, landscape orientation
-- No white backgrounds, no flat/modern UI
-- Mark placeholder art: `/* PLACEHOLDER ART: needs real assets */`
+## CRITICAL BUGS — FIX THESE FIRST (game is broken)
 
-## Priority 1: SYSTEM-BY-SYSTEM FUNCTIONAL AUDIT
-> For EACH system: trace the entire code path from trigger to completion.
-> Find where it breaks, crashes, or behaves wrong. Fix the bug. Move on.
-> These are the core gameplay loops — every one must work end to end.
+### Bug 1: Random encounters spam on every tile move
+The random encounter system fires on EVERY movement step. A player walks 5 tiles and gets 5 encounter prompts. This makes the game unplayable.
+- Find `useRandomEncounters` or the movement handler that triggers encounters
+- The encounter check should fire ONCE per area entry or on a low % chance per move (like 5-10%), not every tile
+- Encounters that fire should ONLY happen if the AI narrator decides to start one, not automatically
+- Fix the trigger rate. Verify by walking around — should be rare, not every step.
 
-### Campaign & Character Creation
-- [x] Campaign creation end-to-end: CreateCampaign.jsx → each wizard step → AI generation (must use platform default API key from app_config, NOT require BYOK) → save to Supabase → redirect to new campaign. Find and fix a real bug.
-- [x] Character creation end-to-end: race select → class select → ability scores (standard array, point buy, 4d6 drop lowest) → spell selection for casters → background/identity → save to Supabase → enter game with new character. Find and fix a real bug.
+### Bug 2: No enemy tokens spawned on map
+Random encounters fire messages ("You notice Goblin ahead!") but no enemy tokens actually appear on the tilemap. The encounter system creates narrator messages but doesn't place enemies on the grid.
+- Trace: random encounter triggers → startEncounter → enemy combatants should appear as red tokens on the PixiJS canvas
+- Find where enemy token placement fails and fix it
 
-### Combat System
-- [x] Combat trigger: trace what happens when player token moves near enemies. encounterZones → AI narrator prompt → startEncounter. Does initiative roll correctly? Find and fix.
-- [x] Melee attack: trace Attack button → target selection → hit/miss roll → damage calculation → HP update → floating damage number → enemy death at 0 HP. Find and fix.
-- [x] Spell casting: trace Cast button → spell selection → AoE targeting overlay → save DCs → damage/healing resolution → spell slot consumption → concentration tracking. Find and fix.
-- [x] Enemy AI turn: trace enemyAi.js → computeGruntAction/boss AI → pathfinding to player → attack resolution → damage broadcast to all clients. Find and fix.
-- [x] Class abilities in combat: verify Extra Attack (Fighter), Sneak Attack (Rogue), Rage (Barbarian), Divine Smite (Paladin), Wild Shape (Druid) actually fire and calculate correctly. Find and fix.
-- [x] Action economy: verify action/bonus action/movement tracking per turn. Can player use Dash? Dodge? Disengage? Does end turn advance properly? Find and fix.
-- [x] Opportunity attacks: trace what happens when a token moves away from an enemy. Does the popup appear? Does disengage prevent it? Find and fix.
-- [x] Death saves: trace HP hitting 0 → death save UI → success/failure tracking → stabilize → healing revival. Find and fix.
+### Bug 3: Narrator float bar is enormous
+There's a huge gold-bordered bar spanning most of the screen width in the middle of the game view. This is either the NarratorFloat, an interaction zone overlay, or the character name display. It should be small and unobtrusive — a small floating text, not a screen-blocking banner.
+- Find what renders that wide gold bar
+- Make it compact — small text, positioned unobtrusively, not blocking the game view
 
-### Exploration & World
-- [x] NPC interaction: walk near NPC → interaction hint → press E or click → NPC dialog opens → AI narrator voices the NPC in character → skill checks (Persuasion/Intimidation) → reputation change. Find and fix.
-- [x] NPC quest offers: NPC can offer quests during dialog → quest appears in journal → objectives trackable → completion triggers reputation gain. Find and fix.
-- [x] Area transitions: walk to exit → pre-generation of next area → fade transition → spawn at entry point in new area → area data loads correctly. Find and fix.
-- [x] Trap detection: walk over trapped tile → passive Perception check → trap triggers if failed → damage/condition applied → trap visually revealed. Find and fix.
-- [x] Stealth/sneaking: Hide action → Stealth check → Hidden condition → approaching enemies undetected → surprise round if successful. Find and fix.
+### Bug 4: Narrator/chat panel takes too much vertical space
+The bottom parchment panel (narrator chat + log) takes up ~50% of the screen. Per ARCHITECTURE.md the layout should be:
+- Top 80%: game map (dominant, full bleed)
+- Bottom 20%: narrator bar (collapsed by default, expands to 40% max)
+- Fix the layout proportions. The map should be dominant.
 
-### Inventory & Equipment
-- [x] Inventory grid: open CharacterSheet → inventory shows items with spatial grid → drag-and-drop works → weight/encumbrance updates. Find and fix.
-- [x] Equipment: equip weapon → AC/attack bonus updates in derived stats → unequip reflects correctly. Find and fix.
-- [x] Item use in combat: Use Item action → consumable picker → healing potion heals → item consumed from inventory → broadcast to other players. Find and fix.
-- [x] Loot: defeat enemies → LootScreen appears → gold split → item drops → roll-off for magic items → items added to inventory. Find and fix.
-- [x] Crafting: open CraftingPanel → materials from inventory shown → select recipe → skill check → item created and added to inventory. Find and fix.
+### Bug 5: Layout/UI elements overlapping or unstyled
+Multiple HUD elements are overlapping. The game should have:
+- Top-left: compact HP/AC/Level HUD
+- Top-center: area name + time
+- Top-right: minimap (collapsible)
+- Bottom: narrator bar (collapsed 20%, expandable)
+- No elements should overlap the game map unnecessarily
+- Review GameV2.jsx render tree and fix z-index/positioning conflicts
 
-### Progression & Economy
-- [x] Level up: trace XP threshold → LevelUpModal trigger → HP roll/average choice → new features → spell slot increase → cantrip/spell selection for casters. Find and fix.
-- [x] Rest system: short rest → hit dice spending → HP recovery. Long rest → full HP + spell slot restore + hit dice recovery. Dungeon blocks long rest. Find and fix.
-- [x] Shop/merchant: open shop → browse items → buy (gold deducted) → sell at 50% → faction reputation affects prices → premium items for friendly factions. Find and fix.
-- [x] Gold persistence: verify gold survives combat rewards, purchases, and session reload. No race conditions on multi-player gold split. Find and fix.
+## After critical bugs are fixed, continue with:
 
-### Multiplayer & Sync
-- [x] Token movement broadcast: one player moves → all other players see the token move smoothly. Find and fix.
-- [x] Combat sync: DM client runs enemy AI → damage/conditions broadcast → all clients update HP bars and conditions simultaneously. Find and fix.
-- [x] Narrator sync: AI narrator message appears for ALL players at the same time, not just the host. Find and fix.
+### Gameplay Testing
+- [ ] Walk around without encounter spam — movement should feel smooth and safe in non-hostile areas
+- [ ] Find enemies on the map (placed by area builder, not random encounters) and engage in combat
+- [ ] Complete a combat encounter — attack, take damage, kill enemy, get loot
+- [ ] Talk to an NPC — dialog should open, AI responds in character
+- [ ] Open character sheet — verify stats, inventory, equipment display correctly
+- [ ] Use the crafting panel — verify it reads real inventory
+- [ ] Verify the shop works — buy/sell items
 
-### Voice & Audio
-- [x] TTS narration: verify narrator messages are spoken aloud (OpenAI TTS → Pollinations fallback → Web Speech). Find and fix.
-- [x] Ambient audio: verify music plays for area themes, switches on combat, mute toggle works. Find and fix.
-
-## Priority 2: UI AUDIT — ONE FILE PER ITERATION
-> Read the file. Fix styling issues. Make it match the dark fantasy theme.
-
-- [x] NarratorPanel.jsx
-- [x] NpcConversation.jsx
-- [x] CharacterSheet.jsx
-- [x] LootScreen.jsx
-- [x] GameOverModal.jsx
-- [x] BottomBar.jsx (HUD)
-- [x] CombatActionBar.jsx
-- [x] ShopPanel.jsx
-- [x] RestModal.jsx
-- [x] LoginPage.jsx
-- [x] CampaignSelect.jsx
-
-## Priority 3: Integration & Mobile
-- [x] Verify CraftingPanel reads real inventory
-- [x] Verify EmoteSystem/PingSystem broadcast via Supabase
-- [x] Verify AutoSave persists to Supabase
-- [x] All panels work at 375px landscape
-- [x] All buttons 44px+ tap targets
-
-## Priority 4: Asset Report
-- [x] Generate `tasks/asset-report.md` — every sprite, texture, icon, sound needed for production
+### UI Polish
+- [ ] Every screen matches dark fantasy theme per DESIGN RULES
+- [ ] No white backgrounds, no unstyled default elements
+- [ ] All text readable — proper contrast, proper sizing
+- [ ] Mobile-friendly — 44px tap targets, works at 375px landscape

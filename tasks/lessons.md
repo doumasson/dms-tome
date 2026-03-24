@@ -1,5 +1,17 @@
 # Lessons Learned
 
+## Do NOT Rubber-Stamp — Test Your Own Work
+**Pattern:** Agent checks off todo items by reading code and deciding "it looks fine" without actually verifying functionality. Then the game ships broken.
+**Rule:** After making a change, check if the Playwright screenshots show the feature working. If you can't verify visually, trace the code path to confirm it actually executes. Never check off an item without writing code.
+
+## Random Encounters Must Be Rare, Not Per-Tile
+**Pattern:** Random encounter check fires on every single tile movement, spamming 10+ encounters in seconds.
+**Rule:** Random encounters should fire at MOST once per area transition or on a very low % chance per significant movement (5-10%). The AI narrator should decide when to trigger combat, not a per-tile RNG.
+
+## Layout Must Match Architecture: 80% Map / 20% Narrator
+**Pattern:** The narrator panel and overlay elements expand to fill 50%+ of the screen, making the map tiny.
+**Rule:** Per ARCHITECTURE.md: Top 80% = game map (dominant), Bottom 20% = narrator bar (collapsed default, 40% max expanded). Always check the visual layout after changes.
+
 ## NEVER Write Tests — Build Game Code Instead
 **Pattern:** Agent spends entire iterations writing Playwright or Vitest test files instead of building game features, assets, or fixes. 50 iterations produced 1,111 tests but left real gameplay polish and missing features untouched.
 
