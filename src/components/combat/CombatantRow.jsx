@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { getTokenColor, CONDITIONS } from '../../lib/dice';
 import { CONDITION_INFO } from '../../lib/conditionDescriptions';
 import { miniBtn } from './combatStyles';
+import Tooltip, { ConditionTooltip } from '../game/Tooltip';
 
 export function HpBar({ current, max }) {
   const pct = max > 0 ? Math.max(0, current / max) : 0;
@@ -207,11 +208,12 @@ export default function CombatantRow({ combatant, isActive, isSelected, colorInd
       ) : combatant.conditions?.length > 0 && (
         <div style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap', gap: 2 }}>
           {combatant.conditions.map(c => (
-            <span key={c}
-              title={CONDITION_INFO[c] || c}
-              style={{ fontSize: '0.65rem', background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.4)', color: '#e88', borderRadius: 3, padding: '1px 4px' }}>
-              {c}
-            </span>
+            <Tooltip key={c} content={<ConditionTooltip name={c} description={CONDITION_INFO[c]} />} position="bottom">
+              <span
+                style={{ fontSize: '0.65rem', background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.4)', color: '#e88', borderRadius: 3, padding: '1px 4px', cursor: 'help' }}>
+                {c}
+              </span>
+            </Tooltip>
           ))}
         </div>
       )}

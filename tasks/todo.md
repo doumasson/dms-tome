@@ -41,7 +41,13 @@
 - [x] Party formation — FormationPanel already existed with front/back line UI; wired formation into trap system so back-line members get advantage (roll twice, take higher) on trap saves, with narrator message noting formation benefit
 - [x] Loot pickup animation — LootAnimation component with flying item icon, sparkle trail particles, item name toast; auto-triggers from addItemToInventory store action; CSS keyframe arc animation from screen center to inventory position
 
-## Priority 7: Asset Generation (blocked — needs external image API)
+## Priority 7: UI & Information
+- [x] Tooltip system — reusable Tooltip component with positioned popups, ItemTooltip/SpellTooltip/ConditionTooltip formatters; integrated into CombatantRow condition badges; dark fantasy styled with fade-in animation
+- [ ] Faction reputation display — show faction standings in a UI panel
+- [ ] Combat recap — post-combat summary showing damage dealt, heals, kills per character
+- [ ] Keyboard shortcut help — press ? to see all available shortcuts
+
+## Priority 8: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
 - [ ] Token/character sprites — already using Pollinations for portraits
 - [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets
