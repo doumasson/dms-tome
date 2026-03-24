@@ -76,6 +76,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Enemy death flash — red tint flash for 120ms then 400ms fade to 25% opacity when enemy drops to 0 HP
 - [x] Chat message timestamps — HH:MM shown next to speaker name in chat tab, subtle muted color
 - [x] Active quest count in zone info — 📜N shown in top bar when player has active quests
+- [x] Context-aware chat placeholder — "Declare your action..." in combat, "What do you do?" in exploration
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds

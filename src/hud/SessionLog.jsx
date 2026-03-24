@@ -199,7 +199,7 @@ export default function SessionLog({ onChat, tab, setTab }) {
               ref={chatInputRef}
               className="hud-chat-input"
               style={{ flex: 1, margin: 0 }}
-              placeholder="Say something..."
+              placeholder={inCombat ? "Declare your action..." : "What do you do?"}
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
             />
