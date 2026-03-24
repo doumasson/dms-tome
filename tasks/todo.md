@@ -55,6 +55,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Gold gain notification — "+N Gold" shown alongside XP in the same toast, watches myCharacter.gold changes
 - [x] Interaction proximity prompt — "E — Talk to [NPC]" / "E — Enter [Exit]" appears when within 2 tiles
 - [x] Danger level indicator — colored dot (green/red) with glow next to SAFE/DANGER text in top bar
+- [x] Auto-narrate area entry — Narrator describes scene on area transition (theme flavor + nearby NPCs), broadcast to all players
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds

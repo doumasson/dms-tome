@@ -6,6 +6,8 @@ import { broadcastAreaTransition } from '../lib/liveChannel'
 import { playZoneTransition } from '../engine/ZoneTransition'
 import { playDoorCreak } from '../lib/ambientSounds'
 import { safeguardSpawn } from '../lib/gridUtils.js'
+import { v4 as uuidv4 } from 'uuid'
+import { broadcastNarratorMessage } from '../lib/liveChannel'
 
 /**
  * Handles area transitions (exit clicks) and exit-proximity pre-generation.
@@ -104,14 +106,51 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
         playerPosRef.current = entry
       }, () => {
         setTransitioning(false)
+        narrateAreaRef.current?.(targetId)
       }, 800, areaName)
     } else {
       activateArea(targetId)
       setPlayerPos(entry)
       playerPosRef.current = entry
-      setTimeout(() => setTransitioning(false), 100)
+      setTimeout(() => {
+        setTransitioning(false)
+        narrateAreaRef.current?.(targetId)
+      }, 100)
     }
   }, [transitioning, inCombat, areas, areaBriefs, buildAndLoadArea, activateArea, advanceGameTime])
 
-  return { transitioning, handleAreaTransition, lastNpcTriggerRef }
+  // Auto-narrate area description when transition completes
+  const narrateAreaRef = useRef(null)
+  narrateAreaRef.current = (areaId) => {
+    const area = useStore.getState().areas[areaId]
+    if (!area?.name) return
+    const npcNames = (area.npcs || []).map(n => n.name).filter(Boolean)
+    const theme = area.theme || 'unknown'
+    const THEME_FLAVOR = {
+      village: 'The sounds of village life surround you.',
+      town: 'Townsfolk go about their daily business.',
+      forest: 'The canopy filters dappled light onto the forest floor.',
+      clearing: 'Sunlight breaks through the trees into an open glade.',
+      dungeon: 'Shadows cling to the cold stone walls.',
+      cave: 'Water drips in the darkness, echoing off stone.',
+      crypt: 'A chill silence hangs over the burial chambers.',
+      sewer: 'The air is thick with dampness and decay.',
+      desert: 'Heat shimmers rise from the endless sands.',
+      mountain: 'The wind howls between jagged peaks.',
+      swamp: 'Mist curls above the murky waters.',
+      graveyard: 'Weathered headstones lean at odd angles in the fog.',
+      coastal: 'Salt spray carries on the ocean breeze.',
+      marketplace: 'Merchants call out their wares from colorful stalls.',
+    }
+    const flavor = THEME_FLAVOR[theme] || 'You survey your surroundings.'
+    const npcNote = npcNames.length > 0
+      ? ` You notice ${npcNames.slice(0, 3).join(', ')}${npcNames.length > 3 ? ` and ${npcNames.length - 3} others` : ''} nearby.`
+      : ''
+    const text = `You arrive at ${area.name}. ${flavor}${npcNote}`
+    const msg = { role: 'dm', speaker: 'The Narrator', text, id: uuidv4(), timestamp: Date.now() }
+    useStore.getState().addNarratorMessage(msg)
+    broadcastNarratorMessage(msg)
+  }
+
+  return { transitioning, handleAreaTransition, lastNpcTriggerRef, narrateAreaRef }
 }
