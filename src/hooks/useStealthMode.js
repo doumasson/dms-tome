@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import useStore from '../store/useStore'
+import { broadcastEncounterAction } from '../lib/liveChannel'
 
 /**
  * Manages stealth approach gameplay:
@@ -18,7 +19,6 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
   const pendingEncounterData = useStore(s => s.pendingEncounterData)
   const clearPendingEncounterData = useStore(s => s.clearPendingEncounterData)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
-  const broadcastEncounterAction = useStore(s => s.broadcastEncounterAction)
 
   // Stable callback to start surprise combat from stealth
   const startSurpriseCombat = useCallback((stealthData) => {
@@ -89,8 +89,7 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
       broadcastEncounterAction?.({ type: 'stealth-mode', active: true, stealthResult: total })
     }
   }, [lastSkillCheckResult, pendingEncounterData, zone, addNarratorMessage,
-      clearLastSkillCheckResult, clearPendingEncounterData, setStealthMode,
-      broadcastEncounterAction])
+      clearLastSkillCheckResult, clearPendingEncounterData, setStealthMode])
 
   // --- Stealth proximity checker ---
   useEffect(() => {
@@ -136,7 +135,7 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
       }
     }
   }, [playerPos, stealthMode, clearStealthMode, addNarratorMessage,
-      broadcastEncounterAction, startSurpriseCombat])
+      startSurpriseCombat])
 
   return { stealthMode }
 }

@@ -39,7 +39,7 @@
 - [x] NPC quest offers: NPC can offer quests during dialog → quest appears in journal → objectives trackable → completion triggers reputation gain. Find and fix.
 - [x] Area transitions: walk to exit → pre-generation of next area → fade transition → spawn at entry point in new area → area data loads correctly. Find and fix.
 - [x] Trap detection: walk over trapped tile → passive Perception check → trap triggers if failed → damage/condition applied → trap visually revealed. Find and fix.
-- [ ] Stealth/sneaking: Hide action → Stealth check → Hidden condition → approaching enemies undetected → surprise round if successful. Find and fix.
+- [x] Stealth/sneaking: Hide action → Stealth check → Hidden condition → approaching enemies undetected → surprise round if successful. Find and fix.
 
 ### Inventory & Equipment
 - [ ] Inventory grid: open CharacterSheet → inventory shows items with spatial grid → drag-and-drop works → weight/encumbrance updates. Find and fix.
