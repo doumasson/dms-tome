@@ -59,7 +59,13 @@
 - [x] Loading screen tips — LoadingTips component with 25 gameplay tips, shows random tip on area transitions, 3s fade-in/fade-out animation, centered bottom overlay
 - [x] Crafting system — 10 material types, 8 recipes (potions, scrolls, oils, caltrops), skill check DC system, ingredient consumption, CraftingPanel UI with material counts/recipe cards/craft button, wired to 'craft' tool handler
 
-## Priority 10: Asset Generation (blocked — needs external image API)
+## Priority 10: World Building
+- [x] Area map overview — SVG node graph showing connected areas with theme icons, dashed connection lines with labels, current area glow animation, visited/unvisited markers, BFS layout, accessible via 'worldmap' tool handler
+- [ ] Bestiary — log of encountered monsters with stats, CR, abilities, portrait
+- [ ] Session timer — show real-time session duration in HUD
+- [ ] Damage type resistance display — show enemy resistances/immunities in combat tooltips
+
+## Priority 11: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
 - [ ] Token/character sprites — already using Pollinations for portraits
 - [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets
