@@ -150,18 +150,21 @@
 .slot-pip {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 1px;
   border: 1px solid #d4af37;
+  transform: rotate(45deg);
+  transition: all 0.3s ease;
 }
 
 .slot-pip.available {
-  background: #d4af37;
-  box-shadow: 0 0 4px rgba(212, 175, 55, 0.6);
+  background: linear-gradient(135deg, #f0c868, #d4af37);
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.7);
 }
 
 .slot-pip.used {
-  background: transparent;
-  opacity: 0.4;
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.3);
+  opacity: 0.5;
 }
 
 /* Conditions Section */
