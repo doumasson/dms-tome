@@ -54,7 +54,16 @@
 - [ ] Drawer/sheet pattern on small screens instead of overlapping modals
 - [ ] HUD collapses properly on narrow screens
 
-## Priority 4: Integration & Wiring
+## Priority 4: Review & Fix Existing Code
+> Not just new stuff — review OLD components and screens for quality.
+- [ ] Audit src/components/ — any file with inline styles that don't match the dark fantasy theme? Fix them.
+- [ ] Audit src/hud/ — HUD elements should all be ornate, consistent, Icewind Dale style
+- [ ] Check all modals/overlays (CharacterSheet, LevelUp, Rest, Loot, GameOver) — consistent styling?
+- [ ] Review NarratorPanel, NpcConversation — do they feel polished? Readable text? Proper spacing?
+- [ ] Check CreateCampaign and CharacterCreate flows — every step styled per design rules?
+- [ ] Look for console warnings/errors in the codebase (missing keys, deprecated APIs, null refs)
+
+## Priority 5: Integration & Wiring
 - [ ] Verify ALL new components are reachable in normal gameplay
 - [ ] CraftingPanel uses real inventory items
 - [ ] EmoteSystem broadcasts via Supabase Realtime

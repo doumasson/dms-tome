@@ -545,6 +545,15 @@ The screenshots tell you what's ACTUALLY rendering — not just what compiles.
   like default HTML is NOT done. It must match the dark fantasy design rules.
 DO NOT modify the screenshot pipeline.
 
+## CODE REVIEW SCOPE:
+You are responsible for ALL code in the project — not just new components.
+When working on a file, also review surrounding code for:
+- Existing components with bad/missing styling (doesn't match dark fantasy theme)
+- Broken or half-wired features (imported but never rendered, hardcoded test data)
+- Console errors, missing null checks, dead imports
+- Inconsistency with CLAUDE.md, ARCHITECTURE.md, or design rules
+If you spot something broken while working on your todo item, fix it in the same iteration.
+
 ## COMPLETION FORMAT:
 BUILT: path/to/file
 WHAT: one-line description of what you built
