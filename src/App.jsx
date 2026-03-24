@@ -5,6 +5,7 @@ import { decryptApiKey } from './lib/apiKeyVault';
 import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
+import { receiveEmote } from './components/game/EmoteSystem';
 import LoginPage from './components/LoginPage';
 import CampaignSelect from './components/CampaignSelect';
 import ApiKeySettings from './components/ApiKeySettings';
@@ -443,6 +444,9 @@ export default function App() {
           }
           break
         }
+        case 'emote':
+          receiveEmote(payload.playerName, payload.emoji);
+          break
       }
     });
 

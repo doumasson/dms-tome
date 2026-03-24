@@ -49,7 +49,7 @@
 
 ## Priority 8: Multiplayer & Social
 - [x] Party health bars — PartyHealthBars component showing compact HP bars for all party members, portrait circles, name labels, condition dots, dead overlay, live HP from combat combatants, positioned bottom-left
-- [ ] Emote/reaction system — quick emoji reactions players can send during gameplay
+- [x] Emote/reaction system — EmoteSystem component with 10 emotes (attack, defend, haha, nice, scared, roll, rip, fire, love, gg), floating emoji animations, broadcast to all players via encounter-action channel, picker grid, player name labels
 - [ ] Auto-save indicator — small icon showing when game state saves to Supabase
 - [ ] Ping system — click map to place a waypoint marker visible to all players
 
