@@ -407,10 +407,10 @@ function localEnemyTurn(enemy, encounter, target, canReach, canMoveAndReach, mov
   const attacks = enemy.attacks || [];
   const attack = attacks[0] || { name: 'Strike', bonus: '+0', damage: '1d6' };
 
-  // Compute move position
+  // Compute move position — move toward target whenever we can't reach in melee
   let moveToPosition = null;
-  if (!canReach && target && canMoveAndReach) {
-    moveToPosition = stepTowards(enemy.position, target.position, moveSquares - 1, encounter.combatants);
+  if (!canReach && target) {
+    moveToPosition = stepTowards(enemy.position, target.position, moveSquares, encounter.combatants);
   }
 
   if (!target) {
