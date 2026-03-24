@@ -11,14 +11,14 @@
 
 ## Priority 2: Gameplay Feel
 - [x] Smooth token movement animations (not snapping tile to tile) — implemented TweenEngine with easing, hooked to combat token movement
-- [ ] Scene image loading — show loading state while Pollinations generates, don't flash blank
-- [ ] Combat feedback — visual hit/miss/damage numbers floating above tokens
-- [ ] Sound effects for combat actions (hit, miss, spell cast, death)
-- [ ] Narrator text should stream in (typewriter effect), not appear all at once
+- [x] Scene image loading — show loading state while Pollinations generates, don't flash blank (already implemented: skeleton shimmer + spinner)
+- [x] Combat feedback — visual hit/miss/damage numbers floating above tokens (already implemented: FloatingDamageNumber component)
+- [x] Sound effects for combat actions (hit, miss, spell cast, death) — implemented procedural Web Audio API sounds (hit, miss, death on damage events)
+- [x] Narrator text should stream in (typewriter effect), not appear all at once — implemented TypewriterText component, applies to last DM message only
 
 ## Priority 3: Missing Game Features
 - [ ] Merchant/shop UI improvements — make it feel like a real RPG shop, not a list
-- [ ] Character portrait in-game — show the actual portrait, not just colored circles
+- [x] Character portrait in-game — show the actual portrait, not just colored circles (added portrait generation for enemies)
 - [ ] Map variety — more curated chunks for different biomes/themes
 - [ ] Spell effects — visual particles/animations for common spells (Fireball, Healing Word, etc.)
 - [ ] Better NPC conversation — longer, more personality-driven dialogue
