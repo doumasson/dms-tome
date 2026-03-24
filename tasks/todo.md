@@ -29,7 +29,7 @@
 - [x] CraftingPanel — RPG workbench: ornate ingredient slots with corner notches, spellbook recipes, filigree corners, gold dividers
 - [x] KeyboardHelp overlay — parchment scroll with curled edges, filigree corners, organized columns, ornate kbd keys
 - [x] LoadingTips — dark vignette backdrop, ornate SVG bars, Cinzel Decorative label, Crimson Text tip
-- [ ] AutoSaveIndicator — subtle, non-intrusive, matches HUD style
+- [x] AutoSaveIndicator — SVG rune spinner, checkmark/X states, subtle HUD glow, Cinzel text
 - [ ] XP bar — ornate progress bar with level badge, not a plain rectangle
 - [ ] Encounter difficulty badge — styled like a seal/sigil
 - [ ] Minimap — ornate border frame, parchment background, compass rose
