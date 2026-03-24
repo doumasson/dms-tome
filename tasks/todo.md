@@ -33,7 +33,7 @@
 - [x] XP bar — SVG shield level badge, ornate bar with notches/end caps, gold shimmer animation
 - [x] Encounter difficulty badge — SVG scalloped wax seal with tick marks, color-coded per difficulty, used in Victory/Defeat screens
 - [x] Minimap — ornate double gold frame, parchment gradient, SVG compass rose, corner filigree, 44px collapsed button
-- [ ] Bestiary — style as a leather-bound monster manual
+- [x] Bestiary — leather-bound book: spine accent, corner studs, split page layout, ornate stat boxes, Cinzel Decorative headers
 - [ ] Area map overview — parchment map style with wax seal markers
 
 ## Priority 2: Campaign & Character Creation (full new-user flow)
