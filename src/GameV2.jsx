@@ -21,6 +21,7 @@ import PartyHealthBars from './components/game/PartyHealthBars'
 import EmoteSystem from './components/game/EmoteSystem'
 import AutoSaveIndicator from './components/game/AutoSaveIndicator'
 import PingSystem from './components/game/PingSystem'
+import LoadingTips from './components/game/LoadingTips'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -440,6 +441,7 @@ export default function GameV2({ onLeave }) {
         <EmoteSystem />
         <AutoSaveIndicator />
         <PingSystem worldTransform={worldTransform} />
+        <LoadingTips />
         {nearbyNpcs.map(npc => (
           <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
         ))}
