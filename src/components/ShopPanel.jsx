@@ -274,7 +274,26 @@ export default function ShopPanel({ npc, shopType, onClose }) {
       showToast(result.reason)
       return
     }
-    addItemToInventory(item)
+    // Normalize shop item format to match the game's consumable/equipment schema
+    const gameItem = { ...item }
+    if (item.type === 'potion' && item.stats?.healDice) {
+      // Convert potion shop format to consumable effect format that useItem expects
+      const match = item.stats.healDice.match(/(\d+)d(\d+)(?:\+(\d+))?/)
+      if (match) {
+        gameItem.type = 'consumable'
+        gameItem.effect = { type: 'heal', dice: `${match[1]}d${match[2]}`, bonus: parseInt(match[3] || '0') }
+        gameItem.description = `Heals ${item.stats.healDice} HP`
+      }
+    }
+    // Copy weapon stats to top-level so equip system recognizes them
+    if (item.stats?.damage && !gameItem.damage) {
+      gameItem.damage = item.stats.damage
+      gameItem.damageType = item.stats.damageType
+    }
+    if (item.stats?.ac && !gameItem.baseAC) {
+      gameItem.baseAC = item.stats.ac
+    }
+    addItemToInventory(gameItem)
     addGold(-item.price)
     playCoinSound()
     showToast(`Purchased ${item.name} for ${item.price} gp`)
