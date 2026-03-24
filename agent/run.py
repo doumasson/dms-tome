@@ -546,11 +546,24 @@ Fix the CRASH, not the auth. Read the console errors for the actual exception.""
 TASK_PICK_FROM_TODO = """The game is reachable and working. Now BUILD FEATURES.
 
 Pick the TOP unchecked item from todo.md. Do NOT skip items.
-Write real code. Make a visible change a player would notice.
-If the item is big, do the smallest meaningful piece.
 
-DO NOT spend this iteration verifying, confirming, or summarizing.
-WRITE CODE. Ship something."""
+EFFICIENCY: You know the codebase. Don't re-read CLAUDE.md or status.md.
+Go directly to the file you need to edit. Make the change. Run the build. Done.
+
+Example good iteration:
+1. Read todo.md → top item is "combat feedback — damage numbers"
+2. Read src/engine/TokenLayer.js (the file that renders tokens)
+3. Add floating damage number rendering
+4. npm run build → PASS
+5. Done. Commit.
+
+Example BAD iteration (wastes turns):
+1. Read CLAUDE.md, AGENTS.md, ARCHITECTURE.md, status.md...
+2. Grep for 20 different things...
+3. Read 15 files...
+4. Hit turn limit before writing any code
+
+WRITE CODE FIRST. Read only the 1-2 files you need to edit."""
 
 
 # ─── MAIN LOOP ─────────────────────────────────────────────────────────────────
