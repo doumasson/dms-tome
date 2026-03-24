@@ -23,6 +23,8 @@ export default function InitiativeStrip() {
         const isDead = (c.deathSaves?.failures ?? 0) >= 3
         const isDying = !isDead && (c.currentHp ?? 0) <= 0 && (c.deathSaves?.failures ?? 0) < 3
         const statusClass = isDead ? 'dead' : isDying ? 'dying' : ''
+        const hpPct = c.currentHp != null && c.maxHp ? Math.max(0, c.currentHp / c.maxHp) : 1
+        const initial = (c.name || '?')[0].toUpperCase()
         return (
           <div
             key={c.id || c.name + i}
@@ -30,12 +32,37 @@ export default function InitiativeStrip() {
             style={{
               background: `${color}22`,
               border: `2px solid ${isActive ? color : color + '66'}`,
-              width: isActive ? 32 : 26,
-              height: isActive ? 32 : 26,
+              width: isActive ? 34 : 26,
+              height: isActive ? 34 : 26,
+              position: 'relative',
+              overflow: 'hidden',
             }}
-            title={`${c.name} (Init: ${c.initiative || '?'})${isDying ? ' — DYING' : isDead ? ' — DEAD' : ''}`}
+            title={`${c.name} (Init: ${c.initiative || '?'}, HP: ${c.currentHp ?? '?'}/${c.maxHp ?? '?'})${isDying ? ' — DYING' : isDead ? ' — DEAD' : ''}`}
           >
-            {isEnemy ? '👹' : '⚔'}
+            <span style={{
+              fontFamily: "'Cinzel', serif",
+              fontSize: isActive ? 13 : 10,
+              fontWeight: 700,
+              color: isDead ? '#666' : color,
+              textShadow: isActive ? `0 0 6px ${color}88` : 'none',
+              lineHeight: 1,
+              zIndex: 1,
+              position: 'relative',
+            }}>
+              {initial}
+            </span>
+            {/* HP pip at bottom */}
+            {!isDead && (
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,
+                background: '#1a0000',
+              }}>
+                <div style={{
+                  width: `${hpPct * 100}%`, height: '100%',
+                  background: hpPct > 0.5 ? '#44aa44' : hpPct > 0.25 ? '#cc8800' : '#cc2222',
+                }} />
+              </div>
+            )}
           </div>
         )
       })}
