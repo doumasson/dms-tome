@@ -258,11 +258,11 @@ export function createCharacterSlice(set, get) {
       get().updateMyCharacter({ xp: newXp });
     },
 
-    // Add gold to myCharacter
+    // Add gold to myCharacter (negative amount = spend; floor at 0 to prevent negative gold)
     addGold: (amount) => {
       const { myCharacter } = get();
       if (!myCharacter) return;
-      const newGold = (myCharacter.gold || 0) + amount;
+      const newGold = Math.max(0, (myCharacter.gold || 0) + amount);
       get().updateMyCharacter({ gold: newGold });
     },
 

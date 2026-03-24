@@ -52,7 +52,7 @@
 - [x] Level up: trace XP threshold → LevelUpModal trigger → HP roll/average choice → new features → spell slot increase → cantrip/spell selection for casters. Find and fix.
 - [x] Rest system: short rest → hit dice spending → HP recovery. Long rest → full HP + spell slot restore + hit dice recovery. Dungeon blocks long rest. Find and fix.
 - [x] Shop/merchant: open shop → browse items → buy (gold deducted) → sell at 50% → faction reputation affects prices → premium items for friendly factions. Find and fix.
-- [ ] Gold persistence: verify gold survives combat rewards, purchases, and session reload. No race conditions on multi-player gold split. Find and fix.
+- [x] Gold persistence: verify gold survives combat rewards, purchases, and session reload. No race conditions on multi-player gold split. Find and fix.
 
 ### Multiplayer & Sync
 - [ ] Token movement broadcast: one player moves → all other players see the token move smoothly. Find and fix.
