@@ -61,7 +61,10 @@ function ItemRollOff({ item, partyMembers, onWinner }) {
     const tied = activePlayers.filter(c => rolls[charKey(c)] === maxRoll);
     if (tied.length === 1) {
       setWinner(tied[0]);
-      addItemToInventory(item);
+      // Only add item to inventory if the LOCAL player won the roll-off
+      if (myCharacter && charKey(myCharacter) === charKey(tied[0])) {
+        addItemToInventory(item);
+      }
       onWinner?.(tied[0], item);
     } else {
       setTiedIds(tied.map(charKey));
