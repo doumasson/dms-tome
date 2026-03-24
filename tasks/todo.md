@@ -70,7 +70,7 @@
 - [x] NpcConversation.jsx
 - [x] CharacterSheet.jsx
 - [x] LootScreen.jsx
-- [ ] GameOverModal.jsx
+- [x] GameOverModal.jsx
 - [ ] BottomBar.jsx (HUD)
 - [ ] CombatActionBar.jsx
 - [ ] ShopPanel.jsx
