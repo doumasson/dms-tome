@@ -624,4 +624,13 @@ _(Empty — add items as they come up)_
 - [x] **Combat victory summary** — enemy count, names, rounds taken, casualties in victory message
 - [x] **Enhanced "Your Turn"** — gold pulse, larger text, ⚔ icon when player's combat turn
 - [x] **Action economy display** — ● ACTION / ● BONUS / movement ft / timer above combat buttons
-- Build: PASS, ~1037 kB bundle (gzip 298 kB). 28 features shipped this session.
+- [x] **Minimap compass + area name** — N/S/E/W compass rose, area name label at bottom of minimap
+- [x] **Heal sound** — gentle rising chime with harmonic shimmer on heal events
+- [x] **Combat start horn** — dramatic sawtooth war horn on combat phase activation
+- [x] **Combat log colors** — auto-detect hit/miss/heal/spell/save/crit for CSS color classes
+- [x] **Targeting crosshair** — cursor changes to crosshair during attack/spell targeting
+- [x] **Low HP vignette** — red edge pulse below 25% health
+- [x] **Diamond spell pips** — rotated 45° with gold gradient glow
+- [x] **Gold display** — 🪙 N gp shown in HUD below character identity
+- [x] **NPC minimap names** — blue name labels near NPC dots when player within 8 tiles
+- Build: PASS, ~1039 kB bundle (gzip 298 kB). 38 features shipped this session.
