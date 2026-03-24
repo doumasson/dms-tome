@@ -25,7 +25,7 @@
 - [x] Tooltip system — ornate dark fantasy panel: double gold borders, corner filigree accents, SVG arrow, Cinzel headers, Crimson Text body, gold dividers, inset glow, rarity-colored item names, spell stat icons
 - [x] PartyHealthBars — BG2/Icewind Dale portrait bar style: ornate gold-framed portraits with corner accents, chiseled HP bars with notch marks, Cinzel names, gradient fills, condition badges with icons
 - [x] EmoteSystem — magical feel (particle trails, fade glow), dark themed picker
-- [ ] PingSystem — magical beacon marker, not a generic circle
+- [x] PingSystem — magical beacon marker: SVG rune circle, vertical energy beam, spark particles, gem center
 - [ ] CraftingPanel — RPG workbench feel, ingredient slots with ornate borders, spellbook-style recipe list
 - [ ] KeyboardHelp overlay — parchment scroll background, organized columns
 - [ ] LoadingTips — dark vignette background, ornate text framing
