@@ -750,17 +750,28 @@ export function createEncounterSlice(set, get) {
         },
       })),
 
-    addEncounterLog: (entry) =>
+    addEncounterLog: (entry) => {
+      // Auto-detect log entry type from content for color-coding
+      const lower = (entry || '').toLowerCase()
+      let logType = 'combat'
+      let icon = '⚔'
+      if (lower.includes('miss')) { logType = 'miss'; icon = '○' }
+      else if (lower.includes('crit')) { logType = 'crit'; icon = '💥' }
+      else if (lower.includes('heal') || lower.includes('💚')) { logType = 'heal'; icon = '💚' }
+      else if (lower.includes('dmg') || lower.includes('damage') || lower.includes('hit')) { logType = 'hit'; icon = '⚔' }
+      else if (lower.includes('spell') || lower.includes('cast') || lower.includes('✨')) { logType = 'spell'; icon = '✨' }
+      else if (lower.includes('save') || lower.includes('saving')) { logType = 'save'; icon = '🛡' }
       set((state) => ({
         encounter: {
           ...state.encounter,
           log: [entry, ...state.encounter.log].slice(0, 30),
         },
         sessionLog: [
-          { id: uuidv4(), timestamp: Date.now(), type: 'combat', icon: '\u2694', title: entry, detail: null },
+          { id: uuidv4(), timestamp: Date.now(), type: logType, icon, title: entry, detail: null },
           ...state.sessionLog,
         ].slice(0, 120),
-      })),
+      }))
+    },
 
     addEncounterCondition: (id, condition) =>
       set((state) => ({

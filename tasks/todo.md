@@ -62,6 +62,7 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 - [x] Minimap compass rose + area name — N/S/E/W indicator in corner, area name label at bottom
 - [x] Heal sound effect — gentle rising chime with harmonic shimmer plays on heal events in combat
 - [x] Combat start war horn — dramatic sawtooth drone plays when combat begins, signals exploration→combat transition
+- [x] Combat log color-coding — auto-detect hit/miss/heal/spell/save/crit from log text, set proper type+icon for CSS color classes
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
