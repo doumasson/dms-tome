@@ -109,9 +109,27 @@ export function renderTokens(container, tokens, tileSizeOverride) {
       hpBar.rect(-barWidth / 2, -radius - 8, barWidth * hpPct, barHeight).fill(hpColor)
       group.addChild(hpBar)
 
-      // Dead token: fade to 25% opacity
+      // Dead token: flash red briefly then fade to 25% opacity
       if (token.currentHp <= 0) {
-        group.alpha = 0.25
+        // Check if this is a fresh kill (token was alive last frame)
+        if (!group._deathFlashed) {
+          group._deathFlashed = true
+          group.tint = 0xff2222
+          group.alpha = 1.0
+          // Animate: red flash → fade out over 400ms
+          const startTime = performance.now()
+          const flashDuration = 400
+          function flashTick() {
+            const elapsed = performance.now() - startTime
+            const progress = Math.min(1, elapsed / flashDuration)
+            group.alpha = 1.0 - progress * 0.75 // 1.0 → 0.25
+            group.tint = progress > 0.3 ? 0xffffff : 0xff2222 // red flash for first 30%
+            if (progress < 1) requestAnimationFrame(flashTick)
+          }
+          requestAnimationFrame(flashTick)
+        } else {
+          group.alpha = 0.25
+        }
       }
     }
 
