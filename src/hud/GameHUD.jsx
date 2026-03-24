@@ -63,6 +63,12 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
         <div className="hud-top-bar-left">
           <span className="hud-zone-name-inline">{zoneName}</span>
           <span className="hud-zone-info-inline">
+            <span style={{
+              display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
+              background: isSafe ? '#44aa66' : '#cc3333',
+              boxShadow: `0 0 4px ${isSafe ? '#44aa66' : '#cc3333'}88`,
+              marginRight: 4, verticalAlign: 'middle',
+            }} />
             {isSafe ? 'SAFE' : 'DANGER'} · {npcCount} NPC{npcCount !== 1 ? 's' : ''}
           </span>
         </div>
