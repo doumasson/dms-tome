@@ -37,5 +37,5 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
 - [x] No white backgrounds, no unstyled default elements — forced dark theme on QR code containers and auth widgets
-- [ ] All text readable — proper contrast, proper sizing
+- [x] All text readable — fixed 5 low-contrast text colors in HUD (economy dots, turn subtitle, combat buttons, text-primary, text-log variables)
 - [ ] Mobile-friendly — 44px tap targets, works at 375px landscape
