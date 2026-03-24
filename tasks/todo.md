@@ -86,4 +86,4 @@
 - [x] All buttons 44px+ tap targets
 
 ## Priority 4: Asset Report
-- [ ] Generate `tasks/asset-report.md` — every sprite, texture, icon, sound needed for production
+- [x] Generate `tasks/asset-report.md` — every sprite, texture, icon, sound needed for production

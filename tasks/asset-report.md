@@ -1,110 +1,145 @@
 # DungeonMind — Production Asset Report
 
-> Complete checklist of all assets needed for production release.
-> Current state: placeholder CSS gradients/procedural SVGs. Needs real hand-drawn dark fantasy art.
+## Summary
+26 real files on disk (1.4 MB), 5 procedural audio systems, 9 tile atlases, 24 emoji placeholders, 16 files marked PLACEHOLDER ART.
 
-## Tile/Sprite Atlases (8 WebP sheets on Supabase CDN)
+---
 
-| Atlas | Categories | Status |
-|---|---|---|
-| atlas-floors.webp | Stone, wood, grass, dirt, cobblestone tiles | ✅ Placeholder procedural |
-| atlas-walls.webp | Brick, stone, dungeon walls, fence | ✅ Placeholder procedural |
-| atlas-structures.webp | Buildings, doors, stairs, bridges | ✅ Placeholder procedural |
-| atlas-terrain.webp | Water, lava, cliff, sand, snow | ✅ Placeholder procedural |
-| atlas-props-furniture.webp | Tables, chairs, beds, chests, shelves | ✅ Placeholder procedural |
-| atlas-props-decor.webp | Banners, rugs, candles, statues, signs | ✅ Placeholder procedural |
-| atlas-props-craft.webp | Anvils, forges, cauldrons, workbenches | ✅ Placeholder procedural |
-| atlas-effects.webp | Fire, ice, lightning, magic circles, fog | ✅ Placeholder procedural |
+## 1. Real Image Files (26 files)
 
-**Spec:** 200×200px per tile, packed into sprite sheets. JSON atlas manifests define frame positions.
+### UI Assets (`/public/ui/`)
+| File | Size | Purpose |
+|------|------|---------|
+| bar-top.png | 232 KB | Header bar stone texture |
+| bar-bottom.png | 424 KB | Bottom narrator panel stone texture |
+| btn-char.png | 34 KB | Character sheet button |
+| btn-dice.png | 35 KB | Dice roll button |
+| btn-journal.png | 35 KB | Journal/notes button |
+| btn-pack.png | 35 KB | Inventory button |
+| btn-rest.png | 37 KB | Rest button |
+| btn-group.png | 6.6 KB | Party button |
+| btn-map.png | 6.6 KB | Map button |
+| btn-settings.png | 7.3 KB | Settings button |
+| icon-char.png | 14 KB | Small character icon |
+| icon-dice.png | 13 KB | Small dice icon |
+| icon-journal.png | 6.8 KB | Small journal icon |
+| icon-pack.png | 6.4 KB | Small pack icon |
+| icon-rest.png | 6.4 KB | Small rest icon |
+| log-bg.png | 162 KB | Session log background |
+| log-tab1.png | 23 KB | Log tab 1 trim |
+| log-tab2.png | 23 KB | Log tab 2 trim |
+| log-expand.png | 3.5 KB | Expand arrow |
+| log-retract.png | 3.4 KB | Collapse arrow |
+| portrait-frame.png | 125 KB | Standard portrait frame |
+| portrait-frame-ornate.png | 24 KB | Ornate portrait frame |
+| weather-bar.png | 57 KB | Weather/time bar |
 
-## UI Art (public/ui/ — 23 images)
+### Tileset (`/public/tilesets/`)
+- tiles.png (54 KB) — 32x32 tile atlas: floors, walls, furniture, props, doors, stairs
 
-### Needs Production Art:
-- `bar-top.png` / `bar-bottom.png` — HUD bar backgrounds (ornate metal/stone frame)
-- `weather-bar.png` — Zone label bar (parchment banner)
-- `portrait-frame.png` / `portrait-frame-ornate.png` — Character portrait frames (gold filigree)
-- `log-bg.png` — Chat panel background (aged parchment/leather)
-- `log-tab1.png` / `log-tab2.png` — Tab indicators (leather bookmark)
-- `log-expand.png` / `log-retract.png` — Expand/collapse icons (scroll arrows)
-- `btn-char.png` / `btn-pack.png` / `btn-journal.png` / `btn-map.png` / `btn-settings.png` / `btn-group.png` / `btn-dice.png` / `btn-rest.png` — Action buttons (embossed metal icons)
-- `icon-dice.png` / `icon-char.png` / `icon-pack.png` / `icon-journal.png` / `icon-rest.png` — Smaller icon variants
+### Vector (`/public/`)
+- favicon.svg — DungeonMind logo
+- icons.svg — Social media icons
 
-## CSS Texture Placeholders (need real texture images)
+---
 
-| CSS Class | Current | Needs |
-|---|---|---|
-| `.stone-panel` | CSS gradient | Seamless stone/masonry texture |
-| `.metal-frame` | CSS gradient + border | Hammered dark metal texture |
-| `.parchment-scroll` | CSS gradient | Aged dark parchment texture |
-| HUD background | rgba + backdrop-blur | Dark stone/metal panel texture |
-| Minimap frame | CSS gradients | Ornate gold metal map frame |
-| Narrator panel | CSS gradients | Leather-bound journal texture |
+## 2. Tile Atlases (9 JSON + sprite sheets)
+- atlas-effects.json — visual effects
+- atlas-floors.json — floor variations
+- atlas-props-craft.json — crafting props
+- atlas-props-decor.json — decorative props
+- atlas-props-furniture.json — furniture
+- atlas-structures.json — buildings, roofs
+- atlas-terrain.json — terrain variants
+- atlas-walls.json — wall variants
+- tileAtlas.json — main V1 atlas metadata
 
-## Dynamic Image Generation (Pollinations.ai — free)
+---
 
-| Asset | Size | Generator | Notes |
-|---|---|---|---|
-| Scene images | 1024×576 | Pollinations | Dark fantasy prompt, seeded per scene |
-| NPC portraits | 256×256 | Pollinations | Per-NPC name seed, face closeup |
-| Character avatars | varies | OAuth provider | Discord/GitHub profile pics |
+## 3. Procedural Audio (Web Audio API — no external files)
 
-**Production upgrade:** Replace Pollinations with pre-rendered hand-drawn scene art and character portraits.
+### Ambient Music (`ambientMusic.js`)
+5 moods: exploration, combat, mystery, tavern, danger
 
-## Audio Assets
+### Ambient Soundscapes (`ambientAudio.js`)
+5 scenes: dungeon, tavern, outdoor, town, combat
 
-| Asset | Current Source | Production Need |
-|---|---|---|
-| Narrator TTS | OpenAI TTS → Pollinations → Web Speech | Keep API chain, add custom voice model |
-| Ambient music | Web Audio API procedural | Real ambient tracks (tavern, dungeon, forest, combat) |
-| Sound effects | Web Audio API procedural | Real SFX: sword clash, spell cast, door open, footsteps |
-| UI sounds | None | Button clicks, level up fanfare, death, victory |
+### Sound Effects (`soundEffects.js`)
+Hit, miss, spell, death sounds
 
-## Fonts (Google Fonts CDN)
+### UI Sounds (`uiSounds.js`)
+Stone click, parchment rustle, metal clink, scroll unfurl, turn chime
 
-- **Cinzel Decorative** (400, 700, 900) — ornate display headers
-- **Cinzel** (400, 700, 900) — all headings, labels, buttons
-- Body text uses system serif fallback
+### Footsteps (`ambientSounds.js`)
+Surface-dependent: stone, wood, grass, sand
 
-## Components with PLACEHOLDER ART Comments (16 files)
+---
 
-These components use CSS-only styling that works but should be upgraded with real art assets:
+## 4. Procedural Image Generation (Pollinations.ai)
+- Scene images: 1024x576, deterministic seed, no API key
+- NPC portraits: 256x256, on-demand
+- Character avatars: DiceBear SVG API
 
-1. `CombatRecap.jsx` — Victory/defeat screen backgrounds
-2. `Tooltip.jsx` — Tooltip panel textures
-3. `PartyHealthBars.jsx` — Portrait frames, HP bar textures
-4. `EmoteSystem.jsx` — Emote picker panel
-5. `PingSystem.jsx` — Beacon marker effects
-6. `CraftingPanel.jsx` — Workbench panel texture
-7. `KeyboardHelp.jsx` — Parchment scroll background
-8. `LoadingTips.jsx` — Tip card texture
-9. `AutoSaveIndicator.jsx` — Save indicator styling
-10. `Minimap.jsx` — Map frame, compass rose
-11. `Bestiary.jsx` — Leather book texture
-12. `AreaMapOverview.jsx` — Parchment map background
-13. `DifficultyBadge.jsx` — Wax seal texture
-14. `BottomSheet.jsx` — Drawer panel texture
-15. `HUD.jsx` — XP bar, shield badge
-16. `CombatantRow.jsx` — Death save tracker panel
+---
 
-## Token/Character Art
+## 5. Fonts (Google Fonts)
+- Cinzel Decorative 700 — titles
+- Cinzel 400/600/700 — headers, buttons
+- System serif — body fallback
+- Consolas/Monaco — combat log
 
-| Asset | Current | Production Need |
-|---|---|---|
-| Player tokens | Colored circles with initials | Character class sprites (warrior, mage, rogue, etc.) |
-| Enemy tokens | Red circles with initials | Monster sprites per SRD type |
-| NPC tokens | Gold circles | NPC character sprites |
-| Dead tokens | Faded circle | Skull/grave markers |
-| Selected highlight | Animated ring | Ornate selection aura |
+---
 
-## Summary — Total Production Art Needed
+## 6. CSS Texture Simulations (need real assets)
+- `.stone-panel` — stone masonry gradient
+- `.metal-frame` — hammered metal gradient
+- `.parchment-scroll` — aged paper gradient
+- `.medallion-btn` — coin/metal radial gradient
 
-| Category | Count | Priority |
-|---|---|---|
-| Tile atlas sprites | ~200 tiles across 8 sheets | HIGH |
-| UI panel/frame art | ~23 images | HIGH |
-| CSS texture replacements | 6 texture images | MEDIUM |
-| Token/character sprites | ~30+ (player classes, monsters, NPCs) | HIGH |
-| Sound effects | ~20 SFX | MEDIUM |
-| Ambient music tracks | 5-8 tracks | MEDIUM |
-| Victory/defeat/UI fanfares | 3-5 jingles | LOW |
+---
+
+## 7. Emoji Placeholders (24 unique, ~80 usages)
+
+### Classes
+Barbarian 🪓 · Bard 🎵 · Cleric ✙ · Druid 🌿 · Fighter ⚔ · Monk 👊 · Paladin 🛡 · Ranger 🏹 · Rogue 🗝 · Sorcerer ✨ · Warlock 🌑 · Wizard 📖
+
+### Races
+Dwarf ⛏ · Elf 🌙 · Halfling 🍀 · Human ⚜ · Dragonborn 🐉 · Gnome ⚙ · Half-Elf ✦ · Half-Orc 🗡 · Tiefling 🔥
+
+### Game UI
+Gold 🪙 · Shield 🛡 · Potion 🧪 · Spell ✨ · Attack ⚔
+
+---
+
+## 8. PLACEHOLDER ART Files (16 marked)
+1. HUD.jsx — XP bar
+2. Tooltip.jsx — tooltip backgrounds
+3. PartyHealthBars.jsx — health bars
+4. Bestiary.jsx — enemy panels
+5. BottomSheet.jsx — modal backgrounds
+6. Minimap.jsx — minimap frame
+7. DifficultyBadge.jsx — encounter difficulty
+8. LoadingTips.jsx — loading screen
+9. CraftingPanel.jsx — crafting UI
+10. CombatRecap.jsx — combat summary
+11. KeyboardHelp.jsx — controls overlay
+12. PingSystem.jsx — ping markers
+13. AreaMapOverview.jsx — area map
+14. AutoSaveIndicator.jsx — save icon
+15. CombatantRow.jsx — death save circles
+16. uiSounds.js — all UI sounds
+
+---
+
+## 9. Production Readiness
+
+| Category | Status | Action |
+|----------|--------|--------|
+| UI PNG art (24 files) | Ready | None |
+| Tile atlases (9 sets) | Ready | None |
+| Fonts (Cinzel) | Ready | None |
+| Scene gen (Pollinations) | Ready | Free, no key |
+| Procedural audio | Functional | Optional: real audio files |
+| CSS textures | Functional | Optional: real PNG textures |
+| Emoji icons | Functional | Optional: custom 16x16 icons |
+| 16 PLACEHOLDER files | Marked | Replace with real art |
