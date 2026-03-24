@@ -34,7 +34,7 @@
 - [x] Encounter difficulty badge — SVG scalloped wax seal with tick marks, color-coded per difficulty, used in Victory/Defeat screens
 - [x] Minimap — ornate double gold frame, parchment gradient, SVG compass rose, corner filigree, 44px collapsed button
 - [x] Bestiary — leather-bound book: spine accent, corner studs, split page layout, ornate stat boxes, Cinzel Decorative headers
-- [ ] Area map overview — parchment map style with wax seal markers
+- [x] Area map overview — parchment map with wax seal node markers, scalloped edges, trail lines, filigree corners
 
 ## Priority 2: Campaign & Character Creation (full new-user flow)
 > Delete the test campaign/character, then go through creation from scratch.
