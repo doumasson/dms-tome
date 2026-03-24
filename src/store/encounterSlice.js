@@ -309,6 +309,11 @@ export function createEncounterSlice(set, get) {
             hazards,
           },
         });
+        // Log enemies to bestiary
+        const addToBestiary = get().addToBestiary;
+        if (addToBestiary) {
+          placed.filter(c => c.type === 'enemy').forEach(e => addToBestiary(e));
+        }
       } else {
         set({
           encounter: {

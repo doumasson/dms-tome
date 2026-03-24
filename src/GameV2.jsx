@@ -24,6 +24,7 @@ import PingSystem from './components/game/PingSystem'
 import LoadingTips from './components/game/LoadingTips'
 import CraftingPanel from './components/game/CraftingPanel'
 import AreaMapOverview from './components/game/AreaMapOverview'
+import Bestiary from './components/game/Bestiary'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -107,6 +108,7 @@ export default function GameV2({ onLeave }) {
   const [showFormation, setShowFormation] = useState(false)
   const [showCrafting, setShowCrafting] = useState(false)
   const [showAreaMap, setShowAreaMap] = useState(false)
+  const [showBestiary, setShowBestiary] = useState(false)
   const [showLevelUp, setShowLevelUp] = useState(false)
   const [showInteractionMenu, setShowInteractionMenu] = useState(false)
   const [showVictory, setShowVictory] = useState(false)
@@ -378,6 +380,7 @@ export default function GameV2({ onLeave }) {
     else if (tool === 'formation') setShowFormation(true)
     else if (tool === 'craft') setShowCrafting(true)
     else if (tool === 'worldmap') setShowAreaMap(true)
+    else if (tool === 'bestiary') setShowBestiary(true)
   }, [myCharacter])
 
   const handleModeSelect = useCallback((mode) => {
@@ -450,6 +453,7 @@ export default function GameV2({ onLeave }) {
         <LoadingTips />
         {showCrafting && <CraftingPanel onClose={() => setShowCrafting(false)} />}
         {showAreaMap && <AreaMapOverview onClose={() => setShowAreaMap(false)} />}
+        {showBestiary && <Bestiary onClose={() => setShowBestiary(false)} />}
         {nearbyNpcs.map(npc => (
           <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
         ))}

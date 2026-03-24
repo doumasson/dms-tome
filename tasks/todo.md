@@ -61,7 +61,7 @@
 
 ## Priority 10: World Building
 - [x] Area map overview — SVG node graph showing connected areas with theme icons, dashed connection lines with labels, current area glow animation, visited/unvisited markers, BFS layout, accessible via 'worldmap' tool handler
-- [ ] Bestiary — log of encountered monsters with stats, CR, abilities, portrait
+- [x] Bestiary — Bestiary component with split-view list/detail, monster portraits, ability scores, attacks, CR/AC/HP/speed badges, search filter, encounter count; auto-logs enemies when combat starts via encounterSlice; stored in storySlice
 - [ ] Session timer — show real-time session duration in HUD
 - [ ] Damage type resistance display — show enemy resistances/immunities in combat tooltips
 

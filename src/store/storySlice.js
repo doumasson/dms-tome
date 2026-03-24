@@ -30,6 +30,37 @@ export function createStorySlice(set, get) {
     setActiveCutscene: (info) => set({ activeCutscene: info }),
     clearActiveCutscene: () => set({ activeCutscene: null }),
 
+    // Bestiary — log of encountered monsters
+    bestiary: [],
+    addToBestiary: (enemy) => set(s => {
+      const existing = s.bestiary.find(m => m.name === enemy.name);
+      if (existing) {
+        return { bestiary: s.bestiary.map(m =>
+          m.name === enemy.name ? { ...m, timesEncountered: (m.timesEncountered || 1) + 1 } : m
+        )};
+      }
+      return { bestiary: [...s.bestiary, {
+        id: enemy.id || enemy.name,
+        name: enemy.name,
+        cr: enemy.cr,
+        ac: enemy.ac,
+        hp: enemy.maxHp || enemy.hp,
+        maxHp: enemy.maxHp || enemy.hp,
+        speed: enemy.speed,
+        stats: enemy.stats,
+        attacks: enemy.attacks,
+        type: enemy.type === 'enemy' ? (enemy.creatureType || 'Monster') : enemy.type,
+        size: enemy.size,
+        alignment: enemy.alignment,
+        portrait: enemy.portrait,
+        resistances: enemy.resistances,
+        immunities: enemy.immunities,
+        vulnerabilities: enemy.vulnerabilities,
+        timesEncountered: 1,
+        firstEncountered: Date.now(),
+      }]};
+    }),
+
     quests: [],
     addQuest: (quest) => set(s => ({ quests: [...s.quests, quest] })),
     updateQuest: (questId, updates) => set(s => ({
