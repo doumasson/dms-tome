@@ -572,3 +572,26 @@ _(Empty — add items as they come up)_
 - **2026-03-22:** Named Boss/Champion Encounters — 4 tiers (Lieutenant/Champion/Legendary/Ancient) with unique names and abilities. 5 archetypes: Warlord (1.5x HP), Archmage (spellcaster, teleport), Assassin (tactical), High Priest (healing/summons), Ancient Dragon (2x HP, 3 AC bonus). Boss abilities: Multiattack, Regeneration, Legendary Actions, Magic Resistance, Immunity types, Aura, Teleport. CR scales with tier (L-1 to L+8). Tactical variations: Aggressive/Defensive/Tactical/Spellcaster/Summoner/Berserker. Boss-specific treasure hoards. 1.5x XP multiplier. 387 tests.
 - **2026-03-22:** Interaction Controller Test Suite complete — Comprehensive 60-test coverage for interactionController.js. Tests cover all 6 exported functions: getAdjacentNpc (adjacency detection in 8 directions), getAdjacentExit (exit width handling), resolveHint (story flag-driven NPC hints with backward search), getAdjacentInteractable (locked/opened chest filtering), getAvailableInteractions (interaction priority: NPC > interactable > exit with fallback search), handleInteract (primary interaction selection). Validates integration scenarios (tavern NPC coordination, dungeon lockpicking, empty corridor search), edge cases (multiple NPCs at same distance, large zones with 100+ NPCs, negative/floating-point coordinates, hint resolution priority). 1040 tests passing.
 - **2026-03-22:** Combat Spells Test Suite complete — Comprehensive 94-test coverage for combatSpells.js. Tests cover 40+ spell definitions (cantrips through level 9), spell metadata validation (level, areaType, damageType, range), all area types (single/cone/sphere/line), damage format parsing (XdY, XdY+Z, compound like 20d6+20d6), saving throw mechanics, healing spells, concentration spells. Condition modifier tests cover advantage/disadvantage for attacker/target conditions (Blinded/Prone/Paralyzed/Invisible), auto-crit triggers (Paralyzed/Unconscious), condition cancellation logic, edge cases (null arrays, control spells, multiple damage types). Full combat scenario coverage. 1111 tests passing.
+
+### UI/UX Polish Sprint ✅ COMPLETE (2026-03-24)
+- [x] **16 components restyled** to dark fantasy theme (Baldur's Gate 2 / Icewind Dale inspired)
+- [x] EmoteSystem — particle trails, fade glow, ornate picker with filigree
+- [x] PingSystem — magical beacon: SVG rune circle, energy beam, spark particles
+- [x] CraftingPanel — RPG workbench: ingredient slots with corner notches, spellbook recipes
+- [x] KeyboardHelp — parchment scroll: curled edges, filigree corners, organized columns
+- [x] LoadingTips — dark vignette backdrop, ornate SVG diamond/circle bars
+- [x] AutoSaveIndicator — SVG rune spinner, checkmark/X states, Cinzel text
+- [x] XP bar — SVG shield level badge, notched progress bar, gold shimmer animation
+- [x] DifficultyBadge — SVG scalloped wax seal sigil, color-coded per difficulty
+- [x] Minimap — ornate double gold frame, compass rose, parchment gradient
+- [x] Bestiary — leather-bound book: spine, corner studs, split page layout
+- [x] AreaMapOverview — parchment map with wax seal node markers, trail lines
+- [x] DeathSaveTracker — ornate SVG pips with check/X marks, pulse animation
+- [x] CreateCampaign — filigree corners, numbered step indicators (Concept/Details/Forge)
+- [x] CharacterCreate — ornate card frame, filigree corners, layered gradient
+- [x] **API key fix** — race condition in key loading eliminated, non-DM players never see ApiKeyGate
+- [x] **Mobile responsive** — landscape phone compact HUD, scaled minimap, tight spacing
+- [x] **BottomSheet** — responsive drawer/modal wrapper (bottom sheet on small screens, modal on large)
+- [x] **HUD collapse** — toggle button hides non-essential sections, HP+AC always visible
+- [x] **Asset report** — `tasks/asset-report.md` cataloging all production art needs
+- Build: PASS, ~1021 kB bundle (gzip 293 kB). 1111 tests.
