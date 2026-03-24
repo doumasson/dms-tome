@@ -57,7 +57,7 @@
 - [x] XP progress bar — XpBar component in HUD showing current level, XP count, XP-to-next-level, gold gradient progress bar; MAX indicator at level 20; uses SRD 5e XP thresholds
 - [x] Encounter difficulty indicator — encounterDifficulty.js calculates Easy/Medium/Hard/Deadly from party levels vs enemy CRs with SRD multipliers; color-coded badge shown in TurnOrderBar during combat; auto-updates as enemies die
 - [x] Loading screen tips — LoadingTips component with 25 gameplay tips, shows random tip on area transitions, 3s fade-in/fade-out animation, centered bottom overlay
-- [ ] Crafting system — combine materials found in loot to create potions, scrolls, and basic gear
+- [x] Crafting system — 10 material types, 8 recipes (potions, scrolls, oils, caltrops), skill check DC system, ingredient consumption, CraftingPanel UI with material counts/recipe cards/craft button, wired to 'craft' tool handler
 
 ## Priority 10: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)

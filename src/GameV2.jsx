@@ -22,6 +22,7 @@ import EmoteSystem from './components/game/EmoteSystem'
 import AutoSaveIndicator from './components/game/AutoSaveIndicator'
 import PingSystem from './components/game/PingSystem'
 import LoadingTips from './components/game/LoadingTips'
+import CraftingPanel from './components/game/CraftingPanel'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -103,6 +104,7 @@ export default function GameV2({ onLeave }) {
   const [activeShop, setActiveShop] = useState(null)
   const [worldTransform, setWorldTransform] = useState(null)
   const [showFormation, setShowFormation] = useState(false)
+  const [showCrafting, setShowCrafting] = useState(false)
   const [showLevelUp, setShowLevelUp] = useState(false)
   const [showInteractionMenu, setShowInteractionMenu] = useState(false)
   const [showVictory, setShowVictory] = useState(false)
@@ -372,6 +374,7 @@ export default function GameV2({ onLeave }) {
     else if (tool === 'short-rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
     else if (tool === 'long-rest') setRestProposal({ type: 'long', proposedBy: myCharacter?.name || 'Someone' })
     else if (tool === 'formation') setShowFormation(true)
+    else if (tool === 'craft') setShowCrafting(true)
   }, [myCharacter])
 
   const handleModeSelect = useCallback((mode) => {
@@ -442,6 +445,7 @@ export default function GameV2({ onLeave }) {
         <AutoSaveIndicator />
         <PingSystem worldTransform={worldTransform} />
         <LoadingTips />
+        {showCrafting && <CraftingPanel onClose={() => setShowCrafting(false)} />}
         {nearbyNpcs.map(npc => (
           <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
         ))}
