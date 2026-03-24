@@ -101,6 +101,21 @@ export default function HUD() {
         </div>
       </div>
 
+      {/* Gold display — compact, always visible */}
+      {myCharacter.gold != null && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 4,
+          padding: '0 2px 3px', fontSize: 10,
+          fontFamily: "'Cinzel', serif", color: '#f0c868',
+          borderBottom: '1px solid rgba(212,175,55,0.1)',
+          marginBottom: 2,
+        }}>
+          <span style={{ fontSize: 12 }}>🪙</span>
+          <span style={{ fontWeight: 700, letterSpacing: '0.5px' }}>{myCharacter.gold || 0}</span>
+          <span style={{ fontSize: 8, color: '#8a7a5a', marginLeft: 2 }}>gp</span>
+        </div>
+      )}
+
       {/* HP Bar — always visible */}
       <div className="hud-section hud-hp">
         <div className="hp-label">HP</div>
