@@ -5,6 +5,7 @@ import { rollDamage } from '../../lib/dice';
 import { crToXp } from '../../lib/xpTable';
 import { broadcastPlayerMove, broadcastNarratorMessage, broadcastEncounterAction } from '../../lib/liveChannel';
 import { COMBAT_SPELLS } from '../../lib/combatSpells';
+import { getSpellSaveDC } from '../../lib/spellCasting';
 import { playHitSound, playMissSound, playDeathSound, playSpellSound } from '../../lib/soundEffects';
 import PartyPanel from '../PartyPanel';
 import CharDetailPanel from '../CharDetailPanel';
@@ -544,12 +545,21 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     const def = spellDef || activeSpell;
     if (!def) { setPanel(null); return; }
 
+    // Consume spell slot for leveled spells (cantrips are level 0)
+    const spellLevel = def.level || 0;
+    if (spellLevel > 0 && activeCombatant) {
+      const { useSpellSlot } = useStore.getState();
+      useSpellSlot(activeCombatant.id, spellLevel);
+      broadcastEncounterAction({ type: 'use-spell-slot', combatantId: activeCombatant.id, slotLevel: spellLevel, userId: currentUser?.id || 'system' });
+    }
+
     const isHealing = def.healing;
     const hasDamage = def.damage && def.damage !== '';
+    const saveDC = activeCombatant ? getSpellSaveDC(activeCombatant) : 10;
 
     if (!hasDamage) {
       const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
-      onLog(`✨ ${activeCombatant?.name} casts ${def.name} → ${names}${def.save ? ` (${def.save.toUpperCase()} save)` : ''}`);
+      onLog(`✨ ${activeCombatant?.name} casts ${def.name} → ${names}${def.save ? ` (${def.save.toUpperCase()} save DC ${saveDC})` : ''}`);
       if (def.concentration) onSetConcentration(activeCombatant.id, def.name);
     } else {
       const rolled = rollDamage(def.damage);
@@ -560,7 +570,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       } else if (def.save) {
         hitCombatants.forEach(c => { onDamage(c.id, rolled.total); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
-        onLog(`🔥 ${activeCombatant?.name} casts ${def.name} (${def.damageType} DC${def.save ? ' ??' : ''}) → ${rolled.total} dmg [${rolled.display}] · ${names} — roll ${def.save.toUpperCase()} saves (½ on success)`);
+        onLog(`🔥 ${activeCombatant?.name} casts ${def.name} (${def.damageType} DC ${saveDC}) → ${rolled.total} dmg [${rolled.display}] · ${names} — roll ${def.save.toUpperCase()} saves (½ on success)`);
       } else {
         hitCombatants.forEach(c => { onDamage(c.id, rolled.total); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';

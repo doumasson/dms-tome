@@ -27,7 +27,7 @@
 ### Combat System
 - [x] Combat trigger: trace what happens when player token moves near enemies. encounterZones → AI narrator prompt → startEncounter. Does initiative roll correctly? Find and fix.
 - [x] Melee attack: trace Attack button → target selection → hit/miss roll → damage calculation → HP update → floating damage number → enemy death at 0 HP. Find and fix.
-- [ ] Spell casting: trace Cast button → spell selection → AoE targeting overlay → save DCs → damage/healing resolution → spell slot consumption → concentration tracking. Find and fix.
+- [x] Spell casting: trace Cast button → spell selection → AoE targeting overlay → save DCs → damage/healing resolution → spell slot consumption → concentration tracking. Find and fix.
 - [ ] Enemy AI turn: trace enemyAi.js → computeGruntAction/boss AI → pathfinding to player → attack resolution → damage broadcast to all clients. Find and fix.
 - [ ] Class abilities in combat: verify Extra Attack (Fighter), Sneak Attack (Rogue), Rage (Barbarian), Divine Smite (Paladin), Wild Shape (Druid) actually fire and calculate correctly. Find and fix.
 - [ ] Action economy: verify action/bonus action/movement tracking per turn. Can player use Dash? Dodge? Disengage? Does end turn advance properly? Find and fix.

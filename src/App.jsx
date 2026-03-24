@@ -190,6 +190,7 @@ export default function App() {
         case 'long-rest':           store.longRest(); break;
         case 'set-concentration':   store.setConcentration(payload.id, payload.spell); break;
         case 'clear-concentration': store.clearConcentration(payload.id); break;
+        case 'use-spell-slot':      store.useSpellSlot(payload.combatantId, payload.slotLevel); break;
         case 'add-effect':          store.applyEncounterEffect(payload.effect); break;
         case 'remove-effect':       store.applyRemoveEffect(payload.effectId); break;
         case 'move':                store.moveToken(payload.id, payload.x, payload.y, payload.cost || 0); break;
