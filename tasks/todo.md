@@ -55,7 +55,7 @@
 
 ## Priority 9: Core RPG Systems
 - [x] XP progress bar — XpBar component in HUD showing current level, XP count, XP-to-next-level, gold gradient progress bar; MAX indicator at level 20; uses SRD 5e XP thresholds
-- [ ] Encounter difficulty indicator — show Easy/Medium/Hard/Deadly rating before and during combat based on party level vs enemy CR
+- [x] Encounter difficulty indicator — encounterDifficulty.js calculates Easy/Medium/Hard/Deadly from party levels vs enemy CRs with SRD multipliers; color-coded badge shown in TurnOrderBar during combat; auto-updates as enemies die
 - [ ] Loading screen tips — show random gameplay tips during area transitions and loading
 - [ ] Crafting system — combine materials found in loot to create potions, scrolls, and basic gear
 

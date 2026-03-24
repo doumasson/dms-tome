@@ -1,4 +1,5 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
+import { calculateEncounterDifficulty } from '../../lib/encounterDifficulty';
 
 const CONDITION_ICONS = {
   Blinded: '👁', Charmed: '♥', Deafened: '🔇', Frightened: '!',
@@ -31,6 +32,13 @@ export default function TurnOrderBar({ combatants = [], currentTurn = 0, round =
     }
   }, [currentTurn]);
 
+  // Calculate encounter difficulty
+  const difficulty = useMemo(() => {
+    const players = combatants.filter(c => c.type === 'player');
+    const enemies = combatants.filter(c => c.type === 'enemy' && (c.currentHp ?? c.hp ?? 0) > 0);
+    return calculateEncounterDifficulty(players, enemies);
+  }, [combatants]);
+
   if (combatants.length === 0) return null;
 
   return (
@@ -58,6 +66,18 @@ export default function TurnOrderBar({ combatants = [], currentTurn = 0, round =
             {combatants[currentTurn]?.name}'s turn
           </span>
         </div>
+        {/* Difficulty badge */}
+        {difficulty.rating !== 'Unknown' && (
+          <span style={{
+            fontSize: '0.55rem', fontWeight: 700,
+            color: difficulty.color,
+            background: `${difficulty.color}15`,
+            border: `1px solid ${difficulty.color}44`,
+            borderRadius: 3, padding: '1px 6px',
+          }}>
+            {difficulty.rating}
+          </span>
+        )}
         <span style={{
           fontSize: '0.6rem', color: 'var(--text-muted)',
         }}>
