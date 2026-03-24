@@ -276,155 +276,206 @@ def take_screenshots(iteration):
     shot_dir = SHOT_DIR / f"iter-{iteration:02d}"
     shot_dir.mkdir(exist_ok=True)
 
-    # Write a temporary node script — agent never sees or edits this
-    # Navigates: login → dashboard → campaign → character select → game
-    # Uses EXACT selectors from the actual React components
+    # Self-healing Playwright flow: creates test data if missing, audits UI at every step
     script_content = """
 const { chromium } = require('%PLAYWRIGHT%');
+const dir = '%SHOTDIR%';
 
-async function snap(page, name, dir, result) {
+async function snap(page, name, result) {
   await page.screenshot({ path: dir + '/' + name + '.png' });
-  result.shots.push(name + '.png');
+  result.shots.push(name);
 }
 
-async function getPageInfo(page) {
+async function audit(page) {
   const headings = await page.evaluate(() =>
-    Array.from(document.querySelectorAll('h1,h2,h3'))
-      .map(e => e.textContent.trim()).filter(t => t).slice(0, 10)
-  );
+    Array.from(document.querySelectorAll('h1,h2,h3')).map(e => e.textContent.trim()).filter(Boolean).slice(0, 10));
   const buttons = await page.evaluate(() =>
-    Array.from(document.querySelectorAll('button'))
-      .map(e => e.textContent.trim()).filter(t => t && t.length < 40).slice(0, 20)
-  );
+    Array.from(document.querySelectorAll('button')).map(e => e.textContent.trim()).filter(t => t && t.length < 40).slice(0, 20));
   const errors = await page.evaluate(() => {
-    // Check for error boundary "Something went wrong"
-    const allText = document.body.innerText || '';
-    const found = [];
-    if (allText.includes('Something went wrong')) found.push('ERROR BOUNDARY: Something went wrong');
+    const f = [];
+    if ((document.body.innerText || '').includes('Something went wrong')) f.push('ERROR_BOUNDARY');
     document.querySelectorAll('.error,[class*="error"],[class*="Error"]').forEach(e => {
-      const t = e.textContent.trim();
-      if (t && t.length < 200) found.push(t);
+      const t = e.textContent.trim(); if (t && t.length < 200) f.push(t);
     });
-    return found;
+    return f;
+  });
+  const styleIssues = await page.evaluate(() => {
+    const issues = [];
+    document.querySelectorAll('div,button,section,aside,nav,header').forEach(el => {
+      const s = window.getComputedStyle(el);
+      if (s.backgroundColor === 'rgb(255, 255, 255)') {
+        const c = el.className?.toString()?.substring(0, 30) || el.tagName;
+        issues.push('WHITE_BG:' + c);
+      }
+    });
+    return issues.slice(0, 5);
   });
   const canvas = await page.$('canvas');
-  return { headings, buttons, errors, hasCanvas: !!canvas };
+  return { headings, buttons, errors, styleIssues, hasCanvas: !!canvas };
 }
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   await page.setViewportSize({ width: 1280, height: 800 });
-  const result = { shots: [], screens: [], errors: [], finalScreen: 'unknown', hasCanvas: false };
-  const dir = '%SHOTDIR%';
+  const result = { shots: [], screens: [], errors: [], finalScreen: 'unknown', hasCanvas: false, actions: [] };
 
-  // Capture console errors
   const consoleErrors = [];
-  page.on('console', msg => {
-    if (msg.type() === 'error') consoleErrors.push(msg.text().substring(0, 200));
-  });
+  page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text().substring(0, 200)); });
   page.on('pageerror', err => consoleErrors.push('UNCAUGHT: ' + err.message.substring(0, 200)));
 
   try {
-    // Step 1: Load app (auto-login via VITE_DEV_AUTO_LOGIN env vars)
+    // === STEP 1: LOAD & LOGIN ===
     await page.goto('http://localhost:%PORT%', { waitUntil: 'networkidle', timeout: 25000 });
     await page.waitForTimeout(3000);
-    let info = await getPageInfo(page);
-    await snap(page, '01-dashboard', dir, result);
-    result.screens.push({ step: 'dashboard', headings: info.headings, buttons: info.buttons, errors: info.errors });
+    let info = await audit(page);
+    await snap(page, '01-dashboard', result);
+    result.screens.push({ step: 'dashboard', ...info });
 
     if (info.errors.length > 0) {
-      result.finalScreen = 'DASHBOARD (with errors)';
-      result.errors = info.errors;
-      result.consoleErrors = consoleErrors.slice(0, 5);
-      console.log(JSON.stringify(result));
-      await browser.close();
-      return;
+      result.finalScreen = 'DASHBOARD_ERROR: ' + info.errors.join('; ');
+      throw new Error('stop');
     }
 
-    // Step 2: Click first campaign card — exact selector: button.campaign-card
-    const campaignCard = await page.$('button.campaign-card');
-    if (!campaignCard) {
-      result.finalScreen = 'DASHBOARD (no campaigns found — button.campaign-card missing)';
-      result.consoleErrors = consoleErrors.slice(0, 5);
-      console.log(JSON.stringify(result));
-      await browser.close();
-      return;
-    }
-    await campaignCard.click();
-    await page.waitForTimeout(4000);
-    info = await getPageInfo(page);
-    await snap(page, '02-after-campaign-click', dir, result);
-    result.screens.push({ step: 'after_campaign', headings: info.headings, buttons: info.buttons, errors: info.errors });
+    // === STEP 2: CAMPAIGN — find or create ===
+    let card = await page.$('button.campaign-card');
+    if (!card) {
+      result.actions.push('NO_CAMPAIGN_FOUND — clicking Create');
+      // Click "+ Create New Campaign"
+      const createBtn = await page.$('button:has-text("Create New Campaign"), button:has-text("Create")');
+      if (createBtn) {
+        await createBtn.click();
+        await page.waitForTimeout(2000);
+        info = await audit(page);
+        await snap(page, '02a-create-campaign', result);
+        result.screens.push({ step: 'create_campaign_ui', ...info });
 
-    if (info.errors.length > 0) {
-      result.finalScreen = 'CAMPAIGN CRASHED: ' + info.errors.join('; ');
-      result.errors = info.errors;
-      result.consoleErrors = consoleErrors.slice(0, 5);
-      console.log(JSON.stringify(result));
-      await browser.close();
-      return;
-    }
-
-    // Step 3: Character select — look for "Choose Your Champion" heading
-    const isCharSelect = info.headings.some(h => /champion|character/i.test(h)) ||
-                         info.buttons.some(b => /create.*character|new.*character/i.test(b));
-    if (isCharSelect) {
-      // Click first character card (div with onClick in character list)
-      const charCard = await page.$('div[style*="cursor: pointer"][style*="#1a1006"]');
-      if (charCard) {
-        await charCard.click();
-        await page.waitForTimeout(5000);
-        info = await getPageInfo(page);
-        await snap(page, '03-after-character', dir, result);
-        result.screens.push({ step: 'after_character', headings: info.headings, buttons: info.buttons, errors: info.errors });
-      } else {
-        result.finalScreen = 'CHARACTER SELECT (no existing characters to click)';
-        result.consoleErrors = consoleErrors.slice(0, 5);
-        console.log(JSON.stringify(result));
-        await browser.close();
-        return;
+        // Look for Quick Start / demo campaign option
+        const quickStart = await page.$('button:has-text("Quick Start"), [class*="quick"], [class*="demo"]');
+        if (quickStart) {
+          result.actions.push('CLICKING_QUICK_START');
+          await quickStart.click();
+          await page.waitForTimeout(5000);
+        } else {
+          // Try the AI generate tab if available
+          const genTab = await page.$('button:has-text("Generate"), button:has-text("AI")');
+          if (genTab) {
+            result.actions.push('CLICKING_AI_GENERATE');
+            await genTab.click();
+            await page.waitForTimeout(2000);
+            // Fill in minimal campaign details and submit
+            const nameInput = await page.$('input[placeholder*="name" i], input[placeholder*="title" i]');
+            if (nameInput) await nameInput.fill('Agent Test Campaign');
+            const submitBtn = await page.$('button[type="submit"], button:has-text("Create"), button:has-text("Generate")');
+            if (submitBtn) {
+              await submitBtn.click();
+              await page.waitForTimeout(10000); // AI generation takes time
+            }
+          } else {
+            result.actions.push('NO_CREATE_METHOD_FOUND');
+          }
+        }
+        // Navigate back to dashboard to find the campaign
+        await page.goto('http://localhost:%PORT%', { waitUntil: 'networkidle', timeout: 20000 });
+        await page.waitForTimeout(3000);
+        card = await page.$('button.campaign-card');
       }
     }
 
-    // Step 4: Check final state
+    if (!card) {
+      info = await audit(page);
+      await snap(page, '02-no-campaign', result);
+      result.screens.push({ step: 'no_campaign', ...info });
+      result.finalScreen = 'DASHBOARD_NO_CAMPAIGN: could not find or create a campaign';
+      result.actions.push('FAILED_TO_GET_CAMPAIGN');
+      throw new Error('stop');
+    }
+
+    result.actions.push('CLICKING_CAMPAIGN');
+    await card.click();
+    await page.waitForTimeout(4000);
+    info = await audit(page);
+    await snap(page, '02-after-campaign', result);
+    result.screens.push({ step: 'after_campaign', ...info });
+
+    if (info.errors.length > 0) {
+      result.finalScreen = 'CAMPAIGN_CRASHED: ' + info.errors.join('; ');
+      throw new Error('stop');
+    }
+
+    // === STEP 3: CHARACTER — find or create ===
+    const isCharSelect = info.headings.some(h => /champion|character/i.test(h));
+    if (isCharSelect) {
+      // Try clicking existing character
+      const charCard = await page.$('div[style*="cursor: pointer"][style*="#1a1006"]');
+      if (charCard) {
+        result.actions.push('CLICKING_EXISTING_CHARACTER');
+        await charCard.click();
+        await page.waitForTimeout(5000);
+      } else {
+        result.actions.push('NO_CHARACTER_FOUND — creating one');
+        // Click create new character
+        const createChar = await page.$('button:has-text("Create"), button:has-text("New Character"), button:has-text("Forge")');
+        if (createChar) {
+          await createChar.click();
+          await page.waitForTimeout(3000);
+          info = await audit(page);
+          await snap(page, '03a-create-character', result);
+          result.screens.push({ step: 'create_character_ui', ...info });
+          result.finalScreen = 'CHARACTER_CREATION: agent needs to complete character creation flow';
+          throw new Error('stop');
+        } else {
+          result.finalScreen = 'CHARACTER_SELECT_STUCK: no characters and no create button found';
+          throw new Error('stop');
+        }
+      }
+
+      info = await audit(page);
+      await snap(page, '03-after-character', result);
+      result.screens.push({ step: 'after_character', ...info });
+
+      if (info.errors.length > 0) {
+        result.finalScreen = 'CHARACTER_CRASHED: ' + info.errors.join('; ');
+        throw new Error('stop');
+      }
+    }
+
+    // === STEP 4: GAME — audit final state ===
     await page.waitForTimeout(2000);
-    info = await getPageInfo(page);
-    await snap(page, '04-final', dir, result);
+    info = await audit(page);
+    await snap(page, '04-game', result);
     result.hasCanvas = info.hasCanvas;
-    result.screens.push({ step: 'final', headings: info.headings, buttons: info.buttons, errors: info.errors, hasCanvas: info.hasCanvas });
+    result.screens.push({ step: 'game', ...info });
 
     if (info.hasCanvas) {
-      result.finalScreen = 'GAME (PixiJS canvas visible)';
-    } else if (info.errors.length > 0) {
-      result.finalScreen = 'GAME SCREEN ERROR: ' + info.errors.join('; ');
-    } else {
-      result.finalScreen = 'STUCK: no canvas, no errors. Headings: ' + info.headings.join(', ') + '. Buttons: ' + info.buttons.slice(0, 5).join(', ');
-    }
-
-    // Check for unstyled/default elements (white backgrounds, no borders)
-    const styleIssues = await page.evaluate(() => {
-      const issues = [];
-      document.querySelectorAll('div, button, panel, section').forEach(el => {
-        const style = window.getComputedStyle(el);
-        const bg = style.backgroundColor;
-        if (bg === 'rgb(255, 255, 255)' || bg === 'white') {
-          const tag = el.tagName.toLowerCase();
-          const cls = el.className?.toString()?.substring(0, 30) || '';
-          issues.push('WHITE_BG: ' + tag + '.' + cls);
-        }
+      result.finalScreen = 'GAME_RUNNING';
+      // Extra audit: check for HUD elements, visible UI panels
+      const gameUI = await page.evaluate(() => {
+        const found = [];
+        if (document.querySelector('canvas')) found.push('CANVAS');
+        if (document.querySelector('[class*="hud" i], [class*="HUD"]')) found.push('HUD');
+        if (document.querySelector('[class*="narrator" i]')) found.push('NARRATOR');
+        if (document.querySelector('[class*="minimap" i]')) found.push('MINIMAP');
+        if (document.querySelector('[class*="health" i], [class*="hp" i]')) found.push('HEALTH');
+        if (document.querySelector('[class*="chat" i], [class*="log" i]')) found.push('CHAT');
+        return found;
       });
-      return issues.slice(0, 5);
-    });
-    if (styleIssues.length > 0) {
-      result.styleIssues = styleIssues;
+      result.gameUI = gameUI;
+    } else if (info.errors.length > 0) {
+      result.finalScreen = 'GAME_ERROR: ' + info.errors.join('; ');
+    } else {
+      result.finalScreen = 'GAME_STUCK: ' + info.headings.join(', ') + ' | ' + info.buttons.slice(0, 5).join(', ');
     }
 
-    result.errors = result.screens.flatMap(s => s.errors || []);
+  } catch(e) {
+    if (e.message !== 'stop') result.errors.push('NAV_ERROR: ' + e.message);
+  }
+  finally {
+    result.errors = [...new Set(result.screens.flatMap(s => s.errors || []))];
     result.consoleErrors = consoleErrors.slice(0, 5);
-
-  } catch(e) { result.errors.push('Navigation error: ' + e.message); result.consoleErrors = consoleErrors.slice(0, 5); }
-  finally { await browser.close(); }
+    result.allStyleIssues = [...new Set(result.screens.flatMap(s => s.styleIssues || []))];
+    await browser.close();
+  }
   console.log(JSON.stringify(result));
 })();
 """.replace('%PLAYWRIGHT%', playwright_bin.replace('\\', '/')
@@ -453,22 +504,30 @@ async function getPageInfo(page) {
             return "Screenshot parse failed"
 
         desc = f"FINAL SCREEN: {r.get('finalScreen', 'unknown')}. "
-        desc += f"Canvas/game visible: {r.get('hasCanvas', False)}. "
+        desc += f"Canvas: {r.get('hasCanvas', False)}. "
+        actions = r.get('actions', [])
+        if actions:
+            desc += f"Actions taken: {actions}. "
+        game_ui = r.get('gameUI', [])
+        if game_ui:
+            desc += f"Game UI found: {game_ui}. "
         screens = r.get('screens', [])
         for s in screens:
-            desc += f"\n  [{s.get('step', '?')}] headings={s.get('headings', [])} buttons={s.get('buttons', [])[:8]}"
+            desc += f"\n  [{s.get('step', '?')}] h={s.get('headings', [])} b={s.get('buttons', [])[:6]}"
             if s.get('errors'):
-                desc += f" ERRORS={s['errors']}"
+                desc += f" ERR={s['errors']}"
+            if s.get('styleIssues'):
+                desc += f" STYLE={s['styleIssues']}"
         all_errors = r.get('errors', [])
         if all_errors:
             desc += f"\nUI ERRORS: {all_errors}"
         console_errors = r.get('consoleErrors', [])
         if console_errors:
             desc += f"\nCONSOLE ERRORS: {console_errors}"
-        style_issues = r.get('styleIssues', [])
-        if style_issues:
-            desc += f"\nSTYLE ISSUES (white/unstyled elements): {style_issues}"
-        log(f"  -> {desc[:500]}")
+        all_style = r.get('allStyleIssues', [])
+        if all_style:
+            desc += f"\nSTYLE ISSUES: {all_style}"
+        log(f"  -> {desc[:600]}")
         return desc
     finally:
         dev_proc.terminate()
@@ -555,17 +614,23 @@ TASK_BUILD_BROKEN = """The build is FAILING. Fix the build errors shown above.
 Check "Known fixes" — you may have fixed this before.
 Just make the build pass. Then the next iteration will build features."""
 
-TASK_FLOW_BLOCKED = """The screenshot shows the app is STUCK and not reaching the game.
-Look at the screen descriptions and CONSOLE ERRORS. Fix whatever is blocking:
-- If "Something went wrong" or error boundary: find the crash in the component, fix it
-- If stuck on dashboard: the test campaign may not load from Supabase
-- If stuck on character select: the test character may not load
-- If no canvas: the game view component may have a rendering error
+TASK_FLOW_BLOCKED = """The screenshot flow is STUCK and not reaching the game.
+The Playwright script tries to self-heal: if no campaign exists it tries to create one,
+if no character exists it tries to create one. But something is still blocking.
 
-CRITICAL: The app works for real human users via Discord OAuth login.
-DO NOT change the auth flow, login UI, or Supabase config.
-The test uses VITE_DEV_AUTO_LOGIN with email/password — that's a separate path.
-Fix the CRASH, not the auth. Read the console errors for the actual exception."""
+Look at the "Actions taken" and screen descriptions:
+- DASHBOARD_NO_CAMPAIGN: the create campaign flow failed. Fix the campaign creation UI.
+- CAMPAIGN_CRASHED / ERROR_BOUNDARY: a component crashed. Read console errors, find the bug.
+- CHARACTER_SELECT_STUCK: character creation or selection is broken.
+- CHARACTER_CREATION: the agent reached the character builder — it needs to work end-to-end.
+- GAME_STUCK: game loaded but canvas didn't render. Check GameV2.jsx and PixiApp.
+
+CRITICAL: DO NOT break the human login flow (Discord OAuth).
+The test uses VITE_DEV_AUTO_LOGIN — that's a separate code path.
+Fix the actual crash/bug, not the auth.
+
+Also check STYLE ISSUES — if any screen has white backgrounds or unstyled elements,
+fix those too. Every screen must match the dark fantasy design rules."""
 
 TASK_PICK_FROM_TODO = """The game is reachable and working. Now BUILD FEATURES.
 
