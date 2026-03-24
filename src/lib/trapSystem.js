@@ -56,7 +56,22 @@ export function getPassivePerception(character) {
  * @param {{ stats: Record<string, number> }} target
  * @returns {{ saved: boolean, saveRoll: number, damage: number, condition: string|null, description: string }}
  */
-export function resolveTrapEffect(trap, target) {
+/**
+ * Determines the trap target based on party formation.
+ * Front-line members get hit; back-line gets advantage on saves.
+ * @param {object} target - The character who stepped on the trap
+ * @param {{ front: string[], back: string[] }} formation
+ * @returns {{ target: object, hasAdvantage: boolean }}
+ */
+export function getFormationTrapModifier(target, formation) {
+  if (!formation || !target) return { hasAdvantage: false }
+  const id = target.id || target.name
+  // Back-line characters get advantage on trap saves (they're further back)
+  const isBackLine = (formation.back || []).includes(id)
+  return { hasAdvantage: isBackLine }
+}
+
+export function resolveTrapEffect(trap, target, formation) {
   const { effect, description } = trap
   const saveAbility = effect.save.toLowerCase() // 'DEX' → 'dex'
   const abilityScore = target?.stats?.[saveAbility] ?? 10
@@ -71,8 +86,13 @@ export function resolveTrapEffect(trap, target) {
     }
   }
 
-  // Roll d20 + modifier for saving throw
-  const d20 = rollDamage('1d20')
+  // Back-line formation members get advantage on trap saves
+  const { hasAdvantage } = getFormationTrapModifier(target, formation)
+
+  // Roll d20 + modifier for saving throw (advantage = roll twice, take higher)
+  const d20_1 = rollDamage('1d20')
+  const d20_2 = hasAdvantage ? rollDamage('1d20') : d20_1
+  const d20 = hasAdvantage ? { total: Math.max(d20_1.total, d20_2.total) } : d20_1
   const saveRoll = Math.max(1, d20.total + modifier + saveProfBonus)
   const saved = saveRoll >= effect.saveDC
 

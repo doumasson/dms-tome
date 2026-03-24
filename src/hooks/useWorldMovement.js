@@ -50,13 +50,14 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
   // Step counter — advance ~1 minute of game time per 10 tiles walked
   const stepCountRef = useRef(0)
   // Trap check helper — called after each movement completes
+  // Uses party formation: back-line members get advantage on trap saves
   const checkTrapsAtPosition = useCallback((newPos) => {
-    const { zone: _z, myCharacter: _c, addNarratorMessage: _a, updateMyCharacter: _u } = {
-      zone: zoneRef.current,
-      myCharacter: useStore.getState().myCharacter,
-      addNarratorMessage: useStore.getState().addNarratorMessage,
-      updateMyCharacter: useStore.getState().updateMyCharacter,
-    }
+    const state = useStore.getState()
+    const _z = zoneRef.current
+    const _c = state.myCharacter
+    const _a = state.addNarratorMessage
+    const _u = state.updateMyCharacter
+    const formation = state.formation
     const traps = _z?.traps || []
     for (const trap of traps) {
       if (!trap.position || trap.triggered || trap.revealed) continue
@@ -70,8 +71,10 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
       const result = checkTrapTrigger(trap, newPos)
       if (result.triggered) {
         trap.triggered = true
-        const effect = resolveTrapEffect(trap, _c)
-        _a({ role: 'dm', speaker: 'DM', text: effect.description })
+        const effect = resolveTrapEffect(trap, _c, formation)
+        const isBackLine = formation?.back?.includes(_c?.id) || formation?.back?.includes(_c?.name)
+        const advNote = isBackLine ? ' (back line — advantage on save!)' : ''
+        _a({ role: 'dm', speaker: 'DM', text: effect.description + advNote })
         if (effect.damage > 0 && _c) {
           const currentHp = _c.currentHp ?? _c.hp ?? 0
           _u({ currentHp: Math.max(0, currentHp - effect.damage) })
