@@ -17,11 +17,8 @@ Fixed: Random encounters now provide `startCombatWithZoneEnemies` function with 
 ### ~~Bug 3: Narrator float bar is enormous~~ ✅ FIXED
 Fixed: Replaced 65%-width OrnateFrame stone-panel with a compact 360px max tooltip-style float at top-center. Subtle dark bg, thin gold border, small text, non-interactive.
 
-### Bug 4: Narrator/chat panel takes too much vertical space
-The bottom parchment panel (narrator chat + log) takes up ~50% of the screen. Per ARCHITECTURE.md the layout should be:
-- Top 80%: game map (dominant, full bleed)
-- Bottom 20%: narrator bar (collapsed by default, expands to 40% max)
-- Fix the layout proportions. The map should be dominant.
+### ~~Bug 4: Narrator/chat panel takes too much vertical space~~ ✅ FIXED
+Fixed: Removed duplicate NarratorBar from GameLayout. Chat is in the HUD's SessionLog (BottomBar). Map now takes full viewport with HUD overlaying at bottom (220px absolute).
 
 ### Bug 5: Layout/UI elements overlapping or unstyled
 Multiple HUD elements are overlapping. The game should have:

@@ -11,13 +11,12 @@
   color: #e8d5a3;
 }
 
-/* Scene area - top portion, 80% dominant */
+/* Scene area - full viewport, HUD overlays on top */
 .scene-area {
-  flex: 8;
-  background: #1a1a1a;
+  flex: 1;
+  background: #08060c;
   position: relative;
   overflow: hidden;
-  border-bottom: 2px solid #d4af37;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
