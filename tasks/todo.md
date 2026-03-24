@@ -47,7 +47,13 @@
 - [x] Combat recap — CombatRecap component parses combat log for per-character stats (damage, healing, kills, hits, misses, spells, crits, damage taken), MVP highlight, integrated into VictoryScreen
 - [x] Keyboard shortcut help — KeyboardHelp overlay triggered by ? key, shows Movement/Combat/Interaction/UI categories with styled kbd elements, Esc to close, skip when typing in inputs
 
-## Priority 8: Asset Generation (blocked — needs external image API)
+## Priority 8: Multiplayer & Social
+- [x] Party health bars — PartyHealthBars component showing compact HP bars for all party members, portrait circles, name labels, condition dots, dead overlay, live HP from combat combatants, positioned bottom-left
+- [ ] Emote/reaction system — quick emoji reactions players can send during gameplay
+- [ ] Auto-save indicator — small icon showing when game state saves to Supabase
+- [ ] Ping system — click map to place a waypoint marker visible to all players
+
+## Priority 9: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
 - [ ] Token/character sprites — already using Pollinations for portraits
 - [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets

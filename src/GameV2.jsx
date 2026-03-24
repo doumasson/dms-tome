@@ -17,6 +17,7 @@ import Minimap from './components/game/Minimap'
 import QuestTracker from './components/game/QuestTracker'
 import LootAnimation from './components/game/LootAnimation'
 import KeyboardHelp from './components/game/KeyboardHelp'
+import PartyHealthBars from './components/game/PartyHealthBars'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -432,6 +433,7 @@ export default function GameV2({ onLeave }) {
         <QuestTracker />
         <LootAnimation />
         <KeyboardHelp />
+        <PartyHealthBars />
         {nearbyNpcs.map(npc => (
           <ChatBubble key={npc.name} npc={npc} tileSize={zone?.tileSize || 32} worldTransform={worldTransform} />
         ))}
