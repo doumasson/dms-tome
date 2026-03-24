@@ -95,6 +95,7 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
     advanceGameTime(10 / 60) // 10 minutes per area transition
 
     const app = pixiRef.current?.getApp()
+    const areaName = targetArea?.name || areaBriefs?.[targetId]?.name || targetId
     if (app) {
       playDoorCreak()
       playZoneTransition(app, () => {
@@ -103,7 +104,7 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
         playerPosRef.current = entry
       }, () => {
         setTransitioning(false)
-      })
+      }, 800, areaName)
     } else {
       activateArea(targetId)
       setPlayerPos(entry)

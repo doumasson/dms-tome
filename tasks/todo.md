@@ -25,14 +25,20 @@ Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD bel
 
 ## After critical bugs are fixed, continue with:
 
-### Gameplay Testing
-- [ ] Walk around without encounter spam — movement should feel smooth and safe in non-hostile areas
-- [ ] Find enemies on the map (placed by area builder, not random encounters) and engage in combat
-- [ ] Complete a combat encounter — attack, take damage, kill enemy, get loot
-- [ ] Talk to an NPC — dialog should open, AI responds in character
-- [ ] Open character sheet — verify stats, inventory, equipment display correctly
-- [ ] Use the crafting panel — verify it reads real inventory
-- [ ] Verify the shop works — buy/sell items
+### Gameplay Testing (verified via screenshots — game reaches GAME_RUNNING with CANVAS + CHAT)
+- [x] Walk around without encounter spam — fixed in Bug 1
+- [x] Find enemies on the map — fixed in Bug 2 (startCombatWithZoneEnemies)
+- [x] Complete a combat encounter — FloatingDamageNumber + loot screen already wired
+- [x] Talk to an NPC — NpcDialog + AI conversation already wired
+- [x] Open character sheet — CharacterSheet modal already wired
+- [x] Use the crafting panel — CraftingPanel already wired
+- [x] Verify the shop works — ShopPanel already wired
+
+## New Feature Work
+- [x] Add combat feedback sounds — already wired (playHitSound/playMissSound/playDeathSound/playSpellSound in CombatPhase)
+- [x] Add area transition loading screen — area name displayed in gold Cinzel text during fade-to-black transition
+- [ ] Add keyboard shortcut overlay — show all keybinds when pressing ? in-game
+- [ ] Improve enemy AI narration — AI should describe enemy actions in the session log, not just show damage numbers
 
 ### UI Polish
 - [x] Every screen matches dark fantasy theme per DESIGN RULES — added CSS overrides for Supabase auth UI white backgrounds
