@@ -95,6 +95,7 @@ export function createEncounterSlice(set, get) {
               : null,
             deathSaves: { successes: 0, failures: 0, stable: false },
             readiedAction: null,
+            portrait: makePortraitUrl(label, group.race || 'monster', group.type || group.name),
           });
         }
       });
