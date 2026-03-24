@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
 import { computeAcFromEquipped } from '../data/equipment';
 import { buildPollinationsUrl } from '../lib/dalleApi';
+import { notifySaveStart, notifySaveComplete, notifySaveError } from '../components/game/AutoSaveIndicator';
 import { normalizeCampaignData } from '../lib/campaignSchema';
 
 /**
@@ -267,6 +268,7 @@ export function createCampaignSlice(set, get) {
       const { activeCampaign } = get();
       if (!activeCampaign?.id) return;
       const c = campaignState || get().campaign;
+      notifySaveStart();
       try {
         const { data: cur } = await supabase
           .from('campaigns').select('settings').eq('id', activeCampaign.id).maybeSingle();
@@ -274,7 +276,8 @@ export function createCampaignSlice(set, get) {
           .from('campaigns')
           .update({ settings: { ...(cur?.settings || {}), notes: c.notes, savedEncounters: c.savedEncounters } })
           .eq('id', activeCampaign.id);
-      } catch { /* non-critical */ }
+        notifySaveComplete();
+      } catch { notifySaveError(); }
     },
 
     saveSessionStateToSupabase: async () => {
@@ -302,16 +305,22 @@ export function createCampaignSlice(set, get) {
     saveCampaignToSupabase: async () => {
       const { activeCampaign, campaign } = get();
       if (!activeCampaign?.id) return;
-      const merged = {
-        ...(activeCampaign.campaign_data || {}),
-        meta: campaign.meta,
-        questObjectives: campaign.questObjectives,
-        characters: campaign.characters,
-      };
-      await supabase
-        .from('campaigns')
-        .update({ campaign_data: merged })
-        .eq('id', activeCampaign.id);
+      notifySaveStart();
+      try {
+        const merged = {
+          ...(activeCampaign.campaign_data || {}),
+          meta: campaign.meta,
+          questObjectives: campaign.questObjectives,
+          characters: campaign.characters,
+        };
+        await supabase
+          .from('campaigns')
+          .update({ campaign_data: merged })
+          .eq('id', activeCampaign.id);
+        notifySaveComplete();
+      } catch {
+        notifySaveError();
+      }
     },
 
     // === Scene Images (cache) ===

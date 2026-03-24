@@ -50,7 +50,7 @@
 ## Priority 8: Multiplayer & Social
 - [x] Party health bars — PartyHealthBars component showing compact HP bars for all party members, portrait circles, name labels, condition dots, dead overlay, live HP from combat combatants, positioned bottom-left
 - [x] Emote/reaction system — EmoteSystem component with 10 emotes (attack, defend, haha, nice, scared, roll, rip, fire, love, gg), floating emoji animations, broadcast to all players via encounter-action channel, picker grid, player name labels
-- [ ] Auto-save indicator — small icon showing when game state saves to Supabase
+- [x] Auto-save indicator — AutoSaveIndicator component with spinning/checkmark/error states, hooked into saveCampaignToSupabase and saveSettingsToSupabase, auto-fades after 2s, positioned top-right
 - [ ] Ping system — click map to place a waypoint marker visible to all players
 
 ## Priority 9: Asset Generation (blocked — needs external image API)
