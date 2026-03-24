@@ -20,14 +20,8 @@ Fixed: Replaced 65%-width OrnateFrame stone-panel with a compact 360px max toolt
 ### ~~Bug 4: Narrator/chat panel takes too much vertical space~~ ✅ FIXED
 Fixed: Removed duplicate NarratorBar from GameLayout. Chat is in the HUD's SessionLog (BottomBar). Map now takes full viewport with HUD overlaying at bottom (220px absolute).
 
-### Bug 5: Layout/UI elements overlapping or unstyled
-Multiple HUD elements are overlapping. The game should have:
-- Top-left: compact HP/AC/Level HUD
-- Top-center: area name + time
-- Top-right: minimap (collapsible)
-- Bottom: narrator bar (collapsed 20%, expandable)
-- No elements should overlap the game map unnecessarily
-- Review GameV2.jsx render tree and fix z-index/positioning conflicts
+### ~~Bug 5: Layout/UI elements overlapping or unstyled~~ ✅ FIXED
+Fixed: Removed duplicate Minimap from GameV2 (already in GameHUD). Moved HUD below top bar (top: 86px). Moved PartyHealthBars above BottomBar (bottom: 230px). Fixed QuestTracker position (top: 90px). Normalized z-index values to 15 for all non-bar HUD elements.
 
 ## After critical bugs are fixed, continue with:
 

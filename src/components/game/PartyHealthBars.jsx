@@ -151,9 +151,9 @@ function conditionIcon(c) {
 const S = {
   container: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 230,
     left: 12,
-    zIndex: 90,
+    zIndex: 15,
     display: 'flex',
     flexDirection: 'column',
     gap: 3,

@@ -61,9 +61,9 @@ export default function QuestTracker() {
   return (
     <div style={{
       position: 'absolute',
-      top: 190,
+      top: 90,
       left: 12,
-      zIndex: 90,
+      zIndex: 15,
       maxWidth: 220,
       userSelect: 'none',
     }}>

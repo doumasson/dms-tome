@@ -442,7 +442,6 @@ export default function GameV2({ onLeave }) {
         <WeatherOverlay />
         <DayNightOverlay />
         <HUD />
-        <Minimap playerPos={playerPos} zone={zone} inCombat={inCombat} />
         <QuestTracker />
         <LootAnimation />
         <KeyboardHelp />
