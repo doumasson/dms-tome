@@ -314,11 +314,16 @@ export default function App() {
           })
           break
         }
-        case 'use-item':
+        case 'use-item': {
+          const user = store.encounter.combatants?.find(c => c.id === payload.id);
+          const userName = user?.name || 'A combatant';
+          const effectDesc = payload.effect?.type === 'heal' ? ' and recovers HP!' :
+            payload.effect?.type === 'condition' ? ` — ${payload.effect.condition}!` : '.';
           store.addNarratorMessage({ role: 'dm', speaker: 'Combat',
-            text: `A combatant uses ${payload.itemName || 'an item'}.`,
+            text: `${userName} uses ${payload.itemName || 'an item'}${effectDesc}`,
           })
           break
+        }
         case 'ready-action': {
           // Remote player readied an action — update their combatant state
           const { setReadiedAction } = store
