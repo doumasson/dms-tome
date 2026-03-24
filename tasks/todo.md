@@ -35,7 +35,13 @@
 - [x] Weather effects — Canvas2D particle overlay for rain, heavy_rain, storm, snow, fog, ash; reads from store weather system with automatic transitions; integrated into GameV2
 - [x] Ambient sound effects — procedural footsteps (4 surface types) on movement, door creak on area transitions, coin jingle on purchases, chest open sound, torch crackle + wind ambient loops
 
-## Priority 6: Asset Generation (blocked — needs external image API)
+## Priority 6: World & Navigation
+- [x] Minimap — Canvas2D corner minimap showing terrain/walls, player dot with white outline, NPC markers, exit markers, enemy markers in combat, area name header, collapsible with click toggle, legend
+- [ ] Quest tracker — persistent sidebar showing active quest objectives
+- [ ] Party formation — drag to reorder marching order, affects who gets hit by traps first
+- [ ] Loot pickup animation — items fly from ground to inventory with sparkle effect
+
+## Priority 7: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
 - [ ] Token/character sprites — already using Pollinations for portraits
 - [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets
