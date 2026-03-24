@@ -1,4 +1,6 @@
+import { useState, useCallback } from 'react';
 import useStore from '../../store/useStore';
+import { setMood, stopMusic, setMusicVolume, getMusicState } from '../../lib/ambientMusic';
 import './HUD.css';
 
 /**
@@ -109,6 +111,9 @@ export default function HUD() {
         </div>
       )}
 
+      {/* Music Toggle */}
+      <MusicToggle />
+
       {/* Death Saves (when dying) */}
       {dying && (
         <div className="hud-section hud-death-saves">
@@ -139,6 +144,50 @@ export default function HUD() {
             </button>
           )}
         </div>
+      )}
+    </div>
+  );
+}
+
+function MusicToggle() {
+  const [enabled, setEnabled] = useState(() => localStorage.getItem('dm-music') !== 'off');
+  const [showVolume, setShowVolume] = useState(false);
+  const [vol, setVol] = useState(() => parseFloat(localStorage.getItem('dm-music-vol') || '0.15'));
+
+  const toggle = useCallback(() => {
+    const next = !enabled;
+    setEnabled(next);
+    localStorage.setItem('dm-music', next ? 'on' : 'off');
+    if (next) {
+      setMood('exploration'); // restart
+    } else {
+      stopMusic(0.5);
+    }
+  }, [enabled]);
+
+  const handleVol = useCallback((e) => {
+    const v = parseFloat(e.target.value);
+    setVol(v);
+    setMusicVolume(v);
+    localStorage.setItem('dm-music-vol', String(v));
+  }, []);
+
+  return (
+    <div className="hud-section hud-music">
+      <button
+        className="music-toggle-btn"
+        onClick={toggle}
+        onContextMenu={(e) => { e.preventDefault(); setShowVolume(v => !v); }}
+        title={enabled ? 'Music on (click to mute, right-click for volume)' : 'Music off (click to enable)'}
+      >
+        {enabled ? '♫' : '♫̸'}
+      </button>
+      {showVolume && (
+        <input
+          type="range" min="0" max="0.4" step="0.01" value={vol}
+          onChange={handleVol}
+          className="music-volume-slider"
+        />
       )}
     </div>
   );

@@ -29,7 +29,13 @@
 - [x] Rest mechanics UI (short rest / long rest buttons with proper 5e recovery) — already implemented: RestModal with party voting, hit dice spending, short/long rest recovery, PartySidebar buttons
 - [x] Initiative tracker visual improvements — TurnOrderBar component with portrait circles, HP ring arcs, initiative badges, condition icons, active turn arrow animation, auto-scroll to active combatant
 
-## Priority 5: Asset Generation (blocked — needs external image API)
+## Priority 5: Atmosphere & Immersion
+- [x] Ambient background music — procedural Web Audio API drone/pad moods (exploration, combat, mystery, tavern, danger), auto-switches on combat state, HUD toggle + volume control, localStorage persistence
+- [ ] Day/night visual cycle — tint overlay changes based on game time
+- [ ] Weather effects — rain/snow/fog particle overlay on scenes
+- [ ] Ambient sound effects — footsteps, door creaks, torch crackle during exploration
+
+## Priority 6: Asset Generation (blocked — needs external image API)
 - [ ] Generate original tile assets to replace Forgotten Adventures placeholders (see `tasks/codex-asset-generation.md`)
 - [ ] Token/character sprites — already using Pollinations for portraits
 - [ ] UI element art — replace CSS-only UI with actual dark fantasy art assets

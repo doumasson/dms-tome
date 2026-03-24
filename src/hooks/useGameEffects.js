@@ -11,6 +11,7 @@ import { loadDefaultApiKey } from '../lib/defaultApiKey'
 import { getClaudeApiKey } from '../lib/claudeApi'
 import { useWorldLoader } from './useWorldLoader'
 import { useNarratorChat } from './useNarratorChat'
+import { setMood, stopMusic, setMusicVolume } from '../lib/ambientMusic'
 
 export function useGameEffects({
   inCombat, encounter, playerPos, playerPosRef, cameraRef, setPlayerPos, zone, myCharacter, isDM, activeCampaign,
@@ -87,6 +88,25 @@ export function useGameEffects({
       useStore.setState({ respawnPosition: null })
     }
   }, [respawnPosition, inCombat, zone?.tileSize])
+
+  // Ambient music — switch mood on combat state changes
+  useEffect(() => {
+    const musicOff = typeof localStorage !== 'undefined' && localStorage.getItem('dm-music') === 'off'
+    if (musicOff) return
+    // Restore saved volume
+    const savedVol = typeof localStorage !== 'undefined' && localStorage.getItem('dm-music-vol')
+    if (savedVol) setMusicVolume(parseFloat(savedVol))
+    if (inCombat) {
+      setMood('combat')
+    } else if (zone) {
+      setMood('exploration')
+    }
+  }, [inCombat, zone?.id])
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopMusic(1)
+  }, [])
 
   // After TPK defeat, clear triggered zones
   useEffect(() => {
