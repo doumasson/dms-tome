@@ -26,8 +26,20 @@ export default function FloatingDamageNumber({ x, y, value, type = 'damage', dur
     return () => clearInterval(interval);
   }, [duration]);
 
-  const color = type === 'heal' ? '#2ecc71' : type === 'miss' ? '#95a5a6' : '#e74c3c';
-  const sign = type === 'heal' ? '+' : '';
+  // Damage type colors for 5e damage types
+  const DAMAGE_COLORS = {
+    fire: '#ff6633', cold: '#44bbee', lightning: '#ffee44',
+    necrotic: '#9944cc', radiant: '#ffffaa', poison: '#66cc44',
+    psychic: '#cc44aa', thunder: '#6688cc', acid: '#88cc22',
+    force: '#bb88ff',
+  }
+  const isCrit = type === 'crit'
+  const baseType = isCrit ? 'damage' : type
+  const color = baseType === 'heal' ? '#2ecc71'
+    : baseType === 'miss' ? '#95a5a6'
+    : DAMAGE_COLORS[baseType] || '#e74c3c'
+  const sign = baseType === 'heal' ? '+' : ''
+  const fontSize = isCrit ? 26 : (baseType === 'miss' ? 16 : 20)
 
   return (
     <div
@@ -37,17 +49,18 @@ export default function FloatingDamageNumber({ x, y, value, type = 'damage', dur
         top: `${y + offsetY}px`,
         opacity,
         color,
-        fontSize: '20px',
+        fontSize: `${fontSize}px`,
         fontWeight: 'bold',
         pointerEvents: 'none',
-        fontFamily: 'Cinzel, serif',
-        textShadow: '0 0 8px rgba(0,0,0,0.8)',
+        fontFamily: "'Cinzel', serif",
+        textShadow: `0 0 8px rgba(0,0,0,0.8)${isCrit ? ', 0 0 12px ' + color + '88' : ''}`,
         transition: 'opacity 0.1s linear',
-        transform: 'translate(-50%, -50%)',
+        transform: `translate(-50%, -50%)${isCrit ? ' scale(1.2)' : ''}`,
         whiteSpace: 'nowrap',
+        letterSpacing: isCrit ? '2px' : '0',
       }}
     >
-      {type === 'miss' ? 'MISS' : `${sign}${value}`}
+      {baseType === 'miss' ? 'MISS' : `${isCrit ? '💥 ' : ''}${sign}${value}`}
     </div>
   );
 }
