@@ -420,6 +420,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
             const conSave = Math.floor(Math.random() * 20) + 1 + Math.floor(((target.stats?.con || 10) - 10) / 2)
             if (conSave < dc) {
               useStore.getState().addEncounterCondition(target.id || target.name, 'Stunned')
+              broadcastEncounterAction({ type: 'add-condition', id: target.id || target.name, condition: 'Stunned', userId: useStore.getState().user?.id || 'system' })
               bonusDmgNotes += ` [STUNNED! CON ${conSave} < DC ${dc}]`
             } else {
               bonusDmgNotes += ` [Stun resisted CON ${conSave} ≥ DC ${dc}]`
