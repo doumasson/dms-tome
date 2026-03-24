@@ -63,6 +63,9 @@ export default function SpellAnimation({ spell, targetX, targetY, cellPx, durati
       {effectType === 'acid' && (
         <AcidEffect progress={progress} cellPx={cellPx} />
       )}
+      {effectType === 'generic' && (
+        <GenericEffect progress={progress} cellPx={cellPx} />
+      )}
     </div>
   );
 }
@@ -330,6 +333,34 @@ function AcidEffect({ progress, cellPx }) {
           }}
         />
       ))}
+    </>
+  );
+}
+
+// Generic: Purple arcane burst
+function GenericEffect({ progress, cellPx }) {
+  const opacity = Math.max(0, 1 - progress);
+  return (
+    <>
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: '50%',
+          border: `2px solid rgba(180, 120, 255, ${opacity})`,
+          boxShadow: `0 0 ${20 * opacity}px rgba(180, 120, 255, ${opacity * 0.6})`,
+          transform: `scale(${0.3 + progress * 1.2})`,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          inset: '30%',
+          borderRadius: '50%',
+          background: `radial-gradient(circle, rgba(180, 120, 255, ${0.6 * opacity}), transparent)`,
+          filter: `blur(${5 + progress * 5}px)`,
+        }}
+      />
     </>
   );
 }

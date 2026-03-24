@@ -17,6 +17,7 @@ import TurnAnnouncement from '../TurnAnnouncement';
 import CombatantRow from './CombatantRow';
 import AttackPanel from './AttackPanel';
 import FloatingDamageNumber from './FloatingDamageNumber';
+import SpellAnimation from '../SpellAnimation';
 import { SavingThrowPanel, AoEPanel, ConcentratePanel, SpellSelectPanel } from './SpellPanels';
 import { btn, apStyle, MAP_W, MAP_H, CELL_PX } from './combatStyles';
 
@@ -42,6 +43,7 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   const [activeSpell, setActiveSpell] = useState(null);
   const [mobileTab, setMobileTab] = useState('battle'); // 'party' | 'battle' | 'actions'
   const [floatingNumbers, setFloatingNumbers] = useState([]); // { id, x, y, value, type, time }
+  const [spellAnimations, setSpellAnimations] = useState([]); // { id, spell, targetX, targetY, time }
   const [sceneImageLoaded, setSceneImageLoaded] = useState(false);
   const logRef = useRef();
   const winWidth = useWindowWidth();
@@ -85,6 +87,16 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     }, 100);
     return () => clearTimeout(timer);
   }, [floatingNumbers]);
+
+  // Clean up old spell animations
+  useEffect(() => {
+    if (spellAnimations.length === 0) return;
+    const timer = setTimeout(() => {
+      const now = Date.now();
+      setSpellAnimations(prev => prev.filter(a => now - a.time < 900));
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [spellAnimations]);
 
   // Pre-load scene image to show loading state while Pollinations generates
   useEffect(() => {
@@ -490,15 +502,15 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     } else {
       const rolled = rollDamage(def.damage);
       if (isHealing) {
-        hitCombatants.forEach(c => onHeal(c.id, rolled.total));
+        hitCombatants.forEach(c => { onHeal(c.id, rolled.total); addFloatingNumber(c.id, rolled.total, 'heal'); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
         onLog(`💚 ${activeCombatant?.name} casts ${def.name} → heals ${names} for ${rolled.total} HP`);
       } else if (def.save) {
-        hitCombatants.forEach(c => onDamage(c.id, rolled.total));
+        hitCombatants.forEach(c => { onDamage(c.id, rolled.total); addFloatingNumber(c.id, rolled.total, 'damage'); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
         onLog(`🔥 ${activeCombatant?.name} casts ${def.name} (${def.damageType} DC${def.save ? ' ??' : ''}) → ${rolled.total} dmg [${rolled.display}] · ${names} — roll ${def.save.toUpperCase()} saves (½ on success)`);
       } else {
-        hitCombatants.forEach(c => onDamage(c.id, rolled.total));
+        hitCombatants.forEach(c => { onDamage(c.id, rolled.total); addFloatingNumber(c.id, rolled.total, 'damage'); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';
         onLog(`✨ ${activeCombatant?.name} casts ${def.name} → ${rolled.total} ${def.damageType} dmg [${rolled.display}] → ${names}`);
       }
@@ -514,6 +526,21 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
         concentration: true,
         ...targeting,
       });
+    }
+
+    // Trigger spell animation at target location
+    if (hitCombatants.length > 0 || (targeting && targeting.center)) {
+      const target = targeting?.center || hitCombatants[0]?.position;
+      if (target) {
+        setSpellAnimations(prev => [...prev, {
+          id: uuidv4(),
+          spell: def,
+          targetX: target.x,
+          targetY: target.y,
+          time: Date.now(),
+        }]);
+        playSpellSound();
+      }
     }
 
     // Narrate the spell (fire-and-forget)
@@ -659,8 +686,14 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           <div style={{ position: 'relative', display: 'inline-block' }}>
             <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} sceneImageLoaded={sceneImageLoaded} fogEnabled={combatFogEnabled} />
             <SpellEffectLayer effects={activeEffects} cellPx={cellPx} mapW={MAP_W} mapH={MAP_H} />
+            {/* Spell animations */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+              {spellAnimations.map(sa => (
+                <SpellAnimation key={sa.id} spell={sa.spell} targetX={sa.targetX} targetY={sa.targetY} cellPx={cellPx} />
+              ))}
+            </div>
             {/* Floating damage/heal numbers */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 11 }}>
               {floatingNumbers.map(fn => (
                 <FloatingDamageNumber key={fn.id} x={fn.x} y={fn.y} value={fn.value} type={fn.type} duration={1000} />
               ))}
@@ -830,8 +863,14 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
           <div style={{ position: 'relative', display: 'inline-block' }}>
             <BattleMap combatants={combatants} selectedToken={selectedToken} activeCombatantId={activeCombatant?.id} onCellClick={handleCellClick} onTokenClick={handleTokenClick} cellPx={cellPx} sceneImageUrl={battleSceneUrl} sceneImageLoaded={sceneImageLoaded} fogEnabled={combatFogEnabled} />
             <SpellEffectLayer effects={activeEffects} cellPx={cellPx} mapW={MAP_W} mapH={MAP_H} />
+            {/* Spell animations */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+              {spellAnimations.map(sa => (
+                <SpellAnimation key={sa.id} spell={sa.spell} targetX={sa.targetX} targetY={sa.targetY} cellPx={cellPx} />
+              ))}
+            </div>
             {/* Floating damage/heal numbers */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 11 }}>
               {floatingNumbers.map(fn => (
                 <FloatingDamageNumber key={fn.id} x={fn.x} y={fn.y} value={fn.value} type={fn.type} duration={1000} />
               ))}
