@@ -625,7 +625,12 @@ export function createEncounterSlice(set, get) {
           if (deadEnemies.length > 0 && !get().pendingLoot) {
             get().setPendingLoot({ enemies: deadEnemies, partySize });
           }
-          get().addNarratorMessage({ role: 'dm', speaker: 'DM', text: 'Victory! All enemies have fallen.' });
+          // Generate combat summary
+          const rounds = afterDmg.round || 1;
+          const enemyNames = [...new Set(deadEnemies.map(e => e.name?.replace(/\s+\d+$/, '') || 'enemy'))];
+          const partyHurt = afterDmg.combatants.filter(c => c.type === 'player' && c.currentHp < c.maxHp);
+          const summary = `Victory! ${deadEnemies.length} ${deadEnemies.length === 1 ? 'enemy' : 'enemies'} defeated (${enemyNames.join(', ')}) in ${rounds} ${rounds === 1 ? 'round' : 'rounds'}.${partyHurt.length > 0 ? ` ${partyHurt.length} party ${partyHurt.length === 1 ? 'member' : 'members'} wounded.` : ' No casualties.'}`;
+          get().addNarratorMessage({ role: 'dm', speaker: 'The Narrator', text: summary });
           setTimeout(() => get().endEncounter(), 2000);
         }
       }
