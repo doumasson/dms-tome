@@ -30,23 +30,33 @@ export function calculateAreaSize(brief) {
 /* ── Theme constants ──────────────────────────────────────────── */
 
 export const THEME_TERRAIN = {
-  village: ['atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01', 'atlas-floors:grass_overlay_medium_c_01'],
-  forest:  ['atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01'],
-  dungeon: ['atlas-floors:brick_floor_03_d1', 'atlas-floors:brick_floor_03_d2', 'atlas-floors:brick_floor_04_d1'],
-  cave:    ['atlas-floors:brick_floor_03_d3', 'atlas-floors:brick_floor_03_d4'],
-  town:    ['atlas-floors:brick_floor_01_d1', 'atlas-floors:brick_floor_01_d2'],
-  crypt:   ['atlas-floors:brick_floor_03_d1', 'atlas-floors:brick_floor_03_d2'],
-  sewer:   ['atlas-floors:brick_floor_04_d1', 'atlas-floors:brick_floor_04_d2'],
+  village:  ['atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01', 'atlas-floors:grass_overlay_medium_c_01'],
+  forest:   ['atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01'],
+  dungeon:  ['atlas-floors:brick_floor_03_d1', 'atlas-floors:brick_floor_03_d2', 'atlas-floors:brick_floor_04_d1'],
+  cave:     ['atlas-floors:brick_floor_03_d3', 'atlas-floors:brick_floor_03_d4'],
+  town:     ['atlas-floors:brick_floor_01_d1', 'atlas-floors:brick_floor_01_d2'],
+  crypt:    ['atlas-floors:brick_floor_03_d1', 'atlas-floors:brick_floor_03_d2'],
+  sewer:    ['atlas-floors:brick_floor_04_d1', 'atlas-floors:brick_floor_04_d2'],
+  mountain: ['atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2', 'atlas-floors:flat_stones_overlay_a3'],
+  desert:   ['atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2'],
+  coastal:  ['atlas-floors:brick_floor_01_d1', 'atlas-floors:brick_floor_02_d1'],
+  swamp:    ['atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01'],
+  graveyard:['atlas-floors:flat_stones_overlay_a1', 'atlas-floors:brick_floor_03_d1'],
 }
 
 export const THEME_ROAD = {
-  village: 'atlas-floors:brick_floor_01_d1',
-  forest:  'atlas-floors:brick_floor_02_d1',
-  dungeon: 'atlas-floors:brick_floor_03_d1',
-  cave:    'atlas-floors:brick_floor_04_d1',
-  town:    'atlas-floors:brick_floor_01_d3',
-  crypt:   'atlas-floors:brick_floor_03_d1',
-  sewer:   'atlas-floors:brick_floor_04_d1',
+  village:  'atlas-floors:brick_floor_01_d1',
+  forest:   'atlas-floors:brick_floor_02_d1',
+  dungeon:  'atlas-floors:brick_floor_03_d1',
+  cave:     'atlas-floors:brick_floor_04_d1',
+  town:     'atlas-floors:brick_floor_01_d3',
+  crypt:    'atlas-floors:brick_floor_03_d1',
+  sewer:    'atlas-floors:brick_floor_04_d1',
+  mountain: 'atlas-floors:flat_stones_overlay_a1',
+  desert:   'atlas-floors:flat_stones_overlay_a2',
+  coastal:  'atlas-floors:brick_floor_01_d2',
+  swamp:    'atlas-floors:grass_overlay_medium_a_01',
+  graveyard:'atlas-floors:brick_floor_03_d2',
 }
 
 const DUNGEON_THEMES = new Set(['dungeon', 'cave', 'crypt', 'sewer'])
