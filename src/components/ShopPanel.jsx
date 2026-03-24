@@ -2,7 +2,7 @@
  * ShopPanel.jsx — RPG shop UI with categories, rarity indicators, and better visual hierarchy
  * Props: { npc, shopType, onClose }
  */
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import useStore from '../store/useStore'
 import { buyItem, sellItem, canBuy, calculateSellPrice } from '../lib/shopSystem'
 import shopInventories from '../data/shopInventories.json'
@@ -105,6 +105,35 @@ const S = {
     fontWeight: 700,
   },
   list: { overflowY: 'auto', flex: 1, padding: '12px 0' },
+  featuredSection: {
+    padding: '16px 12px', borderBottom: '1px solid #3a2e20',
+    background: 'linear-gradient(180deg, rgba(212,175,55,0.05) 0%, rgba(0,0,0,0) 100%)',
+  },
+  featuredTitle: {
+    color: '#ff9d5a', fontSize: 11, fontWeight: 700, letterSpacing: 1,
+    textTransform: 'uppercase', marginBottom: 10, textShadow: '0 0 4px rgba(255,157,90,0.4)',
+  },
+  featuredCard: {
+    background: 'linear-gradient(135deg, rgba(255,157,90,0.1) 0%, rgba(212,175,55,0.05) 100%)',
+    border: '1px solid rgba(255,157,90,0.3)',
+    borderRadius: 4, padding: '12px', marginBottom: 10,
+    display: 'flex', gap: 12, alignItems: 'flex-start',
+    transition: 'all 0.2s',
+  },
+  featuredCardHover: {
+    background: 'linear-gradient(135deg, rgba(255,157,90,0.15) 0%, rgba(212,175,55,0.1) 100%)',
+    borderColor: 'rgba(255,157,90,0.5)',
+    boxShadow: '0 0 12px rgba(255,157,90,0.15)',
+  },
+  featuredIcon: { fontSize: 28, width: 40, textAlign: 'center', flexShrink: 0 },
+  featuredName: { color: '#ff9d5a', fontSize: 13, fontWeight: 700 },
+  featuredPrice: { color: '#ff9d5a', fontSize: 14, fontWeight: 700, marginLeft: 'auto', minWidth: 60, textAlign: 'right' },
+  featuredBtn: {
+    background: 'linear-gradient(135deg, #d4af37 0%, #c99a2e 100%)',
+    border: 'none', color: '#0e0b14', padding: '6px 14px',
+    borderRadius: 2, cursor: 'pointer', fontSize: 11, fontFamily: "'Cinzel', serif",
+    fontWeight: 700, transition: 'all 0.2s', flexShrink: 0,
+  },
   category: {
     marginBottom: 12,
   },
@@ -112,21 +141,23 @@ const S = {
     padding: '8px 16px', color: '#d4af37', fontSize: 12, letterSpacing: 1,
     textTransform: 'uppercase', background: 'rgba(212,175,55,0.05)',
     borderLeft: '3px solid #d4af37', cursor: 'pointer', userSelect: 'none',
-    fontWeight: 600,
+    fontWeight: 600, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
   },
+  categoryCount: { color: '#a89070', fontSize: 11, fontWeight: 400, marginLeft: 'auto' },
   categoryItems: {
     padding: '0 8px',
   },
-  row: {
+  row: (rarityColor) => ({
     display: 'flex', alignItems: 'center', gap: 10,
     padding: '10px 12px', margin: '4px 8px',
-    background: 'rgba(26, 21, 32, 0.6)', borderRadius: 3,
-    borderLeft: '3px solid transparent', transition: 'all 0.2s',
-  },
-  rowHover: {
-    background: 'rgba(26, 21, 32, 1)',
-    borderLeft: '3px solid #d4af37',
-  },
+    background: `linear-gradient(90deg, rgba(212,175,55,0.02) 0%, transparent 100%)`,
+    borderRadius: 3, borderLeft: `3px solid ${rarityColor || 'transparent'}`,
+    transition: 'all 0.2s', cursor: 'pointer',
+  }),
+  rowHover: (rarityColor) => ({
+    background: `linear-gradient(90deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.02) 100%)`,
+    boxShadow: `0 0 8px ${rarityColor}22`,
+  }),
   icon: { fontSize: 20, width: 28, textAlign: 'center', flexShrink: 0 },
   itemName: { color: '#e0d0b0', fontSize: 13, flex: 1, fontWeight: 500 },
   itemSub: { color: '#7a6a50', fontSize: 10, marginTop: 2 },
@@ -179,6 +210,28 @@ export default function ShopPanel({ npc, shopType, onClose }) {
   const [toast, setToast] = useState(null)
   const [toastTimer, setToastTimer] = useState(null)
   const [expandedCategories, setExpandedCategories] = useState({})
+
+  // Inject hover styles for rarity-based item rows
+  useEffect(() => {
+    const style = document.createElement('style')
+    style.textContent = `
+      .shop-item-row:hover {
+        background: linear-gradient(90deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.02) 100%);
+        box-shadow: 0 0 8px rgba(212,175,55,0.3);
+      }
+      .shop-featured-card:hover {
+        background: linear-gradient(135deg, rgba(255,157,90,0.15) 0%, rgba(212,175,55,0.1) 100%);
+        border-color: rgba(255,157,90,0.5);
+        box-shadow: 0 0 12px rgba(255,157,90,0.15);
+        transform: translateY(-2px);
+      }
+      .shop-featured-card:hover button {
+        transform: scale(1.05);
+      }
+    `
+    document.head.appendChild(style)
+    return () => style.remove()
+  }, [])
 
   function toggleCategory(name) {
     setExpandedCategories(prev => ({ ...prev, [name]: !prev[name] }))
@@ -235,6 +288,11 @@ export default function ShopPanel({ npc, shopType, onClose }) {
 
   const sellableItems = inventory.filter(i => i.price && i.price > 0)
 
+  // Featured items: top 3-4 most expensive items
+  const featuredItems = [...shopItems]
+    .sort((a, b) => (b.price || 0) - (a.price || 0))
+    .slice(0, 3)
+
   return (
     <div style={S.overlay} onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div style={{ ...S.modal, position: 'relative' }}>
@@ -258,13 +316,54 @@ export default function ShopPanel({ npc, shopType, onClose }) {
           <div style={S.pane}>
             <div style={S.paneTitle}>⚔ Shop Stock</div>
             <div style={S.list}>
+              {/* Featured Items Section */}
+              {featuredItems.length > 0 && (
+                <div style={S.featuredSection}>
+                  <div style={S.featuredTitle}>✦ Finest Wares ✦</div>
+                  {featuredItems.map(item => {
+                    const affordable = canBuy(gold, item.price)
+                    const itemWeight = item.weight || 0
+                    const wouldExceed = (totalWeight + itemWeight) > carryCapacity
+                    return (
+                      <div key={`featured-${item.id}`}>
+                        <div style={S.featuredCard} className="shop-featured-card">
+                          <span style={S.featuredIcon}>{itemIcon(item.type)}</span>
+                          <div style={{ flex: 1 }}>
+                            <div style={S.featuredName}>{item.name}</div>
+                            <div style={{ color: '#a89070', fontSize: 10, marginTop: 4 }}>
+                              {itemStatSummary(item)} · {item.weight} lb
+                            </div>
+                          </div>
+                          <span style={S.featuredPrice}>{item.price} gp</span>
+                          <button
+                            style={{ ...S.featuredBtn, opacity: affordable ? 1 : 0.5 }}
+                            disabled={!affordable}
+                            onClick={() => handleBuy(item)}
+                            title={!affordable ? `Need ${item.price} gp` : `Buy for ${item.price} gp`}
+                          >
+                            {affordable ? 'Buy' : 'Cannot Afford'}
+                          </button>
+                        </div>
+                        {wouldExceed && affordable && (
+                          <div style={S.warning}>
+                            ⚠ Would exceed capacity ({totalWeight.toFixed(1)}/{carryCapacity} lb)
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              {/* Categorized Items */}
               {categorizeItems(shopItems).map(([categoryName, items]) => (
                 <div key={categoryName} style={S.category}>
                   <div
                     style={S.categoryHeader}
                     onClick={() => toggleCategory(categoryName)}
                   >
-                    {expandedCategories[categoryName] !== false ? '▼' : '▶'} {categoryName}
+                    <span>{expandedCategories[categoryName] !== false ? '▼' : '▶'} {categoryName}</span>
+                    <span style={S.categoryCount}>{items.length}</span>
                   </div>
                   {expandedCategories[categoryName] !== false && (
                     <div style={S.categoryItems}>
@@ -275,7 +374,7 @@ export default function ShopPanel({ npc, shopType, onClose }) {
                         const rarityColor = getRarityColor(item.price)
                         return (
                           <div key={item.id}>
-                            <div style={{ ...S.row }}>
+                            <div style={S.row(rarityColor)} className="shop-item-row">
                               <span style={S.icon}>{itemIcon(item.type)}</span>
                               <div style={{ flex: 1 }}>
                                 <div style={{ ...S.itemName, color: rarityColor }}>
@@ -323,17 +422,19 @@ export default function ShopPanel({ npc, shopType, onClose }) {
                     style={S.categoryHeader}
                     onClick={() => toggleCategory(`inv-${categoryName}`)}
                   >
-                    {expandedCategories[`inv-${categoryName}`] !== false ? '▼' : '▶'} {categoryName}
+                    <span>{expandedCategories[`inv-${categoryName}`] !== false ? '▼' : '▶'} {categoryName}</span>
+                    <span style={S.categoryCount}>{items.length}</span>
                   </div>
                   {expandedCategories[`inv-${categoryName}`] !== false && (
                     <div style={S.categoryItems}>
                       {items.map(invItem => {
                         const sellPrice = calculateSellPrice(invItem.price || 1)
+                        const rarityColor = getRarityColor(invItem.price || 1)
                         return (
-                          <div key={invItem.instanceId} style={S.row}>
+                          <div key={invItem.instanceId} style={S.row(rarityColor)} className="shop-item-row">
                             <span style={S.icon}>{itemIcon(invItem.type)}</span>
                             <div style={{ flex: 1 }}>
-                              <div style={S.itemName}>
+                              <div style={{ ...S.itemName, color: rarityColor }}>
                                 {invItem.name}
                                 {(invItem.quantity || 1) > 1 && (
                                   <span style={{ color: '#a89070', marginLeft: 6 }}>×{invItem.quantity}</span>
