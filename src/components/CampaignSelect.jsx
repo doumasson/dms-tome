@@ -87,10 +87,22 @@ export default function CampaignSelect({ user, pendingInvite, onSelectCampaign, 
     }
 
     localStorage.removeItem('pendingInvite');
-    setJoinSuccess(`Joined "${campaign.name}"!`);
     setJoining(false);
     setJoinCode('');
-    await fetchCampaigns();
+
+    // Auto-navigate into the campaign — fetch full record first
+    const { data: fullCampaign } = await supabase
+      .from('campaigns')
+      .select('*')
+      .eq('id', campaign.id)
+      .single();
+
+    if (fullCampaign) {
+      onSelectCampaign(fullCampaign);
+    } else {
+      setJoinSuccess(`Joined "${campaign.name}"! Click to enter.`);
+      await fetchCampaigns();
+    }
   }
 
   function formatDate(iso) {

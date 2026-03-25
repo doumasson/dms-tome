@@ -597,11 +597,15 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       return
     }
     // Filter out exits with invalid targets (e.g., character names as targetZone)
+    const characterName = useStore.getState().myCharacter?.name
+    const partyNames = new Set((useStore.getState().partyMembers || []).map(m => m.name).filter(Boolean))
+    if (characterName) partyNames.add(characterName)
+    const npcNames = new Set((zone.npcs || []).map(n => n.name).filter(Boolean))
     const validExits = zone.exits.filter(exit => {
       const target = exit.targetArea || exit.targetZone || ''
-      // Skip exits whose target looks like a character name (not a zone/area name)
-      // Valid zone names typically have spaces + descriptive words like "Corridor", "Hall", etc.
       if (!target) return false
+      // Skip exits whose target is a character/NPC name, not a real zone
+      if (partyNames.has(target) || npcNames.has(target)) return false
       return true
     })
     const transformed = validExits.map(exit => {
