@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './SessionResume.css';
 
 /**
  * Session Resume Screen
  * Shows campaign recap, character status, and allows resuming the game
- * Dark fantasy card layout with character status boxes
+ * Auto-dismisses after 5 seconds if user doesn't interact
  */
 
 export default function SessionResume({
@@ -15,6 +15,14 @@ export default function SessionResume({
 }) {
   const [isResuming, setIsResuming] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState(characters[0]?.id);
+
+  // Auto-dismiss after 5 seconds so game always loads
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isResuming) onResume();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleResume = () => {
     setIsResuming(true);
