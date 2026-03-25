@@ -309,16 +309,7 @@ export default function GameModalsRenderer({
           />
         </Suspense>
       )}
-      {showSpellTargeting && pendingSpell && inCombat && (
-        <Suspense fallback={null}>
-          <SpellTargeting
-            spell={pendingSpell}
-            encounter={encounter}
-            onConfirm={({ position, targets }) => { handleCombatAction('spell-confirm', { spell: pendingSpell, position, targets }); setShowSpellTargeting(false) }}
-            onCancel={() => { setShowSpellTargeting(false) }}
-          />
-        </Suspense>
-      )}
+      {/* Spell targeting now handled by PixiJS overlay */}
       {/* CombatUI removed — combat actions handled by CombatActionBar in BottomBar */}
     </>
   )

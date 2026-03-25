@@ -788,18 +788,23 @@ export default function App() {
     // Ensure user has a campaign_members row (required for character selection to work).
     // Use ignoreDuplicates so we never overwrite an existing 'dm' role with 'player'.
     if (freshUserId) {
-      await supabase
+      // Check if membership already exists
+      const { data: existingMember } = await supabase
         .from('campaign_members')
-        .upsert(
-          {
+        .select('id')
+        .eq('campaign_id', campaignRecord.id)
+        .eq('user_id', freshUserId)
+        .maybeSingle();
+
+      if (!existingMember) {
+        await supabase
+          .from('campaign_members')
+          .insert({
             campaign_id: campaignRecord.id,
             user_id: freshUserId,
             role: freshUserId === campaignRecord.dm_user_id ? 'dm' : 'player',
-          },
-          { onConflict: 'campaign_id,user_id', ignoreDuplicates: true }
-        )
-        .select()
-        .maybeSingle();
+          });
+      }
     }
 
     // Cache DM's Claude API key for all players (so narrator works without their own key)

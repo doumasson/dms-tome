@@ -71,10 +71,21 @@ export default function SessionLog({ onChat, tab, setTab }) {
       recog.interimResults = false
       recog.maxAlternatives = 1
       recog.onresult = (e) => {
-        const transcript = e.results[0][0].transcript
-        setChatInput(transcript)
+        const transcript = e.results?.[0]?.[0]?.transcript
+        if (transcript) setChatInput(transcript)
       }
-      recog.onerror = () => setIsRecording(false)
+      recog.onerror = (e) => {
+        setIsRecording(false)
+        const addMsg = useStore.getState().addNarratorMessage
+        if (!addMsg) return
+        if (e.error === 'not-allowed') {
+          addMsg('Microphone access denied. Check browser permissions.')
+        } else if (e.error === 'no-speech') {
+          addMsg('No speech detected. Hold the button and speak clearly.')
+        } else {
+          addMsg(`Speech recognition error: ${e.error}`)
+        }
+      }
       recog.onend = () => setIsRecording(false)
       recog.start()
       pttRecogRef.current = recog

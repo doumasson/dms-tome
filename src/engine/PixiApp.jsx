@@ -15,6 +15,7 @@ import { applyDayNightTint } from './DayNightFilter.js'
 import { getTimeOfDay } from '../lib/gameTime.js'
 import useStore from '../store/useStore.js'
 import { TweenEngine } from './TweenEngine'
+import { startTargeting, updateTargeting, confirmTargeting, cancelTargeting, isTargeting } from './SpellTargetingOverlay'
 
 // Atlas manifest files that ship with the build (JSON only — images loaded at runtime)
 const ATLAS_NAMES = [
@@ -59,6 +60,14 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     getCamera: () => cameraRef.current,
     getMovementRangeLayer: () => stageLayersRef.current.movementRange || null,
     getFogLayer: () => stageLayersRef.current.fog || null,
+    startSpellTargeting: (spell, casterPos, tileSize, onConfirm, onCancel) => {
+      const layer = stageLayersRef.current.movementRange
+      if (!layer) return
+      startTargeting(layer, spell, casterPos, tileSize, onConfirm, onCancel)
+    },
+    cancelSpellTargeting: () => {
+      cancelTargeting()
+    },
   }), [])
 
   // Initialize PixiJS application
@@ -128,10 +137,17 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         if (!worldRef.current) return
         const pos = e.global
         const w = worldRef.current
-        const tileSize = tileAtlasV2Ref.current ? (zone?.tileSize || 200) : 64
-        // Convert screen position to world position
         const wx = (pos.x - w.x) / w.scale.x
         const wy = (pos.y - w.y) / w.scale.y
+
+        // If spell targeting is active, confirm on click
+        if (isTargeting()) {
+          updateTargeting(wx, wy)
+          confirmTargeting()
+          return
+        }
+
+        const tileSize = tileAtlasV2Ref.current ? (zone?.tileSize || 200) : 64
         const tx = Math.floor(wx / tileSize)
         const ty = Math.floor(wy / tileSize)
         // Check if clicked on an NPC token
@@ -143,6 +159,16 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         if (onTileClickRef.current) {
           onTileClickRef.current({ x: tx, y: ty })
         }
+      })
+
+      // Mousemove handler for spell targeting preview
+      app.stage.on('pointermove', (e) => {
+        if (!isTargeting() || !worldRef.current) return
+        const pos = e.global
+        const w = worldRef.current
+        const wx = (pos.x - w.x) / w.scale.x
+        const wy = (pos.y - w.y) / w.scale.y
+        updateTargeting(wx, wy)
       })
 
       setReady(true)
@@ -590,6 +616,18 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
     el.addEventListener('wheel', onWheel, { passive: false })
     return () => { if (el) el.removeEventListener('wheel', onWheel) }
+  }, [ready])
+
+  // Escape key cancels spell targeting
+  useEffect(() => {
+    if (!ready) return
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape' && isTargeting()) {
+        cancelTargeting()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
   }, [ready])
 
   // Render tokens — skip if animation is playing (PixiJS moves sprites directly)

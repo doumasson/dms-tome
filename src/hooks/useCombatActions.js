@@ -1041,9 +1041,30 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
     // Enter targeting based on spell type
     if (spell.areaType) {
-      // AoE spell — show targeting overlay
-      setPendingSpell({ ...spell, castLevel })
-      setShowSpellTargeting(true)
+      // AoE spell — PixiJS targeting overlay
+      const casterPos = active.position || { x: 5, y: 5 }
+      const tileSize = zone?.tileSize || 200
+      const fullSpell = { ...spell, castLevel }
+      pixiRef.current?.startSpellTargeting(
+        fullSpell,
+        casterPos,
+        tileSize,
+        ({ position, affectedTiles }) => {
+          // Use fresh state — targeting callback fires asynchronously
+          const currentEncounter = useStore.getState().encounter
+          const casterId = active.id
+          const targetIds = affectedTiles
+            .map(tile => currentEncounter?.combatants?.find(c =>
+              c.position?.x === tile.x && c.position?.y === tile.y && c.id !== casterId
+            ))
+            .filter(Boolean)
+            .map(c => c.id)
+          handleCombatAction('spell-confirm', { spell: fullSpell, position, targets: targetIds })
+        },
+        () => {
+          addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Spell targeting cancelled.' })
+        }
+      )
       addNarratorMessage({ role: 'dm', speaker: 'System', text: `Targeting ${spell.name}. Click to place. Press Escape to cancel.` })
     } else if (spell.attack) {
       // Ranged/melee spell attack — same as weapon attack targeting

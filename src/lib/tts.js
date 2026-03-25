@@ -1,218 +1,215 @@
-// TTS chain (best to worst voice quality):
-//  1. OpenAI TTS       — tts-1 model, neural voices  (requires OpenAI key)
-//  2. Pollinations TTS — same tts-1 voices, CORS-open (free, no key; 1 req/15s anonymous)
-//  3. Web Speech API   — browser-native fallback
+// TTS — Web Speech API primary with NPC voice registry
 //
-// Narrator voice: 'onyx'   (deep, authoritative storyteller)
-// NPC voices: deterministic per-NPC from [echo, fable, alloy, nova, shimmer]
+// Voice priority:
+//   Edge:   Microsoft Guy/Aria/Jenny Online (Natural) neural voices
+//   Chrome: Google UK English Male/Female, Google US English
+//
+// NPC voices are deterministic per-name via hash → voice index + pitch/rate.
+// Disposition adjusts voice: hostile → lower pitch, friendly → higher, old → slower.
 
-let currentAudio     = null;
-let currentUtterance = null;
+// ── Voice catalog ───────────────────────────────────────────────────────────────
+let _voices = [];
+let _voicesReady = false;
+let _narratorVoice = null;
+let _englishVoices = [];
 
-// OpenAI TTS voices assigned to NPCs deterministically from their name
-const NPC_VOICES = ['echo', 'fable', 'alloy', 'nova', 'shimmer'];
+const BAD_PATTERNS = ['espeak', 'novice', 'festival', 'mbrola', 'flite'];
 
-export function getNpcVoice(npcName) {
-  let hash = 5381;
-  for (const c of (npcName || '')) hash = ((hash << 5) + hash + c.charCodeAt(0)) | 0;
-  return NPC_VOICES[Math.abs(hash) % NPC_VOICES.length];
+function isBadVoice(v) {
+  const n = v.name.toLowerCase();
+  return BAD_PATTERNS.some(p => n.includes(p));
 }
 
-export function isTTSSupported() { return true; }
+function discoverVoices() {
+  if (!('speechSynthesis' in window)) return;
+  const raw = speechSynthesis.getVoices();
+  if (!raw.length) return;
 
-// ── Main entry point ──────────────────────────────────────────────────────────
-// options: { openAiKey, voice }
-//   voice defaults to 'onyx' (narrator). Pass getNpcVoice(name) for NPC speech.
-export async function speak(text, onEnd, options = {}) {
-  if (!text) return;
-  stopSpeaking();
+  _voices = raw;
+  _englishVoices = raw.filter(v => v.lang?.startsWith('en') && !isBadVoice(v));
 
-  const voice = options.voice || 'onyx';
-  const openAiKey = options.openAiKey || null;
-
-  // 1. OpenAI TTS (best quality — requires user's OpenAI key)
-  if (openAiKey) {
-    const url = await tryOpenAiTTS(text, openAiKey, voice);
-    if (url) { playAudioUrl(url, text, onEnd); return; }
-  }
-
-  // 2. Pollinations TTS (same tts-1 quality, free, no key needed)
-  const pollinationsUrl = await tryPollinationsTTS(text, voice);
-  if (pollinationsUrl) { playAudioUrl(pollinationsUrl, text, onEnd); return; }
-
-  // 3. Last resort: browser Web Speech API
-  speakWebSpeech(text, onEnd);
-}
-
-// ── OpenAI TTS (tts-1, neural quality) ───────────────────────────────────────
-async function tryOpenAiTTS(text, apiKey, voice = 'onyx') {
-  try {
-    const controller = new AbortController();
-    const timeout    = setTimeout(() => controller.abort(), 15000);
-
-    const response = await fetch('https://api.openai.com/v1/audio/speech', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'tts-1',
-        input: text.slice(0, 4096),
-        voice,
-        response_format: 'mp3',
-      }),
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-
-    if (!response.ok) return null;
-    const blob = await response.blob();
-    if (blob.size < 1000) return null;
-    return URL.createObjectURL(blob);
-  } catch {
-    return null;
-  }
-}
-
-// ── Pollinations TTS (OpenAI tts-1 quality, free, CORS-open) ─────────────────
-// No API key required — anonymous tier is rate-limited to 1 req/15s.
-// Same voice names as OpenAI: onyx, nova, alloy, echo, fable, shimmer.
-// NPC voices are deterministic per NPC name (via getNpcVoice hash), so each
-// character always gets the same voice. Back-to-back calls (e.g. narrator
-// auto-post + DM response) are spaced by a minimum interval to stay within
-// the rate limit without blocking.
-let _pollinationsLastCall = 0;
-const POLLINATIONS_MIN_MS = 15500; // 15s + small buffer
-
-async function tryPollinationsTTS(text, voice = 'onyx') {
-  try {
-    // Enforce minimum spacing between calls — wait out the remaining window
-    const wait = POLLINATIONS_MIN_MS - (Date.now() - _pollinationsLastCall);
-    if (wait > 0) await new Promise(r => setTimeout(r, wait));
-    _pollinationsLastCall = Date.now();
-
-    const controller = new AbortController();
-    const timeout    = setTimeout(() => controller.abort(), 12000);
-
-    const response = await fetch('https://gen.pollinations.ai/v1/audio/speech', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'tts-1',
-        input: text.slice(0, 4096),
-        voice,
-      }),
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-
-    // 429 = rate limited despite spacing (server-side bucket); fall through
-    if (!response.ok) return null;
-    const blob = await response.blob();
-    if (blob.size < 1000) return null;
-    return URL.createObjectURL(blob);
-  } catch {
-    return null;
-  }
-}
-
-// ── Shared audio player ───────────────────────────────────────────────────────
-function playAudioUrl(url, text, onEnd) {
-  const audio    = new Audio(url);
-  currentAudio   = audio;
-  const isBlob   = url.startsWith('blob:');
-
-  audio.onended = () => {
-    if (isBlob) URL.revokeObjectURL(url);
-    currentAudio = null;
-    if (onEnd) onEnd();
-  };
-  audio.onerror = () => {
-    if (isBlob) URL.revokeObjectURL(url);
-    currentAudio = null;
-    speakWebSpeech(text, onEnd);
-  };
-  audio.play().catch(() => {
-    // Auto-play blocked by browser policy — fall back to Web Speech
-    if (isBlob) URL.revokeObjectURL(url);
-    currentAudio = null;
-    speakWebSpeech(text, onEnd);
-  });
-}
-
-// ── Web Speech API fallback ───────────────────────────────────────────────────
-function getWebVoices() {
-  return new Promise(resolve => {
-    const v = speechSynthesis.getVoices();
-    if (v.length > 0) {
-      resolve(v);
-    } else {
-      speechSynthesis.onvoiceschanged = () => resolve(speechSynthesis.getVoices());
-    }
-  });
-}
-
-async function speakWebSpeech(text, onEnd) {
-  if (!('speechSynthesis' in window)) { if (onEnd) onEnd(); return; }
-
-  const utterance  = new SpeechSynthesisUtterance(text);
-  utterance.rate   = 0.85;
-  utterance.pitch  = 0.75;
-  utterance.volume = 1;
-
-  // Prefer cloud voices (sound human) — aggressively avoid eSpeak/Festival (Linux)
-  const voices   = await getWebVoices();
-  const preferred = [
-    'Google UK English Male',
-    'Google UK English Female',
+  // Narrator: pick best deep male voice by browser
+  const edgeNarrator = [
+    'Microsoft Guy Online (Natural)',
+    'Microsoft George Online (Natural)',
     'Microsoft George - English (United Kingdom)',
     'Microsoft David - English (United States)',
-    'Microsoft Zira - English (United States)',
-    'Daniel (Enhanced)',
-    'Daniel',
-    'Karen',
-    'Moira',
-    'Alex',
+  ];
+  const chromeNarrator = [
+    'Google UK English Male',
     'Google US English',
   ];
-  const BAD_VOICE_PATTERNS = ['espeak', 'novice', 'festival', 'mbrola', 'flite'];
-  let chosen = null;
-  for (const name of preferred) {
-    chosen = voices.find(v => v.name === name);
-    if (chosen) break;
+  const narratorPref = [...edgeNarrator, ...chromeNarrator];
+  for (const name of narratorPref) {
+    const v = raw.find(x => x.name === name);
+    if (v) { _narratorVoice = v; break; }
   }
-  if (!chosen) {
-    const cloudVoices = voices.filter(v =>
-      v.lang?.startsWith('en') &&
-      !v.localService &&
-      !BAD_VOICE_PATTERNS.some(p => v.name.toLowerCase().includes(p))
-    );
-    chosen = cloudVoices[0] || voices.find(v =>
-      v.lang?.startsWith('en') &&
-      !BAD_VOICE_PATTERNS.some(p => v.name.toLowerCase().includes(p))
-    ) || null;
+  // Fallback: best English cloud voice
+  if (!_narratorVoice) {
+    _narratorVoice = _englishVoices.find(v => !v.localService) || _englishVoices[0] || null;
   }
-  if (chosen)  utterance.voice = chosen;
-  if (onEnd)   utterance.onend = onEnd;
-
-  currentUtterance = utterance;
-  speechSynthesis.speak(utterance);
+  _voicesReady = true;
 }
 
-// ── Controls ──────────────────────────────────────────────────────────────────
-export function stopSpeaking() {
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
+// Init voice discovery — some browsers load async
+if ('speechSynthesis' in window) {
+  discoverVoices();
+  speechSynthesis.onvoiceschanged = discoverVoices;
+}
+
+// ── NPC voice registry ──────────────────────────────────────────────────────────
+function hashName(name) {
+  let h = 5381;
+  for (const c of (name || '')) h = ((h << 5) + h + c.charCodeAt(0)) | 0;
+  return Math.abs(h);
+}
+
+/**
+ * Returns { voiceIndex, pitch, rate } based on NPC name hash.
+ * Pass disposition to adjust: 'Hostile', 'Friendly', 'Neutral', etc.
+ */
+export function getNpcVoice(npcName, disposition) {
+  const h = hashName(npcName);
+  const voiceCount = Math.max(_englishVoices.length, 1);
+  const voiceIndex = h % voiceCount;
+
+  // Pitch 0.7–1.3, rate 0.8–1.2 derived from hash
+  let pitch = 0.7 + ((h % 61) / 100);       // 0.70 – 1.30
+  let rate  = 0.8 + (((h >> 8) % 41) / 100); // 0.80 – 1.20
+
+  // Disposition adjustments
+  const d = (disposition || '').toLowerCase();
+  if (d === 'hostile' || d === 'aggressive' || d === 'evil') {
+    pitch -= 0.15; rate -= 0.05;
+  } else if (d === 'friendly' || d === 'kind' || d === 'cheerful') {
+    pitch += 0.05; rate += 0.05;
+  } else if (d === 'old' || d === 'ancient' || d === 'elderly') {
+    rate -= 0.1;
   }
+
+  // Clamp
+  pitch = Math.max(0.5, Math.min(1.5, pitch));
+  rate  = Math.max(0.6, Math.min(1.4, rate));
+
+  return { voiceIndex, pitch: +pitch.toFixed(2), rate: +rate.toFixed(2) };
+}
+
+// ── Queue system ────────────────────────────────────────────────────────────────
+const _queue = [];
+let _currentUtterance = null;
+
+function processQueue() {
+  if (!('speechSynthesis' in window)) return;
+  if (speechSynthesis.speaking || !_queue.length) return;
+
+  const { text, voiceCfg, onEnd } = _queue.shift();
+  _speakNow(text, voiceCfg, onEnd);
+}
+
+function _speakNow(text, voiceCfg, onEnd) {
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.volume = 1;
+
+  if (voiceCfg) {
+    // voiceCfg: { voice (SpeechSynthesisVoice), pitch, rate }
+    if (voiceCfg.voice) utt.voice = voiceCfg.voice;
+    utt.pitch = voiceCfg.pitch ?? 1;
+    utt.rate  = voiceCfg.rate ?? 1;
+  } else {
+    // Narrator defaults
+    if (_narratorVoice) utt.voice = _narratorVoice;
+    utt.pitch = 0.85;
+    utt.rate  = 0.9;
+  }
+
+  utt.onend = () => {
+    _currentUtterance = null;
+    if (onEnd) onEnd();
+    processQueue();
+  };
+  utt.onerror = () => {
+    _currentUtterance = null;
+    if (onEnd) onEnd();
+    processQueue();
+  };
+
+  _currentUtterance = utt;
+  speechSynthesis.speak(utt);
+}
+
+// ── Resolve voice config from options ───────────────────────────────────────────
+function resolveVoiceCfg(options) {
+  const { voice, npcName, disposition } = options;
+
+  // Explicit NPC name → registry lookup
+  if (npcName) {
+    const cfg = getNpcVoice(npcName, disposition);
+    const v = _englishVoices[cfg.voiceIndex] || _narratorVoice || null;
+    return { voice: v, pitch: cfg.pitch, rate: cfg.rate };
+  }
+
+  // voice is an object from getNpcVoice() — { voiceIndex, pitch, rate }
+  if (voice && typeof voice === 'object' && 'voiceIndex' in voice) {
+    const v = _englishVoices[voice.voiceIndex] || _narratorVoice || null;
+    return { voice: v, pitch: voice.pitch, rate: voice.rate };
+  }
+
+  // Legacy string voice name (e.g. 'onyx') or 'narrator' — use narrator voice
+  // Old OpenAI voice names are ignored; we always use Web Speech now.
+  if (!voice || voice === 'narrator' || typeof voice === 'string') {
+    return null; // null = narrator defaults in _speakNow
+  }
+
+  return null;
+}
+
+// ── Public API ──────────────────────────────────────────────────────────────────
+
+/**
+ * Speak text using Web Speech API.
+ * @param {string} text
+ * @param {Function} onEnd - callback when done
+ * @param {object} options - { voice, npcName, disposition, openAiKey (ignored) }
+ */
+export async function speak(text, onEnd, options = {}) {
+  if (!text || !text.trim()) return;
+  if (!('speechSynthesis' in window)) { if (onEnd) onEnd(); return; }
+
+  // Ensure voices loaded (some browsers need a tick)
+  if (!_voicesReady) {
+    discoverVoices();
+    if (!_voicesReady) {
+      await new Promise(r => {
+        const cb = () => { discoverVoices(); r(); };
+        speechSynthesis.onvoiceschanged = cb;
+        setTimeout(cb, 500);
+      });
+    }
+  }
+
+  const voiceCfg = resolveVoiceCfg(options || {});
+
+  // Queue if already speaking
+  if (speechSynthesis.speaking) {
+    _queue.push({ text, voiceCfg, onEnd });
+    return;
+  }
+
+  _speakNow(text, voiceCfg, onEnd);
+}
+
+export function stopSpeaking() {
+  _queue.length = 0;
   if ('speechSynthesis' in window) {
     speechSynthesis.cancel();
-    currentUtterance = null;
+    _currentUtterance = null;
   }
 }
 
 export function isSpeaking() {
-  if (currentAudio && !currentAudio.paused) return true;
   return 'speechSynthesis' in window && speechSynthesis.speaking;
+}
+
+export function isTTSSupported() {
+  return 'speechSynthesis' in window;
 }
