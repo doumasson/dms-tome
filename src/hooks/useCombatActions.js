@@ -938,7 +938,8 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         const target = encounter.combatants?.find(c => c.id === targetId)
         if (!target) continue
 
-        const damage = rollDamage(spell.damage?.dice || '1d6')
+        const dmgResult = rollDamage(spell.damage?.dice || '1d6')
+        const damage = dmgResult.total ?? dmgResult
         const currentHp = (target.currentHp ?? target.hp) - damage
 
         useStore.setState(state => ({

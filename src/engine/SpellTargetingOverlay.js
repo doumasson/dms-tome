@@ -12,6 +12,7 @@ import * as PIXI from 'pixi.js'
 
 // State
 let _active = false
+let _ready = false  // becomes true after first mouse move (prevents instant-confirm from spell picker click)
 let _spell = null
 let _casterPos = null  // tile coords {x, y}
 let _mouseWorldPos = null  // world pixel coords
@@ -26,6 +27,7 @@ export function startTargeting(container, spell, casterPos, tileSize, onConfirm,
   if (_active) cleanup()
 
   _active = true
+  _ready = false  // wait for first mouse move before accepting clicks
   _spell = spell
   _casterPos = casterPos
   _tileSize = tileSize
@@ -40,11 +42,12 @@ export function startTargeting(container, spell, casterPos, tileSize, onConfirm,
 export function updateTargeting(worldX, worldY) {
   if (!_active) return
   _mouseWorldPos = { x: worldX, y: worldY }
+  _ready = true  // mouse has moved — now accept clicks
   drawPreview()
 }
 
 export function confirmTargeting() {
-  if (!_active) return
+  if (!_active || !_ready) return  // ignore clicks before mouse moves (prevents instant-confirm)
   const tiles = getAffectedTiles()
   const pos = _mouseWorldPos ? {
     x: Math.floor(_mouseWorldPos.x / _tileSize),
@@ -74,6 +77,7 @@ function cleanup() {
   }
   _previewGraphics = null
   _active = false
+  _ready = false
   _spell = null
   _casterPos = null
   _mouseWorldPos = null
