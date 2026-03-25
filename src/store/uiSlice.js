@@ -3,6 +3,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
+import { speak, getNpcVoice } from '../lib/tts';
 
 export function createUiSlice(set, get) {
   return {
@@ -11,8 +12,14 @@ export function createUiSlice(set, get) {
       history: [], // { id, role: 'player'|'dm', speaker, text, rollRequest, timestamp }
       open: false,
     },
-    addNarratorMessage: (msg) =>
-      set((state) => {
+    addNarratorMessage: (msg) => {
+      // TTS: speak DM messages aloud (skip system/combat messages, player messages)
+      if (msg.role === 'dm' && msg.text && msg.speaker !== 'System' && msg.speaker !== 'Combat') {
+        const isNpc = msg.speaker && msg.speaker !== 'DM' && msg.speaker !== 'The Narrator'
+        const voiceCfg = isNpc ? getNpcVoice(msg.speaker) : undefined
+        speak(msg.text, null, isNpc ? { npcName: msg.speaker, voice: voiceCfg } : {})
+      }
+      return set((state) => {
         const logEntry = msg.role === 'player'
           ? {
               id: uuidv4(), timestamp: Date.now(),
@@ -40,7 +47,8 @@ export function createUiSlice(set, get) {
             ? [logEntry, ...state.sessionLog].slice(0, 120)
             : state.sessionLog,
         };
-      }),
+      })
+    },
     setNarratorOpen: (open) =>
       set((state) => ({ narrator: { ...state.narrator, open } })),
     clearNarratorHistory: () =>

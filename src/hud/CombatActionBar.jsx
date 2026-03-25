@@ -34,8 +34,8 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
         if (prev <= 1) {
           clearInterval(timerRef.current)
           timerRef.current = null
-          // Auto-end turn only if it's the player's turn
-          if (isMyTurn) setTimeout(() => endTurnRef.current?.(), 0)
+          // Auto-end turn when timer expires — host skips any player's turn
+          setTimeout(() => endTurnRef.current?.(), 0)
           return 0
         }
         return prev - 1
