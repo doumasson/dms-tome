@@ -172,15 +172,11 @@ export function useGameEffects({
     }
   }, [storyFlags, campaign?.storyMilestones])
 
-  // Show session resume on first load if resuming campaign
+  // Session resume disabled — was blocking game rendering with fullscreen overlay
+  // TODO: Re-enable once the overlay properly auto-dismisses
   useEffect(() => {
-    if (myCharacter && zone && campaign && !sessionResumeShownRef.current && !inCombat) {
-      if (myCharacter.xp > 0 || (myCharacter.spellSlots && Object.keys(myCharacter.spellSlots).length > 0)) {
-        setShowSessionResume(true)
-        sessionResumeShownRef.current = true
-      }
-    }
-  }, [myCharacter?.id, zone?.id, campaign?.id, inCombat, setShowSessionResume])
+    sessionResumeShownRef.current = true // prevent it from ever showing
+  }, [])
 
   // Welcome message for new players on first load
   const welcomeShownRef = useRef(false)
