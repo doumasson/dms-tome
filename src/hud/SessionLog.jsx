@@ -102,17 +102,12 @@ export default function SessionLog({ onChat, tab, setTab }) {
     <div className={`hud-log-outer${expanded ? ' hud-log-expanded' : ''}`}>
       {/* Tabs + expand sit OUTSIDE the panel so overflow:hidden doesn't clip them */}
       <div className="hud-log-tab-strip-wrap">
-        <img
-          src={tab === 'chat' ? '/ui/log-tab1.png' : '/ui/log-tab2.png'}
-          alt="" draggable={false}
-          className="hud-log-tab-strip-img"
-        />
         <button
-          className={`hud-log-tab-zone left${tab === 'chat' ? ' active' : ''}`}
+          className={`hud-log-tab-zone${tab === 'chat' ? ' active' : ''}`}
           onClick={() => { playParchmentRustle(); setTab('chat') }}
         >CHAT</button>
         <button
-          className={`hud-log-tab-zone right${tab === 'log' ? ' active' : ''}`}
+          className={`hud-log-tab-zone${tab === 'log' ? ' active' : ''}`}
           onClick={() => { playParchmentRustle(); setTab('log') }}
         >LOG</button>
       </div>
@@ -121,15 +116,10 @@ export default function SessionLog({ onChat, tab, setTab }) {
         onClick={() => setExpanded(prev => !prev)}
         title={expanded ? 'Collapse log' : 'Expand log'}
       >
-        <img
-          src={expanded ? '/ui/log-retract.png' : '/ui/log-expand.png'}
-          alt={expanded ? 'Collapse' : 'Expand'}
-          draggable={false}
-        />
+        {expanded ? '\u25BC' : '\u25B2'}
       </button>
-      {/* Panel with overflow:hidden for content clipping */}
+      {/* Panel — transparent, no parchment */}
       <div className="hud-log-panel">
-        <img src="/ui/log-bg.png" className="hud-log-bg-img" alt="" draggable={false} />
         <div className="hud-log-entries" ref={scrollRef}>
           {tab === 'log' ? (
             sessionLog.length > 0 ? sessionLog.map((entry, i) => {
@@ -168,32 +158,6 @@ export default function SessionLog({ onChat, tab, setTab }) {
         </div>
         {tab === 'chat' && (
           <>
-          {!inCombat && (
-            <div style={{ display: 'flex', gap: 3, padding: '2px 6px 0', flexWrap: 'wrap' }}>
-              {[
-                { label: 'Look around', action: 'I look around and describe what I see.' },
-                { label: 'Search', action: 'I search the area for anything useful — hidden items, traps, or clues.' },
-                { label: 'Sneak', action: 'I try to move stealthily, staying in the shadows.' },
-                { label: 'Listen', action: 'I stop and listen carefully for any sounds nearby.' },
-              ].map(qa => (
-                <button
-                  key={qa.label}
-                  type="button"
-                  onClick={() => onChat?.(qa.action)}
-                  style={{
-                    padding: '2px 8px', fontSize: 9, fontFamily: "'Cinzel', serif",
-                    background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)',
-                    color: '#a89060', borderRadius: 3, cursor: 'pointer', minHeight: 0,
-                    letterSpacing: '0.5px', transition: 'all 0.15s',
-                  }}
-                  onMouseEnter={e => { e.target.style.color = '#d4af37'; e.target.style.borderColor = 'rgba(201,168,76,0.5)' }}
-                  onMouseLeave={e => { e.target.style.color = '#a89060'; e.target.style.borderColor = 'rgba(201,168,76,0.2)' }}
-                >
-                  {qa.label}
-                </button>
-              ))}
-            </div>
-          )}
           <form onSubmit={handleChatSubmit} className="hud-chat-form">
             <input
               ref={chatInputRef}

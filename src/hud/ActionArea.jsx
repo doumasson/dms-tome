@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { playStoneClick } from '../lib/uiSounds'
 
 const TOOLS = [
-  { img: '/ui/btn-dice.png', label: 'DICE', key: 'dice' },
-  { img: '/ui/btn-char.png', label: 'CHAR', key: 'character' },
-  { img: '/ui/btn-pack.png', label: 'PACK', key: 'inventory' },
-  { img: '/ui/btn-journal.png', label: 'JOURNAL', key: 'journal' },
-  { img: '/ui/btn-rest.png', label: 'REST', key: 'rest' },
-  { img: '/ui/btn-faction.png', label: 'FACTION', key: 'faction', icon: '⚔' },
+  { label: 'DICE', key: 'dice', icon: '\u{1F3B2}' },
+  { label: 'CHAR', key: 'character', icon: 'C' },
+  { label: 'PACK', key: 'inventory', icon: 'I' },
+  { label: 'JOURNAL', key: 'journal', icon: 'J' },
+  { label: 'REST', key: 'rest', icon: 'R' },
+  { label: 'FACTION', key: 'faction', icon: 'F' },
 ]
 
 export default function ActionArea({ onTool, areaTheme }) {
@@ -26,53 +26,68 @@ export default function ActionArea({ onTool, areaTheme }) {
 
   return (
     <div className="hud-action-area">
-      {/* Tool buttons — 2-column grid layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, justifyItems: 'center' }}>
-        {TOOLS.map(tool => (
-          <div key={tool.key} style={{ position: 'relative' }}>
-            <button
-              className="asset-btn"
-              title={tool.label}
-              onClick={() => handleToolClick(tool.key)}
-            >
-              {tool.icon ? (
-                <span style={{ fontSize: 24, lineHeight: 1 }}>{tool.icon}</span>
-              ) : (
-                <img src={tool.img} alt={tool.label} draggable={false} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <div style={{ display: 'flex', gap: 3 }}>
+          {TOOLS.slice(0, 3).map(tool => (
+            <div key={tool.key} style={{ position: 'relative' }}>
+              <button
+                className="hud-tool-btn-text"
+                title={tool.label}
+                onClick={() => handleToolClick(tool.key)}
+              >
+                {tool.label}
+              </button>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: 3 }}>
+          {TOOLS.slice(3).map(tool => (
+            <div key={tool.key} style={{ position: 'relative' }}>
+              <button
+                className="hud-tool-btn-text"
+                title={tool.label}
+                onClick={() => handleToolClick(tool.key)}
+              >
+                {tool.label}
+              </button>
+              {tool.key === 'rest' && showRestPicker && (
+                <div style={{
+                  position: 'absolute', bottom: '100%', right: 0, marginBottom: 4,
+                  background: 'rgba(8,6,12,0.95)', border: '1px solid rgba(201,168,76,0.3)',
+                  borderRadius: 4, padding: 4,
+                  display: 'flex', flexDirection: 'column', gap: 3, minWidth: 120, zIndex: 50,
+                  backdropFilter: 'blur(8px)',
+                }}>
+                  <button
+                    onClick={() => { onTool?.('short-rest'); setShowRestPicker(false) }}
+                    style={{
+                      padding: '4px 8px', background: 'rgba(201,168,76,0.08)',
+                      border: '1px solid rgba(201,168,76,0.2)',
+                      color: '#c8b8a0', borderRadius: 3, cursor: 'pointer', fontSize: 10,
+                      fontFamily: "'Cinzel', serif",
+                    }}
+                  >
+                    Short Rest (1hr)
+                  </button>
+                  <button
+                    onClick={() => { onTool?.('long-rest'); setShowRestPicker(false) }}
+                    disabled={isDungeonTheme}
+                    title={isDungeonTheme ? 'Cannot long rest here — find a safe location' : ''}
+                    style={{
+                      padding: '4px 8px', background: isDungeonTheme ? 'rgba(0,0,0,0.3)' : 'rgba(201,168,76,0.08)',
+                      border: '1px solid rgba(201,168,76,0.2)',
+                      color: isDungeonTheme ? '#555' : '#c8b8a0',
+                      borderRadius: 3, cursor: isDungeonTheme ? 'not-allowed' : 'pointer', fontSize: 10,
+                      fontFamily: "'Cinzel', serif",
+                    }}
+                  >
+                    Long Rest (8hr)
+                  </button>
+                </div>
               )}
-            </button>
-            {/* Rest picker popover — only for the REST button */}
-            {tool.key === 'rest' && showRestPicker && (
-              <div style={{
-                position: 'absolute', bottom: '100%', right: 0, marginBottom: 4,
-                background: '#0e0b14', border: '1px solid #d4af37', borderRadius: 6, padding: 6,
-                display: 'flex', flexDirection: 'column', gap: 4, minWidth: 140, zIndex: 50,
-              }}>
-                <button
-                  onClick={() => { onTool?.('short-rest'); setShowRestPicker(false) }}
-                  style={{
-                    padding: '6px 10px', background: '#1a1520', border: '1px solid #333',
-                    color: '#c8b8a0', borderRadius: 4, cursor: 'pointer', fontSize: 11,
-                  }}
-                >
-                  Short Rest (1hr)
-                </button>
-                <button
-                  onClick={() => { onTool?.('long-rest'); setShowRestPicker(false) }}
-                  disabled={isDungeonTheme}
-                  title={isDungeonTheme ? 'Cannot long rest here — find a safe location' : ''}
-                  style={{
-                    padding: '6px 10px', background: isDungeonTheme ? '#111' : '#1a1520',
-                    border: '1px solid #333', color: isDungeonTheme ? '#555' : '#c8b8a0',
-                    borderRadius: 4, cursor: isDungeonTheme ? 'not-allowed' : 'pointer', fontSize: 11,
-                  }}
-                >
-                  Long Rest (8hr)
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

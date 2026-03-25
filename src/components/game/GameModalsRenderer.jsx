@@ -319,16 +319,7 @@ export default function GameModalsRenderer({
           />
         </Suspense>
       )}
-      {inCombat && Array.isArray(encounter.combatants) && (
-        <Suspense fallback={null}>
-          <CombatUI
-            initiative={encounter.combatants}
-            currentTurnIndex={encounter.currentTurn || 0}
-            onAction={handleCombatAction}
-            onEndTurn={handleEndTurn}
-          />
-        </Suspense>
-      )}
+      {/* CombatUI removed — combat actions handled by CombatActionBar in BottomBar */}
     </>
   )
 }

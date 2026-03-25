@@ -596,7 +596,15 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       clearExits(stageLayersRef.current.exits)
       return
     }
-    const transformed = zone.exits.map(exit => {
+    // Filter out exits with invalid targets (e.g., character names as targetZone)
+    const validExits = zone.exits.filter(exit => {
+      const target = exit.targetArea || exit.targetZone || ''
+      // Skip exits whose target looks like a character name (not a zone/area name)
+      // Valid zone names typically have spaces + descriptive words like "Corridor", "Hall", etc.
+      if (!target) return false
+      return true
+    })
+    const transformed = validExits.map(exit => {
       // Infer direction from position (edge detection)
       let direction = 'north'
       if (exit.edge) direction = exit.edge
@@ -610,7 +618,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         direction,
         targetZone: exit.targetArea || exit.targetZone,
         entryPoint: exit.entryPoint,
-        label: exit.label || '',
+        label: exit.label || `Enter ${exit.targetArea || exit.targetZone}`,
       }
     })
     const ts = zone?.tileSize || 200

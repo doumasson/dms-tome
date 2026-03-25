@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useLayoutEffect, useRef, lazy, Suspense } from 'react'
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
@@ -8,12 +8,10 @@ import { getAvailableInteractions } from './lib/interactionController'
 import { getDisposition } from './lib/factionSystem'
 import { isAnimating } from './engine/TokenLayer'
 import ChatBubble from './components/ChatBubble'
-import ApiKeySettings from './components/ApiKeySettings'
 import SkillCheckPanel from './components/SkillCheckPanel'
 import HUD from './components/game/HUD'
-import DayNightOverlay, { TimeDisplay } from './components/game/DayNightOverlay'
+import DayNightOverlay from './components/game/DayNightOverlay'
 import WeatherOverlay from './components/game/WeatherOverlay'
-import Minimap from './components/game/Minimap'
 import QuestTracker from './components/game/QuestTracker'
 import LootAnimation from './components/game/LootAnimation'
 import KeyboardHelp from './components/game/KeyboardHelp'
@@ -45,7 +43,6 @@ import { useGameTokens } from './hooks/useGameTokens'
 import './hud/hud.css'
 
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
-const NarratorBar         = lazy(() => import('./components/game/NarratorBar'))
 const GameModalsRenderer  = lazy(() => import('./components/game/GameModalsRenderer'))
 
 // ─── D&D 5e XP thresholds (inlined from LevelUpModal to avoid static import) ──

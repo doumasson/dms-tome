@@ -65,71 +65,63 @@
   image-rendering: crisp-edges;
 }
 
-/* Bottom bar base — image assets for stone background */
+/* Bottom bar — flush to bottom edges, taller */
 .hud-bottom-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 220px;
+  height: 200px;
   z-index: 20;
   display: flex;
   flex-direction: column;
-  padding: 10px 14px 6px;
+  padding: 8px 12px 6px;
   gap: 0;
   pointer-events: auto;
-  background: transparent;
+  background: linear-gradient(180deg, rgba(8,6,12,0.8) 0%, rgba(8,6,12,0.95) 100%);
+  border-top: 1px solid rgba(201,168,76,0.15);
+  backdrop-filter: blur(8px);
 }
 
-/* === TOP BAR — full width, bar-top.png as background === */
+/* === TOP BAR — slim transparent strip === */
 .hud-top-bar {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 80px;
-  background-image: url('/ui/bar-top.png');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  height: 32px;
+  background: linear-gradient(180deg, rgba(8,6,12,0.85) 0%, rgba(8,6,12,0.4) 80%, transparent 100%);
   z-index: 20;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  padding: 8px 14px 0;
+  padding: 0 14px;
   pointer-events: auto;
 }
 
-/* Tab strip — single image with click zones on top */
+/* Tab strip — text-only tabs */
 .hud-log-tab-strip-wrap {
   position: absolute;
-  top: -6px;
+  top: -22px;
   left: 10px;
   z-index: 20;
   pointer-events: all;
-  width: 160px;
-  height: 28px;
+  display: flex;
+  gap: 0;
 }
 
 .hud-log-tab-strip-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
+  display: none;
 }
 
 .hud-log-tab-zone {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 50%;
-  background: none;
-  border: none;
-  padding: 0;
+  background: rgba(8,6,12,0.7);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-bottom: none;
+  padding: 3px 14px;
   cursor: pointer;
   min-height: 0;
-  border-radius: 0;
+  border-radius: 4px 4px 0 0;
   font-family: var(--font-heading);
   font-size: 8px;
   font-weight: 700;
@@ -138,38 +130,38 @@
   text-transform: uppercase;
 }
 
-.hud-log-tab-zone.left { left: 0; }
-.hud-log-tab-zone.right { left: 50%; }
-
-.hud-log-tab-zone.active { color: var(--gold-bright); }
+.hud-log-tab-zone.active {
+  color: var(--gold-bright);
+  background: rgba(8,6,12,0.9);
+  border-color: rgba(201,168,76,0.3);
+}
 .hud-log-tab-zone:hover { color: var(--gold-bright); }
 
 .hud-top-bar-left {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
 .hud-top-bar-right {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 6px;
   margin-right: 6px;
 }
 
 .hud-top-bar-btn {
-  background: rgba(10, 8, 14, 0.6);
+  background: rgba(10, 8, 14, 0.4);
   border: 1px solid rgba(201, 168, 76, 0.25);
   color: var(--gold-muted);
   font-family: var(--font-heading);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
   letter-spacing: 1px;
-  padding: 3px 10px;
+  padding: 2px 8px;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 3px;
   min-height: 0;
-  margin-top: 4px;
 }
 
 .hud-top-bar-btn:hover {
@@ -273,48 +265,38 @@
 
 .hud-top-bar-icon-btn {
   background: none;
-  border: none;
-  padding: 2px;
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 2px 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 0;
-  border-radius: 0;
-  transition: filter 0.15s, transform 0.15s;
-  margin-top: -2px;
-  margin-right: 2px;
+  border-radius: 3px;
+  transition: all 0.15s;
+  font-family: var(--font-heading);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--gold-muted);
 }
 
 .hud-top-bar-icon-btn img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  display: none;
 }
 
 .hud-top-bar-icon-btn:hover {
-  filter: brightness(1.3) drop-shadow(0 0 4px rgba(212,175,55,0.4));
-  transform: scale(1.08);
+  color: var(--gold-bright);
+  border-color: rgba(201,168,76,0.5);
 }
 
 .hud-top-bar-icon-btn:active {
   transform: scale(0.92);
 }
 
-/* Bottom stone slab image — fills the ENTIRE bottom bar as background texture */
+/* Bottom stone slab image — REMOVED, CSS-only background now */
 .hud-bar-bottom-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  pointer-events: none;
-  z-index: 0;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  display: none;
 }
 
 .hud-bottom-bar-content {
@@ -340,7 +322,7 @@
   z-index: 3;
 }
 
-/* Session log panel — clips content inside parchment */
+/* Session log panel — transparent, no parchment */
 .hud-log-panel {
   flex: 1;
   min-height: 0;
@@ -348,7 +330,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 18px 24px 14px;
+  padding: 4px 8px;
 }
 
 /* Expanded log — grows taller upward, keeps same width */
@@ -363,48 +345,41 @@
   padding-top: 16px;
 }
 
-/* Expand/retract toggle button */
+/* Expand/retract toggle button — text only */
 .hud-log-expand-btn {
   position: absolute;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  background: none;
-  border: none;
-  padding: 0;
+  background: rgba(8,6,12,0.7);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 1px 12px;
   cursor: pointer;
   min-height: 0;
-  border-radius: 0;
-  transition: filter 0.15s, transform 0.15s;
+  color: var(--gold-muted);
+  font-size: 10px;
+  line-height: 1;
 }
 
 .hud-log-expand-btn img {
-  display: block;
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  display: none;
 }
 
 .hud-log-expand-btn:hover {
-  filter: brightness(1.4) drop-shadow(0 0 4px rgba(212,175,55,0.5));
+  color: var(--gold-bright);
+  border-color: rgba(201,168,76,0.4);
 }
 
 .hud-log-expand-btn:active {
-  transform: translateX(-50%) scale(0.9);
+  transform: translateX(-50%) scale(0.95);
 }
 
-/* Parchment background image — no crisp-edges so it stays smooth when stretched */
+/* Parchment background — REMOVED, transparent now */
 .hud-log-bg-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 .hud-log-panel > *:not(.hud-log-bg-img) {
@@ -481,21 +456,30 @@
 .hud-log-damage { color: #cc3333; }
 .hud-log-hit { color: #e8d44d; font-weight: 700; }
 
-/* Tool buttons */
+/* Tool buttons — text-only compact */
 .hud-tool-btn {
-  width: 50px;
-  height: 48px;
-  background: linear-gradient(180deg, #18141e, #0e0c14);
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
+  display: none;
+}
+
+.hud-tool-btn-text {
+  padding: 4px 10px;
+  background: rgba(8,6,12,0.6);
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--gold-muted);
+  font-family: var(--font-heading);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
   cursor: pointer;
-  position: relative;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 3px;
   min-height: 0;
+  transition: all 0.15s;
+}
+
+.hud-tool-btn-text:hover {
+  color: var(--gold-bright);
+  border-color: rgba(201,168,76,0.5);
+  background: rgba(201,168,76,0.1);
 }
 
 /* Chat input */
@@ -1498,11 +1482,10 @@
 /* Hidden by default, shown on phone */
 .hud-drawer-handle { display: none; }
 
-/* Minimap (top-right, below campaign bar) */
-/* PLACEHOLDER: replace with texture asset — metal frame minimap */
+/* Minimap (top-right, below slim top bar) — inherits metal-frame decoration */
 .hud-minimap {
   position: absolute;
-  top: 60px;
+  top: 40px;
   right: 8px;
   z-index: 14;
   width: 160px;
@@ -1624,27 +1607,20 @@
 /* === Portrait Stone Frames (BG2/IWD style) === */
 .portrait-frame {
   position: relative;
-  border: none;
-  box-shadow: none;
-  overflow: visible;
-  background: transparent !important;
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(8,6,12,0.8);
 }
 
-/* Portrait frame image overlay */
+/* Portrait frame image — REMOVED */
 .portrait-frame-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  pointer-events: none;
-  z-index: 2;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  display: none;
 }
 
 .portrait-frame.selected {
-  filter: drop-shadow(0 0 6px rgba(200,170,80,0.4));
+  border-color: rgba(201,168,76,0.6);
+  box-shadow: 0 0 6px rgba(200,170,80,0.3);
 }
 
 /* HP tinting overlay */

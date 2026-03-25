@@ -17,14 +17,27 @@ export function useAreaCamera({ zone, playerPosRef }) {
     }
     const w = window.innerWidth
     const h = window.innerHeight
-    const prevZoom = cameraRef.current?.zoom ?? 0.5
     const cam = new Camera(w, h)
-    cam.zoom = prevZoom // Preserve zoom level across zone transitions
     const tileSize = zone?.tileSize || 200
     cam.setAreaBounds((zone?.width || 40) * tileSize, (zone?.height || 30) * tileSize)
+    // Always auto-fit zoom so the map fills the viewport — no empty canvas areas
+    cam.fitToArea()
     cam.centerOnImmediate(playerPosRef.current.x, playerPosRef.current.y, tileSize)
     cameraRef.current = cam
   }, [useAreaCameraFlag, zone?.width, zone?.height])
+
+  // Resize handler — refit camera when window resizes
+  useEffect(() => {
+    if (!useAreaCameraFlag) return
+    const onResize = () => {
+      const cam = cameraRef.current
+      if (!cam) return
+      cam.resize(window.innerWidth, window.innerHeight)
+      cam.fitToArea()
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [useAreaCameraFlag])
 
   // Camera keyboard controls — arrow keys pan, spacebar recenters on player
   useEffect(() => {

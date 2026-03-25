@@ -59,6 +59,19 @@ class Camera {
   }
 
   /**
+   * Auto-fit zoom so the map covers the entire viewport (no empty canvas).
+   * Uses the larger of width/height ratios to ensure full coverage.
+   */
+  fitToArea() {
+    if (this.areaWidth === null || this.areaHeight === null) return;
+    const zoomX = this.viewportWidth / this.areaWidth;
+    const zoomY = this.viewportHeight / this.areaHeight;
+    // Use the larger ratio so the map fills viewport in both dimensions
+    const fitZoom = Math.max(zoomX, zoomY);
+    this.setZoom(Math.max(fitZoom, ZOOM_MIN));
+  }
+
+  /**
    * Lock camera within combat encounter bounds (or null to unlock).
    * @param {{ x: number, y: number, width: number, height: number } | null} bounds — tile-space rect
    */

@@ -31,19 +31,17 @@ export function renderTokens(container, tokens, tileSizeOverride) {
     group.y = token.y * tileSize + tileSize / 2
     group.label = token.id // store ID for lookup
 
-    // Selection circle (drawn first, underneath token) — BG2/IWD style
+    // Selection circle — BG2/IWD style ellipse under token feet, stroke only
     const selectionCircle = new PIXI.Graphics()
-    const circleRadius = tileSize * (token.isActive ? 0.48 : 0.45)
+    const circleRadius = tileSize * 0.22
     const circleColor = getSelectionCircleColor(token)
-    const alpha = token.isActive ? 0.7 : 0.4
-    selectionCircle.ellipse(0, tileSize * 0.15, circleRadius, circleRadius * 0.45)
-    selectionCircle.stroke({ width: token.isActive ? 2.5 : 1.5, color: circleColor, alpha })
-    selectionCircle.fill({ color: circleColor, alpha: alpha * 0.15 })
+    selectionCircle.ellipse(0, tileSize * 0.06, circleRadius, circleRadius * 0.4)
+    selectionCircle.stroke({ width: token.isActive ? 2 : 1, color: circleColor, alpha: token.isActive ? 0.8 : 0.3 })
     group.addChild(selectionCircle)
 
-    // Circle background
+    // Circle background — token avatar circle
     const bg = new PIXI.Graphics()
-    const radius = tileSize * 0.4
+    const radius = tileSize * 0.2
     bg.circle(0, 0, radius).fill(token.color || 0x08060c)
     bg.circle(0, 0, radius).stroke({
       width: token.isNpc ? 2 : 3,
@@ -51,8 +49,8 @@ export function renderTokens(container, tokens, tileSizeOverride) {
     })
     group.addChild(bg)
 
-    // Scale factor for text/indicators relative to tile size
-    const scale = tileSize / 32
+    // Scale factor for text/indicators — cap at 1x so labels stay small
+    const scale = Math.min(tileSize / 64, 1)
 
     // Quest indicator for relevant NPCs
     if (token.isNpc && token.questRelevant) {
@@ -86,16 +84,16 @@ export function renderTokens(container, tokens, tileSizeOverride) {
     const nameLabel = new PIXI.Text({
       text: token.name || '',
       style: {
-        fontSize: 9 * scale,
+        fontSize: 9,
         fill: token.isNpc ? 0xbba878 : 0xffffff,
         fontFamily: 'Cinzel, serif',
         fontWeight: token.isNpc ? '400' : '700',
-        letterSpacing: 1 * scale,
-        dropShadow: { color: 0x000000, blur: 2 * scale, distance: 1 * scale },
+        letterSpacing: 0.5,
+        dropShadow: { color: 0x000000, blur: 2, distance: 1 },
       },
     })
     nameLabel.anchor.set(0.5, 0)
-    nameLabel.y = radius + 4
+    nameLabel.y = radius + 2
     group.addChild(nameLabel)
 
     // HP bar for enemies/combatants in combat

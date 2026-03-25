@@ -16,9 +16,7 @@ export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onActi
       <div className="hud-drawer-handle" onClick={() => setDrawerOpen(o => !o)}>
         <div className="hud-drawer-handle-bar" />
       </div>
-      {/* Stone slab background only — no top filigree */}
-      {/* Bottom stone slab — image asset */}
-      <img src="/ui/bar-bottom.png" className="hud-bar-bottom-img" alt="" draggable={false} />
+      {/* Background is CSS-only now — no image assets */}
       <div className="hud-bottom-bar-content">
         <PartyPortraits onPortraitClick={onPortraitClick} />
         <SessionLog onChat={onChat} tab={logTab} setTab={setLogTab} />

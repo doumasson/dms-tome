@@ -2,20 +2,22 @@
 
 .hud-container {
   position: absolute;
-  top: 86px;
-  left: 12px;
+  top: 40px;
+  left: 8px;
   z-index: 15;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  background: rgba(26, 26, 26, 0.85);
-  border: 2px solid #d4af37;
-  border-radius: 4px;
-  padding: 12px;
-  min-width: 180px;
+  gap: 8px;
+  background: rgba(8, 6, 12, 0.75);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 6px;
+  padding: 8px;
+  min-width: 140px;
+  max-width: 160px;
   font-family: 'Cinzel', Georgia, serif;
   color: #e8d5a3;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  font-size: 10px;
 }
 
 /* Section styling */

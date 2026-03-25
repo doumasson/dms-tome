@@ -97,15 +97,9 @@ export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, on
             LEAVE
           </button>
           <SoundControl />
-          <button className="hud-top-bar-icon-btn" onClick={() => onModeSelect('map')} title="Map">
-            <img src="/ui/btn-map.png" alt="Map" draggable={false} />
-          </button>
-          <button className="hud-top-bar-icon-btn" onClick={onSettings} title="Settings">
-            <img src="/ui/btn-settings.png" alt="Settings" draggable={false} />
-          </button>
-          <button className="hud-top-bar-icon-btn" onClick={() => onModeSelect('character')} title="Party">
-            <img src="/ui/btn-group.png" alt="Party" draggable={false} />
-          </button>
+          <button className="hud-top-bar-icon-btn" onClick={() => onModeSelect('map')} title="Map (M)">MAP</button>
+          <button className="hud-top-bar-icon-btn" onClick={onSettings} title="Settings">SET</button>
+          <button className="hud-top-bar-icon-btn" onClick={() => onModeSelect('character')} title="Character (C)">CHAR</button>
         </div>
       </div>
       {/* Minimap — below top bar, top-right */}

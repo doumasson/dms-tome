@@ -50,9 +50,11 @@ export function renderExits(container, exits, onExitClick, tileSz) {
     archBar.fill({ color: 0xc9a84c, alpha: 0.4 })
     group.addChild(archBar)
 
-    // Destination label — larger and more prominent
+    // Destination label — only show if there's a proper label
+    const exitLabel = exit.label || (exit.targetZone ? `Enter ${exit.targetZone}` : '')
+    if (!exitLabel) { group.x = ex * tileSize; group.y = ey * tileSize; container.addChild(group); continue }
     const label = new PIXI.Text({
-      text: `\u27A4 ${exit.label || exit.targetZone}`,
+      text: exitLabel,
       style: {
         fontSize: 14,
         fill: 0xf0d878,
