@@ -42,9 +42,18 @@ export function createRestSlice(set, get) {
           },
         };
       });
+      // Auto-spend one hit die to restore HP (5e short rest)
+      const myChar = get().myCharacter
+      if (myChar && (myChar.currentHp || 0) < (myChar.maxHp || 1)) {
+        const remaining = myChar.hitDiceRemaining ?? myChar.level ?? 1
+        if (remaining > 0) {
+          get().spendHitDie(myChar.id || myChar.name)
+        }
+      }
       // Notify all players via narrator
       const charName = get().myCharacter?.name || 'The party'
-      const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} takes a short rest. Class resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
+      const healed = get().myCharacter?.currentHp || 0
+      const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} takes a short rest. HP restored to ${healed}. Class resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
       get().addNarratorMessage?.(msg)
       get().saveCampaignToSupabase();
     },

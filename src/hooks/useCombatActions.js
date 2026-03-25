@@ -140,24 +140,21 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
   }, [inCombat, zone])
 
+  // --- Cancel spell targeting when combat ends ---
+  useEffect(() => {
+    if (!inCombat) {
+      pixiRef.current?.cancelSpellTargeting?.()
+    }
+  }, [inCombat])
+
   // --- Auto-run enemy turns (DM/host only to prevent duplicate execution) ---
   useEffect(() => {
-    console.log('[CombatAI] useEffect fired:', { inCombat, shouldRunEnemyAI, currentTurn: encounter.currentTurn, phase: encounter.phase })
-    if (!inCombat || !shouldRunEnemyAI) {
-      console.log('[CombatAI] Skipped — inCombat:', inCombat, 'shouldRunAI:', shouldRunEnemyAI)
-      return
-    }
+    if (!inCombat || !shouldRunEnemyAI) return
     const active = encounter.combatants?.[encounter.currentTurn]
-    if (!active || !active.isEnemy) {
-      console.log('[CombatAI] Not enemy turn:', active?.name, active?.type)
-      return
-    }
-
-    console.log('[CombatAI] Enemy turn detected:', active.name, 'HP:', active.currentHp, 'Pos:', active.position)
+    if (!active || !active.isEnemy) return
 
     // Skip dead enemies — advance turn immediately
     if ((active.currentHp ?? 0) <= 0) {
-      console.log('[CombatAI] Dead enemy, skipping:', active.name)
       const t = setTimeout(() => {
         nextEncounterTurn()
         broadcastEncounterAction({ type: 'next-turn', userId: 'system' })
@@ -166,13 +163,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     }
 
     const apiKey = sessionApiKey
-    console.log('[CombatAI] Setting 1s timeout for:', active.name)
     const timer = setTimeout(() => {
-      console.log('[CombatAI] Timeout fired — running enemy turn for:', active.name, 'apiKey:', !!apiKey)
       try {
         const result = runEnemyTurn(apiKey || '')
         Promise.resolve(result).then(() => {
-          console.log('[CombatAI] Enemy turn completed:', active.name)
         }).catch((err) => {
           console.error('[CombatAI] Enemy turn FAILED:', active.name, err)
           nextEncounterTurn()
