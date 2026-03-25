@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-  background: #1a1a1a;
+  height: 100vh;
+  background: #08060c;
   overflow: hidden;
   font-family: 'Cinzel', Georgia, serif;
   color: #e8d5a3;

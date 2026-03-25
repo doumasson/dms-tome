@@ -68,8 +68,11 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     let destroyed = false
 
     const init = async () => {
+      // Init WITHOUT resizeTo to avoid premature render before stage exists
+      const container = containerRef.current
       await app.init({
-        resizeTo: containerRef.current,
+        width: container?.clientWidth || window.innerWidth,
+        height: container?.clientHeight || window.innerHeight,
         background: 0x08060c,
         antialias: false,
         roundPixels: true,
@@ -79,7 +82,9 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
       if (destroyed) return
 
-      containerRef.current.appendChild(app.canvas)
+      container.appendChild(app.canvas)
+      // Now safe to enable resizeTo — stage exists
+      app.resizeTo = container
 
       // Initialize tween engine with ticker
       tweenEngineRef.current = new TweenEngine(app.ticker)
@@ -147,13 +152,18 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
     return () => {
       destroyed = true
+      // Remove canvas from DOM directly (safe even if app is partially initialized)
+      containerRef.current?.querySelectorAll('canvas').forEach(c => c.remove())
       try {
-        if (appRef.current) {
-          appRef.current.ticker?.stop()
-          appRef.current.destroy(true, { children: true })
+        const app = appRef.current
+        if (app) {
+          try { app.ticker?.stop() } catch {}
+          // Patch PixiJS v8 ResizePlugin bug
+          if (!app._cancelResize) app._cancelResize = () => {}
+          try { app.destroy(true, { children: true }) } catch {}
         }
       } catch (e) {
-        console.warn('[PixiApp] Cleanup error during destroy:', e)
+        // Silently ignore — React dev mode double-mount cleanup is expected to partially fail
       }
       appRef.current = null
       worldRef.current = null
