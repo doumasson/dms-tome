@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import useStore from '../store/useStore'
 import { playParchmentRustle } from '../lib/uiSounds'
+import { broadcastSpeakerVoteStart, broadcastSpeakerClear } from '../lib/liveChannel'
+import SpeakerVote from '../components/game/SpeakerVote'
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 const SPEECH_SUPPORTED = !!SpeechRecognition
@@ -26,10 +28,22 @@ export default function SessionLog({ onChat, tab, setTab }) {
   const sessionLog = useStore(s => s.sessionLog) || []
   const narratorHistory = useStore(s => s.narrator?.history) || []
   const inCombat = useStore(s => s.encounter.phase === 'combat')
+  const partySpeaker = useStore(s => s.partySpeaker)
+  const user = useStore(s => s.user)
+  const partyMembers = useStore(s => s.partyMembers)
   const scrollRef = useRef(null)
   const chatInputRef = useRef(null)
   const [isRecording, setIsRecording] = useState(false)
   const pttRecogRef = useRef(null)
+
+  // Is this player the decided speaker?
+  const isSpeaker = !partySpeaker || partySpeaker.phase !== 'decided' || partySpeaker.speakerId === user?.id
+  // Is a vote in progress?
+  const isVoting = partySpeaker?.phase === 'voting'
+  // Is someone else the speaker?
+  const lockedSpeaker = partySpeaker?.phase === 'decided' && partySpeaker.speakerId !== user?.id ? partySpeaker.speakerName : null
+  // Are there other players to vote with?
+  const hasParty = (partyMembers?.length || 0) > 0
 
   const entries = tab === 'log' ? sessionLog : narratorHistory
 
@@ -169,16 +183,56 @@ export default function SessionLog({ onChat, tab, setTab }) {
         </div>
         {tab === 'chat' && (
           <>
+          {/* Speaker vote panel */}
+          {isVoting && <SpeakerVote />}
+          {/* Locked speaker indicator */}
+          {lockedSpeaker && (
+            <div style={{
+              padding: '4px 10px', textAlign: 'center', fontSize: 10,
+              color: '#d4af37', fontFamily: "'Cinzel', serif",
+              background: 'rgba(212,175,55,0.08)',
+              borderTop: '1px solid rgba(212,175,55,0.15)',
+            }}>
+              {lockedSpeaker} is speaking for the party
+              <button onClick={() => { useStore.getState().clearPartySpeaker(); broadcastSpeakerClear() }}
+                style={{ marginLeft: 8, background: 'none', border: '1px solid rgba(212,175,55,0.3)', color: '#8a7a5a', fontSize: 9, padding: '1px 6px', borderRadius: 3, cursor: 'pointer', fontFamily: "'Cinzel', serif" }}>
+                End
+              </button>
+            </div>
+          )}
           <form onSubmit={handleChatSubmit} className="hud-chat-form">
             <input
               ref={chatInputRef}
               className="hud-chat-input"
-              style={{ flex: 1, margin: 0 }}
-              placeholder={inCombat ? "Declare your action..." : "What do you do?"}
+              style={{ flex: 1, margin: 0, opacity: isSpeaker ? 1 : 0.4 }}
+              placeholder={lockedSpeaker ? `${lockedSpeaker} is speaking...` : inCombat ? "Declare your action..." : "What do you do?"}
               value={chatInput}
-              onChange={e => setChatInput(e.target.value)}
+              onChange={e => isSpeaker && setChatInput(e.target.value)}
+              disabled={!isSpeaker || isVoting}
             />
-            {SPEECH_SUPPORTED && (
+            {/* Call Vote button — only in exploration with a party */}
+            {!inCombat && hasParty && !isVoting && !lockedSpeaker && (
+              <button
+                type="button"
+                className="hud-mic-btn"
+                onClick={() => { useStore.getState().startSpeakerVote(); broadcastSpeakerVoteStart() }}
+                title="Vote on who speaks to the DM"
+                style={{
+                  background: 'rgba(201,168,76,0.1)',
+                  border: '1px solid rgba(201,168,76,0.2)',
+                  color: '#d4af37',
+                  borderRadius: 4,
+                  padding: '4px 6px',
+                  cursor: 'pointer',
+                  fontSize: '0.7rem',
+                  flexShrink: 0,
+                  fontFamily: "'Cinzel', serif",
+                }}
+              >
+                VOTE
+              </button>
+            )}
+            {SPEECH_SUPPORTED && isSpeaker && (
               <button
                 type="button"
                 className="hud-mic-btn"
@@ -203,7 +257,7 @@ export default function SessionLog({ onChat, tab, setTab }) {
                 {isRecording ? '\u{1F534}' : '\u{1F3A4}'}
               </button>
             )}
-            <button type="submit" className="hud-chat-go-btn">GO</button>
+            <button type="submit" className="hud-chat-go-btn" disabled={!isSpeaker || isVoting}>GO</button>
           </form>
           </>
         )}

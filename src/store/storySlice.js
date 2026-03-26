@@ -35,6 +35,18 @@ export function createStorySlice(set, get) {
     }),
     closeNpcDialogViewer: () => set({ npcDialogViewer: null }),
 
+    // Party speaker vote — who controls the narrator chat
+    // null = anyone can talk (default). Object = vote in progress or decided.
+    partySpeaker: null, // null | { phase: 'voting', votes: {playerId: nomineeId}, timestamp } | { phase: 'decided', speakerId, speakerName }
+    startSpeakerVote: () => set({ partySpeaker: { phase: 'voting', votes: {}, timestamp: Date.now() } }),
+    castSpeakerVote: (voterId, nomineeId) => set(s => {
+      if (!s.partySpeaker || s.partySpeaker.phase !== 'voting') return {}
+      const votes = { ...s.partySpeaker.votes, [voterId]: nomineeId }
+      return { partySpeaker: { ...s.partySpeaker, votes } }
+    }),
+    decideSpeaker: (speakerId, speakerName) => set({ partySpeaker: { phase: 'decided', speakerId, speakerName } }),
+    clearPartySpeaker: () => set({ partySpeaker: null }),
+
     activeCutscene: null,
     setActiveCutscene: (info) => set({ activeCutscene: info }),
     clearActiveCutscene: () => set({ activeCutscene: null }),

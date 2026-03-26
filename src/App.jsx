@@ -603,6 +603,20 @@ export default function App() {
       useStore.getState().appendNpcDialogMessage(payload.npcName, payload.msg)
     })
 
+    // Party speaker vote system
+    ch.on('broadcast', { event: 'speaker-vote-start' }, () => {
+      useStore.getState().startSpeakerVote()
+    })
+    ch.on('broadcast', { event: 'speaker-vote-cast' }, ({ payload }) => {
+      useStore.getState().castSpeakerVote(payload.voterId, payload.nomineeId)
+    })
+    ch.on('broadcast', { event: 'speaker-decided' }, ({ payload }) => {
+      useStore.getState().decideSpeaker(payload.speakerId, payload.speakerName)
+    })
+    ch.on('broadcast', { event: 'speaker-clear' }, () => {
+      useStore.getState().clearPartySpeaker()
+    })
+
     // Story cutscene — freeze all players
     ch.on('broadcast', { event: 'story-cutscene-start' }, ({ payload }) => {
       useStore.getState().setActiveCutscene(payload)

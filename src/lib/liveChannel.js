@@ -81,6 +81,20 @@ export function broadcastNpcDialogMessage(npcName, msg) {
   _channel?.send({ type: 'broadcast', event: 'npc-dialog-message', payload: { npcName, msg } })
 }
 
+// Party speaker vote — who speaks to the DM narrator
+export function broadcastSpeakerVoteStart() {
+  _channel?.send({ type: 'broadcast', event: 'speaker-vote-start', payload: { timestamp: Date.now() } })
+}
+export function broadcastSpeakerVoteCast(voterId, voterName, nomineeId, nomineeName) {
+  _channel?.send({ type: 'broadcast', event: 'speaker-vote-cast', payload: { voterId, voterName, nomineeId, nomineeName } })
+}
+export function broadcastSpeakerDecided(speakerId, speakerName) {
+  _channel?.send({ type: 'broadcast', event: 'speaker-decided', payload: { speakerId, speakerName } })
+}
+export function broadcastSpeakerClear() {
+  _channel?.send({ type: 'broadcast', event: 'speaker-clear', payload: {} })
+}
+
 // Critical story cutscene
 export function broadcastStoryCutsceneStart(npcName, initiatorId, criticalInfo) {
   _channel?.send({ type: 'broadcast', event: 'story-cutscene-start', payload: { npcName, initiatorId, criticalInfo } })
