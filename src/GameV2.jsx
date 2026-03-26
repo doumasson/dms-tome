@@ -13,7 +13,7 @@ import SkillCheckPanel from './components/SkillCheckPanel'
 import HUD from './components/game/HUD'
 import DayNightOverlay from './components/game/DayNightOverlay'
 import WeatherOverlay from './components/game/WeatherOverlay'
-// QuestTracker is now rendered inside HUD component
+import QuestTracker from './components/game/QuestTracker'
 import LootAnimation from './components/game/LootAnimation'
 import KeyboardHelp from './components/game/KeyboardHelp'
 import PartyHealthBars from './components/game/PartyHealthBars'
@@ -512,7 +512,8 @@ export default function GameV2({ onLeave }) {
         <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
         <WeatherOverlay />
         <DayNightOverlay />
-        <HUD />
+        {/* Character stats HUD removed — cluttered the map, info visible on portraits */}
+        <QuestTracker />
         {/* QuestTracker is inside HUD component now */}
         <LootAnimation />
         <KeyboardHelp />

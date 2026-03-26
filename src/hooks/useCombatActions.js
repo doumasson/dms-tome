@@ -474,13 +474,13 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
 
       const fullLog = logEntries.join(' ')
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: fullLog })
-      broadcastEncounterAction({ type: 'attack-result', attackerId: active.id, targetId: target.id, hit: totalDamageDealt > 0, damage: totalDamageDealt, log: fullLog })
-
-      const apiKey = sessionApiKey
-      if (apiKey) {
-        const resultDesc = totalDamageDealt > 0 ? `Hit! ${totalDamageDealt} total damage` : 'Miss!'
-        narrateCombatAction(active.name, 'Attack', target.name, resultDesc, apiKey)
-      }
+      // Broadcast attack result + action economy state so all clients enforce turn rules
+      const updatedActive = useStore.getState().encounter.combatants.find(c => c.id === active.id)
+      broadcastEncounterAction({
+        type: 'attack-result', attackerId: active.id, targetId: target.id,
+        hit: totalDamageDealt > 0, damage: totalDamageDealt, log: fullLog,
+        actionsUsed: updatedActive?.actionsUsed, bonusActionsUsed: updatedActive?.bonusActionsUsed,
+      })
       return true
     }
 

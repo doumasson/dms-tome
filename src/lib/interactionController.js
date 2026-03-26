@@ -79,10 +79,6 @@ export function getAvailableInteractions(playerPos, zone) {
   const npc = getAdjacentNpc(playerPos, zone)
   if (npc) {
     results.push({ type: 'talk', target: npc })
-    // Pickpocket option for non-shop NPCs
-    if (!npc.shopType) {
-      results.push({ type: 'pickpocket', target: npc })
-    }
   }
   const interactable = getAdjacentInteractable(playerPos, zone)
   if (interactable) {
@@ -93,7 +89,7 @@ export function getAvailableInteractions(playerPos, zone) {
       } else {
         results.push({ type: 'open_chest', target: interactable })
       }
-    } else if (interactable.type === 'searchable') {
+    } else if (interactable.type === 'searchable' && !interactable.opened) {
       results.push({ type: 'search', target: interactable })
     }
   }

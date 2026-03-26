@@ -3,7 +3,6 @@ import useStore from '../../store/useStore';
 import { setMood, stopMusic, setMusicVolume, getMusicState } from '../../lib/ambientMusic';
 import { TimeDisplay } from './DayNightOverlay';
 import { xpForLevel } from '../LevelUpModal';
-import QuestTracker from './QuestTracker';
 import './HUD.css';
 
 const CLASS_GLOW = {
@@ -194,9 +193,6 @@ export default function HUD() {
       </div>
 
       </div>{/* end hud-collapsible */}
-
-      {/* Quest Tracker — below HUD stats, no overlap */}
-      <QuestTracker />
 
       {/* Death Saves (when dying) */}
       {dying && (

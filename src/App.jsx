@@ -202,6 +202,21 @@ export default function App() {
           if (payload.hit && payload.damage > 0) {
             store.applyEncounterDamage(payload.targetId, payload.damage)
           }
+          // Sync action economy so all clients enforce turn rules
+          if (payload.attackerId && (payload.actionsUsed != null || payload.bonusActionsUsed != null)) {
+            useStore.setState(state => ({
+              encounter: {
+                ...state.encounter,
+                combatants: state.encounter.combatants.map(c =>
+                  c.id === payload.attackerId ? {
+                    ...c,
+                    actionsUsed: payload.actionsUsed ?? c.actionsUsed,
+                    bonusActionsUsed: payload.bonusActionsUsed ?? c.bonusActionsUsed,
+                  } : c
+                ),
+              },
+            }))
+          }
           break
         case 'aoe-resolve':
           store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })

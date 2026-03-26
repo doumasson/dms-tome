@@ -257,8 +257,10 @@ export function generateInteractables(brief, buildings, positions, width, height
       }
     }
 
-    // Searchable spots in some rooms
-    const searchChance = isDungeon ? 0.35 : 0.1
+    // Searchable spots — only in specific POI types (storage, study, workshop, ruins)
+    const poiLabel = (poi.label || poi.id || '').toLowerCase()
+    const isSearchableLocation = /storage|study|workshop|ruin|library|armory|cache|stash|vault|crate|barrel|wreck|debris/i.test(poiLabel)
+    const searchChance = isSearchableLocation ? 0.6 : 0 // Only in relevant locations
     if (rng() < searchChance) {
       const sx = pos.x + 1 + Math.floor(rng() * Math.max(1, (chunk.width || 4) - 2))
       const sy = pos.y + 1 + Math.floor(rng() * Math.max(1, (chunk.height || 4) - 2))

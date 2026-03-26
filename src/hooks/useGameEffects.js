@@ -250,6 +250,13 @@ export function useGameEffects({
       const encounterPayload = { startCombatWithZoneEnemies, triggered, enemyPositions: (zone.enemies || []).filter(e => e.position).map(e => ({ ...e.position, name: e.name, wis: e.stats?.wis ?? 10 })) }
       setPendingEncounterData(encounterPayload)
       setEncounterLock(true)
+      // Safety timeout — unlock after 15s if API never responds
+      setTimeout(() => {
+        if (useStore.getState().encounterLock) {
+          console.warn('[encounter] Safety unlock — encounterLock was stuck for 15s')
+          setEncounterLock(false)
+        }
+      }, 15000)
       setTimeout(async () => {
         const chat = handleChatRef.current
         if (chat) await chat(prompt)

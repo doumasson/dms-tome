@@ -1353,36 +1353,9 @@ export function createEncounterSlice(set, get) {
 
     // Narrate a player combat action in 1-2 sentences via Claude Haiku.
     // Fires-and-forgets — does not block turn progression.
-    narrateCombatAction: async (actorName, actionLabel, targetName, resultDesc, apiKey) => {
-      if (!apiKey) return;
-      const prompt = `You are the Narrator for a D&D 5e combat action.
-${actorName} uses ${actionLabel}${targetName ? ` against ${targetName}` : ''}.
-Result: ${resultDesc}
-Write exactly 1-2 vivid, present-tense sentences narrating what happens. No dice numbers. Pure immersive narration.`;
-      try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true',
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'claude-haiku-4-5-20251001',
-            max_tokens: 120,
-            messages: [{ role: 'user', content: prompt }],
-          }),
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        const text = data.content?.[0]?.text?.trim();
-        if (!text) return;
-        const msg = { role: 'dm', speaker: 'The Narrator', text, id: uuidv4(), timestamp: Date.now() };
-        get().addNarratorMessage(msg);
-        broadcastNarratorMessage(msg);
-      } catch (error) { console.warn('Combat narration failed:', error); }
-    },
+    // Combat narration disabled — was making an API call for EVERY attack/spell/action
+    // causing constant TTS and flooding the chat with AI-generated play-by-play
+    narrateCombatAction: async () => {},
 
     setConcentration: (id, spell) =>
       set((state) => ({
