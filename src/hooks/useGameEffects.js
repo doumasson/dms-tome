@@ -38,50 +38,21 @@ export function useGameEffects({
   const defeatReset = useStore(s => s.defeatReset)
   const lastSkillCheckResult = useStore(s => s.lastSkillCheckResult)
 
-  // On combat start: save pre-combat position and center camera on the encounter
+  // On combat start: just center camera on the action, never move the player
   useEffect(() => {
     if (inCombat && !prevInCombatRef.current && encounter.combatants?.length) {
-      const pos = playerPosRef.current
-      // Save position before combat so we can restore it after
-      useStore.setState({ lastCombatPosition: { ...pos } })
-
-      // Find my combatant's position from the synced encounter state (set by DM)
-      const myChar = useStore.getState().myCharacter
-      const myCombatant = encounter.combatants.find(c =>
-        c.type === 'player' && (c.id === myChar?.id || c.name === myChar?.name)
-      )
-      if (myCombatant?.position) {
-        // Use the position the DM assigned — this is the authoritative position
-        setPlayerPos(myCombatant.position)
-        playerPosRef.current = { ...myCombatant.position }
-        if (cameraRef.current) cameraRef.current.centerOn(myCombatant.position.x, myCombatant.position.y, zone?.tileSize || 200)
-      } else {
-        // Fallback: center camera on the combat area
-        let cx = 0, cy = 0, count = 0
-        for (const c of encounter.combatants) {
-          if (c.position) { cx += c.position.x; cy += c.position.y; count++ }
-        }
-        if (count > 0) {
-          cx = Math.round(cx / count); cy = Math.round(cy / count)
-          if (cameraRef.current) cameraRef.current.centerOn(cx, cy, zone?.tileSize || 200)
-        }
+      // Center camera on combat center so the player can see the fight
+      let cx = 0, cy = 0, count = 0
+      for (const c of encounter.combatants) {
+        if (c.position) { cx += c.position.x; cy += c.position.y; count++ }
+      }
+      if (count > 0 && cameraRef.current) {
+        cx = Math.round(cx / count); cy = Math.round(cy / count)
+        cameraRef.current.centerOn(cx, cy, zone?.tileSize || 200)
       }
     }
     prevInCombatRef.current = inCombat
   }, [inCombat, encounter.combatants, zone?.tileSize])
-
-  // Restore player position after combat ends
-  useLayoutEffect(() => {
-    if (!inCombat) {
-      const lastPos = useStore.getState().lastCombatPosition
-      if (lastPos) {
-        setPlayerPos(lastPos)
-        playerPosRef.current = lastPos
-        if (cameraRef.current) cameraRef.current.centerOn(lastPos.x, lastPos.y, zone?.tileSize || 200)
-        useStore.setState({ lastCombatPosition: null })
-      }
-    }
-  }, [inCombat, zone?.tileSize])
 
   // Respawn position after TPK defeat
   useEffect(() => {

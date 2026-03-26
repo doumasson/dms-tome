@@ -531,20 +531,10 @@ export default function App() {
       }
     });
 
-    // Area transition sync — only follow if the transitioning player is the host
-    // Non-host players should NOT be dragged into zones when another player transitions
-    ch.on('broadcast', { event: 'area-transition' }, ({ payload }) => {
-      // Only non-DM players auto-follow host transitions
-      // Player-to-player transitions are individual — each player transitions independently
-      if (!useStore.getState().isDM && payload.isHost) {
-        const { areaId, entryPoint } = payload;
-        const { activateArea } = useStore.getState();
-        activateArea(areaId);
-        // Apply entry point so non-host players spawn at the correct position
-        if (entryPoint && typeof entryPoint.x === 'number') {
-          useStore.getState().setPlayerPos(entryPoint);
-        }
-      }
+    // Area transition — each player is independent, never pull anyone
+    // This broadcast is informational only (e.g. for party tracking UI)
+    ch.on('broadcast', { event: 'area-transition' }, () => {
+      // No-op: players transition zones independently via their own exit clicks
     });
 
     // Token move sync (any player → all others for V2 area map)
