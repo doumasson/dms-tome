@@ -584,12 +584,23 @@ export default function App() {
       }
     });
 
-    // NPC dialog busy state
+    // NPC dialog — initiator controls it, other players get read-only viewer
     ch.on('broadcast', { event: 'npc-dialog-start' }, ({ payload }) => {
-      useStore.getState().setNpcBusy(payload)
+      const store = useStore.getState()
+      store.setNpcBusy(payload)
+      // Open read-only NPC dialog viewer for non-initiator players
+      if (payload.playerId !== store.user?.id) {
+        store.openNpcDialogViewer(payload.npcName)
+      }
     })
     ch.on('broadcast', { event: 'npc-dialog-end' }, () => {
       useStore.getState().clearNpcBusy()
+      useStore.getState().closeNpcDialogViewer()
+    })
+    // NPC dialog messages — sync conversation to read-only viewers
+    ch.on('broadcast', { event: 'npc-dialog-message' }, ({ payload }) => {
+      if (!payload?.npcName || !payload?.msg) return
+      useStore.getState().appendNpcDialogMessage(payload.npcName, payload.msg)
     })
 
     // Story cutscene — freeze all players

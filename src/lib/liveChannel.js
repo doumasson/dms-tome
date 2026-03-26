@@ -76,6 +76,11 @@ export function broadcastNpcDialogEnd(npcName) {
   _channel?.send({ type: 'broadcast', event: 'npc-dialog-end', payload: { npcName } })
 }
 
+// NPC dialog conversation messages (initiator → all nearby players)
+export function broadcastNpcDialogMessage(npcName, msg) {
+  _channel?.send({ type: 'broadcast', event: 'npc-dialog-message', payload: { npcName, msg } })
+}
+
 // Critical story cutscene
 export function broadcastStoryCutsceneStart(npcName, initiatorId, criticalInfo) {
   _channel?.send({ type: 'broadcast', event: 'story-cutscene-start', payload: { npcName, initiatorId, criticalInfo } })

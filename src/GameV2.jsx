@@ -28,6 +28,7 @@ import AreaNameAnnounce from './components/game/AreaNameAnnounce'
 import XpNotification from './components/game/XpNotification'
 import InteractionPrompt from './components/game/InteractionPrompt'
 import LowHpOverlay from './components/game/LowHpOverlay'
+import NpcDialogViewer from './components/NpcDialogViewer'
 
 import { useAreaCamera } from './hooks/useAreaCamera'
 import { useAmbientAudio } from './hooks/useAmbientAudio'
@@ -524,6 +525,7 @@ export default function GameV2({ onLeave }) {
         <XpNotification />
         <InteractionPrompt playerPos={playerPos} zone={zone} />
         <LowHpOverlay />
+        {!activeNpc && <NpcDialogViewer />}
         {showCrafting && <CraftingPanel onClose={() => setShowCrafting(false)} />}
         {showAreaMap && <AreaMapOverview onClose={() => setShowAreaMap(false)} />}
         {showBestiary && <Bestiary onClose={() => setShowBestiary(false)} />}

@@ -4,7 +4,7 @@ const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogni
 const SPEECH_SUPPORTED = !!SpeechRecognition
 import { callNarrator, buildNpcSystemPrompt } from '../lib/narratorApi'
 import { createQuest } from '../lib/questSystem'
-import { broadcastEncounterAction, broadcastNarratorMessage } from '../lib/liveChannel'
+import { broadcastEncounterAction, broadcastNarratorMessage, broadcastNpcDialogMessage } from '../lib/liveChannel'
 import { getSkillBonus } from '../lib/derivedStats'
 import useStore from '../store/useStore'
 
@@ -120,10 +120,8 @@ export default function NpcConversation({
       const npcMsg = { role: 'npc', speaker: npc.name, text: dialogue }
       setMessages(prev => [...prev, npcMsg])
 
-      // Broadcast NPC response to all players so everyone sees the conversation
-      const npcNarratorMsg = { role: 'dm', speaker: npc.name, text: dialogue }
-      addNarratorMessage(npcNarratorMsg)
-      broadcastNarratorMessage(npcNarratorMsg)
+      // Broadcast NPC response to all players — shows in their NPC dialog viewer
+      broadcastNpcDialogMessage(npc.name, { role: 'npc', speaker: npc.name, text: dialogue })
 
       // Don't show AI-suggested responses — this is a living game requiring user input
       setSuggestions([])
@@ -185,10 +183,8 @@ export default function NpcConversation({
     setInput('')
     setSuggestions([])
 
-    // Broadcast player's message to all players so everyone sees the conversation
-    const playerNarratorMsg = { role: 'user', speaker: charName, text: `[to ${npc.name}] ${trimmed}` }
-    addNarratorMessage(playerNarratorMsg)
-    broadcastNarratorMessage(playerNarratorMsg)
+    // Broadcast player's message so other players see it in the NPC dialog viewer
+    broadcastNpcDialogMessage(npc.name, { role: 'player', speaker: charName, text: trimmed })
 
     const newCount = promptCount + 1
     setPromptCount(newCount)
