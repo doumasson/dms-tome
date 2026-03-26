@@ -296,9 +296,11 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       }
       renderV2Layer(props, zone.layers.props, zone.width, zone.height, tileSize, tileAtlas, bounds)
 
-      // Ambient lighting glow around fire sources
+      // Ambient lighting glow around fire sources — brighter at night
       if (zone.lightSources?.length) {
-        renderLighting(stageLayersRef.current.lighting, zone.lightSources, tileSize, bounds)
+        const currentHour = useStore.getState().gameTime?.hour ?? 8
+        const isNight = currentHour >= 18 || currentHour < 6
+        renderLighting(stageLayersRef.current.lighting, zone.lightSources, tileSize, bounds, isNight)
       }
 
       // Status effect visuals — condition dots and concentration rings above tokens

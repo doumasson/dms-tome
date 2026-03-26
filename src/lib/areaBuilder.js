@@ -242,6 +242,20 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     const propIdx = layers.props[idx]
     return propIdx > 0 // only include if there's a prop at this position
   })
+  // Auto-add light sources inside buildings (interiors should be lit at night)
+  for (const building of buildings) {
+    // Place a warm light at the center of each building interior
+    const cx = building.x + Math.floor(building.width / 2)
+    const cy = building.y + Math.floor(building.height / 2)
+    // Check if there's already a light here from props
+    const hasLight = autoLights.some(l =>
+      Math.abs(l.position.x - cx) <= 2 && Math.abs(l.position.y - cy) <= 2
+    )
+    if (!hasLight) {
+      autoLights.push({ position: { x: cx, y: cy }, type: 'fireplace', bright: 4, dim: 6 })
+    }
+  }
+
   const allLightSources = [...briefLights, ...autoLights]
 
   // 9. Build collision: edge-based walls handle wall blocking,

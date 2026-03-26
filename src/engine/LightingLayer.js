@@ -16,10 +16,14 @@ const LIGHT_CONFIGS = {
  * @param {Array} lightSources — [{position: {x,y}, type: string, bright?: number, dim?: number}]
  * @param {number} tileSize — pixel size per tile
  * @param {{ startX: number, startY: number, endX: number, endY: number }} bounds — visible pixel bounds for culling
+ * @param {boolean} isNight — boost light intensity at night to counteract darkness tint
  */
-export function renderLighting(container, lightSources, tileSize, bounds) {
+export function renderLighting(container, lightSources, tileSize, bounds, isNight = false) {
   container.removeChildren()
   if (!lightSources?.length) return
+
+  // At night, lights glow brighter to counteract the darkness tint
+  const nightBoost = isNight ? 2.5 : 1.0
 
   for (const source of lightSources) {
     const config = LIGHT_CONFIGS[source.type] || LIGHT_CONFIGS.torch
@@ -34,7 +38,7 @@ export function renderLighting(container, lightSources, tileSize, bounds) {
     if (py + maxRadius < bounds.startY || py - maxRadius > bounds.endY) continue
 
     const totalRadius = brightR + dimR
-    const baseAlpha = config.alpha
+    const baseAlpha = Math.min(config.alpha * nightBoost, 0.5)
 
     // Draw concentric circles from outside in (dim → bright)
     const g = new PIXI.Graphics()
@@ -47,7 +51,7 @@ export function renderLighting(container, lightSources, tileSize, bounds) {
     }
 
     // Inner bright core
-    g.circle(px, py, brightR * 0.5).fill({ color: config.color, alpha: baseAlpha * 1.2 })
+    g.circle(px, py, brightR * 0.5).fill({ color: config.color, alpha: Math.min(baseAlpha * 1.2, 0.6) })
 
     container.addChild(g)
   }
