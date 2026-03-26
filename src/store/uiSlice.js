@@ -13,11 +13,18 @@ export function createUiSlice(set, get) {
       open: false,
     },
     addNarratorMessage: (msg) => {
-      // TTS: speak DM messages aloud (skip system/combat messages, player messages)
+      // TTS: only speak narrative/story/NPC messages — NOT combat actions
+      // Combat actions are too frequent and create constant talking
       if (msg.role === 'dm' && msg.text && msg.speaker !== 'System' && msg.speaker !== 'Combat') {
-        const isNpc = msg.speaker && msg.speaker !== 'DM' && msg.speaker !== 'The Narrator'
-        const voiceCfg = isNpc ? getNpcVoice(msg.speaker) : undefined
-        speak(msg.text, null, isNpc ? { npcName: msg.speaker, voice: voiceCfg } : {})
+        // Skip combat-related messages (attack results, damage, saves, etc.)
+        const isCombatNarration = get().encounter?.phase === 'combat' &&
+          !msg.speaker || msg.speaker === 'DM' || msg.speaker === 'The Narrator'
+        const isNpc = msg.speaker && msg.speaker !== 'DM' && msg.speaker !== 'The Narrator' && msg.speaker !== 'System' && msg.speaker !== 'Combat'
+        // Only TTS: NPC dialogue, scene descriptions, story narration — NOT combat play-by-play
+        if (isNpc || !isCombatNarration) {
+          const voiceCfg = isNpc ? getNpcVoice(msg.speaker) : undefined
+          speak(msg.text, null, isNpc ? { npcName: msg.speaker, voice: voiceCfg } : {})
+        }
       }
       return set((state) => {
         const logEntry = msg.role === 'player'

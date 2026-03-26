@@ -39,18 +39,20 @@ export default function CharacterSheetModal({ character, onClose }) {
         </div>
       </div>
 
-      {/* Body: two panes */}
+      {/* Body: equipment + inventory (inventory hidden for other players) */}
       <div style={s.body}>
         <EquipmentPane
           character={liveChar}
           readOnly={!isOwn}
           onDropOnSlot={handleDropOnSlot}
         />
-        <InventoryPane
-          character={liveChar}
-          readOnly={!isOwn}
-          inCombat={inCombat}
-        />
+        {isOwn && (
+          <InventoryPane
+            character={liveChar}
+            readOnly={false}
+            inCombat={inCombat}
+          />
+        )}
       </div>
     </ModeScreen>
   );

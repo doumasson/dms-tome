@@ -54,6 +54,8 @@ export function useGameEffects({
         const pad = 2
         const bx0 = minX - pad, by0 = minY - pad, bx1 = maxX + pad, by1 = maxY + pad
         const pos = playerPosRef.current
+        // Save position before combat so we can restore it after
+        useStore.setState({ lastCombatPosition: { ...pos } })
         if (pos.x < bx0 || pos.x > bx1 || pos.y < by0 || pos.y > by1) {
           const nx = Math.max(bx0, Math.min(bx1, pos.x))
           const ny = Math.max(by0, Math.min(by1, pos.y))

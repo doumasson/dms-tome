@@ -2,11 +2,12 @@ import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
-import { broadcastEncounterAction } from './lib/liveChannel'
+import { broadcastEncounterAction, broadcastTokenMove } from './lib/liveChannel'
 import ApiKeyGate from './components/ApiKeyGate'
 import { getAvailableInteractions } from './lib/interactionController'
 import { getDisposition } from './lib/factionSystem'
 import { isAnimating } from './engine/TokenLayer'
+import { cancelTargeting, isTargeting } from './engine/SpellTargetingOverlay'
 import ChatBubble from './components/ChatBubble'
 import SkillCheckPanel from './components/SkillCheckPanel'
 import HUD from './components/game/HUD'
@@ -93,6 +94,7 @@ export default function GameV2({ onLeave }) {
   const defeatedEnemies = useStore(s => s.defeatedEnemies)
   const showDeathOptions = useStore(s => s.showDeathOptions)
   const mercyRevive = useStore(s => s.mercyRevive)
+  const pendingRestProposal = useStore(s => s.pendingRestProposal)
 
   const pixiRef = useRef(null)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
@@ -153,6 +155,14 @@ export default function GameV2({ onLeave }) {
     )
   }
 
+  // --- Pick up broadcast rest proposals from other players ---
+  useEffect(() => {
+    if (pendingRestProposal && !restProposal) {
+      setRestProposal(pendingRestProposal)
+      useStore.setState({ pendingRestProposal: null })
+    }
+  }, [pendingRestProposal, restProposal])
+
   // --- BG2-style keyboard shortcuts for mode screens ---
   useEffect(() => {
     function handleKeyDown(e) {
@@ -199,6 +209,24 @@ export default function GameV2({ onLeave }) {
   const { roofManagerRef, triggeredZonesRef } = useRoofManager({ zone, playerPos, playerPosRef, currentAreaId, isDM })
 
   useRandomEncounters({ playerPos, inCombat, isDM, zone })
+
+  // Broadcast initial position so other players can see our token on spawn
+  const initialPosBroadcastRef = useRef(false)
+  useEffect(() => {
+    if (!initialPosBroadcastRef.current && user?.id && playerPos && zone) {
+      initialPosBroadcastRef.current = true
+      broadcastTokenMove(user.id, playerPos)
+      // Also store locally so our token shows for self-lookups
+      useStore.getState().setAreaTokenPosition(currentAreaId, user.id, playerPos)
+    }
+  }, [user?.id, playerPos, zone, currentAreaId])
+
+  // Broadcast position whenever it changes (for other players to see our token move)
+  useEffect(() => {
+    if (user?.id && playerPos && currentAreaId) {
+      useStore.getState().setAreaTokenPosition(currentAreaId, user.id, playerPos)
+    }
+  }, [playerPos, user?.id, currentAreaId])
 
   // Screen shake on combat damage — watch damage events, trigger camera shake
   const damageEventsLen = useStore(s => s.damageEvents?.length || 0)
@@ -275,14 +303,23 @@ export default function GameV2({ onLeave }) {
     partyMembers, defeatedEnemies, currentAreaId,
   })
 
+  // Cancel lingering spell targeting when combat ends
+  useEffect(() => {
+    if (!inCombat && isTargeting()) {
+      cancelTargeting()
+    }
+  }, [inCombat])
+
   // --- Combined tile click handler ---
   const handleTileClick = useCallback(({ x, y }) => {
     if (isAnimating()) return
+    // Cancel stale targeting if we're not in combat
+    if (!inCombat && isTargeting()) { cancelTargeting(); return }
     // Combat logic gets first pass
     if (handleCombatTileClick({ x, y })) return
     // Non-combat world movement
     handleWorldTileClick({ x, y })
-  }, [handleCombatTileClick, handleWorldTileClick])
+  }, [handleCombatTileClick, handleWorldTileClick, inCombat])
 
   useEffect(() => {
     dialogOpenRef.current = !!activeNpc || showInteractionMenu
@@ -392,8 +429,16 @@ export default function GameV2({ onLeave }) {
     else if (tool === 'inventory') setActiveMode(prev => prev === 'inventory' ? null : 'inventory')
     else if (tool === 'journal') setShowJournal(true)
     else if (tool === 'faction') setShowFactions(true)
-    else if (tool === 'short-rest') setRestProposal({ type: 'short', proposedBy: myCharacter?.name || 'Someone' })
-    else if (tool === 'long-rest') setRestProposal({ type: 'long', proposedBy: myCharacter?.name || 'Someone' })
+    else if (tool === 'short-rest') {
+      const proposal = { type: 'short', proposedBy: myCharacter?.name || 'Someone' }
+      setRestProposal(proposal)
+      broadcastEncounterAction({ type: 'rest-proposal', ...proposal })
+    }
+    else if (tool === 'long-rest') {
+      const proposal = { type: 'long', proposedBy: myCharacter?.name || 'Someone' }
+      setRestProposal(proposal)
+      broadcastEncounterAction({ type: 'rest-proposal', ...proposal })
+    }
     else if (tool === 'formation') setShowFormation(true)
     else if (tool === 'craft') setShowCrafting(true)
     else if (tool === 'worldmap') setShowAreaMap(true)

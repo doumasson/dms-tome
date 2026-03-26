@@ -3,7 +3,8 @@ import { getTileSize } from './tileAtlas'
 
 // Track token groups by ID for animation
 const tokenGroupMap = new Map()
-let activeAnimation = null
+// Per-token animations — allows multiple players to move simultaneously
+const activeAnimations = new Map() // tokenId → { cancelled: boolean }
 
 /**
  * Get the BG2/IWD-style selection circle color for a token.
@@ -150,21 +151,22 @@ export function animateTokenAlongPath(tokenId, path, onStep, onComplete, tileSiz
     return
   }
 
-  // Cancel any active animation
-  if (activeAnimation) {
-    activeAnimation.cancelled = true
+  // Cancel any active animation for THIS token only
+  const prevAnim = activeAnimations.get(tokenId)
+  if (prevAnim) {
+    prevAnim.cancelled = true
   }
 
   const tileSize = tileSizeOverride || getTileSize()
   const anim = { cancelled: false }
-  activeAnimation = anim
+  activeAnimations.set(tokenId, anim)
   let step = 1
   const speed = tileSize * 0.15 // ~5 tiles/second at 60fps regardless of tile size
 
   function tick() {
     if (anim.cancelled || step >= path.length) {
       if (!anim.cancelled) {
-        activeAnimation = null
+        activeAnimations.delete(tokenId)
         onComplete?.()
       }
       return
@@ -194,8 +196,20 @@ export function animateTokenAlongPath(tokenId, path, onStep, onComplete, tileSiz
 }
 
 /**
- * Check if a walking animation is currently playing.
+ * Check if the local player's walking animation is currently playing.
+ * Only blocks the 'player' token — other players can move freely.
  */
-export function isAnimating() {
-  return activeAnimation !== null && !activeAnimation.cancelled
+export function isAnimating(tokenId = 'player') {
+  const anim = activeAnimations.get(tokenId)
+  return anim !== null && anim !== undefined && !anim.cancelled
+}
+
+/**
+ * Check if ANY animation is playing (for render skip purposes).
+ */
+export function isAnyAnimating() {
+  for (const anim of activeAnimations.values()) {
+    if (!anim.cancelled) return true
+  }
+  return false
 }

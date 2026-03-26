@@ -62,6 +62,10 @@ export function getAdjacentInteractable(playerPos, zone) {
   return null
 }
 
+// Track searched positions to prevent spamming (tile key → timestamp)
+const _searchedTiles = new Map()
+const SEARCH_COOLDOWN_MS = 60000 // 60 seconds before you can search the same spot again
+
 /**
  * Get all available interactions at player position.
  * Returns an array of { type, target } for the interaction menu.
@@ -91,11 +95,25 @@ export function getAvailableInteractions(playerPos, zone) {
   }
   const exit = getAdjacentExit(playerPos, zone)
   if (exit) results.push({ type: 'exit', target: exit })
-  // Search is always available when nothing else is near
+  // Search area — only available if zone has searchable tag AND not recently searched here
   if (results.length === 0) {
-    results.push({ type: 'search_area', target: { dc: 14, label: 'Search Area' } })
+    const zoneTags = zone?.tags || []
+    const isSearchable = zoneTags.includes('searchable') || zoneTags.includes('lootable') ||
+      zone?.interactables?.some(i => i.type === 'searchable')
+    if (isSearchable) {
+      const tileKey = `${playerPos.x},${playerPos.y}`
+      const lastSearched = _searchedTiles.get(tileKey) || 0
+      if (Date.now() - lastSearched > SEARCH_COOLDOWN_MS) {
+        results.push({ type: 'search_area', target: { dc: 14, label: 'Search Area' } })
+      }
+    }
   }
   return results
+}
+
+/** Mark a tile as searched (called after search action) */
+export function markTileSearched(x, y) {
+  _searchedTiles.set(`${x},${y}`, Date.now())
 }
 
 export function handleInteract(playerPos, zone) {

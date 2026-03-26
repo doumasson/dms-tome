@@ -161,8 +161,17 @@ class Camera {
   // ---------------------------------------------------------------------------
 
   centerOn(tileX, tileY, tileSize) {
-    this._targetX = tileX * tileSize + tileSize / 2 - this.viewportWidth / (2 * this.zoom);
-    this._targetY = tileY * tileSize + tileSize / 2 - this.viewportHeight / (2 * this.zoom);
+    let tx = tileX * tileSize + tileSize / 2 - this.viewportWidth / (2 * this.zoom);
+    let ty = tileY * tileSize + tileSize / 2 - this.viewportHeight / (2 * this.zoom);
+    // Clamp target within area bounds to avoid snapping to corners
+    if (this.areaWidth !== null) {
+      const maxX = Math.max(0, this.areaWidth - this.viewportWidth / this.zoom);
+      const maxY = Math.max(0, this.areaHeight - this.viewportHeight / this.zoom);
+      tx = Math.min(maxX, Math.max(0, tx));
+      ty = Math.min(maxY, Math.max(0, ty));
+    }
+    this._targetX = tx;
+    this._targetY = ty;
   }
 
   centerOnImmediate(tileX, tileY, tileSize) {

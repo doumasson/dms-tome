@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react'
 import useStore from '../store/useStore'
-import { getAvailableInteractions } from '../lib/interactionController'
+import { getAvailableInteractions, markTileSearched } from '../lib/interactionController'
 import {
   attemptPickpocket, attemptLockpick, attemptForceOpen,
   attemptSearch, generateChestLoot,
@@ -181,6 +181,8 @@ export default function InteractionMenu({
       }
       case 'search':
       case 'search_area': {
+        // Mark tile as searched to prevent spam
+        markTileSearched(playerPos.x, playerPos.y)
         const dc = target.dc || 12
         const searchResult = attemptSearch(myCharacter, dc)
         if (searchResult.success) {

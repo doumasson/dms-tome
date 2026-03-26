@@ -464,6 +464,17 @@ export default function App() {
           }
           break
         }
+        case 'weather-change':
+          if (payload.weather) useStore.setState({ weather: payload.weather })
+          break
+        case 'time-sync':
+          if (payload.gameTime) useStore.setState({ gameTime: payload.gameTime })
+          break
+        case 'rest-proposal':
+          // Show rest modal for all players when someone proposes a rest
+          // handled via encounter-action broadcast — set restProposal in store
+          useStore.setState({ pendingRestProposal: payload })
+          break
         case 'emote':
           receiveEmote(payload.playerName, payload.emoji);
           break

@@ -4,7 +4,7 @@ const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogni
 const SPEECH_SUPPORTED = !!SpeechRecognition
 import { callNarrator, buildNpcSystemPrompt } from '../lib/narratorApi'
 import { createQuest } from '../lib/questSystem'
-import { broadcastEncounterAction } from '../lib/liveChannel'
+import { broadcastEncounterAction, broadcastNarratorMessage } from '../lib/liveChannel'
 import { getSkillBonus } from '../lib/derivedStats'
 import useStore from '../store/useStore'
 
@@ -120,12 +120,13 @@ export default function NpcConversation({
       const npcMsg = { role: 'npc', speaker: npc.name, text: dialogue }
       setMessages(prev => [...prev, npcMsg])
 
-      // Capture AI-suggested player responses
-      if (Array.isArray(result?.suggestions) && result.suggestions.length > 0) {
-        setSuggestions(result.suggestions.slice(0, 3))
-      } else {
-        setSuggestions([])
-      }
+      // Broadcast NPC response to all players so everyone sees the conversation
+      const npcNarratorMsg = { role: 'dm', speaker: npc.name, text: dialogue }
+      addNarratorMessage(npcNarratorMsg)
+      broadcastNarratorMessage(npcNarratorMsg)
+
+      // Don't show AI-suggested responses — this is a living game requiring user input
+      setSuggestions([])
 
       // Check for social skill check request
       if (result?.rollRequest && result.rollRequest.skill && result.rollRequest.dc) {
@@ -177,11 +178,17 @@ export default function NpcConversation({
       return
     }
 
-    const playerMsg = { role: 'player', speaker: 'You', text: trimmed }
+    const charName = myCharacter?.name || 'You'
+    const playerMsg = { role: 'player', speaker: charName, text: trimmed }
     const updated = [...messages, playerMsg]
     setMessages(updated)
     setInput('')
     setSuggestions([])
+
+    // Broadcast player's message to all players so everyone sees the conversation
+    const playerNarratorMsg = { role: 'user', speaker: charName, text: `[to ${npc.name}] ${trimmed}` }
+    addNarratorMessage(playerNarratorMsg)
+    broadcastNarratorMessage(playerNarratorMsg)
 
     const newCount = promptCount + 1
     setPromptCount(newCount)
@@ -425,32 +432,7 @@ export default function NpcConversation({
         </div>
       )}
 
-      {/* AI-suggested dialogue choices */}
-      {suggestions.length > 0 && !disabled && !hardLimited && !pendingRoll && !rollResult && !pendingRepChange && !pendingQuestOffer && (
-        <div style={{
-          display: 'flex', flexWrap: 'wrap', gap: 6, padding: '8px 12px',
-          borderTop: '1px solid rgba(201,168,76,0.2)', background: 'rgba(20,16,12,0.6)',
-        }}>
-          {suggestions.map((s, i) => (
-            <button
-              key={i}
-              onClick={() => handleSend(s)}
-              disabled={loading}
-              style={{
-                flex: '1 1 auto', minWidth: 0, padding: '6px 12px',
-                background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
-                borderRadius: 4, color: '#d4af37', cursor: 'pointer',
-                fontFamily: 'Cinzel, serif', fontSize: 11, textAlign: 'center',
-                transition: 'background 0.2s, border-color 0.2s',
-              }}
-              onMouseEnter={e => { e.target.style.background = 'rgba(201,168,76,0.25)'; e.target.style.borderColor = 'rgba(201,168,76,0.6)' }}
-              onMouseLeave={e => { e.target.style.background = 'rgba(201,168,76,0.1)'; e.target.style.borderColor = 'rgba(201,168,76,0.3)' }}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* AI-suggested dialogue choices removed — living game requires user input */}
 
       {!disabled && !hardLimited && !pendingRoll && !rollResult && !pendingRepChange && !pendingQuestOffer && (
         <form onSubmit={handleSubmit} className="npc-conv-input-row">
