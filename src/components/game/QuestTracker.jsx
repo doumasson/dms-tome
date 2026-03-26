@@ -60,12 +60,9 @@ export default function QuestTracker() {
 
   return (
     <div style={{
-      position: 'absolute',
-      top: 90,
-      left: 12,
-      zIndex: 15,
-      maxWidth: 220,
+      maxWidth: 160,
       userSelect: 'none',
+      marginTop: 4,
     }}>
       {/* Header — always visible */}
       <div

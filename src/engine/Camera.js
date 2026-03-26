@@ -67,9 +67,11 @@ class Camera {
    */
   fitToArea() {
     if (this.areaWidth === null || this.areaHeight === null) return;
+    // Fit to visible area above the bottom UI bar
+    const visibleH = this.viewportHeight - this.uiBottomOffset;
     const zoomX = this.viewportWidth / this.areaWidth;
-    const zoomY = this.viewportHeight / this.areaHeight;
-    // Use the larger ratio so the map fills viewport in both dimensions
+    const zoomY = visibleH / this.areaHeight;
+    // Use the larger ratio so the map fills visible area in both dimensions
     const fitZoom = Math.max(zoomX, zoomY);
     this.setZoom(Math.max(fitZoom, ZOOM_MIN));
   }
@@ -124,8 +126,10 @@ class Camera {
 
   _clampPosition() {
     if (this.areaWidth !== null) {
+      // Use visible height (above bottom UI bar) for vertical clamping
+      const visibleH = this.viewportHeight - this.uiBottomOffset;
       const maxX = Math.max(0, this.areaWidth - this.viewportWidth / this.zoom);
-      const maxY = Math.max(0, this.areaHeight - this.viewportHeight / this.zoom);
+      const maxY = Math.max(0, this.areaHeight - visibleH / this.zoom);
       this.x = Math.min(maxX, Math.max(0, this.x));
       this.y = Math.min(maxY, Math.max(0, this.y));
     }
@@ -291,9 +295,9 @@ class Camera {
    * expanded by `buffer` tiles on each side for overdraw / prefetch.
    */
   getVisibleTileBounds(tileSize, buffer = 2) {
-    // World-space rectangle currently visible
+    // World-space rectangle currently visible (above the bottom UI bar)
     const visibleW = this.viewportWidth / this.zoom;
-    const visibleH = this.viewportHeight / this.zoom;
+    const visibleH = (this.viewportHeight - this.uiBottomOffset) / this.zoom;
 
     const startX = Math.floor(this.x / tileSize) - buffer;
     const startY = Math.floor(this.y / tileSize) - buffer;

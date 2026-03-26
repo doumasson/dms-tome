@@ -13,7 +13,7 @@ import SkillCheckPanel from './components/SkillCheckPanel'
 import HUD from './components/game/HUD'
 import DayNightOverlay from './components/game/DayNightOverlay'
 import WeatherOverlay from './components/game/WeatherOverlay'
-import QuestTracker from './components/game/QuestTracker'
+// QuestTracker is now rendered inside HUD component
 import LootAnimation from './components/game/LootAnimation'
 import KeyboardHelp from './components/game/KeyboardHelp'
 import PartyHealthBars from './components/game/PartyHealthBars'
@@ -513,7 +513,7 @@ export default function GameV2({ onLeave }) {
         <WeatherOverlay />
         <DayNightOverlay />
         <HUD />
-        <QuestTracker />
+        {/* QuestTracker is inside HUD component now */}
         <LootAnimation />
         <KeyboardHelp />
         <PartyHealthBars />

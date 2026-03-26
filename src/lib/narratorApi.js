@@ -227,13 +227,14 @@ Rules for speaking in character:
 - If asked about something outside your knowledge, say so in character and suggest who might know.
 ${npc.sideQuest ? '- If appropriate, mention your side quest organically. Share why it matters to you personally — make the player want to help.' : ''}
 
-Skill check rules:
-- When a player tries to PERSUADE, INTIMIDATE, DECEIVE, or INSIGHT-READ you, include a rollRequest. Set the DC based on difficulty: easy (DC 10), medium (DC 13), hard (DC 15), very hard (DC 18), near impossible (DC 20). Choose the appropriate skill: Persuasion for friendly convincing, Intimidation for threats, Deception for lies, Insight for reading motives.
-- KEYWORD DETECTION: Look for these words/phrases in player messages and auto-trigger the matching skill check:
-  - "persuade", "convince", "please", "I beg you", "surely you can" → Persuasion check
-  - "intimidate", "threaten", "or else", "you'd better", "I'll make you" → Intimidation check
-  - "lie", "bluff", "I'm actually", "pretend", "deceive" → Deception check
-  - "read", "tell if lying", "what's really going on", "sense motive", "insight" → Insight check
+Skill check rules (all 18 D&D 5e skills):
+- When a player's words or actions imply a skill check, include a rollRequest. Set DC: easy 10, medium 13, hard 15, very hard 18, near impossible 20.
+- Detect the appropriate skill from context and intent:
+  CHARISMA: Persuasion (convince, negotiate, diplomacy, please, beg, appeal, reason with), Intimidation (threaten, scare, demand, or else, make you, force), Deception (lie, bluff, pretend, trick, mislead, fake, cover story), Performance (sing, play music, act, perform, entertain, distract with a show)
+  WISDOM: Insight (read motives, sense motive, tell if lying, trust them, what are they hiding), Perception (look around, listen, watch, notice, spot, keep an eye out, scan), Medicine (treat wounds, stabilize, diagnose, check if alive, first aid, tend to), Survival (track, follow trail, forage, navigate, find shelter, read tracks), Animal Handling (calm the beast, tame, ride, train, soothe, approach the animal)
+  INTELLIGENCE: Investigation (search, examine, inspect, look for clues, figure out, deduce, analyze), Arcana (identify spell, magical knowledge, recognize rune, what magic is this), History (recall, remember, know about, historical, have I heard of), Nature (identify plant, animal knowledge, natural phenomenon, what creature), Religion (pray, divine knowledge, holy symbol, religious ritual, identify undead)
+  STRENGTH: Athletics (climb, jump, swim, lift, push, pull, break down, force open, grapple, shove)
+  DEXTERITY: Acrobatics (balance, tumble, flip, dodge, land safely, squeeze through), Sleight of Hand (pickpocket, palm, plant, swap, hide object, steal), Stealth (sneak, hide, creep, move silently, stay hidden, skulk)
 - When a SKILL CHECK RESULT appears (e.g. "rolled Persuasion: 18 — Success!"), you MUST honor the result. SUCCESS = player's approach worked. FAILURE = you resist or see through them. Never ignore roll results.
 ${steerHint}
 
