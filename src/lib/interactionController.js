@@ -66,10 +66,6 @@ export function getAdjacentInteractable(playerPos, zone) {
   return null
 }
 
-// Track searched positions to prevent spamming (tile key → timestamp)
-const _searchedTiles = new Map()
-const SEARCH_COOLDOWN_MS = 60000 // 60 seconds before you can search the same spot again
-
 /**
  * Get all available interactions at player position.
  * Returns an array of { type, target } for the interaction menu.
@@ -100,10 +96,6 @@ export function getAvailableInteractions(playerPos, zone) {
   return results
 }
 
-/** Mark a tile as searched (called after search action) */
-export function markTileSearched(x, y) {
-  _searchedTiles.set(`${x},${y}`, Date.now())
-}
 
 export function handleInteract(playerPos, zone) {
   const npc = getAdjacentNpc(playerPos, zone)

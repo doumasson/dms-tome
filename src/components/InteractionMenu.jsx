@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react'
 import useStore from '../store/useStore'
-import { getAvailableInteractions, markTileSearched } from '../lib/interactionController'
+import { getAvailableInteractions } from '../lib/interactionController'
 import {
   attemptPickpocket, attemptLockpick, attemptForceOpen,
   attemptSearch, generateChestLoot,
@@ -14,7 +14,6 @@ const ACTION_ICONS = {
   force_open: '\u{1F4AA}', // muscle
   open_chest: '\u{1F4E6}', // package
   search: '\u{1F50D}',     // magnifying glass
-  search_area: '\u{1F50E}', // magnifying glass right
   exit: '\u{1F6AA}',       // door
 }
 
@@ -25,7 +24,6 @@ const ACTION_LABELS = {
   force_open: 'Force Open',
   open_chest: 'Open',
   search: 'Search',
-  search_area: 'Search Area',
   exit: 'Travel',
 }
 
@@ -179,10 +177,7 @@ export default function InteractionMenu({
         setResult({ success: true, text: 'Opened!' })
         return
       }
-      case 'search':
-      case 'search_area': {
-        // Mark tile as searched to prevent spam
-        markTileSearched(playerPos.x, playerPos.y)
+      case 'search': {
         const dc = target.dc || 12
         const searchResult = attemptSearch(myCharacter, dc)
         if (searchResult.success) {
