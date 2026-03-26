@@ -17,15 +17,19 @@ import { safeguardSpawn } from './gridUtils.js'
 export function calculateAreaSize(brief) {
   if (brief.width && brief.height) return { width: brief.width, height: brief.height }
   const poiCount = brief.pois?.length || 3
-  // Dungeons/caves stay compact; outdoor areas are ~4x larger
+  // Dungeons/caves stay compact; outdoor areas are moderately larger
+  // Indoor areas (docking bays, corridors, rooms) stay compact
   const isDungeon = DUNGEON_THEMES.has(brief.theme)
-  const base = isDungeon ? 12 : 24
-  const maxW = isDungeon ? 80 : 200
-  const minW = isDungeon ? 30 : 80
+  const isIndoor = INDOOR_THEMES.has(brief.theme) || (brief.name || '').toLowerCase().match(/corridor|room|hall|bay|dock|chamber|cell/)
+  const base = isDungeon ? 12 : isIndoor ? 10 : 18
+  const maxW = isDungeon ? 60 : isIndoor ? 50 : 100
+  const minW = isDungeon ? 25 : isIndoor ? 20 : 50
   const width = Math.min(maxW, Math.max(minW, poiCount * base))
   const height = Math.round(width * 0.75)
   return { width, height }
 }
+
+const INDOOR_THEMES = new Set(['town', 'tavern', 'marketplace'])
 
 /* ── Theme constants ──────────────────────────────────────────── */
 

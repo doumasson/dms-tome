@@ -18,15 +18,19 @@ export function getAdjacentNpc(playerPos, zone) {
 export function getAdjacentExit(playerPos, zone) {
   if (!zone?.exits) return null
   for (const exit of zone.exits) {
-    if (!exit.position) continue
+    // Support both { position: {x,y} } and flat { x, y } format
+    const ex0 = exit.position?.x ?? exit.x
+    const ey0 = exit.position?.y ?? exit.y
+    if (ex0 == null || ey0 == null) continue
     const w = exit.width || 1
-    for (let i = 0; i < w; i++) {
-      const ex = exit.position.x + i
-      const ey = exit.position.y
-      const dx = Math.abs(playerPos.x - ex)
-      const dy = Math.abs(playerPos.y - ey)
-      if (dx <= 1 && dy <= 1) {
-        return exit
+    const h = exit.height || 1
+    for (let ix = 0; ix < w; ix++) {
+      for (let iy = 0; iy < h; iy++) {
+        const dx = Math.abs(playerPos.x - (ex0 + ix))
+        const dy = Math.abs(playerPos.y - (ey0 + iy))
+        if (dx <= 1 && dy <= 1) {
+          return exit
+        }
       }
     }
   }

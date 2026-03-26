@@ -168,14 +168,23 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', gap: 4, flexShrink: 0, alignSelf: 'center' }}>
-      {/* Other party members stacked vertically above */}
+    <div style={{ position: 'relative', flexShrink: 0, alignSelf: 'center' }}>
+      {/* Party member portraits — float above the bottom bar on the left */}
       {others.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+        <div style={{
+          position: 'absolute',
+          bottom: '100%',
+          left: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 6,
+          paddingBottom: 8,
+        }}>
           {others.map((member, i) => renderPortrait(member, i, 'small'))}
         </div>
       )}
-      {/* Player's own portrait — bigger, at bottom */}
+      {/* Player's own portrait — inside the bar */}
       {me && renderPortrait(me, 'me', 'big')}
     </div>
   )

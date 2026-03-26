@@ -6,6 +6,49 @@ import { buildAreaFromBrief } from '../lib/areaBuilder.js'
 import { safeguardSpawn } from '../lib/gridUtils.js'
 
 /**
+ * Validate and repair exit connectivity in campaign areaBriefs.
+ * Ensures bidirectional exits and warns about missing targets.
+ */
+function validateAndRepairExits(briefs, areas) {
+  const allIds = new Set([...Object.keys(briefs), ...Object.keys(areas)])
+  const repairs = []
+
+  for (const [areaId, brief] of Object.entries(briefs)) {
+    if (!brief.exits) continue
+    for (const exit of brief.exits) {
+      if (!exit.targetArea) continue
+      // Check target exists
+      if (!allIds.has(exit.targetArea)) {
+        console.warn(`[worldLoader] Exit from "${areaId}" targets unknown area "${exit.targetArea}" — removing`)
+        exit._invalid = true
+        continue
+      }
+      // Ensure reverse exit exists
+      const targetBrief = briefs[exit.targetArea]
+      if (targetBrief) {
+        const hasReverse = (targetBrief.exits || []).some(e => e.targetArea === areaId)
+        if (!hasReverse) {
+          // Auto-create reverse exit on opposite edge
+          const oppositeEdge = { north: 'south', south: 'north', east: 'west', west: 'east' }[exit.edge] || 'south'
+          if (!targetBrief.exits) targetBrief.exits = []
+          targetBrief.exits.push({
+            edge: oppositeEdge,
+            targetArea: areaId,
+            label: brief.name || areaId,
+          })
+          repairs.push(`Added reverse exit: ${exit.targetArea} → ${areaId} (${oppositeEdge})`)
+        }
+      }
+    }
+    // Remove invalid exits
+    if (brief.exits) {
+      brief.exits = brief.exits.filter(e => !e._invalid)
+    }
+  }
+  if (repairs.length) console.log('[worldLoader] Exit repairs:', repairs)
+}
+
+/**
  * Loads the area world on mount — test area, campaign areas, or demo fallback.
  */
 export function useWorldLoader({ campaign, setPlayerPos }) {
@@ -53,6 +96,9 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
       worldLoadedRef.current = true
       const areas = { ...(campaignData.areas || {}) }
       const briefs = { ...(campaignData.areaBriefs || {}) }
+
+      // Validate and repair exit connectivity (bidirectional exits, missing targets)
+      validateAndRepairExits(briefs, areas)
 
       // If startArea is undefined, pick the first available brief or area
       let startId = campaignData.startArea
