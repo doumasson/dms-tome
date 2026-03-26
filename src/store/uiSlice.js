@@ -17,11 +17,11 @@ export function createUiSlice(set, get) {
       // Combat actions are too frequent and create constant talking
       if (msg.role === 'dm' && msg.text && msg.speaker !== 'System' && msg.speaker !== 'Combat') {
         // Skip combat-related messages (attack results, damage, saves, etc.)
-        const isCombatNarration = get().encounter?.phase === 'combat' &&
-          !msg.speaker || msg.speaker === 'DM' || msg.speaker === 'The Narrator'
+        const inCombat = get().encounter?.phase === 'combat'
         const isNpc = msg.speaker && msg.speaker !== 'DM' && msg.speaker !== 'The Narrator' && msg.speaker !== 'System' && msg.speaker !== 'Combat'
+        const isGenericDm = !msg.speaker || msg.speaker === 'DM' || msg.speaker === 'The Narrator'
         // Only TTS: NPC dialogue, scene descriptions, story narration — NOT combat play-by-play
-        if (isNpc || !isCombatNarration) {
+        if (isNpc || !(inCombat && isGenericDm)) {
           const voiceCfg = isNpc ? getNpcVoice(msg.speaker) : undefined
           speak(msg.text, null, isNpc ? { npcName: msg.speaker, voice: voiceCfg } : {})
         }
