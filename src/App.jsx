@@ -5,7 +5,7 @@ import { decryptApiKey } from './lib/apiKeyVault';
 import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
-import { speak } from './lib/tts';
+// TTS is handled inside addNarratorMessage (uiSlice) — no direct speak() calls needed here
 import { receiveEmote } from './components/game/EmoteSystem';
 import { receivePing } from './components/game/PingSystem';
 import LoginPage from './components/LoginPage';
@@ -472,8 +472,11 @@ export default function App() {
           break
         case 'rest-proposal':
           // Show rest modal for all players when someone proposes a rest
-          // handled via encounter-action broadcast — set restProposal in store
           useStore.setState({ pendingRestProposal: payload })
+          break
+        case 'rest-vote':
+          // Sync rest votes across players — dispatch custom event for RestModal to pick up
+          window.dispatchEvent(new CustomEvent('rest-vote-received', { detail: payload }))
           break
         case 'emote':
           receiveEmote(payload.playerName, payload.emoji);
@@ -524,11 +527,8 @@ export default function App() {
       if (!payload?.text) return;
       const myId = useStore.getState().user?.id;
       if (payload._senderId && payload._senderId === myId) return;
+      // addNarratorMessage handles TTS internally with proper filtering
       useStore.getState().addNarratorMessage(payload);
-      // TTS: speak DM messages aloud for non-host players
-      if (payload.role === 'dm') {
-        speak(payload.text, null, { voice: payload.npcVoice || 'onyx' });
-      }
     });
 
     // Area transition — each player is independent, never pull anyone

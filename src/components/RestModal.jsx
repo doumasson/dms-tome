@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import useStore from '../store/useStore';
 import { CLASSES } from '../data/classes';
+import { broadcastEncounterAction } from '../lib/liveChannel';
 
 const VOTE_TIMEOUT_MS = 60000; // 60 seconds
 
@@ -24,6 +25,18 @@ export default function RestModal({ type, proposedBy, partyMembers, onResolve, o
   const [hitDiceLog, setHitDiceLog] = useState([]); // { roll, healed, remaining }
   const timerRef = useRef();
   const totalPlayers = partyMembers?.length || 1;
+
+  // Listen for remote votes from other players
+  useEffect(() => {
+    const handler = (e) => {
+      const { playerId, vote } = e.detail || {}
+      if (playerId && playerId !== user?.id) {
+        setVotes(v => ({ ...v, [playerId]: vote }))
+      }
+    }
+    window.addEventListener('rest-vote-received', handler)
+    return () => window.removeEventListener('rest-vote-received', handler)
+  }, [user?.id])
 
   // Tick the timer
   useEffect(() => {
@@ -57,6 +70,7 @@ export default function RestModal({ type, proposedBy, partyMembers, onResolve, o
   function castVote(yes) {
     if (!user) return;
     setVotes(v => ({ ...v, [user.id]: yes }));
+    broadcastEncounterAction({ type: 'rest-vote', playerId: user.id, vote: yes });
   }
 
   function handleForce() {

@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react'
+import useStore from '../../store/useStore'
 
 const DiceTray = lazy(() => import('../DiceTray'))
 const CharacterSheetModal = lazy(() => import('../characterSheet/CharacterSheetModal'))
@@ -148,7 +149,10 @@ export default function GameModalsRenderer({
         <Suspense fallback={null}>
           <RestModal
             type={restProposal.type} proposedBy={restProposal.proposedBy}
-            partyMembers={[{ id: user?.id, name: myCharacter?.name || 'You' }]}
+            partyMembers={[
+              { id: user?.id, name: myCharacter?.name || 'You' },
+              ...((useStore.getState().partyMembers || []).filter(m => m.name !== myCharacter?.name).map(m => ({ id: m.userId || m.id, name: m.name })))
+            ]}
             isHost={false}
             onResolve={() => { advanceGameTime(restProposal.type === 'long' ? 8 : 1); setRestProposal(null) }}
             onCancel={() => setRestProposal(null)}

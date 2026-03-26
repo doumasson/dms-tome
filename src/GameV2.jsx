@@ -388,13 +388,13 @@ export default function GameV2({ onLeave }) {
     const pos = playerPosRef.current
     const interactions = getAvailableInteractions(pos, zone)
 
-    // If the only interaction is exit or single talk, execute immediately
+    // Nothing to interact with
     if (interactions.length === 0) return
+    // Single interaction — execute immediately
     if (interactions.length === 1) {
       const { type, target } = interactions[0]
       if (type === 'exit') { handleAreaTransition(target); return }
       if (type === 'talk') { openNpcInteraction(target); return }
-      if (type === 'search_area') { setShowInteractionMenu(true); return }
     }
 
     // Multiple options — show context menu

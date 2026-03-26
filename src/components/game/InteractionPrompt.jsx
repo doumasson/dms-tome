@@ -23,14 +23,19 @@ export default function InteractionPrompt({ playerPos, zone }) {
       if (dist <= 2) return { type: 'npc', label: npc.name || 'NPC' }
     }
 
-    // Check exits within 2 tiles
+    // Check exits within 2 tiles (exits can be multi-tile wide)
     const exits = zone.exits || []
     for (const exit of exits) {
       const ex = exit.x ?? exit.position?.x
       const ey = exit.y ?? exit.position?.y
       if (ex == null || ey == null) continue
-      const dist = Math.abs(x - ex) + Math.abs(y - ey)
-      if (dist <= 2) return { type: 'exit', label: exit.label || exit.targetName || 'Exit' }
+      const ew = exit.width || 1
+      const eh = exit.height || 1
+      // Check distance to closest point on the exit rectangle
+      const closestX = Math.max(ex, Math.min(ex + ew - 1, x))
+      const closestY = Math.max(ey, Math.min(ey + eh - 1, y))
+      const dist = Math.abs(x - closestX) + Math.abs(y - closestY)
+      if (dist <= 2) return { type: 'exit', label: exit.label || exit.targetArea || 'Exit' }
     }
 
     return null

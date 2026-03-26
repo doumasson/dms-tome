@@ -45,7 +45,6 @@ export default function NpcConversation({
   // Social skill check state
   const [pendingRoll, setPendingRoll] = useState(null) // { skill, dc, reason }
   const [rollResult, setRollResult] = useState(null)    // { d20, total, pass, skill }
-  const [suggestions, setSuggestions] = useState([])     // AI-suggested player responses
 
   // Reputation change state
   const [pendingRepChange, setPendingRepChange] = useState(null) // { faction, delta, reason }
@@ -123,8 +122,6 @@ export default function NpcConversation({
       // Broadcast NPC response to all players — shows in their NPC dialog viewer
       broadcastNpcDialogMessage(npc.name, { role: 'npc', speaker: npc.name, text: dialogue })
 
-      // Don't show AI-suggested responses — this is a living game requiring user input
-      setSuggestions([])
 
       // Check for social skill check request
       if (result?.rollRequest && result.rollRequest.skill && result.rollRequest.dc) {
@@ -181,7 +178,6 @@ export default function NpcConversation({
     const updated = [...messages, playerMsg]
     setMessages(updated)
     setInput('')
-    setSuggestions([])
 
     // Broadcast player's message so other players see it in the NPC dialog viewer
     broadcastNpcDialogMessage(npc.name, { role: 'player', speaker: charName, text: trimmed })
