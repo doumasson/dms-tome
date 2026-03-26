@@ -229,18 +229,18 @@ ${npc.sideQuest ? '- If appropriate, mention your side quest organically. Share 
 
 Skill check rules:
 - When a player tries to PERSUADE, INTIMIDATE, DECEIVE, or INSIGHT-READ you, include a rollRequest. Set the DC based on difficulty: easy (DC 10), medium (DC 13), hard (DC 15), very hard (DC 18), near impossible (DC 20). Choose the appropriate skill: Persuasion for friendly convincing, Intimidation for threats, Deception for lies, Insight for reading motives.
+- KEYWORD DETECTION: Look for these words/phrases in player messages and auto-trigger the matching skill check:
+  - "persuade", "convince", "please", "I beg you", "surely you can" → Persuasion check
+  - "intimidate", "threaten", "or else", "you'd better", "I'll make you" → Intimidation check
+  - "lie", "bluff", "I'm actually", "pretend", "deceive" → Deception check
+  - "read", "tell if lying", "what's really going on", "sense motive", "insight" → Insight check
 - When a SKILL CHECK RESULT appears (e.g. "rolled Persuasion: 18 — Success!"), you MUST honor the result. SUCCESS = player's approach worked. FAILURE = you resist or see through them. Never ignore roll results.
 ${steerHint}
 
-Suggested responses:
-- Always include 2-3 suggested player responses in the "suggestions" field. These should be short (5-12 words each), varied in tone and approach, and give the player interesting directions to take the conversation:
-  - One should continue the current topic or go deeper
-  - One should try a different angle or ask about something new
-  - Optionally include one that's a social skill attempt (persuade, intimidate, etc.)
-- Make suggestions feel natural and in-world, not generic. They should reflect what a player might actually want to say in this moment.
+Do NOT include suggested responses. Players decide what to say on their own.
 
 Respond ONLY with a raw JSON object — no markdown, no code fences:
-{"narrative":"Your in-character response here.","suggestions":["Ask about the rumors","Tell me about the bounty","I don't believe you (Insight)"],"rollRequest":null,"reputationChange":null,"questOffer":null}
+{"narrative":"Your in-character response here.","rollRequest":null,"reputationChange":null,"questOffer":null}
 
 rollRequest rules:
 - Set to null for normal conversation. Only include when the player is actively trying to influence you.

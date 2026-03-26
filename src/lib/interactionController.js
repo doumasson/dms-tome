@@ -99,19 +99,8 @@ export function getAvailableInteractions(playerPos, zone) {
   }
   const exit = getAdjacentExit(playerPos, zone)
   if (exit) results.push({ type: 'exit', target: exit })
-  // Search area — only available if zone has searchable tag AND not recently searched here
-  if (results.length === 0) {
-    const zoneTags = zone?.tags || []
-    const isSearchable = zoneTags.includes('searchable') || zoneTags.includes('lootable') ||
-      zone?.interactables?.some(i => i.type === 'searchable')
-    if (isSearchable) {
-      const tileKey = `${playerPos.x},${playerPos.y}`
-      const lastSearched = _searchedTiles.get(tileKey) || 0
-      if (Date.now() - lastSearched > SEARCH_COOLDOWN_MS) {
-        results.push({ type: 'search_area', target: { dc: 14, label: 'Search Area' } })
-      }
-    }
-  }
+  // No blanket "search area" — search is only available near interactable objects
+  // Players must find specific searchable spots, chests, or containers
   return results
 }
 

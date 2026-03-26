@@ -22,7 +22,7 @@ const STATUS_COLORS = {
 export default function QuestTracker() {
   const quests = useStore(s => s.quests) || [];
   const questObjectives = useStore(s => s.campaign?.questObjectives) || [];
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [filter, setFilter] = useState('active'); // 'active' | 'all'
 
   // Combine store quests with legacy campaign questObjectives

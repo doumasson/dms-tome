@@ -14,22 +14,52 @@ import { safeguardSpawn } from './gridUtils.js'
 
 /* ── Area sizing ─────────────────────────────────────────────── */
 
+// Semantic size categories — match area name/type to realistic dimensions
+const SIZE_KEYWORDS = {
+  // Tiny rooms: 4x4 to 8x8 (elevator shafts, cells, closets)
+  tiny: /elevator|shaft|cell|closet|alcove|nook|crawl|vent|hatch/i,
+  // Small rooms: 8x6 to 15x12 (corridors, hallways, small rooms)
+  small: /corridor|hallway|hall\b|passage|tunnel|bridge|stairw|landing|airlock|pod|booth/i,
+  // Medium rooms: 15x12 to 30x25 (rooms, chambers, bays, docks)
+  medium: /room|chamber|bay|dock|office|quarters|barracks|lab|armory|mess|storage|workshop|shrine|chapel/i,
+  // Large areas: 30x25 to 60x50 (plazas, markets, caverns, arenas)
+  large: /plaza|market|arena|cavern|courtyard|garden|warehouse|hangar|throne|great.*hall/i,
+  // Hub areas: 50x40 to 80x60 (towns, villages, camps, outposts)
+  hub: /town|village|camp|outpost|settlement|fortress|castle|keep|stronghold|hub|station|command.*center/i,
+  // Open world: 60x50 to 100x75 (forests, fields, deserts, wilderness)
+  open: /forest|field|desert|wilderness|plains|swamp|mountain|coast|beach|lake|river|road|trail/i,
+}
+
+const SIZE_RANGES = {
+  tiny:   { minW: 6,  maxW: 10, minH: 6,  maxH: 10 },
+  small:  { minW: 8,  maxW: 18, minH: 6,  maxH: 14 },
+  medium: { minW: 15, maxW: 35, minH: 12, maxH: 28 },
+  large:  { minW: 30, maxW: 55, minH: 25, maxH: 45 },
+  hub:    { minW: 45, maxW: 80, minH: 35, maxH: 60 },
+  open:   { minW: 55, maxW: 100, minH: 45, maxH: 75 },
+}
+
+function detectSizeCategory(name, theme) {
+  const text = (name || '') + ' ' + (theme || '')
+  for (const [cat, regex] of Object.entries(SIZE_KEYWORDS)) {
+    if (regex.test(text)) return cat
+  }
+  // Fallback by theme
+  if (DUNGEON_THEMES.has(theme)) return 'medium'
+  return 'large'
+}
+
 export function calculateAreaSize(brief) {
   if (brief.width && brief.height) return { width: brief.width, height: brief.height }
   const poiCount = brief.pois?.length || 3
-  // Dungeons/caves stay compact; outdoor areas are moderately larger
-  // Indoor areas (docking bays, corridors, rooms) stay compact
-  const isDungeon = DUNGEON_THEMES.has(brief.theme)
-  const isIndoor = INDOOR_THEMES.has(brief.theme) || (brief.name || '').toLowerCase().match(/corridor|room|hall|bay|dock|chamber|cell/)
-  const base = isDungeon ? 12 : isIndoor ? 10 : 18
-  const maxW = isDungeon ? 60 : isIndoor ? 50 : 100
-  const minW = isDungeon ? 25 : isIndoor ? 20 : 50
-  const width = Math.min(maxW, Math.max(minW, poiCount * base))
-  const height = Math.round(width * 0.75)
+  const category = detectSizeCategory(brief.name, brief.theme)
+  const range = SIZE_RANGES[category]
+  // Scale within range based on POI count (more POIs = bigger)
+  const poiFactor = Math.min(1, (poiCount - 1) / 5) // 0 to 1
+  const width = Math.round(range.minW + (range.maxW - range.minW) * poiFactor)
+  const height = Math.round(range.minH + (range.maxH - range.minH) * poiFactor)
   return { width, height }
 }
-
-const INDOOR_THEMES = new Set(['town', 'tavern', 'marketplace'])
 
 /* ── Theme constants ──────────────────────────────────────────── */
 

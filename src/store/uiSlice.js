@@ -13,15 +13,17 @@ export function createUiSlice(set, get) {
       open: false,
     },
     addNarratorMessage: (msg) => {
-      // TTS: only speak narrative/story/NPC messages — NOT combat actions
-      // Combat actions are too frequent and create constant talking
+      // TTS: only speak narrative/story/NPC messages
+      // Skip: combat actions, search results, skill checks, system messages
       if (msg.role === 'dm' && msg.text && msg.speaker !== 'System' && msg.speaker !== 'Combat') {
-        // Skip combat-related messages (attack results, damage, saves, etc.)
         const inCombat = get().encounter?.phase === 'combat'
         const isNpc = msg.speaker && msg.speaker !== 'DM' && msg.speaker !== 'The Narrator' && msg.speaker !== 'System' && msg.speaker !== 'Combat'
         const isGenericDm = !msg.speaker || msg.speaker === 'DM' || msg.speaker === 'The Narrator'
-        // Only TTS: NPC dialogue, scene descriptions, story narration — NOT combat play-by-play
-        if (isNpc || !(inCombat && isGenericDm)) {
+        // Skip mechanical messages: searches, skill checks, trap results, pickpocket, etc.
+        const txt = msg.text || ''
+        const isMechanical = /\(Investigation DC|\(Sleight of Hand|\(Athletics DC|\(Stealth|\(Perception|searches but finds|picks the lock|forces the lock|finds nothing/i.test(txt)
+        // Only TTS: NPC dialogue, scene descriptions, story narration
+        if (!isMechanical && (isNpc || !(inCombat && isGenericDm))) {
           const voiceCfg = isNpc ? getNpcVoice(msg.speaker) : undefined
           speak(msg.text, null, isNpc ? { npcName: msg.speaker, voice: voiceCfg } : {})
         }

@@ -28,6 +28,9 @@ class Camera {
     this.areaWidth = null;
     this.areaHeight = null;
 
+    // UI offset — bottom bar covers this many pixels, camera compensates
+    this.uiBottomOffset = 200;
+
     // Pan velocity (world px/sec)
     this._vx = 0;
     this._vy = 0;
@@ -161,8 +164,10 @@ class Camera {
   // ---------------------------------------------------------------------------
 
   centerOn(tileX, tileY, tileSize) {
+    // Center in visible area (above the bottom UI bar)
+    const visibleH = this.viewportHeight - this.uiBottomOffset;
     let tx = tileX * tileSize + tileSize / 2 - this.viewportWidth / (2 * this.zoom);
-    let ty = tileY * tileSize + tileSize / 2 - this.viewportHeight / (2 * this.zoom);
+    let ty = tileY * tileSize + tileSize / 2 - visibleH / (2 * this.zoom);
     // Clamp target within area bounds to avoid snapping to corners
     if (this.areaWidth !== null) {
       const maxX = Math.max(0, this.areaWidth - this.viewportWidth / this.zoom);
@@ -175,8 +180,9 @@ class Camera {
   }
 
   centerOnImmediate(tileX, tileY, tileSize) {
+    const visibleH = this.viewportHeight - this.uiBottomOffset;
     const tx = tileX * tileSize + tileSize / 2 - this.viewportWidth / (2 * this.zoom);
-    const ty = tileY * tileSize + tileSize / 2 - this.viewportHeight / (2 * this.zoom);
+    const ty = tileY * tileSize + tileSize / 2 - visibleH / (2 * this.zoom);
     this._targetX = null;
     this._targetY = null;
     this._vx = 0;
