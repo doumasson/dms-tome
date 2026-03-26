@@ -6,28 +6,25 @@
 > - **DO NOT WRITE TESTS.** Fix real game code only.
 > - If Playwright shows the game is broken, fix THAT before anything else.
 
-## Multiplayer Playtest Fixes (2026-03-25)
+## Multiplayer Playtest Fixes (2026-03-25) — ALL 17 FIXED
 
-### Fixed
 - [x] Can't see other player token on spawn — broadcast initial position on game load
 - [x] Combat teleports players — save pre-combat position, restore after combat ends
-- [x] TTS narrates every combat action — filter out combat play-by-play, only speak NPC/story/scene
-- [x] TTS voices broken (Stephen Hawking) — NPC voice registry was already wired, TTS filter was blocking it
-- [x] Can't move simultaneously — per-token animation tracking instead of global lock
-- [x] NPC conversations not visible to all players — broadcast NPC dialog messages to narrator chat
-- [x] Remove suggested response choices in NPC dialog — removed, living game requires user input
+- [x] TTS narrates every combat action — filter: only speak NPC/story/scene, skip combat play-by-play
+- [x] TTS voices broken (Stephen Hawking) — fixed operator precedence bug blocking NPC voice registry
+- [x] Can't move simultaneously — per-token animation map instead of single global lock
+- [x] NPC conversations invisible to party — broadcast NPC dialog to all players via narrator chat
+- [x] Remove suggested responses — removed, living game requires user input
 - [x] Click-to-move broken — cancel stale spell targeting when leaving combat
-- [x] Weather not synced across players — handle weather-change broadcast in encounter-action receiver
-- [x] Clicking other player shows inventory — hide InventoryPane for non-self character sheets
-- [x] Space recenter camera broken when zoomed in — clamp centerOn target within area bounds
-- [x] Indoor lighting at night — auto-place building interior lights, boost intensity 2.5x at night
-- [x] Long rest voting not reaching other player — broadcast rest proposals via encounter-action
-- [x] E to search spammable everywhere — require searchable zone tag + 60s per-tile cooldown
-
-### Still Needs Attention (campaign-specific)
-- [ ] Zone transitions missing for "command hub corridor" — campaign data needs proper exit definitions
-- [ ] Missing zone transitions to "lower docks" — campaign generator needs to create bidirectional exits
-- [ ] Portrait layout — currently correct (player big, party small above), may need further tuning
+- [x] Weather not synced — handle weather-change broadcast in encounter-action receiver
+- [x] Portrait layout — party members float above bottom bar on left, only player portrait in bar
+- [x] Other player shows inventory — hide InventoryPane for non-self character sheets
+- [x] Space recenter broken — clamp centerOn target within area bounds
+- [x] Indoor lighting at night — auto-place building lights + 2.5x brightness at night
+- [x] Zone transitions missing — FIX: getAdjacentExit was checking exit.position (undefined) instead of exit.x/y
+- [x] Long rest voting broken — broadcast rest proposals to all players
+- [x] Search spammable — require searchable zone tag + 60s per-tile cooldown
+- [x] Missing zone transitions — auto-generate reverse exits, validate exit targets, reduce area sizes
 
 ## Previous Fixes (all checked off)
 
