@@ -479,16 +479,24 @@ export default function GameV2({ onLeave }) {
       ...e, isEnemy: true, type: 'enemy',
       position: e.position || { x: playerPosRef.current.x + 2, y: playerPosRef.current.y },
     }))
-    const combatParty = freshParty.map(p => ({
-      ...p,
-      ...(myChar && (p.id === myChar.id || p.name === myChar.name) ? myChar : {}),
-      position: myChar && (p.id === myChar.id || p.name === myChar.name) ? { ...playerPosRef.current } : null,
-    }))
+    // Use live positions from areaTokenPositions so all players have correct combat positions
+    const areaPositions = useStore.getState().areaTokenPositions?.[currentAreaId] || {}
+    const combatParty = freshParty.map(p => {
+      const isLocal = myChar && (p.id === myChar.id || p.name === myChar.name)
+      const livePos = isLocal
+        ? { ...playerPosRef.current }
+        : (areaPositions[p.userId] || areaPositions[p.id] || null)
+      return {
+        ...p,
+        ...(isLocal ? myChar : {}),
+        position: livePos,
+      }
+    })
     if (myChar && !combatParty.some(p => p.id === myChar.id || p.name === myChar.name)) {
       combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
     }
     startEncounter(combatEnemies, combatParty, true)
-  }, [])
+  }, [currentAreaId])
 
   // --- Early returns ---
   if (apiKeyLoaded && !sessionApiKey) {

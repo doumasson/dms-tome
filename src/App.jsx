@@ -531,15 +531,18 @@ export default function App() {
       }
     });
 
-    // Area transition sync (host → players for V2 world map)
+    // Area transition sync — only follow if the transitioning player is the host
+    // Non-host players should NOT be dragged into zones when another player transitions
     ch.on('broadcast', { event: 'area-transition' }, ({ payload }) => {
-      if (!useStore.getState().isDM) {
+      // Only non-DM players auto-follow host transitions
+      // Player-to-player transitions are individual — each player transitions independently
+      if (!useStore.getState().isDM && payload.isHost) {
         const { areaId, entryPoint } = payload;
-        const { activateArea, setPlayerPos } = useStore.getState();
+        const { activateArea } = useStore.getState();
         activateArea(areaId);
         // Apply entry point so non-host players spawn at the correct position
         if (entryPoint && typeof entryPoint.x === 'number') {
-          setPlayerPos(entryPoint);
+          useStore.getState().setPlayerPos(entryPoint);
         }
       }
     });

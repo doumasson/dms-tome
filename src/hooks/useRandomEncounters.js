@@ -92,9 +92,23 @@ export function useRandomEncounters({
 
     // Create the combat start function that other systems (narrator chat, stealth) expect
     const startCombatWithZoneEnemies = () => {
-      const { startEncounter, partyMembers: pm } = useStore.getState()
+      const state = useStore.getState()
+      const { startEncounter, partyMembers: pm, myCharacter: mc, currentAreaId: areaId, areaTokenPositions } = state
       if (startEncounter) {
-        startEncounter(enemiesWithPositions, pm, true, { hazards })
+        // Include live positions for all party members
+        const areaPos = areaTokenPositions?.[areaId] || {}
+        const partyWithPositions = (pm || []).map(p => {
+          const isLocal = mc && (p.id === mc.id || p.name === mc.name)
+          return {
+            ...p,
+            ...(isLocal ? mc : {}),
+            position: isLocal ? { ...playerPos } : (areaPos[p.userId] || areaPos[p.id] || null),
+          }
+        })
+        if (mc && !partyWithPositions.some(p => p.id === mc.id || p.name === mc.name)) {
+          partyWithPositions.push({ ...mc, position: { ...playerPos } })
+        }
+        startEncounter(enemiesWithPositions, partyWithPositions, true, { hazards })
         broadcastEncounterAction({
           type: 'start-encounter',
           enemies: enemiesWithPositions,

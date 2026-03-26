@@ -17,6 +17,7 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
   const activateArea = useStore(s => s.activateArea)
   const clearPendingEncounterData = useStore(s => s.clearPendingEncounterData)
   const setEncounterLock = useStore(s => s.setEncounterLock)
+  const isDM = useStore(s => s.isDM)
 
   const [transitioning, setTransitioning] = useState(false)
   const lastNpcTriggerRef = useRef(null)
@@ -89,7 +90,7 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
     const entry = targetArea
       ? safeguardSpawn(rawEntry, targetArea.enemies, targetArea)
       : rawEntry
-    broadcastAreaTransition(targetId, entry)
+    broadcastAreaTransition(targetId, entry, isDM)
     lastNpcTriggerRef.current = null
     // Clear encounter lock when leaving the area
     clearPendingEncounterData()

@@ -99,11 +99,11 @@ export function broadcastJournalEntry(entry) {
 
 /* ── Area broadcasts ──────────────────────────────────────────── */
 
-export function broadcastAreaTransition(areaId, entryPoint) {
+export function broadcastAreaTransition(areaId, entryPoint, isHost = false) {
   _channel?.send({
     type: 'broadcast',
     event: 'area-transition',
-    payload: { areaId, entryPoint },
+    payload: { areaId, entryPoint, isHost },
   })
 }
 

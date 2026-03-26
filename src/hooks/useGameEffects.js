@@ -38,30 +38,32 @@ export function useGameEffects({
   const defeatReset = useStore(s => s.defeatReset)
   const lastSkillCheckResult = useStore(s => s.lastSkillCheckResult)
 
-  // Teleport player into combat zone if outside bounds
+  // On combat start: save pre-combat position and center camera on the encounter
   useEffect(() => {
     if (inCombat && !prevInCombatRef.current && encounter.combatants?.length) {
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
-      for (const c of encounter.combatants) {
-        if (c.position) {
-          minX = Math.min(minX, c.position.x)
-          minY = Math.min(minY, c.position.y)
-          maxX = Math.max(maxX, c.position.x)
-          maxY = Math.max(maxY, c.position.y)
+      const pos = playerPosRef.current
+      // Save position before combat so we can restore it after
+      useStore.setState({ lastCombatPosition: { ...pos } })
+
+      // Find my combatant's position from the synced encounter state (set by DM)
+      const myChar = useStore.getState().myCharacter
+      const myCombatant = encounter.combatants.find(c =>
+        c.type === 'player' && (c.id === myChar?.id || c.name === myChar?.name)
+      )
+      if (myCombatant?.position) {
+        // Use the position the DM assigned — this is the authoritative position
+        setPlayerPos(myCombatant.position)
+        playerPosRef.current = { ...myCombatant.position }
+        if (cameraRef.current) cameraRef.current.centerOn(myCombatant.position.x, myCombatant.position.y, zone?.tileSize || 200)
+      } else {
+        // Fallback: center camera on the combat area
+        let cx = 0, cy = 0, count = 0
+        for (const c of encounter.combatants) {
+          if (c.position) { cx += c.position.x; cy += c.position.y; count++ }
         }
-      }
-      if (minX !== Infinity) {
-        const pad = 2
-        const bx0 = minX - pad, by0 = minY - pad, bx1 = maxX + pad, by1 = maxY + pad
-        const pos = playerPosRef.current
-        // Save position before combat so we can restore it after
-        useStore.setState({ lastCombatPosition: { ...pos } })
-        if (pos.x < bx0 || pos.x > bx1 || pos.y < by0 || pos.y > by1) {
-          const nx = Math.max(bx0, Math.min(bx1, pos.x))
-          const ny = Math.max(by0, Math.min(by1, pos.y))
-          setPlayerPos({ x: nx, y: ny })
-          playerPosRef.current = { x: nx, y: ny }
-          if (cameraRef.current) cameraRef.current.centerOn(nx, ny, zone?.tileSize || 200)
+        if (count > 0) {
+          cx = Math.round(cx / count); cy = Math.round(cy / count)
+          if (cameraRef.current) cameraRef.current.centerOn(cx, cy, zone?.tileSize || 200)
         }
       }
     }
@@ -252,11 +254,20 @@ export function useGameEffects({
         }))
         const myChar = useStore.getState().myCharacter
         const freshParty = useStore.getState().partyMembers || []
-        const combatParty = freshParty.map(p => ({
-          ...p,
-          ...(myChar && (p.id === myChar.id || p.name === myChar.name) ? myChar : {}),
-          position: myChar && (p.id === myChar.id || p.name === myChar.name) ? { ...playerPosRef.current } : null,
-        }))
+        const currentArea = useStore.getState().currentAreaId
+        const areaPositions = useStore.getState().areaTokenPositions?.[currentArea] || {}
+        const combatParty = freshParty.map(p => {
+          const isLocal = myChar && (p.id === myChar.id || p.name === myChar.name)
+          // Use live position from areaTokenPositions or local playerPos
+          const livePos = isLocal
+            ? { ...playerPosRef.current }
+            : (areaPositions[p.userId] || areaPositions[p.id] || null)
+          return {
+            ...p,
+            ...(isLocal ? myChar : {}),
+            position: livePos,
+          }
+        })
         if (myChar && !combatParty.some(p => p.id === myChar.id || p.name === myChar.name)) {
           combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
         }
