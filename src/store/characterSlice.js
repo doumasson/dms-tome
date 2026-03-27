@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { computeDerivedStats } from '../lib/derivedStats.js';
 import { triggerLootAnimation } from '../components/game/LootAnimation';
 import { broadcastEncounterAction } from '../lib/liveChannel';
+import { autoLevelCharacter, stripToLevel } from '../lib/charBuilder';
 
 /**
  * Character slice — player-owned characters, equipment, inventory, gold, XP.
@@ -300,10 +301,22 @@ export function createCharacterSlice(set, get) {
     applyLevelUp: (updates) => {
       set((state) => {
         const myChar = state.myCharacter;
-        const updatedChar = myChar ? { ...myChar, ...updates } : myChar;
+        if (!myChar) return state;
+
+        // Save snapshot at CURRENT level before applying
+        const snapshots = { ...(myChar.levelSnapshots || {}) };
+        const { levelSnapshots: _, ...charWithoutSnapshots } = myChar;
+        snapshots[String(myChar.level || 1)] = { ...charWithoutSnapshots };
+
+        const updatedChar = { ...myChar, ...updates, levelSnapshots: snapshots };
+
+        // Save snapshot at NEW level after applying
+        const { levelSnapshots: _2, ...newCharWithoutSnapshots } = updatedChar;
+        updatedChar.levelSnapshots[String(updatedChar.level)] = { ...newCharWithoutSnapshots };
+
         const updatedCampaignChars = state.campaign.characters.map(c =>
           (c.id === myChar?.id || c.name === myChar?.name)
-            ? { ...c, ...updates }
+            ? { ...c, ...updates, levelSnapshots: updatedChar.levelSnapshots }
             : c
         );
         return {
@@ -312,6 +325,31 @@ export function createCharacterSlice(set, get) {
         };
       });
       get().saveCampaignToSupabase();
+    },
+
+    // Scale myCharacter to a target level using snapshots or auto-level/strip helpers
+    scaleCharacterToLevel: (targetLevel) => {
+      set((state) => {
+        const myChar = state.myCharacter;
+        if (!myChar) return state;
+        const currentLevel = myChar.level || 1;
+        if (currentLevel === targetLevel) return state;
+
+        let scaledChar;
+        if (targetLevel < currentLevel) {
+          const snapshot = myChar.levelSnapshots?.[String(targetLevel)];
+          if (snapshot) {
+            scaledChar = { ...snapshot, levelSnapshots: myChar.levelSnapshots };
+          } else {
+            scaledChar = { ...stripToLevel(myChar, targetLevel), levelSnapshots: myChar.levelSnapshots || {} };
+          }
+        } else {
+          scaledChar = { ...autoLevelCharacter(myChar, currentLevel, targetLevel), levelSnapshots: myChar.levelSnapshots || {} };
+        }
+
+        return { myCharacter: scaledChar };
+      });
+      get().updateMyCharacter({});
     },
   };
 }

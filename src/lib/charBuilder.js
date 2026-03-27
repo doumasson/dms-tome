@@ -138,3 +138,118 @@ export function avatarUrl(name, race, cls) {
   const seed = encodeURIComponent(`${name} ${race} ${cls}`.trim());
   return `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=transparent`;
 }
+
+// ASI levels in SRD 5.1 (most classes)
+const ASI_LEVELS = new Set([4, 8, 12, 16, 19]);
+
+/**
+ * Auto-level a character from fromLevel up to toLevel.
+ * Returns a new character object (does not mutate the original).
+ */
+export function autoLevelCharacter(char, fromLevel, toLevel) {
+  const className = char.class || '';
+  const cls = CLASSES[className];
+  const hitDie = cls?.hitDie || 8;
+  const conScore = char.stats?.con || char.con || 10;
+  const conMod = modNum(conScore);
+
+  // Work on a mutable copy; carry snapshots along the way
+  let current = { ...char };
+  const snapshots = { ...(char.levelSnapshots || {}) };
+
+  for (let lvl = fromLevel + 1; lvl <= toLevel; lvl++) {
+    // HP gain: floor(hitDie / 2) + 1 + CON mod (minimum 1)
+    const hpGain = Math.max(1, Math.floor(hitDie / 2) + 1 + conMod);
+    const newMaxHp = (current.maxHp || hitDie + conMod) + hpGain;
+
+    // Spell slots for new level
+    const newSpellSlots = buildSpellSlots(className, lvl);
+
+    // Features for new level
+    const newFeatures = buildFeatures(className, lvl);
+
+    // Proficiency bonus
+    const newProfBonus = profBonus(lvl);
+
+    // Stats — apply ASI (+2 to highest stat, capped at 20)
+    let newStats = { ...(current.stats || {}) };
+    if (ASI_LEVELS.has(lvl)) {
+      const highestKey = Object.keys(newStats).reduce(
+        (best, k) => ((newStats[k] || 0) > (newStats[best] || 0) ? k : best),
+        Object.keys(newStats)[0] || 'str'
+      );
+      newStats = { ...newStats, [highestKey]: Math.min(20, (newStats[highestKey] || 10) + 2) };
+    }
+
+    // Save snapshot at current level before advancing
+    const { levelSnapshots: _snap, ...charWithoutSnaps } = current;
+    snapshots[String(lvl - 1)] = { ...charWithoutSnaps };
+
+    current = {
+      ...current,
+      level: lvl,
+      maxHp: newMaxHp,
+      currentHp: Math.min(current.currentHp || newMaxHp, newMaxHp),
+      spellSlots: newSpellSlots,
+      features: newFeatures,
+      proficiencyBonus: newProfBonus,
+      stats: newStats,
+    };
+  }
+
+  // Save snapshot at final level
+  const { levelSnapshots: _final, ...finalWithoutSnaps } = current;
+  snapshots[String(toLevel)] = { ...finalWithoutSnaps };
+
+  return { ...current, levelSnapshots: snapshots };
+}
+
+/**
+ * Strip a character back to targetLevel, recalculating stats from scratch.
+ * Returns a new character object (does not mutate the original).
+ */
+export function stripToLevel(char, targetLevel) {
+  const className = char.class || '';
+  const cls = CLASSES[className];
+  const hitDie = cls?.hitDie || 8;
+  const conScore = char.stats?.con || char.con || 10;
+  const conMod = modNum(conScore);
+
+  // HP: hitDie + CON mod at level 1, then avg per additional level
+  let maxHp = Math.max(1, hitDie + conMod);
+  for (let lvl = 2; lvl <= targetLevel; lvl++) {
+    maxHp += Math.max(1, Math.floor(hitDie / 2) + 1 + conMod);
+  }
+
+  // Spell slots for target level
+  const spellSlots = buildSpellSlots(className, targetLevel);
+
+  // Features for target level
+  const features = buildFeatures(className, targetLevel);
+
+  // Proficiency bonus
+  const pb = profBonus(targetLevel);
+
+  // Filter known spells to max spell level = ceil(targetLevel / 2)
+  const maxSpellLevel = Math.ceil(targetLevel / 2);
+  const knownSpells = (char.knownSpells || []).filter(spell => {
+    const spellLvl = typeof spell === 'object' ? (spell.level ?? 0) : 0;
+    return spellLvl <= maxSpellLevel;
+  });
+  const preparedSpells = (char.preparedSpells || []).filter(spell => {
+    const spellLvl = typeof spell === 'object' ? (spell.level ?? 0) : 0;
+    return spellLvl <= maxSpellLevel;
+  });
+
+  return {
+    ...char,
+    level: targetLevel,
+    maxHp,
+    currentHp: Math.min(char.currentHp || maxHp, maxHp),
+    spellSlots,
+    features,
+    proficiencyBonus: pb,
+    knownSpells,
+    preparedSpells,
+  };
+}
