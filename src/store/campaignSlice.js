@@ -179,6 +179,20 @@ export function createCampaignSlice(set, get) {
     campaignComplete: false,
     setCampaignComplete: (val) => set({ campaignComplete: val }),
 
+    // Chapter milestone detection
+    chapterMilestoneReached: false,
+    checkChapterMilestone: (triggerType, triggerId) => {
+      const state = get();
+      const milestone = state.campaign?.chapterMilestone;
+      if (!milestone || state.chapterMilestoneReached) return false;
+      if (milestone.trigger === triggerType && milestone.targetId === triggerId) {
+        set({ chapterMilestoneReached: true });
+        return true;
+      }
+      return false;
+    },
+    resetChapterMilestone: () => set({ chapterMilestoneReached: false }),
+
     // === Class Resources ===
     spendResource: (charId, resourceName) =>
       set((state) => ({

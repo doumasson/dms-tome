@@ -17,6 +17,7 @@ const ShopPanel = lazy(() => import('../ShopPanel'))
 const FormationPanel = lazy(() => import('../FormationPanel'))
 const CombatDebugOverlay = lazy(() => import('../../hud/CombatDebugOverlay'))
 const GameOverModal = lazy(() => import('../GameOverModal'))
+const ChapterCompleteModal = lazy(() => import('../ChapterCompleteModal'))
 const VictoryScreen = lazy(() => import('./VictoryScreen'))
 const DefeatScreen = lazy(() => import('./DefeatScreen'))
 const PreCombatMenu = lazy(() => import('./PreCombatMenu'))
@@ -66,6 +67,7 @@ export default function GameModalsRenderer({
   inCombat,
   campaign,
   pendingLoot, setPendingLoot,
+  chapterMilestoneReached, handleChapterContinue, handleEndSession,
   applyLevelUp,
   advanceGameTime,
   openNpcInteraction,
@@ -262,6 +264,15 @@ export default function GameModalsRenderer({
           <GameOverModal
             onRevive={() => {}}
             onLeave={() => { onLeave() }}
+          />
+        </Suspense>
+      )}
+      {chapterMilestoneReached && (
+        <Suspense fallback={null}>
+          <ChapterCompleteModal
+            campaign={campaign}
+            onContinue={handleChapterContinue}
+            onEndSession={handleEndSession}
           />
         </Suspense>
       )}
