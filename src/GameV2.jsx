@@ -42,6 +42,7 @@ import { useStealthMode } from './hooks/useStealthMode'
 import { useRandomEncounters } from './hooks/useRandomEncounters'
 import { useGameEffects } from './hooks/useGameEffects'
 import { useGameTokens } from './hooks/useGameTokens'
+import { useChapterContinuation } from './hooks/useChapterContinuation'
 import './hud/hud.css'
 
 const GameLayout          = lazy(() => import('./components/game/GameLayout'))
@@ -96,6 +97,7 @@ export default function GameV2({ onLeave }) {
   const showDeathOptions = useStore(s => s.showDeathOptions)
   const mercyRevive = useStore(s => s.mercyRevive)
   const pendingRestProposal = useStore(s => s.pendingRestProposal)
+  const chapterMilestoneReached = useStore(s => s.chapterMilestoneReached)
 
   const pixiRef = useRef(null)
   const [playerPos, setPlayerPos] = useState({ x: 5, y: 7 })
@@ -272,6 +274,9 @@ export default function GameV2({ onLeave }) {
 
   // --- Stealth approach system ---
   const { stealthMode } = useStealthMode({ playerPos, playerPosRef, partyMembers, zone })
+
+  // --- Chapter continuation ---
+  const { handleChapterContinue, handleEndSession } = useChapterContinuation()
 
   // --- Major game effects (combat, level-up, session resume, encounters, API key loading, etc.) ---
   const {
@@ -578,6 +583,9 @@ export default function GameV2({ onLeave }) {
           encounter={encounter}
           inCombat={inCombat}
           campaign={campaign}
+          chapterMilestoneReached={chapterMilestoneReached}
+          handleChapterContinue={handleChapterContinue}
+          handleEndSession={handleEndSession}
           pendingLoot={pendingLoot} setPendingLoot={setPendingLoot}
           applyLevelUp={applyLevelUp}
           advanceGameTime={advanceGameTime}
