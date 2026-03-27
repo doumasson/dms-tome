@@ -5,6 +5,7 @@ import { getNpcMovements } from '../lib/npcScheduler'
 import { findPathEdge } from '../lib/pathfinding'
 import { animateTokenAlongPath } from '../engine/TokenLayer'
 import { checkEncounterProximity, buildEncounterPrompt } from '../lib/encounterZones'
+import { resolveEncounterTemplates, isTemplateFormat } from '../lib/encounterTemplateResolver'
 import { broadcastEncounterAction } from '../lib/liveChannel'
 import { loadApiKeyFromSupabase } from '../lib/apiKeyVault'
 import { loadDefaultApiKey } from '../lib/defaultApiKey'
@@ -196,9 +197,21 @@ export function useGameEffects({
     const triggered = checkEncounterProximity(pos, zones, useStore.getState().storyFlags)
     if (!triggered) return
 
-    const relevantEnemies = triggered.enemies?.length
-      ? (zone.enemies || []).filter(e => triggered.enemies.some(name => e.name === name || e.name?.startsWith(name + ' ')))
-      : (zone.enemies || [])
+    let relevantEnemies
+    if (isTemplateFormat(triggered)) {
+      // New chapter format: resolve templates based on current party
+      const pCount = Math.max(1, (partyMembers || []).length + 1) // +1 for self
+      const avgLevel = Math.max(1, Math.round(
+        [...(partyMembers || []), myCharacter].filter(Boolean).reduce((s, m) => s + (m.level || 1), 0) /
+        Math.max(1, (partyMembers || []).length + 1)
+      ))
+      relevantEnemies = resolveEncounterTemplates(triggered, pCount, avgLevel)
+    } else {
+      // Legacy format: existing code stays as-is
+      relevantEnemies = triggered.enemies?.length
+        ? (zone.enemies || []).filter(e => triggered.enemies.some(name => e.name === name || e.name?.startsWith(name + ' ')))
+        : (zone.enemies || [])
+    }
     const allRelevantDefeated = relevantEnemies.length > 0 && relevantEnemies.every(e => areaDefeated.includes(e.name))
     if (allRelevantDefeated) {
       triggeredZonesRef.current.add(triggered.id)
@@ -210,7 +223,10 @@ export function useGameEffects({
       broadcastEncounterAction({ type: 'encounter-zone-triggered', zoneId: triggered.id })
     }
 
-    const prompt = buildEncounterPrompt(triggered, '')
+    const prompt = buildEncounterPrompt(
+      { ...triggered, dmPrompt: triggered.narratorPrompt || triggered.dmPrompt },
+      ''
+    )
     const startCombatWithZoneEnemies = () => {
       const { startEncounter } = useStore.getState()
       const zoneEnemies = (zone.enemies || []).filter(e => {

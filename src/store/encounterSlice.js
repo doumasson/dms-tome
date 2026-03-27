@@ -45,21 +45,24 @@ export function createEncounterSlice(set, get) {
     startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false, hazards = [] } = {}) => {
       const combatants = [];
 
-      // Scale enemy count to party size
+      // Scale enemy count to party size (skip for template-resolved enemies which have role field)
       const playerCount = Math.max(1, (partyMembers || []).length);
       let scaledEnemies = [...(enemies || [])];
-      if (playerCount <= 2 && scaledEnemies.length > 2) {
-        // Solo/duo: cap at playerCount enemies
-        scaledEnemies = scaledEnemies.slice(0, Math.max(1, playerCount));
-      } else if (playerCount <= 3 && scaledEnemies.length > playerCount + 1) {
-        scaledEnemies = scaledEnemies.slice(0, playerCount + 1);
-      }
-      // Also scale individual group counts for solo/duo
-      if (playerCount <= 2) {
-        scaledEnemies = scaledEnemies.map(e => ({
-          ...e,
-          count: Math.min(e.count || 1, Math.max(1, playerCount)),
-        }));
+      const isTemplateResolved = scaledEnemies.some(e => e.role);
+      if (!isTemplateResolved) {
+        if (playerCount <= 2 && scaledEnemies.length > 2) {
+          // Solo/duo: cap at playerCount enemies
+          scaledEnemies = scaledEnemies.slice(0, Math.max(1, playerCount));
+        } else if (playerCount <= 3 && scaledEnemies.length > playerCount + 1) {
+          scaledEnemies = scaledEnemies.slice(0, playerCount + 1);
+        }
+        // Also scale individual group counts for solo/duo
+        if (playerCount <= 2) {
+          scaledEnemies = scaledEnemies.map(e => ({
+            ...e,
+            count: Math.min(e.count || 1, Math.max(1, playerCount)),
+          }));
+        }
       }
 
       // Expand enemy groups by count
