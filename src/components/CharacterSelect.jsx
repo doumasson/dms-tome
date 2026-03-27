@@ -72,19 +72,62 @@ export default function CharacterSelect({ user, campaignId, onSelectExisting, on
   async function handleBring(char) {
     setSaving(true);
     try {
+      // Calculate party average level
+      const { data: members } = await supabase
+        .from('campaign_members')
+        .select('character_data')
+        .eq('campaign_id', campaignId)
+        .not('character_data', 'is', null);
+
+      const existingLevels = (members || [])
+        .map(m => m.character_data?.level || 1)
+        .filter(l => l > 0);
+      const avgLevel = existingLevels.length > 0
+        ? Math.max(1, Math.floor(existingLevels.reduce((a, b) => a + b, 0) / existingLevels.length))
+        : 1;
+
+      // Scale character to party average level if different
+      let scaledChar = { ...char };
+      const charLevel = char.level || 1;
+      if (charLevel !== avgLevel) {
+        if (charLevel > avgLevel) {
+          const snapshot = char.levelSnapshots?.[String(avgLevel)];
+          if (snapshot) {
+            scaledChar = { ...snapshot, levelSnapshots: char.levelSnapshots };
+          } else {
+            const { stripToLevel } = await import('../lib/charBuilder');
+            scaledChar = { ...stripToLevel(char, avgLevel), levelSnapshots: char.levelSnapshots || {} };
+          }
+        } else {
+          const { autoLevelCharacter } = await import('../lib/charBuilder');
+          scaledChar = { ...autoLevelCharacter(char, charLevel, avgLevel), levelSnapshots: char.levelSnapshots || {} };
+        }
+      }
+
+      // Ensure level 1 snapshot exists
+      if (!scaledChar.levelSnapshots?.['1']) {
+        const snapshots = { ...(scaledChar.levelSnapshots || {}) };
+        const { levelSnapshots: _, ...withoutSnapshots } = scaledChar;
+        if (charLevel === 1 || avgLevel === 1) {
+          snapshots['1'] = { ...withoutSnapshots };
+        }
+        scaledChar.levelSnapshots = snapshots;
+      }
+
       // Save to current campaign's campaign_members row
       const { error: dbErr } = await supabase
         .from('campaign_members')
-        .update({ character_data: char })
+        .update({ character_data: scaledChar })
         .eq('campaign_id', campaignId)
         .eq('user_id', user.id);
+
       if (dbErr) {
         setError('Failed to bring character. Please try again.');
         setSaving(false);
         return;
       }
       setSaving(false);
-      onSelectExisting(char);
+      onSelectExisting(scaledChar);
     } catch (err) {
       console.error('Error bringing character:', err);
       setError('An unexpected error occurred. Please try again.');
