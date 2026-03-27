@@ -362,16 +362,24 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     const areaBriefs = getDemoBriefs();
     const demoCampaignData = {
       title: 'Whispers in Millhaven',
-      description: 'A demo adventure across three connected areas: a quiet village, a goblin-infested forest, and sunken ruins hiding a boss fight.',
+      description: 'A demo chapter: a quiet village, a goblin-infested forest, and sunken ruins hiding a boss fight.',
+      chapter: 1,
+      tone: 'Heroic Fantasy',
+      setting: 'Medieval Kingdom',
       startArea: 'area-village',
+      chapterMilestone: {
+        trigger: 'defeat_boss',
+        targetId: 'boss_fight',
+        description: 'Defeat the Goblin Boss in the Sunken Ruins',
+      },
       factions: [
         { id: 'millhaven-guard', name: 'Millhaven Guard', description: 'Village militia protecting the locals from goblin raids', alignment: 'Lawful Good' },
         { id: 'goblin-tribe', name: 'Goblin Tribe', description: 'Scattered goblin forces seeking treasure and revenge', alignment: 'Chaotic Evil' },
       ],
       areaBriefs,
       questObjectives: [
-        { id: 'investigate', text: 'Investigate the goblin activity in Darkwood Forest', completed: false },
-        { id: 'ruins', text: 'Explore the Sunken Ruins', completed: false },
+        { id: 'investigate', text: 'Investigate the goblin activity in Darkwood Forest', completed: false, status: 'active' },
+        { id: 'ruins', text: 'Explore the Sunken Ruins and defeat the Goblin Boss', completed: false, status: 'active' },
       ],
     };
     // Update areaBriefs to add faction affiliations to NPCs
