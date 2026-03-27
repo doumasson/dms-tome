@@ -199,18 +199,25 @@ export function createGameTimeSlice(set, get) {
       return { areas: newAreas, areaBriefs: newBriefs };
     }),
 
-    activateArea: (areaId) => set(state => {
+    activateArea: (areaId) => {
+      const state = get();
       const area = state.areas[areaId];
       if (!area) {
         console.warn(`[activateArea] Area "${areaId}" not found. Available:`, Object.keys(state.areas || {}));
-        return {};
+        return;
       }
-      return {
+      set({
         currentAreaId: areaId,
         areaLayers: area.layers,
         areaCollision: area.collision || null,
         areaTilePalette: area.palette || [],
-      };
-    }),
+      });
+
+      // Check chapter milestone: reach_area
+      const checkChapterMilestone = get().checkChapterMilestone;
+      if (checkChapterMilestone) {
+        checkChapterMilestone('reach_area', areaId);
+      }
+    },
   };
 }

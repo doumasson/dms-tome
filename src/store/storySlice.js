@@ -12,6 +12,9 @@ export function createStorySlice(set, get) {
       if (flags.has(flag)) return
       flags.add(flag)
       set({ storyFlags: flags })
+
+      // Check chapter milestone: story_flag
+      get().checkChapterMilestone?.('story_flag', flag)
     },
     hasStoryFlag: (flag) => get().storyFlags.has(flag),
     loadStoryFlags: (flagsArray) => set({ storyFlags: new Set(flagsArray) }),
@@ -87,23 +90,28 @@ export function createStorySlice(set, get) {
     updateQuest: (questId, updates) => set(s => ({
       quests: s.quests.map(q => q.id === questId ? { ...q, ...updates } : q)
     })),
-    completeQuestObjective: (questId, objId) => set(s => {
-      const updatedQuests = s.quests.map(q => {
-        if (q.id !== questId) return q
-        const withObjComplete = completeObjective(q, objId)
-        const withQuestComplete = maybeCompleteQuest(withObjComplete)
+    completeQuestObjective: (questId, objId) => {
+      set(s => {
+        const updatedQuests = s.quests.map(q => {
+          if (q.id !== questId) return q
+          const withObjComplete = completeObjective(q, objId)
+          const withQuestComplete = maybeCompleteQuest(withObjComplete)
 
-        // If quest just completed and has a faction, increase reputation
-        if (withQuestComplete.status === 'completed' && q.status !== 'completed' && withQuestComplete.faction) {
-          const repIncrement = 20 // Default quest completion reward
-          if (s.adjustFactionReputation) {
-            s.adjustFactionReputation(withQuestComplete.faction, repIncrement)
+          // If quest just completed and has a faction, increase reputation
+          if (withQuestComplete.status === 'completed' && q.status !== 'completed' && withQuestComplete.faction) {
+            const repIncrement = 20 // Default quest completion reward
+            if (s.adjustFactionReputation) {
+              s.adjustFactionReputation(withQuestComplete.faction, repIncrement)
+            }
           }
-        }
 
-        return withQuestComplete
+          return withQuestComplete
+        })
+        return { quests: updatedQuests }
       })
-      return { quests: updatedQuests }
-    }),
+
+      // Check chapter milestone: complete_quest
+      get().checkChapterMilestone?.('complete_quest', questId)
+    },
   }
 }

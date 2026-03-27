@@ -951,6 +951,15 @@ export function createEncounterSlice(set, get) {
               [areaId]: [...new Set([...(state.defeatedEnemies?.[areaId] || []), ...allNames])],
             }
           }
+
+          // Check chapter milestone: defeat_boss
+          const milestone = get().campaign?.chapterMilestone
+          if (milestone?.trigger === 'defeat_boss') {
+            const checkChapterMilestone = get().checkChapterMilestone
+            if (checkChapterMilestone) {
+              checkChapterMilestone('defeat_boss', milestone.targetId)
+            }
+          }
         } else {
           // Partial victory: only mark actually killed enemies
           const deadNames = (combatants || []).filter(c => c.type === 'enemy' && (c.currentHp ?? 0) <= 0).map(e => e.name)
