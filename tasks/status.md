@@ -498,6 +498,24 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 49 comprehensive tests covering all resistance types and interactions
 - 618 tests, 0 failures.
 
+### Campaign Creation Overhaul ✅ COMPLETE
+- [x] 2-step wizard (Concept+Forge → Success), removed length/players/level/villain pickers
+- [x] 8 original tones (Heroic Fantasy, Grimdark, Horror, Mystery, Whimsical, Sword & Sorcery, War, Heist)
+- [x] 8 original settings (Medieval Kingdom, Frozen North, Desert Empire, Jungle Wilds, The Deep Below, Coastal Isles, Haunted Realm, Planar Crossroads)
+- [x] Chapter-based generation (~4 hours per chapter) with milestone endpoint
+- [x] Encounter templates (countPerPlayer, fixedCount, role) instead of fixed enemy arrays
+- [x] Dynamic encounter scaling at combat trigger time (party size + average level)
+- [x] Character level snapshots saved on every level-up
+- [x] Character scaling on campaign join (auto-level up, snapshot/strip down to party average)
+- [x] Chapter continuation: story-so-far summary + next chapter generation from milestone
+- [x] ChapterCompleteModal with Continue the Story / End Session
+- [x] Demo campaign updated to chapter format with encounter templates + milestone
+- [x] Backward compat: existing campaigns with enemies arrays still work
+- [x] campaignGenerator: chapter fields passthrough, continuation prompt, story summary prompt
+- [x] encounterTemplateResolver: 12 SRD enemy stat blocks, CR scaling by role, difficulty multipliers
+- 9 commits, build passing.
+- Spec: `docs/superpowers/specs/2026-03-26-campaign-creation-overhaul-design.md`
+
 ### Branding Refactor ✅ COMPLETE
 - [x] Updated product name to "DungeonMind"
 - [x] Changed all user-facing AI references from "Dungeon Master" to "The Narrator"
