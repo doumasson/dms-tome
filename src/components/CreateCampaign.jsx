@@ -6,11 +6,8 @@ import { getDemoBriefs } from '../data/demoArea';
 import { generateDemoCharacter } from '../lib/demoCharacter';
 import useStore from '../store/useStore';
 
-const TONES = ['Heroic & Epic', 'Dark & Gritty', 'Swashbuckling', 'Horror', 'Political Intrigue', 'Whimsical'];
-const SETTINGS = ['High Fantasy', 'The Shattered Kingdoms', 'Dark Gothic', 'Steampunk', 'Ancient World', 'Urban Fantasy', 'Sci-Fi'];
-const LENGTHS = ['One-shot (~4 hours)', 'Short campaign (3–5 sessions)', 'Full campaign (10+ sessions)'];
-const LEVELS = ['1–4 (Tier 1)', '5–10 (Tier 2)', '11–16 (Tier 3)', '17–20 (Tier 4)'];
-const VILLAINS = ['Ancient Dragon', 'Lich', 'Demon Lord', 'Corrupt Noble', 'Cosmic Horror', 'Cult Leader', 'Rival Adventurer'];
+const TONES = ['Heroic Fantasy', 'Grimdark', 'Horror', 'Mystery', 'Whimsical', 'Sword & Sorcery', 'War', 'Heist'];
+const SETTINGS = ['Medieval Kingdom', 'Frozen North', 'Desert Empire', 'Jungle Wilds', 'The Deep Below', 'Coastal Isles', 'Haunted Realm', 'Planar Crossroads'];
 
 const DRAFT_KEY = 'dm-tome-wizard-draft';
 
@@ -43,21 +40,20 @@ function cleanJsonText(str) {
 }
 
 function generatePrompt(fields) {
-  return `You are a D&D 5e campaign designer. Create a complete campaign as a set of interconnected area briefs with the following specifications:
+  return `You are a D&D 5e campaign designer. Create Chapter 1 of a campaign as a set of interconnected area briefs.
 
 Campaign Name: ${fields.name}
 Tone: ${fields.tone}
 Setting: ${fields.setting}
-Length: ${fields.length}
-Number of Players: ${fields.players}
-Starting Level: ${fields.level}
-Main Villain: ${fields.villain}
+Chapter: 1
+Starting Level: 1
 Key Themes & Notes: ${fields.themes || 'None specified'}
 
 Generate a JSON object with this EXACT structure (no extra text before or after, just the JSON):
 
 {
   "title": "${fields.name}",
+  "chapter": 1,
   "startArea": "area-village",
   "factions": [
     { "id": "town-guard", "name": "Town Guard", "description": "Official protectors of law and order", "alignment": "Lawful Good" },
@@ -67,6 +63,11 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
     { "id": "q1", "name": "Main quest objective description", "status": "active" }
   ],
   "storyMilestones": ["Meet the hermit", "Enter the dungeon"],
+  "chapterMilestone": {
+    "trigger": "boss_killed",
+    "targetId": "boss-encounter-zone-id",
+    "description": "Defeat the chapter boss to advance"
+  },
   "areaBriefs": {
     "area-village": {
       "id": "area-village",
@@ -86,8 +87,16 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
       "npcs": [
         { "name": "Barkeep Hilda", "position": "The Rusty Flagon", "personality": "Gruff but kind tavern owner, knows local rumors", "faction": "town-guard", "questRelevant": true }
       ],
-      "enemies": [],
-      "encounterZones": [],
+      "encounterZones": [
+        {
+          "id": "tavern-brawl",
+          "triggerRadius": 5,
+          "dmPrompt": "A drunken brawl erupts in the tavern",
+          "enemyTemplates": [
+            { "name": "Thug", "role": "grunt", "countPerPlayer": 1 }
+          ]
+        }
+      ],
       "exits": [
         { "edge": "north", "targetArea": "area-forest", "label": "Forest Path" }
       ]
@@ -108,11 +117,16 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
       "npcs": [
         { "name": "Old Marren", "position": "Hermit's Hut", "personality": "Paranoid hermit who knows about the curse", "faction": "shadow-guild" }
       ],
-      "enemies": [
-        { "name": "Goblin Scout", "position": "Clearing", "count": 3, "stats": { "hp": 7, "ac": 15, "speed": 30, "cr": "1/4" }, "attacks": [{ "name": "Scimitar", "bonus": "+4", "damage": "1d6+2" }] }
-      ],
       "encounterZones": [
-        { "id": "goblin_ambush", "triggerRadius": 5, "enemies": ["Goblin Scout"], "dmPrompt": "Goblin scouts ambush the party as they cross the clearing" }
+        {
+          "id": "goblin-ambush",
+          "triggerRadius": 5,
+          "dmPrompt": "Goblin scouts ambush the party as they cross the clearing",
+          "enemyTemplates": [
+            { "name": "Goblin", "role": "grunt", "countPerPlayer": 1 },
+            { "name": "Goblin Boss", "role": "leader", "fixedCount": 1 }
+          ]
+        }
       ],
       "exits": [
         { "edge": "south", "targetArea": "area-village", "label": "Back to Village" },
@@ -121,6 +135,24 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
     }
   }
 }
+
+ENCOUNTER ZONES — use enemyTemplates instead of enemies arrays:
+- Each encounter zone has an "enemyTemplates" array
+- Each template: { "name": "Monster Name", "role": "grunt|leader|boss|minion", "countPerPlayer": N } or { "name": "...", "role": "...", "fixedCount": N }
+- Roles: grunt (standard), leader (tougher, one per group), boss (chapter boss, fixedCount: 1), minion (weak, high countPerPlayer)
+- countPerPlayer scales with party size; fixedCount is exact
+
+CHAPTER MILESTONE:
+- "chapterMilestone" defines what ends this chapter
+- trigger types: "boss_killed" (targetId = encounter zone id), "quest_complete" (targetId = quest objective id), "area_reached" (targetId = area id)
+- Every chapter MUST have exactly one chapterMilestone
+
+CONTENT DENSITY:
+- 5–6 areas forming a connected graph (every area reachable via exits)
+- 4–6 encounter zones spread across areas
+- 1 boss encounter zone (role: "boss") in the final/climactic area
+- 4–8 NPCs across areas with distinct personalities
+- 2–4 factions with distinct motivations and alignments
 
 AVAILABLE POI TYPES (chunk IDs — you MUST use only these):
 - tavern_main — indoor tavern building (10x8 tiles)
@@ -154,13 +186,9 @@ When a building warrants multiple floors (taverns, inns, castles, dungeons, cave
 - Small buildings (shops, small houses) stay single-floor
 
 Requirements:
-- Create 3–6 areas forming a connected graph (every area reachable via exits)
 - Exits MUST be bidirectional: if area A exits to area B, area B must exit back to area A
 - Each area should have 2–5 POIs
-- Create 2–4 factions with distinct motivations and alignments (political, criminal, merchant, mercenary, religious, etc.)
-- Include 3–6 NPCs across areas with distinct personalities
 - Each NPC must have a "faction" field (faction id) representing their primary allegiance
-- The villain (${fields.villain}) should appear in a later area
 - Set questRelevant: true on NPCs that advance the story
 - Outdoor area dimensions: width 80–120, height 60–90 (villages, forests, towns)
 - Dungeon/cave dimensions: width 30–50, height 25–40 (compact, tighter spaces)
@@ -203,10 +231,6 @@ const DEFAULT_FIELDS = {
   isAiDm: true,
   tone: TONES[0],
   setting: SETTINGS[0],
-  length: LENGTHS[0],
-  players: '4',
-  level: LEVELS[0],
-  villain: VILLAINS[0],
   themes: '',
 };
 
@@ -229,9 +253,8 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
   // Fresh "Create New Campaign" clicks never restore anything — always start at step 1.
   useEffect(() => {
     if (draftCampaign?.campaign_data?.__draft) {
-      const { fields: savedFields, __step } = draftCampaign.campaign_data;
+      const { fields: savedFields } = draftCampaign.campaign_data;
       if (savedFields) setFields(f => ({ ...f, ...savedFields }));
-      if (__step > 1) setStep(__step);
       setCampaignId(draftCampaign.id);
     }
     // Never read from localStorage on mount — avoids stale step/JSON pre-fill on fresh creates.
@@ -241,27 +264,26 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     setFields(f => ({ ...f, [key]: val }));
   }
 
-  function saveDraftLocally(currentStep, currentFields, currentCampaignId) {
+  function saveDraftLocally(currentFields, currentCampaignId) {
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
       userId: user.id,
       campaignId: currentCampaignId,
-      step: currentStep,
       fields: currentFields,
     }));
   }
 
-  function saveDraftToDb(currentStep, currentFields, id) {
+  function saveDraftToDb(currentFields, id) {
     if (!id) return;
     // Fire-and-forget — don't block the UI
     supabase
       .from('campaigns')
-      .update({ campaign_data: { __draft: true, __step: currentStep, fields: currentFields } })
+      .update({ campaign_data: { __draft: true, fields: currentFields } })
       .eq('id', id)
       .then(() => {});
   }
 
-  // Step 1 "Next" — create the campaign record in DB right away
-  async function handleStep1Next() {
+  // Forge button — creates DB record + starts AI generation in one step
+  async function handleForge() {
     if (!fields.name.trim()) return;
     setSaving(true);
 
@@ -275,7 +297,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           name: fields.name.trim(),
           dm_user_id: user.id,
           invite_code: inviteCode,
-          campaign_data: { __draft: true, __step: 1, fields },
+          campaign_data: { __draft: true, fields },
           settings: { isAiDm: true },
         })
         .select()
@@ -291,19 +313,35 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
           role: 'dm',
         });
       }
-      // If insert failed, continue anyway — we'll try again at the end
     } else {
       // Update the name in case it changed
       supabase
         .from('campaigns')
-        .update({ name: fields.name.trim(), campaign_data: { __draft: true, __step: 1, fields } })
+        .update({ name: fields.name.trim(), campaign_data: { __draft: true, fields } })
         .eq('id', id)
         .then(() => {});
     }
 
     setSaving(false);
+    saveDraftLocally(fields, id);
+
+    // Move to step 2 and start generation
     setStep(2);
-    saveDraftLocally(2, fields, id);
+    setGenerateError('');
+    setGenerating(true);
+    setNeedsByok(false);
+    try {
+      let apiKey = await loadDefaultApiKey();
+      if (!apiKey) {
+        setGenerating(false);
+        setNeedsByok(true);
+        return;
+      }
+      await doGenerate(apiKey);
+    } catch (err) {
+      setGenerateError(err.message || 'Generation failed');
+      setGenerating(false);
+    }
   }
 
   function handleStartOver() {
@@ -376,15 +414,13 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     await handleCreate(validation.data, apiKey);
   }
 
-  async function handleAutoGenerate() {
-    setStep(3);
+  async function handleRetryGenerate() {
     setGenerateError('');
     setGenerating(true);
     setNeedsByok(false);
     try {
       let apiKey = await loadDefaultApiKey();
       if (!apiKey) {
-        // No platform key - show BYOK input and stop
         setGenerating(false);
         setNeedsByok(true);
         return;
@@ -474,7 +510,6 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
     setCreatedCampaign(campaign);
     setCreating(false);
     setGenerating(false);
-    setStep(4);
   }
 
   const inviteLink = createdCampaign
@@ -503,45 +538,14 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
         </svg>
 
         {/* Back button */}
-        <button onClick={step > 1 && step < 4 ? () => setStep(s => s - 1) : onBack} style={styles.backBtn}>
-          ← {step > 1 && step < 4 ? 'Back' : 'All Campaigns'}
+        <button onClick={step === 1 ? onBack : handleStartOver} style={styles.backBtn}>
+          {step === 1 ? '\u2190 All Campaigns' : '\u2190 Start Over'}
         </button>
 
-        {/* Progress — ornate step indicators */}
-        {step <= 2 && (
-          <div style={styles.progress}>
-            {[
-              { n: 1, label: 'Concept' },
-              { n: 2, label: 'Details' },
-              { n: 3, label: 'Forge' },
-            ].map(({ n, label }) => (
-              <div key={n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                <div style={{
-                  width: 28, height: 28, borderRadius: '50%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: n <= step ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
-                  border: `1.5px solid ${n <= step ? '#d4af37' : 'rgba(100,80,50,0.3)'}`,
-                  fontFamily: '"Cinzel", serif', fontSize: '0.6rem', fontWeight: 700,
-                  color: n <= step ? '#d4af37' : 'rgba(100,80,50,0.4)',
-                  boxShadow: n <= step ? '0 0 8px rgba(212,175,55,0.15)' : 'none',
-                  transition: 'all 0.3s',
-                }}>{n}</div>
-                <span style={{
-                  fontFamily: '"Cinzel", serif', fontSize: '0.42rem',
-                  color: n <= step ? 'rgba(212,175,55,0.6)' : 'rgba(100,80,50,0.3)',
-                  letterSpacing: '0.08em', textTransform: 'uppercase',
-                }}>{label}</span>
-              </div>
-            ))}
-            {/* Connecting lines between dots */}
-            <div style={{ position: 'absolute', top: 14, left: '25%', right: '25%', height: 1, background: `linear-gradient(90deg, ${step >= 2 ? 'rgba(212,175,55,0.3)' : 'rgba(100,80,50,0.15)'}, ${step >= 3 ? 'rgba(212,175,55,0.3)' : 'rgba(100,80,50,0.15)'})`, zIndex: 0 }} />
-          </div>
-        )}
-
-        {/* Step 1: Name + Tone + Setting */}
+        {/* Step 1: Name + Tone + Setting + Forge */}
         {step === 1 && (
           <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>New Campaign</h2>
+            <h2 style={styles.stepTitle}>Create Your Campaign</h2>
 
             {/* Quick-start demo card */}
             <button
@@ -550,15 +554,15 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               style={styles.demoCard}
             >
               <div style={styles.demoLeft}>
-                <span style={styles.demoIcon}>🗡</span>
+                <span style={styles.demoIcon}>{'\uD83D\uDDE1'}</span>
                 <div>
                   <div style={styles.demoTitle}>Whispers in the Dark</div>
-                  <div style={styles.demoSubtitle}>Ready-to-play 4-hour one-shot · No setup · 3–5 players · The Narrator</div>
+                  <div style={styles.demoSubtitle}>Ready-to-play one-shot · No setup · The Narrator</div>
                 </div>
               </div>
               <div style={styles.demoRight}>
                 <span style={styles.demoBadge}>DEMO</span>
-                <span style={styles.demoArrow}>{demoLoading ? '...' : '→'}</span>
+                <span style={styles.demoArrow}>{demoLoading ? '...' : '\u2192'}</span>
               </div>
             </button>
 
@@ -573,7 +577,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               onChange={e => setField('name', e.target.value)}
               placeholder="e.g. The Curse of the Shadow King"
               style={styles.input}
-              onKeyDown={e => e.key === 'Enter' && fields.name.trim() && handleStep1Next()}
+              onKeyDown={e => e.key === 'Enter' && fields.name.trim() && handleForge()}
             />
 
             <label style={{ ...styles.label, marginTop: 16 }}>Campaign Tone</label>
@@ -596,49 +600,7 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               ))}
             </div>
 
-            <button
-              disabled={!fields.name.trim() || saving}
-              onClick={handleStep1Next}
-              style={styles.nextBtn}
-            >
-              {saving ? 'Saving...' : 'Next →'}
-            </button>
-          </div>
-        )}
-
-        {/* Step 2: Details */}
-        {step === 2 && (
-          <div style={styles.stepContent}>
-            <h2 style={styles.stepTitle}>Campaign Details</h2>
-            <div style={styles.row}>
-              <div style={styles.col}>
-                <label style={styles.label}>Campaign Length</label>
-                <select value={fields.length} onChange={e => setField('length', e.target.value)} style={styles.select}>
-                  {LENGTHS.map(l => <option key={l}>{l}</option>)}
-                </select>
-              </div>
-              <div style={styles.col}>
-                <label style={styles.label}>Number of Players</label>
-                <select value={fields.players} onChange={e => setField('players', e.target.value)} style={styles.select}>
-                  {['2','3','4','5','6'].map(n => <option key={n}>{n}</option>)}
-                </select>
-              </div>
-            </div>
-            <div style={styles.row}>
-              <div style={styles.col}>
-                <label style={styles.label}>Starting Level</label>
-                <select value={fields.level} onChange={e => setField('level', e.target.value)} style={styles.select}>
-                  {LEVELS.map(l => <option key={l}>{l}</option>)}
-                </select>
-              </div>
-              <div style={styles.col}>
-                <label style={styles.label}>Main Villain</label>
-                <select value={fields.villain} onChange={e => setField('villain', e.target.value)} style={styles.select}>
-                  {VILLAINS.map(v => <option key={v}>{v}</option>)}
-                </select>
-              </div>
-            </div>
-            <label style={styles.label}>Key Themes &amp; Notes (optional)</label>
+            <label style={{ ...styles.label, marginTop: 16 }}>Key Themes &amp; Notes (optional)</label>
             <textarea
               value={fields.themes}
               onChange={e => setField('themes', e.target.value)}
@@ -646,14 +608,19 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               style={styles.textarea}
               rows={3}
             />
-            <button onClick={handleAutoGenerate} style={styles.createBtn}>
-              Create Campaign →
+
+            <button
+              disabled={!fields.name.trim() || saving}
+              onClick={handleForge}
+              style={styles.createBtn}
+            >
+              {saving ? 'Saving...' : '\uD83D\uDD25 Forge'}
             </button>
           </div>
         )}
 
-        {/* Step 3: Generating... */}
-        {step === 3 && (
+        {/* Step 2: Forging / BYOK / Error / Success */}
+        {step === 2 && !createdCampaign && (
           <div style={styles.stepContent}>
             {generating && (
               <div style={styles.generatingWrap}>
@@ -680,10 +647,10 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
                   disabled={!byokKey.trim()}
                   style={styles.createBtn}
                 >
-                  Generate Campaign →
+                  Generate Campaign {'\u2192'}
                 </button>
                 <button onClick={handleStartOver} style={styles.startOverBtn}>
-                  ↺ Start Over
+                  {'\u21BA'} Start Over
                 </button>
               </div>
             )}
@@ -692,21 +659,21 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
               <div style={styles.stepContent}>
                 <h2 style={styles.stepTitle}>Generation Failed</h2>
                 <p style={styles.errorMsg}>{generateError}</p>
-                <button onClick={handleAutoGenerate} style={styles.nextBtn}>
-                  Retry →
+                <button onClick={handleRetryGenerate} style={styles.nextBtn}>
+                  Retry {'\u2192'}
                 </button>
                 <button onClick={handleStartOver} style={styles.startOverBtn}>
-                  ↺ Start Over
+                  {'\u21BA'} Start Over
                 </button>
               </div>
             )}
           </div>
         )}
 
-        {/* Step 4: Success */}
-        {step === 4 && createdCampaign && (
+        {/* Success */}
+        {step === 2 && createdCampaign && (
           <div style={styles.stepContent}>
-            <div style={styles.successIcon}>⚔</div>
+            <div style={styles.successIcon}>{'\u2694'}</div>
             <h2 style={styles.stepTitle}>Campaign Created!</h2>
             <p style={styles.hint}>Share this invite link with your players:</p>
             <div style={styles.inviteBox}>
@@ -715,12 +682,12 @@ export default function CreateCampaign({ user, onDone, onBack, draftCampaign }) 
                 onClick={() => { navigator.clipboard.writeText(inviteLink); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
                 style={styles.copyLinkBtn}
               >
-                {copied ? '✓' : 'Copy'}
+                {copied ? '\u2713' : 'Copy'}
               </button>
             </div>
             <p style={styles.inviteCodeLabel}>Invite Code: <strong style={{ color: 'var(--gold)', fontFamily: 'monospace', letterSpacing: '0.1em' }}>{createdCampaign.invite_code}</strong></p>
             <button onClick={() => onDone({ ...createdCampaign, userRole: 'dm' })} style={styles.createBtn}>
-              Enter Campaign →
+              Enter Campaign {'\u2192'}
             </button>
           </div>
         )}
@@ -766,19 +733,6 @@ const styles = {
     fontFamily: "'Cinzel', Georgia, serif",
     padding: '0 0 16px',
     display: 'block',
-  },
-  progress: {
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    gap: 32,
-    marginBottom: 28,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    transition: 'background 0.2s',
   },
   stepContent: {
     display: 'flex',
@@ -840,27 +794,6 @@ const styles = {
     background: 'rgba(212,175,55,0.12)',
     border: '1px solid var(--border-gold)',
     color: 'var(--gold)',
-  },
-  select: {
-    background: 'var(--bg-card)',
-    border: '1px solid var(--border-color)',
-    borderRadius: 8,
-    padding: '10px 12px',
-    color: 'var(--text-primary)',
-    fontSize: '0.88rem',
-    width: '100%',
-    outline: 'none',
-    cursor: 'pointer',
-  },
-  row: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 16,
-  },
-  col: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
   },
   textarea: {
     background: 'var(--bg-card)',
