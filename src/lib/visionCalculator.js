@@ -15,8 +15,8 @@ const LIGHT_SOURCES = {
   sconce: { bright: 2, dim: 2 },
 }
 
-const BRIGHT_VISION = 15 // tiles in bright light (gamified viewport limit)
-const DIM_VISION = 8     // tiles in dim light without darkvision
+const BRIGHT_VISION = 8  // tiles visible in bright light (~40ft, reveals nearby area)
+const DIM_VISION = 5     // tiles in dim light without darkvision (~25ft)
 
 /**
  * Compute a character's vision ranges given lighting conditions.

@@ -135,7 +135,13 @@ export function computeGruntAction(enemy, combatants, collisionData, width, heig
 
   if (!nearest) return { action: 'wait', narrative: `${enemy.name} waits.` }
 
-  const weapon = enemy.attacks?.[0] || { name: 'Attack', bonus: '+3', damage: '1d6+1' }
+  // Handle both string attacks (['Scimitar']) and object attacks ([{ name, bonus, damage }])
+  const rawWeapon = enemy.attacks?.[0]
+  const weapon = !rawWeapon
+    ? { name: 'Attack', bonus: '+3', damage: '1d6+1' }
+    : typeof rawWeapon === 'string'
+      ? { name: rawWeapon, bonus: `+${Math.max(2, Math.floor(((enemy.stats?.str || 10) - 10) / 2) + 2)}`, damage: '1d6+1' }
+      : rawWeapon
   const bonus = parseInt(weapon.bonus) || 0
 
   // Adjacent? Attack immediately.
