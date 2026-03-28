@@ -101,77 +101,86 @@ const DUNGEON_THEMES = new Set(['dungeon', 'cave', 'crypt', 'sewer'])
 // These get scattered on empty tiles to make the world feel alive and decorated
 export const THEME_SCATTER = {
   village: [
-    'atlas-terrain:bush_multicolor2_a1_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',
-    'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
-    'atlas-props-decor:crate_wood_ashen_a_1x1',
-    'atlas-props-decor:sack_black_a1_1x1',
-    'atlas-props-decor:bucket_pail_metal_gray_a1_1x1',
+    'atlas-terrain:fir_tree_stump_a1_1x1',      // tree
+    'atlas-terrain:fir_tree_stump_a2_1x1',      // tree variant
+    'atlas-terrain:fir_tree_stump_b1_1x1',      // tree variant
+    'atlas-terrain:bush_multicolor2_a1_1x1',    // bush
+    'atlas-terrain:branch_wood_ashen_a6_1x1',   // fallen branch
+    'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1', // barrel (fewer, mixed in)
   ],
   forest: [
-    'atlas-terrain:bush_multicolor2_a1_1x1',
-    'atlas-terrain:bush_multicolor2_a1_1x1',   // double-weight: forests need lots of bushes
-    'atlas-terrain:branch_wood_ashen_a6_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',  // double-weight: fallen branches everywhere
-    'atlas-terrain:gravestone_stone_gray_a1_1x1', // mushroom/stump stand-in
-    'atlas-props-decor:arranged_clutter_a10_1x1',
+    'atlas-terrain:fir_tree_stump_a1_1x1',      // tree (dominant)
+    'atlas-terrain:fir_tree_stump_a2_1x1',      // tree variant
+    'atlas-terrain:fir_tree_stump_a3_1x1',      // tree variant
+    'atlas-terrain:fir_tree_stump_b1_1x1',      // tree variant
+    'atlas-terrain:fir_tree_stump_b2_1x1',      // tree variant
+    'atlas-terrain:bush_multicolor2_a1_1x1',    // underbrush
+    'atlas-terrain:branch_wood_ashen_a6_1x1',   // fallen log
+    'atlas-props-decor:rock_stone_earthy_a10_1x1', // rock
   ],
   town: [
+    'atlas-terrain:fir_tree_stump_a1_1x1',      // street tree
+    'atlas-terrain:bush_multicolor2_a1_1x1',    // hedge
     'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
     'atlas-props-decor:crate_wood_ashen_a_1x1',
     'atlas-props-decor:sack_black_a1_1x1',
     'atlas-props-decor:bucket_pail_metal_gray_a1_1x1',
-    'atlas-props-decor:amphora_clay_brown_a1_1x1',
-    'atlas-terrain:bush_multicolor2_a1_1x1',
   ],
   dungeon: [
-    'atlas-props-decor:arranged_clutter_a10_1x1',
-    'atlas-props-decor:amphora_clay_brown_a1_1x1',
+    'atlas-props-decor:rock_stone_earthy_a10_1x1',   // rubble
+    'atlas-props-decor:rock_stone_slate_blue_b10_1x1', // stone debris
     'atlas-props-decor:candles_black_arranged_a1_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',  // debris
+    'atlas-props-decor:arranged_clutter_a10_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',        // wooden debris
   ],
   cave: [
-    'atlas-terrain:branch_wood_ashen_a6_1x1',
-    'atlas-terrain:gravestone_stone_gray_a1_1x1',  // rock formation stand-in
-    'atlas-props-decor:arranged_clutter_a10_1x1',
+    'atlas-props-decor:stalagmite_hole_rock_earthy_a10_1x1', // stalagmite
+    'atlas-props-decor:rock_stone_earthy_a10_1x1',    // rock formation
+    'atlas-props-decor:rock_stone_slate_blue_b10_1x1', // blue stone
+    'atlas-props-decor:underdark_crystal_rock_sliver_blue_a10_1x1', // crystal
   ],
   mountain: [
-    'atlas-terrain:gravestone_stone_gray_a1_1x1',
-    'atlas-terrain:gravestone_stone_gray_b1_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',
-    'atlas-terrain:bush_multicolor2_a1_1x1',
+    'atlas-props-decor:rock_stone_earthy_a10_1x1',    // boulder
+    'atlas-props-decor:rock_stone_slate_blue_b10_1x1', // rock
+    'atlas-terrain:fir_tree_stump_a1_1x1',             // hardy tree
+    'atlas-terrain:bush_multicolor2_a1_1x1',           // scrub
+    'atlas-terrain:branch_wood_ashen_a6_1x1',          // deadfall
   ],
   desert: [
-    'atlas-terrain:gravestone_stone_gray_a1_1x1',  // rock stand-in
-    'atlas-terrain:gravestone_stone_gray_b1_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',  // dried wood
+    'atlas-props-decor:rock_stone_earthy_a10_1x1',    // rock
+    'atlas-props-decor:rock_stone_slate_blue_b10_1x1', // sandstone
+    'atlas-terrain:branch_wood_ashen_a6_1x1',          // dried wood
   ],
   swamp: [
-    'atlas-terrain:bush_multicolor2_a1_1x1',
-    'atlas-terrain:bush_multicolor2_a1_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',
-    'atlas-terrain:gravestone_stone_gray_a1_1x1',  // dead stump
+    'atlas-terrain:fir_tree_stump_a4_1x1',     // dead tree
+    'atlas-terrain:fir_tree_stump_a5_1x1',     // dead tree
+    'atlas-terrain:bush_multicolor2_a1_1x1',   // marsh reeds
+    'atlas-terrain:branch_wood_ashen_a6_1x1',  // fallen log
+    'atlas-props-decor:rock_stone_earthy_a10_1x1', // mossy rock
   ],
   coastal: [
-    'atlas-terrain:bush_multicolor2_a1_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',
-    'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
+    'atlas-terrain:fir_tree_stump_a1_1x1',     // palm-ish tree
+    'atlas-terrain:bush_multicolor2_a1_1x1',   // coastal scrub
+    'atlas-props-decor:rock_stone_earthy_a10_1x1', // beach rock
+    'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1', // driftwood barrel
   ],
   graveyard: [
-    'atlas-terrain:gravestone_stone_gray_a1_1x1',
-    'atlas-terrain:gravestone_stone_gray_b1_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',
-    'atlas-terrain:bush_multicolor2_a1_1x1',
+    'atlas-terrain:gravestone_stone_gray_a1_1x1',  // headstone
+    'atlas-terrain:gravestone_stone_gray_b1_1x1',  // headstone variant
+    'atlas-terrain:fir_tree_stump_a4_1x1',         // dead tree
+    'atlas-terrain:bush_multicolor2_a1_1x1',       // overgrown bush
+    'atlas-props-decor:rock_stone_earthy_a10_1x1', // crumbling stone
   ],
   crypt: [
-    'atlas-props-decor:amphora_clay_brown_a1_1x1',
-    'atlas-props-decor:candles_black_arranged_a1_1x1',
-    'atlas-props-decor:arranged_clutter_a10_1x1',
+    'atlas-props-decor:rock_stone_earthy_a10_1x1',    // rubble
+    'atlas-props-decor:candles_black_arranged_a1_1x1', // candles
+    'atlas-props-decor:arranged_clutter_a10_1x1',      // bones/debris
+    'atlas-props-decor:amphora_clay_brown_a1_1x1',    // urn
   ],
   sewer: [
-    'atlas-props-decor:amphora_clay_brown_a1_1x1',
-    'atlas-props-decor:arranged_clutter_a10_1x1',
-    'atlas-terrain:branch_wood_ashen_a6_1x1',
+    'atlas-props-decor:rock_stone_earthy_a10_1x1',    // fallen masonry
+    'atlas-props-decor:arranged_clutter_a10_1x1',     // debris
+    'atlas-terrain:branch_wood_ashen_a6_1x1',         // driftwood
   ],
 }
 
@@ -208,8 +217,8 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
 
   const { id, name, theme = 'village', pois = [], connections = [], npcs = [], exits = [], enemies = [], encounterZones = [] } = brief
   const areaSize = calculateAreaSize(brief)
-  const width = brief.width || areaSize.width
-  const height = brief.height || areaSize.height
+  const width = areaSize.width   // always use capped size from calculateAreaSize
+  const height = areaSize.height
   const lib = getChunkLibrary()
 
   // 1. Match chunks for each POI
@@ -399,11 +408,25 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   const blockingSet = getBlockingSet()
   // V2 scatter props that should block movement (large objects you can't walk through)
   const v2BlockingTiles = new Set([
+    // Trees
+    'atlas-terrain:fir_tree_stump_a1_1x1', 'atlas-terrain:fir_tree_stump_a2_1x1',
+    'atlas-terrain:fir_tree_stump_a3_1x1', 'atlas-terrain:fir_tree_stump_a4_1x1',
+    'atlas-terrain:fir_tree_stump_a5_1x1', 'atlas-terrain:fir_tree_stump_b1_1x1',
+    'atlas-terrain:fir_tree_stump_b2_1x1', 'atlas-terrain:fir_tree_stump_b3_1x1',
+    // Rocks and boulders
+    'atlas-props-decor:rock_stone_earthy_a10_1x1',
+    'atlas-props-decor:rock_stone_slate_blue_b10_1x1',
+    'atlas-props-decor:stalagmite_hole_rock_earthy_a10_1x1',
+    'atlas-props-decor:underdark_crystal_rock_sliver_blue_a10_1x1',
+    'atlas-props-decor:underdark_crystal_rock_stone_drow_a1_1x1',
+    // Gravestones
+    'atlas-terrain:gravestone_stone_gray_a1_1x1',
+    'atlas-terrain:gravestone_stone_gray_b1_1x1',
+    // Containers
     'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
     'atlas-props-decor:crate_wood_ashen_a_1x1',
     'atlas-props-decor:amphora_clay_brown_a1_1x1',
-    'atlas-terrain:gravestone_stone_gray_a1_1x1',
-    'atlas-terrain:gravestone_stone_gray_b1_1x1',
+    // Furniture
     'atlas-props-furniture:table_misc_wood_ashen_a1_1x1',
     'atlas-props-furniture:armchair_fabric_black_a1_1x1',
   ])

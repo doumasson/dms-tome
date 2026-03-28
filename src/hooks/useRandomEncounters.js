@@ -77,7 +77,7 @@ export function useRandomEncounters({
     const msg = {
       role: 'dm',
       speaker: 'The Narrator',
-      text: `${dmPrompt}\n\nYou notice ${enemies.map(e => e.originalName).join(', ')} ahead! Initiative?`,
+      text: dmPrompt,
       id: uuidv4(),
       timestamp: Date.now(),
     }

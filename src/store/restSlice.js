@@ -1,6 +1,7 @@
 import { getClassResources } from '../lib/classResources';
 import { CLASSES } from '../data/classes';
 import { broadcastEncounterAction } from '../lib/liveChannel';
+import { buildSpellSlots } from '../lib/charBuilder';
 
 /**
  * Rest slice — short rest, long rest, hit dice spending.
@@ -46,7 +47,7 @@ export function createRestSlice(set, get) {
       // Don't auto-spend hit dice — let the player use the hit dice roller UI in RestModal
       // Notify all players via narrator
       const charName = get().myCharacter?.name || 'The party'
-      const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} takes a short rest. Class resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
+      const msg = { role: 'dm', speaker: 'System', text: `${charName} takes a short rest. Class resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
       get().addNarratorMessage?.(msg)
       get().saveCampaignToSupabase();
     },
@@ -97,11 +98,16 @@ export function createRestSlice(set, get) {
     longRest: () => {
       set((state) => {
         const updatedChars = state.campaign.characters.map((c) => {
-          const spellSlots = c.spellSlots
-            ? Object.fromEntries(
-                Object.entries(c.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])
-              )
-            : c.spellSlots;
+          // Restore all spell slots to full (used: 0)
+          let spellSlots = c.spellSlots
+          if (spellSlots && Object.keys(spellSlots).length > 0) {
+            spellSlots = Object.fromEntries(
+              Object.entries(spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])
+            )
+          } else if (c.class) {
+            // Rebuild spell slots from class/level if missing
+            spellSlots = buildSpellSlots(c.class, c.level || 1)
+          }
           // Long rest restores half your level in hit dice (minimum 1)
           const totalHitDice = c.level || 1;
           const restored = Math.max(1, Math.floor(totalHitDice / 2));
@@ -146,12 +152,16 @@ export function createRestSlice(set, get) {
             };
           } else {
             // myCharacter not in campaign.characters — heal directly
+            const mySlots = state.myCharacter.spellSlots && Object.keys(state.myCharacter.spellSlots).length > 0
+              ? Object.fromEntries(Object.entries(state.myCharacter.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }]))
+              : buildSpellSlots(state.myCharacter.class, state.myCharacter.level || 1)
             updatedMyChar = {
               ...state.myCharacter,
               currentHp: state.myCharacter.maxHp,
               hp: state.myCharacter.maxHp,
               conditions: [],
               resourcesUsed: {},
+              spellSlots: mySlots,
             };
           }
         }
@@ -168,7 +178,7 @@ export function createRestSlice(set, get) {
       });
       // Notify all players via narrator
       const charName = get().myCharacter?.name || 'The party'
-      const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} completes a long rest. Full HP, spell slots, and resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
+      const msg = { role: 'dm', speaker: 'System', text: `${charName} completes a long rest. Full HP, spell slots, and resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
       get().addNarratorMessage?.(msg)
       // Broadcast rest completion so all players restore HP
       const updatedChars = get().campaign.characters.map(c => ({
