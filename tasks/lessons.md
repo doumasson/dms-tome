@@ -75,6 +75,31 @@ useEffect(() => { ... }, [inCombat]); // safe
 
 **Rule:** For dungeon exits, set `entryPoint` to the center of the nearest BSP room to that edge. Also, when transitioning areas, prefer the target area's `playerStart` over the source exit's `entryPoint`.
 
+## Multiplayer: Every Feature Must Work for ALL Players
+**Pattern:** Feature works for host but is invisible/broken for second player. Examples: tokens not visible, TTS not playing, quests not syncing, rest modal not showing, resurrect HP not matching, roof state not per-player.
+
+**Rule:** When building ANY feature, check: (1) Does it broadcast state to other players? (2) Does the broadcast handler on the receiver actually apply the state? (3) Is the feature using local player position or host position? Always use local position for visual state (roofs, fog, darkvision). Always include `userId` when constructing `partyMembers` from Supabase.
+
+## Never Gate Game Flow on AI Response Flags
+**Pattern:** Encounter zone triggers, narrator describes combat, but code waits for `startCombat: true` in AI response. AI doesn't include the flag. Players stuck forever.
+
+**Rule:** Use AI responses for flavor text only. Game mechanics (combat start, enemy spawning) must proceed automatically after a short delay. If an AI call fails, use local fallback logic. Same for enemy AI turns — if AI omits `moveToPosition`, compute it locally.
+
+## Enemy Templates Must Be Expanded Into Individual Objects
+**Pattern:** `resolveEncounterTemplates` returns `{ name, count, stats }` but `startEncounter` expects individual enemy objects with `id`, `hp`, `maxHp`, `currentHp`, `position`. Passing grouped templates produces zero enemies in combat.
+
+**Rule:** The resolver must expand `count` into N individual objects, each with a unique `id`, full stat block at top level (`hp`, `maxHp`, `currentHp`, `ac`, `speed`), and `isEnemy: true`.
+
+## SpellTargeting Grid Y Coordinate Bug
+**Pattern:** `Math.floor(i / mapH)` instead of `Math.floor(i / mapW)` when computing Y from a flat index. All grid cell Y coordinates are wrong, making single-target spell targeting impossible.
+
+**Rule:** When computing 2D coordinates from a flat index: `x = i % width`, `y = Math.floor(i / width)`. Always divide by WIDTH, never height.
+
+## Deploy Requires Merging to Main
+**Pattern:** All changes on `agent-dev` but `loreengine.vercel.app` deploys from `main`. User sees old UI.
+
+**Rule:** Always push to agent-dev AND merge to main: `git push origin agent-dev && git checkout main && git merge agent-dev --no-edit && git push origin main && git checkout agent-dev`
+
 ## Wall Sprites Need Per-Direction Rotation/Flip
 
 **Pattern:** Wall connector sprites are oriented horizontally by default. For east/west edges they need rotation. But applying the same rotation to both east and west (or no flip on south) makes walls look uniform/wrong.
