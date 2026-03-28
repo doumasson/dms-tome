@@ -54,12 +54,19 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
   const partyMembers = useStore(s => s.partyMembers)
   const encounter = useStore(s => s.encounter)
   const isInCombat = encounter?.phase === 'combat'
+  const areaTokenPositions = useStore(s => s.areaTokenPositions)
+  const currentAreaId = useStore(s => s.currentAreaId)
+  const areaPositions = areaTokenPositions?.[currentAreaId] || {}
 
   const allMembers = []
   if (myCharacter) allMembers.push({ ...myCharacter, isMe: true })
   if (partyMembers?.length) {
     partyMembers.forEach(m => {
-      if (m.name !== myCharacter?.name) allMembers.push(m)
+      if (m.name !== myCharacter?.name) {
+        // Only show party members who have a known position (are online/active)
+        const hasPosition = areaPositions[m.userId] || areaPositions[m.id]
+        if (hasPosition) allMembers.push(m)
+      }
     })
   }
 
@@ -168,24 +175,27 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
   }
 
   return (
-    <div style={{ position: 'relative', flexShrink: 0, alignSelf: 'center' }}>
-      {/* Party member portraits — float above the bottom bar on the left */}
+    <>
+      {/* Party member portraits — positioned above the bottom bar, left side */}
       {others.length > 0 && (
         <div style={{
-          position: 'absolute',
-          bottom: '100%',
-          left: 0,
+          position: 'fixed',
+          bottom: 210,
+          left: 12,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: 6,
-          paddingBottom: 8,
+          zIndex: 25,
+          pointerEvents: 'auto',
         }}>
           {others.map((member, i) => renderPortrait(member, i, 'small'))}
         </div>
       )}
       {/* Player's own portrait — inside the bar */}
-      {me && renderPortrait(me, 'me', 'big')}
-    </div>
+      <div style={{ flexShrink: 0, alignSelf: 'center' }}>
+        {me && renderPortrait(me, 'me', 'big')}
+      </div>
+    </>
   )
 }

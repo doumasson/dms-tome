@@ -214,22 +214,18 @@ export default function GameV2({ onLeave }) {
   useRandomEncounters({ playerPos, inCombat, isDM, zone })
 
   // Broadcast initial position so other players can see our token on spawn
-  const initialPosBroadcastRef = useRef(false)
+  const lastBroadcastAreaRef = useRef(null)
+  // Broadcast position on area entry and whenever position changes
   useEffect(() => {
-    if (!initialPosBroadcastRef.current && user?.id && playerPos && zone) {
-      initialPosBroadcastRef.current = true
+    if (!user?.id || !playerPos || !currentAreaId) return
+    // Always store locally
+    useStore.getState().setAreaTokenPosition(currentAreaId, user.id, playerPos)
+    // Broadcast on area change or initial load
+    if (lastBroadcastAreaRef.current !== currentAreaId) {
+      lastBroadcastAreaRef.current = currentAreaId
       broadcastTokenMove(user.id, playerPos)
-      // Also store locally so our token shows for self-lookups
-      useStore.getState().setAreaTokenPosition(currentAreaId, user.id, playerPos)
     }
   }, [user?.id, playerPos, zone, currentAreaId])
-
-  // Broadcast position whenever it changes (for other players to see our token move)
-  useEffect(() => {
-    if (user?.id && playerPos && currentAreaId) {
-      useStore.getState().setAreaTokenPosition(currentAreaId, user.id, playerPos)
-    }
-  }, [playerPos, user?.id, currentAreaId])
 
   // Screen shake on combat damage — watch damage events, trigger camera shake
   const damageEventsLen = useStore(s => s.damageEvents?.length || 0)

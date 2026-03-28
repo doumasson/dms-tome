@@ -170,17 +170,27 @@ class Camera {
   centerOn(tileX, tileY, tileSize) {
     // Center in visible area (above the bottom UI bar)
     const visibleH = this.viewportHeight - this.uiBottomOffset;
-    let tx = tileX * tileSize + tileSize / 2 - this.viewportWidth / (2 * this.zoom);
-    let ty = tileY * tileSize + tileSize / 2 - visibleH / (2 * this.zoom);
-    // Clamp target within area bounds to avoid snapping to corners
+    const tx = tileX * tileSize + tileSize / 2 - this.viewportWidth / (2 * this.zoom);
+    const ty = tileY * tileSize + tileSize / 2 - visibleH / (2 * this.zoom);
+    // Only clamp when the map is larger than the viewport at current zoom
     if (this.areaWidth !== null) {
-      const maxX = Math.max(0, this.areaWidth - this.viewportWidth / this.zoom);
-      const maxY = Math.max(0, this.areaHeight - this.viewportHeight / this.zoom);
-      tx = Math.min(maxX, Math.max(0, tx));
-      ty = Math.min(maxY, Math.max(0, ty));
+      const viewW = this.viewportWidth / this.zoom;
+      const viewH = this.viewportHeight / this.zoom;
+      if (this.areaWidth > viewW) {
+        this._targetX = Math.min(this.areaWidth - viewW, Math.max(0, tx));
+      } else {
+        // Map fits in viewport — center the map
+        this._targetX = (this.areaWidth - viewW) / 2;
+      }
+      if (this.areaHeight > viewH) {
+        this._targetY = Math.min(this.areaHeight - viewH, Math.max(0, ty));
+      } else {
+        this._targetY = (this.areaHeight - viewH) / 2;
+      }
+    } else {
+      this._targetX = tx;
+      this._targetY = ty;
     }
-    this._targetX = tx;
-    this._targetY = ty;
   }
 
   centerOnImmediate(tileX, tileY, tileSize) {

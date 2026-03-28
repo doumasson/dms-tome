@@ -227,17 +227,18 @@ export function useGameEffects({
       { ...triggered, dmPrompt: triggered.narratorPrompt || triggered.dmPrompt },
       ''
     )
+    // Capture resolved enemies for the combat start closure
+    const resolvedEnemies = relevantEnemies
     const startCombatWithZoneEnemies = () => {
       const { startEncounter } = useStore.getState()
-      const zoneEnemies = (zone.enemies || []).filter(e => {
-        const enemyNames = triggered.enemies || []
-        return enemyNames.some(name => e.name === name || e.name?.startsWith(name + ' '))
-      })
-      const enemies = zoneEnemies.length > 0 ? zoneEnemies : (zone.enemies || [])
+      // Use resolved enemies from templates (V2) or fall back to zone.enemies (legacy)
+      const enemies = resolvedEnemies?.length > 0
+        ? resolvedEnemies
+        : (zone.enemies || [])
       if (enemies.length > 0) {
-        const combatEnemies = enemies.map(e => ({
+        const combatEnemies = enemies.map((e, i) => ({
           ...e, isEnemy: true, type: 'enemy',
-          position: e.position || { x: pos.x + 2, y: pos.y },
+          position: e.position || { x: pos.x + 3 + (i % 3), y: pos.y - 1 + Math.floor(i / 3) },
         }))
         const myChar = useStore.getState().myCharacter
         const freshParty = useStore.getState().partyMembers || []
@@ -263,28 +264,20 @@ export function useGameEffects({
     }
 
     if (sessionApiKey) {
+      // Send narrator prompt for flavor text, then auto-start combat
       const encounterPayload = { startCombatWithZoneEnemies, triggered, enemyPositions: (zone.enemies || []).filter(e => e.position).map(e => ({ ...e.position, name: e.name, wis: e.stats?.wis ?? 10 })) }
       setPendingEncounterData(encounterPayload)
-      setEncounterLock(true)
-      // Safety timeout — unlock after 15s if API never responds
-      setTimeout(() => {
-        if (useStore.getState().encounterLock) {
-          console.warn('[encounter] Safety unlock — encounterLock was stuck for 15s')
-          setEncounterLock(false)
-        }
-      }, 15000)
       setTimeout(async () => {
         const chat = handleChatRef.current
-        if (chat) await chat(prompt)
-        await new Promise(r => setTimeout(r, 50))
-        const { pendingSkillCheck, pendingEncounterData: ped } = useStore.getState()
-        if (pendingSkillCheck) return
-        const lastMsg = useStore.getState().narrator?.history?.slice(-1)?.[0]
-        const aiWantsCombat = lastMsg?.startCombat === true
-        if (ped && aiWantsCombat) {
+        if (chat) {
+          try { await chat(prompt) } catch { /* narrator failed, still start combat */ }
+        }
+        // Always start combat after narrator describes the scene (don't wait for AI startCombat flag)
+        const { pendingEncounterData: ped, pendingSkillCheck } = useStore.getState()
+        if (pendingSkillCheck) return // stealth check in progress — let that flow handle it
+        if (ped?.startCombatWithZoneEnemies) {
           clearPendingEncounterData()
-          setEncounterLock(false)
-          startCombatWithZoneEnemies()
+          ped.startCombatWithZoneEnemies()
         }
       }, 100)
     } else {

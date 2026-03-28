@@ -50,11 +50,13 @@ export function useGameTokens({
       })
       // Render other multiplayer party members from broadcast positions
       const areaPositions = areaTokenPositions?.[currentAreaId] || {}
-      const userId = useStore.getState().user?.id
+      const localUserId = useStore.getState().user?.id
       if (partyMembers?.length) {
         partyMembers.forEach(member => {
-          if (member.name === myCharacter?.name || member.id === myCharacter?.id) return // skip self
-          const pos = areaPositions[member.userId] || areaPositions[member.id]
+          // Skip self — use userId for reliable check
+          if (member.userId && localUserId && member.userId === localUserId) return
+          if (!member.userId && (member.name === myCharacter?.name || member.id === myCharacter?.id)) return
+          const pos = areaPositions[member.userId] || areaPositions[member.id] || areaPositions[member.name]
           if (!pos) return
           t.push({
             id: member.userId || member.id || member.name,

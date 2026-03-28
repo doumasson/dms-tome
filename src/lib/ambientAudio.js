@@ -32,6 +32,11 @@ class AmbientSystem {
       this.master = this.ctx.createGain();
       this.master.gain.setValueAtTime(0, this.ctx.currentTime);
       this.master.connect(this.ctx.destination);
+      // Resume on first user gesture if browser suspended the context
+      if (this.ctx.state === 'suspended') {
+        const resume = () => { this.ctx?.resume(); document.removeEventListener('click', resume); };
+        document.addEventListener('click', resume, { once: true });
+      }
       return true;
     } catch {
       return false;

@@ -210,28 +210,7 @@ export default function SessionLog({ onChat, tab, setTab }) {
               onChange={e => isSpeaker && setChatInput(e.target.value)}
               disabled={!isSpeaker || isVoting}
             />
-            {/* Call Vote button — only in exploration with a party */}
-            {!inCombat && hasParty && !isVoting && !lockedSpeaker && (
-              <button
-                type="button"
-                className="hud-mic-btn"
-                onClick={() => { useStore.getState().startSpeakerVote(); broadcastSpeakerVoteStart() }}
-                title="Vote on who speaks to the DM"
-                style={{
-                  background: 'rgba(201,168,76,0.1)',
-                  border: '1px solid rgba(201,168,76,0.2)',
-                  color: '#d4af37',
-                  borderRadius: 4,
-                  padding: '4px 6px',
-                  cursor: 'pointer',
-                  fontSize: '0.7rem',
-                  flexShrink: 0,
-                  fontFamily: "'Cinzel', serif",
-                }}
-              >
-                VOTE
-              </button>
-            )}
+            {/* Vote button removed — voting is triggered automatically when narrator requires input */}
             {SPEECH_SUPPORTED && isSpeaker && (
               <button
                 type="button"

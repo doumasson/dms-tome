@@ -190,13 +190,23 @@ export function resolveEncounterTemplates(encounterZone, playerCount, avgLevel) 
       }
     }
 
-    result.push({
-      name,
-      count,
-      stats,
-      attacks,
-      role,
-    })
+    // Expand count into individual enemy objects for combat
+    for (let i = 0; i < count; i++) {
+      result.push({
+        id: `${name.toLowerCase().replace(/\s+/g, '_')}_${i}`,
+        name: count > 1 && i > 0 ? `${name} ${i + 1}` : name,
+        hp: stats.hp,
+        maxHp: stats.hp,
+        currentHp: stats.hp,
+        ac: stats.ac,
+        speed: stats.speed || 30,
+        stats,
+        attacks,
+        role,
+        isEnemy: true,
+        type: 'enemy',
+      })
+    }
   }
 
   return result

@@ -4,10 +4,22 @@
  */
 
 let audioContext = null;
+let audioResumeListenerAdded = false;
 
 function getAudioContext() {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // Resume on first user gesture if browser suspended the context
+    if (!audioResumeListenerAdded) {
+      audioResumeListenerAdded = true;
+      const resume = () => {
+        if (audioContext?.state === 'suspended') audioContext.resume();
+        document.removeEventListener('click', resume);
+        document.removeEventListener('keydown', resume);
+      };
+      document.addEventListener('click', resume, { once: true });
+      document.addEventListener('keydown', resume, { once: true });
+    }
   }
   return audioContext;
 }
