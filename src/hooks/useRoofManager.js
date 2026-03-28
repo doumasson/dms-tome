@@ -58,31 +58,42 @@ export function useRoofManager({ zone, playerPos, playerPosRef, currentAreaId, i
     }
   }, [zone?.buildings, currentAreaId])
 
-  // Update roof reveal states when tokens move
+  // Update roof reveal states based on LOCAL player position (per-player, not host-dependent)
   useEffect(() => {
     if (!zone?.useCamera) return
     const rm = roofManagerRef.current
     const pos = playerPosRef.current
     if (!pos) return
+    // Each client determines roof state from their own position
     const positions = [pos]
     const changes = rm.updateRevealStates(positions)
-    if (changes.length > 0 && isDM) {
-      const { setRoofState, saveSessionStateToSupabase } = useStore.getState()
+    if (changes.length > 0) {
+      const { setRoofState } = useStore.getState()
       for (const { buildingId, revealed } of changes) {
-        broadcastRoofReveal(currentAreaId, buildingId, revealed)
         setRoofState(currentAreaId, buildingId, revealed)
       }
-      saveSessionStateToSupabase()
+      // Only host persists and broadcasts (for initial state sync on join)
+      if (isDM) {
+        const { saveSessionStateToSupabase } = useStore.getState()
+        for (const { buildingId, revealed } of changes) {
+          broadcastRoofReveal(currentAreaId, buildingId, revealed)
+        }
+        saveSessionStateToSupabase()
+      }
     }
   }, [playerPos, currentAreaId, zone])
 
-  // Apply incoming roof reveal broadcasts (non-DM clients)
+  // Apply incoming roof reveal broadcasts (non-DM clients) — only for INITIAL state sync
+  // After that, local position-based detection takes over
   useEffect(() => {
     if (!roofStates || isDM) return
     const rm = roofManagerRef.current
     const areaRoofStates = roofStates[currentAreaId] || {}
     for (const [buildingId, revealed] of Object.entries(areaRoofStates)) {
-      rm.setRevealed(buildingId, revealed)
+      // Only apply broadcast state if we don't have local position-based state yet
+      if (!rm.revealed.has(buildingId)) {
+        rm.setRevealed(buildingId, revealed)
+      }
     }
   }, [roofStates, currentAreaId])
 

@@ -899,6 +899,12 @@ export function createEncounterSlice(set, get) {
       get().addNarratorMessage(reviveMsg);
       broadcastNarratorMessage(reviveMsg);
 
+      // Broadcast to all players so they also revive at 1 HP
+      broadcastEncounterAction({
+        type: 'mercy-revive',
+        respawnPosition: respawnPos,
+      });
+
       setTimeout(() => get().saveSessionStateToSupabase(), 0);
     },
 

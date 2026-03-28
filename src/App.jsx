@@ -259,6 +259,24 @@ export default function App() {
             store.addNarratorMessage({ role: 'system', speaker: 'Quest Added', text: payload.quest.title || 'New quest accepted' })
           }
           break
+        case 'mercy-revive': {
+          // Other players revive at 1 HP when host triggers mercy revive
+          const mc = store.myCharacter;
+          if (mc) {
+            const hpChanges = { currentHp: 1, hp: 1, conditions: [] };
+            useStore.setState(prev => ({
+              myCharacter: { ...prev.myCharacter, ...hpChanges },
+              showDeathOptions: false,
+              stealthMode: null,
+              defeatReset: true,
+              respawnPosition: payload.respawnPosition || null,
+            }));
+            setTimeout(() => store.updateMyCharacter(hpChanges), 0);
+          } else {
+            useStore.setState({ showDeathOptions: false, defeatReset: true, stealthMode: null });
+          }
+          break;
+        }
         case 'stealth-mode':
           if (payload.active) {
             store.setStealthMode({ active: true, stealthResult: payload.stealthResult, enemyPositions: [], zoneEnemies: [] })

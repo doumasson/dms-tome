@@ -394,6 +394,10 @@ export async function triggerEnemyTurn(enemy, encounter, apiKey) {
       const target = encounter.combatants.find(c => c.id === result.targetId);
       if (!target) result.targetId = closestPlayer?.id || null;
     }
+    // If AI didn't include moveToPosition but enemy can't reach target, compute it locally
+    if (!result.moveToPosition && closestPlayer && !canReach) {
+      result.moveToPosition = stepTowards(enemy.position, closestPlayer.position, moveSquares, encounter.combatants);
+    }
     return result;
   } catch (error) {
     // JSON parse failed — fall back to local roll
