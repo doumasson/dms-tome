@@ -395,12 +395,22 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   // 9. Build collision: edge-based walls handle wall blocking,
   // cellBlocked only tracks blocking props (furniture, boulders, etc.)
   const blockingSet = getBlockingSet()
+  // V2 scatter props that should block movement (large objects you can't walk through)
+  const v2BlockingTiles = new Set([
+    'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
+    'atlas-props-decor:crate_wood_ashen_a_1x1',
+    'atlas-props-decor:amphora_clay_brown_a1_1x1',
+    'atlas-terrain:gravestone_stone_gray_a1_1x1',
+    'atlas-terrain:gravestone_stone_gray_b1_1x1',
+    'atlas-props-furniture:table_misc_wood_ashen_a1_1x1',
+    'atlas-props-furniture:armchair_fabric_black_a1_1x1',
+  ])
   const cellBlocked = new Uint8Array(size)
   for (let i = 0; i < size; i++) {
     const propIdx = layers.props[i]
     if (propIdx === 0) continue
     const tileId = palette[propIdx] || ''
-    if (blockingSet.has(tileId)) cellBlocked[i] = 1
+    if (blockingSet.has(tileId) || v2BlockingTiles.has(tileId)) cellBlocked[i] = 1
   }
 
   // 10. Place NPCs

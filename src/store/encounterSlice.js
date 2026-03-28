@@ -1547,8 +1547,29 @@ export function createEncounterSlice(set, get) {
     },
 
     // Received from Supabase Realtime — non-DM clients sync encounter state
-    syncEncounterDown: (encounterData) =>
-      set({ encounter: encounterData }),
+    // Preserve local player's combat position (DM may have stale data for remote players)
+    syncEncounterDown: (encounterData) => {
+      const myChar = get().myCharacter;
+      if (!myChar || !encounterData?.combatants) {
+        set({ encounter: encounterData });
+        return;
+      }
+      // Find our combatant in the incoming data and preserve our local position
+      const localCombatant = get().encounter?.combatants?.find(
+        c => c.type === 'player' && (c.id === myChar.id || c.name === myChar.name)
+      );
+      if (localCombatant?.position) {
+        const combatants = encounterData.combatants.map(c => {
+          if (c.type === 'player' && (c.id === myChar.id || c.name === myChar.name)) {
+            return { ...c, position: localCombatant.position };
+          }
+          return c;
+        });
+        set({ encounter: { ...encounterData, combatants } });
+      } else {
+        set({ encounter: encounterData });
+      }
+    },
 
     // === Combat (legacy simple tracker) ===
     combat: {

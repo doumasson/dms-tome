@@ -161,12 +161,29 @@ AVAILABLE POI TYPES (chunk IDs — you MUST use only these):
 - dungeon_room_basic — stone dungeon chamber (8x8 tiles)
 - road_horizontal — horizontal road segment (8x3 tiles)
 
-AVAILABLE THEMES:
-- village — grass terrain with stone roads
-- forest — grass terrain with dirt roads
-- dungeon — brick/stone terrain
-- cave — dark stone terrain
-- town — cobblestone terrain with paved roads
+AVAILABLE THEMES (pick based on setting — see mapping below):
+- village — grass terrain with stone roads (settlements, farms)
+- forest — grass terrain with dirt roads (woodlands, wilderness)
+- dungeon — brick/stone terrain (underground structures, ruins)
+- cave — dark stone terrain (natural caves, underdark, mines)
+- town — cobblestone terrain with paved roads (cities, large settlements)
+- crypt — dark stone terrain (tombs, crypts, necropolis)
+- sewer — wet stone terrain (sewers, waterways)
+- mountain — rocky terrain (mountain passes, cliffs)
+- desert — sandy/rocky terrain (desert, wasteland)
+- coastal — mixed terrain (harbors, beaches, docks)
+- swamp — wet grass terrain (marshes, bogs, fens)
+- graveyard — dark stone/grass terrain (graveyards, haunted grounds)
+
+SETTING TO THEME MAPPING (you MUST use themes that match the campaign setting):
+- Medieval Kingdom → village, town, dungeon, forest
+- Frozen North → village, mountain, cave, forest
+- Desert Empire → desert, town, dungeon, cave
+- Jungle Wilds → forest, swamp, cave, village
+- The Deep Below → cave, dungeon, crypt, sewer (NEVER forest/village/town for underground)
+- Coastal Isles → coastal, village, town, cave
+- Haunted Realm → graveyard, crypt, dungeon, forest
+- Planar Crossroads → dungeon, cave, crypt
 
 POSITION VALUES (where to place the POI on the map):
 center, north, south, east, west, north-east, north-west, south-east, south-west, center-north, center-south, center-east, center-west

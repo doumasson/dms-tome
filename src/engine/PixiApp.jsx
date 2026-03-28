@@ -125,6 +125,20 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       }
       // All world layers go inside the scaled world container
       const { weather: weatherLayer, ambient: ambientLayer, ...worldLayers } = layers
+      world.sortableChildren = true
+      // Set explicit z-order so spell targeting overlay renders above grid but below tokens
+      layers.floor.zIndex = 0
+      layers.walls.zIndex = 1
+      layers.props.zIndex = 2
+      layers.lighting.zIndex = 3
+      layers.grid.zIndex = 4
+      layers.movementRange.zIndex = 8  // spell targeting + movement range — above tokens so visible
+      layers.tokens.zIndex = 6
+      layers.statusEffects.zIndex = 7
+      layers.spellEffects.zIndex = 9
+      layers.roof.zIndex = 10
+      layers.fog.zIndex = 11
+      layers.exits.zIndex = 5
       Object.values(worldLayers).forEach(l => world.addChild(l))
       // Weather + ambient are screen-space: not scaled with camera, sit above world on stage
       app.stage.addChild(weatherLayer)

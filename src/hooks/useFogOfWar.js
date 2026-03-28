@@ -5,6 +5,16 @@ import { buildFogTileStates, renderFog, updateExplored } from '../engine/FogOfWa
 import { broadcastFogUpdate } from '../lib/liveChannel'
 import * as PIXI from 'pixi.js'
 
+/** Derive area lighting from time of day — outdoor areas get darker at night */
+function getEffectiveLighting(zoneLighting) {
+  const isDungeon = zoneLighting === 'darkness' || zoneLighting === 'dim'
+  if (isDungeon) return zoneLighting // indoor areas keep their fixed lighting
+  const hour = useStore.getState().gameTime?.hour ?? 8
+  if (hour >= 22 || hour < 5) return 'darkness' // deep night
+  if (hour >= 20 || hour < 6) return 'dim'      // twilight/early morning
+  return zoneLighting || 'bright'
+}
+
 /**
  * Manages fog-of-war state: explored set, vision computation,
  * fog rendering via PixiJS ticker, and broadcast sync.
@@ -43,7 +53,7 @@ export function useFogOfWar({ zone, playerPos, playerPosRef, currentAreaId, myCh
     const pos = playerPosRef.current
     if (!pos) return
 
-    const areaLighting = zone.lighting || 'bright'
+    const areaLighting = getEffectiveLighting(zone.lighting)
     const charVision = getCharacterVisionRange(myCharacter || {}, areaLighting)
     const partyVisions = [{
       position: pos,
@@ -73,11 +83,13 @@ export function useFogOfWar({ zone, playerPos, playerPosRef, currentAreaId, myCh
     const app = pixiRef.current?.getApp?.()
     if (!app?.ticker) return
 
+    let fogLogOnce = false
     const tickerFn = () => {
       const fogContainer = pixiRef.current?.getFogLayer?.()
       if (!fogContainer) return
       const cam = cameraRef.current
       if (!cam) return
+      if (!fogLogOnce) { console.log('[FogOfWar] Ticker running, cam ok, container ok'); fogLogOnce = true }
       const tileSize = zone.tileSize || 200
       const viewW = window.innerWidth
       const viewH = window.innerHeight
@@ -89,7 +101,7 @@ export function useFogOfWar({ zone, playerPos, playerPosRef, currentAreaId, myCh
       }
       const pos = playerPosRef.current
       if (!pos) return
-      const areaLighting = zone.lighting || 'bright'
+      const areaLighting = getEffectiveLighting(zone.lighting)
       const charVision = getCharacterVisionRange(myCharacter || {}, areaLighting)
       const partyVisions = [{
         position: pos,

@@ -164,7 +164,19 @@ export default function App() {
     // AI-triggered combat start (host → players via NarratorPanel)
     ch.on('broadcast', { event: 'combat-start' }, ({ payload }) => {
       if (!useStore.getState().isDM) {
-        useStore.getState().startEncounter(payload.enemies || [], payload.party || [], payload.autoRoll ?? true);
+        // Override own character's position with LOCAL position (DM may have stale data)
+        const myChar = useStore.getState().myCharacter
+        const party = (payload.party || []).map(p => {
+          if (myChar && (p.id === myChar.id || p.name === myChar.name)) {
+            // Use our own known position from areaTokenPositions
+            const areaId = useStore.getState().currentAreaId
+            const areaPos = useStore.getState().areaTokenPositions?.[areaId]
+            const localPos = areaPos?.[user?.id] || areaPos?.[myChar.id] || areaPos?.[myChar.name]
+            return { ...p, ...myChar, position: localPos || p.position }
+          }
+          return p
+        })
+        useStore.getState().startEncounter(payload.enemies || [], party, payload.autoRoll ?? true);
       }
     });
 
