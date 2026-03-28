@@ -132,8 +132,10 @@ export function generateRandomEncounter(partyLevel, partySize, areaType = 'dunge
           : 'Deadly';
 
   // Generate environmental hazards (30% chance, more common in deadly encounters)
+  // Pass area type as biome to filter inappropriate hazards (no lava in forests)
   const hazardProbability = difficultyRating === 'Deadly' ? 0.5 : 0.3;
-  const hazards = determineEncounterHazards(hazardProbability);
+  const biomeMap = { dungeon: 'dungeon', wilderness: 'forest', town: 'village' }
+  const hazards = determineEncounterHazards(hazardProbability, biomeMap[areaType] || areaType);
   const hazardDescriptions = hazards.map(h => describeHazard(h));
 
   // Generate loot based on difficulty and party level

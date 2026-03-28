@@ -1200,13 +1200,21 @@ export function createEncounterSlice(set, get) {
       const active = encounter.combatants[encounter.currentTurn];
       console.log('[runEnemyTurn] Start:', active?.name, 'type:', active?.type, 'hp:', active?.currentHp, 'turn:', encounter.currentTurn)
 
-      // Check if all players are dead/dying — don't run enemy turn if TPK
+      // Check if all players IN COMBAT are dead/dying — end combat immediately
       const livingPlayers = encounter.combatants.filter(c =>
         c.type !== 'enemy' && (c.currentHp > 0 || c.deathSaves?.stable)
       );
       if (livingPlayers.length === 0) {
-        console.log('[runEnemyTurn] No living players — TPK detected, skipping enemy turn')
-        get().nextEncounterTurn(); // This will trigger TPK handling
+        console.log('[runEnemyTurn] All players in combat are down — ending combat with defeat')
+        get().addEncounterLog('\u2620 All combatants have fallen...');
+        const msg = {
+          role: 'dm', speaker: 'The Narrator',
+          text: 'The party has been defeated. Darkness closes in... but fate is not yet done with you.',
+          id: uuidv4(), timestamp: Date.now(),
+        };
+        get().addNarratorMessage(msg);
+        broadcastNarratorMessage(msg);
+        setTimeout(() => get().endEncounterWithDefeat(), 2000);
         return;
       }
 

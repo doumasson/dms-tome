@@ -130,9 +130,23 @@ export const HAZARD_TEMPLATES = {
  * @param {number} partyLevel - Average party level
  * @returns {object} Hazard configuration
  */
-export function generateRandomHazard(partyLevel = 3) {
-  const types = Object.values(HAZARD_TYPES);
-  const hazardType = types[Math.floor(Math.random() * types.length)];
+// Hazards appropriate per biome — prevents lava in forests etc.
+const BIOME_HAZARDS = {
+  forest:   ['fire', 'web', 'poison_cloud', 'darkness', 'cursed'],
+  village:  ['fire', 'collapse', 'darkness', 'cursed'],
+  town:     ['fire', 'collapse', 'darkness', 'cursed'],
+  dungeon:  ['fire', 'collapse', 'poison_cloud', 'darkness', 'web', 'electrified', 'cursed'],
+  cave:     ['lava', 'collapse', 'poison_cloud', 'darkness', 'ice', 'electrified'],
+  mountain: ['ice', 'collapse', 'electrified', 'darkness'],
+  swamp:    ['poison_cloud', 'web', 'darkness', 'cursed'],
+  desert:   ['fire', 'lava', 'collapse', 'darkness'],
+  graveyard:['cursed', 'darkness', 'blessed', 'poison_cloud'],
+  crypt:    ['cursed', 'darkness', 'collapse', 'poison_cloud'],
+}
+
+export function generateRandomHazard(partyLevel = 3, biome = null) {
+  const allowed = biome && BIOME_HAZARDS[biome] ? BIOME_HAZARDS[biome] : Object.values(HAZARD_TYPES);
+  const hazardType = allowed[Math.floor(Math.random() * allowed.length)];
   const template = HAZARD_TEMPLATES[hazardType];
 
   return {
@@ -150,14 +164,14 @@ export function generateRandomHazard(partyLevel = 3) {
  * @param {number} probability - 0-1, chance of hazard in encounter (0.3 = 30%)
  * @returns {Array} Array of hazards
  */
-export function determineEncounterHazards(probability = 0.3) {
+export function determineEncounterHazards(probability = 0.3, biome = null) {
   if (Math.random() > probability) return [];
 
   // 30-70% chance of 1 hazard, 20% chance of 2 hazards
   const numHazards = Math.random() < 0.7 ? 1 : 2;
   const hazards = [];
   for (let i = 0; i < numHazards; i++) {
-    hazards.push(generateRandomHazard());
+    hazards.push(generateRandomHazard(3, biome));
   }
   return hazards;
 }
