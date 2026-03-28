@@ -539,12 +539,19 @@ export function createEncounterSlice(set, get) {
       const { combatants, currentTurn, round } = state.encounter;
       if (combatants.length === 0) return;
 
-      // Check for total party kill — all players dead (3 failed saves) or dying with no living players
+      // Check for total party kill — only if ALL players in combat are dead AND no allies outside combat
       const livingPlayers = combatants.filter(c =>
         c.type !== 'enemy' && (c.currentHp > 0 || c.deathSaves?.stable)
       );
-      if (livingPlayers.length === 0) {
-        // TPK — end combat with defeat
+      // Check if there are party members outside combat who could rescue
+      const allParty = get().partyMembers || [];
+      const playersInCombat = combatants.filter(c => c.type !== 'enemy');
+      const playersOutsideCombat = allParty.filter(p =>
+        !playersInCombat.some(c => c.id === p.id || c.name === p.name)
+      );
+      const hasRescuers = playersOutsideCombat.length > 0;
+      if (livingPlayers.length === 0 && !hasRescuers) {
+        // True TPK — no one alive anywhere
         get().addEncounterLog('\u2620 The party has fallen...');
         const msg = {
           role: 'dm', speaker: 'The Narrator',

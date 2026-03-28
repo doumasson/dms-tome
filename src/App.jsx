@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { supabase } from './lib/supabase';
-import { setLiveChannel, setLocalUserId, broadcastApiKeySync } from './lib/liveChannel';
+import { setLiveChannel, setLocalUserId, broadcastApiKeySync, broadcastPlayerJoined } from './lib/liveChannel';
 import { decryptApiKey } from './lib/apiKeyVault';
 import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
@@ -630,6 +630,28 @@ export default function App() {
       // No-op: players transition zones independently via their own exit clicks
     });
 
+    // Player joined — refresh partyMembers from Supabase so host sees new player
+    ch.on('broadcast', { event: 'player-joined' }, async ({ payload }) => {
+      const { userId, character } = payload || {}
+      if (!userId || userId === useStore.getState().user?.id) return // ignore self
+      console.log('[player-joined] Refreshing partyMembers for new player:', character?.name)
+      const campaignId = useStore.getState().activeCampaign?.id
+      if (!campaignId) return
+      try {
+        const { data: members } = await supabase
+          .from('campaign_members')
+          .select('user_id, role, character_data')
+          .eq('campaign_id', campaignId)
+        const seen = new Set()
+        const players = (members || [])
+          .filter(m => m.character_data?.name && !seen.has(m.user_id) && seen.add(m.user_id))
+          .map(m => ({ ...m.character_data, userId: m.user_id }))
+        useStore.getState().setPartyMembers(players)
+      } catch (err) {
+        console.error('[player-joined] Failed to refresh:', err)
+      }
+    })
+
     // Token move sync (any player → all others for V2 area map)
     ch.on('broadcast', { event: 'token-move' }, ({ payload }) => {
       const { playerId, position, path } = payload;
@@ -1104,6 +1126,8 @@ export default function App() {
                 console.error('Failed to load party members:', err);
               }
             }
+            // Notify all other players that we joined
+            broadcastPlayerJoined(user?.id, char);
             setAppView('game');
           }}
           onCreateNew={() => setAppView('character-create')}
@@ -1149,6 +1173,8 @@ export default function App() {
                 .map(m => ({ ...m.character_data, userId: m.user_id }));
               setPartyMembers(players);
             }
+            // Notify all other players that we joined
+            broadcastPlayerJoined(user?.id, char);
             setAppView('game');
           }}
         />

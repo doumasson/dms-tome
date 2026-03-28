@@ -126,6 +126,15 @@ export function broadcastAreaTransition(areaId, entryPoint, isHost = false) {
   })
 }
 
+// Notify all players that a new player joined the campaign
+export function broadcastPlayerJoined(userId, character) {
+  _channel?.send({
+    type: 'broadcast',
+    event: 'player-joined',
+    payload: { userId, character },
+  })
+}
+
 export function broadcastTokenMove(playerId, position, path = null) {
   _channel?.send({
     type: 'broadcast',

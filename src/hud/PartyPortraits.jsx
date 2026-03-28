@@ -64,7 +64,7 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
     partyMembers.forEach(m => {
       if (m.name !== myCharacter?.name) {
         // Only show party members who have a known position (are online/active)
-        const hasPosition = areaPositions[m.userId] || areaPositions[m.id]
+        const hasPosition = areaPositions[m.userId] || areaPositions[m.id] || areaPositions[m.name]
         if (hasPosition) allMembers.push(m)
       }
     })

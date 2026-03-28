@@ -67,13 +67,13 @@ export const s = {
 
   // ── Title ─────────────────────────────────────────────────────────────────
   headerGlyph: {
-    fontSize: '1.8rem',
+    fontSize: '1.1rem',
     display: 'block',
-    marginBottom: 2,
+    marginBottom: 0,
   },
   title: {
     fontFamily: "'Cinzel Decorative', 'Cinzel', Georgia, serif",
-    fontSize: '1.5rem',
+    fontSize: '1.05rem',
     fontWeight: 700,
     color: '#d4af37',
     margin: 0,
@@ -83,18 +83,18 @@ export const s = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 4,
+    gap: 2,
     textAlign: 'center',
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
 
   // ── Step dots ─────────────────────────────────────────────────────────────
   dotsRow: {
     display: 'flex',
-    gap: 8,
+    gap: 6,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '4px 0',
+    padding: '2px 0',
   },
   dot: {
     width: 8,
@@ -120,13 +120,13 @@ export const s = {
   // ── Step heading ──────────────────────────────────────────────────────────
   stepHeading: {
     fontFamily: "'Cinzel', Georgia, serif",
-    fontSize: '1rem',
+    fontSize: '0.85rem',
     fontWeight: 700,
     color: 'rgba(240,230,208,0.7)',
     letterSpacing: '0.12em',
     textTransform: 'uppercase',
     textAlign: 'center',
-    paddingBottom: 2,
+    paddingBottom: 1,
   },
   divider: {
     height: 1,

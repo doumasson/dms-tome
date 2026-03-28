@@ -999,7 +999,9 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
           const target = encounter.combatants?.find(c => c.id === targetId)
           if (!target) continue
 
-          const dmgResult = rollDamage(spell.damage?.dice || '1d6')
+          // Handle both string damage ('1d10') and object damage ({dice:'1d10'})
+          const damageDice = typeof spell.damage === 'string' ? spell.damage : (spell.damage?.dice || '1d6')
+          const dmgResult = rollDamage(damageDice)
           const damage = dmgResult.total ?? dmgResult
 
           // Use applyEncounterDamage so victory detection fires when last enemy dies
@@ -1127,6 +1129,17 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         },
         () => {
           addNarratorMessage({ role: 'dm', speaker: 'System', text: 'Spell targeting cancelled.' })
+          // Clear the leveled spell flag so they can cast again
+          if (castLevel > 0) {
+            useStore.setState(state => ({
+              encounter: {
+                ...state.encounter,
+                combatants: state.encounter.combatants.map(c =>
+                  c.id === active.id ? { ...c, leveledSpellCastThisTurn: false } : c
+                ),
+              },
+            }))
+          }
         }
       )
       addNarratorMessage({ role: 'dm', speaker: 'System', text: `Targeting ${spell.name}. Click to place. Press Escape to cancel.` })
