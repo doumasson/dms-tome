@@ -55,15 +55,29 @@ export function useGameEffects({
     prevInCombatRef.current = inCombat
   }, [inCombat, encounter.combatants, zone?.tileSize])
 
-  // Respawn position after TPK defeat
+  // Respawn position after TPK defeat — add cooldown to prevent immediate encounter zone re-trigger
+  const respawnCooldownRef = useRef(false)
   useEffect(() => {
     if (respawnPosition && !inCombat) {
       setPlayerPos(respawnPosition)
       playerPosRef.current = respawnPosition
       if (cameraRef.current) cameraRef.current.centerOn(respawnPosition.x, respawnPosition.y, zone?.tileSize || 200)
       useStore.setState({ respawnPosition: null })
+      // Prevent encounter zones from triggering for 3 seconds after respawn
+      respawnCooldownRef.current = true
+      setTimeout(() => { respawnCooldownRef.current = false }, 3000)
     }
   }, [respawnPosition, inCombat, zone?.tileSize])
+
+  // Real-time game clock — advances ~1 game-minute per 2 real seconds
+  // Full day cycle = ~48 minutes of real play time
+  useEffect(() => {
+    const { advanceGameTime } = useStore.getState()
+    const interval = setInterval(() => {
+      advanceGameTime(1 / 60) // 1 minute in game-hours
+    }, 2000) // every 2 real seconds
+    return () => clearInterval(interval)
+  }, [])
 
   // Ambient music — switch mood on combat state changes
   useEffect(() => {
@@ -180,7 +194,7 @@ export function useGameEffects({
 
   // Encounter zone proximity detection
   useEffect(() => {
-    if (!zone?.encounterZones?.length || !playerPos || inCombat || !myCharacter || !hasMovedRef.current || stealthMode?.active) return
+    if (!zone?.encounterZones?.length || !playerPos || inCombat || !myCharacter || !hasMovedRef.current || stealthMode?.active || respawnCooldownRef.current) return
     const pos = playerPosRef.current
     if (!pos) return
 
@@ -244,12 +258,15 @@ export function useGameEffects({
         const freshParty = useStore.getState().partyMembers || []
         const currentArea = useStore.getState().currentAreaId
         const areaPositions = useStore.getState().areaTokenPositions?.[currentArea] || {}
+        const myPos = playerPosRef.current || { x: 5, y: 5 }
+        const areaData = useStore.getState().areas?.[currentArea]
+        const fallbackPos = areaData?.playerStart || myPos
         const combatParty = freshParty.map(p => {
           const isLocal = myChar && (p.id === myChar.id || p.name === myChar.name)
-          // Use live position from areaTokenPositions or local playerPos
+          // Use live position from areaTokenPositions or local playerPos, fall back to playerStart
           const livePos = isLocal
-            ? { ...playerPosRef.current }
-            : (areaPositions[p.userId] || areaPositions[p.id] || null)
+            ? { ...myPos }
+            : (areaPositions[p.userId] || areaPositions[p.id] || { x: fallbackPos.x + 1, y: fallbackPos.y })
           return {
             ...p,
             ...(isLocal ? myChar : {}),
@@ -285,6 +302,53 @@ export function useGameEffects({
       startCombatWithZoneEnemies()
     }
   }, [playerPos, zone, inCombat, isDM, addNarratorMessage, sessionApiKey, partyMembers, defeatedEnemies, currentAreaId, stealthMode?.active, myCharacter, activeCampaign])
+
+  // Mid-combat join — if combat is active but we're not in it, check if we walked into the radius
+  useEffect(() => {
+    if (!inCombat || !myCharacter || !playerPos) return
+    const { encounter, joinEncounterMidCombat } = useStore.getState()
+    // Already in combat
+    if (encounter.combatants.some(c => c.id === myCharacter.id || c.name === myCharacter.name)) return
+    // Check distance to combat center
+    const center = encounter.combatCenter
+    const radius = encounter.combatRadius || 10
+    if (!center) return
+    const pos = playerPosRef.current
+    if (!pos) return
+    const dx = pos.x - center.x
+    const dy = pos.y - center.y
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    if (dist > radius) return
+
+    // Player entered combat radius — check stealth
+    if (stealthMode?.active) {
+      // Enemies get a perception check against player's stealth
+      const enemies = encounter.combatants.filter(c => c.type === 'enemy' && c.currentHp > 0)
+      const stealthDC = stealthMode.stealthRoll || 15
+      let detected = false
+      for (const enemy of enemies) {
+        const wisMod = Math.floor(((enemy.stats?.wis || 10) - 10) / 2)
+        const perceptionRoll = Math.floor(Math.random() * 20) + 1 + wisMod
+        if (perceptionRoll >= stealthDC) {
+          detected = true
+          addNarratorMessage({
+            role: 'dm', speaker: 'Combat',
+            text: `${enemy.name} spots ${myCharacter.name} sneaking nearby! (Perception ${perceptionRoll} vs Stealth ${stealthDC})`,
+          })
+          break
+        }
+      }
+      if (!detected) {
+        // Stealth holds — don't join combat yet
+        return
+      }
+      // Stealth broken — clear it and fall through to join
+      useStore.setState({ stealthMode: null })
+    }
+
+    // Join combat
+    joinEncounterMidCombat({ ...myCharacter, position: { ...pos } })
+  }, [playerPos, inCombat, myCharacter, stealthMode?.active])
 
   // NPC schedule movement on time-of-day changes
   useEffect(() => {

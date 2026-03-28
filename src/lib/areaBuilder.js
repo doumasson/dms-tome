@@ -32,11 +32,11 @@ const SIZE_KEYWORDS = {
 
 const SIZE_RANGES = {
   tiny:   { minW: 6,  maxW: 10, minH: 6,  maxH: 10 },
-  small:  { minW: 8,  maxW: 18, minH: 6,  maxH: 14 },
-  medium: { minW: 15, maxW: 35, minH: 12, maxH: 28 },
-  large:  { minW: 30, maxW: 55, minH: 25, maxH: 45 },
-  hub:    { minW: 45, maxW: 80, minH: 35, maxH: 60 },
-  open:   { minW: 55, maxW: 100, minH: 45, maxH: 75 },
+  small:  { minW: 8,  maxW: 16, minH: 6,  maxH: 12 },
+  medium: { minW: 14, maxW: 28, minH: 12, maxH: 22 },
+  large:  { minW: 24, maxW: 40, minH: 20, maxH: 32 },
+  hub:    { minW: 32, maxW: 55, minH: 26, maxH: 42 },
+  open:   { minW: 35, maxW: 60, minH: 30, maxH: 48 },
 }
 
 function detectSizeCategory(name, theme) {
@@ -95,6 +95,91 @@ export const THEME_ROAD = {
 
 const DUNGEON_THEMES = new Set(['dungeon', 'cave', 'crypt', 'sewer'])
 
+/* ── Scatter decoration tiles per theme ─────────────────────── */
+// These get scattered on empty tiles to make the world feel alive and decorated
+export const THEME_SCATTER = {
+  village: [
+    'atlas-terrain:bush_multicolor2_a1_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',
+    'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
+    'atlas-props-decor:crate_wood_ashen_a_1x1',
+    'atlas-props-decor:sack_black_a1_1x1',
+    'atlas-props-decor:bucket_pail_metal_gray_a1_1x1',
+  ],
+  forest: [
+    'atlas-terrain:bush_multicolor2_a1_1x1',
+    'atlas-terrain:bush_multicolor2_a1_1x1',   // double-weight: forests need lots of bushes
+    'atlas-terrain:branch_wood_ashen_a6_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',  // double-weight: fallen branches everywhere
+    'atlas-terrain:gravestone_stone_gray_a1_1x1', // mushroom/stump stand-in
+    'atlas-props-decor:arranged_clutter_a10_1x1',
+  ],
+  town: [
+    'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
+    'atlas-props-decor:crate_wood_ashen_a_1x1',
+    'atlas-props-decor:sack_black_a1_1x1',
+    'atlas-props-decor:bucket_pail_metal_gray_a1_1x1',
+    'atlas-props-decor:amphora_clay_brown_a1_1x1',
+    'atlas-terrain:bush_multicolor2_a1_1x1',
+  ],
+  dungeon: [
+    'atlas-props-decor:arranged_clutter_a10_1x1',
+    'atlas-props-decor:amphora_clay_brown_a1_1x1',
+    'atlas-props-decor:candles_black_arranged_a1_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',  // debris
+  ],
+  cave: [
+    'atlas-terrain:branch_wood_ashen_a6_1x1',
+    'atlas-terrain:gravestone_stone_gray_a1_1x1',  // rock formation stand-in
+    'atlas-props-decor:arranged_clutter_a10_1x1',
+  ],
+  mountain: [
+    'atlas-terrain:gravestone_stone_gray_a1_1x1',
+    'atlas-terrain:gravestone_stone_gray_b1_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',
+    'atlas-terrain:bush_multicolor2_a1_1x1',
+  ],
+  desert: [
+    'atlas-terrain:gravestone_stone_gray_a1_1x1',  // rock stand-in
+    'atlas-terrain:gravestone_stone_gray_b1_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',  // dried wood
+  ],
+  swamp: [
+    'atlas-terrain:bush_multicolor2_a1_1x1',
+    'atlas-terrain:bush_multicolor2_a1_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',
+    'atlas-terrain:gravestone_stone_gray_a1_1x1',  // dead stump
+  ],
+  coastal: [
+    'atlas-terrain:bush_multicolor2_a1_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',
+    'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
+  ],
+  graveyard: [
+    'atlas-terrain:gravestone_stone_gray_a1_1x1',
+    'atlas-terrain:gravestone_stone_gray_b1_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',
+    'atlas-terrain:bush_multicolor2_a1_1x1',
+  ],
+  crypt: [
+    'atlas-props-decor:amphora_clay_brown_a1_1x1',
+    'atlas-props-decor:candles_black_arranged_a1_1x1',
+    'atlas-props-decor:arranged_clutter_a10_1x1',
+  ],
+  sewer: [
+    'atlas-props-decor:amphora_clay_brown_a1_1x1',
+    'atlas-props-decor:arranged_clutter_a10_1x1',
+    'atlas-terrain:branch_wood_ashen_a6_1x1',
+  ],
+}
+
+// Scatter density per theme — outdoor areas get more decoration
+const THEME_SCATTER_DENSITY = {
+  village: 0.08, forest: 0.14, town: 0.07, dungeon: 0.05,
+  cave: 0.06, mountain: 0.10, desert: 0.06, swamp: 0.12,
+  coastal: 0.08, graveyard: 0.10, crypt: 0.04, sewer: 0.04,
+}
+
 /* ── Shared chunk library singleton ──────────────────────────── */
 
 let _lib = null
@@ -142,7 +227,8 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   // 3. Build unified palette from all matched chunks + theme tiles
   const terrainTiles = THEME_TERRAIN[theme] || THEME_TERRAIN.village
   const roadTile = THEME_ROAD[theme] || THEME_ROAD.village
-  const extraTiles = [...terrainTiles, roadTile]
+  const scatterTiles = THEME_SCATTER[theme] || THEME_SCATTER.village
+  const extraTiles = [...terrainTiles, roadTile, ...scatterTiles]
   const matchedChunks = matchedPois.map(p => p.chunk)
   const { palette, tileToIndex } = buildUnifiedPalette(matchedChunks, extraTiles)
 
@@ -219,6 +305,20 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   // 7b. Apply edge padding — darken/vary border cells for natural framing
   if (terrainIndices.length > 0) {
     edgePadding(layers.floor, terrainIndices, width, height, 3, seed + 1)
+  }
+
+  // 7c. Scatter decoration props across empty terrain — makes the world feel alive
+  const scatterIndices = scatterTiles.map(id => tileToIndex.get(id)).filter(Boolean)
+  if (scatterIndices.length > 0) {
+    const density = THEME_SCATTER_DENSITY[theme] || 0.08
+    const roadIdxSet = new Set([tileToIndex.get(roadTile)].filter(Boolean))
+    scatterProps(layers.props, scatterIndices, width, height, density, seed + 2, layers.walls, roadIdxSet, layers.floor)
+    // Count scattered props for debugging
+    let scatterCount = 0
+    for (let i = 0; i < layers.props.length; i++) if (layers.props[i] > 0) scatterCount++
+    console.log(`[areaBuilder] Scattered ${scatterCount} props (${scatterIndices.length} tile types, ${(density * 100).toFixed(0)}% density, theme: ${theme})`)
+  } else {
+    console.warn(`[areaBuilder] No scatter indices for theme "${theme}" — scatter tiles may not be in palette`)
   }
 
   // 8. Extract wall edges (also backfills floor under wall cells)

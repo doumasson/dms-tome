@@ -3,6 +3,7 @@ import useStore from '../store/useStore'
 import { playParchmentRustle } from '../lib/uiSounds'
 import { broadcastSpeakerVoteStart, broadcastSpeakerClear } from '../lib/liveChannel'
 import SpeakerVote from '../components/game/SpeakerVote'
+import { stopSpeaking, isSpeaking } from '../lib/tts'
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 const SPEECH_SUPPORTED = !!SpeechRecognition
@@ -236,6 +237,7 @@ export default function SessionLog({ onChat, tab, setTab }) {
                 {isRecording ? '\u{1F534}' : '\u{1F3A4}'}
               </button>
             )}
+            <button type="button" className="hud-chat-skip-btn" onClick={() => stopSpeaking()} title="Skip narration">SKIP</button>
             <button type="submit" className="hud-chat-go-btn" disabled={!isSpeaker || isVoting}>GO</button>
           </form>
           </>

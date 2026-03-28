@@ -13,6 +13,7 @@ import { updateAmbientParticles } from './AmbientParticles.js'
 import { updateStatusEffects } from './StatusEffectRenderer.js'
 import { applyDayNightTint } from './DayNightFilter.js'
 import { getTimeOfDay } from '../lib/gameTime.js'
+import { initSpellEffects, cleanupSpellEffects, playSpellEffect } from './SpellEffects.js'
 import useStore from '../store/useStore.js'
 import { TweenEngine } from './TweenEngine'
 import { startTargeting, updateTargeting, confirmTargeting, cancelTargeting, isTargeting } from './SpellTargetingOverlay'
@@ -68,6 +69,9 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
     cancelSpellTargeting: () => {
       cancelTargeting()
     },
+    playSpellAnimation: (spellName, casterPos, targetPos, tileSize, opts) => {
+      playSpellEffect(spellName, casterPos, targetPos, tileSize, opts)
+    },
   }), [])
 
   // Initialize PixiJS application
@@ -112,6 +116,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         movementRange: new PIXI.Container(),  // combat reachable-tile highlights
         tokens: new PIXI.Container(),
         statusEffects: new PIXI.Container(),  // condition tints/rings — above tokens, below roof
+        spellEffects: new PIXI.Container(),  // spell cast animations — above tokens
         roof: new PIXI.Container(),    // above tokens — hides interior + NPCs until revealed
         fog: new PIXI.Container(),
         exits: new PIXI.Container(),
@@ -126,6 +131,9 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
       app.stage.addChild(ambientLayer)
       layers.lighting.blendMode = 'add'
       stageLayersRef.current = layers
+
+      // Initialize spell effects on the dedicated layer
+      initSpellEffects(layers.spellEffects, app.ticker)
 
       await loadTileAtlas()
       if (destroyed) return
@@ -178,6 +186,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
 
     return () => {
       destroyed = true
+      cleanupSpellEffects()
       // Remove canvas from DOM directly (safe even if app is partially initialized)
       containerRef.current?.querySelectorAll('canvas').forEach(c => c.remove())
       try {

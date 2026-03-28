@@ -158,15 +158,28 @@ export function buildUnifiedPalette(chunks, extraTileIds = []) {
 
 /**
  * Scatter prop tiles randomly across empty prop cells.
+ * @param {Uint16Array} propsLayer
+ * @param {number[]} scatterTileIndices — palette indices of decoration tiles
+ * @param {number} width
+ * @param {number} height
+ * @param {number} density — 0-1, fraction of empty tiles to fill (0.08 = 8%)
+ * @param {number} seed
+ * @param {Uint16Array} [wallsLayer] — skip cells with walls
+ * @param {Set<number>} [roadIndices] — skip cells whose floor is a road tile
+ * @param {Uint16Array} [floorLayer] — floor layer for road checking
  */
-export function scatterProps(propsLayer, scatterTileIndices, width, height, density = 0.03, seed = 42) {
+export function scatterProps(propsLayer, scatterTileIndices, width, height, density = 0.03, seed = 42, wallsLayer, roadIndices, floorLayer) {
   let rng = seed
   const next = () => { rng = (rng * 16807) % 2147483647; return (rng - 1) / 2147483646 }
   for (let y = 2; y < height - 2; y++) {
     for (let x = 2; x < width - 2; x++) {
       const idx = y * width + x
-      // Only scatter in empty prop cells that have floor underneath
-      if (propsLayer[idx] === 0 && next() < density) {
+      // Skip cells that already have props, walls, road tiles, or no floor
+      if (propsLayer[idx] !== 0) continue
+      if (wallsLayer && wallsLayer[idx] !== 0) continue
+      if (floorLayer && floorLayer[idx] === 0) continue // no floor = void/edge
+      if (roadIndices && floorLayer && roadIndices.has(floorLayer[idx])) continue
+      if (next() < density) {
         propsLayer[idx] = scatterTileIndices[Math.floor(next() * scatterTileIndices.length)]
       }
     }

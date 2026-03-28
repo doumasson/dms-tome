@@ -483,11 +483,14 @@ export default function GameV2({ onLeave }) {
     }))
     // Use live positions from areaTokenPositions so all players have correct combat positions
     const areaPositions = useStore.getState().areaTokenPositions?.[currentAreaId] || {}
+    const myPos = playerPosRef.current || { x: 5, y: 5 }
+    const areaData = useStore.getState().areas?.[currentAreaId]
+    const fallbackPos = areaData?.playerStart || myPos
     const combatParty = freshParty.map(p => {
       const isLocal = myChar && (p.id === myChar.id || p.name === myChar.name)
       const livePos = isLocal
-        ? { ...playerPosRef.current }
-        : (areaPositions[p.userId] || areaPositions[p.id] || null)
+        ? { ...myPos }
+        : (areaPositions[p.userId] || areaPositions[p.id] || { x: fallbackPos.x + 1, y: fallbackPos.y })
       return {
         ...p,
         ...(isLocal ? myChar : {}),

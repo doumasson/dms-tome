@@ -511,6 +511,66 @@ export default function App() {
           // Sync rest votes across players — dispatch custom event for RestModal to pick up
           window.dispatchEvent(new CustomEvent('rest-vote-received', { detail: payload }))
           break
+        case 'rest-complete': {
+          // Another player completed a rest — apply HP restoration locally
+          const chars = payload.characters || []
+          if (payload.restType === 'long') {
+            // Long rest: restore all characters to full HP
+            const state = useStore.getState()
+            const myChar = state.myCharacter
+            const match = chars.find(c => c.id === myChar?.id || c.name === myChar?.name)
+            if (match && myChar) {
+              useStore.setState({
+                myCharacter: { ...myChar, currentHp: match.currentHp, maxHp: match.maxHp, conditions: [], hitDiceRemaining: match.hitDiceRemaining },
+              })
+            }
+            // Update partyMembers with new HP
+            useStore.setState(s => ({
+              partyMembers: s.partyMembers.map(p => {
+                const upd = chars.find(c => c.id === p.id || c.name === p.name)
+                return upd ? { ...p, currentHp: upd.currentHp, maxHp: upd.maxHp, hp: upd.currentHp, conditions: [] } : p
+              }),
+            }))
+          }
+          break
+        }
+        case 'rest-hp-update': {
+          // Another player spent a hit die — update their HP in partyMembers for portrait display
+          const { charId, charName, currentHp, maxHp } = payload
+          useStore.setState(s => ({
+            partyMembers: s.partyMembers.map(p =>
+              (p.id === charId || p.name === charName) ? { ...p, currentHp, maxHp, hp: currentHp } : p
+            ),
+          }))
+          // Also update myCharacter if it's us (e.g. from another tab)
+          const myChar = useStore.getState().myCharacter
+          if (myChar && (myChar.id === charId || myChar.name === charName)) {
+            useStore.setState({ myCharacter: { ...myChar, currentHp, maxHp } })
+          }
+          break
+        }
+        case 'mid-combat-join': {
+          // Another player joined combat mid-fight — insert into local combatant list
+          const newCombatant = payload.combatant
+          if (newCombatant) {
+            useStore.setState(s => {
+              if (s.encounter.combatants.some(c => c.id === newCombatant.id || c.name === newCombatant.name)) return s
+              const combatants = [...s.encounter.combatants]
+              let insertIdx = combatants.findIndex(c => (c.initiative || 0) < (newCombatant.initiative || 0))
+              if (insertIdx === -1) insertIdx = combatants.length
+              combatants.splice(insertIdx, 0, newCombatant)
+              const currentTurn = insertIdx <= s.encounter.currentTurn
+                ? s.encounter.currentTurn + 1 : s.encounter.currentTurn
+              return {
+                encounter: {
+                  ...s.encounter, combatants, currentTurn,
+                  log: [`${newCombatant.name} joins the fray! (Initiative: ${newCombatant.initiative})`, ...s.encounter.log].slice(0, 30),
+                },
+              }
+            })
+          }
+          break
+        }
         case 'emote':
           receiveEmote(payload.playerName, payload.emoji);
           break

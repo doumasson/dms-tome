@@ -84,8 +84,8 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
     const w = isSmall ? 44 : 80
     const h = isSmall ? 55 : 100
     const color = CLASS_COLORS[member.class] || '#888'
-    let hp = member.hp ?? member.currentHp ?? member.maxHp ?? 10
-    let maxHp = member.maxHp ?? 10
+    let hp = member.currentHp ?? member.hp ?? member.maxHp ?? 10
+    let maxHp = member.maxHp ?? member.hp ?? 10
 
     // During combat, override with live combatant HP
     if (isInCombat && encounter?.combatants) {

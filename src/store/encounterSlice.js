@@ -42,10 +42,16 @@ export function createEncounterSlice(set, get) {
     defeatedEnemies: {},        // { [areaId]: [enemyName, ...] } — prevents respawn in exploration
     showDeathOptions: false,    // Show respawn choice dialog after TPK
 
-    startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false, hazards = [] } = {}) => {
+    startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false, hazards = [], combatCenter = null, combatRadius = 10 } = {}) => {
       // Clear stealth when combat starts
       set({ stealthMode: null });
       const combatants = [];
+
+      // Determine combat center from enemies or first party member
+      const center = combatCenter
+        || enemies?.find(e => e.position)?.position
+        || partyMembers?.[0]?.position
+        || { x: 10, y: 10 };
 
       // Scale enemy count to party size (skip for template-resolved enemies which have role field)
       const playerCount = Math.max(1, (partyMembers || []).length);
@@ -106,12 +112,23 @@ export function createEncounterSlice(set, get) {
         }
       });
 
-      // Add party members from campaign characters
+      // Add party members within combat radius — players too far away stay in exploration
       partyMembers?.forEach((rawChar) => {
         // Overlay fresh myCharacter data for the local player (handles stale partyMembers from Supabase)
         const myChar = get().myCharacter;
         const isLocal = myChar && (rawChar.id === myChar.id || rawChar.name === myChar.name);
         const char = isLocal ? { ...rawChar, ...myChar } : rawChar;
+
+        // Check if player is within combat radius
+        if (char.position && center) {
+          const dx = (char.position.x || 0) - center.x;
+          const dy = (char.position.y || 0) - center.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist > combatRadius) {
+            console.log(`[startEncounter] ${char.name} too far from combat (${Math.round(dist)} tiles), skipping`);
+            return; // skip — this player stays in exploration
+          }
+        }
 
         // Try multiple sources for class
         let resolvedClass = char.class || char.className || char.characterClass || '';
@@ -313,6 +330,8 @@ export function createEncounterSlice(set, get) {
             round: 1,
             log: [`Initiative rolled — ${initLog}`],
             hazards,
+            combatCenter: center,
+            combatRadius,
           },
         });
         // Log enemies to bestiary
@@ -332,6 +351,76 @@ export function createEncounterSlice(set, get) {
           },
         });
       }
+    },
+
+    // Join an active combat mid-fight — rolls initiative and inserts into order
+    joinEncounterMidCombat: (charData) => {
+      const state = get();
+      if (state.encounter.phase !== 'combat') return;
+      // Don't add if already in combat
+      if (state.encounter.combatants.some(c => c.id === charData.id || c.name === charData.name)) return;
+
+      const dexMod = Math.floor(((charData.stats?.dex || 10) - 10) / 2);
+      const initiative = Math.floor(Math.random() * 20) + 1 + dexMod;
+      const spd = charData.speed || 30;
+
+      const newCombatant = {
+        id: charData.id || uuidv4(),
+        name: charData.name,
+        type: 'player',
+        class: charData.class || '',
+        level: charData.level || 1,
+        initiative,
+        maxHp: charData.maxHp || charData.hp || 10,
+        currentHp: charData.currentHp ?? charData.hp ?? charData.maxHp ?? 10,
+        ac: charData.ac || 10,
+        speed: spd,
+        remainingMove: Math.floor(spd / 5),
+        actionsUsed: 0,
+        bonusActionsUsed: 0,
+        stats: charData.stats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        attacks: charData.attacks || [{ name: 'Unarmed Strike', bonus: '+2', damage: '1' }],
+        spells: charData.spells || [],
+        spellSlots: charData.spellSlots || null,
+        resourcesUsed: charData.resourcesUsed || {},
+        conditions: [],
+        concentration: null,
+        position: charData.position || null,
+        deathSaves: { successes: 0, failures: 0, stable: false },
+        readiedAction: null,
+        portrait: charData.portrait || makePortraitUrl(charData.name, charData.race, charData.class),
+      };
+
+      // Insert into initiative order at the right spot
+      set(s => {
+        const combatants = [...s.encounter.combatants];
+        let insertIdx = combatants.findIndex(c => (c.initiative || 0) < initiative);
+        if (insertIdx === -1) insertIdx = combatants.length;
+        combatants.splice(insertIdx, 0, newCombatant);
+        // Adjust currentTurn if insert is before current
+        const currentTurn = insertIdx <= s.encounter.currentTurn
+          ? s.encounter.currentTurn + 1
+          : s.encounter.currentTurn;
+        return {
+          encounter: {
+            ...s.encounter,
+            combatants,
+            currentTurn,
+            log: [`${charData.name} joins the fray! (Initiative: ${initiative})`, ...s.encounter.log].slice(0, 30),
+          },
+        };
+      });
+
+      broadcastEncounterAction({
+        type: 'mid-combat-join',
+        combatant: newCombatant,
+      });
+
+      get().addNarratorMessage?.({
+        role: 'dm', speaker: 'Combat',
+        text: `${charData.name} enters combat! (Initiative: ${initiative})`,
+        id: uuidv4(), timestamp: Date.now(),
+      });
     },
 
     setEncounterInitiative: (id, value) =>
@@ -470,8 +559,16 @@ export function createEncounterSlice(set, get) {
         return;
       }
 
-      // Find next living combatant (skip dead characters — 3 failed death saves)
-      const isDead = (c) => c.currentHp <= 0 && c.deathSaves?.failures >= 3 && !c.deathSaves?.stable;
+      // Find next combatant who can actually act (skip dead, unconscious, stable, stunned, paralyzed)
+      const cannotAct = (c) => {
+        // Dead (3 failed death saves)
+        if (c.currentHp <= 0 && c.deathSaves?.failures >= 3) return true;
+        // Unconscious at 0 HP (dying or stable — can't take turns either way)
+        if (c.currentHp <= 0) return true;
+        // Unconscious condition (from Sleep or other effects)
+        if (c.conditions?.includes('Unconscious')) return true;
+        return false;
+      };
       let nextTurn = currentTurn;
       let nextRound = round;
       let attempts = 0;
@@ -480,7 +577,14 @@ export function createEncounterSlice(set, get) {
         nextTurn = isLast ? 0 : nextTurn + 1;
         if (isLast) nextRound = nextRound + 1;
         attempts++;
-      } while (isDead(combatants[nextTurn]) && attempts < combatants.length);
+      } while (cannotAct(combatants[nextTurn]) && attempts < combatants.length);
+
+      // If ALL combatants can't act (everyone unconscious/dead), end combat
+      if (attempts >= combatants.length && cannotAct(combatants[nextTurn])) {
+        get().addEncounterLog('All combatants are incapacitated. Combat ends.');
+        get().endEncounter();
+        return;
+      }
 
       const roundChanged = nextRound !== round;
       if (roundChanged) {
@@ -681,7 +785,7 @@ export function createEncounterSlice(set, get) {
           logMsg = `${c.name} rolled a 1 on death save \u2014 2 failures! (${failures}/3)`;
         } else if (roll >= 10) {
           successes = Math.min(3, successes + 1);
-          if (successes >= 3) { stable = true; logMsg = `${c.name} stabilizes! (3 successes)`; }
+          if (successes >= 3) { newHp = 1; successes = 0; failures = 0; stable = false; logMsg = `${c.name} succeeds 3 death saves \u2014 revived with 1 HP!`; }
           else logMsg = `${c.name} death save: ${roll} \u2014 success (${successes}/3)`;
         } else {
           failures = Math.min(3, failures + 1);
@@ -721,7 +825,7 @@ export function createEncounterSlice(set, get) {
           logMsg = `${c.name} rolled a 1 on death save \u2014 2 failures! (${failures}/3)`;
         } else if (roll >= 10) {
           successes = Math.min(3, successes + 1);
-          if (successes >= 3) { stable = true; logMsg = `${c.name} stabilizes! (3 successes)`; }
+          if (successes >= 3) { newHp = 1; successes = 0; failures = 0; stable = false; logMsg = `${c.name} succeeds 3 death saves \u2014 revived with 1 HP!`; }
           else logMsg = `${c.name} death save: ${roll} \u2014 success (${successes}/3)`;
         } else {
           failures = Math.min(3, failures + 1);

@@ -6,6 +6,29 @@
 > - **DO NOT WRITE TESTS.** Fix real game code only.
 > - If Playwright shows the game is broken, fix THAT before anything else.
 
+## Playtest 5 Fixes (2026-03-28)
+
+- [x] Short rest solo vote — auto-passes when only 1 player (no force button needed)
+- [x] Short rest hit dice — removed auto-spend, player now sees hit dice roller UI
+- [x] HP broadcast after rest — long rest + hit dice spending now broadcast to all players
+- [x] Rest vote visibility — rest-complete and rest-hp-update broadcast handlers added
+- [x] Portrait HP sync — portraits now prefer currentHp, update from broadcast events
+- [x] Death saves 3 successes — revives at 1 HP instead of stable at 0 HP
+- [x] Combat loop fix — unconscious/0 HP combatants skipped in turn order, combat ends if all incapacitated
+- [x] Sleep spell — uses HP pool mechanic (5d8), applies Unconscious condition, no damage
+- [x] Control spells — Tasha's Hideous Laughter and similar now apply conditions with save
+- [x] TTS skip button — NarratorFloat stays visible while TTS speaks, SKIP button pulses, larger click target
+- [x] Magic Missiles fix — SpellTargetingOverlay now handles 'single' areaType (was returning empty tiles), red crosshair targeting preview added
+- [x] Spell panel — only shows spells character knows + cantrips (removed catalog fallback showing all spells)
+- [x] Sorcerer starter spells — Magic Missile added to default Sorcerer spell list
+- [x] Auto-walk to combat after respawn — 3-second cooldown prevents encounter zones triggering after respawn
+- [x] Second player null position in combat — falls back to playerStart instead of null
+- [x] Combat encounter radius (NEW) — only players within 10 tiles join combat, far players stay in exploration
+- [x] Mid-combat join (NEW) — players entering combat radius roll initiative and get inserted into turn order
+- [x] Stealth through combat radius (NEW) — enemies roll perception vs player stealth DC, stealth holds if undetected
+- [x] PixiJS spell animations (NEW) — 12 unique spell effects: Magic Missile darts, fire cone/bolt, sleep sparkles, thunderwave shockwave, healing glow, eldritch blast beam, frost particles, lightning bolt, radiant pillar, poison cloud, necrotic wisps, generic arcane burst
+- [x] Spell targeting preview for single-target (NEW) — red crosshair on hovered tile for Magic Missile, etc.
+
 ## Multiplayer Playtest Fixes (2026-03-25) — ALL 17 FIXED
 
 - [x] Can't see other player token on spawn — broadcast initial position on game load

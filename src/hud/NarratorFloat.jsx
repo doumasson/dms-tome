@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import useStore from '../store/useStore'
 import { stopSpeaking, isSpeaking } from '../lib/tts'
 
@@ -8,9 +8,16 @@ export default function NarratorFloat() {
   // Find last DM message
   const lastDm = [...history].reverse().find(m => m.role === 'dm')
 
-  // Auto-hide after 8 seconds
   const [visible, setVisible] = useState(true)
   const [displayedText, setDisplayedText] = useState('')
+  const [speaking, setSpeaking] = useState(false)
+  const hideTimerRef = useRef()
+
+  // Poll TTS speaking state so float stays visible while narrating
+  useEffect(() => {
+    const poll = setInterval(() => setSpeaking(isSpeaking()), 300)
+    return () => clearInterval(poll)
+  }, [])
 
   // Typewriter effect: show 1 character per 25ms
   useEffect(() => {
@@ -30,12 +37,23 @@ export default function NarratorFloat() {
     return () => clearInterval(interval)
   }, [lastDm?.text])
 
-  // Auto-hide after 8 seconds
+  // Auto-hide after 8 seconds — but stay visible while TTS is speaking
   useEffect(() => {
     setVisible(true)
-    const t = setTimeout(() => setVisible(false), 8000)
-    return () => clearTimeout(t)
+    clearTimeout(hideTimerRef.current)
+    hideTimerRef.current = setTimeout(() => {
+      if (!isSpeaking()) setVisible(false)
+    }, 8000)
+    return () => clearTimeout(hideTimerRef.current)
   }, [lastDm?.text])
+
+  // Hide when TTS finishes (if auto-hide timer already passed)
+  useEffect(() => {
+    if (!speaking) {
+      const t = setTimeout(() => setVisible(false), 2000)
+      return () => clearTimeout(t)
+    }
+  }, [speaking])
 
   if (!lastDm || !visible) return null
 
@@ -62,21 +80,23 @@ export default function NarratorFloat() {
         </div>
         <button
           onClick={() => { stopSpeaking(); setVisible(false); }}
-          title="Skip narration"
+          title="Skip narration (click to silence)"
           style={{
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(201,168,76,0.3)',
+            background: speaking ? 'rgba(212,175,55,0.25)' : 'rgba(255,255,255,0.06)',
+            border: `1px solid ${speaking ? 'rgba(212,175,55,0.6)' : 'rgba(201,168,76,0.3)'}`,
             color: '#d4af37',
             borderRadius: 4,
-            padding: '2px 8px',
+            padding: '4px 12px',
             cursor: 'pointer',
-            fontSize: 10,
+            fontSize: 11,
+            fontWeight: 700,
             fontFamily: "'Cinzel', serif",
             flexShrink: 0,
             marginTop: 1,
+            animation: speaking ? 'pulse 1.5s ease infinite' : 'none',
           }}
         >
-          SKIP
+          {speaking ? 'SKIP' : 'X'}
         </button>
       </div>
     </div>

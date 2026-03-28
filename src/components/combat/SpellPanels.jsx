@@ -295,9 +295,13 @@ export function SpellSelectPanel({ combatant, onPick, onCancel }) {
   const spells = combatant.spells || [];
   const [filter, setFilter] = useState('');
 
+  // Only show spells the character actually knows that have combat definitions
+  // Cantrips from COMBAT_SPELLS are always available (level 0, no slot needed)
   const knownNames = spells.filter(s => COMBAT_SPELLS[s]);
-  const catalogNames = Object.keys(COMBAT_SPELLS).filter(s => !knownNames.includes(s));
-  const allSpells = [...knownNames, ...catalogNames];
+  const knownCantrips = Object.keys(COMBAT_SPELLS).filter(s =>
+    COMBAT_SPELLS[s].level === 0 && !knownNames.includes(s)
+  );
+  const allSpells = [...knownNames, ...knownCantrips];
 
   const filtered = filter
     ? allSpells.filter(s => s.toLowerCase().includes(filter.toLowerCase()))

@@ -1,5 +1,6 @@
 import { getClassResources } from '../lib/classResources';
 import { CLASSES } from '../data/classes';
+import { broadcastEncounterAction } from '../lib/liveChannel';
 
 /**
  * Rest slice — short rest, long rest, hit dice spending.
@@ -42,18 +43,10 @@ export function createRestSlice(set, get) {
           },
         };
       });
-      // Auto-spend one hit die to restore HP (5e short rest)
-      const myChar = get().myCharacter
-      if (myChar && (myChar.currentHp || 0) < (myChar.maxHp || 1)) {
-        const remaining = myChar.hitDiceRemaining ?? myChar.level ?? 1
-        if (remaining > 0) {
-          get().spendHitDie(myChar.id || myChar.name)
-        }
-      }
+      // Don't auto-spend hit dice — let the player use the hit dice roller UI in RestModal
       // Notify all players via narrator
       const charName = get().myCharacter?.name || 'The party'
-      const healed = get().myCharacter?.currentHp || 0
-      const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} takes a short rest. HP restored to ${healed}. Class resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
+      const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} takes a short rest. Class resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
       get().addNarratorMessage?.(msg)
       get().saveCampaignToSupabase();
     },
@@ -94,6 +87,8 @@ export function createRestSlice(set, get) {
           log: [`\ud83c\udfb2 ${char.name} spends a hit die: d${hitDie}(${roll})${conMod >= 0 ? '+' : ''}${conMod} = +${healed} HP`, ...state.encounter.log].slice(0, 30),
         },
       }));
+      // Broadcast HP change to all players
+      broadcastEncounterAction({ type: 'rest-hp-update', charId: char.id, charName: char.name, currentHp: newHp, maxHp: char.maxHp });
       get().saveCampaignToSupabase();
 
       return { roll, healed, remaining, newHp };
@@ -175,6 +170,12 @@ export function createRestSlice(set, get) {
       const charName = get().myCharacter?.name || 'The party'
       const msg = { role: 'dm', speaker: 'The Narrator', text: `${charName} completes a long rest. Full HP, spell slots, and resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
       get().addNarratorMessage?.(msg)
+      // Broadcast rest completion so all players restore HP
+      const updatedChars = get().campaign.characters.map(c => ({
+        id: c.id, name: c.name, currentHp: c.maxHp, maxHp: c.maxHp,
+        hitDiceRemaining: c.hitDiceRemaining, conditions: [],
+      }));
+      broadcastEncounterAction({ type: 'rest-complete', restType: 'long', characters: updatedChars });
       get().saveCampaignToSupabase();
       get().saveSettingsToSupabase();
     },

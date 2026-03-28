@@ -104,7 +104,14 @@ function drawPreview() {
   const cx = _casterPos.x * _tileSize + _tileSize / 2
   const cy = _casterPos.y * _tileSize + _tileSize / 2
 
-  if (areaType === 'cone') {
+  if (areaType === 'single') {
+    // Single target — highlight just the hovered tile with a crosshair
+    const tx = Math.floor(_mouseWorldPos.x / _tileSize)
+    const ty = Math.floor(_mouseWorldPos.y / _tileSize)
+    _previewGraphics.rect(tx * _tileSize, ty * _tileSize, _tileSize, _tileSize)
+    _previewGraphics.fill({ color: 0xff4444, alpha: 0.2 })
+    _previewGraphics.stroke({ width: 2, color: 0xff4444, alpha: 0.8 })
+  } else if (areaType === 'cone') {
     const angle = Math.atan2(_mouseWorldPos.y - cy, _mouseWorldPos.x - cx)
     const lengthPx = ((_spell?.areaSize || 15) / 5) * _tileSize
     const halfAngle = Math.PI / 3
@@ -156,7 +163,13 @@ function getAffectedTiles() {
   const cy = _casterPos.y * _tileSize + _tileSize / 2
   const angle = Math.atan2(_mouseWorldPos.y - cy, _mouseWorldPos.x - cx)
 
-  if (areaType === 'cone') {
+  if (areaType === 'single') {
+    // Single target — just the clicked tile
+    return [{
+      x: Math.floor(_mouseWorldPos.x / _tileSize),
+      y: Math.floor(_mouseWorldPos.y / _tileSize)
+    }]
+  } else if (areaType === 'cone') {
     return getTilesInConeAngle(_casterPos, angle, areaTiles)
   } else if (areaType === 'sphere' || areaType === 'cube') {
     const center = {

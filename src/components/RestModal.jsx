@@ -60,6 +60,13 @@ export default function RestModal({ type, proposedBy, partyMembers, onResolve, o
   const approved = yesVotes >= majority;
   const rejected = noVotes >= majority;
 
+  // Solo player: auto-vote yes on mount so it passes immediately
+  useEffect(() => {
+    if (totalPlayers <= 1 && user && !votes[user.id]) {
+      castVote(true);
+    }
+  }, [totalPlayers, user?.id]);
+
   // Auto-resolve when majority reached
   useEffect(() => {
     if (resolved) return;

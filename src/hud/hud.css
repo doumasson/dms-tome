@@ -507,6 +507,24 @@
 
 .hud-chat-input::placeholder { color: #8a7a5a; }
 
+.hud-chat-skip-btn {
+  background: linear-gradient(135deg, #302020, #221818);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  color: #e74c3c;
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 0;
+  min-height: 0;
+}
+.hud-chat-skip-btn:hover {
+  border-color: rgba(231, 76, 60, 0.6);
+  color: #ff6b5b;
+}
+
 .hud-chat-go-btn {
   background: linear-gradient(135deg, #3a3020, #2a2218);
   border: 1px solid rgba(201, 168, 76, 0.3);

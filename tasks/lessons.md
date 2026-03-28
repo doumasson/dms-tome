@@ -100,6 +100,31 @@ useEffect(() => { ... }, [inCombat]); // safe
 
 **Rule:** Always push to agent-dev AND merge to main: `git push origin agent-dev && git checkout main && git merge agent-dev --no-edit && git push origin main && git checkout agent-dev`
 
+## Death Saves Must Revive at 1 HP, Not Stabilize at 0
+**Pattern:** `rollDeathSave` and `applyDeathSaveResult` both set `stable: true` at 3 successes but leave `newHp = 0`. Player is stuck unconscious at 0 HP indefinitely.
+
+**Rule:** When `successes >= 3`, set `newHp = 1`, reset `successes = 0, failures = 0, stable = false`. The player revives and can act on their next turn. This matches 5e RAW (PHB p.197 says creature regains 1 HP after succeeding 3 death saves).
+
+## Control Spells Must Apply Conditions, Not Damage
+**Pattern:** `spell-confirm` handler always calls `rollDamage()` even for control spells like Sleep (which has `damage: ''` and `hpPool: '5d8'`). Sleep was dealing d6 damage to each target instead of using the HP pool mechanic.
+
+**Rule:** Check `spell.hpPool` first (Sleep), then `spell.condition` with no damage (Tasha's), then fall through to normal damage spells. Each branch has different resolution logic.
+
+## Combat Turn Loop Must Skip Unconscious Combatants
+**Pattern:** `isDead()` in `nextEncounterTurn` only skips combatants with 3 failed death saves. Stable-unconscious, dying, and Sleep-unconscious combatants are never skipped. Combat loops forever when all remaining combatants are incapacitated.
+
+**Rule:** Use `cannotAct()` that returns true for: 0 HP (any reason), Unconscious condition, 3 failed death saves. If ALL combatants can't act, end combat immediately.
+
+## Rest HP Must Broadcast to All Players
+**Pattern:** `longRest()` and `spendHitDie()` update local store but don't broadcast. Second player's HP never updates after host rests. Portraits show stale HP.
+
+**Rule:** After any rest action that changes HP, broadcast the changes via `broadcastEncounterAction({ type: 'rest-complete' })` or `rest-hp-update`. Receiver must update `partyMembers` and `myCharacter` in store.
+
+## Maps Need Scatter Decoration — Empty Terrain Feels Dead
+**Pattern:** `scatterProps()` existed in mapGenerator.js but was never called. 85%+ of outdoor maps were pure flat terrain with zero decoration — no bushes, no rocks, no debris.
+
+**Rule:** Always call `scatterProps()` after terrain fill with theme-appropriate tiles. Density: 5-14% depending on biome (forests highest, dungeons lowest). Skip road tiles and wall cells.
+
 ## Wall Sprites Need Per-Direction Rotation/Flip
 
 **Pattern:** Wall connector sprites are oriented horizontally by default. For east/west edges they need rotation. But applying the same rotation to both east and west (or no flip on south) makes walls look uniform/wrong.

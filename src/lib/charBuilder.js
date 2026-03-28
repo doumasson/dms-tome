@@ -116,7 +116,7 @@ export function buildFeatures(className, level = 1) {
 // Gives new players a functional kit without overwhelming them.
 export const STARTER_SPELLS = {
   Wizard:   ['Mage Hand', 'Fire Bolt', 'Magic Missile', 'Shield', 'Sleep'],
-  Sorcerer: ['Mage Hand', 'Fire Bolt', 'Chromatic Orb', 'Shield', 'Thunderwave'],
+  Sorcerer: ['Mage Hand', 'Fire Bolt', 'Magic Missile', 'Shield', 'Chromatic Orb'],
   Warlock:  ['Eldritch Blast', 'Minor Illusion', 'Hex', 'Armor of Agathys'],
   Cleric:   ['Sacred Flame', 'Guidance', 'Cure Wounds', 'Bless', 'Guiding Bolt'],
   Druid:    ['Shillelagh', 'Thorn Whip', 'Healing Word', 'Entangle', 'Faerie Fire'],

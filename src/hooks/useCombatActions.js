@@ -911,7 +911,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       setShowReadyModal(false)
     } else if (type === 'spell-confirm') {
       // payload = { spell, position, targets }
-      const { useSpellSlot, useAction: consumeAction } = useStore.getState()
+      const { useSpellSlot, useAction: consumeAction, addEncounterCondition } = useStore.getState()
       const active = encounter.combatants?.[encounter.currentTurn]
       if (!active) return
 
@@ -926,34 +926,103 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       // Consume action
       consumeAction(active.id)
 
-      // Calculate damage and apply to targets
-      let damageRolls = []
-      for (const targetId of selectedTargets) {
-        const target = encounter.combatants?.find(c => c.id === targetId)
-        if (!target) continue
-
-        const dmgResult = rollDamage(spell.damage?.dice || '1d6')
-        const damage = dmgResult.total ?? dmgResult
-        const currentHp = (target.currentHp ?? target.hp) - damage
-
-        useStore.setState(state => ({
-          encounter: {
-            ...state.encounter,
-            combatants: state.encounter.combatants.map(c =>
-              c.id === targetId ? { ...c, currentHp: Math.max(0, currentHp) } : c
-            ),
-          },
-        }))
-
-        damageRolls.push(`${target.name}: ${damage} damage`)
+      // Play spell cast animation on the tilemap
+      const targetPos = payload.position || (selectedTargets.length > 0
+        ? encounter.combatants?.find(c => c.id === selectedTargets[0])?.position
+        : null) || active.position
+      if (targetPos && pixiRef.current?.playSpellAnimation) {
+        const tileSize = zone?.tileSize || 200
+        pixiRef.current.playSpellAnimation(spell.name, active.position || { x: 0, y: 0 }, targetPos, tileSize, {
+          areaType: spell.areaType, areaSize: spell.areaSize, damageType: spell.damageType,
+        })
       }
 
-      const resultText = damageRolls.length > 0
-        ? `${active.name} casts ${spell.name}! Affected: ${damageRolls.join(', ')}`
-        : `${active.name} casts ${spell.name}!`
+      // --- Sleep spell: HP pool mechanic (no damage, applies Unconscious) ---
+      if (spell.hpPool) {
+        const poolResult = rollDamage(spell.hpPool)
+        let remainingPool = poolResult.total ?? poolResult
+        // Sort targets by current HP (lowest first, per 5e rules)
+        const sorted = selectedTargets
+          .map(id => encounter.combatants?.find(c => c.id === id))
+          .filter(Boolean)
+          .sort((a, b) => (a.currentHp ?? a.hp ?? 0) - (b.currentHp ?? b.hp ?? 0))
 
-      addNarratorMessage({ role: 'dm', speaker: 'Combat', text: resultText })
-      broadcastEncounterAction({ type: 'spell-cast', id: active.id, spell: spell.name, targets: selectedTargets, damage: damageRolls })
+        const affected = []
+        for (const target of sorted) {
+          const hp = target.currentHp ?? target.hp ?? 0
+          if (hp <= 0) continue // skip already downed
+          if (hp <= remainingPool) {
+            remainingPool -= hp
+            addEncounterCondition(target.id, spell.condition || 'Unconscious')
+            broadcastEncounterAction({ type: 'add-condition', id: target.id, condition: spell.condition || 'Unconscious' })
+            affected.push(`${target.name} (${hp} HP)`)
+          }
+        }
+
+        const resultText = affected.length > 0
+          ? `${active.name} casts ${spell.name}! (${poolResult.total ?? poolResult} HP pool) Put to sleep: ${affected.join(', ')}`
+          : `${active.name} casts ${spell.name}! (${poolResult.total ?? poolResult} HP pool) No creatures affected.`
+
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: resultText })
+        broadcastEncounterAction({ type: 'spell-cast', id: active.id, spell: spell.name, targets: selectedTargets, affected })
+
+      // --- Control spells with condition but no damage (Tasha's, etc.) ---
+      } else if (spell.condition && (!spell.damage?.dice || spell.damage?.dice === '' || spell.damageType === 'control')) {
+        const affected = []
+        for (const targetId of selectedTargets) {
+          const target = encounter.combatants?.find(c => c.id === targetId)
+          if (!target) continue
+          // Apply save if spell has one
+          if (spell.save) {
+            const saveMod = Math.floor(((target.stats?.[spell.save] || 10) - 10) / 2)
+            const saveRoll = Math.floor(Math.random() * 20) + 1
+            const spellDC = 8 + (active.proficiencyBonus || 2) + Math.floor(((active.stats?.int || active.stats?.wis || active.stats?.cha || 10) - 10) / 2)
+            if (saveRoll + saveMod >= spellDC) {
+              affected.push(`${target.name}: saved (${saveRoll}+${saveMod} vs DC ${spellDC})`)
+              continue
+            }
+          }
+          addEncounterCondition(targetId, spell.condition)
+          broadcastEncounterAction({ type: 'add-condition', id: targetId, condition: spell.condition })
+          affected.push(`${target.name}: ${spell.condition}`)
+        }
+
+        const resultText = `${active.name} casts ${spell.name}! ${affected.join(', ')}`
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: resultText })
+        broadcastEncounterAction({ type: 'spell-cast', id: active.id, spell: spell.name, targets: selectedTargets, affected })
+
+      // --- Normal damage spells ---
+      } else {
+        let damageRolls = []
+        const { applyEncounterDamage: applyDmg } = useStore.getState()
+        for (const targetId of selectedTargets) {
+          const target = encounter.combatants?.find(c => c.id === targetId)
+          if (!target) continue
+
+          const dmgResult = rollDamage(spell.damage?.dice || '1d6')
+          const damage = dmgResult.total ?? dmgResult
+
+          // Use applyEncounterDamage so victory detection fires when last enemy dies
+          if (damage > 0) {
+            applyDmg(targetId, damage, spell.damageType || undefined)
+          }
+
+          damageRolls.push(`${target.name}: ${damage} damage`)
+
+          // Apply condition if spell has one (e.g. Hex adds condition alongside damage)
+          if (spell.condition) {
+            addEncounterCondition(targetId, spell.condition)
+            broadcastEncounterAction({ type: 'add-condition', id: targetId, condition: spell.condition })
+          }
+        }
+
+        const resultText = damageRolls.length > 0
+          ? `${active.name} casts ${spell.name}! Affected: ${damageRolls.join(', ')}`
+          : `${active.name} casts ${spell.name}!`
+
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: resultText })
+        broadcastEncounterAction({ type: 'spell-cast', id: active.id, spell: spell.name, targets: selectedTargets, damage: damageRolls })
+      }
     }
   }, [addNarratorMessage, encounter])
 
