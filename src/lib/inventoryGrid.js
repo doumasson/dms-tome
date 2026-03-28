@@ -135,5 +135,21 @@ export function getItemSize(item) {
   const key = item.category ?? item.type
   if (key && itemSizes[key]) return itemSizes[key]
 
+  // Name-based fallback for common items without sizeCategory
+  const name = (item.name || '').toLowerCase()
+  if (name.includes('spellbook')) return itemSizes['spellbook'] || [2, 2]
+  if (name.includes('book') || name.includes('tome')) return itemSizes['book'] || [2, 2]
+  if (name.includes('pack') || name.includes("kit")) return itemSizes['pack'] || [2, 3]
+  if (name.includes('focus') || name.includes('orb') || name.includes('crystal')) return itemSizes['focus'] || [1, 2]
+  if (name.includes('staff') || name.includes('quarterstaff')) return itemSizes['staff'] || [1, 3]
+  if (name.includes('wand')) return itemSizes['wand'] || [1, 2]
+  if (name.includes('rope')) return itemSizes['rope'] || [1, 2]
+  if (name.includes('bedroll') || name.includes('blanket')) return itemSizes['bedroll'] || [2, 2]
+  if (name.includes('instrument') || name.includes('lute') || name.includes('flute')) return itemSizes['instrument'] || [1, 3]
+  if (name.includes('pouch') || name.includes('component')) return itemSizes['component_pouch'] || [1, 2]
+  if (name.includes('holy symbol')) return itemSizes['holy_symbol'] || [1, 1]
+  if (name.includes('torch')) return itemSizes['torch'] || [1, 1]
+  if (name.includes('lantern')) return itemSizes['lantern'] || [1, 1]
+
   return itemSizes['default'] || [1, 1]
 }

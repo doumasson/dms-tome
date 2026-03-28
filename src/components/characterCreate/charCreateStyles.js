@@ -222,11 +222,14 @@ export const s = {
 
   // ── Detail panel (shown below selected card) ──────────────────────────────
   detailPanel: {
-    background: 'linear-gradient(180deg, rgba(212,175,55,0.05) 0%, rgba(0,0,0,0) 100%)',
+    background: 'linear-gradient(180deg, rgba(30,22,10,0.98) 0%, rgba(20,16,10,0.96) 100%)',
     border: '1px solid rgba(212,175,55,0.18)',
     borderRadius: 10,
     padding: '16px 20px',
     marginTop: 4,
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
   },
   detailPlaceholder: {
     color: 'rgba(200,180,140,0.3)',

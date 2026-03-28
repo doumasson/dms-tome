@@ -6,6 +6,7 @@ import { callNarrator, buildNpcSystemPrompt } from '../lib/narratorApi'
 import { createQuest } from '../lib/questSystem'
 import { broadcastEncounterAction, broadcastNarratorMessage, broadcastNpcDialogMessage } from '../lib/liveChannel'
 import { getSkillBonus } from '../lib/derivedStats'
+import { speak, stopSpeaking, getNpcVoice } from '../lib/tts'
 import useStore from '../store/useStore'
 
 /**
@@ -118,6 +119,10 @@ export default function NpcConversation({
       const dialogue = result?.narrative || '...'
       const npcMsg = { role: 'npc', speaker: npc.name, text: dialogue }
       setMessages(prev => [...prev, npcMsg])
+
+      // TTS: narrate the NPC response with their unique voice
+      const voiceCfg = getNpcVoice(npc.name, npc.disposition || npc.personality)
+      speak(dialogue, null, { npcName: npc.name, voice: voiceCfg })
 
       // Broadcast NPC response to all players — shows in their NPC dialog viewer
       broadcastNpcDialogMessage(npc.name, { role: 'npc', speaker: npc.name, text: dialogue })
@@ -288,6 +293,7 @@ export default function NpcConversation({
     broadcastEncounterAction({
       type: 'quest-accepted',
       quest,
+      userId: useStore.getState().user?.id,
       characterName: myCharacter?.name || 'Party',
     })
 
@@ -389,35 +395,38 @@ export default function NpcConversation({
         </div>
       )}
 
-      {/* Quest offer panel */}
+      {/* Quest offer panel — positioned as overlay so chat stays visible */}
       {pendingQuestOffer && !rollResult && (
         <div style={{
-          padding: '12px 16px', textAlign: 'left', fontFamily: 'Cinzel, serif',
-          background: 'rgba(20,16,12,0.95)', borderTop: '2px solid #d4af37',
-          color: '#e8dcc8',
+          position: 'absolute', bottom: 60, left: 12, right: 12,
+          padding: '16px 20px', textAlign: 'left', fontFamily: 'Cinzel, serif',
+          background: 'rgba(20,16,12,0.98)', border: '2px solid #d4af37',
+          borderRadius: 10, color: '#e8dcc8', zIndex: 20,
+          boxShadow: '0 -4px 24px rgba(0,0,0,0.6)',
+          maxHeight: '60%', overflowY: 'auto',
         }}>
-          <div style={{ fontSize: 14, color: '#d4af37', marginBottom: 8, textAlign: 'center' }}>
-            Quest Offered
+          <div style={{ fontSize: 14, color: '#d4af37', marginBottom: 8, textAlign: 'center', letterSpacing: 2 }}>
+            QUEST OFFERED
           </div>
           <div style={{ fontSize: 15, fontWeight: 'bold', marginBottom: 6, color: '#d4af37' }}>
             {pendingQuestOffer.title}
           </div>
           {pendingQuestOffer.description && (
-            <div style={{ fontSize: 12, marginBottom: 10, opacity: 0.85 }}>
+            <div style={{ fontSize: 12, marginBottom: 10, opacity: 0.85, lineHeight: 1.5 }}>
               {pendingQuestOffer.description}
             </div>
           )}
           {pendingQuestOffer.objectives && pendingQuestOffer.objectives.length > 0 && (
             <div style={{ fontSize: 11, marginBottom: 10, opacity: 0.75 }}>
               {pendingQuestOffer.objectives.map((obj, i) => (
-                <div key={i}>• {obj}</div>
+                <div key={i} style={{ marginBottom: 4 }}>• {obj}</div>
               ))}
             </div>
           )}
           <button onClick={handleAcceptQuest} style={{
-            width: '100%', padding: '10px 0', background: '#d4af37', color: '#1a1614',
-            border: 'none', borderRadius: 4, cursor: 'pointer', fontFamily: 'Cinzel, serif',
-            fontSize: 13, fontWeight: 'bold', letterSpacing: 1,
+            width: '100%', padding: '12px 0', background: '#d4af37', color: '#1a1614',
+            border: 'none', borderRadius: 6, cursor: 'pointer', fontFamily: 'Cinzel, serif',
+            fontSize: 14, fontWeight: 'bold', letterSpacing: 1,
           }}>
             Accept Quest
           </button>
@@ -450,6 +459,9 @@ export default function NpcConversation({
               {isRecording ? '🔴' : '🎤'}
             </button>
           )}
+          <button type="button" className="npc-conv-send" onClick={stopSpeaking} title="Skip narration">
+            ⏭
+          </button>
           <button type="submit" className="npc-conv-send" disabled={loading}>
             {loading ? '...' : '▶'}
           </button>

@@ -141,6 +141,7 @@ export default function CharacterCreate({ user, campaignId, onDone, onCancel }) 
       hp, maxHp: hp, currentHp: hp,
       ac: startingAc,
       speed: raceData?.speed || 30,
+      darkvision: raceData?.darkvision || 0,
       stats: finalStats,
       skills,
       attacks,

@@ -29,24 +29,25 @@ function discoverVoices() {
   _englishVoices = raw.filter(v => v.lang?.startsWith('en') && !isBadVoice(v));
 
   // Narrator: pick best deep male voice by browser
-  const edgeNarrator = [
-    'Microsoft Guy Online (Natural)',
-    'Microsoft George Online (Natural)',
-    'Microsoft George - English (United Kingdom)',
-    'Microsoft David - English (United States)',
-  ];
-  const chromeNarrator = [
+  // Prefer cloud/neural voices — partial name matching for robustness
+  const narratorKeywords = [
+    'Guy Online',      // Edge neural male
+    'Guy -',           // Edge local male (newer)
+    'George Online',   // Edge neural male UK
+    'Andrew Online',   // Edge neural male
     'Google UK English Male',
     'Google US English',
   ];
-  const narratorPref = [...edgeNarrator, ...chromeNarrator];
-  for (const name of narratorPref) {
-    const v = raw.find(x => x.name === name);
+  // Try keyword matching first (handles name format variations across Edge versions)
+  for (const keyword of narratorKeywords) {
+    const v = _englishVoices.find(x => x.name.includes(keyword));
     if (v) { _narratorVoice = v; break; }
   }
-  // Fallback: best English cloud voice
+  // Fallback: best English cloud/neural voice, then any English voice
   if (!_narratorVoice) {
-    _narratorVoice = _englishVoices.find(v => !v.localService) || _englishVoices[0] || null;
+    _narratorVoice = _englishVoices.find(v => !v.localService && /male|guy|george|andrew|david/i.test(v.name))
+      || _englishVoices.find(v => !v.localService)
+      || _englishVoices[0] || null;
   }
   _voicesReady = true;
 }

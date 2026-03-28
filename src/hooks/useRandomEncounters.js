@@ -21,7 +21,8 @@ export function useRandomEncounters({
   zone,
 }) {
   const lastRegionRef = useRef(null)
-  const lastEncounterTimeRef = useRef(0)
+  const lastEncounterTimeRef = useRef(Date.now()) // Start with current time to prevent spawn-trigger
+  const spawnGuardRef = useRef(true) // Skip the very first movement after spawn
 
   useEffect(() => {
     // Only run on host/DM client
@@ -36,6 +37,12 @@ export function useRandomEncounters({
     // Determine area type from zone theme/type — no encounters in towns
     const areaType = zone.theme === 'dungeon' || zone.dungeon ? 'dungeon' : 'wilderness'
     if (zone.theme === 'town' || zone.town || zone.safe) return
+
+    // Skip the first few movements after spawn to prevent instant encounters
+    if (spawnGuardRef.current) {
+      spawnGuardRef.current = false
+      return
+    }
 
     // Region-based dedup: only check once per 6x6 tile region
     const regionKey = `${Math.floor(playerPos.x / REGION_SIZE)},${Math.floor(playerPos.y / REGION_SIZE)}`
@@ -117,7 +124,8 @@ export function useRandomEncounters({
       }
     }
 
-    // Store encounter data for DM to decide how to proceed
+    // Store encounter data and auto-start combat after a short delay
+    // (gives the narrator message time to display before switching to combat UI)
     useStore.setState({
       pendingEncounterData: {
         enemies: enemiesWithPositions,
@@ -128,5 +136,14 @@ export function useRandomEncounters({
         startCombatWithZoneEnemies,
       },
     })
+
+    // Auto-initiate combat after 2 seconds so the encounter message is visible
+    setTimeout(() => {
+      const { pendingEncounterData: pending } = useStore.getState()
+      if (pending?.startCombatWithZoneEnemies) {
+        pending.startCombatWithZoneEnemies()
+        useStore.setState({ pendingEncounterData: null })
+      }
+    }, 2000)
   }, [playerPos, inCombat, isDM, zone])
 }

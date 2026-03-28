@@ -12,8 +12,8 @@ import {
 } from './inventoryGridStyles';
 
 const GRID_COLS = 10;
-const GRID_ROWS = 7;
-const CELL_PX   = 36;
+const GRID_ROWS = 8;
+const CELL_PX   = 48;
 const DRAG_THRESHOLD = 4;
 
 function itemKey(i) { return i.instanceId || i.name; }

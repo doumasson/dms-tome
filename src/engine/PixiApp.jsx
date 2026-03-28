@@ -688,7 +688,7 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   return (
     <div
       ref={containerRef}
-      style={{ position: 'absolute', inset: 0, zIndex: 0 }}
+      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: '200px', zIndex: 0 }}
     />
   )
 })

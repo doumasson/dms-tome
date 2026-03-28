@@ -58,9 +58,21 @@ function lerpTint(a, b, t) {
 
 export default function DayNightOverlay() {
   const gameTime = useStore(s => s.gameTime);
+  const myCharacter = useStore(s => s.myCharacter);
   const hour = gameTime?.hour ?? 12;
 
-  const tint = useMemo(() => getTint(hour), [hour]);
+  // Check if character has darkvision (racial trait)
+  const darkvision = myCharacter?.darkvision ?? myCharacter?.race_data?.darkvision ?? 0;
+
+  const tint = useMemo(() => {
+    const base = getTint(hour);
+    if (darkvision > 0 && base.opacity > 0.05) {
+      // Darkvision reduces darkness — 60ft = half opacity, 120ft = quarter opacity
+      const reduction = darkvision >= 120 ? 0.25 : darkvision >= 60 ? 0.5 : 0.75;
+      return { ...base, opacity: base.opacity * reduction };
+    }
+    return base;
+  }, [hour, darkvision]);
 
   // No overlay needed during day
   if (tint.opacity < 0.005) return null;

@@ -882,7 +882,7 @@ export default function App() {
     const seenUsers = new Set();
     const realPlayers = (allMembers || [])
       .filter(m => m.character_data?.name && !seenUsers.has(m.user_id) && seenUsers.add(m.user_id))
-      .map(m => ({ ...m.character_data }));
+      .map(m => ({ ...m.character_data, userId: m.user_id }));
     setPartyMembers(realPlayers);
 
     // ── Load saved narrator history (last 50 messages) ───────────────────────
@@ -1020,7 +1020,7 @@ export default function App() {
                 const seen = new Set();
                 const players = (members || [])
                   .filter(m => m.character_data?.name && !seen.has(m.user_id) && seen.add(m.user_id))
-                  .map(m => ({ ...m.character_data }));
+                  .map(m => ({ ...m.character_data, userId: m.user_id }));
                 setPartyMembers(players);
               } catch (err) {
                 console.error('Failed to load party members:', err);
@@ -1068,7 +1068,7 @@ export default function App() {
               const seen = new Set();
               const players = (members || [])
                 .filter(m => m.character_data?.name && !seen.has(m.user_id) && seen.add(m.user_id))
-                .map(m => ({ ...m.character_data }));
+                .map(m => ({ ...m.character_data, userId: m.user_id }));
               setPartyMembers(players);
             }
             setAppView('game');

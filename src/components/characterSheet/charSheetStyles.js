@@ -6,7 +6,7 @@ export const s = {
     padding: 16,
   },
   modal: {
-    width: '100%', maxWidth: 900,
+    width: '100%', maxWidth: 1050,
     maxHeight: '92vh',
     background: 'linear-gradient(180deg, #1a0f05 0%, #130b03 100%)',
     border: '1px solid rgba(212,175,55,0.35)',
