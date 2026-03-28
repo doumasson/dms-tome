@@ -104,7 +104,7 @@ export default function AttackPanel({ attacker, combatants, onResolve, onCancel 
             Unarmed Strike
           </button>
         )}
-        <button onClick={onCancel} style={apStyle.cancel}>Cancel</button>
+        <button onClick={onCancel} style={apStyle.cancel}>← Back</button>
       </div>
     );
   }
@@ -139,7 +139,7 @@ export default function AttackPanel({ attacker, combatants, onResolve, onCancel 
         {attacker.attacks.length > 1 && (
           <button onClick={() => setWeapon(null)} style={apStyle.cancel}>← Back</button>
         )}
-        <button onClick={onCancel} style={apStyle.cancel}>Cancel</button>
+        <button onClick={onCancel} style={apStyle.cancel}>← Back</button>
       </div>
     </div>
   );

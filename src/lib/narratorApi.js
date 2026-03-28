@@ -245,7 +245,7 @@ ${steerHint}
 Do NOT include suggested responses. Players decide what to say on their own.
 
 Respond ONLY with a raw JSON object — no markdown, no code fences:
-{"narrative":"Your in-character response here.","rollRequest":null,"reputationChange":null,"questOffer":null}
+{"narrative":"Your in-character response here.","rollRequest":null,"reputationChange":null,"questOffer":null,"startCombat":null}
 
 rollRequest rules:
 - Set to null for normal conversation. Only include when the player is actively trying to influence you.
@@ -265,6 +265,14 @@ questOffer rules:
 - Include questOffer only when the player has shown interest in helping or the NPC feels they can trust the player.
 - Format: {"title":"Quest Title","description":"One sentence description","objectives":["Objective 1","Objective 2"]}
 - objectives is an array of 1-3 strings describing the quest steps
+- Set to null for normal conversation.
+
+startCombat rules:
+- Use when combat is UNAVOIDABLE: the NPC attacks, guards attack, a brawl erupts, someone draws a weapon.
+- NEVER use for threats alone — only when violence actually begins.
+- Format: {"enemyName":"Guard Captain","hp":30,"ac":15,"allies":[{"name":"Guard","hp":11,"ac":12}]}
+- enemyName = the main combatant. hp/ac = their stats. allies = optional array of additional enemies.
+- This ENDS the conversation and starts actual combat in the game.
 - Set to null for normal conversation.`
 }
 

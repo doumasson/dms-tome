@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import useStore from '../store/useStore'
+import { speak, getNpcVoice } from '../lib/tts'
 
 /**
  * Read-only NPC dialog viewer — shown to non-initiator players
@@ -11,10 +12,23 @@ export default function NpcDialogViewer() {
   const npcBusy = useStore(s => s.npcBusy)
   const scrollRef = useRef(null)
 
+  const lastMsgCountRef = useRef(0)
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
+    // TTS: speak new NPC messages for non-initiator players
+    const msgs = viewer?.messages || []
+    if (msgs.length > lastMsgCountRef.current) {
+      const newMsgs = msgs.slice(lastMsgCountRef.current)
+      for (const msg of newMsgs) {
+        if (msg.role === 'npc' && msg.text) {
+          const voiceCfg = getNpcVoice(msg.speaker || viewer?.npcName)
+          speak(msg.text, null, { npcName: msg.speaker || viewer?.npcName, voice: voiceCfg })
+        }
+      }
+    }
+    lastMsgCountRef.current = msgs.length
   }, [viewer?.messages?.length])
 
   if (!viewer) return null

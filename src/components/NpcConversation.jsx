@@ -143,6 +143,46 @@ export default function NpcConversation({
         setPendingQuestOffer(result.questOffer)
       }
 
+      // Check for combat trigger from NPC (guards attack, NPC fights back, etc.)
+      if (result?.startCombat) {
+        // Close dialog and trigger encounter with NPC as enemy
+        setHardLimited(true)
+        if (onClose) onClose()
+        // Spawn combat enemies based on NPC context
+        const { startEncounter, myCharacter: mc, partyMembers: pm } = useStore.getState()
+        if (startEncounter && mc) {
+          const npcEnemy = {
+            id: `npc_${npc.name.toLowerCase().replace(/\s+/g, '_')}`,
+            name: result.startCombat.enemyName || npc.name,
+            hp: result.startCombat.hp || 15, maxHp: result.startCombat.hp || 15,
+            currentHp: result.startCombat.hp || 15,
+            ac: result.startCombat.ac || 13, speed: 30,
+            stats: { str: 12, dex: 12, con: 12, int: 10, wis: 10, cha: 10 },
+            attacks: [{ name: 'Attack', bonus: '+4', damage: '1d6+2' }],
+            isEnemy: true, type: 'enemy',
+            position: npc.position || { x: 0, y: 0 },
+          }
+          const enemies = [npcEnemy]
+          // Add extra enemies (guards, allies) if specified
+          if (result.startCombat.allies) {
+            result.startCombat.allies.forEach((a, i) => {
+              enemies.push({
+                ...npcEnemy,
+                id: `npc_ally_${i}`,
+                name: a.name || `Guard ${i + 1}`,
+                hp: a.hp || 11, maxHp: a.hp || 11, currentHp: a.hp || 11,
+                ac: a.ac || 12,
+                position: { x: (npc.position?.x || 0) + 1 + i, y: npc.position?.y || 0 },
+              })
+            })
+          }
+          const party = [{ ...mc, position: { ...mc.position } }]
+          ;(pm || []).forEach(p => { if (p.name !== mc.name) party.push(p) })
+          startEncounter(enemies, party, true)
+          broadcastEncounterAction({ type: 'start-encounter', enemies })
+        }
+      }
+
       if (isCritical && newCount >= 7 && newCount < (maxPrompts || 10)) {
         setTimeout(() => {
           setMessages(prev => [...prev, {

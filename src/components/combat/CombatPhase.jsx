@@ -191,7 +191,9 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
   useEffect(() => {
     setTurnSecsLeft(60);
     if (encounter.phase !== 'combat') return;
-    if (!activeCombatant || activeCombatant.type !== 'player' || activeCombatant.currentHp <= 0) return;
+    if (!activeCombatant || activeCombatant.type !== 'player') return;
+    // Timer runs for alive players AND dying players making death saves (not fully dead)
+    if (activeCombatant.currentHp <= 0 && activeCombatant.deathSaves?.failures >= 3) return;
     const interval = setInterval(() => {
       setTurnSecsLeft(s => {
         if (s <= 1) {

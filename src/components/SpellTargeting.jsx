@@ -259,7 +259,7 @@ export default function SpellTargeting({ spell, caster, combatants, mapW = 10, m
       >
         {Array.from({ length: mapW * mapH }).map((_, i) => {
           const x = i % mapW;
-          const y = Math.floor(i / mapH);
+          const y = Math.floor(i / mapW);
           const isTarget = targetCell?.x === x && targetCell?.y === y;
           const hasToken = combatants.some(c => c.position?.x === x && c.position?.y === y);
           return (

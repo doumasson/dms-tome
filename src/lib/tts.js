@@ -65,32 +65,75 @@ function hashName(name) {
   return Math.abs(h);
 }
 
+// Gender detection from NPC personality/description text
+const FEMALE_HINTS = /\b(woman|female|she |her |lady|queen|princess|priestess|witch|barmaid|maiden|wife|mother|daughter|sister|aunt|grandmother|girl)\b/i;
+const MALE_HINTS = /\b(man |male|he |his |lord|king|prince|priest|guard|soldier|husband|father|son|brother|uncle|grandfather|boy |scarred man|grizzled)\b/i;
+
+function detectGender(npcName, disposition) {
+  const text = `${npcName} ${disposition || ''}`;
+  if (FEMALE_HINTS.test(text)) return 'female';
+  if (MALE_HINTS.test(text)) return 'male';
+  return null; // unknown — use hash
+}
+
+function isVoiceMale(v) {
+  const n = (v.name || '').toLowerCase();
+  return /\b(guy|david|george|andrew|mark|james|daniel|male|man)\b/.test(n);
+}
+
+function isVoiceFemale(v) {
+  const n = (v.name || '').toLowerCase();
+  return /\b(zira|aria|jenny|linda|susan|female|woman|nova|shimmer|fable|alloy)\b/.test(n);
+}
+
 /**
  * Returns { voiceIndex, pitch, rate } based on NPC name hash.
- * Pass disposition to adjust: 'Hostile', 'Friendly', 'Neutral', etc.
+ * Pass disposition/personality to adjust voice and detect gender.
  */
 export function getNpcVoice(npcName, disposition) {
   const h = hashName(npcName);
-  const voiceCount = Math.max(_englishVoices.length, 1);
-  const voiceIndex = h % voiceCount;
+  const gender = detectGender(npcName, disposition);
 
-  // Pitch 0.7–1.3, rate 0.8–1.2 derived from hash
-  let pitch = 0.7 + ((h % 61) / 100);       // 0.70 – 1.30
-  let rate  = 0.8 + (((h >> 8) % 41) / 100); // 0.80 – 1.20
+  // Try to match voice gender
+  let voiceIndex;
+  if (gender && _englishVoices.length > 0) {
+    const genderVoices = _englishVoices
+      .map((v, i) => ({ v, i }))
+      .filter(({ v }) => gender === 'male' ? !isVoiceFemale(v) : !isVoiceMale(v));
+    if (genderVoices.length > 0) {
+      voiceIndex = genderVoices[h % genderVoices.length].i;
+    } else {
+      voiceIndex = h % Math.max(_englishVoices.length, 1);
+    }
+  } else {
+    voiceIndex = h % Math.max(_englishVoices.length, 1);
+  }
+
+  // Pitch: male 0.65–0.95, female 0.95–1.25, unknown 0.7–1.3
+  let pitch, rate;
+  if (gender === 'male') {
+    pitch = 0.65 + ((h % 31) / 100);
+    rate  = 0.9 + (((h >> 8) % 21) / 100);
+  } else if (gender === 'female') {
+    pitch = 0.95 + ((h % 31) / 100);
+    rate  = 0.9 + (((h >> 8) % 21) / 100);
+  } else {
+    pitch = 0.7 + ((h % 61) / 100);
+    rate  = 0.85 + (((h >> 8) % 31) / 100);
+  }
 
   // Disposition adjustments
   const d = (disposition || '').toLowerCase();
-  if (d === 'hostile' || d === 'aggressive' || d === 'evil') {
-    pitch -= 0.15; rate -= 0.05;
-  } else if (d === 'friendly' || d === 'kind' || d === 'cheerful') {
+  if (d.includes('hostile') || d.includes('aggressive') || d.includes('evil')) {
+    pitch -= 0.12; rate -= 0.05;
+  } else if (d.includes('friendly') || d.includes('kind') || d.includes('cheerful')) {
     pitch += 0.05; rate += 0.05;
-  } else if (d === 'old' || d === 'ancient' || d === 'elderly') {
-    rate -= 0.1;
+  } else if (d.includes('old') || d.includes('ancient') || d.includes('elderly')) {
+    rate -= 0.1; pitch -= 0.08;
   }
 
-  // Clamp
   pitch = Math.max(0.5, Math.min(1.5, pitch));
-  rate  = Math.max(0.6, Math.min(1.4, rate));
+  rate  = Math.max(0.7, Math.min(1.3, rate));
 
   return { voiceIndex, pitch: +pitch.toFixed(2), rate: +rate.toFixed(2) };
 }
@@ -117,10 +160,10 @@ function _speakNow(text, voiceCfg, onEnd) {
     utt.pitch = voiceCfg.pitch ?? 1;
     utt.rate  = voiceCfg.rate ?? 1;
   } else {
-    // Narrator defaults
+    // Narrator defaults — deep storytelling voice, slightly faster
     if (_narratorVoice) utt.voice = _narratorVoice;
-    utt.pitch = 0.85;
-    utt.rate  = 0.9;
+    utt.pitch = 0.75;
+    utt.rate  = 1.05;
   }
 
   utt.onend = () => {

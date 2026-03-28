@@ -262,7 +262,7 @@ export default function GameModalsRenderer({
       {showDeathOptions && (
         <Suspense fallback={null}>
           <GameOverModal
-            onRevive={() => {}}
+            onRevive={() => { useStore.getState().mercyRevive() }}
             onLeave={() => { onLeave() }}
           />
         </Suspense>
