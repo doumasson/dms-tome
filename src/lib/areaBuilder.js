@@ -50,14 +50,16 @@ function detectSizeCategory(name, theme) {
 }
 
 export function calculateAreaSize(brief) {
-  if (brief.width && brief.height) return { width: brief.width, height: brief.height }
   const poiCount = brief.pois?.length || 3
   const category = detectSizeCategory(brief.name, brief.theme)
   const range = SIZE_RANGES[category]
   // Scale within range based on POI count (more POIs = bigger)
   const poiFactor = Math.min(1, (poiCount - 1) / 5) // 0 to 1
-  const width = Math.round(range.minW + (range.maxW - range.minW) * poiFactor)
-  const height = Math.round(range.minH + (range.maxH - range.minH) * poiFactor)
+  const calcW = Math.round(range.minW + (range.maxW - range.minW) * poiFactor)
+  const calcH = Math.round(range.minH + (range.maxH - range.minH) * poiFactor)
+  // If brief specifies size, cap to our max (AI often generates oversized maps)
+  const width = brief.width ? Math.min(brief.width, range.maxW) : calcW
+  const height = brief.height ? Math.min(brief.height, range.maxH) : calcH
   return { width, height }
 }
 
