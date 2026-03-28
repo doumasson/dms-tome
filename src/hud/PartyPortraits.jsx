@@ -100,7 +100,9 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
     const isActive = member.isMe
     const isSelected = isActive || (activeCombatantId && member.id === activeCombatantId)
     const hpTintClass = getHpTintClass(hpRatio)
-    const statsTooltip = `HP: ${hp}/${maxHp} • AC: ${member.ac || 10}`
+    const xp = member.xp || 0
+    const nextLevelXp = XP_THRESHOLDS[Math.min(member.level || 1, 19)] || 355000
+    const statsTooltip = `HP: ${hp}/${maxHp} • AC: ${member.ac || 10} • XP: ${xp}/${nextLevelXp}`
 
     return (
       <div key={member.name || i} style={{ position: 'relative', cursor: 'pointer' }}
@@ -144,12 +146,15 @@ export default function PartyPortraits({ onPortraitClick, activeCombatantId }) {
             ) : null
           })()}
           {/* HP bar */}
-          <div style={{ position: 'absolute', bottom: 3, left: 0, right: 0, height: isSmall ? 3 : 4, background: '#0a0004' }}>
+          <div style={{ position: 'absolute', bottom: isSmall ? 4 : 6, left: 0, right: 0, height: isSmall ? 3 : 4, background: '#0a0004' }}>
             <div style={{ width: `${hpRatio * 100}%`, height: '100%', background: getHpColor(hpRatio) }} />
           </div>
-          {/* XP bar */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: '#0a0004' }}>
-            <div style={{ width: `${getXpRatio(member.xp || 0, member.level || 1) * 100}%`, height: '100%', background: '#c9a84c' }} />
+          {/* XP bar — gold, visible below HP bar */}
+          <div
+            title={`XP: ${member.xp || 0} / ${XP_THRESHOLDS[Math.min(member.level || 1, 19)] || '???'}`}
+            style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: isSmall ? 3 : 5, background: '#0a0004', borderTop: '1px solid #1a1208' }}
+          >
+            <div style={{ width: `${getXpRatio(member.xp || 0, member.level || 1) * 100}%`, height: '100%', background: 'linear-gradient(90deg, #8a6a1a, #d4af37)', transition: 'width 0.5s ease' }} />
           </div>
           {/* Level badge */}
           <div style={{
