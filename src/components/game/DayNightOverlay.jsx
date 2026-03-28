@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import useStore from '../../store/useStore';
 import { getTimeOfDay } from '../../lib/gameTime';
+import { getRace } from '../../data/races';
 
 /**
  * DayNightOverlay — Renders a full-screen tint overlay based on in-game time.
@@ -61,8 +62,10 @@ export default function DayNightOverlay() {
   const myCharacter = useStore(s => s.myCharacter);
   const hour = gameTime?.hour ?? 12;
 
-  // Check if character has darkvision (racial trait)
-  const darkvision = myCharacter?.darkvision ?? myCharacter?.race_data?.darkvision ?? 0;
+  // Check if character has darkvision (racial trait) — fall back to race lookup for old characters
+  const darkvision = myCharacter?.darkvision
+    ?? myCharacter?.race_data?.darkvision
+    ?? (myCharacter?.race ? (getRace(myCharacter.race)?.darkvision ?? 0) : 0);
 
   const tint = useMemo(() => {
     const base = getTint(hour);

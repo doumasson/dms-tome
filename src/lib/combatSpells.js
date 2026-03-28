@@ -15,6 +15,8 @@ export const COMBAT_SPELLS = {
   'Vicious Mockery':  { level: 0, areaType: 'single', damage: '1d4',  damageType: 'psychic', save: 'wis', range: 60 },
   // Level 1
   'Magic Missile':    { level: 1, areaType: 'single', damage: '3d4+3', damageType: 'force', noSave: true, range: 120 },
+  'Sleep':            { level: 1, areaType: 'sphere', areaSize: 20, damage: '',     damageType: 'control', range: 90, condition: 'Unconscious', hpPool: '5d8' },
+  "Tasha's Hideous Laughter": { level: 1, areaType: 'single', damage: '', damageType: 'control', save: 'wis', concentration: true, range: 30, condition: 'Incapacitated' },
   'Burning Hands':    { level: 1, areaType: 'cone',   areaSize: 15, damage: '3d6',  damageType: 'fire', save: 'dex' },
   'Thunderwave':      { level: 1, areaType: 'sphere', areaSize: 15, damage: '2d8',  damageType: 'thunder', save: 'con', selfCentered: true },
   'Witch Bolt':       { level: 1, areaType: 'single', damage: '1d12', damageType: 'lightning', range: 30 },

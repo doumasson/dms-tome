@@ -43,6 +43,8 @@ export function createEncounterSlice(set, get) {
     showDeathOptions: false,    // Show respawn choice dialog after TPK
 
     startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false, hazards = [] } = {}) => {
+      // Clear stealth when combat starts
+      set({ stealthMode: null });
       const combatants = [];
 
       // Scale enemy count to party size (skip for template-resolved enemies which have role field)
@@ -885,6 +887,7 @@ export function createEncounterSlice(set, get) {
       set({
         respawnPosition: respawnPos,
         defeatReset: true,
+        stealthMode: null, // Clear stealth on resurrect
       });
 
       // Narrate the revival

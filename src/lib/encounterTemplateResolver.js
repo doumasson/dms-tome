@@ -209,5 +209,14 @@ export function resolveEncounterTemplates(encounterZone, playerCount, avgLevel) 
     }
   }
 
+  // Cap total enemies: never more than playerCount + 1 at level 1, scales up at higher levels
+  const maxEnemies = Math.max(playerCount, playerCount + Math.floor(avgLevel / 2))
+  if (result.length > maxEnemies) {
+    // Keep boss/leader types, trim grunts/minions first
+    const bosses = result.filter(e => e.role === 'boss' || e.role === 'leader')
+    const others = result.filter(e => e.role !== 'boss' && e.role !== 'leader')
+    const trimmed = [...bosses, ...others.slice(0, maxEnemies - bosses.length)]
+    return trimmed
+  }
   return result
 }

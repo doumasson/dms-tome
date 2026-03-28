@@ -563,6 +563,11 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       useSpellSlot(activeCombatant.id, spellLevel);
       broadcastEncounterAction({ type: 'use-spell-slot', combatantId: activeCombatant.id, slotLevel: spellLevel, userId: currentUser?.id || 'system' });
     }
+    // Consume the action (spells use an action just like attacks)
+    if (activeCombatant) {
+      const { useAction } = useStore.getState();
+      useAction(activeCombatant.id);
+    }
 
     const isHealing = def.healing;
     const hasDamage = def.damage && def.damage !== '';

@@ -155,7 +155,7 @@ export default function GameModalsRenderer({
               { id: user?.id, name: myCharacter?.name || 'You' },
               ...((useStore.getState().partyMembers || []).filter(m => m.name !== myCharacter?.name).map(m => ({ id: m.userId || m.id, name: m.name })))
             ]}
-            isHost={false}
+            isHost={useStore.getState().isDM || useStore.getState().dmMode}
             onResolve={() => { advanceGameTime(restProposal.type === 'long' ? 8 : 1); setRestProposal(null) }}
             onCancel={() => setRestProposal(null)}
           />
