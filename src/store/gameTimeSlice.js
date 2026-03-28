@@ -14,18 +14,24 @@ export function createGameTimeSlice(set, get) {
     weather: { current: 'clear', duration: 3 },
     advanceGameTime: (hours) => {
       const { gameTime, weather } = get();
+      const oldHour = Math.floor(gameTime.hour);
       const newTime = advanceTime(gameTime, hours);
+      const newHour = Math.floor(newTime.hour);
       let newWeather = weather;
-      const newDuration = weather.duration - 1;
-      if (newDuration <= 0) {
-        const next = rollWeatherChange(weather.current);
-        newWeather = { current: next, duration: 2 + Math.floor(Math.random() * 4) };
-        broadcastEncounterAction?.({ type: 'weather-change', weather: newWeather });
-      } else {
-        newWeather = { ...weather, duration: newDuration };
+      // Only check weather when a full game hour passes (not every tick)
+      if (newHour !== oldHour) {
+        const newDuration = weather.duration - 1;
+        if (newDuration <= 0) {
+          const next = rollWeatherChange(weather.current);
+          newWeather = { current: next, duration: 2 + Math.floor(Math.random() * 4) };
+          broadcastEncounterAction?.({ type: 'weather-change', weather: newWeather });
+        } else {
+          newWeather = { ...weather, duration: newDuration };
+        }
+        // Only broadcast time change once per hour (not every 2 seconds)
+        broadcastEncounterAction?.({ type: 'time-advance', gameTime: newTime });
       }
       set({ gameTime: newTime, weather: newWeather });
-      broadcastEncounterAction?.({ type: 'time-advance', gameTime: newTime });
     },
 
     // === Skill Checks ===

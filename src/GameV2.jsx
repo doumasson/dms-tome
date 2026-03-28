@@ -3,6 +3,7 @@ import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
 import { broadcastEncounterAction, broadcastTokenMove } from './lib/liveChannel'
+import { supabase } from './lib/supabase'
 import ApiKeyGate from './components/ApiKeyGate'
 import { getAvailableInteractions } from './lib/interactionController'
 import { getDisposition } from './lib/factionSystem'
@@ -226,6 +227,31 @@ export default function GameV2({ onLeave }) {
       broadcastTokenMove(user.id, playerPos)
     }
   }, [user?.id, playerPos, zone, currentAreaId])
+
+  // Periodic party member refresh — catches missed join broadcasts (every 15s)
+  useEffect(() => {
+    const campaignId = activeCampaign?.id
+    if (!campaignId) return
+    const refresh = async () => {
+      try {
+        const { data: members } = await supabase
+          .from('campaign_members')
+          .select('user_id, role, character_data')
+          .eq('campaign_id', campaignId)
+        const seen = new Set()
+        const players = (members || [])
+          .filter(m => m.character_data?.name && !seen.has(m.user_id) && seen.add(m.user_id))
+          .map(m => ({ ...m.character_data, userId: m.user_id }))
+        const current = useStore.getState().partyMembers || []
+        // Only update if member count changed (avoid unnecessary re-renders)
+        if (players.length !== current.length) {
+          useStore.getState().setPartyMembers(players)
+        }
+      } catch {}
+    }
+    const interval = setInterval(refresh, 15000)
+    return () => clearInterval(interval)
+  }, [activeCampaign?.id])
 
   // Screen shake on combat damage — watch damage events, trigger camera shake
   const damageEventsLen = useStore(s => s.damageEvents?.length || 0)

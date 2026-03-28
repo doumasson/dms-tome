@@ -69,13 +69,14 @@ export function useGameEffects({
     }
   }, [respawnPosition, inCombat, zone?.tileSize])
 
-  // Real-time game clock — advances ~1 game-minute per 2 real seconds
-  // Full day cycle = ~48 minutes of real play time
+  // Real-time game clock — advances ~1 game-minute per 5 real seconds
+  // Full day cycle = ~2 hours of real play time. Only host ticks to avoid duplicate broadcasts.
   useEffect(() => {
-    const { advanceGameTime } = useStore.getState()
+    const isHost = useStore.getState().isDM || !useStore.getState().activeCampaign
+    if (!isHost) return
     const interval = setInterval(() => {
-      advanceGameTime(1 / 60) // 1 minute in game-hours
-    }, 2000) // every 2 real seconds
+      useStore.getState().advanceGameTime(1 / 60) // 1 minute in game-hours
+    }, 5000) // every 5 real seconds
     return () => clearInterval(interval)
   }, [])
 
