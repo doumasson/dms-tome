@@ -179,10 +179,8 @@ export default function GameV2({ onLeave }) {
           if (activeMode !== 'character') setSheetChar(myCharacter)
           else setSheetChar(null)
           break
-        case 'i': // Inventory
-          setActiveMode(prev => prev === 'inventory' ? null : 'inventory')
-          if (activeMode !== 'inventory') setSheetChar(myCharacter)
-          else setSheetChar(null)
+        case 'i': // Inventory — disabled, use PACK button instead
+          // setActiveMode(prev => prev === 'inventory' ? null : 'inventory')
           break
         case 'j': // Journal
           setShowJournal(prev => !prev)
@@ -458,13 +456,13 @@ export default function GameV2({ onLeave }) {
     else if (tool === 'journal') setShowJournal(true)
     else if (tool === 'faction') setShowFactions(true)
     else if (tool === 'short-rest') {
-      const proposal = { type: 'short', proposedBy: myCharacter?.name || 'Someone' }
-      setRestProposal(proposal)
+      const proposal = { restType: 'short', proposedBy: myCharacter?.name || 'Someone' }
+      setRestProposal({ type: 'short', proposedBy: proposal.proposedBy })
       broadcastEncounterAction({ type: 'rest-proposal', ...proposal })
     }
     else if (tool === 'long-rest') {
-      const proposal = { type: 'long', proposedBy: myCharacter?.name || 'Someone' }
-      setRestProposal(proposal)
+      const proposal = { restType: 'long', proposedBy: myCharacter?.name || 'Someone' }
+      setRestProposal({ type: 'long', proposedBy: proposal.proposedBy })
       broadcastEncounterAction({ type: 'rest-proposal', ...proposal })
     }
     else if (tool === 'formation') setShowFormation(true)

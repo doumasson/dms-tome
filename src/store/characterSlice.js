@@ -268,12 +268,20 @@ export function createCharacterSlice(set, get) {
     },
 
     // Claim post-combat rewards: XP + gold in a single atomic write to avoid race conditions
+    // Broadcasts to all players so everyone gets their share
     claimCombatRewards: (xpAmount, goldAmount) => {
       const { myCharacter } = get();
       if (!myCharacter) return;
       get().updateMyCharacter({
         xp: (myCharacter.xp || 0) + xpAmount,
         gold: (myCharacter.gold || 0) + goldAmount,
+      });
+      // Broadcast so all other players also get rewards
+      broadcastEncounterAction({
+        type: 'combat-rewards',
+        xp: xpAmount,
+        gold: goldAmount,
+        claimedBy: myCharacter.name,
       });
     },
 

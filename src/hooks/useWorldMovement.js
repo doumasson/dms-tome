@@ -60,6 +60,8 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
   walkDataRef.current = walkData
   // Step counter — advance ~1 minute of game time per 10 tiles walked
   const stepCountRef = useRef(0)
+  // Stealth movement cooldown — half speed per 5e rules
+  const stealthCooldownRef = useRef(false)
   // Trap check helper — called after each movement completes
   // Uses party formation: back-line members get advantage on trap saves
   const checkTrapsAtPosition = useCallback((newPos) => {
@@ -185,17 +187,21 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
       e.preventDefault()
 
       // Block world movement during active combat only
-      const { encounter: enc } = useStore.getState()
+      const { encounter: enc, stealthMode: stealth } = useStore.getState()
       if (enc?.phase === 'combat') return
 
+      // Stealth = half speed (5e PHB p.182): enforce movement cooldown
+      if (stealth?.active && stealthCooldownRef.current) return
       if (isAnimating()) return
       const wd = walkDataRef.current
       const pos = playerPosRef.current
       const nx = pos.x + dir.x
       const ny = pos.y + dir.y
 
+      // Reserve 2 tiles at bottom for HUD bar overlap
+      const maxY = (wd?.height || 999) - 2
       if (wd?.type === 'v2-edge') {
-        if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
+        if (nx < 0 || nx >= wd.width || ny < 0 || ny > maxY) return
         if (wd.cellBlocked[ny * wd.width + nx] === 1) return
         const fromIdx = pos.y * wd.width + pos.x
         const toIdx = ny * wd.width + nx
@@ -203,7 +209,7 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
         const entryBit = dir.y === -1 ? 0x4 : dir.x === 1 ? 0x8 : dir.y === 1 ? 0x1 : 0x2
         if ((wd.wallEdges[fromIdx] & exitBit) || (wd.wallEdges[toIdx] & entryBit)) return
       } else if (wd?.type === 'v2') {
-        if (nx < 0 || nx >= wd.width || ny < 0 || ny >= wd.height) return
+        if (nx < 0 || nx >= wd.width || ny < 0 || ny > maxY) return
         if (wd.collision[ny * wd.width + nx] === 1) return
       } else if (wd?.type === 'v1') {
         if (!wd.grid || ny < 0 || nx < 0 || ny >= wd.grid.length || nx >= wd.grid[0]?.length) return
@@ -212,6 +218,12 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
         return
       }
 
+      // Stealth half-speed cooldown: block next move for 300ms
+      const { stealthMode: stealthNow } = useStore.getState()
+      if (stealthNow?.active) {
+        stealthCooldownRef.current = true
+        setTimeout(() => { stealthCooldownRef.current = false }, 300)
+      }
       // Track steps for time advancement (~1 minute per 10 tiles)
       stepCountRef.current += 1
       if (stepCountRef.current >= 10) {

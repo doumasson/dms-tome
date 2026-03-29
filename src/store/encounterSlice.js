@@ -1116,6 +1116,7 @@ export function createEncounterSlice(set, get) {
           activeEffects: [],
         },
         lastCombatPosition,
+        respawnPosition: null,  // Clear respawn so it doesn't teleport after next combat
         ...defeatedUpdate,
         ...posUpdate,
       });

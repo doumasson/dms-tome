@@ -517,7 +517,7 @@ export default function App() {
           break
         case 'rest-proposal':
           // Show rest modal for all players when someone proposes a rest
-          useStore.setState({ pendingRestProposal: payload })
+          useStore.setState({ pendingRestProposal: { type: payload.restType, proposedBy: payload.proposedBy } })
           break
         case 'rest-vote':
           // Sync rest votes across players — dispatch custom event for RestModal to pick up
@@ -579,6 +579,17 @@ export default function App() {
                   log: [`${newCombatant.name} joins the fray! (Initiative: ${newCombatant.initiative})`, ...s.encounter.log].slice(0, 30),
                 },
               }
+            })
+          }
+          break
+        }
+        case 'combat-rewards': {
+          // Another player claimed rewards — apply XP and gold to our character too
+          const mc = useStore.getState().myCharacter
+          if (mc && payload.claimedBy !== mc.name) {
+            useStore.getState().updateMyCharacter({
+              xp: (mc.xp || 0) + (payload.xp || 0),
+              gold: (mc.gold || 0) + (payload.gold || 0),
             })
           }
           break

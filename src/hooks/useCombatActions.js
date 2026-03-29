@@ -991,6 +991,25 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         addNarratorMessage({ role: 'dm', speaker: 'Combat', text: resultText })
         broadcastEncounterAction({ type: 'spell-cast', id: active.id, spell: spell.name, targets: selectedTargets, affected })
 
+      // --- Healing spells (Cure Wounds, Healing Word, etc.) ---
+      } else if (spell.healing || spell.damageType === 'healing') {
+        let healRolls = []
+        const { applyEncounterHeal } = useStore.getState()
+        for (const targetId of selectedTargets) {
+          const target = encounter.combatants?.find(c => c.id === targetId)
+          if (!target) continue
+          const healDice = typeof spell.damage === 'string' ? spell.damage : (spell.damage?.dice || '1d8')
+          const healResult = rollDamage(healDice)
+          const healing = healResult.total ?? healResult
+          if (healing > 0) applyEncounterHeal(targetId, healing)
+          healRolls.push(`${target.name}: +${healing} HP`)
+        }
+        const resultText = healRolls.length > 0
+          ? `${active.name} casts ${spell.name}! ${healRolls.join(', ')}`
+          : `${active.name} casts ${spell.name}!`
+        addNarratorMessage({ role: 'dm', speaker: 'Combat', text: resultText })
+        broadcastEncounterAction({ type: 'spell-cast', id: active.id, spell: spell.name, targets: selectedTargets, healing: healRolls })
+
       // --- Normal damage spells ---
       } else {
         let damageRolls = []

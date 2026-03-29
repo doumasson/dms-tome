@@ -827,7 +827,7 @@
 /* PLACEHOLDER: replace with texture asset — stone panel enemy info */
 .hud-enemy-info {
   position: absolute;
-  top: 86px;
+  top: 180px;  /* Below minimap (minimap at ~40px, 130px tall) */
   right: 6px;
   width: 150px;
   z-index: 15;
