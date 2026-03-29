@@ -78,7 +78,12 @@ export default function GameV2({ onLeave }) {
   const user = useStore(s => s.user)
   const encounter = useStore(s => s.encounter)
   const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
-  const inCombat = encounter.phase === 'combat'
+  // Only show combat UI if this player is actually in the combatants list
+  // (combat radius may exclude distant players)
+  const isInCombatants = encounter.combatants?.some(c =>
+    c.type === 'player' && (c.id === myCharacter?.id || c.name === myCharacter?.name)
+  )
+  const inCombat = encounter.phase === 'combat' && isInCombatants
   const sessionApiKey = useStore(s => s.sessionApiKey)
   const isDM = useStore(s => s.isDM)
   const activeCampaign = useStore(s => s.activeCampaign)

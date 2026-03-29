@@ -7,7 +7,12 @@ import CombatActionBar from './CombatActionBar'
 import QuickslotBar from './QuickslotBar'
 
 export default function BottomBar({ areaTheme, onTool, onChat, onEndTurn, onAction, onPortraitClick, onUseQuickslot, logTab, setLogTab }) {
-  const inCombat = useStore(s => s.encounter.phase === 'combat')
+  const myName = useStore(s => s.myCharacter?.name)
+  const myId = useStore(s => s.myCharacter?.id)
+  const inCombat = useStore(s =>
+    s.encounter.phase === 'combat' &&
+    s.encounter.combatants?.some(c => c.type === 'player' && (c.id === myId || c.name === myName))
+  )
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   return (

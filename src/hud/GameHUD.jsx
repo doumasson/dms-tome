@@ -10,9 +10,10 @@ import { getTimeOfDay, formatTime } from '../lib/gameTime'
 import './hud.css'
 
 export default function GameHUD({ zone, areaTheme, onTool, onChat, onEndTurn, onAction, onSettings, onLeave, playerPos, tokens, cameraRef, onPortraitClick, activeMode, onModeSelect }) {
-  const inCombat = useStore(s => s.encounter.phase === 'combat')
   const encounter = useStore(s => s.encounter)
   const myCharacter = useStore(s => s.myCharacter)
+  const inCombat = encounter.phase === 'combat' &&
+    encounter.combatants?.some(c => c.type === 'player' && (c.id === myCharacter?.id || c.name === myCharacter?.name))
   const quests = useStore(s => s.quests) || []
   const activeQuestCount = quests.filter(q => q.status === 'active').length
   const campaign = useStore(s => s.campaign)
