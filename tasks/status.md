@@ -577,8 +577,20 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Stealth halves movement speed (300ms cooldown per 5e PHB p.182)
 - [x] Rest/random encounter narration cleaned up (System speaker, no "Initiative?")
 
-**Known asset limitation:**
-- Tree stumps (`fir_tree_stump`) are the only tree tiles in current atlas — no full canopy trees available. Need new art assets.
+### Full Asset Import ✅ COMPLETE
+- [x] FA Asset Scanner — scanned 5 compatible FA zip packs (Core Mapmaking 1-3 + March 2026 updates)
+- [x] 147,782 FA assets scanned from ~150k zip entries across 3 Core packs + 2 update packs
+- [x] Loose Asset Scanner — scanned 90+ non-FA folders (tokens, props, spell FX, map tiles)
+- [x] 6,320 loose assets imported from D&D asset library
+- [x] 9 sprite atlases rebuilt: 6,040 total tiles (was ~3,200)
+- [x] New `atlas-tokens` atlas — 560 character/creature token sprites
+- [x] 112 tree tiles imported: fir (small 2x2, medium 3x3, large 4x4), palm, multicolor fantasy, ashen branches
+- [x] Multi-tile rendering support — TilemapRendererV2 now renders sprites at their actual gw×gh dimensions
+- [x] Scatter system updated — all biome themes use full canopy trees (village, forest, town, mountain, swamp, coastal, graveyard)
+- [x] Blocking collision updated for new tree tile IDs
+- [x] Import pipeline script: `scripts/assets/import-all.js` (reusable for future asset drops)
+- [x] Full manifest saved: `assets/manifest-all.json` (154,102 entries)
+- Incompatible assets (FA Objects A/B, Textures A/B — dungeondraft_pack format) deferred for future extraction
 
 ### Branding Refactor ✅ COMPLETE
 - [x] Updated product name to "DungeonMind"
@@ -603,6 +615,7 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-28:** Full asset import — Scanned 154,102 assets from FA Core Mapmaking packs 1-3 + 90 loose D&D asset folders. Rebuilt 9 atlas sheets with 6,040 tiles (was ~3,200). Added 112 tree tiles (fir, palm, multicolor, ashen), 560 character tokens, and hundreds of new props/effects/structures. Multi-tile rendering support added to TilemapRendererV2. Scatter system updated for all biomes with full canopy trees replacing stumps. New reusable import pipeline: `scripts/assets/import-all.js`. Build passing 706ms.
 - **2026-03-23:** Floating damage/heal numbers for combat feedback — FloatingDamageNumber component displays damage (red), healing (green), and misses (gray) as numbers that float upward and fade out over 1 second. Triggers on attacks, AoE spells, and manual HP changes. Provides immediate visual feedback during combat. Build passing 947ms. Commit 92fa135.
 - **2026-03-23:** Typewriter effect for narrator messages — NarratorFloat now streams text character-by-character at 25ms intervals instead of displaying all at once. Enhances narrative immersion and game feel. Build passing 924ms. Commit 6b60fa1.
 - **2026-03-23:** Branding refactor verification + iteration 2 completion — All "Dungeon Master" terminology renamed to "The Narrator" across 14 source files (user-facing strings only; technical variables preserved). Build passing 951ms. All 1111 tests passing. Project is feature-complete and production-ready: full D&D 5.1 ruleset, all 12 classes with abilities, procedural world generation, multiplayer sync, faction system, quest tracking, boss encounters with phases, NPC scheduling, trap/weather systems. Only blocked item: pitched roof visuals (awaiting FA asset tiles). All changes committed and pushed to agent-dev.

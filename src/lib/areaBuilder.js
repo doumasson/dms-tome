@@ -101,26 +101,30 @@ const DUNGEON_THEMES = new Set(['dungeon', 'cave', 'crypt', 'sewer'])
 // These get scattered on empty tiles to make the world feel alive and decorated
 export const THEME_SCATTER = {
   village: [
-    'atlas-terrain:fir_tree_stump_a1_1x1',      // tree
-    'atlas-terrain:fir_tree_stump_a2_1x1',      // tree variant
-    'atlas-terrain:fir_tree_stump_b1_1x1',      // tree variant
-    'atlas-terrain:bush_multicolor2_a1_1x1',    // bush
-    'atlas-terrain:branch_wood_ashen_a6_1x1',   // fallen branch
+    'atlas-terrain:fir_tree_green_small_a1_2x2',  // full canopy tree (2x2)
+    'atlas-terrain:fir_tree_green_small_a2_2x2',  // tree variant
+    'atlas-terrain:fir_tree_green_small_a3_2x2',  // tree variant
+    'atlas-terrain:fir_tree_stump_a1_1x1',        // tree stump
+    'atlas-terrain:bush_multicolor2_a1_1x1',      // bush
+    'atlas-terrain:branch_wood_ashen_a6_1x1',     // fallen branch
     'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1', // barrel (fewer, mixed in)
   ],
   forest: [
-    'atlas-terrain:fir_tree_stump_a1_1x1',      // tree (dominant)
-    'atlas-terrain:fir_tree_stump_a2_1x1',      // tree variant
-    'atlas-terrain:fir_tree_stump_a3_1x1',      // tree variant
-    'atlas-terrain:fir_tree_stump_b1_1x1',      // tree variant
-    'atlas-terrain:fir_tree_stump_b2_1x1',      // tree variant
-    'atlas-terrain:bush_multicolor2_a1_1x1',    // underbrush
-    'atlas-terrain:branch_wood_ashen_a6_1x1',   // fallen log
+    'atlas-terrain:fir_tree_green_medium_a1_3x3', // large canopy tree (3x3)
+    'atlas-terrain:fir_tree_green_medium_a2_3x3', // tree variant
+    'atlas-terrain:fir_tree_green_medium_a3_3x3', // tree variant
+    'atlas-terrain:fir_tree_green_small_a1_2x2',  // small canopy tree (2x2)
+    'atlas-terrain:fir_tree_green_small_a2_2x2',  // tree variant
+    'atlas-terrain:fir_tree_green_small_a3_2x2',  // tree variant
+    'atlas-terrain:fir_tree_stump_a1_1x1',        // tree stump
+    'atlas-terrain:bush_multicolor2_a1_1x1',      // underbrush
+    'atlas-terrain:branch_wood_ashen_a6_1x1',     // fallen log
     'atlas-props-decor:rock_stone_earthy_a10_1x1', // rock
   ],
   town: [
-    'atlas-terrain:fir_tree_stump_a1_1x1',      // street tree
-    'atlas-terrain:bush_multicolor2_a1_1x1',    // hedge
+    'atlas-terrain:fir_tree_green_small_a4_2x2',  // street tree (2x2)
+    'atlas-terrain:fir_tree_green_small_a5_2x2',  // tree variant
+    'atlas-terrain:bush_multicolor2_a1_1x1',      // hedge
     'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1',
     'atlas-props-decor:crate_wood_ashen_a_1x1',
     'atlas-props-decor:sack_black_a1_1x1',
@@ -142,9 +146,10 @@ export const THEME_SCATTER = {
   mountain: [
     'atlas-props-decor:rock_stone_earthy_a10_1x1',    // boulder
     'atlas-props-decor:rock_stone_slate_blue_b10_1x1', // rock
-    'atlas-terrain:fir_tree_stump_a1_1x1',             // hardy tree
-    'atlas-terrain:bush_multicolor2_a1_1x1',           // scrub
-    'atlas-terrain:branch_wood_ashen_a6_1x1',          // deadfall
+    'atlas-terrain:fir_tree_green_small_a1_2x2',      // hardy tree (2x2)
+    'atlas-terrain:fir_tree_stump_a1_1x1',            // tree stump
+    'atlas-terrain:bush_multicolor2_a1_1x1',          // scrub
+    'atlas-terrain:branch_wood_ashen_a6_1x1',         // deadfall
   ],
   desert: [
     'atlas-props-decor:rock_stone_earthy_a10_1x1',    // rock
@@ -152,22 +157,27 @@ export const THEME_SCATTER = {
     'atlas-terrain:branch_wood_ashen_a6_1x1',          // dried wood
   ],
   swamp: [
-    'atlas-terrain:fir_tree_stump_a4_1x1',     // dead tree
-    'atlas-terrain:fir_tree_stump_a5_1x1',     // dead tree
-    'atlas-terrain:bush_multicolor2_a1_1x1',   // marsh reeds
-    'atlas-terrain:branch_wood_ashen_a6_1x1',  // fallen log
+    'atlas-terrain:tree_branch_ashen_a19_3x3',  // dead tree (3x3)
+    'atlas-terrain:tree_branch_ashen_a1_2x2',   // dead branch (2x2)
+    'atlas-terrain:fir_tree_stump_a4_1x1',      // dead stump
+    'atlas-terrain:fir_tree_stump_a5_1x1',      // dead stump
+    'atlas-terrain:bush_multicolor2_a1_1x1',    // marsh reeds
+    'atlas-terrain:branch_wood_ashen_a6_1x1',   // fallen log
     'atlas-props-decor:rock_stone_earthy_a10_1x1', // mossy rock
   ],
   coastal: [
-    'atlas-terrain:fir_tree_stump_a1_1x1',     // palm-ish tree
-    'atlas-terrain:bush_multicolor2_a1_1x1',   // coastal scrub
-    'atlas-props-decor:rock_stone_earthy_a10_1x1', // beach rock
+    'atlas-terrain:palm_tree_trunk_shadow_a3_3x3',  // palm tree (3x3)
+    'atlas-terrain:palm_tree_trunk_shadow_a6_3x3',  // palm variant
+    'atlas-terrain:fir_tree_green_small_a4_2x2',    // small tree (2x2)
+    'atlas-terrain:bush_multicolor2_a1_1x1',        // coastal scrub
+    'atlas-props-decor:rock_stone_earthy_a10_1x1',  // beach rock
     'atlas-props-decor:barrel_lid_wood_ashen_a1_1x1', // driftwood barrel
   ],
   graveyard: [
     'atlas-terrain:gravestone_stone_gray_a1_1x1',  // headstone
     'atlas-terrain:gravestone_stone_gray_b1_1x1',  // headstone variant
-    'atlas-terrain:fir_tree_stump_a4_1x1',         // dead tree
+    'atlas-terrain:tree_branch_ashen_a11_2x2',     // dead tree (2x2)
+    'atlas-terrain:fir_tree_stump_a4_1x1',         // dead stump
     'atlas-terrain:bush_multicolor2_a1_1x1',       // overgrown bush
     'atlas-props-decor:rock_stone_earthy_a10_1x1', // crumbling stone
   ],
@@ -408,11 +418,21 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
   const blockingSet = getBlockingSet()
   // V2 scatter props that should block movement (large objects you can't walk through)
   const v2BlockingTiles = new Set([
-    // Trees
+    // Trees — stumps (1x1)
     'atlas-terrain:fir_tree_stump_a1_1x1', 'atlas-terrain:fir_tree_stump_a2_1x1',
     'atlas-terrain:fir_tree_stump_a3_1x1', 'atlas-terrain:fir_tree_stump_a4_1x1',
     'atlas-terrain:fir_tree_stump_a5_1x1', 'atlas-terrain:fir_tree_stump_b1_1x1',
     'atlas-terrain:fir_tree_stump_b2_1x1', 'atlas-terrain:fir_tree_stump_b3_1x1',
+    // Trees — full canopy (2x2, 3x3)
+    'atlas-terrain:fir_tree_green_small_a1_2x2', 'atlas-terrain:fir_tree_green_small_a2_2x2',
+    'atlas-terrain:fir_tree_green_small_a3_2x2', 'atlas-terrain:fir_tree_green_small_a4_2x2',
+    'atlas-terrain:fir_tree_green_small_a5_2x2',
+    'atlas-terrain:fir_tree_green_medium_a1_3x3', 'atlas-terrain:fir_tree_green_medium_a2_3x3',
+    'atlas-terrain:fir_tree_green_medium_a3_3x3',
+    'atlas-terrain:tree_branch_ashen_a19_3x3', 'atlas-terrain:tree_branch_ashen_a1_2x2',
+    'atlas-terrain:tree_branch_ashen_a11_2x2',
+    'atlas-terrain:palm_tree_trunk_shadow_a3_3x3', 'atlas-terrain:palm_tree_trunk_shadow_a6_3x3',
+    'atlas-terrain:tree_multicolor2_c6_3x3', 'atlas-terrain:tree_multicolor3_c6_3x3',
     // Rocks and boulders
     'atlas-props-decor:rock_stone_earthy_a10_1x1',
     'atlas-props-decor:rock_stone_slate_blue_b10_1x1',

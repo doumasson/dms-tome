@@ -160,160 +160,160 @@
     "gh": 1
   },
   "atlas-props-craft:button_blue_a1_1x1": {
-    "x": 0,
-    "y": 200,
+    "x": 4000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:easel_canvas_a1_empty_1x1": {
-    "x": 200,
-    "y": 200,
+    "x": 4200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:carving_knife_wood_ashen_a_1x1": {
-    "x": 400,
-    "y": 200,
+    "x": 4400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chimney_metal_brass_hood_small_a1_1x1": {
-    "x": 600,
-    "y": 200,
+    "x": 4600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chisel_mallet_wood_ashen_a_1x1": {
-    "x": 800,
-    "y": 200,
+    "x": 4800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:churn_wood_ashen_a1_1x1": {
-    "x": 1000,
-    "y": 200,
+    "x": 5000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chute_metal_rusty_connector_a1_1x1": {
-    "x": 1200,
-    "y": 200,
+    "x": 5200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pottery_clay_brown_a10_1x1": {
-    "x": 1400,
-    "y": 200,
+    "x": 5400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:feather_duster_wood_ashen_a1_1x1": {
-    "x": 1600,
-    "y": 200,
+    "x": 5600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:dress_pattern_brown_a1_1x1": {
-    "x": 1800,
-    "y": 200,
+    "x": 5800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:coal_fill_01_a1_1x1": {
-    "x": 2000,
-    "y": 200,
+    "x": 6000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:coal_shovel_wood_ashen_a_1x1": {
-    "x": 2200,
-    "y": 200,
+    "x": 6200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:cork_float_a1_1x1": {
-    "x": 2400,
-    "y": 200,
+    "x": 6400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:crucible_large_metal_rusty_stand_a1_1x1": {
-    "x": 2600,
-    "y": 200,
+    "x": 6600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bandage_rag_gray_dirty_a10_1x1": {
-    "x": 2800,
-    "y": 200,
+    "x": 6800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:draw_plate_metal_gray_a1_1x1": {
-    "x": 3000,
-    "y": 200,
+    "x": 7000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:drill_metal_gray_a_1x1": {
-    "x": 3200,
-    "y": 200,
+    "x": 7200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:squid_drying_01_a1_1x1": {
-    "x": 3400,
-    "y": 200,
+    "x": 7400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:dustpan_brush_wood_ashen_a1_1x1": {
-    "x": 3600,
-    "y": 200,
+    "x": 7600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:spool_wood_ashen_a1_1x1": {
-    "x": 3800,
-    "y": 200,
+    "x": 7800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -321,7 +321,7 @@
   },
   "atlas-props-craft:funnel_a_1x1": {
     "x": 0,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -329,7 +329,7 @@
   },
   "atlas-props-craft:pitchfork_wood_ashen_a2_1x1": {
     "x": 200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -337,7 +337,7 @@
   },
   "atlas-props-craft:file_wood_ashen_a_1x1": {
     "x": 400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -345,7 +345,7 @@
   },
   "atlas-props-craft:glassware_blue_beaker_a1_1x1": {
     "x": 600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -353,7 +353,7 @@
   },
   "atlas-props-craft:fingerprint_brush_a1_1x1": {
     "x": 800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -361,7 +361,7 @@
   },
   "atlas-props-craft:fish_01_pile_a1_1x1": {
     "x": 1000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -369,7 +369,7 @@
   },
   "atlas-props-craft:fishing_basket_wicker_ashen_a1_1x1": {
     "x": 1200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -377,7 +377,7 @@
   },
   "atlas-props-craft:fishing_rod_stand_wood_ashen_a1_1x1": {
     "x": 1400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -385,7 +385,7 @@
   },
   "atlas-props-craft:fishing_bobbin_01_a1_1x1": {
     "x": 1600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -393,7 +393,7 @@
   },
   "atlas-props-craft:fur_pelt_long_black_a1_1x1": {
     "x": 1800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -401,7 +401,7 @@
   },
   "atlas-props-craft:garden_fork_wood_ashen_a_1x1": {
     "x": 2000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -409,7 +409,7 @@
   },
   "atlas-props-craft:glass_float_blue_a1_1x1": {
     "x": 2200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -417,7 +417,7 @@
   },
   "atlas-props-craft:glassware_beaker_a1_1x1": {
     "x": 2400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -425,7 +425,7 @@
   },
   "atlas-props-craft:grain_mill_stone_earthy_b2_1x1": {
     "x": 2600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -433,7 +433,7 @@
   },
   "atlas-props-craft:cobbler_hammer_wood_ashen_a_1x1": {
     "x": 2800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -441,7 +441,7 @@
   },
   "atlas-props-craft:fishing_net_01_wood_light_c1_1x1": {
     "x": 3000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -449,7 +449,7 @@
   },
   "atlas-props-craft:law_enforcement_handheld_ram_wood_ashen_metal_gray_a1_1x1": {
     "x": 3200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -457,7 +457,7 @@
   },
   "atlas-props-craft:hole_punch_metal_gray_a_1x1": {
     "x": 3400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -465,7 +465,7 @@
   },
   "atlas-props-craft:yoke_wood_ashen_a1_1x1": {
     "x": 3600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -473,167 +473,167 @@
   },
   "atlas-props-craft:iv_stand_metal_black_a1_1x1": {
     "x": 3800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:iv_empty_c1_1x1": {
-    "x": 0,
-    "y": 600,
+    "x": 4000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:iron_stand_metal_gray_a1_1x1": {
-    "x": 200,
-    "y": 600,
+    "x": 4200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:knitting_needle_wood_ashen_a_1x1": {
-    "x": 400,
-    "y": 600,
+    "x": 4400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_knife_wood_ashen_a_1x1": {
-    "x": 600,
-    "y": 600,
+    "x": 4600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:lace_spool_holder_filled_wood_ashen_a1_1x1": {
-    "x": 800,
-    "y": 600,
+    "x": 4800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:lace_spool_black_wood_ashen_a1_1x1": {
-    "x": 1000,
-    "y": 600,
+    "x": 5000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:laundry_dolly_wood_ashen_a1_1x1": {
-    "x": 1200,
-    "y": 600,
+    "x": 5200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_scraps_black_a_1x1": {
-    "x": 1400,
-    "y": 600,
+    "x": 5400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_tanning_rack_wood_ashen_a_1x1": {
-    "x": 1600,
-    "y": 600,
+    "x": 5600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_black_a1_1x1": {
-    "x": 1800,
-    "y": 600,
+    "x": 5800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:life_ring_01_a1_1x1": {
-    "x": 2000,
-    "y": 600,
+    "x": 6000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:loom_shuttle_spool_black_wood_ashen_a1_1x1": {
-    "x": 2200,
-    "y": 600,
+    "x": 6200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:mannequin_a_black_1x1": {
-    "x": 2400,
-    "y": 600,
+    "x": 6400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:mast_rope_ashen_a_1x1": {
-    "x": 2600,
-    "y": 600,
+    "x": 6600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:folding_ruler_wood_ashen_metal_gray_a1_1x1": {
-    "x": 2800,
-    "y": 600,
+    "x": 6800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:microscope_wood_ashen_metal_brass_a1_1x1": {
-    "x": 3000,
-    "y": 600,
+    "x": 7000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:milk_churn_metal_black_a1_1x1": {
-    "x": 3200,
-    "y": 600,
+    "x": 7200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:minecart_metal_gray_a1_1x1": {
-    "x": 3400,
-    "y": 600,
+    "x": 7400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:track_ashen_broken_end_a1_1x1": {
-    "x": 3600,
-    "y": 600,
+    "x": 7600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pickaxe_head_metal_gray_a_1x1": {
-    "x": 3800,
-    "y": 600,
+    "x": 7800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -641,7 +641,7 @@
   },
   "atlas-props-craft:artists_mannequin_wood_ashen_a1_1x1": {
     "x": 0,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -649,7 +649,7 @@
   },
   "atlas-props-craft:mooring_post_metal_gray_a1_1x1": {
     "x": 200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -657,7 +657,7 @@
   },
   "atlas-props-craft:mop_bloody_wood_ashen_a1_1x1": {
     "x": 400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -665,7 +665,7 @@
   },
   "atlas-props-craft:mould_circle_lid_metal_rusty_a1_1x1": {
     "x": 600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -673,7 +673,7 @@
   },
   "atlas-props-craft:nail_a10_1x1": {
     "x": 800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -681,7 +681,7 @@
   },
   "atlas-props-craft:net_01_pile_a2_1x1": {
     "x": 1000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -689,7 +689,7 @@
   },
   "atlas-props-craft:operating_tray_metal_black_a1_1x1": {
     "x": 1200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -697,7 +697,7 @@
   },
   "atlas-props-craft:ore_minecart_fill_black_a1_1x1": {
     "x": 1400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -705,7 +705,7 @@
   },
   "atlas-props-craft:painting_pallet_wood_ashen_a1_1x1": {
     "x": 1600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -713,7 +713,7 @@
   },
   "atlas-props-craft:palette_knife_wood_ashen_a1_1x1": {
     "x": 1800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -721,7 +721,7 @@
   },
   "atlas-props-craft:track_metal_solo_path": {
     "x": 2000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -729,7 +729,7 @@
   },
   "atlas-props-craft:camera_wood_ashen_a1_1x1": {
     "x": 2200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -737,7 +737,7 @@
   },
   "atlas-props-craft:pincers_wood_ashen_a_1x1": {
     "x": 2400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -745,7 +745,7 @@
   },
   "atlas-props-craft:dress_pin_blue_metal_gray_a1_1x1": {
     "x": 2600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -753,7 +753,7 @@
   },
   "atlas-props-craft:pliers_metal_gray_a_1x1": {
     "x": 2800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -761,7 +761,7 @@
   },
   "atlas-props-craft:pottery_wheel_wood_ashen_clay_gray_a_1x1": {
     "x": 3000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -769,7 +769,7 @@
   },
   "atlas-props-craft:pottery_toolkit_leather_black_a1_1x1": {
     "x": 3200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -777,7 +777,7 @@
   },
   "atlas-props-craft:pritchel_metal_gray_a_1x1": {
     "x": 3400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -785,7 +785,7 @@
   },
   "atlas-props-craft:rigging_blocks_metal_gray_rope_ashen_a1_1x1": {
     "x": 3600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -793,167 +793,167 @@
   },
   "atlas-props-craft:rigging_hoop_metal_gray_rope_ashen_a1_1x1": {
     "x": 3800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:rigging_peg_metal_gray_a1_1x1": {
-    "x": 0,
-    "y": 1000,
+    "x": 4000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:ruler_metal_gray_a_1x1": {
-    "x": 200,
-    "y": 1000,
+    "x": 4200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:saddle_leather_black_a1_1x1": {
-    "x": 400,
-    "y": 1000,
+    "x": 4400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:saw_wood_ashen_a_1x1": {
-    "x": 600,
-    "y": 1000,
+    "x": 4600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:scarecrow_hat_a1_1x1": {
-    "x": 800,
-    "y": 1000,
+    "x": 4800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:scissors_metal_gray_a1_1x1": {
-    "x": 1000,
-    "y": 1000,
+    "x": 5000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sewing_box_closed_wood_ashen_a1_1x1": {
-    "x": 1200,
-    "y": 1000,
+    "x": 5200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sewing_hoop_wood_ashen_a1_1x1": {
-    "x": 1400,
-    "y": 1000,
+    "x": 5400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sewing_machine_metal_black_a1_1x1": {
-    "x": 1600,
-    "y": 1000,
+    "x": 5600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:shape_former_metal_gray_a1_1x1": {
-    "x": 1800,
-    "y": 1000,
+    "x": 5800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:carpentry_shaver_wood_ashen_a_1x1": {
-    "x": 2000,
-    "y": 1000,
+    "x": 6000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:molten_chunk_a1_1x1": {
-    "x": 2200,
-    "y": 1000,
+    "x": 6200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:spinning_wheel_spool_black_a1_1x1": {
-    "x": 2400,
-    "y": 1000,
+    "x": 6400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sponge_a1_1x1": {
-    "x": 2600,
-    "y": 1000,
+    "x": 6600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:syringe_metal_black_c1_1x1": {
-    "x": 2800,
-    "y": 1000,
+    "x": 6800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:barn_hanger_wood_ashen_a1_1x1": {
-    "x": 3000,
-    "y": 1000,
+    "x": 7000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:crochet_hook_wood_ashen_metal_gray_a1_1x1": {
-    "x": 3200,
-    "y": 1000,
+    "x": 7200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:tang_metal_molten_b1_1x1": {
-    "x": 3400,
-    "y": 1000,
+    "x": 7400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:tanning_rack_wood_ashen_leather_gray_d1_1x1": {
-    "x": 3600,
-    "y": 1000,
+    "x": 7600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:clamp_metal_gray_a1_1x1": {
-    "x": 3800,
-    "y": 1000,
+    "x": 7800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -961,7 +961,7 @@
   },
   "atlas-props-craft:toolbox_metal_gray_a1_1x1": {
     "x": 0,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -969,7 +969,7 @@
   },
   "atlas-props-craft:toolkit_medical_brown_ashen_a_1x1": {
     "x": 200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -977,7 +977,7 @@
   },
   "atlas-props-craft:fishing_net_01_sieve_wood_light_a1_1x1": {
     "x": 400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -985,7 +985,7 @@
   },
   "atlas-props-craft:trough_metal_gray_oil_clear_a1_1x1": {
     "x": 600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -993,7 +993,7 @@
   },
   "atlas-props-craft:watering_can_metal_black_a1_1x1": {
     "x": 800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1001,7 +1001,7 @@
   },
   "atlas-props-craft:fishing_net_01_weight_metal_gray_a1_1x1": {
     "x": 1000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1009,7 +1009,7 @@
   },
   "atlas-props-craft:winch_handle_metal_gray_a_1x1": {
     "x": 1200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1017,7 +1017,7 @@
   },
   "atlas-props-craft:wine_press_wood_ashen_metal_rusty_a1_1x1": {
     "x": 1400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1025,7 +1025,7 @@
   },
   "atlas-props-craft:alchemy_clamp_brass_b_1x1": {
     "x": 1600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1033,7 +1033,7 @@
   },
   "atlas-props-craft:alchemy_arrangement_a11_1x1": {
     "x": 1800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1041,7 +1041,7 @@
   },
   "atlas-props-craft:animal_brush_wood_ashen_a2_1x1": {
     "x": 2000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1049,7 +1049,7 @@
   },
   "atlas-props-craft:animal_feeder_metal_gray_a2_1x1": {
     "x": 2200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1057,7 +1057,7 @@
   },
   "atlas-props-craft:artists_table_drawer_wood_ashen_a2_1x1": {
     "x": 2400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1065,7 +1065,7 @@
   },
   "atlas-props-craft:awl_wood_ashen_a_rusty_1x1": {
     "x": 2600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1073,7 +1073,7 @@
   },
   "atlas-props-craft:hand_axe_wood_ashen_a1_rusty_1x1": {
     "x": 2800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1081,7 +1081,7 @@
   },
   "atlas-props-craft:law_enforcement_badge_metal_brass_b1_1x1": {
     "x": 3000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1089,7 +1089,7 @@
   },
   "atlas-props-craft:bandage_cloth_black_b_1x1": {
     "x": 3200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1097,7 +1097,7 @@
   },
   "atlas-props-craft:beehive_honey_frame_wood_ashen_a1_broken_1x1": {
     "x": 3400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1105,7 +1105,7 @@
   },
   "atlas-props-craft:bellows_wood_dark_1x1": {
     "x": 3600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1113,167 +1113,167 @@
   },
   "atlas-props-craft:anvil_metal_gray_a2_1x1": {
     "x": 3800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bird_house_wood_ashen_a2_1x1": {
-    "x": 0,
-    "y": 1400,
+    "x": 4000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bandage_rag_gray_bloody_a11_1x1": {
-    "x": 200,
-    "y": 1400,
+    "x": 4200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bolt_and_tackle_wood_ashen_a_rusty_1x1": {
-    "x": 400,
-    "y": 1400,
+    "x": 4400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bone_saw_wood_ashen_a_rusty_1x1": {
-    "x": 600,
-    "y": 1400,
+    "x": 4600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:book_clamp_wood_ashen_a2_1x1": {
-    "x": 800,
-    "y": 1400,
+    "x": 4800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:wheel_broken_wood_ashen_a3_1x1": {
-    "x": 1000,
-    "y": 1400,
+    "x": 5000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:broom_wood_ashen_b2_1x1": {
-    "x": 1200,
-    "y": 1400,
+    "x": 5200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:mahl_stick_wood_ashen_b1_1x1": {
-    "x": 1400,
-    "y": 1400,
+    "x": 5400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:button_blue_a2_1x1": {
-    "x": 1600,
-    "y": 1400,
+    "x": 5600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:easel_canvas_a2_1x1": {
-    "x": 1800,
-    "y": 1400,
+    "x": 5800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:carving_knife_wood_ashen_a_rusty_1x1": {
-    "x": 2000,
-    "y": 1400,
+    "x": 6000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chimney_metal_brass_hood_small_b1_1x1": {
-    "x": 2200,
-    "y": 1400,
+    "x": 6200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chisel_mallet_wood_dark_a_1x1": {
-    "x": 2400,
-    "y": 1400,
+    "x": 6400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:churn_wood_ashen_a2_1x1": {
-    "x": 2600,
-    "y": 1400,
+    "x": 6600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chute_metal_rusty_corner_a1_1x1": {
-    "x": 2800,
-    "y": 1400,
+    "x": 6800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pottery_clay_brown_a11_1x1": {
-    "x": 3000,
-    "y": 1400,
+    "x": 7000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:feather_duster_wood_ashen_a2_1x1": {
-    "x": 3200,
-    "y": 1400,
+    "x": 7200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:dress_pattern_brown_a2_1x1": {
-    "x": 3400,
-    "y": 1400,
+    "x": 7400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:coal_fill_01_a2_1x1": {
-    "x": 3600,
-    "y": 1400,
+    "x": 7600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:coal_shovel_wood_ashen_a_rusty_1x1": {
-    "x": 3800,
-    "y": 1400,
+    "x": 7800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1281,7 +1281,7 @@
   },
   "atlas-props-craft:cork_float_a2_1x1": {
     "x": 0,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1289,7 +1289,7 @@
   },
   "atlas-props-craft:crucible_large_metal_rusty_stand_a2_1x1": {
     "x": 200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1297,7 +1297,7 @@
   },
   "atlas-props-craft:bandage_rag_gray_dirty_a11_1x1": {
     "x": 400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1305,7 +1305,7 @@
   },
   "atlas-props-craft:draw_plate_metal_gray_b1_1x1": {
     "x": 600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1313,7 +1313,7 @@
   },
   "atlas-props-craft:drill_metal_rusty_a_1x1": {
     "x": 800,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1321,7 +1321,7 @@
   },
   "atlas-props-craft:squid_drying_01_a2_1x1": {
     "x": 1000,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1329,7 +1329,7 @@
   },
   "atlas-props-craft:dustpan_brush_wood_ashen_a2_1x1": {
     "x": 1200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1337,7 +1337,7 @@
   },
   "atlas-props-craft:spool_wood_ashen_a2_1x1": {
     "x": 1400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1345,7 +1345,7 @@
   },
   "atlas-props-craft:funnel_b_1x1": {
     "x": 1600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1353,7 +1353,7 @@
   },
   "atlas-props-craft:pitchfork_wood_ashen_a2_rusty_1x1": {
     "x": 1800,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1361,7 +1361,7 @@
   },
   "atlas-props-craft:file_wood_ashen_a_rusty_1x1": {
     "x": 2000,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1369,7 +1369,7 @@
   },
   "atlas-props-craft:glassware_blue_beaker_a2_1x1": {
     "x": 2200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1377,7 +1377,7 @@
   },
   "atlas-props-craft:fingerprint_powder_a1_1x1": {
     "x": 2400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1385,7 +1385,7 @@
   },
   "atlas-props-craft:fish_01_pile_a2_1x1": {
     "x": 2600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1393,7 +1393,7 @@
   },
   "atlas-props-craft:fishing_basket_wicker_dark_a1_1x1": {
     "x": 2800,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1401,7 +1401,7 @@
   },
   "atlas-props-craft:fishing_rod_stand_wood_dark_a1_1x1": {
     "x": 3000,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1409,7 +1409,7 @@
   },
   "atlas-props-craft:fishing_bobbin_01_a2_1x1": {
     "x": 3200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1417,7 +1417,7 @@
   },
   "atlas-props-craft:fur_pelt_long_black_b1_1x1": {
     "x": 3400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1425,7 +1425,7 @@
   },
   "atlas-props-craft:garden_fork_wood_ashen_a_rusty_1x1": {
     "x": 3600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1433,167 +1433,167 @@
   },
   "atlas-props-craft:glass_float_blue_a2_1x1": {
     "x": 3800,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:glassware_beaker_a2_1x1": {
-    "x": 0,
-    "y": 1800,
+    "x": 4000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:grain_mill_stone_earthy_c2_1x1": {
-    "x": 200,
-    "y": 1800,
+    "x": 4200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:cobbler_hammer_wood_ashen_a_rusty_1x1": {
-    "x": 400,
-    "y": 1800,
+    "x": 4400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:fishing_net_02_wood_ashen_c1_1x1": {
-    "x": 600,
-    "y": 1800,
+    "x": 4600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:law_enforcement_handheld_ram_wood_ashen_metal_rusty_a1_1x1": {
-    "x": 800,
-    "y": 1800,
+    "x": 4800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:hole_punch_metal_gray_b_1x1": {
-    "x": 1000,
-    "y": 1800,
+    "x": 5000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:yoke_wood_ashen_b1_1x1": {
-    "x": 1200,
-    "y": 1800,
+    "x": 5200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:iv_stand_metal_black_a2_1x1": {
-    "x": 1400,
-    "y": 1800,
+    "x": 5400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:iv_empty_c1_bloody_1x1": {
-    "x": 1600,
-    "y": 1800,
+    "x": 5600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:iron_stand_metal_gray_b1_1x1": {
-    "x": 1800,
-    "y": 1800,
+    "x": 5800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:knitting_needle_wood_ashen_b_1x1": {
-    "x": 2000,
-    "y": 1800,
+    "x": 6000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_knife_wood_ashen_a_rusty_1x1": {
-    "x": 2200,
-    "y": 1800,
+    "x": 6200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:lace_spool_holder_filled_wood_dark_a1_1x1": {
-    "x": 2400,
-    "y": 1800,
+    "x": 6400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:lace_spool_black_wood_ashen_a2_1x1": {
-    "x": 2600,
-    "y": 1800,
+    "x": 6600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:laundry_dolly_wood_ashen_a2_1x1": {
-    "x": 2800,
-    "y": 1800,
+    "x": 6800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_scraps_black_b_1x1": {
-    "x": 3000,
-    "y": 1800,
+    "x": 7000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_tanning_rack_wood_ashen_b_1x1": {
-    "x": 3200,
-    "y": 1800,
+    "x": 7200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_black_a2_1x1": {
-    "x": 3400,
-    "y": 1800,
+    "x": 7400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:life_ring_01_a2_1x1": {
-    "x": 3600,
-    "y": 1800,
+    "x": 7600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:loom_shuttle_spool_black_wood_dark_a1_1x1": {
-    "x": 3800,
-    "y": 1800,
+    "x": 7800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1601,7 +1601,7 @@
   },
   "atlas-props-craft:mannequin_a_brown_1x1": {
     "x": 0,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1609,7 +1609,7 @@
   },
   "atlas-props-craft:mast_rope_ashen_b_1x1": {
     "x": 200,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1617,7 +1617,7 @@
   },
   "atlas-props-craft:folding_ruler_wood_ashen_metal_gray_a2_1x1": {
     "x": 400,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1625,7 +1625,7 @@
   },
   "atlas-props-craft:microscope_wood_ashen_metal_rusty_a1_1x1": {
     "x": 600,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1633,7 +1633,7 @@
   },
   "atlas-props-craft:milk_churn_metal_black_a1_lid_1x1": {
     "x": 800,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1641,7 +1641,7 @@
   },
   "atlas-props-craft:minecart_metal_gray_a2_1x1": {
     "x": 1000,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1649,7 +1649,7 @@
   },
   "atlas-props-craft:track_ashen_broken_straight_b1_1x1": {
     "x": 1200,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1657,7 +1657,7 @@
   },
   "atlas-props-craft:pickaxe_head_metal_gray_b_1x1": {
     "x": 1400,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1665,7 +1665,7 @@
   },
   "atlas-props-craft:artists_mannequin_wood_ashen_a2_1x1": {
     "x": 1600,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1673,7 +1673,7 @@
   },
   "atlas-props-craft:mooring_post_metal_gray_b1_1x1": {
     "x": 1800,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1681,7 +1681,7 @@
   },
   "atlas-props-craft:mop_bloody_wood_dark_a1_1x1": {
     "x": 2000,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1689,7 +1689,7 @@
   },
   "atlas-props-craft:mould_circle_lid_metal_rusty_a2_1x1": {
     "x": 2200,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1697,7 +1697,7 @@
   },
   "atlas-props-craft:nail_a1_1x1": {
     "x": 2400,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1705,7 +1705,7 @@
   },
   "atlas-props-craft:net_02_pile_a2_1x1": {
     "x": 2600,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1713,7 +1713,7 @@
   },
   "atlas-props-craft:operating_tray_metal_gray_a1_1x1": {
     "x": 2800,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1721,7 +1721,7 @@
   },
   "atlas-props-craft:ore_minecart_fill_black_a2_1x1": {
     "x": 3000,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1729,7 +1729,7 @@
   },
   "atlas-props-craft:painting_pallet_wood_ashen_b1_1x1": {
     "x": 3200,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1737,7 +1737,7 @@
   },
   "atlas-props-craft:palette_knife_wood_ashen_a2_1x1": {
     "x": 3400,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1745,7 +1745,7 @@
   },
   "atlas-props-craft:track_wood_ashen_path": {
     "x": 3600,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1753,167 +1753,167 @@
   },
   "atlas-props-craft:camera_wood_dark_a1_1x1": {
     "x": 3800,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pincers_wood_ashen_a_rusty_1x1": {
-    "x": 0,
-    "y": 2200,
+    "x": 4000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:dress_pin_blue_metal_gray_a2_1x1": {
-    "x": 200,
-    "y": 2200,
+    "x": 4200,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pliers_metal_gray_b_1x1": {
-    "x": 400,
-    "y": 2200,
+    "x": 4400,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pottery_wheel_wood_ashen_clay_gray_b_1x1": {
-    "x": 600,
-    "y": 2200,
+    "x": 4600,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pottery_toolkit_leather_black_b1_1x1": {
-    "x": 800,
-    "y": 2200,
+    "x": 4800,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pritchel_metal_gray_b_1x1": {
-    "x": 1000,
-    "y": 2200,
+    "x": 5000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:rigging_blocks_metal_gray_rope_ashen_a2_1x1": {
-    "x": 1200,
-    "y": 2200,
+    "x": 5200,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:rigging_hoop_metal_gray_rope_ashen_a2_1x1": {
-    "x": 1400,
-    "y": 2200,
+    "x": 5400,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:rigging_peg_metal_gray_a2_1x1": {
-    "x": 1600,
-    "y": 2200,
+    "x": 5600,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:ruler_metal_gray_b_1x1": {
-    "x": 1800,
-    "y": 2200,
+    "x": 5800,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:saddle_leather_black_a2_1x1": {
-    "x": 2000,
-    "y": 2200,
+    "x": 6000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:saw_wood_ashen_a_rusty_1x1": {
-    "x": 2200,
-    "y": 2200,
+    "x": 6200,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sewing_hoop_wood_ashen_a2_1x1": {
-    "x": 2400,
-    "y": 2200,
+    "x": 6400,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sewing_machine_metal_bronze_a1_1x1": {
-    "x": 2600,
-    "y": 2200,
+    "x": 6600,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:shape_former_metal_gray_a2_1x1": {
-    "x": 2800,
-    "y": 2200,
+    "x": 6800,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:carpentry_shaver_wood_ashen_a_rusty_1x1": {
-    "x": 3000,
-    "y": 2200,
+    "x": 7000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:molten_chunk_a2_1x1": {
-    "x": 3200,
-    "y": 2200,
+    "x": 7200,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:spinning_wheel_spool_blue_a1_1x1": {
-    "x": 3400,
-    "y": 2200,
+    "x": 7400,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sponge_b1_1x1": {
-    "x": 3600,
-    "y": 2200,
+    "x": 7600,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:syringe_metal_black_c2_1x1": {
-    "x": 3800,
-    "y": 2200,
+    "x": 7800,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1921,7 +1921,7 @@
   },
   "atlas-props-craft:barn_hanger_wood_ashen_b1_1x1": {
     "x": 0,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1929,7 +1929,7 @@
   },
   "atlas-props-craft:crochet_hook_wood_ashen_metal_rusty_a1_1x1": {
     "x": 200,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1937,7 +1937,7 @@
   },
   "atlas-props-craft:tang_metal_rusty_b1_1x1": {
     "x": 400,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1945,7 +1945,7 @@
   },
   "atlas-props-craft:tanning_rack_wood_ashen_leather_gray_d2_1x1": {
     "x": 600,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1953,7 +1953,7 @@
   },
   "atlas-props-craft:clamp_metal_gray_a2_1x1": {
     "x": 800,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1961,7 +1961,7 @@
   },
   "atlas-props-craft:toolbox_metal_gray_a2_1x1": {
     "x": 1000,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1969,7 +1969,7 @@
   },
   "atlas-props-craft:toolkit_medical_brown_ashen_a_rusty_1x1": {
     "x": 1200,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1977,7 +1977,7 @@
   },
   "atlas-props-craft:fishing_net_02_sieve_wood_ashen_a1_1x1": {
     "x": 1400,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1985,7 +1985,7 @@
   },
   "atlas-props-craft:trough_metal_gray_oil_opaque_a1_1x1": {
     "x": 1600,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1993,7 +1993,7 @@
   },
   "atlas-props-craft:watering_can_metal_black_a2_1x1": {
     "x": 1800,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2001,7 +2001,7 @@
   },
   "atlas-props-craft:fishing_net_01_weight_metal_gray_a2_1x1": {
     "x": 2000,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2009,7 +2009,7 @@
   },
   "atlas-props-craft:winch_handle_metal_gray_b_1x1": {
     "x": 2200,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2017,7 +2017,7 @@
   },
   "atlas-props-craft:wine_press_wood_dark_metal_gray_a1_1x1": {
     "x": 2400,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2025,7 +2025,7 @@
   },
   "atlas-props-craft:alchemy_clamp_brass_c_1x1": {
     "x": 2600,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2033,7 +2033,7 @@
   },
   "atlas-props-craft:alchemy_arrangement_a12_1x1": {
     "x": 2800,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2041,7 +2041,7 @@
   },
   "atlas-props-craft:animal_brush_wood_ashen_a3_1x1": {
     "x": 3000,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2049,7 +2049,7 @@
   },
   "atlas-props-craft:animal_feeder_metal_gray_b1_1x1": {
     "x": 3200,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2057,7 +2057,7 @@
   },
   "atlas-props-craft:artists_table_drawer_wood_dark_a1_1x1": {
     "x": 3400,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2065,7 +2065,7 @@
   },
   "atlas-props-craft:awl_wood_ashen_b_1x1": {
     "x": 3600,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2073,167 +2073,167 @@
   },
   "atlas-props-craft:hand_axe_wood_ashen_a2_1x1": {
     "x": 3800,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:law_enforcement_badge_metal_brass_c1_1x1": {
-    "x": 0,
-    "y": 2600,
+    "x": 4000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bandage_cloth_black_c_1x1": {
-    "x": 200,
-    "y": 2600,
+    "x": 4200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:beehive_honey_frame_wood_ashen_a2_1x1": {
-    "x": 400,
-    "y": 2600,
+    "x": 4400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bellows_wood_light_1x1": {
-    "x": 600,
-    "y": 2600,
+    "x": 4600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:anvil_metal_rusty_a1_1x1": {
-    "x": 800,
-    "y": 2600,
+    "x": 4800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bird_house_wood_dark_a1_1x1": {
-    "x": 1000,
-    "y": 2600,
+    "x": 5000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bandage_rag_gray_bloody_a12_1x1": {
-    "x": 1200,
-    "y": 2600,
+    "x": 5200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bolt_and_tackle_wood_ashen_b_1x1": {
-    "x": 1400,
-    "y": 2600,
+    "x": 5400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bone_saw_wood_ashen_b_1x1": {
-    "x": 1600,
-    "y": 2600,
+    "x": 5600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:book_clamp_wood_ashen_b1_1x1": {
-    "x": 1800,
-    "y": 2600,
+    "x": 5800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:wheel_broken_wood_ashen_b1_1x1": {
-    "x": 2000,
-    "y": 2600,
+    "x": 6000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:broom_wood_dark_a2_1x1": {
-    "x": 2200,
-    "y": 2600,
+    "x": 6200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:mahl_stick_wood_dark_a1_1x1": {
-    "x": 2400,
-    "y": 2600,
+    "x": 6400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:button_blue_a3_1x1": {
-    "x": 2600,
-    "y": 2600,
+    "x": 6600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:easel_canvas_a3_1x1": {
-    "x": 2800,
-    "y": 2600,
+    "x": 6800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:carving_knife_wood_dark_a_1x1": {
-    "x": 3000,
-    "y": 2600,
+    "x": 7000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chimney_metal_brass_plug_large_a1_1x1": {
-    "x": 3200,
-    "y": 2600,
+    "x": 7200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chisel_mallet_wood_light_a_1x1": {
-    "x": 3400,
-    "y": 2600,
+    "x": 7400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:churn_wood_dark_a1_1x1": {
-    "x": 3600,
-    "y": 2600,
+    "x": 7600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chute_metal_rusty_end_a1_1x1": {
-    "x": 3800,
-    "y": 2600,
+    "x": 7800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2241,7 +2241,7 @@
   },
   "atlas-props-craft:pottery_clay_brown_a12_1x1": {
     "x": 0,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2249,7 +2249,7 @@
   },
   "atlas-props-craft:feather_duster_wood_dark_a1_1x1": {
     "x": 200,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2257,7 +2257,7 @@
   },
   "atlas-props-craft:dress_pattern_brown_a3_1x1": {
     "x": 400,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2265,7 +2265,7 @@
   },
   "atlas-props-craft:coal_fill_02_a1_1x1": {
     "x": 600,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2273,7 +2273,7 @@
   },
   "atlas-props-craft:coal_shovel_wood_dark_a_1x1": {
     "x": 800,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2281,7 +2281,7 @@
   },
   "atlas-props-craft:cork_float_a3_1x1": {
     "x": 1000,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2289,7 +2289,7 @@
   },
   "atlas-props-craft:crucible_large_metal_sut_stand_a1_1x1": {
     "x": 1200,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2297,7 +2297,7 @@
   },
   "atlas-props-craft:bandage_rag_gray_dirty_a12_1x1": {
     "x": 1400,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2305,7 +2305,7 @@
   },
   "atlas-props-craft:draw_plate_metal_gray_c1_1x1": {
     "x": 1600,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2313,7 +2313,7 @@
   },
   "atlas-props-craft:drill_wood_ashen_a_1x1": {
     "x": 1800,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2321,7 +2321,7 @@
   },
   "atlas-props-craft:squid_drying_01_a3_1x1": {
     "x": 2000,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2329,7 +2329,7 @@
   },
   "atlas-props-craft:dustpan_brush_wood_dark_a1_1x1": {
     "x": 2200,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2337,7 +2337,7 @@
   },
   "atlas-props-craft:spool_wood_ashen_a3_1x1": {
     "x": 2400,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2345,7 +2345,7 @@
   },
   "atlas-props-craft:tnt_box_ashen_a_1x1": {
     "x": 2600,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2353,7 +2353,7 @@
   },
   "atlas-props-craft:pitchfork_wood_ashen_b2_1x1": {
     "x": 2800,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2361,7 +2361,7 @@
   },
   "atlas-props-craft:file_wood_ashen_b_1x1": {
     "x": 3000,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2369,7 +2369,7 @@
   },
   "atlas-props-craft:glassware_blue_beaker_b1_1x1": {
     "x": 3200,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2377,7 +2377,7 @@
   },
   "atlas-props-craft:fingerprint_tools_a1_1x1": {
     "x": 3400,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2385,7 +2385,7 @@
   },
   "atlas-props-craft:fish_01_pile_a3_1x1": {
     "x": 3600,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2393,167 +2393,167 @@
   },
   "atlas-props-craft:fishing_basket_wicker_light_a1_1x1": {
     "x": 3800,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:fishing_rod_stand_wood_light_a1_1x1": {
-    "x": 0,
-    "y": 3000,
+    "x": 4000,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:fishing_bobbin_02_a1_1x1": {
-    "x": 200,
-    "y": 3000,
+    "x": 4200,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:fur_pelt_long_black_d1_1x1": {
-    "x": 400,
-    "y": 3000,
+    "x": 4400,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:garden_fork_wood_dark_a_1x1": {
-    "x": 600,
-    "y": 3000,
+    "x": 4600,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:glass_float_blue_a3_1x1": {
-    "x": 800,
-    "y": 3000,
+    "x": 4800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:glassware_beaker_b1_1x1": {
-    "x": 1000,
-    "y": 3000,
+    "x": 5000,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:grain_mill_stone_earthy_wood_ashen_c2_1x1": {
-    "x": 1200,
-    "y": 3000,
+    "x": 5200,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:cobbler_hammer_wood_dark_a_1x1": {
-    "x": 1400,
-    "y": 3000,
+    "x": 5400,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:fishing_net_02_wood_walnut_c1_1x1": {
-    "x": 1600,
-    "y": 3000,
+    "x": 5600,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:law_enforcement_handheld_ram_wood_dark_metal_gray_a1_1x1": {
-    "x": 1800,
-    "y": 3000,
+    "x": 5800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:hole_punch_metal_rusty_a_1x1": {
-    "x": 2000,
-    "y": 3000,
+    "x": 6000,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:yoke_wood_ashen_c1_1x1": {
-    "x": 2200,
-    "y": 3000,
+    "x": 6200,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:iv_stand_metal_black_b1_1x1": {
-    "x": 2400,
-    "y": 3000,
+    "x": 6400,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:iv_green_a1_1x1": {
-    "x": 2600,
-    "y": 3000,
+    "x": 6600,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:iron_stand_metal_rusty_a1_1x1": {
-    "x": 2800,
-    "y": 3000,
+    "x": 6800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:knitting_needle_wood_dark_a_1x1": {
-    "x": 3000,
-    "y": 3000,
+    "x": 7000,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:leather_knife_wood_dark_a_1x1": {
-    "x": 3200,
-    "y": 3000,
+    "x": 7200,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:lace_spool_holder_filled_wood_light_a1_1x1": {
-    "x": 3400,
-    "y": 3000,
+    "x": 7400,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:lace_spool_black_wood_ashen_a3_1x1": {
-    "x": 3600,
-    "y": 3000,
+    "x": 7600,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:laundry_dolly_wood_dark_a1_1x1": {
-    "x": 3800,
-    "y": 3000,
+    "x": 7800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2561,7 +2561,7 @@
   },
   "atlas-props-craft:leather_scraps_black_c_1x1": {
     "x": 0,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2569,7 +2569,7 @@
   },
   "atlas-props-craft:leather_tanning_rack_wood_dark_a_1x1": {
     "x": 200,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2577,7 +2577,7 @@
   },
   "atlas-props-craft:leather_black_a3_1x1": {
     "x": 400,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2585,7 +2585,7 @@
   },
   "atlas-props-craft:life_ring_01_b1_1x1": {
     "x": 600,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2593,7 +2593,7 @@
   },
   "atlas-props-craft:loom_shuttle_spool_black_wood_light_a1_1x1": {
     "x": 800,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2601,7 +2601,7 @@
   },
   "atlas-props-craft:mannequin_a_tan_1x1": {
     "x": 1000,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2609,7 +2609,7 @@
   },
   "atlas-props-craft:mast_rope_ashen_c_1x1": {
     "x": 1200,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2617,7 +2617,7 @@
   },
   "atlas-props-craft:folding_ruler_wood_ashen_metal_rusty_a1_1x1": {
     "x": 1400,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2625,7 +2625,7 @@
   },
   "atlas-props-craft:microscope_wood_dark_metal_brass_a1_1x1": {
     "x": 1600,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2633,7 +2633,7 @@
   },
   "atlas-props-craft:milk_churn_metal_black_a2_1x1": {
     "x": 1800,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2641,7 +2641,7 @@
   },
   "atlas-props-craft:minecart_metal_gray_a3_1x1": {
     "x": 2000,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2649,7 +2649,7 @@
   },
   "atlas-props-craft:track_ashen_broken_straight_b2_1x1": {
     "x": 2200,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2657,7 +2657,7 @@
   },
   "atlas-props-craft:pickaxe_head_metal_gray_c_1x1": {
     "x": 2400,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2665,7 +2665,7 @@
   },
   "atlas-props-craft:artists_mannequin_wood_dark_a1_1x1": {
     "x": 2600,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2673,7 +2673,7 @@
   },
   "atlas-props-craft:mooring_post_metal_gray_c1_1x1": {
     "x": 2800,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2681,7 +2681,7 @@
   },
   "atlas-props-craft:mop_bloody_wood_light_a1_1x1": {
     "x": 3000,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2689,7 +2689,7 @@
   },
   "atlas-props-craft:mould_circle_lid_metal_sut_a1_1x1": {
     "x": 3200,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2697,7 +2697,7 @@
   },
   "atlas-props-craft:nail_a2_1x1": {
     "x": 3400,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2705,7 +2705,7 @@
   },
   "atlas-props-craft:net_03_pile_a2_1x1": {
     "x": 3600,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2713,167 +2713,167 @@
   },
   "atlas-props-craft:operating_tray_metal_gray_a1_bloody_1x1": {
     "x": 3800,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:ore_minecart_fill_blue_a1_1x1": {
-    "x": 0,
-    "y": 3400,
+    "x": 4000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:painting_pallet_wood_ashen_b2_1x1": {
-    "x": 200,
-    "y": 3400,
+    "x": 4200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:palette_knife_wood_ashen_a3_1x1": {
-    "x": 400,
-    "y": 3400,
+    "x": 4400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:track_wood_dark_path": {
-    "x": 600,
-    "y": 3400,
+    "x": 4600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:camera_wood_light_a1_1x1": {
-    "x": 800,
-    "y": 3400,
+    "x": 4800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pincers_wood_dark_a_1x1": {
-    "x": 1000,
-    "y": 3400,
+    "x": 5000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:dress_pin_blue_metal_gray_a3_1x1": {
-    "x": 1200,
-    "y": 3400,
+    "x": 5200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pliers_metal_gray_c_1x1": {
-    "x": 1400,
-    "y": 3400,
+    "x": 5400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pottery_wheel_wood_ashen_clay_gray_c_1x1": {
-    "x": 1600,
-    "y": 3400,
+    "x": 5600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pottery_toolkit_leather_black_c1_1x1": {
-    "x": 1800,
-    "y": 3400,
+    "x": 5800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:pritchel_metal_rusty_a_1x1": {
-    "x": 2000,
-    "y": 3400,
+    "x": 6000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:rigging_blocks_metal_gray_rope_ashen_b1_1x1": {
-    "x": 2200,
-    "y": 3400,
+    "x": 6200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:rigging_hoop_metal_gray_rope_ashen_b1_1x1": {
-    "x": 2400,
-    "y": 3400,
+    "x": 6400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:rigging_peg_metal_gray_a3_1x1": {
-    "x": 2600,
-    "y": 3400,
+    "x": 6600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:ruler_metal_rusty_a_1x1": {
-    "x": 2800,
-    "y": 3400,
+    "x": 6800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:saddle_leather_black_b1_1x1": {
-    "x": 3000,
-    "y": 3400,
+    "x": 7000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:saw_wood_ashen_b_1x1": {
-    "x": 3200,
-    "y": 3400,
+    "x": 7200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:scissors_metal_gray_a2_1x1": {
-    "x": 3400,
-    "y": 3400,
+    "x": 7400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sewing_box_closed_wood_ashen_b1_1x1": {
-    "x": 3600,
-    "y": 3400,
+    "x": 7600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:sewing_hoop_wood_ashen_a3_1x1": {
-    "x": 3800,
-    "y": 3400,
+    "x": 7800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2881,7 +2881,7 @@
   },
   "atlas-props-craft:sewing_machine_metal_gray_a1_1x1": {
     "x": 0,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2889,7 +2889,7 @@
   },
   "atlas-props-craft:shape_former_metal_gray_a3_1x1": {
     "x": 200,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2897,7 +2897,7 @@
   },
   "atlas-props-craft:carpentry_shaver_wood_ashen_b_1x1": {
     "x": 400,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2905,7 +2905,7 @@
   },
   "atlas-props-craft:molten_chunk_b1_1x1": {
     "x": 600,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2913,7 +2913,7 @@
   },
   "atlas-props-craft:spinning_wheel_spool_brown_a1_1x1": {
     "x": 800,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2921,7 +2921,7 @@
   },
   "atlas-props-craft:sponge_c1_1x1": {
     "x": 1000,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2929,7 +2929,7 @@
   },
   "atlas-props-craft:syringe_metal_black_c3_1x1": {
     "x": 1200,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2937,7 +2937,7 @@
   },
   "atlas-props-craft:barn_hanger_wood_ashen_c1_1x1": {
     "x": 1400,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2945,7 +2945,7 @@
   },
   "atlas-props-craft:crochet_hook_wood_dark_metal_gray_a1_1x1": {
     "x": 1600,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2953,7 +2953,7 @@
   },
   "atlas-props-craft:tang_metal_sut_b1_1x1": {
     "x": 1800,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2961,7 +2961,7 @@
   },
   "atlas-props-craft:tanning_rack_wood_ashen_leather_gray_e1_1x1": {
     "x": 2000,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2969,7 +2969,7 @@
   },
   "atlas-props-craft:clamp_metal_gray_a3_1x1": {
     "x": 2200,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2977,7 +2977,7 @@
   },
   "atlas-props-craft:toolbox_metal_gray_a3_1x1": {
     "x": 2400,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2985,7 +2985,7 @@
   },
   "atlas-props-craft:toolkit_medical_brown_dark_a_1x1": {
     "x": 2600,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2993,7 +2993,7 @@
   },
   "atlas-props-craft:fishing_net_02_sieve_wood_walnut_a1_1x1": {
     "x": 2800,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3001,7 +3001,7 @@
   },
   "atlas-props-craft:trough_metal_gray_water_blue_a1_1x1": {
     "x": 3000,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3009,7 +3009,7 @@
   },
   "atlas-props-craft:watering_can_metal_black_b1_1x1": {
     "x": 3200,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3017,7 +3017,7 @@
   },
   "atlas-props-craft:fishing_net_01_weight_metal_gray_b1_1x1": {
     "x": 3400,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3025,7 +3025,7 @@
   },
   "atlas-props-craft:winch_handle_metal_gray_c_1x1": {
     "x": 3600,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3033,170 +3033,2986 @@
   },
   "atlas-props-craft:wine_press_wood_light_metal_gray_a1_1x1": {
     "x": 3800,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:alchemy_clamp_brass_d_1x1": {
-    "x": 0,
-    "y": 3800,
+    "x": 4000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:alchemy_arrangement_a13_1x1": {
-    "x": 200,
-    "y": 3800,
+    "x": 4200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:animal_brush_wood_dark_a1_1x1": {
-    "x": 400,
-    "y": 3800,
+    "x": 4400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:animal_feeder_metal_gray_b2_1x1": {
-    "x": 600,
-    "y": 3800,
+    "x": 4600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:artists_table_drawer_wood_dark_a2_1x1": {
-    "x": 800,
-    "y": 3800,
+    "x": 4800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:awl_wood_ashen_b_rusty_1x1": {
-    "x": 1000,
-    "y": 3800,
+    "x": 5000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:hand_axe_wood_ashen_a2_rusty_1x1": {
-    "x": 1200,
-    "y": 3800,
+    "x": 5200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:law_enforcement_badge_metal_gold_a1_1x1": {
-    "x": 1400,
-    "y": 3800,
+    "x": 5400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bandage_cloth_black_d_1x1": {
-    "x": 1600,
-    "y": 3800,
+    "x": 5600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:beehive_honey_frame_wood_ashen_a3_1x1": {
-    "x": 1800,
-    "y": 3800,
+    "x": 5800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:bone_saw_wood_ashen_b_rusty_1x1": {
-    "x": 2000,
-    "y": 3800,
+    "x": 6000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:book_clamp_wood_ashen_b2_1x1": {
-    "x": 2200,
-    "y": 3800,
+    "x": 6200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:wheel_broken_wood_ashen_b3_1x1": {
-    "x": 2400,
-    "y": 3800,
+    "x": 6400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:broom_wood_dark_b2_1x1": {
-    "x": 2600,
-    "y": 3800,
+    "x": 6600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:mahl_stick_wood_dark_b1_1x1": {
-    "x": 2800,
-    "y": 3800,
+    "x": 6800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:button_blue_a4_1x1": {
-    "x": 3000,
-    "y": 3800,
+    "x": 7000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:easel_canvas_a4_1x1": {
-    "x": 3200,
-    "y": 3800,
+    "x": 7200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:carving_knife_wood_light_a_1x1": {
-    "x": 3400,
-    "y": 3800,
+    "x": 7400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chimney_metal_brass_plug_small_a1_1x1": {
-    "x": 3600,
-    "y": 3800,
+    "x": 7600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-craft:chisel_mallet_wood_red_a_1x1": {
-    "x": 3800,
-    "y": 3800,
+    "x": 7800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
+  },
+  "atlas-props-craft:churn_wood_dark_a2_1x1": {
+    "x": 0,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:chute_metal_rusty_end_b1_1x1": {
+    "x": 200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pottery_clay_brown_a13_1x1": {
+    "x": 400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:feather_duster_wood_dark_a2_1x1": {
+    "x": 600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:dress_pattern_brown_a4_1x1": {
+    "x": 800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:coal_fill_02_a2_1x1": {
+    "x": 1000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:coal_shovel_wood_light_a_1x1": {
+    "x": 1200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:cork_float_b1_1x1": {
+    "x": 1400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:crucible_large_metal_sut_stand_a2_1x1": {
+    "x": 1600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:bandage_rag_gray_dirty_a13_1x1": {
+    "x": 1800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:draw_plate_metal_rusty_a1_1x1": {
+    "x": 2000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:drill_wood_ashen_a_rusty_1x1": {
+    "x": 2200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:squid_drying_01_a4_1x1": {
+    "x": 2400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:dustpan_brush_wood_dark_a2_1x1": {
+    "x": 2600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:spool_wood_ashen_b1_1x1": {
+    "x": 2800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:tnt_box_ashen_b_1x1": {
+    "x": 3000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pitchfork_wood_ashen_b2_rusty_1x1": {
+    "x": 3200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:file_wood_ashen_b_rusty_1x1": {
+    "x": 3400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:glassware_blue_beaker_b2_1x1": {
+    "x": 3600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fur_pelt_long_black_e1_1x1": {
+    "x": 3800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:garden_fork_wood_light_a_1x1": {
+    "x": 4000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:glass_float_clear_a1_1x1": {
+    "x": 4200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:glassware_beaker_b2_1x1": {
+    "x": 4400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:grain_mill_stone_earthy_wood_ashen_d1_1x1": {
+    "x": 4600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:cobbler_hammer_wood_light_a_1x1": {
+    "x": 4800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fishing_net_03_wood_dark_c1_1x1": {
+    "x": 5000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:law_enforcement_handheld_ram_wood_light_metal_gray_a1_1x1": {
+    "x": 5200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:hole_punch_metal_rusty_b_1x1": {
+    "x": 5400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:yoke_wood_dark_a1_1x1": {
+    "x": 5600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:iv_stand_metal_black_b2_1x1": {
+    "x": 5800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:iv_green_a1_bloody_1x1": {
+    "x": 6000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:iron_stand_metal_rusty_b1_1x1": {
+    "x": 6200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:knitting_needle_wood_dark_b_1x1": {
+    "x": 6400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:leather_knife_wood_light_a_1x1": {
+    "x": 6600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:lace_spool_holder_filled_wood_red_a1_1x1": {
+    "x": 6800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:lace_spool_black_wood_ashen_a4_1x1": {
+    "x": 7000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:laundry_dolly_wood_dark_a2_1x1": {
+    "x": 7200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:leather_scraps_black_d_1x1": {
+    "x": 7400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:leather_tanning_rack_wood_dark_b_1x1": {
+    "x": 7600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:leather_black_b1_1x1": {
+    "x": 7800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:life_ring_01_b2_1x1": {
+    "x": 0,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:loom_shuttle_spool_black_wood_red_a1_1x1": {
+    "x": 200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mannequin_a_white_1x1": {
+    "x": 400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mast_rope_ashen_d_1x1": {
+    "x": 600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:folding_ruler_wood_ashen_metal_rusty_a2_1x1": {
+    "x": 800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:microscope_wood_light_metal_brass_a1_1x1": {
+    "x": 1000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:milk_churn_metal_black_b1_1x1": {
+    "x": 1200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:minecart_metal_gray_a4_1x1": {
+    "x": 1400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:track_ashen_broken_straight_b3_1x1": {
+    "x": 1600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pickaxe_head_metal_rusty_a_1x1": {
+    "x": 1800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:artists_mannequin_wood_dark_a2_1x1": {
+    "x": 2000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mooring_post_metal_gray_d1_1x1": {
+    "x": 2200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mop_bloody_wood_red_a1_1x1": {
+    "x": 2400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mould_circle_lid_metal_sut_a2_1x1": {
+    "x": 2600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:nail_a3_1x1": {
+    "x": 2800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:track_wood_light_path": {
+    "x": 3000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:camera_wood_red_a1_1x1": {
+    "x": 3200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pincers_wood_light_a_1x1": {
+    "x": 3400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:dress_pin_blue_metal_rusty_a1_1x1": {
+    "x": 3600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pliers_metal_gray_d_1x1": {
+    "x": 3800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pottery_wheel_wood_dark_clay_brown_a_1x1": {
+    "x": 4000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pottery_toolkit_leather_brown_a1_1x1": {
+    "x": 4200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pritchel_metal_rusty_b_1x1": {
+    "x": 4400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:rigging_blocks_metal_gray_rope_ashen_c1_1x1": {
+    "x": 4600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:rigging_hoop_metal_gray_rope_ashen_b2_1x1": {
+    "x": 4800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:rigging_peg_metal_gray_a4_1x1": {
+    "x": 5000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:ruler_metal_rusty_b_1x1": {
+    "x": 5200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:saddle_leather_black_b2_1x1": {
+    "x": 5400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:saw_wood_ashen_b_rusty_1x1": {
+    "x": 5600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:scissors_metal_gray_a3_1x1": {
+    "x": 5800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:sewing_box_closed_wood_dark_a1_1x1": {
+    "x": 6000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:sewing_hoop_wood_ashen_a4_1x1": {
+    "x": 6200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:sewing_machine_metal_polished_a1_1x1": {
+    "x": 6400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:shape_former_metal_gray_b1_1x1": {
+    "x": 6600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:carpentry_shaver_wood_ashen_b_rusty_1x1": {
+    "x": 6800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:molten_chunk_b2_1x1": {
+    "x": 7000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:spinning_wheel_spool_green_a1_1x1": {
+    "x": 7200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:sponge_d1_1x1": {
+    "x": 7400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:syringe_metal_black_empty_a1_1x1": {
+    "x": 7600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:barn_hanger_wood_ashen_tackle_leather_brown3_a1_1x1": {
+    "x": 7800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:crochet_hook_wood_light_metal_gray_a1_1x1": {
+    "x": 0,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fishing_net_03_sieve_wood_dark_a1_1x1": {
+    "x": 200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:trough_metal_gray_water_clear_a1_1x1": {
+    "x": 400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:watering_can_metal_black_b2_1x1": {
+    "x": 600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fishing_net_01_weight_metal_gray_b2_1x1": {
+    "x": 800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:winch_handle_metal_gray_d1_1x1": {
+    "x": 1000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:wine_press_wood_red_metal_gray_a1_1x1": {
+    "x": 1200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:alchemy_clamp_brass_e_1x1": {
+    "x": 1400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:alchemy_arrangement_a1_1x1": {
+    "x": 1600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:animal_brush_wood_dark_a2_1x1": {
+    "x": 1800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:animal_feeder_metal_rusty_a1_1x1": {
+    "x": 2000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:artists_table_drawer_wood_light_a1_1x1": {
+    "x": 2200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:awl_wood_ashen_c_1x1": {
+    "x": 2400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:hand_axe_wood_dark_a1_1x1": {
+    "x": 2600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:law_enforcement_badge_metal_gold_b1_1x1": {
+    "x": 2800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:bandage_cloth_black_e_1x1": {
+    "x": 3000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:beehive_honey_frame_wood_ashen_a4_1x1": {
+    "x": 3200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:anvil_metal_rusty_a2_1x1": {
+    "x": 3400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:bird_house_wood_dark_a2_1x1": {
+    "x": 3600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:bandage_rag_gray_bloody_a13_1x1": {
+    "x": 3800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:bolt_and_tackle_wood_ashen_b_rusty_1x1": {
+    "x": 4000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:bone_saw_wood_dark_a_1x1": {
+    "x": 4200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:book_clamp_wood_dark_a1_1x1": {
+    "x": 4400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:wheel_broken_wood_ashen_c2_1x1": {
+    "x": 4600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:broom_wood_light_a2_1x1": {
+    "x": 4800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mahl_stick_wood_light_a1_1x1": {
+    "x": 5000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:button_green_a1_1x1": {
+    "x": 5200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:easel_canvas_b1_empty_1x1": {
+    "x": 5400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:modeling_knife_wood_ashen_a_1x1": {
+    "x": 5600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:chimney_metal_brass_small_rectangle_a1_1x1": {
+    "x": 5800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:chisel_mallet_wood_walnut_a_1x1": {
+    "x": 6000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:churn_wood_light_a1_1x1": {
+    "x": 6200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:chute_metal_rusty_straight_b1_1x1": {
+    "x": 6400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pottery_clay_brown_a14_1x1": {
+    "x": 6600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:feather_duster_wood_light_a1_1x1": {
+    "x": 6800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:dress_pattern_brown_a5_1x1": {
+    "x": 7000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:coal_spill_01_a_1x1": {
+    "x": 7200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:squid_drying_02_a1_1x1": {
+    "x": 7400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:dustpan_brush_wood_light_a1_1x1": {
+    "x": 7600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:spool_wood_ashen_b2_1x1": {
+    "x": 7800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:tnt_box_ashen_c_1x1": {
+    "x": 0,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pitchfork_wood_ashen_c2_1x1": {
+    "x": 200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:file_wood_dark_a_1x1": {
+    "x": 400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:glassware_blue_connector_a_1x1": {
+    "x": 600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fish_01_pile_a4_1x1": {
+    "x": 800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fishing_basket_wicker_red_a1_1x1": {
+    "x": 1000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fishing_rod_stand_wood_red_a1_1x1": {
+    "x": 1200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fishing_bobbin_02_a2_1x1": {
+    "x": 1400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fur_pelt_long_black_folded_b1_1x1": {
+    "x": 1600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mower_metal_gray_wood_dark_a1_1x1": {
+    "x": 1800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:glass_float_clear_a2_1x1": {
+    "x": 2000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:glassware_connector_cork_a_1x1": {
+    "x": 2200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:grain_mill_stone_redrock_b2_1x1": {
+    "x": 2400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:blacksmith_hammer_wood_ashen_a1_1x1": {
+    "x": 2600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:fishing_net_03_wood_red_c1_1x1": {
+    "x": 2800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:law_enforcement_handheld_ram_wood_red_metal_gray_a1_1x1": {
+    "x": 3000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:leather_tool_wood_ashen_a_1x1": {
+    "x": 3200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:lace_spool_holder_filled_wood_walnut_a1_1x1": {
+    "x": 3400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:lace_spool_black_wood_ashen_a5_1x1": {
+    "x": 3600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:laundry_dolly_wood_light_a1_1x1": {
+    "x": 3800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:leather_scraps_black_e_1x1": {
+    "x": 4000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:leather_tanning_rack_wood_light_a_1x1": {
+    "x": 4200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:leather_black_b2_1x1": {
+    "x": 4400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:life_ring_02_a1_1x1": {
+    "x": 4600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:loom_shuttle_spool_black_wood_walnut_a1_1x1": {
+    "x": 4800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mannequin_cloth_black_bust_a1_1x1": {
+    "x": 5000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mast_rope_brown_a_1x1": {
+    "x": 5200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:folding_ruler_wood_dark_metal_gray_a1_1x1": {
+    "x": 5400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:microscope_wood_red_metal_brass_a1_1x1": {
+    "x": 5600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:milk_churn_metal_black_b2_1x1": {
+    "x": 5800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:minecart_metal_gray_flatbed_a_1x1": {
+    "x": 6000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:track_ashen_broken_straight_b4_1x1": {
+    "x": 6200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:pickaxe_head_metal_rusty_b_1x1": {
+    "x": 6400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:artists_mannequin_wood_light_a1_1x1": {
+    "x": 6600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mooring_post_metal_gray_e1_1x1": {
+    "x": 6800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mop_bloody_wood_walnut_a1_1x1": {
+    "x": 7000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:mould_circle_metal_rusty_a1_1x1": {
+    "x": 7200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:nail_a4_1x1": {
+    "x": 7400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:operating_tray_metal_rusty_a1_1x1": {
+    "x": 7600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:ore_minecart_fill_blue_a2_1x1": {
+    "x": 7800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-craft:rowboat_broken_wood_ashen_a1_2x2": {
+    "x": 0,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_ashen_b1_2x3": {
+    "x": 400,
+    "y": 2800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_broken_wood_ashen_c1_2x2": {
+    "x": 800,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_ashen_d1_2x2": {
+    "x": 1200,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_dark_a1_2x2": {
+    "x": 1600,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_dark_b1_2x3": {
+    "x": 2000,
+    "y": 2800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_broken_wood_dark_c1_2x2": {
+    "x": 2400,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_dark_d1_2x2": {
+    "x": 2800,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_light_a1_2x2": {
+    "x": 3200,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_light_b1_2x3": {
+    "x": 3600,
+    "y": 2800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_broken_wood_light_c1_2x2": {
+    "x": 4000,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_light_d1_2x2": {
+    "x": 4400,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_red_a1_2x2": {
+    "x": 4800,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_red_b1_2x3": {
+    "x": 5200,
+    "y": 2800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_broken_wood_red_c1_2x2": {
+    "x": 5600,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_red_d1_2x2": {
+    "x": 6000,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_walnut_a1_2x2": {
+    "x": 6400,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_walnut_b1_2x3": {
+    "x": 6800,
+    "y": 2800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_broken_wood_walnut_c1_2x2": {
+    "x": 7200,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_broken_wood_walnut_d1_2x2": {
+    "x": 7600,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_ashen_a1_2x2": {
+    "x": 0,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_ashen_b1_2x2": {
+    "x": 400,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_dark_a1_2x2": {
+    "x": 800,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_dark_b1_2x2": {
+    "x": 1200,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_light_a1_2x2": {
+    "x": 1600,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_light_b1_2x2": {
+    "x": 2000,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_red_a1_2x2": {
+    "x": 2400,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_red_b1_2x2": {
+    "x": 2800,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_walnut_a1_2x2": {
+    "x": 3200,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_broken_wood_walnut_b1_2x2": {
+    "x": 3600,
+    "y": 3400,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a10_1x3": {
+    "x": 4000,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a1_2x3": {
+    "x": 4200,
+    "y": 3400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a2_1x3": {
+    "x": 4600,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a3_1x3": {
+    "x": 4800,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a4_2x3": {
+    "x": 5000,
+    "y": 3400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a5_1x3": {
+    "x": 5400,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a6_1x3": {
+    "x": 5600,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a7_2x3": {
+    "x": 5800,
+    "y": 3400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a8_2x3": {
+    "x": 6200,
+    "y": 3400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_a9_1x3": {
+    "x": 6600,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a10_1x3": {
+    "x": 6800,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a1_2x3": {
+    "x": 7000,
+    "y": 3400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a2_1x3": {
+    "x": 7400,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a3_1x3": {
+    "x": 7600,
+    "y": 3400,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a4_2x3": {
+    "x": 0,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a5_1x3": {
+    "x": 400,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a6_1x3": {
+    "x": 600,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a7_2x3": {
+    "x": 800,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a8_2x3": {
+    "x": 1200,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_a9_1x3": {
+    "x": 1600,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a10_1x3": {
+    "x": 1800,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a1_2x3": {
+    "x": 2000,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a2_1x3": {
+    "x": 2400,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a3_1x3": {
+    "x": 2600,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a4_2x3": {
+    "x": 2800,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a5_1x3": {
+    "x": 3200,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a6_1x3": {
+    "x": 3400,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a7_2x3": {
+    "x": 3600,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a8_2x3": {
+    "x": 4000,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_a9_1x3": {
+    "x": 4400,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a10_1x3": {
+    "x": 4600,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a1_2x3": {
+    "x": 4800,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a2_1x3": {
+    "x": 5200,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a3_1x3": {
+    "x": 5400,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a4_2x3": {
+    "x": 5600,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a5_1x3": {
+    "x": 6000,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a6_1x3": {
+    "x": 6200,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a7_2x3": {
+    "x": 6400,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a8_2x3": {
+    "x": 6800,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_a9_1x3": {
+    "x": 7200,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a10_1x3": {
+    "x": 7400,
+    "y": 4000,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a1_2x3": {
+    "x": 7600,
+    "y": 4000,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a2_1x3": {
+    "x": 0,
+    "y": 4600,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a3_1x3": {
+    "x": 200,
+    "y": 4600,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a4_2x3": {
+    "x": 400,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a5_1x3": {
+    "x": 800,
+    "y": 4600,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a6_1x3": {
+    "x": 1000,
+    "y": 4600,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a7_2x3": {
+    "x": 1200,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a8_2x3": {
+    "x": 1600,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_a9_1x3": {
+    "x": 2000,
+    "y": 4600,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:oar_wood_ashen_a1_1x2": {
+    "x": 2200,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_ashen_a2_1x2": {
+    "x": 2400,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_dark_a1_1x2": {
+    "x": 2600,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_dark_a2_1x2": {
+    "x": 2800,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_light_a1_1x2": {
+    "x": 3000,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_light_a2_1x2": {
+    "x": 3200,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_red_a1_1x2": {
+    "x": 3400,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_red_a2_1x2": {
+    "x": 3600,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_walnut_a1_1x2": {
+    "x": 3800,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:oar_wood_walnut_a2_1x2": {
+    "x": 4000,
+    "y": 4600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_ashen_a1_2x3": {
+    "x": 4200,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_dark_a1_2x3": {
+    "x": 4600,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_light_a1_2x3": {
+    "x": 5000,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_red_a1_2x3": {
+    "x": 5400,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_walnut_a1_2x3": {
+    "x": 5800,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a1_1x3": {
+    "x": 6200,
+    "y": 4600,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a2_3x3": {
+    "x": 6400,
+    "y": 4600,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a3_1x3": {
+    "x": 7000,
+    "y": 4600,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a4_2x3": {
+    "x": 7200,
+    "y": 4600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a5_1x3": {
+    "x": 7600,
+    "y": 4600,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a6_2x3": {
+    "x": 0,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a7_1x3": {
+    "x": 400,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a8_2x3": {
+    "x": 600,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_a9_2x3": {
+    "x": 1000,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a1_1x3": {
+    "x": 1400,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a2_3x3": {
+    "x": 1600,
+    "y": 5200,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a3_1x3": {
+    "x": 2200,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a4_2x3": {
+    "x": 2400,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a5_1x3": {
+    "x": 2800,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a6_2x3": {
+    "x": 3000,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a7_1x3": {
+    "x": 3400,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a8_2x3": {
+    "x": 3600,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_dark_a9_2x3": {
+    "x": 4000,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a1_1x3": {
+    "x": 4400,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a2_3x3": {
+    "x": 4600,
+    "y": 5200,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a3_1x3": {
+    "x": 5200,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a4_2x3": {
+    "x": 5400,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a5_1x3": {
+    "x": 5800,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a6_2x3": {
+    "x": 6000,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a7_1x3": {
+    "x": 6400,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a8_2x3": {
+    "x": 6600,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_light_a9_2x3": {
+    "x": 7000,
+    "y": 5200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a1_1x3": {
+    "x": 7400,
+    "y": 5200,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a2_3x3": {
+    "x": 0,
+    "y": 5800,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a3_1x3": {
+    "x": 600,
+    "y": 5800,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a4_2x3": {
+    "x": 800,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a5_1x3": {
+    "x": 1200,
+    "y": 5800,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a6_2x3": {
+    "x": 1400,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a7_1x3": {
+    "x": 1800,
+    "y": 5800,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a8_2x3": {
+    "x": 2000,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_red_a9_2x3": {
+    "x": 2400,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a1_1x3": {
+    "x": 2800,
+    "y": 5800,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a2_3x3": {
+    "x": 3000,
+    "y": 5800,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a3_1x3": {
+    "x": 3600,
+    "y": 5800,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a4_2x3": {
+    "x": 3800,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a5_1x3": {
+    "x": 4200,
+    "y": 5800,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a6_2x3": {
+    "x": 4400,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a7_1x3": {
+    "x": 4800,
+    "y": 5800,
+    "w": 200,
+    "h": 600,
+    "gw": 1,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a8_2x3": {
+    "x": 5000,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_walnut_a9_2x3": {
+    "x": 5400,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_ashen_a1_2x3": {
+    "x": 5800,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_ashen_b1_2x3": {
+    "x": 6200,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_ashen_c1_2x3": {
+    "x": 6600,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_ashen_d1_2x3": {
+    "x": 7000,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_ashen_rusty_b1_2x3": {
+    "x": 7400,
+    "y": 5800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_ashen_rusty_c1_2x3": {
+    "x": 0,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_ashen_rusty_d1_2x3": {
+    "x": 400,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_dark_a1_2x3": {
+    "x": 800,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_dark_b1_2x3": {
+    "x": 1200,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_dark_c1_2x3": {
+    "x": 1600,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_dark_d1_2x3": {
+    "x": 2000,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_light_a1_2x3": {
+    "x": 2400,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_light_b1_2x3": {
+    "x": 2800,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_light_c1_2x3": {
+    "x": 3200,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_light_d1_2x3": {
+    "x": 3600,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_red_a1_2x3": {
+    "x": 4000,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_red_b1_2x3": {
+    "x": 4400,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_red_c1_2x3": {
+    "x": 4800,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_red_d1_2x3": {
+    "x": 5200,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:cart_wood_walnut_a1_2x3": {
+    "x": 5600,
+    "y": 6400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-craft:raft_wood_ashen_filled_a1_4x3": {
+    "x": 6000,
+    "y": 6400,
+    "w": 800,
+    "h": 600,
+    "gw": 4,
+    "gh": 3
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_b1_1x4": {
+    "x": 6800,
+    "y": 6400,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_b2_2x4": {
+    "x": 7000,
+    "y": 6400,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_b3_1x4": {
+    "x": 7400,
+    "y": 6400,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_b4_2x4": {
+    "x": 7600,
+    "y": 6400,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_ashen_filled_b5_1x4": {
+    "x": 0,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_b1_1x4": {
+    "x": 200,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_b2_2x4": {
+    "x": 400,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_b3_1x4": {
+    "x": 800,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_b4_2x4": {
+    "x": 1000,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_dark_filled_b5_1x4": {
+    "x": 1400,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_b1_1x4": {
+    "x": 1600,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_b2_2x4": {
+    "x": 1800,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_b3_1x4": {
+    "x": 2200,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_b4_2x4": {
+    "x": 2400,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_light_filled_b5_1x4": {
+    "x": 2800,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_b1_1x4": {
+    "x": 3000,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_b2_2x4": {
+    "x": 3200,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_b3_1x4": {
+    "x": 3600,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_b4_2x4": {
+    "x": 3800,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_red_filled_b5_1x4": {
+    "x": 4200,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_b1_1x4": {
+    "x": 4400,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_b2_2x4": {
+    "x": 4600,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_b3_1x4": {
+    "x": 5000,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_b4_2x4": {
+    "x": 5200,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_walnut_filled_b5_1x4": {
+    "x": 5600,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_ashen_b1_2x4": {
+    "x": 5800,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_dark_b1_2x4": {
+    "x": 6200,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_light_b1_2x4": {
+    "x": 6600,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_red_b1_2x4": {
+    "x": 7000,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_upsidedown_wood_walnut_b1_2x4": {
+    "x": 7400,
+    "y": 7200,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-craft:rowboat_wood_ashen_b1_1x4": {
+    "x": 7800,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
   }
 }

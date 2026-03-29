@@ -1,5 +1,5 @@
 {
-  "atlas-floors:brick_floor_01_d1": {
+  "atlas-tokens:demon_tree_greater_02_hi": {
     "x": 0,
     "y": 0,
     "w": 200,
@@ -7,7 +7,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_01_a1": {
+  "atlas-tokens:demon_tree_lesser_02_hi": {
     "x": 200,
     "y": 0,
     "w": 200,
@@ -15,7 +15,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_01_a1": {
+  "atlas-tokens:demon_tree_roots_02_hi": {
     "x": 400,
     "y": 0,
     "w": 200,
@@ -23,7 +23,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:glass_blue": {
+  "atlas-tokens:guard__archer__at_ease__a_": {
     "x": 600,
     "y": 0,
     "w": 200,
@@ -31,7 +31,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:body_parts_01_a1": {
+  "atlas-tokens:desert_guard_corpse_a_03_bloody_": {
     "x": 800,
     "y": 0,
     "w": 200,
@@ -39,7 +39,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_a_01": {
+  "atlas-tokens:ape": {
     "x": 1000,
     "y": 0,
     "w": 200,
@@ -47,7 +47,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_a_01": {
+  "atlas-tokens:plant_beast": {
     "x": 1200,
     "y": 0,
     "w": 200,
@@ -55,7 +55,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rocky_overlay_a": {
+  "atlas-tokens:airelemental": {
     "x": 1400,
     "y": 0,
     "w": 200,
@@ -63,7 +63,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_blue_a": {
+  "atlas-tokens:ankheg": {
     "x": 1600,
     "y": 0,
     "w": 200,
@@ -71,7 +71,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_01_e1": {
+  "atlas-tokens:balor": {
     "x": 1800,
     "y": 0,
     "w": 200,
@@ -79,7 +79,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_01_a1": {
+  "atlas-tokens:baphomet": {
     "x": 2000,
     "y": 0,
     "w": 200,
@@ -87,7 +87,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_01_a1": {
+  "atlas-tokens:airelementallord": {
     "x": 2200,
     "y": 0,
     "w": 200,
@@ -95,7 +95,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wet_mud_puddles_overlay_a": {
+  "atlas-tokens:allosaurus": {
     "x": 2400,
     "y": 0,
     "w": 200,
@@ -103,7 +103,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_01": {
+  "atlas-tokens:annishag": {
     "x": 2600,
     "y": 0,
     "w": 200,
@@ -111,7 +111,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:pebbles_overlay_a": {
+  "atlas-tokens:ruffian": {
     "x": 2800,
     "y": 0,
     "w": 200,
@@ -119,7 +119,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rocks_overlay_a": {
+  "atlas-tokens:banshee": {
     "x": 3000,
     "y": 0,
     "w": 200,
@@ -127,7 +127,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_01_a1": {
+  "atlas-tokens:acolyte": {
     "x": 3200,
     "y": 0,
     "w": 200,
@@ -135,7 +135,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rug_threadbare_overlay_a1": {
+  "atlas-tokens:cambion": {
     "x": 3400,
     "y": 0,
     "w": 200,
@@ -143,7 +143,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_ashen_a3": {
+  "atlas-tokens:blood_hawk_base_": {
     "x": 3600,
     "y": 0,
     "w": 200,
@@ -151,7 +151,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a1_01": {
+  "atlas-tokens:bullywug": {
     "x": 3800,
     "y": 0,
     "w": 200,
@@ -159,7 +159,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:flat_stones_overlay_a1": {
+  "atlas-tokens:deathdog": {
     "x": 4000,
     "y": 0,
     "w": 200,
@@ -167,7 +167,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:water_still_overlay_a_01": {
+  "atlas-tokens:aarakocra": {
     "x": 4200,
     "y": 0,
     "w": 200,
@@ -175,7 +175,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_ag1": {
+  "atlas-tokens:darkmantle": {
     "x": 4400,
     "y": 0,
     "w": 200,
@@ -183,7 +183,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_01_d2": {
+  "atlas-tokens:animatedarmor": {
     "x": 4600,
     "y": 0,
     "w": 200,
@@ -191,7 +191,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_01_a2": {
+  "atlas-tokens:brainlesscorpse": {
     "x": 4800,
     "y": 0,
     "w": 200,
@@ -199,7 +199,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_01_a2": {
+  "atlas-tokens:archdemon": {
     "x": 5000,
     "y": 0,
     "w": 200,
@@ -207,7 +207,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:glass_clear": {
+  "atlas-tokens:fvsaber_tooth_tiger_02_hi": {
     "x": 5200,
     "y": 0,
     "w": 200,
@@ -215,7 +215,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:body_parts_01_a2": {
+  "atlas-tokens:ambushdrake": {
     "x": 5400,
     "y": 0,
     "w": 200,
@@ -223,7 +223,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_a_02": {
+  "atlas-tokens:dragon": {
     "x": 5600,
     "y": 0,
     "w": 200,
@@ -231,7 +231,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_a_02": {
+  "atlas-tokens:male_dwarf_12": {
     "x": 5800,
     "y": 0,
     "w": 200,
@@ -239,7 +239,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_01_a2": {
+  "atlas-tokens:antqueen": {
     "x": 6000,
     "y": 0,
     "w": 200,
@@ -247,7 +247,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_01_a2": {
+  "atlas-tokens:centaur": {
     "x": 6200,
     "y": 0,
     "w": 200,
@@ -255,7 +255,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_ashen_b3": {
+  "atlas-tokens:anthro_foodog": {
     "x": 6400,
     "y": 0,
     "w": 200,
@@ -263,7 +263,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a1_02": {
+  "atlas-tokens:abyssalwretch": {
     "x": 6600,
     "y": 0,
     "w": 200,
@@ -271,7 +271,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:flat_stones_overlay_a2": {
+  "atlas-tokens:barghest": {
     "x": 6800,
     "y": 0,
     "w": 200,
@@ -279,7 +279,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:water_still_overlay_a_02": {
+  "atlas-tokens:githzerai_pirate_female_2": {
     "x": 7000,
     "y": 0,
     "w": 200,
@@ -287,7 +287,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_ag2": {
+  "atlas-tokens:goblin_armored_wolf": {
     "x": 7200,
     "y": 0,
     "w": 200,
@@ -295,7 +295,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_01_d3": {
+  "atlas-tokens:beholderzombie": {
     "x": 7400,
     "y": 0,
     "w": 200,
@@ -303,7 +303,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_01_a3": {
+  "atlas-tokens:tortle_monk_sai_01_": {
     "x": 7600,
     "y": 0,
     "w": 200,
@@ -311,7 +311,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_01_a3": {
+  "atlas-tokens:barbarian_battleaxe_a_": {
     "x": 7800,
     "y": 0,
     "w": 200,
@@ -319,7 +319,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:glass_clearblue": {
+  "atlas-tokens:assassin_dark_elf_sword_": {
     "x": 0,
     "y": 200,
     "w": 200,
@@ -327,7 +327,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:body_parts_02_a1": {
+  "atlas-tokens:airgenasifemale": {
     "x": 200,
     "y": 200,
     "w": 200,
@@ -335,7 +335,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_a_03": {
+  "atlas-tokens:dwarf_male_fighter2": {
     "x": 400,
     "y": 200,
     "w": 200,
@@ -343,7 +343,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_a_03": {
+  "atlas-tokens:f_aasimar_paladin": {
     "x": 600,
     "y": 200,
     "w": 200,
@@ -351,7 +351,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_blue_b": {
+  "atlas-tokens:f_adventuringwitch2": {
     "x": 800,
     "y": 200,
     "w": 200,
@@ -359,7 +359,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_01_f1": {
+  "atlas-tokens:demonkin_male_mage": {
     "x": 1000,
     "y": 200,
     "w": 200,
@@ -367,7 +367,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_01_b1": {
+  "atlas-tokens:angel_female_battlemage_02_hi": {
     "x": 1200,
     "y": 200,
     "w": 200,
@@ -375,7 +375,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_02_a1": {
+  "atlas-tokens:adultkruthik": {
     "x": 1400,
     "y": 200,
     "w": 200,
@@ -383,7 +383,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_02": {
+  "atlas-tokens:ankheg_2": {
     "x": 1600,
     "y": 200,
     "w": 200,
@@ -391,7 +391,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:pebbles_overlay_b": {
+  "atlas-tokens:arctic_hunter_1": {
     "x": 1800,
     "y": 200,
     "w": 200,
@@ -399,7 +399,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_01_a2": {
+  "atlas-tokens:axebeak": {
     "x": 2000,
     "y": 200,
     "w": 200,
@@ -407,7 +407,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rug_uneven_overlay_a1": {
+  "atlas-tokens:ankheg_emerging": {
     "x": 2200,
     "y": 200,
     "w": 200,
@@ -415,7 +415,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_dark_a3": {
+  "atlas-tokens:boggard_female_02_hi": {
     "x": 2400,
     "y": 200,
     "w": 200,
@@ -423,7 +423,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a1_03": {
+  "atlas-tokens:townsfolk__barkeep__female__a_": {
     "x": 2600,
     "y": 200,
     "w": 200,
@@ -431,7 +431,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:flat_stones_overlay_a3": {
+  "atlas-tokens:female_dragonborn_commoner_black_base_": {
     "x": 2800,
     "y": 200,
     "w": 200,
@@ -439,7 +439,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:water_still_overlay_a_03": {
+  "atlas-tokens:berhinolder": {
     "x": 3000,
     "y": 200,
     "w": 200,
@@ -447,7 +447,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_ag3": {
+  "atlas-tokens:acolyte_2": {
     "x": 3200,
     "y": 200,
     "w": 200,
@@ -455,7 +455,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_01_d4": {
+  "atlas-tokens:greywerefox01": {
     "x": 3400,
     "y": 200,
     "w": 200,
@@ -463,7 +463,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_01_a4": {
+  "atlas-tokens:athach": {
     "x": 3600,
     "y": 200,
     "w": 200,
@@ -471,7 +471,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_02_a1": {
+  "atlas-tokens:atticwhisperer": {
     "x": 3800,
     "y": 200,
     "w": 200,
@@ -479,7 +479,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:glass_veryclear": {
+  "atlas-tokens:axeman1armored": {
     "x": 4000,
     "y": 200,
     "w": 200,
@@ -487,7 +487,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:body_parts_02_a2": {
+  "atlas-tokens:adventurer010": {
     "x": 4200,
     "y": 200,
     "w": 200,
@@ -495,7 +495,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_b_01": {
+  "atlas-tokens:black_dragon_elder_armored_flying": {
     "x": 4400,
     "y": 200,
     "w": 200,
@@ -503,7 +503,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_a_04": {
+  "atlas-tokens:batriders": {
     "x": 4600,
     "y": 200,
     "w": 200,
@@ -511,7 +511,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_gold_a": {
+  "atlas-tokens:bugbear_archer": {
     "x": 4800,
     "y": 200,
     "w": 200,
@@ -519,7 +519,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_01_g1": {
+  "atlas-tokens:guard__archer__at_ease__b_": {
     "x": 5000,
     "y": 200,
     "w": 200,
@@ -527,7 +527,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_01_b2": {
+  "atlas-tokens:desert_guard_corpse_a_04_bloody_": {
     "x": 5200,
     "y": 200,
     "w": 200,
@@ -535,7 +535,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_02_a2": {
+  "atlas-tokens:baboon": {
     "x": 5400,
     "y": 200,
     "w": 200,
@@ -543,7 +543,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_03": {
+  "atlas-tokens:bulette": {
     "x": 5600,
     "y": 200,
     "w": 200,
@@ -551,7 +551,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:herringbone_overlay_a_04": {
+  "atlas-tokens:behir": {
     "x": 5800,
     "y": 200,
     "w": 200,
@@ -559,7 +559,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:water_still_overlay_a_05": {
+  "atlas-tokens:barlgura": {
     "x": 6000,
     "y": 200,
     "w": 200,
@@ -567,7 +567,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_h1": {
+  "atlas-tokens:blackdragon": {
     "x": 6200,
     "y": 200,
     "w": 200,
@@ -575,7 +575,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_02_d1": {
+  "atlas-tokens:beastdemonlord": {
     "x": 6400,
     "y": 200,
     "w": 200,
@@ -583,7 +583,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_02_a1": {
+  "atlas-tokens:ambergolem": {
     "x": 6600,
     "y": 200,
     "w": 200,
@@ -591,7 +591,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_02_a2": {
+  "atlas-tokens:ankylosaurus": {
     "x": 6800,
     "y": 200,
     "w": 200,
@@ -599,7 +599,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_02_a1": {
+  "atlas-tokens:banderhobb": {
     "x": 7000,
     "y": 200,
     "w": 200,
@@ -607,7 +607,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_03_a1": {
+  "atlas-tokens:ruffian_2": {
     "x": 7200,
     "y": 200,
     "w": 200,
@@ -615,7 +615,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_04": {
+  "atlas-tokens:crawlingclaw": {
     "x": 7400,
     "y": 200,
     "w": 200,
@@ -623,7 +623,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_01_a3": {
+  "atlas-tokens:archmage": {
     "x": 7600,
     "y": 200,
     "w": 200,
@@ -631,7 +631,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rug_uneven_overlay_a2": {
+  "atlas-tokens:creepinghut": {
     "x": 7800,
     "y": 200,
     "w": 200,
@@ -639,7 +639,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_dark_b3": {
+  "atlas-tokens:blood_hawk_": {
     "x": 0,
     "y": 400,
     "w": 200,
@@ -647,7 +647,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a1_04": {
+  "atlas-tokens:coraldrake": {
     "x": 200,
     "y": 400,
     "w": 200,
@@ -655,7 +655,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:herringbone_overlay_a_05": {
+  "atlas-tokens:flind": {
     "x": 400,
     "y": 400,
     "w": 200,
@@ -663,7 +663,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:water_still_overlay_a_04": {
+  "atlas-tokens:basilisk": {
     "x": 600,
     "y": 400,
     "w": 200,
@@ -671,7 +671,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_h2": {
+  "atlas-tokens:deepgnome": {
     "x": 800,
     "y": 400,
     "w": 200,
@@ -679,7 +679,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_02_d2": {
+  "atlas-tokens:animatedstatue": {
     "x": 1000,
     "y": 400,
     "w": 200,
@@ -687,7 +687,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_02_a2": {
+  "atlas-tokens:cthulhuchestopened": {
     "x": 1200,
     "y": 400,
     "w": 200,
@@ -695,7 +695,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_02_a3": {
+  "atlas-tokens:demon_caster": {
     "x": 1400,
     "y": 400,
     "w": 200,
@@ -703,7 +703,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:body_parts_03_a1": {
+  "atlas-tokens:fvwolly_mammoth_02_hi": {
     "x": 1600,
     "y": 400,
     "w": 200,
@@ -711,7 +711,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_b_02": {
+  "atlas-tokens:bahamut": {
     "x": 1800,
     "y": 400,
     "w": 200,
@@ -719,7 +719,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_a_05": {
+  "atlas-tokens:dragon_2": {
     "x": 2000,
     "y": 400,
     "w": 200,
@@ -727,7 +727,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_gold_b": {
+  "atlas-tokens:male_dwarf_token": {
     "x": 2200,
     "y": 400,
     "w": 200,
@@ -735,7 +735,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_01_h1": {
+  "atlas-tokens:antsoldier": {
     "x": 2400,
     "y": 400,
     "w": 200,
@@ -743,7 +743,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_02_a2": {
+  "atlas-tokens:chimera_black": {
     "x": 2600,
     "y": 400,
     "w": 200,
@@ -751,7 +751,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_03_a2": {
+  "atlas-tokens:f_blueskinned_kensei2": {
     "x": 2800,
     "y": 400,
     "w": 200,
@@ -759,7 +759,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_05": {
+  "atlas-tokens:alkilith": {
     "x": 3000,
     "y": 400,
     "w": 200,
@@ -767,7 +767,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_01_b1": {
+  "atlas-tokens:barghest_greater": {
     "x": 3200,
     "y": 400,
     "w": 200,
@@ -775,7 +775,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rug_uneven_overlay_a3": {
+  "atlas-tokens:githzerai_pirate_male_3": {
     "x": 3400,
     "y": 400,
     "w": 200,
@@ -783,7 +783,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_light_a3": {
+  "atlas-tokens:bugbear_guard": {
     "x": 3600,
     "y": 400,
     "w": 200,
@@ -791,7 +791,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a1_05": {
+  "atlas-tokens:blackpudding": {
     "x": 3800,
     "y": 400,
     "w": 200,
@@ -799,7 +799,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:herringbone_overlay_a_06": {
+  "atlas-tokens:tortle_monk_sai_03_": {
     "x": 4000,
     "y": 400,
     "w": 200,
@@ -807,7 +807,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_a_06": {
+  "atlas-tokens:barbarian_battleaxe_a__2": {
     "x": 4200,
     "y": 400,
     "w": 200,
@@ -815,7 +815,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_green1_a": {
+  "atlas-tokens:assassin_dark_elf_w_daggers_": {
     "x": 4400,
     "y": 400,
     "w": 200,
@@ -823,7 +823,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_01_h2": {
+  "atlas-tokens:airgenasimale": {
     "x": 4600,
     "y": 400,
     "w": 200,
@@ -831,7 +831,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_02_b1": {
+  "atlas-tokens:dwarf_male_fighter3": {
     "x": 4800,
     "y": 400,
     "w": 200,
@@ -839,7 +839,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_04_a1": {
+  "atlas-tokens:f_aasimar_rogue": {
     "x": 5000,
     "y": 400,
     "w": 200,
@@ -847,7 +847,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_06": {
+  "atlas-tokens:f_adventuringwitch": {
     "x": 5200,
     "y": 400,
     "w": 200,
@@ -855,7 +855,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_01_b2": {
+  "atlas-tokens:drow_male_ranger": {
     "x": 5400,
     "y": 400,
     "w": 200,
@@ -863,7 +863,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:body_parts_03_a2": {
+  "atlas-tokens:astral_male_wizard_02_hi": {
     "x": 5600,
     "y": 400,
     "w": 200,
@@ -871,7 +871,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_b_03": {
+  "atlas-tokens:blemmyes": {
     "x": 5800,
     "y": 400,
     "w": 200,
@@ -879,7 +879,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_b_01": {
+  "atlas-tokens:braineater": {
     "x": 6000,
     "y": 400,
     "w": 200,
@@ -887,7 +887,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_green1_b": {
+  "atlas-tokens:arctic_hunter_2": {
     "x": 6200,
     "y": 400,
     "w": 200,
@@ -895,7 +895,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_02_e1": {
+  "atlas-tokens:cloudgiantsmilingone": {
     "x": 6400,
     "y": 400,
     "w": 200,
@@ -903,7 +903,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_02_b2": {
+  "atlas-tokens:ankheg_full": {
     "x": 6600,
     "y": 400,
     "w": 200,
@@ -911,7 +911,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_04_a2": {
+  "atlas-tokens:boggard_male_02_hi": {
     "x": 6800,
     "y": 400,
     "w": 200,
@@ -919,7 +919,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_07": {
+  "atlas-tokens:townsfolk__barkeep__female__b_": {
     "x": 7000,
     "y": 400,
     "w": 200,
@@ -927,7 +927,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_01_b3": {
+  "atlas-tokens:female_dragonborn_commoner_black_": {
     "x": 7200,
     "y": 400,
     "w": 200,
@@ -935,7 +935,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_light_b3": {
+  "atlas-tokens:aboleth": {
     "x": 7400,
     "y": 400,
     "w": 200,
@@ -943,7 +943,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a2_01": {
+  "atlas-tokens:alligator": {
     "x": 7600,
     "y": 400,
     "w": 200,
@@ -951,7 +951,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:herringbone_overlay_a_07": {
+  "atlas-tokens:greywerefox02": {
     "x": 7800,
     "y": 400,
     "w": 200,
@@ -959,7 +959,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_h3": {
+  "atlas-tokens:atlantean": {
     "x": 0,
     "y": 600,
     "w": 200,
@@ -967,7 +967,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_02_d3": {
+  "atlas-tokens:scaregolem": {
     "x": 200,
     "y": 600,
     "w": 200,
@@ -975,7 +975,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_02_a3": {
+  "atlas-tokens:axeman2armored": {
     "x": 400,
     "y": 600,
     "w": 200,
@@ -983,7 +983,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_03_a1": {
+  "atlas-tokens:adventurer011": {
     "x": 600,
     "y": 600,
     "w": 200,
@@ -991,7 +991,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:body_parts_04_a1": {
+  "atlas-tokens:black_dragon_elder_armored_walking": {
     "x": 800,
     "y": 600,
     "w": 200,
@@ -999,7 +999,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_c_01": {
+  "atlas-tokens:belker": {
     "x": 1000,
     "y": 600,
     "w": 200,
@@ -1007,7 +1007,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_b_02": {
+  "atlas-tokens:bugbear_mace": {
     "x": 1200,
     "y": 600,
     "w": 200,
@@ -1015,7 +1015,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_green2_a": {
+  "atlas-tokens:guard__archer__at_ease__c_": {
     "x": 1400,
     "y": 600,
     "w": 200,
@@ -1023,7 +1023,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_02_f1": {
+  "atlas-tokens:desert_guard_corpse_b_02_bloody_": {
     "x": 1600,
     "y": 600,
     "w": 200,
@@ -1031,7 +1031,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_03_a1": {
+  "atlas-tokens:badger": {
     "x": 1800,
     "y": 600,
     "w": 200,
@@ -1039,7 +1039,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_05_a1": {
+  "atlas-tokens:insect_juggernaut": {
     "x": 2000,
     "y": 600,
     "w": 200,
@@ -1047,7 +1047,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_08": {
+  "atlas-tokens:bluedragon": {
     "x": 2200,
     "y": 600,
     "w": 200,
@@ -1055,7 +1055,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_02_a1": {
+  "atlas-tokens:blackpudding_2": {
     "x": 2400,
     "y": 600,
     "w": 200,
@@ -1063,7 +1063,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_red_a3": {
+  "atlas-tokens:centaur_2": {
     "x": 2600,
     "y": 600,
     "w": 200,
@@ -1071,7 +1071,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a2_02": {
+  "atlas-tokens:bonedevil": {
     "x": 2800,
     "y": 600,
     "w": 200,
@@ -1079,7 +1079,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:herringbone_overlay_a_08": {
+  "atlas-tokens:blackdragon_2": {
     "x": 3000,
     "y": 600,
     "w": 200,
@@ -1087,7 +1087,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_i1": {
+  "atlas-tokens:bluetoadfolk": {
     "x": 3200,
     "y": 600,
     "w": 200,
@@ -1095,7 +1095,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_02_d4": {
+  "atlas-tokens:barghest_2": {
     "x": 3400,
     "y": 600,
     "w": 200,
@@ -1103,7 +1103,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_02_a4": {
+  "atlas-tokens:ruffian_3": {
     "x": 3600,
     "y": 600,
     "w": 200,
@@ -1111,7 +1111,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_03_a2": {
+  "atlas-tokens:femalevampirehunter": {
     "x": 3800,
     "y": 600,
     "w": 200,
@@ -1119,7 +1119,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:body_parts_04_a2": {
+  "atlas-tokens:assassin": {
     "x": 4000,
     "y": 600,
     "w": 200,
@@ -1127,7 +1127,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_c_02": {
+  "atlas-tokens:deathknight": {
     "x": 4200,
     "y": 600,
     "w": 200,
@@ -1135,7 +1135,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_b_03": {
+  "atlas-tokens:chicken_base_": {
     "x": 4400,
     "y": 600,
     "w": 200,
@@ -1143,7 +1143,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_green2_b": {
+  "atlas-tokens:deepscion": {
     "x": 4600,
     "y": 600,
     "w": 200,
@@ -1151,7 +1151,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_02_g1": {
+  "atlas-tokens:gnollfang": {
     "x": 4800,
     "y": 600,
     "w": 200,
@@ -1159,7 +1159,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_03_a2": {
+  "atlas-tokens:chwinga": {
     "x": 5000,
     "y": 600,
     "w": 200,
@@ -1167,7 +1167,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_05_a2": {
+  "atlas-tokens:dretch": {
     "x": 5200,
     "y": 600,
     "w": 200,
@@ -1175,7 +1175,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_glow_01": {
+  "atlas-tokens:derrosavant": {
     "x": 5400,
     "y": 600,
     "w": 200,
@@ -1183,7 +1183,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_02_a2": {
+  "atlas-tokens:cthulhuchest": {
     "x": 5600,
     "y": 600,
     "w": 200,
@@ -1191,7 +1191,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_red_b3": {
+  "atlas-tokens:demon_fighter2": {
     "x": 5800,
     "y": 600,
     "w": 200,
@@ -1199,7 +1199,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a2_03": {
+  "atlas-tokens:fvaquatic_kronosaurus_02_hi": {
     "x": 6000,
     "y": 600,
     "w": 200,
@@ -1207,7 +1207,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:herringbone_overlay_a_gray": {
+  "atlas-tokens:cultfanatic": {
     "x": 6200,
     "y": 600,
     "w": 200,
@@ -1215,7 +1215,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_i2": {
+  "atlas-tokens:dragon_3": {
     "x": 6400,
     "y": 600,
     "w": 200,
@@ -1223,7 +1223,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_03_d1": {
+  "atlas-tokens:arcanaloth": {
     "x": 6600,
     "y": 600,
     "w": 200,
@@ -1231,7 +1231,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_03_a1": {
+  "atlas-tokens:blinkdog": {
     "x": 6800,
     "y": 600,
     "w": 200,
@@ -1239,7 +1239,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_03_a3": {
+  "atlas-tokens:portrait_githzerai_pirate_female_4": {
     "x": 7000,
     "y": 600,
     "w": 200,
@@ -1247,7 +1247,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_damage_overlay_i3": {
+  "atlas-tokens:bugbear_guard_muted_colors": {
     "x": 7200,
     "y": 600,
     "w": 200,
@@ -1255,7 +1255,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_03_d2": {
+  "atlas-tokens:bonenaga": {
     "x": 7400,
     "y": 600,
     "w": 200,
@@ -1263,7 +1263,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_03_a2": {
+  "atlas-tokens:tortle_monk_sai_04_": {
     "x": 7600,
     "y": 600,
     "w": 200,
@@ -1271,7 +1271,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_04_a1": {
+  "atlas-tokens:barbarian_battleaxe_b_": {
     "x": 7800,
     "y": 600,
     "w": 200,
@@ -1279,7 +1279,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_c_03": {
+  "atlas-tokens:dark_elf_assassin": {
     "x": 0,
     "y": 800,
     "w": 200,
@@ -1287,7 +1287,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_b_04": {
+  "atlas-tokens:autumneladrinfemale": {
     "x": 200,
     "y": 800,
     "w": 200,
@@ -1295,7 +1295,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_purple_a": {
+  "atlas-tokens:dwarf_male_fighter": {
     "x": 400,
     "y": 800,
     "w": 200,
@@ -1303,7 +1303,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_02_h1": {
+  "atlas-tokens:f_aasimar_warrior": {
     "x": 600,
     "y": 800,
     "w": 200,
@@ -1311,7 +1311,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_03_b1": {
+  "atlas-tokens:f_asian_fighter": {
     "x": 800,
     "y": 800,
     "w": 200,
@@ -1319,7 +1319,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_06_a1": {
+  "atlas-tokens:dwarf_male_duergar_captain": {
     "x": 1000,
     "y": 800,
     "w": 200,
@@ -1327,7 +1327,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_glow_02": {
+  "atlas-tokens:drow_male_whipmaster_02_hi": {
     "x": 1200,
     "y": 800,
     "w": 200,
@@ -1335,7 +1335,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_02_a3": {
+  "atlas-tokens:bukavac": {
     "x": 1400,
     "y": 800,
     "w": 200,
@@ -1343,7 +1343,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_walnut_a3": {
+  "atlas-tokens:burrowingankheg": {
     "x": 1600,
     "y": 800,
     "w": 200,
@@ -1351,7 +1351,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a2_04": {
+  "atlas-tokens:arctic_hunter_3": {
     "x": 1800,
     "y": 800,
     "w": 200,
@@ -1359,7 +1359,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:herringbone_overlay_a_orange": {
+  "atlas-tokens:elk": {
     "x": 2000,
     "y": 800,
     "w": 200,
@@ -1367,7 +1367,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_floor_scratches_overlay_ag1": {
+  "atlas-tokens:aranea": {
     "x": 2200,
     "y": 800,
     "w": 200,
@@ -1375,7 +1375,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_03_d3": {
+  "atlas-tokens:cyclops_female_02_hi": {
     "x": 2400,
     "y": 800,
     "w": 200,
@@ -1383,7 +1383,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_03_a3": {
+  "atlas-tokens:townsfolk__barkeep__female__c_": {
     "x": 2600,
     "y": 800,
     "w": 200,
@@ -1391,7 +1391,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_04_a2": {
+  "atlas-tokens:female_dragonborn_commoner_blue_base_": {
     "x": 2800,
     "y": 800,
     "w": 200,
@@ -1399,7 +1399,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_d_01": {
+  "atlas-tokens:aboleth_mage": {
     "x": 3000,
     "y": 800,
     "w": 200,
@@ -1407,7 +1407,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_b_05": {
+  "atlas-tokens:armor": {
     "x": 3200,
     "y": 800,
     "w": 200,
@@ -1415,7 +1415,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_purple_b": {
+  "atlas-tokens:greywerefox03": {
     "x": 3400,
     "y": 800,
     "w": 200,
@@ -1423,7 +1423,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_02_h2": {
+  "atlas-tokens:azer_male": {
     "x": 3600,
     "y": 800,
     "w": 200,
@@ -1431,7 +1431,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_03_b2": {
+  "atlas-tokens:squid1": {
     "x": 3800,
     "y": 800,
     "w": 200,
@@ -1439,7 +1439,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_metal_overlay_06_a2": {
+  "atlas-tokens:f_falconeer": {
     "x": 4000,
     "y": 800,
     "w": 200,
@@ -1447,7 +1447,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_glow_03": {
+  "atlas-tokens:adventurer1": {
     "x": 4200,
     "y": 800,
     "w": 200,
@@ -1455,7 +1455,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_02_b1": {
+  "atlas-tokens:black_dragon_elder_bare_flying": {
     "x": 4400,
     "y": 800,
     "w": 200,
@@ -1463,7 +1463,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:shack_floor_wood_walnut_b3": {
+  "atlas-tokens:chimera": {
     "x": 4600,
     "y": 800,
     "w": 200,
@@ -1471,7 +1471,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:spider_web_overlay_a2_05": {
+  "atlas-tokens:gnoll_2_sword": {
     "x": 4800,
     "y": 800,
     "w": 200,
@@ -1479,7 +1479,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:herringbone_overlay_a_red": {
+  "atlas-tokens:guard__archer__at_ease__d_": {
     "x": 5000,
     "y": 800,
     "w": 200,
@@ -1487,7 +1487,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_floor_scratches_overlay_ag2": {
+  "atlas-tokens:desert_guard_corpse_b_03_bloody_": {
     "x": 5200,
     "y": 800,
     "w": 200,
@@ -1495,7 +1495,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_03_d4": {
+  "atlas-tokens:badger_honey": {
     "x": 5400,
     "y": 800,
     "w": 200,
@@ -1503,7 +1503,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_03_a4": {
+  "atlas-tokens:colossus": {
     "x": 5600,
     "y": 800,
     "w": 200,
@@ -1511,7 +1511,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:feces_04_a3": {
+  "atlas-tokens:chimera_2": {
     "x": 5800,
     "y": 800,
     "w": 200,
@@ -1519,7 +1519,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_d_02": {
+  "atlas-tokens:bronzedragon": {
     "x": 6000,
     "y": 800,
     "w": 200,
@@ -1527,7 +1527,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_b_06": {
+  "atlas-tokens:chasme": {
     "x": 6200,
     "y": 800,
     "w": 200,
@@ -1535,7 +1535,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_teal_a": {
+  "atlas-tokens:brassdragon": {
     "x": 6400,
     "y": 800,
     "w": 200,
@@ -1543,7 +1543,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_03_e1": {
+  "atlas-tokens:bonenaga_2": {
     "x": 6600,
     "y": 800,
     "w": 200,
@@ -1551,7 +1551,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_04_a1": {
+  "atlas-tokens:deathkiss": {
     "x": 6800,
     "y": 800,
     "w": 200,
@@ -1559,7 +1559,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_glow_04": {
+  "atlas-tokens:brontosaurus": {
     "x": 7000,
     "y": 800,
     "w": 200,
@@ -1567,7 +1567,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_02_b2": {
+  "atlas-tokens:ruffian_4": {
     "x": 7200,
     "y": 800,
     "w": 200,
@@ -1575,7 +1575,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_floor_scratches_overlay_h1": {
+  "atlas-tokens:flameskull": {
     "x": 7400,
     "y": 800,
     "w": 200,
@@ -1583,7 +1583,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_04_d1": {
+  "atlas-tokens:banditcaptain": {
     "x": 7600,
     "y": 800,
     "w": 200,
@@ -1591,7 +1591,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_04_a1": {
+  "atlas-tokens:demilich": {
     "x": 7800,
     "y": 800,
     "w": 200,
@@ -1599,7 +1599,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_glow_05": {
+  "atlas-tokens:chicken_black_base_": {
     "x": 0,
     "y": 1000,
     "w": 200,
@@ -1607,7 +1607,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_02_b3": {
+  "atlas-tokens:dolphin": {
     "x": 200,
     "y": 1000,
     "w": 200,
@@ -1615,7 +1615,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_03_f1": {
+  "atlas-tokens:gnollfleshgnawer": {
     "x": 400,
     "y": 1000,
     "w": 200,
@@ -1623,7 +1623,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_04_a2": {
+  "atlas-tokens:deathtoadfolk": {
     "x": 600,
     "y": 1000,
     "w": 200,
@@ -1631,7 +1631,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_glow_06": {
+  "atlas-tokens:drowguard": {
     "x": 800,
     "y": 1000,
     "w": 200,
@@ -1639,7 +1639,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_03_a1": {
+  "atlas-tokens:derro": {
     "x": 1000,
     "y": 1000,
     "w": 200,
@@ -1647,7 +1647,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_01_b1": {
+  "atlas-tokens:cthulhularva": {
     "x": 1200,
     "y": 1000,
     "w": 200,
@@ -1655,7 +1655,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_floor_scratches_overlay_h2": {
+  "atlas-tokens:demon_fighter": {
     "x": 1400,
     "y": 1000,
     "w": 200,
@@ -1663,7 +1663,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_04_d2": {
+  "atlas-tokens:fvaquatic_plesiosaurus_02_hi": {
     "x": 1600,
     "y": 1000,
     "w": 200,
@@ -1671,7 +1671,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_04_a2": {
+  "atlas-tokens:cultleader": {
     "x": 1800,
     "y": 1000,
     "w": 200,
@@ -1679,7 +1679,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_long_d_03": {
+  "atlas-tokens:dragon_4": {
     "x": 2000,
     "y": 1000,
     "w": 200,
@@ -1687,7 +1687,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_c_01": {
+  "atlas-tokens:antworker": {
     "x": 2200,
     "y": 1000,
     "w": 200,
@@ -1695,7 +1695,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_teal_b": {
+  "atlas-tokens:chimera_blue": {
     "x": 2400,
     "y": 1000,
     "w": 200,
@@ -1703,7 +1703,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_03_g1": {
+  "atlas-tokens:f_human_elementalmonk": {
     "x": 2600,
     "y": 1000,
     "w": 200,
@@ -1711,7 +1711,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_04_b1": {
+  "atlas-tokens:barbeddevil": {
     "x": 2800,
     "y": 1000,
     "w": 200,
@@ -1719,7 +1719,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_glow_07": {
+  "atlas-tokens:centaur_3": {
     "x": 3000,
     "y": 1000,
     "w": 200,
@@ -1727,7 +1727,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_03_a2": {
+  "atlas-tokens:portrait_githzerai_pirate_female_3": {
     "x": 3200,
     "y": 1000,
     "w": 200,
@@ -1735,7 +1735,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_01_b2": {
+  "atlas-tokens:goblin_armored_wolf_muted_colors": {
     "x": 3400,
     "y": 1000,
     "w": 200,
@@ -1743,7 +1743,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_floor_scratches_overlay_i1": {
+  "atlas-tokens:chuul": {
     "x": 3600,
     "y": 1000,
     "w": 200,
@@ -1751,7 +1751,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_04_d3": {
+  "atlas-tokens:tortle_monk_sai_05_": {
     "x": 3800,
     "y": 1000,
     "w": 200,
@@ -1759,7 +1759,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_04_a3": {
+  "atlas-tokens:barbarian_battleaxe_b__2": {
     "x": 4000,
     "y": 1000,
     "w": 200,
@@ -1767,7 +1767,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_a_01": {
+  "atlas-tokens:dark_elf_crossbow": {
     "x": 4200,
     "y": 1000,
     "w": 200,
@@ -1775,7 +1775,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_c_02": {
+  "atlas-tokens:autumneladrinmale": {
     "x": 4400,
     "y": 1000,
     "w": 200,
@@ -1783,7 +1783,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_white_a": {
+  "atlas-tokens:elf_female_druid": {
     "x": 4600,
     "y": 1000,
     "w": 200,
@@ -1791,7 +1791,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_03_h1": {
+  "atlas-tokens:f_human_druid": {
     "x": 4800,
     "y": 1000,
     "w": 200,
@@ -1799,7 +1799,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_04_b2": {
+  "atlas-tokens:f_blacksmith": {
     "x": 5000,
     "y": 1000,
     "w": 200,
@@ -1807,7 +1807,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_a_glow_08": {
+  "atlas-tokens:elf_male_archer2": {
     "x": 5200,
     "y": 1000,
     "w": 200,
@@ -1815,7 +1815,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_03_a3": {
+  "atlas-tokens:dwarf_female_cleric_02_hi": {
     "x": 5400,
     "y": 1000,
     "w": 200,
@@ -1823,7 +1823,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_01_b3": {
+  "atlas-tokens:cavefisher": {
     "x": 5600,
     "y": 1000,
     "w": 200,
@@ -1831,7 +1831,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:wood_floor_scratches_overlay_i2": {
+  "atlas-tokens:civilizedquaggoth": {
     "x": 5800,
     "y": 1000,
     "w": 200,
@@ -1839,7 +1839,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_04_d4": {
+  "atlas-tokens:arctic_hunter_4": {
     "x": 6000,
     "y": 1000,
     "w": 200,
@@ -1847,7 +1847,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_04_a4": {
+  "atlas-tokens:firegiantdreadnought": {
     "x": 6200,
     "y": 1000,
     "w": 200,
@@ -1855,7 +1855,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_a_02": {
+  "atlas-tokens:basilisk_2": {
     "x": 6400,
     "y": 1000,
     "w": 200,
@@ -1863,7 +1863,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_c_03": {
+  "atlas-tokens:cyclops_male_02_hi": {
     "x": 6600,
     "y": 1000,
     "w": 200,
@@ -1871,7 +1871,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ceremorph_magical_overlay_white_b": {
+  "atlas-tokens:townsfolk__barkeep__female__d_": {
     "x": 6800,
     "y": 1000,
     "w": 200,
@@ -1879,7 +1879,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_03_h2": {
+  "atlas-tokens:female_dragonborn_commoner_blue_": {
     "x": 7000,
     "y": 1000,
     "w": 200,
@@ -1887,7 +1887,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_05_a1": {
+  "atlas-tokens:assassin_ore": {
     "x": 7200,
     "y": 1000,
     "w": 200,
@@ -1895,7 +1895,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_b_01": {
+  "atlas-tokens:bandit": {
     "x": 7400,
     "y": 1000,
     "w": 200,
@@ -1903,7 +1903,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_03_b1": {
+  "atlas-tokens:greywerefox04": {
     "x": 7600,
     "y": 1000,
     "w": 200,
@@ -1911,7 +1911,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_01_b4": {
+  "atlas-tokens:bull_man": {
     "x": 7800,
     "y": 1000,
     "w": 200,
@@ -1919,7 +1919,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_c_04": {
+  "atlas-tokens:allip": {
     "x": 0,
     "y": 1200,
     "w": 200,
@@ -1927,7 +1927,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_c_05": {
+  "atlas-tokens:f_viking_barmaida": {
     "x": 200,
     "y": 1200,
     "w": 200,
@@ -1935,7 +1935,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_04_e1": {
+  "atlas-tokens:adventurer2": {
     "x": 400,
     "y": 1200,
     "w": 200,
@@ -1943,7 +1943,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_05_a2": {
+  "atlas-tokens:black_dragon_elder_bare_walking": {
     "x": 600,
     "y": 1200,
     "w": 200,
@@ -1951,7 +1951,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_b_02": {
+  "atlas-tokens:cloaker_flying": {
     "x": 800,
     "y": 1200,
     "w": 200,
@@ -1959,7 +1959,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_03_b2": {
+  "atlas-tokens:gnoll_3_axe": {
     "x": 1000,
     "y": 1200,
     "w": 200,
@@ -1967,7 +1967,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_01_b5": {
+  "atlas-tokens:guard__archer__at_ease__e_": {
     "x": 1200,
     "y": 1200,
     "w": 200,
@@ -1975,7 +1975,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_05_d1": {
+  "atlas-tokens:desert_guard_corpse_b_04_bloody_": {
     "x": 1400,
     "y": 1200,
     "w": 200,
@@ -1983,7 +1983,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_05_a1": {
+  "atlas-tokens:bat": {
     "x": 1600,
     "y": 1200,
     "w": 200,
@@ -1991,7 +1991,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_a_03": {
+  "atlas-tokens:death_titan": {
     "x": 1800,
     "y": 1200,
     "w": 200,
@@ -1999,7 +1999,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_c_06": {
+  "atlas-tokens:cloudgiant": {
     "x": 2000,
     "y": 1200,
     "w": 200,
@@ -2007,7 +2007,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_04_f1": {
+  "atlas-tokens:claygolem": {
     "x": 2200,
     "y": 1200,
     "w": 200,
@@ -2015,7 +2015,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_05_b1": {
+  "atlas-tokens:dracolich": {
     "x": 2400,
     "y": 1200,
     "w": 200,
@@ -2023,7 +2023,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_b_03": {
+  "atlas-tokens:copperdragon": {
     "x": 2600,
     "y": 1200,
     "w": 200,
@@ -2031,7 +2031,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_03_b3": {
+  "atlas-tokens:cavehulk": {
     "x": 2800,
     "y": 1200,
     "w": 200,
@@ -2039,7 +2039,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_02_b1": {
+  "atlas-tokens:giantshark": {
     "x": 3000,
     "y": 1200,
     "w": 200,
@@ -2047,7 +2047,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_05_d2": {
+  "atlas-tokens:catoblepas": {
     "x": 3200,
     "y": 1200,
     "w": 200,
@@ -2055,7 +2055,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_05_a2": {
+  "atlas-tokens:ruffian_5": {
     "x": 3400,
     "y": 1200,
     "w": 200,
@@ -2063,7 +2063,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_b_01": {
+  "atlas-tokens:fleshgolem": {
     "x": 3600,
     "y": 1200,
     "w": 200,
@@ -2071,7 +2071,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_d_01": {
+  "atlas-tokens:bandit_2": {
     "x": 3800,
     "y": 1200,
     "w": 200,
@@ -2079,7 +2079,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_04_g1": {
+  "atlas-tokens:ettercap": {
     "x": 4000,
     "y": 1200,
     "w": 200,
@@ -2087,7 +2087,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_frame_05_b2": {
+  "atlas-tokens:chicken_black_sitting_base_": {
     "x": 4200,
     "y": 1200,
     "w": 200,
@@ -2095,7 +2095,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_b_04": {
+  "atlas-tokens:eelhound": {
     "x": 4400,
     "y": 1200,
     "w": 200,
@@ -2103,7 +2103,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_04_a1": {
+  "atlas-tokens:gnollhunter": {
     "x": 4600,
     "y": 1200,
     "w": 200,
@@ -2111,7 +2111,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_02_b2": {
+  "atlas-tokens:firenewtwarlock": {
     "x": 4800,
     "y": 1200,
     "w": 200,
@@ -2119,7 +2119,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_05_d3": {
+  "atlas-tokens:drowmage": {
     "x": 5000,
     "y": 1200,
     "w": 200,
@@ -2127,7 +2127,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_05_a3": {
+  "atlas-tokens:doppelganger": {
     "x": 5200,
     "y": 1200,
     "w": 200,
@@ -2135,7 +2135,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_b_02": {
+  "atlas-tokens:cthulhulich": {
     "x": 5400,
     "y": 1200,
     "w": 200,
@@ -2143,7 +2143,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_d_02": {
+  "atlas-tokens:babau": {
     "x": 5600,
     "y": 1200,
     "w": 200,
@@ -2151,7 +2151,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_04_h1": {
+  "atlas-tokens:fvaquatic_stenopterygius_02_hi": {
     "x": 5800,
     "y": 1200,
     "w": 200,
@@ -2159,7 +2159,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_b_05": {
+  "atlas-tokens:cultmage": {
     "x": 6000,
     "y": 1200,
     "w": 200,
@@ -2167,7 +2167,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_04_a2": {
+  "atlas-tokens:dragon_5": {
     "x": 6200,
     "y": 1200,
     "w": 200,
@@ -2175,7 +2175,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_02_b3": {
+  "atlas-tokens:ape_2": {
     "x": 6400,
     "y": 1200,
     "w": 200,
@@ -2183,7 +2183,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:brick_floor_05_d4": {
+  "atlas-tokens:chimera_green": {
     "x": 6600,
     "y": 1200,
     "w": 200,
@@ -2191,7 +2191,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_05_a4": {
+  "atlas-tokens:f_human_fighter2": {
     "x": 6800,
     "y": 1200,
     "w": 200,
@@ -2199,7 +2199,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_b_03": {
+  "atlas-tokens:beardeddevil": {
     "x": 7000,
     "y": 1200,
     "w": 200,
@@ -2207,7 +2207,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_d_03": {
+  "atlas-tokens:dino_elasmosaurus": {
     "x": 7200,
     "y": 1200,
     "w": 200,
@@ -2215,7 +2215,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_04_h2": {
+  "atlas-tokens:githzerai_pirate_male_5": {
     "x": 7400,
     "y": 1200,
     "w": 200,
@@ -2223,7 +2223,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_b_06": {
+  "atlas-tokens:bugbear_archer_2": {
     "x": 7600,
     "y": 1200,
     "w": 200,
@@ -2231,7 +2231,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_04_a3": {
+  "atlas-tokens:darknesssphere": {
     "x": 7800,
     "y": 1200,
     "w": 200,
@@ -2239,7 +2239,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_02_b4": {
+  "atlas-tokens:tortle_monk_staff_01_": {
     "x": 0,
     "y": 1400,
     "w": 200,
@@ -2247,7 +2247,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_05_e1": {
+  "atlas-tokens:barbarian_battleaxe_c_": {
     "x": 200,
     "y": 1400,
     "w": 200,
@@ -2255,7 +2255,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_b_07": {
+  "atlas-tokens:dark_elf_daggers": {
     "x": 400,
     "y": 1400,
     "w": 200,
@@ -2263,7 +2263,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_04_b1": {
+  "atlas-tokens:earthgenasifemale": {
     "x": 600,
     "y": 1400,
     "w": 200,
@@ -2271,7 +2271,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_02_b5": {
+  "atlas-tokens:elf_male_archer": {
     "x": 800,
     "y": 1400,
     "w": 200,
@@ -2279,7 +2279,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_06_a1": {
+  "atlas-tokens:f_human_fighter": {
     "x": 1000,
     "y": 1400,
     "w": 200,
@@ -2287,7 +2287,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_c_01": {
+  "atlas-tokens:f_elf_queen": {
     "x": 1200,
     "y": 1400,
     "w": 200,
@@ -2295,7 +2295,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_d_04": {
+  "atlas-tokens:gith_male_swordmaster": {
     "x": 1400,
     "y": 1400,
     "w": 200,
@@ -2303,7 +2303,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_05_f1": {
+  "atlas-tokens:dwarf_male_tinkerer_02_hi": {
     "x": 1600,
     "y": 1400,
     "w": 200,
@@ -2311,7 +2311,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:mycelial_overlay_b_08": {
+  "atlas-tokens:chitine": {
     "x": 1800,
     "y": 1400,
     "w": 200,
@@ -2319,7 +2319,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_04_b2": {
+  "atlas-tokens:deepgnome_2": {
     "x": 2000,
     "y": 1400,
     "w": 200,
@@ -2327,7 +2327,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_03_b1 ": {
+  "atlas-tokens:behir_1": {
     "x": 2200,
     "y": 1400,
     "w": 200,
@@ -2335,7 +2335,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_06_a2": {
+  "atlas-tokens:flyingsnake": {
     "x": 2400,
     "y": 1400,
     "w": 200,
@@ -2343,7 +2343,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_c_02": {
+  "atlas-tokens:basilisk_greater": {
     "x": 2600,
     "y": 1400,
     "w": 200,
@@ -2351,7 +2351,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_d_05": {
+  "atlas-tokens:derro_female_02_hi": {
     "x": 2800,
     "y": 1400,
     "w": 200,
@@ -2359,7 +2359,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_05_g1": {
+  "atlas-tokens:townsfolk__barkeep__female__e_": {
     "x": 3000,
     "y": 1400,
     "w": 200,
@@ -2367,7 +2367,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grass_overlay_medium_c_03": {
+  "atlas-tokens:female_dragonborn_commoner_brass_base_": {
     "x": 3200,
     "y": 1400,
     "w": 200,
@@ -2375,7 +2375,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_d_06": {
+  "atlas-tokens:assassin_vine": {
     "x": 3400,
     "y": 1400,
     "w": 200,
@@ -2383,7 +2383,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_05_h1": {
+  "atlas-tokens:bar_maid": {
     "x": 3600,
     "y": 1400,
     "w": 200,
@@ -2391,7 +2391,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_04_b3": {
+  "atlas-tokens:nuwaviperman01": {
     "x": 3800,
     "y": 1400,
     "w": 200,
@@ -2399,7 +2399,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_03_b2": {
+  "atlas-tokens:choker1": {
     "x": 4000,
     "y": 1400,
     "w": 200,
@@ -2407,7 +2407,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_06_a3": {
+  "atlas-tokens:bodak": {
     "x": 4200,
     "y": 1400,
     "w": 200,
@@ -2415,7 +2415,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_06_a4": {
+  "atlas-tokens:f_viking_farmer": {
     "x": 4400,
     "y": 1400,
     "w": 200,
@@ -2423,7 +2423,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_e_01": {
+  "atlas-tokens:adventurer3": {
     "x": 4600,
     "y": 1400,
     "w": 200,
@@ -2431,7 +2431,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_grate_05_h2": {
+  "atlas-tokens:black_dragon_elder_sleeping": {
     "x": 4800,
     "y": 1400,
     "w": 200,
@@ -2439,7 +2439,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_05_a1": {
+  "atlas-tokens:cloaker_hovering": {
     "x": 5000,
     "y": 1400,
     "w": 200,
@@ -2447,7 +2447,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_03_b3": {
+  "atlas-tokens:gnoll_archer": {
     "x": 5200,
     "y": 1400,
     "w": 200,
@@ -2455,7 +2455,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_07_a1": {
+  "atlas-tokens:guard__archer__ready__a_": {
     "x": 5400,
     "y": 1400,
     "w": 200,
@@ -2463,7 +2463,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_e_02": {
+  "atlas-tokens:desert_guard_corpse_b_05_bloody_": {
     "x": 5600,
     "y": 1400,
     "w": 200,
@@ -2471,7 +2471,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_01_c2": {
+  "atlas-tokens:bear_black": {
     "x": 5800,
     "y": 1400,
     "w": 200,
@@ -2479,7 +2479,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_05_a2": {
+  "atlas-tokens:deathweb_spider": {
     "x": 6000,
     "y": 1400,
     "w": 200,
@@ -2487,7 +2487,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_03_b4": {
+  "atlas-tokens:cyclops": {
     "x": 6200,
     "y": 1400,
     "w": 200,
@@ -2495,7 +2495,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_07_a2": {
+  "atlas-tokens:corpseeater": {
     "x": 6400,
     "y": 1400,
     "w": 200,
@@ -2503,7 +2503,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_e_03": {
+  "atlas-tokens:ettin": {
     "x": 6600,
     "y": 1400,
     "w": 200,
@@ -2511,7 +2511,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_01_d2": {
+  "atlas-tokens:darkprincedemonlord": {
     "x": 6800,
     "y": 1400,
     "w": 200,
@@ -2519,7 +2519,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_05_a3": {
+  "atlas-tokens:dragonturtle": {
     "x": 7000,
     "y": 1400,
     "w": 200,
@@ -2527,7 +2527,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_03_b5": {
+  "atlas-tokens:greentoadfolk": {
     "x": 7200,
     "y": 1400,
     "w": 200,
@@ -2535,7 +2535,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_07_a3": {
+  "atlas-tokens:devourer": {
     "x": 7400,
     "y": 1400,
     "w": 200,
@@ -2543,7 +2543,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_e_04": {
+  "atlas-tokens:ruffian_6": {
     "x": 7600,
     "y": 1400,
     "w": 200,
@@ -2551,7 +2551,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_01_e3": {
+  "atlas-tokens:flyingsword": {
     "x": 7800,
     "y": 1400,
     "w": 200,
@@ -2559,7 +2559,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_05_b1": {
+  "atlas-tokens:broomofanimatedattack": {
     "x": 0,
     "y": 1600,
     "w": 200,
@@ -2567,7 +2567,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_04_b1": {
+  "atlas-tokens:gibberingmouther": {
     "x": 200,
     "y": 1600,
     "w": 200,
@@ -2575,7 +2575,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:drow_overlay_crystal_07_a4": {
+  "atlas-tokens:chicken_black_sitting_": {
     "x": 400,
     "y": 1600,
     "w": 200,
@@ -2583,7 +2583,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_e_05": {
+  "atlas-tokens:giantcrocodile": {
     "x": 600,
     "y": 1600,
     "w": 200,
@@ -2591,7 +2591,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_02_c2": {
+  "atlas-tokens:gnollpacklord": {
     "x": 800,
     "y": 1600,
     "w": 200,
@@ -2599,7 +2599,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_05_b2": {
+  "atlas-tokens:firenewtwarrior": {
     "x": 1000,
     "y": 1600,
     "w": 200,
@@ -2607,7 +2607,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_04_b2": {
+  "atlas-tokens:drowpriestess": {
     "x": 1200,
     "y": 1600,
     "w": 200,
@@ -2615,7 +2615,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_hay_05_b3": {
+  "atlas-tokens:duergarguard": {
     "x": 1400,
     "y": 1600,
     "w": 200,
@@ -2623,7 +2623,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_04_b3": {
+  "atlas-tokens:cthulhuman1": {
     "x": 1600,
     "y": 1600,
     "w": 200,
@@ -2631,7 +2631,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_metal_e_06": {
+  "atlas-tokens:bonedevil_2": {
     "x": 1800,
     "y": 1600,
     "w": 200,
@@ -2639,7 +2639,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_02_d2": {
+  "atlas-tokens:fvaquatic_elasmosaurus_02_hi": {
     "x": 2000,
     "y": 1600,
     "w": 200,
@@ -2647,7 +2647,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_slate_black_a1": {
+  "atlas-tokens:cultshaman": {
     "x": 2200,
     "y": 1600,
     "w": 200,
@@ -2655,7 +2655,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_04_b4": {
+  "atlas-tokens:dragon_6": {
     "x": 2400,
     "y": 1600,
     "w": 200,
@@ -2663,7 +2663,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_a_ashen": {
+  "atlas-tokens:baboon_": {
     "x": 2600,
     "y": 1600,
     "w": 200,
@@ -2671,7 +2671,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_02_e3": {
+  "atlas-tokens:chimera_red": {
     "x": 2800,
     "y": 1600,
     "w": 200,
@@ -2679,7 +2679,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_slate_black_a2": {
+  "atlas-tokens:f_human__kensei": {
     "x": 3000,
     "y": 1600,
     "w": 200,
@@ -2687,7 +2687,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_04_b5": {
+  "atlas-tokens:blackabishai": {
     "x": 3200,
     "y": 1600,
     "w": 200,
@@ -2695,7 +2695,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_a_dark": {
+  "atlas-tokens:dino_triceratops": {
     "x": 3400,
     "y": 1600,
     "w": 200,
@@ -2703,7 +2703,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_03_c2": {
+  "atlas-tokens:portrait_githzerai_pirate_female_5": {
     "x": 3600,
     "y": 1600,
     "w": 200,
@@ -2711,7 +2711,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_slate_blue_a1": {
+  "atlas-tokens:bugbear_archer_muted_colors": {
     "x": 3800,
     "y": 1600,
     "w": 200,
@@ -2719,7 +2719,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_05_b1": {
+  "atlas-tokens:doppelganger_2": {
     "x": 4000,
     "y": 1600,
     "w": 200,
@@ -2727,7 +2727,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_a_light": {
+  "atlas-tokens:tortle_monk_staff_02_": {
     "x": 4200,
     "y": 1600,
     "w": 200,
@@ -2735,7 +2735,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_03_d2": {
+  "atlas-tokens:barbarian_battleaxe_c__2": {
     "x": 4400,
     "y": 1600,
     "w": 200,
@@ -2743,7 +2743,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_slate_blue_a2": {
+  "atlas-tokens:dark_elf_sword_": {
     "x": 4600,
     "y": 1600,
     "w": 200,
@@ -2751,7 +2751,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_05_b2": {
+  "atlas-tokens:earthgenasimale": {
     "x": 4800,
     "y": 1600,
     "w": 200,
@@ -2759,7 +2759,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_a_red": {
+  "atlas-tokens:elf_male_fighter": {
     "x": 5000,
     "y": 1600,
     "w": 200,
@@ -2767,7 +2767,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_03_e3": {
+  "atlas-tokens:f_human_knight": {
     "x": 5200,
     "y": 1600,
     "w": 200,
@@ -2775,7 +2775,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_slate_mossy_a1": {
+  "atlas-tokens:f_elf_ranger": {
     "x": 5400,
     "y": 1600,
     "w": 200,
@@ -2783,7 +2783,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_05_b3": {
+  "atlas-tokens:gnome_male_mage": {
     "x": 5600,
     "y": 1600,
     "w": 200,
@@ -2791,7 +2791,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_a_walnut": {
+  "atlas-tokens:dwarf_male_fighter_axe_02_hi": {
     "x": 5800,
     "y": 1600,
     "w": 200,
@@ -2799,7 +2799,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_04_c2": {
+  "atlas-tokens:choldrith": {
     "x": 6000,
     "y": 1600,
     "w": 200,
@@ -2807,7 +2807,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_slate_mossy_a2": {
+  "atlas-tokens:drider": {
     "x": 6200,
     "y": 1600,
     "w": 200,
@@ -2815,7 +2815,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_05_b4": {
+  "atlas-tokens:behir_2": {
     "x": 6400,
     "y": 1600,
     "w": 200,
@@ -2823,7 +2823,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_b_ashen": {
+  "atlas-tokens:frostgianteverlastingone": {
     "x": 6600,
     "y": 1600,
     "w": 200,
@@ -2831,7 +2831,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_04_d2": {
+  "atlas-tokens:behir_3": {
     "x": 6800,
     "y": 1600,
     "w": 200,
@@ -2839,7 +2839,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_slate_purple_a1": {
+  "atlas-tokens:derro_male_02_hi": {
     "x": 7000,
     "y": 1600,
     "w": 200,
@@ -2847,7 +2847,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:rectangular_tiles_05_b5": {
+  "atlas-tokens:townsfolk__barkeep__female__f_": {
     "x": 7200,
     "y": 1600,
     "w": 200,
@@ -2855,7 +2855,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_b_dark": {
+  "atlas-tokens:female_dragonborn_commoner_brass_": {
     "x": 7400,
     "y": 1600,
     "w": 200,
@@ -2863,7 +2863,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_04_e3": {
+  "atlas-tokens:chaos_beast": {
     "x": 7600,
     "y": 1600,
     "w": 200,
@@ -2871,7 +2871,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_slate_purple_a2": {
+  "atlas-tokens:bar_man": {
     "x": 7800,
     "y": 1600,
     "w": 200,
@@ -2879,7 +2879,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_a1": {
+  "atlas-tokens:nuwaviperman02": {
     "x": 0,
     "y": 1800,
     "w": 200,
@@ -2887,7 +2887,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_b_light": {
+  "atlas-tokens:digester": {
     "x": 200,
     "y": 1800,
     "w": 200,
@@ -2895,7 +2895,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_05_c2": {
+  "atlas-tokens:demilich_2": {
     "x": 400,
     "y": 1800,
     "w": 200,
@@ -2903,7 +2903,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_a2": {
+  "atlas-tokens:f_viking_merchant": {
     "x": 600,
     "y": 1800,
     "w": 200,
@@ -2911,7 +2911,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_b_red": {
+  "atlas-tokens:adventurer4": {
     "x": 800,
     "y": 1800,
     "w": 200,
@@ -2919,7 +2919,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_05_d2": {
+  "atlas-tokens:black_dragon_mature_armored_flying": {
     "x": 1000,
     "y": 1800,
     "w": 200,
@@ -2927,7 +2927,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_b1": {
+  "atlas-tokens:cockatrice": {
     "x": 1200,
     "y": 1800,
     "w": 200,
@@ -2935,7 +2935,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_b_walnut": {
+  "atlas-tokens:gnoll_sword_shield": {
     "x": 1400,
     "y": 1800,
     "w": 200,
@@ -2943,7 +2943,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:metal_square_panels_05_e3": {
+  "atlas-tokens:guard__archer__ready__b_": {
     "x": 1600,
     "y": 1800,
     "w": 200,
@@ -2951,7 +2951,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_b2": {
+  "atlas-tokens:desert_guard_corpse_c_01_bloody_": {
     "x": 1800,
     "y": 1800,
     "w": 200,
@@ -2959,7 +2959,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_c_ashen": {
+  "atlas-tokens:bear_brown": {
     "x": 2000,
     "y": 1800,
     "w": 200,
@@ -2967,7 +2967,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_c_dark": {
+  "atlas-tokens:disenchanter_beast": {
     "x": 2200,
     "y": 1800,
     "w": 200,
@@ -2975,7 +2975,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_c1": {
+  "atlas-tokens:deathtyrant": {
     "x": 2400,
     "y": 1800,
     "w": 200,
@@ -2983,7 +2983,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_c_light": {
+  "atlas-tokens:dao": {
     "x": 2600,
     "y": 1800,
     "w": 200,
@@ -2991,7 +2991,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_c2": {
+  "atlas-tokens:gelatinouscube": {
     "x": 2800,
     "y": 1800,
     "w": 200,
@@ -2999,7 +2999,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_c_red": {
+  "atlas-tokens:demogorgon": {
     "x": 3000,
     "y": 1800,
     "w": 200,
@@ -3007,7 +3007,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_d1": {
+  "atlas-tokens:earthelementallord": {
     "x": 3200,
     "y": 1800,
     "w": 200,
@@ -3015,7 +3015,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_c_walnut": {
+  "atlas-tokens:killerwhale": {
     "x": 3400,
     "y": 1800,
     "w": 200,
@@ -3023,7 +3023,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_d2": {
+  "atlas-tokens:draegloth": {
     "x": 3600,
     "y": 1800,
     "w": 200,
@@ -3031,7 +3031,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_d_ashen": {
+  "atlas-tokens:ruffian_7": {
     "x": 3800,
     "y": 1800,
     "w": 200,
@@ -3039,7 +3039,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_e1": {
+  "atlas-tokens:ghast": {
     "x": 4000,
     "y": 1800,
     "w": 200,
@@ -3047,7 +3047,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_d_dark": {
+  "atlas-tokens:cultist": {
     "x": 4200,
     "y": 1800,
     "w": 200,
@@ -3055,7 +3055,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_e2": {
+  "atlas-tokens:harpy": {
     "x": 4400,
     "y": 1800,
     "w": 200,
@@ -3063,7 +3063,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_d_light": {
+  "atlas-tokens:chicken_black_": {
     "x": 4600,
     "y": 1800,
     "w": 200,
@@ -3071,7 +3071,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_f1": {
+  "atlas-tokens:giantoctopus": {
     "x": 4800,
     "y": 1800,
     "w": 200,
@@ -3079,7 +3079,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_d_red": {
+  "atlas-tokens:gnollwitherling": {
     "x": 5000,
     "y": 1800,
     "w": 200,
@@ -3087,7 +3087,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_f2": {
+  "atlas-tokens:greytoadfolk": {
     "x": 5200,
     "y": 1800,
     "w": 200,
@@ -3095,7 +3095,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:grate_wood_d_walnut": {
+  "atlas-tokens:flumph": {
     "x": 5400,
     "y": 1800,
     "w": 200,
@@ -3103,7 +3103,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_g1": {
+  "atlas-tokens:duergarkavalrachni": {
     "x": 5600,
     "y": 1800,
     "w": 200,
@@ -3111,7 +3111,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_g2": {
+  "atlas-tokens:cthulhuman2": {
     "x": 5800,
     "y": 1800,
     "w": 200,
@@ -3119,7 +3119,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_black_h1": {
+  "atlas-tokens:demon_eridux_isuf": {
     "x": 6000,
     "y": 1800,
     "w": 200,
@@ -3127,7 +3127,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_a1": {
+  "atlas-tokens:fvavian_arambourgiania_02_hi": {
     "x": 6200,
     "y": 1800,
     "w": 200,
@@ -3135,7 +3135,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_a2": {
+  "atlas-tokens:dragoncultist": {
     "x": 6400,
     "y": 1800,
     "w": 200,
@@ -3143,7 +3143,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_b1": {
+  "atlas-tokens:cultist_2": {
     "x": 6600,
     "y": 1800,
     "w": 200,
@@ -3151,7 +3151,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_b2": {
+  "atlas-tokens:badger_2": {
     "x": 6800,
     "y": 1800,
     "w": 200,
@@ -3159,7 +3159,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_c1": {
+  "atlas-tokens:chimera_white": {
     "x": 7000,
     "y": 1800,
     "w": 200,
@@ -3167,7 +3167,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_c2": {
+  "atlas-tokens:f_human_warrior": {
     "x": 7200,
     "y": 1800,
     "w": 200,
@@ -3175,7 +3175,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_d1": {
+  "atlas-tokens:bulezau": {
     "x": 7400,
     "y": 1800,
     "w": 200,
@@ -3183,7 +3183,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_d2": {
+  "atlas-tokens:dinosaur_ankylosaurus": {
     "x": 7600,
     "y": 1800,
     "w": 200,
@@ -3191,7 +3191,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_e1": {
+  "atlas-tokens:githzerai_pirate_male_4": {
     "x": 7800,
     "y": 1800,
     "w": 200,
@@ -3199,7 +3199,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_e2": {
+  "atlas-tokens:bugbear_fighter": {
     "x": 0,
     "y": 2000,
     "w": 200,
@@ -3207,7 +3207,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_f1": {
+  "atlas-tokens:drowelitewarrior": {
     "x": 200,
     "y": 2000,
     "w": 200,
@@ -3215,7 +3215,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_f2": {
+  "atlas-tokens:tortle_monk_staff_03_": {
     "x": 400,
     "y": 2000,
     "w": 200,
@@ -3223,7 +3223,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_g1": {
+  "atlas-tokens:barbarian_battleaxe_d_": {
     "x": 600,
     "y": 2000,
     "w": 200,
@@ -3231,7 +3231,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_g2": {
+  "atlas-tokens:dark_elf_w_crossbow": {
     "x": 800,
     "y": 2000,
     "w": 200,
@@ -3239,7 +3239,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_blue_h1": {
+  "atlas-tokens:firegenasifemale": {
     "x": 1000,
     "y": 2000,
     "w": 200,
@@ -3247,7 +3247,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_a1": {
+  "atlas-tokens:elf_male_mage": {
     "x": 1200,
     "y": 2000,
     "w": 200,
@@ -3255,7 +3255,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_a2": {
+  "atlas-tokens:f_human_monk": {
     "x": 1400,
     "y": 2000,
     "w": 200,
@@ -3263,7 +3263,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_b1": {
+  "atlas-tokens:f_elven_cleric": {
     "x": 1600,
     "y": 2000,
     "w": 200,
@@ -3271,7 +3271,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_b2": {
+  "atlas-tokens:human_female_barbarian": {
     "x": 1800,
     "y": 2000,
     "w": 200,
@@ -3279,7 +3279,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_c1": {
+  "atlas-tokens:dwarf_male_fighter_hammer_02_hi": {
     "x": 2000,
     "y": 2000,
     "w": 200,
@@ -3287,7 +3287,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_c2": {
+  "atlas-tokens:cockatrice_2": {
     "x": 2200,
     "y": 2000,
     "w": 200,
@@ -3295,7 +3295,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_d1": {
+  "atlas-tokens:drowmatron": {
     "x": 2400,
     "y": 2000,
     "w": 200,
@@ -3303,7 +3303,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_d2": {
+  "atlas-tokens:behir_3_2": {
     "x": 2600,
     "y": 2000,
     "w": 200,
@@ -3311,7 +3311,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_e1": {
+  "atlas-tokens:giantcrab": {
     "x": 2800,
     "y": 2000,
     "w": 200,
@@ -3319,7 +3319,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_e2": {
+  "atlas-tokens:bulette_2": {
     "x": 3000,
     "y": 2000,
     "w": 200,
@@ -3327,7 +3327,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_f1": {
+  "atlas-tokens:eel_giant_02_hi": {
     "x": 3200,
     "y": 2000,
     "w": 200,
@@ -3335,7 +3335,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_f2": {
+  "atlas-tokens:townsfolk__barkeep__male__a_": {
     "x": 3400,
     "y": 2000,
     "w": 200,
@@ -3343,7 +3343,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_g1": {
+  "atlas-tokens:female_dragonborn_commoner_bronze_base_": {
     "x": 3600,
     "y": 2000,
     "w": 200,
@@ -3351,7 +3351,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_g2": {
+  "atlas-tokens:darkmantle_2": {
     "x": 3800,
     "y": 2000,
     "w": 200,
@@ -3359,7 +3359,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_brown_h1": {
+  "atlas-tokens:bear": {
     "x": 4000,
     "y": 2000,
     "w": 200,
@@ -3367,7 +3367,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_a1": {
+  "atlas-tokens:nuwaviperman03": {
     "x": 4200,
     "y": 2000,
     "w": 200,
@@ -3375,7 +3375,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_a2": {
+  "atlas-tokens:dino_deinonychus": {
     "x": 4400,
     "y": 2000,
     "w": 200,
@@ -3383,7 +3383,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_b1": {
+  "atlas-tokens:devourer_2": {
     "x": 4600,
     "y": 2000,
     "w": 200,
@@ -3391,7 +3391,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_b2": {
+  "atlas-tokens:old_viking_merchant": {
     "x": 4800,
     "y": 2000,
     "w": 200,
@@ -3399,7 +3399,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_c1": {
+  "atlas-tokens:adventurer5": {
     "x": 5000,
     "y": 2000,
     "w": 200,
@@ -3407,7 +3407,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_c2": {
+  "atlas-tokens:black_dragon_mature_armored_walking": {
     "x": 5200,
     "y": 2000,
     "w": 200,
@@ -3415,7 +3415,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_d1": {
+  "atlas-tokens:couatl": {
     "x": 5400,
     "y": 2000,
     "w": 200,
@@ -3423,7 +3423,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_d2": {
+  "atlas-tokens:goblin_archer": {
     "x": 5600,
     "y": 2000,
     "w": 200,
@@ -3431,7 +3431,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_e1": {
+  "atlas-tokens:guard__archer__ready__c_": {
     "x": 5800,
     "y": 2000,
     "w": 200,
@@ -3439,7 +3439,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_e2": {
+  "atlas-tokens:desert_guard_corpse_c_02_bloody_": {
     "x": 6000,
     "y": 2000,
     "w": 200,
@@ -3447,7 +3447,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_f1": {
+  "atlas-tokens:bear_polar": {
     "x": 6200,
     "y": 2000,
     "w": 200,
@@ -3455,7 +3455,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_f2": {
+  "atlas-tokens:earth_titan": {
     "x": 6400,
     "y": 2000,
     "w": 200,
@@ -3463,7 +3463,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_g1": {
+  "atlas-tokens:earthelemental": {
     "x": 6600,
     "y": 2000,
     "w": 200,
@@ -3471,7 +3471,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_g2": {
+  "atlas-tokens:djinni": {
     "x": 6800,
     "y": 2000,
     "w": 200,
@@ -3479,7 +3479,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_gray_h1": {
+  "atlas-tokens:glabrezu": {
     "x": 7000,
     "y": 2000,
     "w": 200,
@@ -3487,7 +3487,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_a1": {
+  "atlas-tokens:demonlordofillusions": {
     "x": 7200,
     "y": 2000,
     "w": 200,
@@ -3495,7 +3495,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_a2": {
+  "atlas-tokens:fireelementallord": {
     "x": 7400,
     "y": 2000,
     "w": 200,
@@ -3503,7 +3503,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_b1": {
+  "atlas-tokens:nycaloth": {
     "x": 7600,
     "y": 2000,
     "w": 200,
@@ -3511,7 +3511,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_b2": {
+  "atlas-tokens:flailsnail": {
     "x": 7800,
     "y": 2000,
     "w": 200,
@@ -3519,7 +3519,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_c1": {
+  "atlas-tokens:ruffian_8": {
     "x": 0,
     "y": 2200,
     "w": 200,
@@ -3527,7 +3527,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_c2": {
+  "atlas-tokens:ghouls": {
     "x": 200,
     "y": 2200,
     "w": 200,
@@ -3535,7 +3535,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_d1": {
+  "atlas-tokens:direwolf": {
     "x": 400,
     "y": 2200,
     "w": 200,
@@ -3543,7 +3543,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_d2": {
+  "atlas-tokens:helmedhorror": {
     "x": 600,
     "y": 2200,
     "w": 200,
@@ -3551,7 +3551,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_e1": {
+  "atlas-tokens:chicken_grey_base_": {
     "x": 800,
     "y": 2200,
     "w": 200,
@@ -3559,7 +3559,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_e2": {
+  "atlas-tokens:giantseahorse": {
     "x": 1000,
     "y": 2200,
     "w": 200,
@@ -3567,7 +3567,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_f1": {
+  "atlas-tokens:goblinboss": {
     "x": 1200,
     "y": 2200,
     "w": 200,
@@ -3575,7 +3575,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_f2": {
+  "atlas-tokens:medusa": {
     "x": 1400,
     "y": 2200,
     "w": 200,
@@ -3583,7 +3583,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_g1": {
+  "atlas-tokens:giantfirebeetle": {
     "x": 1600,
     "y": 2200,
     "w": 200,
@@ -3591,7 +3591,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_g2": {
+  "atlas-tokens:duergarsoulblade": {
     "x": 1800,
     "y": 2200,
     "w": 200,
@@ -3599,7 +3599,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_green_h1": {
+  "atlas-tokens:cthulhuman3": {
     "x": 2000,
     "y": 2200,
     "w": 200,
@@ -3607,7 +3607,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_a1": {
+  "atlas-tokens:demon_balor": {
     "x": 2200,
     "y": 2200,
     "w": 200,
@@ -3615,7 +3615,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_a2": {
+  "atlas-tokens:fvavian_arambourgiania_standing_02_hi": {
     "x": 2400,
     "y": 2200,
     "w": 200,
@@ -3623,7 +3623,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_b1": {
+  "atlas-tokens:dragonguard": {
     "x": 2600,
     "y": 2200,
     "w": 200,
@@ -3631,7 +3631,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_b2": {
+  "atlas-tokens:cultist_3": {
     "x": 2800,
     "y": 2200,
     "w": 200,
@@ -3639,7 +3639,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_c1": {
+  "atlas-tokens:bearblack": {
     "x": 3000,
     "y": 2200,
     "w": 200,
@@ -3647,7 +3647,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_c2": {
+  "atlas-tokens:clay_golem": {
     "x": 3200,
     "y": 2200,
     "w": 200,
@@ -3655,7 +3655,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_d1": {
+  "atlas-tokens:f_elven_monk2": {
     "x": 3400,
     "y": 2200,
     "w": 200,
@@ -3663,7 +3663,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_d2": {
+  "atlas-tokens:chaindevil": {
     "x": 3600,
     "y": 2200,
     "w": 200,
@@ -3671,7 +3671,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_e1": {
+  "atlas-tokens:dragon_turtle": {
     "x": 3800,
     "y": 2200,
     "w": 200,
@@ -3679,7 +3679,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_e2": {
+  "atlas-tokens:portrait_githzerai_pirate_male_5": {
     "x": 4000,
     "y": 2200,
     "w": 200,
@@ -3687,7 +3687,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_f1": {
+  "atlas-tokens:bugbear_fighter_muted_colors": {
     "x": 4200,
     "y": 2200,
     "w": 200,
@@ -3695,7 +3695,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_f2": {
+  "atlas-tokens:earthelemental_2": {
     "x": 4400,
     "y": 2200,
     "w": 200,
@@ -3703,7 +3703,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_g1": {
+  "atlas-tokens:tortle_monk_staff_04_": {
     "x": 4600,
     "y": 2200,
     "w": 200,
@@ -3711,7 +3711,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_g2": {
+  "atlas-tokens:barbarian_battleaxe_d__2": {
     "x": 4800,
     "y": 2200,
     "w": 200,
@@ -3719,7 +3719,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_mossy_h1": {
+  "atlas-tokens:dragonborn_paladin_": {
     "x": 5000,
     "y": 2200,
     "w": 200,
@@ -3727,7 +3727,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_a1": {
+  "atlas-tokens:firegenasimale": {
     "x": 5200,
     "y": 2200,
     "w": 200,
@@ -3735,7 +3735,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_a2": {
+  "atlas-tokens:elf_female_fighter": {
     "x": 5400,
     "y": 2200,
     "w": 200,
@@ -3743,7 +3743,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_b1": {
+  "atlas-tokens:f_human_nature_wizard": {
     "x": 5600,
     "y": 2200,
     "w": 200,
@@ -3751,7 +3751,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_b2": {
+  "atlas-tokens:f_elven_sorceress3": {
     "x": 5800,
     "y": 2200,
     "w": 200,
@@ -3759,7 +3759,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_c1": {
+  "atlas-tokens:human_female_rogue1": {
     "x": 6000,
     "y": 2200,
     "w": 200,
@@ -3767,7 +3767,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_c2": {
+  "atlas-tokens:elemental_male_swordmage_02_hi": {
     "x": 6200,
     "y": 2200,
     "w": 200,
@@ -3775,7 +3775,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_d1": {
+  "atlas-tokens:eala": {
     "x": 6400,
     "y": 2200,
     "w": 200,
@@ -3783,7 +3783,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_d2": {
+  "atlas-tokens:drowpriestess_2": {
     "x": 6600,
     "y": 2200,
     "w": 200,
@@ -3791,7 +3791,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_e1": {
+  "atlas-tokens:bulette_1": {
     "x": 6800,
     "y": 2200,
     "w": 200,
@@ -3799,7 +3799,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_e2": {
+  "atlas-tokens:giantowl": {
     "x": 7000,
     "y": 2200,
     "w": 200,
@@ -3807,7 +3807,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_f1": {
+  "atlas-tokens:drider_2": {
     "x": 7200,
     "y": 2200,
     "w": 200,
@@ -3815,7 +3815,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_f2": {
+  "atlas-tokens:elephant_02_hi": {
     "x": 7400,
     "y": 2200,
     "w": 200,
@@ -3823,7 +3823,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_g1": {
+  "atlas-tokens:townsfolk__barkeep__male__b_": {
     "x": 7600,
     "y": 2200,
     "w": 200,
@@ -3831,7 +3831,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_g2": {
+  "atlas-tokens:female_dragonborn_commoner_bronze_": {
     "x": 7800,
     "y": 2200,
     "w": 200,
@@ -3839,7 +3839,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_orange_h1": {
+  "atlas-tokens:delver": {
     "x": 0,
     "y": 2400,
     "w": 200,
@@ -3847,7 +3847,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_a1": {
+  "atlas-tokens:bugbear": {
     "x": 200,
     "y": 2400,
     "w": 200,
@@ -3855,7 +3855,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_a2": {
+  "atlas-tokens:nuwaviperman04": {
     "x": 400,
     "y": 2400,
     "w": 200,
@@ -3863,7 +3863,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_b1": {
+  "atlas-tokens:dinosaur_raptor": {
     "x": 600,
     "y": 2400,
     "w": 200,
@@ -3871,7 +3871,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_b2": {
+  "atlas-tokens:dracolich_2": {
     "x": 800,
     "y": 2400,
     "w": 200,
@@ -3879,7 +3879,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_c1": {
+  "atlas-tokens:shieldmaiden1": {
     "x": 1000,
     "y": 2400,
     "w": 200,
@@ -3887,7 +3887,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_c2": {
+  "atlas-tokens:adventurer6": {
     "x": 1200,
     "y": 2400,
     "w": 200,
@@ -3895,7 +3895,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_d1": {
+  "atlas-tokens:black_dragon_mature_bare_flying": {
     "x": 1400,
     "y": 2400,
     "w": 200,
@@ -3903,7 +3903,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_d2": {
+  "atlas-tokens:dinosaur_pterodactyl": {
     "x": 1600,
     "y": 2400,
     "w": 200,
@@ -3911,7 +3911,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_e1": {
+  "atlas-tokens:goblin_dog": {
     "x": 1800,
     "y": 2400,
     "w": 200,
@@ -3919,7 +3919,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_e2": {
+  "atlas-tokens:guard__archer__ready__d_": {
     "x": 2000,
     "y": 2400,
     "w": 200,
@@ -3927,7 +3927,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_f1": {
+  "atlas-tokens:desert_guard_corpse_c_05_bloody_": {
     "x": 2200,
     "y": 2400,
     "w": 200,
@@ -3935,7 +3935,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_f2": {
+  "atlas-tokens:bison": {
     "x": 2400,
     "y": 2400,
     "w": 200,
@@ -3943,7 +3943,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_g1": {
+  "atlas-tokens:fire_titan": {
     "x": 2600,
     "y": 2400,
     "w": 200,
@@ -3951,7 +3951,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_g2": {
+  "atlas-tokens:empyrean": {
     "x": 2800,
     "y": 2400,
     "w": 200,
@@ -3959,7 +3959,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_purple_h1": {
+  "atlas-tokens:drider_3": {
     "x": 3000,
     "y": 2400,
     "w": 200,
@@ -3967,7 +3967,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_a1": {
+  "atlas-tokens:hezrou": {
     "x": 3200,
     "y": 2400,
     "w": 200,
@@ -3975,7 +3975,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_a2": {
+  "atlas-tokens:facelessdemonlord": {
     "x": 3400,
     "y": 2400,
     "w": 200,
@@ -3983,7 +3983,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_b1": {
+  "atlas-tokens:gasspore": {
     "x": 3600,
     "y": 2400,
     "w": 200,
@@ -3991,7 +3991,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_b2": {
+  "atlas-tokens:observerzombie": {
     "x": 3800,
     "y": 2400,
     "w": 200,
@@ -3999,7 +3999,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_c1": {
+  "atlas-tokens:froghemoth": {
     "x": 4000,
     "y": 2400,
     "w": 200,
@@ -4007,7 +4007,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_c2": {
+  "atlas-tokens:ruffian_9": {
     "x": 4200,
     "y": 2400,
     "w": 200,
@@ -4015,7 +4015,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_d1": {
+  "atlas-tokens:imp": {
     "x": 4400,
     "y": 2400,
     "w": 200,
@@ -4023,7 +4023,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_d2": {
+  "atlas-tokens:guardianportrait": {
     "x": 4600,
     "y": 2400,
     "w": 200,
@@ -4031,7 +4031,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_e1": {
+  "atlas-tokens:jackalwere": {
     "x": 4800,
     "y": 2400,
     "w": 200,
@@ -4039,7 +4039,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_e2": {
+  "atlas-tokens:chicken_grey_sitting_base_": {
     "x": 5000,
     "y": 2400,
     "w": 200,
@@ -4047,7 +4047,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_f1": {
+  "atlas-tokens:krakespawn": {
     "x": 5200,
     "y": 2400,
     "w": 200,
@@ -4055,7 +4055,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_f2": {
+  "atlas-tokens:hyena": {
     "x": 5400,
     "y": 2400,
     "w": 200,
@@ -4063,7 +4063,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_g1": {
+  "atlas-tokens:pterafolk": {
     "x": 5600,
     "y": 2400,
     "w": 200,
@@ -4071,7 +4071,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_g2": {
+  "atlas-tokens:goblin": {
     "x": 5800,
     "y": 2400,
     "w": 200,
@@ -4079,7 +4079,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_red_h1": {
+  "atlas-tokens:duergarxarrorn": {
     "x": 6000,
     "y": 2400,
     "w": 200,
@@ -4087,7 +4087,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_a1": {
+  "atlas-tokens:cthulhuman4": {
     "x": 6200,
     "y": 2400,
     "w": 200,
@@ -4095,7 +4095,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_a2": {
+  "atlas-tokens:demon_bebelith": {
     "x": 6400,
     "y": 2400,
     "w": 200,
@@ -4103,7 +4103,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_b1": {
+  "atlas-tokens:fvavian_pteranodon_02_hi": {
     "x": 6600,
     "y": 2400,
     "w": 200,
@@ -4111,7 +4111,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_b2": {
+  "atlas-tokens:dragonknight": {
     "x": 6800,
     "y": 2400,
     "w": 200,
@@ -4119,7 +4119,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_c1": {
+  "atlas-tokens:cultist_4": {
     "x": 7000,
     "y": 2400,
     "w": 200,
@@ -4127,7 +4127,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_c2": {
+  "atlas-tokens:beargrizzley": {
     "x": 7200,
     "y": 2400,
     "w": 200,
@@ -4135,7 +4135,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_d1": {
+  "atlas-tokens:cthulhu": {
     "x": 7400,
     "y": 2400,
     "w": 200,
@@ -4143,7 +4143,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_d2": {
+  "atlas-tokens:f_elven_monk": {
     "x": 7600,
     "y": 2400,
     "w": 200,
@@ -4151,7 +4151,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_e1": {
+  "atlas-tokens:dybbuk": {
     "x": 7800,
     "y": 2400,
     "w": 200,
@@ -4159,7 +4159,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_e2": {
+  "atlas-tokens:drow_lizard_rider": {
     "x": 0,
     "y": 2600,
     "w": 200,
@@ -4167,7 +4167,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_f1": {
+  "atlas-tokens:portrait_githzerai_pirate_female_1": {
     "x": 200,
     "y": 2600,
     "w": 200,
@@ -4175,7 +4175,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_f2": {
+  "atlas-tokens:goblin_caster": {
     "x": 400,
     "y": 2600,
     "w": 200,
@@ -4183,7 +4183,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_g1": {
+  "atlas-tokens:ettin_2": {
     "x": 600,
     "y": 2600,
     "w": 200,
@@ -4191,7 +4191,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_g2": {
+  "atlas-tokens:tortle_monk_staff_05_": {
     "x": 800,
     "y": 2600,
     "w": 200,
@@ -4199,7 +4199,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_tile_tan_h1": {
+  "atlas-tokens:barbarian_battleaxe_e_": {
     "x": 1000,
     "y": 2600,
     "w": 200,
@@ -4207,7 +4207,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_ashen_shingle_a1": {
+  "atlas-tokens:dwarf_fighter_w_sword_": {
     "x": 1200,
     "y": 2600,
     "w": 200,
@@ -4215,7 +4215,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_ashen_shingle_a2": {
+  "atlas-tokens:springeladrinfemale": {
     "x": 1400,
     "y": 2600,
     "w": 200,
@@ -4223,7 +4223,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_dark_shingle_a1": {
+  "atlas-tokens:half_giant_barbarian": {
     "x": 1600,
     "y": 2600,
     "w": 200,
@@ -4231,7 +4231,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_dark_shingle_a2": {
+  "atlas-tokens:f_human_ranger2": {
     "x": 1800,
     "y": 2600,
     "w": 200,
@@ -4239,7 +4239,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_light_shingle_a1": {
+  "atlas-tokens:f_giant_void2": {
     "x": 2000,
     "y": 2600,
     "w": 200,
@@ -4247,7 +4247,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_light_shingle_a2": {
+  "atlas-tokens:human_female_rogue2": {
     "x": 2200,
     "y": 2600,
     "w": 200,
@@ -4255,7 +4255,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_red_shingle_a1": {
+  "atlas-tokens:elf_male_archer3_02_hi": {
     "x": 2400,
     "y": 2600,
     "w": 200,
@@ -4263,7 +4263,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_red_shingle_a2": {
+  "atlas-tokens:ghostwalkspider": {
     "x": 2600,
     "y": 2600,
     "w": 200,
@@ -4271,7 +4271,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_walnut_shingle_a1": {
+  "atlas-tokens:duergar": {
     "x": 2800,
     "y": 2600,
     "w": 200,
@@ -4279,7 +4279,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:roof_texture_wood_walnut_shingle_a2": {
+  "atlas-tokens:bulette_2_": {
     "x": 3000,
     "y": 2600,
     "w": 200,
@@ -4287,7 +4287,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:corrugated_metal_gray_a1": {
+  "atlas-tokens:giantvulture": {
     "x": 3200,
     "y": 2600,
     "w": 200,
@@ -4295,7 +4295,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:corrugated_metal_rusty_a1": {
+  "atlas-tokens:ethereal_cat": {
     "x": 3400,
     "y": 2600,
     "w": 200,
@@ -4303,60 +4303,180 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-floors:ivy_multicolor2_overlay_a1_2x2": {
+  "atlas-tokens:leech_giant_02_hi": {
     "x": 3600,
     "y": 2600,
-    "w": 400,
-    "h": 400,
-    "gw": 2,
-    "gh": 2
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
   },
-  "atlas-floors:ivy_multicolor3_overlay_a1_2x2": {
+  "atlas-tokens:townsfolk__barkeep__male__c_": {
+    "x": 3800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:female_dragonborn_commoner_copper_base_": {
     "x": 4000,
     "y": 2600,
-    "w": 400,
-    "h": 400,
-    "gw": 2,
-    "gh": 2
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
   },
-  "atlas-floors:ivy_green1_overlay_a1_2x2": {
+  "atlas-tokens:dryad": {
+    "x": 4200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:bulette_3": {
     "x": 4400,
     "y": 2600,
-    "w": 400,
-    "h": 400,
-    "gw": 2,
-    "gh": 2
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
   },
-  "atlas-floors:ivy_green2_overlay_a1_2x2": {
+  "atlas-tokens:nuwaviperman05": {
+    "x": 4600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:dinosaur_trex": {
     "x": 4800,
     "y": 2600,
-    "w": 400,
-    "h": 400,
-    "gw": 2,
-    "gh": 2
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
   },
-  "atlas-floors:ivy_multicolor1_overlay_a1_2x2": {
+  "atlas-tokens:firemage": {
+    "x": 5000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:shieldmaiden2": {
     "x": 5200,
     "y": 2600,
-    "w": 400,
-    "h": 400,
-    "gw": 2,
-    "gh": 2
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
   },
-  "atlas-floors:ivy_red_overlay_a1_2x2": {
+  "atlas-tokens:adventurer7": {
+    "x": 5400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:black_dragon_mature_bare_walking": {
     "x": 5600,
     "y": 2600,
-    "w": 400,
-    "h": 400,
-    "gw": 2,
-    "gh": 2
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
   },
-  "atlas-floors:ivy_yellow_overlay_a1_2x2": {
+  "atlas-tokens:draconian": {
+    "x": 5800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:goblin_mace": {
     "x": 6000,
     "y": 2600,
-    "w": 400,
-    "h": 400,
-    "gw": 2,
-    "gh": 2
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:guard__archer__ready__e_": {
+    "x": 6200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:desert_guard_corpse_a_01_bloody_": {
+    "x": 6400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:boar": {
+    "x": 6600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:fomorian": {
+    "x": 6800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:femalesphinx": {
+    "x": 7000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:efreeti": {
+    "x": 7200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:hookhorror": {
+    "x": 7400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:fungidemonqueen": {
+    "x": 7600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-tokens:golddragon": {
+    "x": 7800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
   }
 }

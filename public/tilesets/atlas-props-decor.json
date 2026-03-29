@@ -160,160 +160,160 @@
     "gh": 1
   },
   "atlas-props-decor:bag_brown_a_1x1": {
-    "x": 0,
-    "y": 200,
+    "x": 4000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ball_leather_brown_a1_1x1": {
-    "x": 200,
-    "y": 200,
+    "x": 4200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:bangle_metal_gold_a_blue_1x1": {
-    "x": 400,
-    "y": 200,
+    "x": 4400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:flag_banner_fabric_black_small_top_a1_1x1": {
-    "x": 600,
-    "y": 200,
+    "x": 4600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:flag_banner_rail_metal_gold_small_a1_1x1": {
-    "x": 800,
-    "y": 200,
+    "x": 4800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:flag_banner_fabric_black_small_a1_1x1": {
-    "x": 1000,
-    "y": 200,
+    "x": 5000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:flag_banner_ripped_fabric_black_small_a1_1x1": {
-    "x": 1200,
-    "y": 200,
+    "x": 5200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:barbwire_metal_black_a1_1x1": {
-    "x": 1400,
-    "y": 200,
+    "x": 5400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:barrel_lid_wood_ashen_a1_1x1": {
-    "x": 1600,
-    "y": 200,
+    "x": 5600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:sign_post_base_stone_earthy_a1_1x1": {
-    "x": 1800,
-    "y": 200,
+    "x": 5800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:basket_bin_wicker_ashen_a1_1x1": {
-    "x": 2000,
-    "y": 200,
+    "x": 6000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_bat_a1_1x1": {
-    "x": 2200,
-    "y": 200,
+    "x": 6200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:bauble_gold_a1_1x1": {
-    "x": 2400,
-    "y": 200,
+    "x": 6400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_bear_leg_a2_1x1": {
-    "x": 2600,
-    "y": 200,
+    "x": 6600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:pet_bed_wood_ashen_bedding_blue_a1_1x1": {
-    "x": 2800,
-    "y": 200,
+    "x": 6800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:meat_bacon_roasted_01_a1_1x1": {
-    "x": 3000,
-    "y": 200,
+    "x": 7000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:bell_hand_wood_ashen_brass_a_1x1": {
-    "x": 3200,
-    "y": 200,
+    "x": 7200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:belt_leather_black_a1_1x1": {
-    "x": 3400,
-    "y": 200,
+    "x": 7400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:binoculars_case_black_a1_1x1": {
-    "x": 3600,
-    "y": 200,
+    "x": 7600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:birdcage_metal_brass_b1_1x1": {
-    "x": 3800,
-    "y": 200,
+    "x": 7800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -321,7 +321,7 @@
   },
   "atlas-props-decor:crystal_black_cluster_a10_1x1": {
     "x": 0,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -329,7 +329,7 @@
   },
   "atlas-props-decor:blackboard_insert_black_a1_1x1": {
     "x": 200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -337,7 +337,7 @@
   },
   "atlas-props-decor:crystal_blue_cluster_a10_1x1": {
     "x": 400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -345,7 +345,7 @@
   },
   "atlas-props-decor:skeleton_bloody_boar_foot_a1_1x1": {
     "x": 600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -353,7 +353,7 @@
   },
   "atlas-props-decor:character_sheet_paper_bloody_a_1x1": {
     "x": 800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -361,7 +361,7 @@
   },
   "atlas-props-decor:arranged_clutter_board_wood_ashen_a10_1x1": {
     "x": 1000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -369,7 +369,7 @@
   },
   "atlas-props-decor:beast_bone_bloody_pile_a12_1x1": {
     "x": 1200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -377,7 +377,7 @@
   },
   "atlas-props-decor:book_end_stone_earthy_a1_1x1": {
     "x": 1400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -385,7 +385,7 @@
   },
   "atlas-props-decor:book_leather_line_a1_1x1": {
     "x": 1600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -393,7 +393,7 @@
   },
   "atlas-props-decor:books_row_a_1x1": {
     "x": 1800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -401,7 +401,7 @@
   },
   "atlas-props-decor:book_a_black_1x1": {
     "x": 2000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -409,7 +409,7 @@
   },
   "atlas-props-decor:baby_bottle_empty_glass_a1_1x1": {
     "x": 2200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -417,7 +417,7 @@
   },
   "atlas-props-decor:bottle_glass_a_black_1x1": {
     "x": 2400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -425,7 +425,7 @@
   },
   "atlas-props-decor:bowl_metal_gray_filled_a1_1x1": {
     "x": 2600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -433,7 +433,7 @@
   },
   "atlas-props-decor:box_insert_hay_01_a10_1x1": {
     "x": 2800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -441,7 +441,7 @@
   },
   "atlas-props-decor:box_lid_leaning_wood_ashen_a1_1x1": {
     "x": 3000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -449,7 +449,7 @@
   },
   "atlas-props-decor:box_spray_black_a1_1x1": {
     "x": 3200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -457,7 +457,7 @@
   },
   "atlas-props-decor:box_sticker_blue_a10_1x1": {
     "x": 3400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -465,7 +465,7 @@
   },
   "atlas-props-decor:box_lid_wood_ashen_a10_1x1": {
     "x": 3600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -473,167 +473,167 @@
   },
   "atlas-props-decor:box_base_wood_ashen_a10_1x1": {
     "x": 3800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ceremorph_blue_brain_jar_a1_1x1": {
-    "x": 0,
-    "y": 600,
+    "x": 4000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cornett_wood_ashen_a_1x1": {
-    "x": 200,
-    "y": 600,
+    "x": 4200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:brazier_a_1x1": {
-    "x": 400,
-    "y": 600,
+    "x": 4400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:baguette_dark_a1_1x1": {
-    "x": 600,
-    "y": 600,
+    "x": 4600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:perfume_bottle_broken_glass_blue_a1_1x1": {
-    "x": 800,
-    "y": 600,
+    "x": 4800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:brush_metal_brass_a_1x1": {
-    "x": 1000,
-    "y": 600,
+    "x": 5000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:bucket_pail_metal_gray_a1_1x1": {
-    "x": 1200,
-    "y": 600,
+    "x": 5200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:building_blocks_wood_ashen_a1_1x1": {
-    "x": 1400,
-    "y": 600,
+    "x": 5400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:bunting_flags_black_a4_1x1": {
-    "x": 1600,
-    "y": 600,
+    "x": 5600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:burrow_dirt_01_a10_1x1": {
-    "x": 1800,
-    "y": 600,
+    "x": 5800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:statue_bust_marble_white_a1_1x1": {
-    "x": 2000,
-    "y": 600,
+    "x": 6000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cage_door_metal_gray_a_1x1": {
-    "x": 2200,
-    "y": 600,
+    "x": 6200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:bundcake_chocolate_dark_a1_1x1": {
-    "x": 2400,
-    "y": 600,
+    "x": 6400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_camel_jaw_a1_1x1": {
-    "x": 2600,
-    "y": 600,
+    "x": 6600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:campfire_ash_a1_1x1": {
-    "x": 2800,
-    "y": 600,
+    "x": 6800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:candelabra_metal_gold_a1_1x1": {
-    "x": 3000,
-    "y": 600,
+    "x": 7000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:candle_holder_fancy_metal_brass_a1_1x1": {
-    "x": 3200,
-    "y": 600,
+    "x": 7200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:candle_snuffer_metal_gray_a1_1x1": {
-    "x": 3400,
-    "y": 600,
+    "x": 7400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:candle_black_wax_a1_1x1": {
-    "x": 3600,
-    "y": 600,
+    "x": 7600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:candle_black_a_1x1": {
-    "x": 3800,
-    "y": 600,
+    "x": 7800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -641,7 +641,7 @@
   },
   "atlas-props-decor:cane_wood_ashen_a1_1x1": {
     "x": 0,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -649,7 +649,7 @@
   },
   "atlas-props-decor:sign_post_cap_metal_gray_a1_1x1": {
     "x": 200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -657,7 +657,7 @@
   },
   "atlas-props-decor:cash_register_metal_metal_black_a_1x1": {
     "x": 400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -665,7 +665,7 @@
   },
   "atlas-props-decor:cauldron_metal_gray_filled_a1_1x1": {
     "x": 600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -673,7 +673,7 @@
   },
   "atlas-props-decor:cheese_ball_01_a1_1x1": {
     "x": 800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -681,7 +681,7 @@
   },
   "atlas-props-decor:chest_wood_ashen_a_1x1": {
     "x": 1000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -689,7 +689,7 @@
   },
   "atlas-props-decor:skeleton_bloody_chicken_a1_1x1": {
     "x": 1200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -697,7 +697,7 @@
   },
   "atlas-props-decor:childs_teaset_milkjug_blue_a1_1x1": {
     "x": 1400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -705,7 +705,7 @@
   },
   "atlas-props-decor:acorn_a1_1x1": {
     "x": 1600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -713,7 +713,7 @@
   },
   "atlas-props-decor:christmas_tree_topper_a1_1x1": {
     "x": 1800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -721,7 +721,7 @@
   },
   "atlas-props-decor:cigarette_a1_1x1": {
     "x": 2000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -729,7 +729,7 @@
   },
   "atlas-props-decor:ashtray_large_stone_volcanic_a1_1x1": {
     "x": 2200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -737,7 +737,7 @@
   },
   "atlas-props-decor:clock_wood_ashen_a1_1x1": {
     "x": 2400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -745,7 +745,7 @@
   },
   "atlas-props-decor:cloth_black_a_1x1": {
     "x": 2600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -753,7 +753,7 @@
   },
   "atlas-props-decor:cloth_bolt_black_a_ashen_1x1": {
     "x": 2800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -761,7 +761,7 @@
   },
   "atlas-props-decor:cloth_folded_black_a_1x1": {
     "x": 3000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -769,7 +769,7 @@
   },
   "atlas-props-decor:cloth_ripped_black_a_1x1": {
     "x": 3200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -777,7 +777,7 @@
   },
   "atlas-props-decor:clothing_folded_pile_black_a1_1x1": {
     "x": 3400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -785,7 +785,7 @@
   },
   "atlas-props-decor:clothing_rail_wood_ashen_a1_1x1": {
     "x": 3600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -793,167 +793,167 @@
   },
   "atlas-props-decor:basin_coal_fire_blue_a1_1x1": {
     "x": 3800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:basin_coal_fire_unlit_a1_1x1": {
-    "x": 0,
-    "y": 1000,
+    "x": 4000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:coffee_grinder_metal_black_wood_walnut_a1_1x1": {
-    "x": 200,
-    "y": 1000,
+    "x": 4200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:coin_pile_copper_a10_1x1": {
-    "x": 400,
-    "y": 1000,
+    "x": 4400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:coin_pile_edge_copper_a10_1x1": {
-    "x": 600,
-    "y": 1000,
+    "x": 4600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:coin_copper_a1_1x1": {
-    "x": 800,
-    "y": 1000,
+    "x": 4800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:torment_collar_metal_black_medium_a1_1x1": {
-    "x": 1000,
-    "y": 1000,
+    "x": 5000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:comb_wood_ashen_a_1x1": {
-    "x": 1200,
-    "y": 1000,
+    "x": 5200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ceremorph_control_tentacle_blue_a10_1x1": {
-    "x": 1400,
-    "y": 1000,
+    "x": 5400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:amphora_c1_cork_1x1": {
-    "x": 1600,
-    "y": 1000,
+    "x": 5600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:rug_corner_tassel_large_brown_a1_1x1": {
-    "x": 1800,
-    "y": 1000,
+    "x": 5800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_cow_jaw_a1_1x1": {
-    "x": 2000,
-    "y": 1000,
+    "x": 6000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:crate_wood_ashen_a_1x1": {
-    "x": 2200,
-    "y": 1000,
+    "x": 6200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:crayons_tin_metal_gray_a1_1x1": {
-    "x": 2400,
-    "y": 1000,
+    "x": 6400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cane_crook_wood_ashen_a1_1x1": {
-    "x": 2600,
-    "y": 1000,
+    "x": 6600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:crown_metal_bronze_a_1x1": {
-    "x": 2800,
-    "y": 1000,
+    "x": 6800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ceremorph_crystal_reader_blue_a1_1x1": {
-    "x": 3000,
-    "y": 1000,
+    "x": 7000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cupboard_arrangement_a112_1x1": {
-    "x": 3200,
-    "y": 1000,
+    "x": 7200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cup_metal_gold_a_1x1": {
-    "x": 3400,
-    "y": 1000,
+    "x": 7400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cake_shovel_metal_black_a_1x1": {
-    "x": 3600,
-    "y": 1000,
+    "x": 7600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:crystal_cyan_cluster_a10_1x1": {
-    "x": 3800,
-    "y": 1000,
+    "x": 7800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -961,7 +961,7 @@
   },
   "atlas-props-decor:flesh_black_cyst_blood_a10_1x1": {
     "x": 0,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -969,7 +969,7 @@
   },
   "atlas-props-decor:mug_side_wood_dark_a_1x1": {
     "x": 200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -977,7 +977,7 @@
   },
   "atlas-props-decor:skeleton_bloody_deer_b1_1x1": {
     "x": 400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -985,7 +985,7 @@
   },
   "atlas-props-decor:toothpaste_tube_metal_gray_a1_1x1": {
     "x": 600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -993,7 +993,7 @@
   },
   "atlas-props-decor:baby_powder_a1_1x1": {
     "x": 800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1001,7 +1001,7 @@
   },
   "atlas-props-decor:dice_d10_blue_a1_1x1": {
     "x": 1000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1009,7 +1009,7 @@
   },
   "atlas-props-decor:pile_dirt_01_a1_1x1": {
     "x": 1200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1017,7 +1017,7 @@
   },
   "atlas-props-decor:bowl_metal_gray_a_1x1": {
     "x": 1400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1025,7 +1025,7 @@
   },
   "atlas-props-decor:doily_black_a10_1x1": {
     "x": 1600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1033,7 +1033,7 @@
   },
   "atlas-props-decor:doll_a1_1x1": {
     "x": 1800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1041,7 +1041,7 @@
   },
   "atlas-props-decor:domino_piece_wood_ashen_a10_1x1": {
     "x": 2000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1049,7 +1049,7 @@
   },
   "atlas-props-decor:door_mat_black_bye_1x1": {
     "x": 2200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1057,7 +1057,7 @@
   },
   "atlas-props-decor:drawing_paper_white_beholder_a1_1x1": {
     "x": 2400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1065,7 +1065,7 @@
   },
   "atlas-props-decor:dress_cloth_black_b2_1x1": {
     "x": 2600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1073,7 +1073,7 @@
   },
   "atlas-props-decor:drinking_horn_dark_a_1x1": {
     "x": 2800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1081,7 +1081,7 @@
   },
   "atlas-props-decor:egg_huge_black_a1_1x1": {
     "x": 3000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1089,7 +1089,7 @@
   },
   "atlas-props-decor:skeleton_bloody_elephant_foot_a1_1x1": {
     "x": 3200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1097,7 +1097,7 @@
   },
   "atlas-props-decor:torment_chain_end_metal_black_a1_1x1": {
     "x": 3400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1105,7 +1105,7 @@
   },
   "atlas-props-decor:envelope_addressed_white_a1_1x1": {
     "x": 3600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1113,167 +1113,167 @@
   },
   "atlas-props-decor:compass_metal_brass_a1_1x1": {
     "x": 3800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ceremorph_blue_eyeball_closed_medium_a1_1x1": {
-    "x": 0,
-    "y": 1400,
+    "x": 4000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:eyes_of_charming_a1_1x1": {
-    "x": 200,
-    "y": 1400,
+    "x": 4200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:lantern_fallen_metal_brass_a1_1x1": {
-    "x": 400,
-    "y": 1400,
+    "x": 4400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:arranged_clutter_fancy_a10_1x1": {
-    "x": 600,
-    "y": 1400,
+    "x": 4600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:fancy_glass_bottle_blue_a1_1x1": {
-    "x": 800,
-    "y": 1400,
+    "x": 4800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:hanging_sign_apothecary_metal_gray_a1_1x1": {
-    "x": 1000,
-    "y": 1400,
+    "x": 5000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:handfan_black_patterened_wood_dark_a1_1x1": {
-    "x": 1200,
-    "y": 1400,
+    "x": 5200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:food_bowls_empty_wood_ashen_metal_gray_a1_1x1": {
-    "x": 1400,
-    "y": 1400,
+    "x": 5400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:feather_token_anchor_a1_1x1": {
-    "x": 1600,
-    "y": 1400,
+    "x": 5600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:law_enforcement_file_closed_papers_white_a1_1x1": {
-    "x": 1800,
-    "y": 1400,
+    "x": 5800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cane_umbrella_stand_metal_gray_filled_a1_1x1": {
-    "x": 2000,
-    "y": 1400,
+    "x": 6000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cutting_board_ashen_filled_a1_1x1": {
-    "x": 2200,
-    "y": 1400,
+    "x": 6200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:firewood_log_pile_wood_a3_1x1": {
-    "x": 2400,
-    "y": 1400,
+    "x": 6400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:meat_fish_roasted_01_cut_a1_1x1": {
-    "x": 2600,
-    "y": 1400,
+    "x": 6600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:fish_bowl_a1_1x1": {
-    "x": 2800,
-    "y": 1400,
+    "x": 6800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:flag_base_metal_gold_a1_1x1": {
-    "x": 3000,
-    "y": 1400,
+    "x": 7000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:flag_pole_top_metal_gold_a1_1x1": {
-    "x": 3200,
-    "y": 1400,
+    "x": 7200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:flag_fabric_black_a4_1x1": {
-    "x": 3400,
-    "y": 1400,
+    "x": 7400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:carpet_edge_floral_blackgold_a1_path": {
-    "x": 3600,
-    "y": 1400,
+    "x": 7600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:arranged_flowers_a1_1x1": {
-    "x": 3800,
-    "y": 1400,
+    "x": 7800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1281,7 +1281,7 @@
   },
   "atlas-props-decor:food_ration_cloth_beige_a_1x1": {
     "x": 0,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1289,7 +1289,7 @@
   },
   "atlas-props-decor:boots_leather_black_a1_1x1": {
     "x": 200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1297,7 +1297,7 @@
   },
   "atlas-props-decor:framed_painting_wood_ashen_a1_1x1": {
     "x": 400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1305,7 +1305,7 @@
   },
   "atlas-props-decor:accordion_wood_ashen_metal_gray_a_1x1": {
     "x": 600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1313,125 +1313,1405 @@
   },
   "atlas-props-decor:apple_green_a1_1x1": {
     "x": 800,
-    "y": 1600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bars_1x1": {
+    "x": 1000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:gem_black_a10_1x1": {
-    "x": 1000,
-    "y": 1600,
+    "x": 1200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:carpet_edge_geometric_blackgold_a1_path": {
-    "x": 1200,
-    "y": 1600,
+    "x": 1400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_giant_ape_hand_a1_1x1": {
-    "x": 1400,
-    "y": 1600,
+    "x": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_giant_bat_skull_a1_1x1": {
-    "x": 1600,
-    "y": 1600,
+    "x": 1800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_giant_elk_antler_a1_1x1": {
-    "x": 1800,
-    "y": 1600,
+    "x": 2000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_giant_lizard_foot_a1_1x1": {
-    "x": 2000,
-    "y": 1600,
+    "x": 2200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_giant_rat_a1_1x1": {
-    "x": 2200,
-    "y": 1600,
+    "x": 2400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_giant_snake_skull_a1_1x1": {
-    "x": 2400,
-    "y": 1600,
+    "x": 2600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:gift_box_black_a1_1x1": {
-    "x": 2600,
-    "y": 1600,
+    "x": 2800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:gingerbread_cutter_a1_1x1": {
-    "x": 2800,
-    "y": 1600,
+    "x": 3000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:globe_large_b1_1x1": {
-    "x": 3000,
-    "y": 1600,
+    "x": 3200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:glove_cloth_black_a1_1x1": {
-    "x": 3200,
-    "y": 1600,
+    "x": 3400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ceremorph_brain_glowing_light_blue_b1_1x1": {
-    "x": 3400,
-    "y": 1600,
+    "x": 3600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:gramophone_metal_black_wood_walnut_a1_1x1": {
-    "x": 3600,
-    "y": 1600,
+    "x": 3800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:crystal_green_cluster_a10_1x1": {
+    "x": 4000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flesh_black_organic_growth_a10_1x1": {
+    "x": 4200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:tooth_bleached_a10_1x1": {
+    "x": 4400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mirror_hand_metal_brass_a_1x1": {
+    "x": 4600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:breast_ripper_black_a1_1x1": {
+    "x": 4800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:hanger_peg_metal_brass_a1_1x1": {
+    "x": 5000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:clothing_cloth_black_a1_1x1": {
+    "x": 5200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:hanging_corset_cloth_black_wood_ashen_a1_1x1": {
+    "x": 5400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mannequin_head_wood_ashen_burned_a1_1x1": {
+    "x": 5600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bonnet_cap_cloth_black_a1_1x1": {
+    "x": 5800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:hip_flask_metal_brass_a1_1x1": {
+    "x": 6000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:beast_bone_bloody_hip_a10_1x1": {
+    "x": 6200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:hookah_glass_black_a1_1x1": {
+    "x": 6400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_horse_jaw_a1_1x1": {
+    "x": 6600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cage_small_wood_ashen_metal_gray_a1_1x1": {
+    "x": 6800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ingot_pile_black_a1_1x1": {
+    "x": 7000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ingot_rod_black_a1_1x1": {
+    "x": 7200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ingot_black_a1_1x1": {
+    "x": 7400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:blotting_paper_a1_1x1": {
+    "x": 7600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:inkwell_base_metal_brass_a1_1x1": {
+    "x": 7800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:underdark_insect_hive_brown_a1_1x1": {
+    "x": 0,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_blue_input_device_a1_1x1": {
+    "x": 200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:wall_light_black_metal_rusty_a1_1x1": {
+    "x": 400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:jack_in_the_box_wood_ashen_a1_1x1": {
+    "x": 600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cloak_cloth_black_a2_1x1": {
+    "x": 800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:jewel_box_metal_gold_a_blue_1x1": {
+    "x": 1000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:jigsaw_puzzle_a1_1x1": {
+    "x": 1200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bookmark_leather_black_a_1x1": {
+    "x": 1400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:jug_clay_brown_a1_1x1": {
+    "x": 1600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:organ_pipes_wood_ashen_metal_gray_a_1x1": {
+    "x": 1800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cooking_spoon_wood_ashen_a_1x1": {
+    "x": 2000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cleaver_wood_ashen_a1_1x1": {
+    "x": 2200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:toy_kite_black_white_a1_1x1": {
+    "x": 2400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:lamp_pillar_stone_earthy_a_brass_1x1": {
+    "x": 2600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:magic_lamp_black_1x1": {
+    "x": 2800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:lantern_metal_brass_a1_1x1": {
+    "x": 3000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pet_chain_metal_gray_a1_1x1": {
+    "x": 3200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:letter_blocks_a_1x1": {
+    "x": 3400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:letter_opener_antler_a1_1x1": {
+    "x": 3600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:letter_rack_metal_brass_a1_1x1": {
+    "x": 3800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:letter_scale_metal_brass_wood_ashen_a1_1x1": {
+    "x": 4000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:folded_letter_white_a1_1x1": {
+    "x": 4200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:lid_metal_copper_a1_1x1": {
+    "x": 4400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mug_side_wood_light_a_1x1": {
+    "x": 4600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_blue_glowing_orb_holder_a1_1x1": {
+    "x": 4800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:carpet_edge_lines_blackgold_a1_path": {
+    "x": 5000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_lion_foot_a1_1x1": {
+    "x": 5200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:canteen_leather_black_a_1x1": {
+    "x": 5400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:brazier_blue_a_embers_1x1": {
+    "x": 5600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:key_metal_copper_a_1x1": {
+    "x": 5800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:beast_bone_bloody_medium_a10_1x1": {
+    "x": 6000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mannequin_foot_wood_ashen_metal_gray_burned_a1_1x1": {
+    "x": 6200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_luggage_lid_leather_blue_metal_gray_a10_1x1": {
+    "x": 6400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_luggage_base_leather_blue_metal_gray_a10_1x1": {
+    "x": 6600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_luggage_lid_open_leather_blue_metal_gray_a10_1x1": {
+    "x": 6800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bag_of_beans_a1_1x1": {
+    "x": 7000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:belt_of_dwarvenkind_a1_1x1": {
+    "x": 7200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:boots_of_speed_fallen_a1_1x1": {
+    "x": 7400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:circlet_of_blasting_a1_1x1": {
+    "x": 7600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:rock_stone_slate_blue_b10_1x1": {
+    "x": 7800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mail_box_metal_gray_closed_a1_1x1": {
+    "x": 0,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:compact_blush_metal_black_a1_1x1": {
+    "x": 200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:makeup_brush_metal_black_a1_1x1": {
+    "x": 400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:map_blank_d_1x1": {
+    "x": 600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:matches_case_metal_brass_a1_1x1": {
+    "x": 800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:meat_hook_chain_metal_black_a1_1x1": {
+    "x": 1000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:meat_hook_metal_black_a1_1x1": {
+    "x": 1200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:menu_sign_insert_black_a1_1x1": {
+    "x": 1400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:abacus_wood_ashen_a_1x1": {
+    "x": 1600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:dice_d10_metal_black_a1_1x1": {
+    "x": 1800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:milk_bottle_a1_1x1": {
+    "x": 2000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_brain_recepticle_blue_a1_1x1": {
+    "x": 2200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:meat_skewer_sauce_a1_1x1": {
+    "x": 2400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_dog_skull_a1_1x1": {
+    "x": 2600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ship_model_bottle_glass_blue_a1_1x1": {
+    "x": 2800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:aboard_wood_ashen_a1_1x1": {
+    "x": 3000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:sign_arrow_metal_gray_a1_1x1": {
+    "x": 3200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_monkey_a1_1x1": {
+    "x": 3400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_moose_ribs_a1_1x1": {
+    "x": 3600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:wall_light_mount_metal_black_a1_1x1": {
+    "x": 3800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_multicolor1_cluster_a10_1x1": {
+    "x": 4000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_multicolor2_cluster_a10_1x1": {
+    "x": 4200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_multicolor3_cluster_a10_1x1": {
+    "x": 4400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:music_box_blue_metal_silver_a1_1x1": {
+    "x": 4600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_harp_blue_a1_1x1": {
+    "x": 4800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:naughty_nice_list_paper_old_a1_1x1": {
+    "x": 5000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:amulet_a_gold_purple_1x1": {
+    "x": 5200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:nest_medium_a1_1x1": {
+    "x": 5400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:newspaper_bloody_a_1x1": {
+    "x": 5600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:nutcracker_large_wood_painted_a1_1x1": {
+    "x": 5800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:opera_glasses_black_metal_brass_b1_1x1": {
+    "x": 6000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_orange_cluster_a10_1x1": {
+    "x": 6200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:orb_a_black_1x1": {
+    "x": 6400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ore_black_a10_1x1": {
+    "x": 6600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flesh_black_organic_orifice_a10_1x1": {
+    "x": 6800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_blue_decoration_detail_a1_1x1": {
+    "x": 7000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bbq_pot_metal_black_a1_1x1": {
+    "x": 7200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:oil_ball_torch_metal_gray_lit_a1_1x1": {
+    "x": 7400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:door_mat_overlay_black_fuckoff_a1_1x1": {
+    "x": 7600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_owlbear_foot_a1_1x1": {
+    "x": 7800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pan_metal_gray_filled_a1_1x1": {
+    "x": 0,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pants_cloth_black_a1_1x1": {
+    "x": 200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bag_paper_blue_a_1x1": {
+    "x": 400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_paper_blue_rectangle_a1_1x1": {
+    "x": 600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:paper_pile_a1_1x1": {
+    "x": 800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:blank_paper_white_a1_1x1": {
+    "x": 1000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:parasol_lace_black_wood_dark_a1_1x1": {
+    "x": 1200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:parcel_brown_a1_1x1": {
+    "x": 1400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:neck_restraint_metal_black_a1_1x1": {
+    "x": 1600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:patch_overlay_a10_1x1": {
+    "x": 1800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:altar_runner_black_a1_path": {
+    "x": 2000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pebble_stone_earthy_a11_1x1": {
+    "x": 2200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_blue_pen_a1_1x1": {
+    "x": 2400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:perch_leather_black_metal_gray_a1_1x1": {
+    "x": 2600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cowbell_metal_brass_a_1x1": {
+    "x": 2800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:perfume_bottle_glass_blue_a1_1x1": {
+    "x": 3000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:dead_mouse_a1_1x1": {
+    "x": 3200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_pig_a1_1x1": {
+    "x": 3400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_pink_cluster_a10_1x1": {
+    "x": 3600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pitcher_metal_gold_a1_1x1": {
+    "x": 3800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:plant_pot_clay_brown_a_1x1": {
+    "x": 4000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:plaque_metal_bronze_a_1x1": {
+    "x": 4200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:plate_metal_gray_filled_a10_1x1": {
+    "x": 4400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:platter_metal_gray_filled_a10_1x1": {
+    "x": 4600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:playing_cards_a1_1x1": {
+    "x": 4800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:plinth_bust_pedestal_marble_white_a1_1x1": {
+    "x": 5000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:post_box_metal_gray_closed_a1_1x1": {
+    "x": 5200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:postcard_back_white_a1_1x1": {
+    "x": 5400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:paper_bloody_poster_a1_1x1": {
+    "x": 5600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pot_cloth_black_lid_a_1x1": {
+    "x": 5800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_blue_lab_bottle_a1_1x1": {
+    "x": 6000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pot_clay_brown_a1_1x1": {
+    "x": 6200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:potted_plant_green_a1_1x1": {
+    "x": 6400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pot_clay_brown_a1_1x1_2": {
+    "x": 6600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:plates_clay_brown_a10_1x1": {
+    "x": 6800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:meat_poultry_roasted_01_chopped_a1_1x1": {
+    "x": 7000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:broken_lady_a2": {
+    "x": 7200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:puddle_water_blue_a11_1x1": {
+    "x": 7400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_purple_cluster_a10_1x1": {
+    "x": 7600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pus_creamy_a10_1x1": {
+    "x": 7800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flesh_black_pustule_a10_1x1": {
+    "x": 0,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:rag_cloth_black_a_1x1": {
+    "x": 200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_ram_a1_1x1": {
+    "x": 400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:baby_rattle_metal_brass_a1_1x1": {
+    "x": 600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:meat_piece_raw_01_a1_1x1": {
+    "x": 800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:rug_rectangle_small_designa_black_a1_1x1": {
+    "x": 1000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mug_side_wood_red_a_1x1": {
+    "x": 1200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:chain_metal_gray_a_1x1": {
+    "x": 1400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:gift_ribbon_silk_black_a1_1x1": {
+    "x": 1600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ribbon_cloth_black_a_1x1": {
+    "x": 1800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:beast_bone_bloody_rib_small_a10_1x1": {
+    "x": 2000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ring_metal_gold_a_1x1": {
+    "x": 2200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:carpet_edge_ripped_blackgold_a1_path": {
+    "x": 2400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:rip_ground_large_overlay_a2_1x1": {
+    "x": 2600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:rock_ore_overlay_black_a10_1x1": {
+    "x": 2800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:rock_stone_earthy_a10_1x1": {
+    "x": 3000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:rolled_rug_large_designa_purple_upright_a1_1x1": {
+    "x": 3200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:rope_ashen_a1_1x1": {
+    "x": 3400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_sabertooth_skull_a1_1x1": {
+    "x": 3600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:sack_black_a1_1x1": {
     "x": 3800,
     "y": 1600,
     "w": 200,
@@ -1439,1756 +2719,3316 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-props-decor:flesh_black_organic_growth_a10_1x1": {
-    "x": 0,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:tooth_bleached_a10_1x1": {
-    "x": 200,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:mirror_hand_metal_brass_a_1x1": {
-    "x": 400,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:breast_ripper_black_a1_1x1": {
-    "x": 600,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:hanger_peg_metal_brass_a1_1x1": {
-    "x": 800,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:clothing_cloth_black_a1_1x1": {
-    "x": 1000,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:hanging_corset_cloth_black_wood_ashen_a1_1x1": {
-    "x": 1200,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:mannequin_head_wood_ashen_burned_a1_1x1": {
-    "x": 1400,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:bonnet_cap_cloth_black_a1_1x1": {
-    "x": 1600,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:hip_flask_metal_brass_a1_1x1": {
-    "x": 1800,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:beast_bone_bloody_hip_a10_1x1": {
-    "x": 2000,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:hookah_glass_black_a1_1x1": {
-    "x": 2200,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_horse_jaw_a1_1x1": {
-    "x": 2400,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:cage_small_wood_ashen_metal_gray_a1_1x1": {
-    "x": 2600,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ingot_pile_black_a1_1x1": {
-    "x": 2800,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ingot_rod_black_a1_1x1": {
-    "x": 3000,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ingot_black_a1_1x1": {
-    "x": 3200,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:blotting_paper_a1_1x1": {
-    "x": 3400,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:inkwell_base_metal_brass_a1_1x1": {
-    "x": 3600,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:underdark_insect_hive_brown_a1_1x1": {
-    "x": 3800,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ceremorph_blue_input_device_a1_1x1": {
-    "x": 0,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:wall_light_black_metal_rusty_a1_1x1": {
-    "x": 200,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:jack_in_the_box_wood_ashen_a1_1x1": {
-    "x": 400,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:cloak_cloth_black_a2_1x1": {
-    "x": 600,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:jewel_box_metal_gold_a_blue_1x1": {
-    "x": 800,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:jigsaw_puzzle_a1_1x1": {
-    "x": 1000,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:bookmark_leather_black_a_1x1": {
-    "x": 1200,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:jug_clay_brown_a1_1x1": {
-    "x": 1400,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:organ_pipes_wood_ashen_metal_gray_a_1x1": {
-    "x": 1600,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:cooking_spoon_wood_ashen_a_1x1": {
-    "x": 1800,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:cleaver_wood_ashen_a1_1x1": {
-    "x": 2000,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:toy_kite_black_white_a1_1x1": {
-    "x": 2200,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:lamp_pillar_stone_earthy_a_brass_1x1": {
-    "x": 2400,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:magic_lamp_black_1x1": {
-    "x": 2600,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:lantern_metal_brass_a1_1x1": {
-    "x": 2800,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:pet_chain_metal_gray_a1_1x1": {
-    "x": 3000,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:letter_blocks_a_1x1": {
-    "x": 3200,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:letter_opener_antler_a1_1x1": {
-    "x": 3400,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:letter_rack_metal_brass_a1_1x1": {
-    "x": 3600,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:letter_scale_metal_brass_wood_ashen_a1_1x1": {
-    "x": 3800,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:folded_letter_white_a1_1x1": {
-    "x": 0,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:lid_metal_copper_a1_1x1": {
-    "x": 200,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:mug_side_wood_light_a_1x1": {
-    "x": 400,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ceremorph_blue_glowing_orb_holder_a1_1x1": {
-    "x": 600,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:carpet_edge_lines_blackgold_a1_path": {
-    "x": 800,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_lion_foot_a1_1x1": {
-    "x": 1000,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:canteen_leather_black_a_1x1": {
-    "x": 1200,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:brazier_blue_a_embers_1x1": {
-    "x": 1400,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:key_metal_copper_a_1x1": {
-    "x": 1600,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:beast_bone_bloody_medium_a10_1x1": {
-    "x": 1800,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:mannequin_foot_wood_ashen_metal_gray_burned_a1_1x1": {
-    "x": 2000,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:box_luggage_lid_leather_blue_metal_gray_a10_1x1": {
-    "x": 2200,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:box_luggage_base_leather_blue_metal_gray_a10_1x1": {
-    "x": 2400,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:box_luggage_lid_open_leather_blue_metal_gray_a10_1x1": {
-    "x": 2600,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:bag_of_beans_a1_1x1": {
-    "x": 2800,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:belt_of_dwarvenkind_a1_1x1": {
-    "x": 3000,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:boots_of_speed_fallen_a1_1x1": {
-    "x": 3200,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:circlet_of_blasting_a1_1x1": {
-    "x": 3400,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:rock_stone_slate_blue_b10_1x1": {
-    "x": 3600,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:mail_box_metal_gray_closed_a1_1x1": {
-    "x": 3800,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:compact_blush_metal_black_a1_1x1": {
-    "x": 0,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:makeup_brush_metal_black_a1_1x1": {
-    "x": 200,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:map_blank_d_1x1": {
-    "x": 400,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:matches_case_metal_brass_a1_1x1": {
-    "x": 600,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:meat_hook_chain_metal_black_a1_1x1": {
-    "x": 800,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:meat_hook_metal_black_a1_1x1": {
-    "x": 1000,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:menu_sign_insert_black_a1_1x1": {
-    "x": 1200,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:abacus_wood_ashen_a_1x1": {
-    "x": 1400,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:dice_d10_metal_black_a1_1x1": {
-    "x": 1600,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:milk_bottle_a1_1x1": {
-    "x": 1800,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ceremorph_brain_recepticle_blue_a1_1x1": {
-    "x": 2000,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:meat_skewer_sauce_a1_1x1": {
-    "x": 2200,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_dog_skull_a1_1x1": {
-    "x": 2400,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ship_model_bottle_glass_blue_a1_1x1": {
-    "x": 2600,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:aboard_wood_ashen_a1_1x1": {
-    "x": 2800,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:sign_arrow_metal_gray_a1_1x1": {
-    "x": 3000,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_monkey_a1_1x1": {
-    "x": 3200,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_moose_ribs_a1_1x1": {
-    "x": 3400,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:wall_light_mount_metal_black_a1_1x1": {
-    "x": 3600,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:crystal_multicolor1_cluster_a10_1x1": {
-    "x": 3800,
-    "y": 2400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:crystal_multicolor2_cluster_a10_1x1": {
-    "x": 0,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:crystal_multicolor3_cluster_a10_1x1": {
-    "x": 200,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:music_box_blue_metal_silver_a1_1x1": {
-    "x": 400,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ceremorph_harp_blue_a1_1x1": {
-    "x": 600,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:naughty_nice_list_paper_old_a1_1x1": {
-    "x": 800,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:amulet_a_gold_purple_1x1": {
-    "x": 1000,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:nest_medium_a1_1x1": {
-    "x": 1200,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:newspaper_bloody_a_1x1": {
-    "x": 1400,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:nutcracker_large_wood_painted_a1_1x1": {
-    "x": 1600,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:opera_glasses_black_metal_brass_b1_1x1": {
-    "x": 1800,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:crystal_orange_cluster_a10_1x1": {
-    "x": 2000,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:orb_a_black_1x1": {
-    "x": 2200,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ore_black_a10_1x1": {
-    "x": 2400,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:flesh_black_organic_orifice_a10_1x1": {
-    "x": 2600,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ceremorph_blue_decoration_detail_a1_1x1": {
-    "x": 2800,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:bbq_pot_metal_black_a1_1x1": {
-    "x": 3000,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:oil_ball_torch_metal_gray_lit_a1_1x1": {
-    "x": 3200,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:door_mat_overlay_black_fuckoff_a1_1x1": {
-    "x": 3400,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_owlbear_foot_a1_1x1": {
-    "x": 3600,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:pan_metal_gray_filled_a1_1x1": {
-    "x": 3800,
-    "y": 2600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:pants_cloth_black_a1_1x1": {
-    "x": 0,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:bag_paper_blue_a_1x1": {
-    "x": 200,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:box_paper_blue_rectangle_a1_1x1": {
-    "x": 400,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:paper_pile_a1_1x1": {
-    "x": 600,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:blank_paper_white_a1_1x1": {
-    "x": 800,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:parasol_lace_black_wood_dark_a1_1x1": {
-    "x": 1000,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:parcel_brown_a1_1x1": {
-    "x": 1200,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:neck_restraint_metal_black_a1_1x1": {
-    "x": 1400,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:altar_runner_black_a1_path": {
-    "x": 1600,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:pebble_stone_earthy_a11_1x1": {
-    "x": 1800,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ceremorph_blue_pen_a1_1x1": {
-    "x": 2000,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:perch_leather_black_metal_gray_a1_1x1": {
-    "x": 2200,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:cowbell_metal_brass_a_1x1": {
-    "x": 2400,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:perfume_bottle_glass_blue_a1_1x1": {
-    "x": 2600,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:dead_mouse_a1_1x1": {
-    "x": 2800,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_pig_a1_1x1": {
-    "x": 3000,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:crystal_pink_cluster_a10_1x1": {
-    "x": 3200,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:pitcher_metal_gold_a1_1x1": {
-    "x": 3400,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:plant_pot_clay_brown_a_1x1": {
-    "x": 3600,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:plaque_metal_bronze_a_1x1": {
-    "x": 3800,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:plate_metal_gray_filled_a10_1x1": {
-    "x": 0,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:platter_metal_gray_filled_a10_1x1": {
-    "x": 200,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:playing_cards_a1_1x1": {
-    "x": 400,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:plinth_bust_pedestal_marble_white_a1_1x1": {
-    "x": 600,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:post_box_metal_gray_closed_a1_1x1": {
-    "x": 800,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:postcard_back_white_a1_1x1": {
-    "x": 1000,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:paper_bloody_poster_a1_1x1": {
-    "x": 1200,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:pot_cloth_black_lid_a_1x1": {
-    "x": 1400,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ceremorph_blue_lab_bottle_a1_1x1": {
-    "x": 1600,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:pot_clay_brown_a1_1x1": {
-    "x": 2200,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:potted_plant_green_a1_1x1": {
-    "x": 2000,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:plates_clay_brown_a10_1x1": {
-    "x": 2400,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:meat_poultry_roasted_01_chopped_a1_1x1": {
-    "x": 2600,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:puddle_water_blue_a11_1x1": {
-    "x": 2800,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:crystal_purple_cluster_a10_1x1": {
-    "x": 3000,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:pus_creamy_a10_1x1": {
-    "x": 3200,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:flesh_black_pustule_a10_1x1": {
-    "x": 3400,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:rag_cloth_black_a_1x1": {
-    "x": 3600,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_ram_a1_1x1": {
-    "x": 3800,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:baby_rattle_metal_brass_a1_1x1": {
-    "x": 0,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:meat_piece_raw_01_a1_1x1": {
-    "x": 200,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:rug_rectangle_small_designa_black_a1_1x1": {
-    "x": 400,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:mug_side_wood_red_a_1x1": {
-    "x": 600,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:chain_metal_gray_a_1x1": {
-    "x": 800,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:gift_ribbon_silk_black_a1_1x1": {
-    "x": 1000,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ribbon_cloth_black_a_1x1": {
-    "x": 1200,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:beast_bone_bloody_rib_small_a10_1x1": {
-    "x": 1400,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:ring_metal_gold_a_1x1": {
-    "x": 1600,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:carpet_edge_ripped_blackgold_a1_path": {
-    "x": 1800,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:rock_ore_overlay_black_a10_1x1": {
-    "x": 2000,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:rock_stone_earthy_a10_1x1": {
-    "x": 2200,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:rolled_rug_large_designa_purple_upright_a1_1x1": {
-    "x": 2400,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:rope_ashen_a1_1x1": {
-    "x": 2600,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:skeleton_bloody_sabertooth_skull_a1_1x1": {
-    "x": 2800,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-props-decor:sack_black_a1_1x1": {
-    "x": 3000,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
   "atlas-props-decor:safeco_logo_metal_black_a1_1x1": {
-    "x": 3200,
-    "y": 3200,
+    "x": 4000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:tooth_saliva_blue_a10_1x1": {
-    "x": 3400,
-    "y": 3200,
+    "x": 4200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:sauciere_metal_gray_a_1x1": {
-    "x": 3600,
-    "y": 3200,
+    "x": 4400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:meat_sausage_01_a1_1x1": {
-    "x": 3800,
-    "y": 3200,
+    "x": 4600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:scales_weights_metal_brass_a_1x1": {
-    "x": 0,
-    "y": 3400,
+    "x": 4800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:bandana_cloth_black_a1_1x1": {
-    "x": 200,
-    "y": 3400,
+    "x": 5000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:scroll_case_a_black_1x1": {
-    "x": 400,
-    "y": 3400,
+    "x": 5200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:fancy_scroll_a_01_1x1": {
-    "x": 600,
-    "y": 3400,
+    "x": 5400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:sign_shaped_wood_ashen_a1_1x1": {
-    "x": 800,
-    "y": 3400,
+    "x": 5600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_shark_fin_a1_1x1": {
-    "x": 1000,
-    "y": 3400,
+    "x": 5800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:razor_blade_metal_gray_a1_1x1": {
-    "x": 1200,
-    "y": 3400,
+    "x": 6000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:music_sheets_bloody_a_1x1": {
-    "x": 1400,
-    "y": 3400,
+    "x": 6200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:shirt_cloth_black_a1_1x1": {
-    "x": 1600,
-    "y": 3400,
+    "x": 6400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:shop_logo_black_a_1x1": {
-    "x": 1800,
-    "y": 3400,
+    "x": 6600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ink_pad_metal_brass_black_a1_1x1": {
-    "x": 2000,
-    "y": 3400,
+    "x": 6800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:sign_post_wood_ashen_e1_1x1": {
-    "x": 2200,
-    "y": 3400,
+    "x": 7000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:aboard_fortune_teller_wood_black_a1_1x1": {
-    "x": 2400,
-    "y": 3400,
+    "x": 7200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ceremorph_basin_blue_a1_1x1": {
-    "x": 2600,
-    "y": 3400,
+    "x": 7400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:sketchbook_black_a2_1x1": {
-    "x": 2800,
-    "y": 3400,
+    "x": 7600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cyst_skinless_bile_a10_1x1": {
-    "x": 3000,
-    "y": 3400,
+    "x": 7800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skipping_rope_wood_ashen_a1_1x1": {
-    "x": 3200,
-    "y": 3400,
+    "x": 0,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skittles_ball_wood_ashen_a1_1x1": {
-    "x": 3400,
-    "y": 3400,
+    "x": 200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skull_decor_black_1x1": {
-    "x": 3600,
-    "y": 3400,
+    "x": 400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cheese_01_slice_a1_1x1": {
-    "x": 3800,
-    "y": 3400,
+    "x": 600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:toy_slingshot_ammo_a1_1x1": {
-    "x": 0,
-    "y": 3600,
+    "x": 800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:underdark_crystal_rock_sliver_blue_a10_1x1": {
-    "x": 200,
-    "y": 3600,
+    "x": 1000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:curtain_small_cloth_black_a_1x1": {
-    "x": 400,
-    "y": 3600,
+    "x": 1200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:curtain_rod_ends_small_metal_brass_a_1x1": {
-    "x": 600,
-    "y": 3600,
+    "x": 1400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:curtain_small_metal_brass_a1_black_1x1": {
-    "x": 800,
-    "y": 3600,
+    "x": 1600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:pipe_wood_ashen_a_1x1": {
-    "x": 1000,
-    "y": 3600,
+    "x": 1800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:skeleton_bloody_snake_jaw_a1_1x1": {
-    "x": 1200,
-    "y": 3600,
+    "x": 2000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:snake_basket_lid_wood_ashen_a1_1x1": {
-    "x": 1400,
-    "y": 3600,
+    "x": 2200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:soap_beige_a_1x1": {
-    "x": 1600,
-    "y": 3600,
+    "x": 2400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:crystal_a_black_1x1": {
-    "x": 1800,
-    "y": 3600,
+    "x": 2600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:underdark_spider_cocoon_brown_body_a1_1x1": {
-    "x": 2000,
-    "y": 3600,
+    "x": 2800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:beast_bone_bloody_plate_a1_1x1": {
-    "x": 2200,
-    "y": 3600,
+    "x": 3000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:planchette_metal_brass_a1_1x1": {
-    "x": 2400,
-    "y": 3600,
+    "x": 3200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:campfire_spit_holder_metal_black_a1_1x1": {
-    "x": 2600,
-    "y": 3600,
+    "x": 3400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:underdark_spider_cocoon_brown_bloody_body_a1_1x1": {
-    "x": 2800,
-    "y": 3600,
+    "x": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:stalagmite_hole_rock_earthy_a10_1x1": {
-    "x": 3000,
-    "y": 3600,
+    "x": 3800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:cane_umbrella_stand_metal_gray_a1_1x1": {
-    "x": 3200,
-    "y": 3600,
+    "x": 4000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:planetar_a": {
+    "x": 4200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:statue_angel_metal_gold_a_blue_1x1": {
-    "x": 3400,
-    "y": 3600,
+    "x": 4400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:stein_closed_metal_gold_a1_1x1": {
-    "x": 3600,
-    "y": 3600,
+    "x": 4600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:stepping_stone_earthy_a1_1x1": {
-    "x": 3800,
-    "y": 3600,
+    "x": 4800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:stitch_overlay_a10_1x1": {
+    "x": 5000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:gift_stocking_green_a1_1x1": {
-    "x": 0,
-    "y": 3800,
+    "x": 5200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:underdark_crystal_rock_stone_drow_a1_1x1": {
-    "x": 200,
-    "y": 3800,
+    "x": 5400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:stone_weight_a1_1x1": {
-    "x": 400,
-    "y": 3800,
+    "x": 5600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:stone_earthy_a10_1x1": {
-    "x": 600,
-    "y": 3800,
+    "x": 5800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:banjo_wood_ashen_metal_gray_a_1x1": {
-    "x": 800,
-    "y": 3800,
+    "x": 6000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:strongbox_a1_metal_gray_1x1": {
-    "x": 1000,
-    "y": 3800,
+    "x": 6200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:stuffing_a10_1x1": {
+    "x": 6400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:table_arrangement_a10_1x1": {
-    "x": 1200,
-    "y": 3800,
+    "x": 6600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:lamp_light_a1_1x1": {
-    "x": 1400,
-    "y": 3800,
+    "x": 6800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:table_napkins_cloth_black_a_1x1": {
-    "x": 1600,
-    "y": 3800,
+    "x": 7000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:tea_kettle_metal_gray_a1_1x1": {
-    "x": 1800,
-    "y": 3800,
+    "x": 7200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:porcelain_black_tea_pot_a_1x1": {
-    "x": 2000,
-    "y": 3800,
+    "x": 7400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:teddy_blonde_a1_1x1": {
-    "x": 2200,
-    "y": 3800,
+    "x": 7600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:tooth_bleached_gums_black_a10_1x1": {
-    "x": 2400,
-    "y": 3800,
+    "x": 7800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:blackbear": {
+    "x": 0,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:batswarm": {
+    "x": 200,
+    "y": 2000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:telephone_metal_black_a1_1x1": {
-    "x": 2600,
-    "y": 3800,
+    "x": 400,
+    "y": 2000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:telescope_metal_brass_a1_ashen_1x1": {
-    "x": 2800,
-    "y": 3800,
+    "x": 600,
+    "y": 2000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:ball_bearings_bag_brown_a_1x1": {
-    "x": 3000,
-    "y": 3800,
+    "x": 800,
+    "y": 2000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:tombstone_base_stone_earthy_a_1x1": {
-    "x": 3200,
-    "y": 3800,
+    "x": 1000,
+    "y": 2000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:atlas_of_endless_horizons_a1_1x1": {
-    "x": 3400,
-    "y": 3800,
+    "x": 1200,
+    "y": 2000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:crowbar_metal_gray_a_1x1": {
-    "x": 3600,
-    "y": 3800,
+    "x": 1400,
+    "y": 2000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-props-decor:sconce_a_1x1": {
-    "x": 3800,
-    "y": 3800,
+    "x": 1600,
+    "y": 2000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
+  },
+  "atlas-props-decor:torment_manacles_metal_black_large_a1_1x1": {
+    "x": 1800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:torment_chain_metal_black_a1_1x1": {
+    "x": 2000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mannequin_torso_wood_ashen_burned_a1_1x1": {
+    "x": 2200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:torture_chair_electric_wood_ashen_metal_gray_a1_1x1": {
+    "x": 2400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:barrel_torture_wood_ashen_a1_1x1": {
+    "x": 2600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:torment_torture_mask_metal_black_a1_1x1": {
+    "x": 2800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_operating_arm_blue_a1_1x1": {
+    "x": 3000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:toy_shield_wood_ashen_a1_1x1": {
+    "x": 3200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:airplane_paper_white_a1_1x1": {
+    "x": 3400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:tracks_dirt_01_bear_a1_1x1": {
+    "x": 3600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:toy_train_part_wooden_ashen_a1_1x1": {
+    "x": 3800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:hunting_trap_metal_gray_a1_1x1": {
+    "x": 4000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_blue_tray_a1_1x1": {
+    "x": 4200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:treasure_chest_wood_ashen_a1_1x1": {
+    "x": 4400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:treasure_pile_copper_a10_1x1": {
+    "x": 4600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:trinket_box_metal_brass_a1_1x1": {
+    "x": 4800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pentacle_black_1x1": {
+    "x": 5000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:wall_trophy_wood_ashen_a1_pony_1x1": {
+    "x": 5200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:wall_trophy_frame_fancy_wood_ashen_a1_1x1": {
+    "x": 5400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:beast_bone_bloody_spike_medium_a11_1x1": {
+    "x": 5600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:typewriter_metal_black_a1_1x1": {
+    "x": 5800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_tyrannosaurus_rex_hand_a1_1x1": {
+    "x": 6000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:umbrella_black_wood_red_a1_1x1": {
+    "x": 6200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:sock_cloth_black_a1_1x1": {
+    "x": 6400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mannequin_arm_wood_ashen_metal_gray_burned_a11_1x1": {
+    "x": 6600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:trophy_urn_clay_brown_a_1x1": {
+    "x": 6800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:vase_clay_brown_a1_1x1": {
+    "x": 7000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:artichoke_green_a1_1x1": {
+    "x": 7200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:corset_cloth_black_a1_1x1": {
+    "x": 7400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:wall_lamp_double_metal_brass_a_1x1": {
+    "x": 7600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:torment_wallring_metal_black_a1_1x1": {
+    "x": 7800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mug_side_wood_walnut_a_1x1": {
+    "x": 0,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flesh_black_warts_cluster_a10_1x1": {
+    "x": 200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pocket_watch_closed_metal_brass_a1_1x1": {
+    "x": 400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flesh_black_organic_webbing_a10_1x1": {
+    "x": 600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_whale_fin_a2_1x1": {
+    "x": 800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_white_cluster_a10_1x1": {
+    "x": 1000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:curtain_rod_end_metal_brass_a_1x1": {
+    "x": 1200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:debris_wood_burnt_a8_1x1": {
+    "x": 1400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:clarinet_wood_ashen_metal_gray_a_1x1": {
+    "x": 1600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ink_bottle_a_1x1": {
+    "x": 1800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_yellow_cluster_a10_1x1": {
+    "x": 2000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:arranged_clutter_a11_1x1": {
+    "x": 2200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:sign_bracket_brace_metal_gray_b1_1x1": {
+    "x": 2400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_alligator_leg_a1_1x1": {
+    "x": 2600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_eyeball_01_medium_a1_1x1": {
+    "x": 2800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:amphora_clay_brown_a1_broken_1x1": {
+    "x": 3000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flag_angled_pole_metal_gold_b2_1x1": {
+    "x": 3200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flag_angled_fabric_black_b1_1x1": {
+    "x": 3400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flag_angled_ripped_fabric_black_b1_1x1": {
+    "x": 3600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:apron_cloth_black_folded_d1_1x1": {
+    "x": 3800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:aquarium_small_wood_dark_a1_1x1": {
+    "x": 4000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:armillary_sphere_metal_brass_gray_b1_1x1": {
+    "x": 4200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:candles_black_arranged_a2_1x1": {
+    "x": 4400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:arranged_decor_a7_1x1": {
+    "x": 4600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:storage_arrangement_a11_1x1": {
+    "x": 4800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:mug_side_wood_ashen_b_1x1": {
+    "x": 5000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ashtray_small_stone_earthy_b1_1x1": {
+    "x": 5200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_axe_beak_foot_a1_1x1": {
+    "x": 5400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bbq_grill_metal_gray_a1_1x1": {
+    "x": 5600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:backgammon_board_wood_ashen_a2_1x1": {
+    "x": 5800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:backpack_blue_a2_1x1": {
+    "x": 6000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bag_brown_a_rusty_1x1": {
+    "x": 6200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ball_leather_gray_a1_1x1": {
+    "x": 6400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bangle_metal_gold_a_green_1x1": {
+    "x": 6600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flag_banner_fabric_black_small_top_a2_1x1": {
+    "x": 6800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flag_banner_rail_metal_gold_small_b1_1x1": {
+    "x": 7000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flag_banner_fabric_black_small_a2_1x1": {
+    "x": 7200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:flag_banner_ripped_fabric_black_small_a2_1x1": {
+    "x": 7400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:barbwire_metal_black_a2_1x1": {
+    "x": 7600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:barrel_lid_wood_ashen_a2_1x1": {
+    "x": 7800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:sign_post_base_stone_earthy_b1_1x1": {
+    "x": 0,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:basket_bin_wicker_ashen_a2_1x1": {
+    "x": 200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_bat_a2_1x1": {
+    "x": 400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bauble_gold_a1_broken_1x1": {
+    "x": 600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_bear_skull_a1_1x1": {
+    "x": 800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:pet_bed_wood_ashen_bedding_blue_b1_1x1": {
+    "x": 1000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:meat_bacon_roasted_01_a2_1x1": {
+    "x": 1200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bell_hand_wood_ashen_bronze_a_1x1": {
+    "x": 1400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:belt_leather_black_a2_1x1": {
+    "x": 1600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:binoculars_case_brown_a1_1x1": {
+    "x": 1800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:birdcage_metal_brass_c1_1x1": {
+    "x": 2000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_black_cluster_a8_1x1": {
+    "x": 2200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:blackboard_insert_black_a2_1x1": {
+    "x": 2400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:crystal_blue_cluster_a8_1x1": {
+    "x": 2600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_boar_jaw_a1_1x1": {
+    "x": 2800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:character_sheet_paper_bloody_b_1x1": {
+    "x": 3000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:arranged_clutter_board_wood_ashen_a11_1x1": {
+    "x": 3200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:beast_bone_bloody_pile_a13_1x1": {
+    "x": 3400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:book_end_stone_earthy_b1_1x1": {
+    "x": 3600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:book_leather_line_a2_1x1": {
+    "x": 3800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:books_row_b_1x1": {
+    "x": 4000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:book_a_blue_1x1": {
+    "x": 4200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:baby_bottle_empty_glass_a2_1x1": {
+    "x": 4400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bottle_glass_a_blue_1x1": {
+    "x": 4600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bowl_metal_gray_filled_a2_1x1": {
+    "x": 4800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_insert_hay_01_a1_1x1": {
+    "x": 5000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_lid_leaning_wood_ashen_a2_1x1": {
+    "x": 5200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_spray_black_b1_1x1": {
+    "x": 5400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_sticker_blue_a11_1x1": {
+    "x": 5600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_lid_wood_ashen_a1_1x1": {
+    "x": 5800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:box_base_wood_ashen_a1_1x1": {
+    "x": 6000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_blue_brain_jar_a1_broken_1x1": {
+    "x": 6200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cornett_wood_ashen_b_1x1": {
+    "x": 6400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:brazier_a_empty_1x1": {
+    "x": 6600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:baguette_dark_a2_1x1": {
+    "x": 6800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:perfume_bottle_broken_glass_blue_a2_1x1": {
+    "x": 7000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:brush_metal_brass_b_1x1": {
+    "x": 7200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bucket_pail_metal_gray_a2_1x1": {
+    "x": 7400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:building_blocks_wood_ashen_b1_1x1": {
+    "x": 7600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bunting_flags_black_a5_1x1": {
+    "x": 7800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:burrow_dirt_01_a11_1x1": {
+    "x": 0,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:statue_bust_marble_white_a1_broken_1x1": {
+    "x": 200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cage_door_metal_gray_b_1x1": {
+    "x": 400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:bundcake_chocolate_dark_a2_1x1": {
+    "x": 600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_camel_skull_a1_1x1": {
+    "x": 800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:campfire_ash_b1_1x1": {
+    "x": 1000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:candelabra_metal_gold_a2_1x1": {
+    "x": 1200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:candle_holder_fancy_metal_gold_a1_1x1": {
+    "x": 1400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:candle_snuffer_metal_rusty_a1_1x1": {
+    "x": 1600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:candle_black_wax_a2_1x1": {
+    "x": 1800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:candle_black_b_1x1": {
+    "x": 2000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cane_wood_ashen_a2_1x1": {
+    "x": 2200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:sign_post_cap_metal_gray_b1_1x1": {
+    "x": 2400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cash_register_metal_metal_brass_gray_a_1x1": {
+    "x": 2600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cauldron_metal_gray_filled_a2_1x1": {
+    "x": 2800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cheese_ball_01_a2_1x1": {
+    "x": 3000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:chest_wood_ashen_a_rusty_1x1": {
+    "x": 3200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:skeleton_bloody_chicken_b1_1x1": {
+    "x": 3400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:childs_teaset_milkjug_green_a1_1x1": {
+    "x": 3600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:acorn_a2_1x1": {
+    "x": 3800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:christmas_tree_topper_a2_1x1": {
+    "x": 4000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cigarette_a2_1x1": {
+    "x": 4200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ashtray_large_stone_volcanic_b1_1x1": {
+    "x": 4400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:clock_wood_dark_a1_1x1": {
+    "x": 4600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cloth_black_b_1x1": {
+    "x": 4800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cloth_bolt_black_a_dark_1x1": {
+    "x": 5000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cloth_folded_black_b_1x1": {
+    "x": 5200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:cloth_ripped_black_b_1x1": {
+    "x": 5400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:clothing_folded_pile_blue_a1_1x1": {
+    "x": 5600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:clothing_rail_wood_dark_a1_1x1": {
+    "x": 5800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:basin_coal_fire_blue_a2_1x1": {
+    "x": 6000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:basin_coal_fire_unlit_a2_1x1": {
+    "x": 6200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:coffee_grinder_metal_black_wood_walnut_a2_1x1": {
+    "x": 6400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:coin_pile_copper_a11_1x1": {
+    "x": 6600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:coin_pile_edge_copper_a11_1x1": {
+    "x": 6800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:coin_copper_a2_1x1": {
+    "x": 7000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:torment_collar_metal_black_medium_b1_1x1": {
+    "x": 7200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:comb_wood_ashen_b_1x1": {
+    "x": 7400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:ceremorph_control_tentacle_blue_a11_1x1": {
+    "x": 7600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:amphora_c2_cork_1x1": {
+    "x": 7800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-props-decor:coffin_black_a_cloth_purple_1x2": {
+    "x": 0,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_a_cloth_red_1x2": {
+    "x": 200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_a_cloth_tan_1x2": {
+    "x": 400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_b_cloth_purple_1x2": {
+    "x": 600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_b_cloth_red_1x2": {
+    "x": 800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_b_cloth_tan_1x2": {
+    "x": 1000,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_a1_gold_1x2": {
+    "x": 1200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_a1_red_1x2": {
+    "x": 1400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_a1_white_1x2": {
+    "x": 1600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_a2_gold_1x2": {
+    "x": 1800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_a2_red_1x2": {
+    "x": 2000,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_a2_white_1x2": {
+    "x": 2200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_b1_gold_1x2": {
+    "x": 2400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_b1_red_1x2": {
+    "x": 2600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_b1_white_1x2": {
+    "x": 2800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_b2_gold_1x2": {
+    "x": 3000,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_b2_red_1x2": {
+    "x": 3200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_black_top_b2_white_1x2": {
+    "x": 3400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_a_1x2": {
+    "x": 3600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_b_1x2": {
+    "x": 3800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_c_1x2": {
+    "x": 4000,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_d_1x2": {
+    "x": 4200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_e_1x2": {
+    "x": 4400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_a1_1x2": {
+    "x": 4600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_a2_1x2": {
+    "x": 4800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_b1_1x2": {
+    "x": 5000,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_b2_1x2": {
+    "x": 5200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_c1_1x2": {
+    "x": 5400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_c2_1x2": {
+    "x": 5600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_d1_1x2": {
+    "x": 5800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_d2_1x2": {
+    "x": 6000,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_e1_1x2": {
+    "x": 6200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_ashen_top_e2_1x2": {
+    "x": 6400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_a_1x2": {
+    "x": 6600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_b_1x2": {
+    "x": 6800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_c_1x2": {
+    "x": 7000,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_d_1x2": {
+    "x": 7200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_e_1x2": {
+    "x": 7400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_a1_1x2": {
+    "x": 7600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_a2_1x2": {
+    "x": 7800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_b1_1x2": {
+    "x": 0,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_b2_1x2": {
+    "x": 200,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_c1_1x2": {
+    "x": 400,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_c2_1x2": {
+    "x": 600,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_d1_1x2": {
+    "x": 800,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_d2_1x2": {
+    "x": 1000,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_e1_1x2": {
+    "x": 1200,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_dark_top_e2_1x2": {
+    "x": 1400,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_a_1x2": {
+    "x": 1600,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_b_1x2": {
+    "x": 1800,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_c_1x2": {
+    "x": 2000,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_d_1x2": {
+    "x": 2200,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_e_1x2": {
+    "x": 2400,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_a1_1x2": {
+    "x": 2600,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_a2_1x2": {
+    "x": 2800,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_b1_1x2": {
+    "x": 3000,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_b2_1x2": {
+    "x": 3200,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_c1_1x2": {
+    "x": 3400,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_c2_1x2": {
+    "x": 3600,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_d1_1x2": {
+    "x": 3800,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_d2_1x2": {
+    "x": 4000,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_e1_1x2": {
+    "x": 4200,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_light_top_e2_1x2": {
+    "x": 4400,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_a_1x2": {
+    "x": 4600,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_b_1x2": {
+    "x": 4800,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_c_1x2": {
+    "x": 5000,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_d_1x2": {
+    "x": 5200,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_e_1x2": {
+    "x": 5400,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_a1_1x2": {
+    "x": 5600,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_a2_1x2": {
+    "x": 5800,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_b1_1x2": {
+    "x": 6000,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_b2_1x2": {
+    "x": 6200,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_c1_1x2": {
+    "x": 6400,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_c2_1x2": {
+    "x": 6600,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_d1_1x2": {
+    "x": 6800,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_d2_1x2": {
+    "x": 7000,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_e1_1x2": {
+    "x": 7200,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_red_top_e2_1x2": {
+    "x": 7400,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_a_1x2": {
+    "x": 7600,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_b_1x2": {
+    "x": 7800,
+    "y": 3200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_c_1x2": {
+    "x": 0,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_d_1x2": {
+    "x": 200,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_e_1x2": {
+    "x": 400,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_a1_1x2": {
+    "x": 600,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_a2_1x2": {
+    "x": 800,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_b1_1x2": {
+    "x": 1000,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_b2_1x2": {
+    "x": 1200,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_c1_1x2": {
+    "x": 1400,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_c2_1x2": {
+    "x": 1600,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_d1_1x2": {
+    "x": 1800,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_d2_1x2": {
+    "x": 2000,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_e1_1x2": {
+    "x": 2200,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:coffin_wood_walnut_top_e2_1x2": {
+    "x": 2400,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:grave_hole_dirt_01_hole_a1_2x3": {
+    "x": 2600,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_01_hole_a2_2x3": {
+    "x": 3000,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_01_hole_b1_2x3": {
+    "x": 3400,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_02_hole_a1_2x3": {
+    "x": 3800,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_02_hole_a2_2x3": {
+    "x": 4200,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_02_hole_b1_2x3": {
+    "x": 4600,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_03_hole_a1_2x3": {
+    "x": 5000,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_03_hole_a2_2x3": {
+    "x": 5400,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_03_hole_b1_2x3": {
+    "x": 5800,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_04_hole_a1_2x3": {
+    "x": 6200,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_04_hole_a2_2x3": {
+    "x": 6600,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_hole_dirt_04_hole_b1_2x3": {
+    "x": 7000,
+    "y": 3600,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:pile_dirt_01_c1_1x2": {
+    "x": 7400,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_01_c2_1x2": {
+    "x": 7600,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_01_c3_1x2": {
+    "x": 7800,
+    "y": 3600,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_01_c4_1x2": {
+    "x": 0,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_01_c5_1x2": {
+    "x": 200,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_01_c6_1x2": {
+    "x": 400,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_01_d1_2x2": {
+    "x": 600,
+    "y": 4200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_01_d2_2x2": {
+    "x": 1000,
+    "y": 4200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_02_c1_1x2": {
+    "x": 1400,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_02_c2_1x2": {
+    "x": 1600,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_02_c3_1x2": {
+    "x": 1800,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_02_c4_1x2": {
+    "x": 2000,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_02_c5_1x2": {
+    "x": 2200,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_02_c6_1x2": {
+    "x": 2400,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_02_d1_2x2": {
+    "x": 2600,
+    "y": 4200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_02_d2_2x2": {
+    "x": 3000,
+    "y": 4200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_03_c1_1x2": {
+    "x": 3400,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_03_c2_1x2": {
+    "x": 3600,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_03_c3_1x2": {
+    "x": 3800,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_03_c4_1x2": {
+    "x": 4000,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_03_c5_1x2": {
+    "x": 4200,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_03_c6_1x2": {
+    "x": 4400,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_03_d1_2x2": {
+    "x": 4600,
+    "y": 4200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_03_d2_2x2": {
+    "x": 5000,
+    "y": 4200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_04_c1_1x2": {
+    "x": 5400,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_04_c2_1x2": {
+    "x": 5600,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_04_c3_1x2": {
+    "x": 5800,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_04_c4_1x2": {
+    "x": 6000,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_04_c5_1x2": {
+    "x": 6200,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_04_c6_1x2": {
+    "x": 6400,
+    "y": 4200,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_04_d1_2x2": {
+    "x": 6600,
+    "y": 4200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-decor:pile_dirt_04_d2_2x2": {
+    "x": 7000,
+    "y": 4200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-props-decor:grave_stone_earthy_a1_2x3": {
+    "x": 7400,
+    "y": 4200,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_earthy_a2_2x3": {
+    "x": 0,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_earthy_b_2x3": {
+    "x": 400,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_earthy_double_a_3x3": {
+    "x": 800,
+    "y": 4800,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_earthy_double_b_3x3": {
+    "x": 1400,
+    "y": 4800,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_redrock_a1_2x3": {
+    "x": 2000,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_redrock_a2_2x3": {
+    "x": 2400,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_redrock_b_2x3": {
+    "x": 2800,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_redrock_double_a_3x3": {
+    "x": 3200,
+    "y": 4800,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_redrock_double_b_3x3": {
+    "x": 3800,
+    "y": 4800,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_sandstone_a1_2x3": {
+    "x": 4400,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_sandstone_a2_2x3": {
+    "x": 4800,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_sandstone_b_2x3": {
+    "x": 5200,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_sandstone_double_a_3x3": {
+    "x": 5600,
+    "y": 4800,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_sandstone_double_b_3x3": {
+    "x": 6200,
+    "y": 4800,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_slate_a1_2x3": {
+    "x": 6800,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_slate_a2_2x3": {
+    "x": 7200,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_slate_b_2x3": {
+    "x": 7600,
+    "y": 4800,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_slate_double_a_3x3": {
+    "x": 0,
+    "y": 5400,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_slate_double_b_3x3": {
+    "x": 600,
+    "y": 5400,
+    "w": 600,
+    "h": 600,
+    "gw": 3,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_volcanic_a1_2x3": {
+    "x": 1200,
+    "y": 5400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_volcanic_a2_2x3": {
+    "x": 1600,
+    "y": 5400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:grave_stone_volcanic_b_2x3": {
+    "x": 2000,
+    "y": 5400,
+    "w": 400,
+    "h": 600,
+    "gw": 2,
+    "gh": 3
+  },
+  "atlas-props-decor:arranged_clutter_fancy_a31_4x2": {
+    "x": 2400,
+    "y": 5400,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:arranged_clutter_fancy_a32_4x2": {
+    "x": 3200,
+    "y": 5400,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:arranged_clutter_fancy_a33_2x4": {
+    "x": 4000,
+    "y": 5400,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-decor:arranged_clutter_fancy_a34_2x4": {
+    "x": 4400,
+    "y": 5400,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-decor:arranged_clutter_fancy_a35_2x4": {
+    "x": 4800,
+    "y": 5400,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
+  },
+  "atlas-props-decor:table_arrangement_a100_4x2": {
+    "x": 5200,
+    "y": 5400,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:table_arrangement_a32_4x1": {
+    "x": 6000,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-props-decor:table_arrangement_a95_4x2": {
+    "x": 6800,
+    "y": 5400,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:table_arrangement_a96_4x2": {
+    "x": 0,
+    "y": 6200,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:table_arrangement_a97_4x2": {
+    "x": 800,
+    "y": 6200,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:table_arrangement_a98_4x2": {
+    "x": 1600,
+    "y": 6200,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:table_arrangement_a99_4x2": {
+    "x": 2400,
+    "y": 6200,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:rope_01_path_a1_1x4": {
+    "x": 3200,
+    "y": 6200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-decor:rope_01_path_b1_1x4": {
+    "x": 3400,
+    "y": 6200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-decor:rope_02_path_a1_1x4": {
+    "x": 3600,
+    "y": 6200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-decor:rope_02_path_b1_1x4": {
+    "x": 3800,
+    "y": 6200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-decor:rope_03_path_a1_1x4": {
+    "x": 4000,
+    "y": 6200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-decor:rope_03_path_b1_1x4": {
+    "x": 4200,
+    "y": 6200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-decor:clothes_line_a8_1x4": {
+    "x": 4400,
+    "y": 6200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-props-decor:apparatus_of_kwalish_activated_a1_4x3": {
+    "x": 4600,
+    "y": 6200,
+    "w": 800,
+    "h": 600,
+    "gw": 4,
+    "gh": 3
+  },
+  "atlas-props-decor:apparatus_of_kwalish_activated_rusty_a1_4x3": {
+    "x": 5400,
+    "y": 6200,
+    "w": 800,
+    "h": 600,
+    "gw": 4,
+    "gh": 3
+  },
+  "atlas-props-decor:coin_pile_edge_copper_a2_4x2": {
+    "x": 6200,
+    "y": 6200,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:coin_pile_edge_gold_a2_4x2": {
+    "x": 7000,
+    "y": 6200,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:coin_pile_edge_mixed1_a2_4x2": {
+    "x": 0,
+    "y": 7000,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:coin_pile_edge_mixed2_a2_4x2": {
+    "x": 800,
+    "y": 7000,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:coin_pile_edge_mixed3_a2_4x2": {
+    "x": 1600,
+    "y": 7000,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:coin_pile_edge_silver_a2_4x2": {
+    "x": 2400,
+    "y": 7000,
+    "w": 800,
+    "h": 400,
+    "gw": 4,
+    "gh": 2
+  },
+  "atlas-props-decor:arranged_decor_a33_3x4": {
+    "x": 3200,
+    "y": 7000,
+    "w": 600,
+    "h": 800,
+    "gw": 3,
+    "gh": 4
+  },
+  "atlas-props-decor:arranged_decor_a34_3x4": {
+    "x": 3800,
+    "y": 7000,
+    "w": 600,
+    "h": 800,
+    "gw": 3,
+    "gh": 4
+  },
+  "atlas-props-decor:arranged_decor_a35_4x4": {
+    "x": 4400,
+    "y": 7000,
+    "w": 800,
+    "h": 800,
+    "gw": 4,
+    "gh": 4
+  },
+  "atlas-props-decor:christmas_tree_01_fallen_a1_4x3": {
+    "x": 5200,
+    "y": 7000,
+    "w": 800,
+    "h": 600,
+    "gw": 4,
+    "gh": 3
+  },
+  "atlas-props-decor:christmas_tree_02_fallen_a1_4x3": {
+    "x": 6000,
+    "y": 7000,
+    "w": 800,
+    "h": 600,
+    "gw": 4,
+    "gh": 3
+  },
+  "atlas-props-decor:christmas_tree_03_fallen_a1_4x3": {
+    "x": 6800,
+    "y": 7000,
+    "w": 800,
+    "h": 600,
+    "gw": 4,
+    "gh": 3
+  },
+  "atlas-props-decor:mannequin_lower_body_wood_ashen_metal_gray_burned_a10_2x4": {
+    "x": 7600,
+    "y": 7000,
+    "w": 400,
+    "h": 800,
+    "gw": 2,
+    "gh": 4
   }
 }

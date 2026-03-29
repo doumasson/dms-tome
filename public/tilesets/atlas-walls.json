@@ -160,160 +160,160 @@
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_f1_1x1": {
-    "x": 0,
-    "y": 200,
+    "x": 4000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_connector_g2_1x1": {
-    "x": 200,
-    "y": 200,
+    "x": 4200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_connector_h2_1x1": {
-    "x": 400,
-    "y": 200,
+    "x": 4400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_connector_i2_1x1": {
-    "x": 600,
-    "y": 200,
+    "x": 4600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_connector_j2_1x1": {
-    "x": 800,
-    "y": 200,
+    "x": 4800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_k1_1x1": {
-    "x": 1000,
-    "y": 200,
+    "x": 5000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_connector_l2_1x1": {
-    "x": 1200,
-    "y": 200,
+    "x": 5200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_connector_m2_1x1": {
-    "x": 1400,
-    "y": 200,
+    "x": 5400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_brain_wall_corner_a1_1x1": {
-    "x": 1600,
-    "y": 200,
+    "x": 5600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_a1_1x1": {
-    "x": 1800,
-    "y": 200,
+    "x": 5800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_b1_1x1": {
-    "x": 2000,
-    "y": 200,
+    "x": 6000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_c1_1x1": {
-    "x": 2200,
-    "y": 200,
+    "x": 6200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_d1_1x1": {
-    "x": 2400,
-    "y": 200,
+    "x": 6400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_e1_1x1": {
-    "x": 2600,
-    "y": 200,
+    "x": 6600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_f1_1x1": {
-    "x": 2800,
-    "y": 200,
+    "x": 6800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_g1_1x1": {
-    "x": 3000,
-    "y": 200,
+    "x": 7000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_h1_1x1": {
-    "x": 3200,
-    "y": 200,
+    "x": 7200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_i1_1x1": {
-    "x": 3400,
-    "y": 200,
+    "x": 7400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_corner_j1_1x1": {
-    "x": 3600,
-    "y": 200,
+    "x": 7600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_k1_1x1": {
-    "x": 3800,
-    "y": 200,
+    "x": 7800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -321,7 +321,7 @@
   },
   "atlas-walls:flesh_black_wall_corner_l1_1x1": {
     "x": 0,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -329,7 +329,7 @@
   },
   "atlas-walls:flesh_black_wall_corner_m1_1x1": {
     "x": 200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -337,7 +337,7 @@
   },
   "atlas-walls:flesh_black_brain_wall_diagonal_a1_1x1": {
     "x": 400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -345,7 +345,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_a1_1x1": {
     "x": 600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -353,7 +353,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_b1_1x1": {
     "x": 800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -361,7 +361,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_c1_1x1": {
     "x": 1000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -369,7 +369,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_d1_1x1": {
     "x": 1200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -377,7 +377,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_e1_1x1": {
     "x": 1400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -385,7 +385,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_f2_1x1": {
     "x": 1600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -393,7 +393,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_g1_1x1": {
     "x": 1800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -401,7 +401,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_h1_1x1": {
     "x": 2000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -409,7 +409,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_i1_1x1": {
     "x": 2200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -417,7 +417,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_j1_1x1": {
     "x": 2400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -425,7 +425,7 @@
   },
   "atlas-walls:flesh_black_wall_joint_k1_1x1": {
     "x": 2600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -433,7 +433,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_l1_1x1": {
     "x": 2800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -441,7 +441,7 @@
   },
   "atlas-walls:flesh_black_wall_diagonal_m1_1x1": {
     "x": 3000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -449,7 +449,7 @@
   },
   "atlas-walls:flesh_black_brain_wall_ending_a1_1x1": {
     "x": 3200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -457,7 +457,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_a1_1x1": {
     "x": 3400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -465,7 +465,7 @@
   },
   "atlas-walls:flesh_black_wall_joint_b1_1x1": {
     "x": 3600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -473,167 +473,167 @@
   },
   "atlas-walls:flesh_black_wall_ending_c1_1x1": {
     "x": 3800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_d1_1x1": {
-    "x": 0,
-    "y": 600,
+    "x": 4000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_e1_1x1": {
-    "x": 200,
-    "y": 600,
+    "x": 4200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_f3_1x1": {
-    "x": 400,
-    "y": 600,
+    "x": 4400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_g1_1x1": {
-    "x": 600,
-    "y": 600,
+    "x": 4600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_h1_1x1": {
-    "x": 800,
-    "y": 600,
+    "x": 4800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_i1_1x1": {
-    "x": 1000,
-    "y": 600,
+    "x": 5000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_j2_1x1": {
-    "x": 1200,
-    "y": 600,
+    "x": 5200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_piece_k1_1x1": {
-    "x": 1400,
-    "y": 600,
+    "x": 5400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_l1_1x1": {
-    "x": 1600,
-    "y": 600,
+    "x": 5600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_m1_1x1": {
-    "x": 1800,
-    "y": 600,
+    "x": 5800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_brain_wall_joint_a1_1x1": {
-    "x": 2000,
-    "y": 600,
+    "x": 6000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_a2_1x1": {
-    "x": 2200,
-    "y": 600,
+    "x": 6200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_piece_b1_1x1": {
-    "x": 2400,
-    "y": 600,
+    "x": 6400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_joint_c1_1x1": {
-    "x": 2600,
-    "y": 600,
+    "x": 6600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_d2_1x1": {
-    "x": 2800,
-    "y": 600,
+    "x": 6800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_joint_e1_1x1": {
-    "x": 3000,
-    "y": 600,
+    "x": 7000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_f4_1x1": {
-    "x": 3200,
-    "y": 600,
+    "x": 7200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_joint_g1_1x1": {
-    "x": 3400,
-    "y": 600,
+    "x": 7400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_h2_1x1": {
-    "x": 3600,
-    "y": 600,
+    "x": 7600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_joint_i1_1x1": {
-    "x": 3800,
-    "y": 600,
+    "x": 7800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -641,7 +641,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_j3_1x1": {
     "x": 0,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -649,7 +649,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_k1_1x1": {
     "x": 200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -657,7 +657,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_l2_1x1": {
     "x": 400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -665,7 +665,7 @@
   },
   "atlas-walls:flesh_black_wall_joint_m1_1x1": {
     "x": 600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -673,7 +673,7 @@
   },
   "atlas-walls:flesh_black_brain_wall_piece_a1_1x1": {
     "x": 800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -681,7 +681,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_a3_1x1": {
     "x": 1000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -689,7 +689,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_b1_1x1": {
     "x": 1200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -697,7 +697,7 @@
   },
   "atlas-walls:flesh_black_wall_piece_c1_1x1": {
     "x": 1400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -705,7 +705,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_d3_1x1": {
     "x": 1600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -713,7 +713,7 @@
   },
   "atlas-walls:flesh_black_wall_piece_e1_1x1": {
     "x": 1800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -721,7 +721,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_f5_1x1": {
     "x": 2000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -729,7 +729,7 @@
   },
   "atlas-walls:flesh_black_wall_piece_g1_1x1": {
     "x": 2200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -737,7 +737,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_h3_1x1": {
     "x": 2400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -745,7 +745,7 @@
   },
   "atlas-walls:flesh_black_wall_piece_i1_1x1": {
     "x": 2600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -753,7 +753,7 @@
   },
   "atlas-walls:flesh_black_wall_joint_j1_1x1": {
     "x": 2800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -761,7 +761,7 @@
   },
   "atlas-walls:flesh_green_wall_corner_k1_1x1": {
     "x": 3000,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -769,7 +769,7 @@
   },
   "atlas-walls:flesh_black_wall_ending_l3_1x1": {
     "x": 3200,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -777,7 +777,7 @@
   },
   "atlas-walls:flesh_black_wall_piece_m1_1x1": {
     "x": 3400,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -785,7 +785,7 @@
   },
   "atlas-walls:flesh_green_brain_wall_connector_a1_1x1": {
     "x": 3600,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -793,167 +793,167 @@
   },
   "atlas-walls:flesh_black_wall_ending_a4_1x1": {
     "x": 3800,
-    "y": 800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_b2_1x1": {
-    "x": 0,
-    "y": 1000,
+    "x": 4000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_c1_1x1": {
-    "x": 200,
-    "y": 1000,
+    "x": 4200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_d4_1x1": {
-    "x": 400,
-    "y": 1000,
+    "x": 4400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_e1_1x1": {
-    "x": 600,
-    "y": 1000,
+    "x": 4600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_joint_f1_1x1": {
-    "x": 800,
-    "y": 1000,
+    "x": 4800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_g1_1x1": {
-    "x": 1000,
-    "y": 1000,
+    "x": 5000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_h4_1x1": {
-    "x": 1200,
-    "y": 1000,
+    "x": 5200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_i1_1x1": {
-    "x": 1400,
-    "y": 1000,
+    "x": 5400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_piece_j1_1x1": {
-    "x": 1600,
-    "y": 1000,
+    "x": 5600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_k1_1x1": {
-    "x": 1800,
-    "y": 1000,
+    "x": 5800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_l4_1x1": {
-    "x": 2000,
-    "y": 1000,
+    "x": 6000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_m1_1x1": {
-    "x": 2200,
-    "y": 1000,
+    "x": 6200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_brain_wall_connector_a2_1x1": {
-    "x": 2400,
-    "y": 1000,
+    "x": 6400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_a5_1x1": {
-    "x": 2600,
-    "y": 1000,
+    "x": 6600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_corner_b1_1x1": {
-    "x": 2800,
-    "y": 1000,
+    "x": 6800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_c2_1x1": {
-    "x": 3000,
-    "y": 1000,
+    "x": 7000,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_ending_d5_1x1": {
-    "x": 3200,
-    "y": 1000,
+    "x": 7200,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_e2_1x1": {
-    "x": 3400,
-    "y": 1000,
+    "x": 7400,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_piece_f1_1x1": {
-    "x": 3600,
-    "y": 1000,
+    "x": 7600,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_g2_1x1": {
-    "x": 3800,
-    "y": 1000,
+    "x": 7800,
+    "y": 400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -961,7 +961,7 @@
   },
   "atlas-walls:flesh_black_wall_joint_h1_1x1": {
     "x": 0,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -969,7 +969,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_i2_1x1": {
     "x": 200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -977,7 +977,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_j1_1x1": {
     "x": 400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -985,7 +985,7 @@
   },
   "atlas-walls:flesh_green_wall_joint_k1_1x1": {
     "x": 600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -993,7 +993,7 @@
   },
   "atlas-walls:flesh_black_wall_joint_l1_1x1": {
     "x": 800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1001,7 +1001,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_m2_1x1": {
     "x": 1000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1009,7 +1009,7 @@
   },
   "atlas-walls:flesh_green_brain_wall_corner_a1_1x1": {
     "x": 1200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1017,7 +1017,7 @@
   },
   "atlas-walls:flesh_black_wall_joint_a1_1x1": {
     "x": 1400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1025,7 +1025,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_b1_1x1": {
     "x": 1600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1033,7 +1033,7 @@
   },
   "atlas-walls:flesh_green_wall_corner_c1_1x1": {
     "x": 1800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1041,7 +1041,7 @@
   },
   "atlas-walls:flesh_black_wall_joint_d1_1x1": {
     "x": 2000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1049,7 +1049,7 @@
   },
   "atlas-walls:flesh_green_wall_corner_e1_1x1": {
     "x": 2200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1057,7 +1057,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_f1_1x1": {
     "x": 2400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1065,7 +1065,7 @@
   },
   "atlas-walls:flesh_green_wall_corner_g1_1x1": {
     "x": 2600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1073,7 +1073,7 @@
   },
   "atlas-walls:flesh_black_wall_piece_h1_1x1": {
     "x": 2800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1081,7 +1081,7 @@
   },
   "atlas-walls:flesh_green_wall_corner_i1_1x1": {
     "x": 3000,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1089,7 +1089,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_j2_1x1": {
     "x": 3200,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1097,7 +1097,7 @@
   },
   "atlas-walls:flesh_green_wall_piece_k1_1x1": {
     "x": 3400,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1105,7 +1105,7 @@
   },
   "atlas-walls:flesh_black_wall_piece_l1_1x1": {
     "x": 3600,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1113,167 +1113,167 @@
   },
   "atlas-walls:flesh_green_wall_corner_m1_1x1": {
     "x": 3800,
-    "y": 1200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_brain_wall_diagonal_a1_1x1": {
-    "x": 0,
-    "y": 1400,
+    "x": 4000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_piece_a1_1x1": {
-    "x": 200,
-    "y": 1400,
+    "x": 4200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_joint_b1_1x1": {
-    "x": 400,
-    "y": 1400,
+    "x": 4400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_diagonal_c1_1x1": {
-    "x": 600,
-    "y": 1400,
+    "x": 4600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_black_wall_piece_d1_1x1": {
-    "x": 800,
-    "y": 1400,
+    "x": 4800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_diagonal_e1_1x1": {
-    "x": 1000,
-    "y": 1400,
+    "x": 5000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_corner_f1_1x1": {
-    "x": 1200,
-    "y": 1400,
+    "x": 5200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_diagonal_g1_1x1": {
-    "x": 1400,
-    "y": 1400,
+    "x": 5400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_h1_1x1": {
-    "x": 1600,
-    "y": 1400,
+    "x": 5600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_diagonal_i1_1x1": {
-    "x": 1800,
-    "y": 1400,
+    "x": 5800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_corner_j1_1x1": {
-    "x": 2000,
-    "y": 1400,
+    "x": 6000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_k1_1x1": {
-    "x": 2200,
-    "y": 1400,
+    "x": 6200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_l1_1x1": {
-    "x": 2400,
-    "y": 1400,
+    "x": 6400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_diagonal_m1_1x1": {
-    "x": 2600,
-    "y": 1400,
+    "x": 6600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_brain_wall_ending_a1_1x1": {
-    "x": 2800,
-    "y": 1400,
+    "x": 6800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_a1_1x1": {
-    "x": 3000,
-    "y": 1400,
+    "x": 7000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_b1_1x1": {
-    "x": 3200,
-    "y": 1400,
+    "x": 7200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_c1_1x1": {
-    "x": 3400,
-    "y": 1400,
+    "x": 7400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_connector_d1_1x1": {
-    "x": 3600,
-    "y": 1400,
+    "x": 7600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_e1_1x1": {
-    "x": 3800,
-    "y": 1400,
+    "x": 7800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1281,7 +1281,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_f1_1x1": {
     "x": 0,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1289,7 +1289,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_g1_1x1": {
     "x": 200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1297,7 +1297,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_h2_1x1": {
     "x": 400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1305,7 +1305,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_i1_1x1": {
     "x": 600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1313,7 +1313,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_j1_1x1": {
     "x": 800,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1321,7 +1321,7 @@
   },
   "atlas-walls:flesh_pale_wall_corner_k1_1x1": {
     "x": 1000,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1329,7 +1329,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_l2_1x1": {
     "x": 1200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1337,7 +1337,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_m1_1x1": {
     "x": 1400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1345,7 +1345,7 @@
   },
   "atlas-walls:flesh_green_brain_wall_joint_a1_1x1": {
     "x": 1600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1353,7 +1353,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_a2_1x1": {
     "x": 1800,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1361,7 +1361,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_b1_1x1": {
     "x": 2000,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1369,7 +1369,7 @@
   },
   "atlas-walls:flesh_green_wall_joint_c1_1x1": {
     "x": 2200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1377,7 +1377,7 @@
   },
   "atlas-walls:flesh_green_wall_connector_d2_1x1": {
     "x": 2400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1385,7 +1385,7 @@
   },
   "atlas-walls:flesh_green_wall_joint_e1_1x1": {
     "x": 2600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1393,7 +1393,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_f2_1x1": {
     "x": 2800,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1401,7 +1401,7 @@
   },
   "atlas-walls:flesh_green_wall_joint_g1_1x1": {
     "x": 3000,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1409,7 +1409,7 @@
   },
   "atlas-walls:flesh_green_wall_corner_h1_1x1": {
     "x": 3200,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1417,7 +1417,7 @@
   },
   "atlas-walls:flesh_green_wall_joint_i1_1x1": {
     "x": 3400,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1425,7 +1425,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_j2_1x1": {
     "x": 3600,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1433,167 +1433,167 @@
   },
   "atlas-walls:flesh_pale_wall_ending_k1_1x1": {
     "x": 3800,
-    "y": 1600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_corner_l1_1x1": {
-    "x": 0,
-    "y": 1800,
+    "x": 4000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_joint_m1_1x1": {
-    "x": 200,
-    "y": 1800,
+    "x": 4200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_brain_wall_piece_a1_1x1": {
-    "x": 400,
-    "y": 1800,
+    "x": 4400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_corner_a1_1x1": {
-    "x": 600,
-    "y": 1800,
+    "x": 4600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_b2_1x1": {
-    "x": 800,
-    "y": 1800,
+    "x": 4800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_c1_1x1": {
-    "x": 1000,
-    "y": 1800,
+    "x": 5000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_corner_d1_1x1": {
-    "x": 1200,
-    "y": 1800,
+    "x": 5200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_e1_1x1": {
-    "x": 1400,
-    "y": 1800,
+    "x": 5400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_f3_1x1": {
-    "x": 1600,
-    "y": 1800,
+    "x": 5600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_g1_1x1": {
-    "x": 1800,
-    "y": 1800,
+    "x": 5800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_diagonal_h1_1x1": {
-    "x": 2000,
-    "y": 1800,
+    "x": 6000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_i1_1x1": {
-    "x": 2200,
-    "y": 1800,
+    "x": 6200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_j3_1x1": {
-    "x": 2400,
-    "y": 1800,
+    "x": 6400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_k1_1x1": {
-    "x": 2600,
-    "y": 1800,
+    "x": 6600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_diagonal_l1_1x1": {
-    "x": 2800,
-    "y": 1800,
+    "x": 6800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_m1_1x1": {
-    "x": 3000,
-    "y": 1800,
+    "x": 7000,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_brain_wall_connector_a1_1x1": {
-    "x": 3200,
-    "y": 1800,
+    "x": 7200,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_diagonal_a1_1x1": {
-    "x": 3400,
-    "y": 1800,
+    "x": 7400,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_b1_1x1": {
-    "x": 3600,
-    "y": 1800,
+    "x": 7600,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_c1_1x1": {
-    "x": 3800,
-    "y": 1800,
+    "x": 7800,
+    "y": 800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1601,7 +1601,7 @@
   },
   "atlas-walls:flesh_green_wall_diagonal_d1_1x1": {
     "x": 0,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1609,7 +1609,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_e1_1x1": {
     "x": 200,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1617,7 +1617,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_f4_1x1": {
     "x": 400,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1625,7 +1625,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_g1_1x1": {
     "x": 600,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1633,7 +1633,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_h1_1x1": {
     "x": 800,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1641,7 +1641,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_i1_1x1": {
     "x": 1000,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1649,7 +1649,7 @@
   },
   "atlas-walls:flesh_green_wall_joint_j1_1x1": {
     "x": 1200,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1657,7 +1657,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_k1_1x1": {
     "x": 1400,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1665,7 +1665,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_l1_1x1": {
     "x": 1600,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1673,7 +1673,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_m1_1x1": {
     "x": 1800,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1681,7 +1681,7 @@
   },
   "atlas-walls:flesh_pale_brain_wall_connector_a2_1x1": {
     "x": 2000,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1689,7 +1689,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_a1_1x1": {
     "x": 2200,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1697,7 +1697,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_b1_1x1": {
     "x": 2400,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1705,7 +1705,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_c2_1x1": {
     "x": 2600,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1713,7 +1713,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_d1_1x1": {
     "x": 2800,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1721,7 +1721,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_e2_1x1": {
     "x": 3000,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1729,7 +1729,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_f5_1x1": {
     "x": 3200,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1737,7 +1737,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_g2_1x1": {
     "x": 3400,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1745,7 +1745,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_h2_1x1": {
     "x": 3600,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1753,167 +1753,167 @@
   },
   "atlas-walls:flesh_pale_wall_connector_i2_1x1": {
     "x": 3800,
-    "y": 2000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_j1_1x1": {
-    "x": 0,
-    "y": 2200,
+    "x": 4000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_k1_1x1": {
-    "x": 200,
-    "y": 2200,
+    "x": 4200,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_l2_1x1": {
-    "x": 400,
-    "y": 2200,
+    "x": 4400,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_m2_1x1": {
-    "x": 600,
-    "y": 2200,
+    "x": 4600,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_brain_wall_corner_a1_1x1": {
-    "x": 800,
-    "y": 2200,
+    "x": 4800,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_a2_1x1": {
-    "x": 1000,
-    "y": 2200,
+    "x": 5000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_b1_1x1": {
-    "x": 1200,
-    "y": 2200,
+    "x": 5200,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_c1_1x1": {
-    "x": 1400,
-    "y": 2200,
+    "x": 5400,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_d2_1x1": {
-    "x": 1600,
-    "y": 2200,
+    "x": 5600,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_e1_1x1": {
-    "x": 1800,
-    "y": 2200,
+    "x": 5800,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_joint_f1_1x1": {
-    "x": 2000,
-    "y": 2200,
+    "x": 6000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_g1_1x1": {
-    "x": 2200,
-    "y": 2200,
+    "x": 6200,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_h3_1x1": {
-    "x": 2400,
-    "y": 2200,
+    "x": 6400,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_i1_1x1": {
-    "x": 2600,
-    "y": 2200,
+    "x": 6600,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_j1_1x1": {
-    "x": 2800,
-    "y": 2200,
+    "x": 6800,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_corner_k1_1x1": {
-    "x": 3000,
-    "y": 2200,
+    "x": 7000,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_l3_1x1": {
-    "x": 3200,
-    "y": 2200,
+    "x": 7200,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_m1_1x1": {
-    "x": 3400,
-    "y": 2200,
+    "x": 7400,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_brain_wall_diagonal_a1_1x1": {
-    "x": 3600,
-    "y": 2200,
+    "x": 7600,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_a3_1x1": {
-    "x": 3800,
-    "y": 2200,
+    "x": 7800,
+    "y": 1000,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1921,7 +1921,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_b1_1x1": {
     "x": 0,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1929,7 +1929,7 @@
   },
   "atlas-walls:flesh_pale_wall_diagonal_c1_1x1": {
     "x": 200,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1937,7 +1937,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_d3_1x1": {
     "x": 400,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1945,7 +1945,7 @@
   },
   "atlas-walls:flesh_pale_wall_diagonal_e1_1x1": {
     "x": 600,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1953,7 +1953,7 @@
   },
   "atlas-walls:flesh_green_wall_piece_f1_1x1": {
     "x": 800,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1961,7 +1961,7 @@
   },
   "atlas-walls:flesh_pale_wall_diagonal_g1_1x1": {
     "x": 1000,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1969,7 +1969,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_h4_1x1": {
     "x": 1200,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1977,7 +1977,7 @@
   },
   "atlas-walls:flesh_pale_wall_diagonal_i1_1x1": {
     "x": 1400,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1985,7 +1985,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_j2_1x1": {
     "x": 1600,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -1993,7 +1993,7 @@
   },
   "atlas-walls:flesh_peachy_wall_ending_k1_1x1": {
     "x": 1800,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2001,7 +2001,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_l4_1x1": {
     "x": 2000,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2009,7 +2009,7 @@
   },
   "atlas-walls:flesh_pale_wall_diagonal_m1_1x1": {
     "x": 2200,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2017,7 +2017,7 @@
   },
   "atlas-walls:flesh_pale_brain_wall_ending_a1_1x1": {
     "x": 2400,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2025,7 +2025,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_a4_1x1": {
     "x": 2600,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2033,7 +2033,7 @@
   },
   "atlas-walls:flesh_peachy_wall_connector_b1_1x1": {
     "x": 2800,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2041,7 +2041,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_c1_1x1": {
     "x": 3000,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2049,7 +2049,7 @@
   },
   "atlas-walls:flesh_green_wall_ending_d4_1x1": {
     "x": 3200,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2057,7 +2057,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_e1_1x1": {
     "x": 3400,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2065,7 +2065,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_f1_1x1": {
     "x": 3600,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2073,167 +2073,167 @@
   },
   "atlas-walls:flesh_pale_wall_ending_g1_1x1": {
     "x": 3800,
-    "y": 2400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_joint_h1_1x1": {
-    "x": 0,
-    "y": 2600,
+    "x": 4000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_i1_1x1": {
-    "x": 200,
-    "y": 2600,
+    "x": 4200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_j1_1x1": {
-    "x": 400,
-    "y": 2600,
+    "x": 4400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_joint_k1_1x1": {
-    "x": 600,
-    "y": 2600,
+    "x": 4600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_joint_l1_1x1": {
-    "x": 800,
-    "y": 2600,
+    "x": 4800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_m1_1x1": {
-    "x": 1000,
-    "y": 2600,
+    "x": 5000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_brain_wall_joint_a1_1x1": {
-    "x": 1200,
-    "y": 2600,
+    "x": 5200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_a5_1x1": {
-    "x": 1400,
-    "y": 2600,
+    "x": 5400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_b2_1x1": {
-    "x": 1600,
-    "y": 2600,
+    "x": 5600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_c1_1x1": {
-    "x": 1800,
-    "y": 2600,
+    "x": 5800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_ending_d5_1x1": {
-    "x": 2000,
-    "y": 2600,
+    "x": 6000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_e1_1x1": {
-    "x": 2200,
-    "y": 2600,
+    "x": 6200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_f1_1x1": {
-    "x": 2400,
-    "y": 2600,
+    "x": 6400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_g1_1x1": {
-    "x": 2600,
-    "y": 2600,
+    "x": 6600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_h1_1x1": {
-    "x": 2800,
-    "y": 2600,
+    "x": 6800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_i1_1x1": {
-    "x": 3000,
-    "y": 2600,
+    "x": 7000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_j1_1x1": {
-    "x": 3200,
-    "y": 2600,
+    "x": 7200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_piece_k1_1x1": {
-    "x": 3400,
-    "y": 2600,
+    "x": 7400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_green_wall_piece_l1_1x1": {
-    "x": 3600,
-    "y": 2600,
+    "x": 7600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_m1_1x1": {
-    "x": 3800,
-    "y": 2600,
+    "x": 7800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2241,7 +2241,7 @@
   },
   "atlas-walls:flesh_pale_brain_wall_piece_a1_1x1": {
     "x": 0,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2249,7 +2249,7 @@
   },
   "atlas-walls:flesh_green_wall_joint_a1_1x1": {
     "x": 200,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2257,7 +2257,7 @@
   },
   "atlas-walls:flesh_peachy_wall_corner_b1_1x1": {
     "x": 400,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2265,7 +2265,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_c1_1x1": {
     "x": 600,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2273,7 +2273,7 @@
   },
   "atlas-walls:flesh_green_wall_joint_d1_1x1": {
     "x": 800,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2281,7 +2281,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_e1_1x1": {
     "x": 1000,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2289,7 +2289,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_f1_1x1": {
     "x": 1200,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2297,7 +2297,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_g1_1x1": {
     "x": 1400,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2305,7 +2305,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_h1_1x1": {
     "x": 1600,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2313,7 +2313,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_i1_1x1": {
     "x": 1800,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2321,7 +2321,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_j2_1x1": {
     "x": 2000,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2329,7 +2329,7 @@
   },
   "atlas-walls:flesh_purple_wall_connector_k1_1x1": {
     "x": 2200,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2337,7 +2337,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_l1_1x1": {
     "x": 2400,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2345,7 +2345,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_m1_1x1": {
     "x": 2600,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2353,7 +2353,7 @@
   },
   "atlas-walls:flesh_peachy_brain_wall_connector_a1_1x1": {
     "x": 2800,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2361,7 +2361,7 @@
   },
   "atlas-walls:flesh_green_wall_piece_a1_1x1": {
     "x": 3000,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2369,7 +2369,7 @@
   },
   "atlas-walls:flesh_peachy_wall_ending_b1_1x1": {
     "x": 3200,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2377,7 +2377,7 @@
   },
   "atlas-walls:flesh_peachy_wall_connector_c1_1x1": {
     "x": 3400,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2385,7 +2385,7 @@
   },
   "atlas-walls:flesh_green_wall_piece_d1_1x1": {
     "x": 3600,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2393,167 +2393,167 @@
   },
   "atlas-walls:flesh_peachy_wall_connector_e1_1x1": {
     "x": 3800,
-    "y": 2800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_f2_1x1": {
-    "x": 0,
-    "y": 3000,
+    "x": 4000,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_g1_1x1": {
-    "x": 200,
-    "y": 3000,
+    "x": 4200,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_h2_1x1": {
-    "x": 400,
-    "y": 3000,
+    "x": 4400,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_i1_1x1": {
-    "x": 600,
-    "y": 3000,
+    "x": 4600,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_j3_1x1": {
-    "x": 800,
-    "y": 3000,
+    "x": 4800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_corner_k1_1x1": {
-    "x": 1000,
-    "y": 3000,
+    "x": 5000,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_l2_1x1": {
-    "x": 1200,
-    "y": 3000,
+    "x": 5200,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_m1_1x1": {
-    "x": 1400,
-    "y": 3000,
+    "x": 5400,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_brain_wall_connector_a2_1x1": {
-    "x": 1600,
-    "y": 3000,
+    "x": 5600,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_a1_1x1": {
-    "x": 1800,
-    "y": 3000,
+    "x": 5800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_joint_b1_1x1": {
-    "x": 2000,
-    "y": 3000,
+    "x": 6000,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_c2_1x1": {
-    "x": 2200,
-    "y": 3000,
+    "x": 6200,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_connector_d1_1x1": {
-    "x": 2400,
-    "y": 3000,
+    "x": 6400,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_e2_1x1": {
-    "x": 2600,
-    "y": 3000,
+    "x": 6600,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_f3_1x1": {
-    "x": 2800,
-    "y": 3000,
+    "x": 6800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_g2_1x1": {
-    "x": 3000,
-    "y": 3000,
+    "x": 7000,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_h1_1x1": {
-    "x": 3200,
-    "y": 3000,
+    "x": 7200,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_i2_1x1": {
-    "x": 3400,
-    "y": 3000,
+    "x": 7400,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_j1_1x1": {
-    "x": 3600,
-    "y": 3000,
+    "x": 7600,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_ending_k1_1x1": {
-    "x": 3800,
-    "y": 3000,
+    "x": 7800,
+    "y": 1400,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2561,7 +2561,7 @@
   },
   "atlas-walls:flesh_pale_wall_corner_l1_1x1": {
     "x": 0,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2569,7 +2569,7 @@
   },
   "atlas-walls:flesh_peachy_wall_connector_m2_1x1": {
     "x": 200,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2577,7 +2577,7 @@
   },
   "atlas-walls:flesh_peachy_brain_wall_corner_a1_1x1": {
     "x": 400,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2585,7 +2585,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_a2_1x1": {
     "x": 600,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2593,7 +2593,7 @@
   },
   "atlas-walls:flesh_peachy_wall_piece_b1_1x1": {
     "x": 800,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2601,7 +2601,7 @@
   },
   "atlas-walls:flesh_peachy_wall_corner_c1_1x1": {
     "x": 1000,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2609,7 +2609,7 @@
   },
   "atlas-walls:flesh_pale_wall_connector_d2_1x1": {
     "x": 1200,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2617,7 +2617,7 @@
   },
   "atlas-walls:flesh_peachy_wall_corner_e1_1x1": {
     "x": 1400,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2625,7 +2625,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_f4_1x1": {
     "x": 1600,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2633,7 +2633,7 @@
   },
   "atlas-walls:flesh_peachy_wall_corner_g1_1x1": {
     "x": 1800,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2641,7 +2641,7 @@
   },
   "atlas-walls:flesh_pale_wall_diagonal_h1_1x1": {
     "x": 2000,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2649,7 +2649,7 @@
   },
   "atlas-walls:flesh_peachy_wall_corner_i1_1x1": {
     "x": 2200,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2657,7 +2657,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_j1_1x1": {
     "x": 2400,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2665,7 +2665,7 @@
   },
   "atlas-walls:flesh_purple_wall_joint_k1_1x1": {
     "x": 2600,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2673,7 +2673,7 @@
   },
   "atlas-walls:flesh_pale_wall_diagonal_l1_1x1": {
     "x": 2800,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2681,7 +2681,7 @@
   },
   "atlas-walls:flesh_peachy_wall_corner_m1_1x1": {
     "x": 3000,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2689,7 +2689,7 @@
   },
   "atlas-walls:flesh_peachy_brain_wall_diagonal_a1_1x1": {
     "x": 3200,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2697,7 +2697,7 @@
   },
   "atlas-walls:flesh_pale_wall_corner_a1_1x1": {
     "x": 3400,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2705,7 +2705,7 @@
   },
   "atlas-walls:flesh_purple_wall_connector_b1_1x1": {
     "x": 3600,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2713,167 +2713,167 @@
   },
   "atlas-walls:flesh_peachy_wall_diagonal_c1_1x1": {
     "x": 3800,
-    "y": 3200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_corner_d1_1x1": {
-    "x": 0,
-    "y": 3400,
+    "x": 4000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_diagonal_e1_1x1": {
-    "x": 200,
-    "y": 3400,
+    "x": 4200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_f5_1x1": {
-    "x": 400,
-    "y": 3400,
+    "x": 4400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_diagonal_g1_1x1": {
-    "x": 600,
-    "y": 3400,
+    "x": 4600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_h1_1x1": {
-    "x": 800,
-    "y": 3400,
+    "x": 4800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_diagonal_i1_1x1": {
-    "x": 1000,
-    "y": 3400,
+    "x": 5000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_j1_1x1": {
-    "x": 1200,
-    "y": 3400,
+    "x": 5200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_piece_k1_1x1": {
-    "x": 1400,
-    "y": 3400,
+    "x": 5400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_l1_1x1": {
-    "x": 1600,
-    "y": 3400,
+    "x": 5600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_diagonal_m1_1x1": {
-    "x": 1800,
-    "y": 3400,
+    "x": 5800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_brain_wall_ending_a1_1x1": {
-    "x": 2000,
-    "y": 3400,
+    "x": 6000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_diagonal_a1_1x1": {
-    "x": 2200,
-    "y": 3400,
+    "x": 6200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_connector_b2_1x1": {
-    "x": 2400,
-    "y": 3400,
+    "x": 6400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_ending_c1_1x1": {
-    "x": 2600,
-    "y": 3400,
+    "x": 6600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_diagonal_d1_1x1": {
-    "x": 2800,
-    "y": 3400,
+    "x": 6800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_ending_e1_1x1": {
-    "x": 3000,
-    "y": 3400,
+    "x": 7000,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_joint_f1_1x1": {
-    "x": 3200,
-    "y": 3400,
+    "x": 7200,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_ending_g1_1x1": {
-    "x": 3400,
-    "y": 3400,
+    "x": 7400,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_h2_1x1": {
-    "x": 3600,
-    "y": 3400,
+    "x": 7600,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_ending_i1_1x1": {
-    "x": 3800,
-    "y": 3400,
+    "x": 7800,
+    "y": 1600,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2881,7 +2881,7 @@
   },
   "atlas-walls:flesh_peachy_wall_connector_j2_1x1": {
     "x": 0,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2889,7 +2889,7 @@
   },
   "atlas-walls:flesh_rotten_wall_connector_k1_1x1": {
     "x": 200,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2897,7 +2897,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_l2_1x1": {
     "x": 400,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2905,7 +2905,7 @@
   },
   "atlas-walls:flesh_peachy_wall_ending_m1_1x1": {
     "x": 600,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2913,7 +2913,7 @@
   },
   "atlas-walls:flesh_peachy_brain_wall_joint_a1_1x1": {
     "x": 800,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2921,7 +2921,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_a1_1x1": {
     "x": 1000,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2929,7 +2929,7 @@
   },
   "atlas-walls:flesh_purple_wall_corner_b1_1x1": {
     "x": 1200,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2937,7 +2937,7 @@
   },
   "atlas-walls:flesh_peachy_wall_joint_c1_1x1": {
     "x": 1400,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2945,7 +2945,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_d1_1x1": {
     "x": 1600,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2953,7 +2953,7 @@
   },
   "atlas-walls:flesh_peachy_wall_joint_e1_1x1": {
     "x": 1800,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2961,7 +2961,7 @@
   },
   "atlas-walls:flesh_pale_wall_piece_f1_1x1": {
     "x": 2000,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2969,7 +2969,7 @@
   },
   "atlas-walls:flesh_peachy_wall_joint_g1_1x1": {
     "x": 2200,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2977,7 +2977,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_h3_1x1": {
     "x": 2400,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2985,7 +2985,7 @@
   },
   "atlas-walls:flesh_peachy_wall_joint_i1_1x1": {
     "x": 2600,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -2993,7 +2993,7 @@
   },
   "atlas-walls:flesh_peachy_wall_corner_j1_1x1": {
     "x": 2800,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3001,7 +3001,7 @@
   },
   "atlas-walls:flesh_rotten_wall_corner_k1_1x1": {
     "x": 3000,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3009,7 +3009,7 @@
   },
   "atlas-walls:flesh_pale_wall_ending_l3_1x1": {
     "x": 3200,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3017,7 +3017,7 @@
   },
   "atlas-walls:flesh_peachy_wall_joint_m1_1x1": {
     "x": 3400,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3025,7 +3025,7 @@
   },
   "atlas-walls:flesh_peachy_brain_wall_piece_a1_1x1": {
     "x": 3600,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -3033,170 +3033,2986 @@
   },
   "atlas-walls:flesh_pale_wall_ending_a2_1x1": {
     "x": 3800,
-    "y": 3600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_ending_b1_1x1": {
-    "x": 0,
-    "y": 3800,
+    "x": 4000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_piece_c1_1x1": {
-    "x": 200,
-    "y": 3800,
+    "x": 4200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_d2_1x1": {
-    "x": 400,
-    "y": 3800,
+    "x": 4400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_piece_e1_1x1": {
-    "x": 600,
-    "y": 3800,
+    "x": 4600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_connector_f1_1x1": {
-    "x": 800,
-    "y": 3800,
+    "x": 4800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_piece_g1_1x1": {
-    "x": 1000,
-    "y": 3800,
+    "x": 5000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_h4_1x1": {
-    "x": 1200,
-    "y": 3800,
+    "x": 5200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_piece_i1_1x1": {
-    "x": 1400,
-    "y": 3800,
+    "x": 5400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_ending_j1_1x1": {
-    "x": 1600,
-    "y": 3800,
+    "x": 5600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_rotten_wall_ending_k1_1x1": {
-    "x": 1800,
-    "y": 3800,
+    "x": 5800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_l4_1x1": {
-    "x": 2000,
-    "y": 3800,
+    "x": 6000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_piece_m1_1x1": {
-    "x": 2200,
-    "y": 3800,
+    "x": 6200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_brain_wall_connector_a1_1x1": {
-    "x": 2400,
-    "y": 3800,
+    "x": 6400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_a3_1x1": {
-    "x": 2600,
-    "y": 3800,
+    "x": 6600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_joint_b1_1x1": {
-    "x": 2800,
-    "y": 3800,
+    "x": 6800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_connector_c1_1x1": {
-    "x": 3000,
-    "y": 3800,
+    "x": 7000,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_pale_wall_ending_d3_1x1": {
-    "x": 3200,
-    "y": 3800,
+    "x": 7200,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_connector_e1_1x1": {
-    "x": 3400,
-    "y": 3800,
+    "x": 7400,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_peachy_wall_corner_f1_1x1": {
-    "x": 3600,
-    "y": 3800,
+    "x": 7600,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-walls:flesh_purple_wall_connector_g1_1x1": {
-    "x": 3800,
-    "y": 3800,
+    "x": 7800,
+    "y": 1800,
     "w": 200,
     "h": 200,
     "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_joint_h1_1x1": {
+    "x": 0,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_i1_1x1": {
+    "x": 200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_j2_1x1": {
+    "x": 400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_joint_k1_1x1": {
+    "x": 600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_joint_l1_1x1": {
+    "x": 800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_m1_1x1": {
+    "x": 1000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_brain_wall_connector_a2_1x1": {
+    "x": 1200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_ending_a4_1x1": {
+    "x": 1400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_piece_b1_1x1": {
+    "x": 1600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_c2_1x1": {
+    "x": 1800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_ending_d4_1x1": {
+    "x": 2000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_e2_1x1": {
+    "x": 2200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_f1_1x1": {
+    "x": 2400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_g2_1x1": {
+    "x": 2600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_piece_h1_1x1": {
+    "x": 2800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_i2_1x1": {
+    "x": 3000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_j3_1x1": {
+    "x": 3200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_piece_k1_1x1": {
+    "x": 3400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_piece_l1_1x1": {
+    "x": 3600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_m2_1x1": {
+    "x": 3800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_brain_wall_corner_a1_1x1": {
+    "x": 4000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_ending_a5_1x1": {
+    "x": 4200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_b1_1x1": {
+    "x": 4400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_corner_c1_1x1": {
+    "x": 4600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_ending_d5_1x1": {
+    "x": 4800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_corner_e1_1x1": {
+    "x": 5000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_f2_1x1": {
+    "x": 5200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_corner_g1_1x1": {
+    "x": 5400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_connector_h1_1x1": {
+    "x": 5600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_corner_i1_1x1": {
+    "x": 5800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_joint_j1_1x1": {
+    "x": 6000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_c1_1x1": {
+    "x": 6200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_joint_d1_1x1": {
+    "x": 6400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_e1_1x1": {
+    "x": 6600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_f3_1x1": {
+    "x": 6800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_g1_1x1": {
+    "x": 7000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_connector_h2_1x1": {
+    "x": 7200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_i1_1x1": {
+    "x": 7400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_piece_j1_1x1": {
+    "x": 7600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_connector_l1_1x1": {
+    "x": 7800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_corner_m1_1x1": {
+    "x": 0,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_brain_wall_diagonal_a1_1x1": {
+    "x": 200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_joint_a1_1x1": {
+    "x": 400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_b2_1x1": {
+    "x": 600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_c1_1x1": {
+    "x": 800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_piece_d1_1x1": {
+    "x": 1000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_e1_1x1": {
+    "x": 1200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_f4_1x1": {
+    "x": 1400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_g1_1x1": {
+    "x": 1600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_corner_h1_1x1": {
+    "x": 1800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_i1_1x1": {
+    "x": 2000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_j1_1x1": {
+    "x": 2200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_connector_l2_1x1": {
+    "x": 2400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_m1_1x1": {
+    "x": 2600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_brain_wall_ending_a1_1x1": {
+    "x": 2800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_piece_a1_1x1": {
+    "x": 3000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_corner_b1_1x1": {
+    "x": 3200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_joint_c1_1x1": {
+    "x": 3400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_connector_d1_1x1": {
+    "x": 3600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_joint_e1_1x1": {
+    "x": 3800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_f5_1x1": {
+    "x": 4000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_joint_g1_1x1": {
+    "x": 4200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_diagonal_h1_1x1": {
+    "x": 4400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_joint_i1_1x1": {
+    "x": 4600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_j2_1x1": {
+    "x": 4800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_corner_l1_1x1": {
+    "x": 5000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_m1_1x1": {
+    "x": 5200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_brain_wall_joint_a1_1x1": {
+    "x": 5400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_connector_a1_1x1": {
+    "x": 5600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_ending_b1_1x1": {
+    "x": 5800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_piece_c1_1x1": {
+    "x": 6000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_connector_d2_1x1": {
+    "x": 6200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_piece_e1_1x1": {
+    "x": 6400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_joint_f1_1x1": {
+    "x": 6600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_piece_g1_1x1": {
+    "x": 6800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_h1_1x1": {
+    "x": 7000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_piece_i1_1x1": {
+    "x": 7200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_corner_j1_1x1": {
+    "x": 7400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_diagonal_l1_1x1": {
+    "x": 7600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_joint_m1_1x1": {
+    "x": 7800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_brain_wall_piece_a1_1x1": {
+    "x": 0,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_connector_a2_1x1": {
+    "x": 200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_joint_b1_1x1": {
+    "x": 400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_c1_1x1": {
+    "x": 600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_corner_d1_1x1": {
+    "x": 800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_e1_1x1": {
+    "x": 1000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_piece_f1_1x1": {
+    "x": 1200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_g1_1x1": {
+    "x": 1400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_h2_1x1": {
+    "x": 1600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_i1_1x1": {
+    "x": 1800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_j1_1x1": {
+    "x": 2000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_l1_1x1": {
+    "x": 2200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_piece_m1_1x1": {
+    "x": 2400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_brain_wall_connector_a1_1x1": {
+    "x": 2600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_corner_a1_1x1": {
+    "x": 2800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_piece_b1_1x1": {
+    "x": 3000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_c2_1x1": {
+    "x": 3200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_diagonal_d1_1x1": {
+    "x": 3400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_e2_1x1": {
+    "x": 3600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_f1_1x1": {
+    "x": 3800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_g2_1x1": {
+    "x": 4000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_h3_1x1": {
+    "x": 4200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_i2_1x1": {
+    "x": 4400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_j2_1x1": {
+    "x": 4600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_l2_1x1": {
+    "x": 4800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_m1_1x1": {
+    "x": 5000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_brain_wall_connector_a2_1x1": {
+    "x": 5200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_diagonal_a1_1x1": {
+    "x": 5400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_corner_g1_1x1": {
+    "x": 5600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_h4_1x1": {
+    "x": 5800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_corner_i1_1x1": {
+    "x": 6000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_j3_1x1": {
+    "x": 6200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_l3_1x1": {
+    "x": 6400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_m2_1x1": {
+    "x": 6600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_brain_wall_corner_a1_1x1": {
+    "x": 6800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_a1_1x1": {
+    "x": 7000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_corner_c1_1x1": {
+    "x": 7200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_d1_1x1": {
+    "x": 7400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_corner_e1_1x1": {
+    "x": 7600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_corner_f1_1x1": {
+    "x": 7800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_g1_1x1": {
+    "x": 0,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_joint_h1_1x1": {
+    "x": 200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_i1_1x1": {
+    "x": 400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_joint_j1_1x1": {
+    "x": 600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_l4_1x1": {
+    "x": 800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_corner_m1_1x1": {
+    "x": 1000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_brain_wall_diagonal_a1_1x1": {
+    "x": 1200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_a2_1x1": {
+    "x": 1400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_c1_1x1": {
+    "x": 1600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_d2_1x1": {
+    "x": 1800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_e1_1x1": {
+    "x": 2000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_f1_1x1": {
+    "x": 2200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_ending_g1_1x1": {
+    "x": 2400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_piece_h1_1x1": {
+    "x": 2600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_ending_i1_1x1": {
+    "x": 2800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_piece_j1_1x1": {
+    "x": 3000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_joint_l1_1x1": {
+    "x": 3200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_m1_1x1": {
+    "x": 3400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_brain_wall_ending_a1_1x1": {
+    "x": 3600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_a3_1x1": {
+    "x": 3800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_ending_c1_1x1": {
+    "x": 4000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_d3_1x1": {
+    "x": 4200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_ending_e1_1x1": {
+    "x": 4400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_f2_1x1": {
+    "x": 4600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_joint_g1_1x1": {
+    "x": 4800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_h1_1x1": {
+    "x": 5000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_joint_i1_1x1": {
+    "x": 5200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_j1_1x1": {
+    "x": 5400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_piece_l1_1x1": {
+    "x": 5600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_ending_m1_1x1": {
+    "x": 5800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_brain_wall_joint_a1_1x1": {
+    "x": 6000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_a4_1x1": {
+    "x": 6200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_joint_c1_1x1": {
+    "x": 6400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_ending_d4_1x1": {
+    "x": 6600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_joint_e1_1x1": {
+    "x": 6800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_ending_f3_1x1": {
+    "x": 7000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_piece_g1_1x1": {
+    "x": 7200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_connector_h2_1x1": {
+    "x": 7400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_piece_i1_1x1": {
+    "x": 7600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_connector_j2_1x1": {
+    "x": 7800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_diagonal_b1_2x2": {
+    "x": 0,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_green_wall_diagonal_b1_2x2": {
+    "x": 400,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_pale_wall_diagonal_b1_2x2": {
+    "x": 800,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_peachy_wall_diagonal_b1_2x2": {
+    "x": 1200,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_b1_2x2": {
+    "x": 1600,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_b1_2x2": {
+    "x": 2000,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_black_wall_diagonal_f1_2x2": {
+    "x": 2400,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_green_wall_diagonal_f1_2x2": {
+    "x": 2800,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_pale_wall_diagonal_f1_2x2": {
+    "x": 3200,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_peachy_wall_diagonal_f1_2x2": {
+    "x": 3600,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_f1_2x2": {
+    "x": 4000,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_f1_2x2": {
+    "x": 4400,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_black_wall_diagonal_j1_1x2": {
+    "x": 4800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-walls:flesh_green_wall_diagonal_j1_1x2": {
+    "x": 5000,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-walls:flesh_pale_wall_diagonal_j1_1x2": {
+    "x": 5200,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-walls:flesh_peachy_wall_diagonal_j1_1x2": {
+    "x": 5400,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_j1_1x2": {
+    "x": 5600,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_j1_1x2": {
+    "x": 5800,
+    "y": 2800,
+    "w": 200,
+    "h": 400,
+    "gw": 1,
+    "gh": 2
+  },
+  "atlas-walls:flesh_black_wall_diagonal_k1_2x2": {
+    "x": 6000,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_green_wall_diagonal_k1_2x2": {
+    "x": 6400,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_pale_wall_diagonal_k1_2x2": {
+    "x": 6800,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_peachy_wall_diagonal_k1_2x2": {
+    "x": 7200,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_purple_wall_diagonal_k1_2x2": {
+    "x": 7600,
+    "y": 2800,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_rotten_wall_diagonal_k1_2x2": {
+    "x": 0,
+    "y": 3200,
+    "w": 400,
+    "h": 400,
+    "gw": 2,
+    "gh": 2
+  },
+  "atlas-walls:flesh_black_brain_wall_straight_a1_4x1": {
+    "x": 400,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_brain_wall_straight_a2_4x1": {
+    "x": 1200,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_brain_wall_straight_a1_4x1": {
+    "x": 2000,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_brain_wall_straight_a2_4x1": {
+    "x": 2800,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_brain_wall_straight_a1_4x1": {
+    "x": 3600,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_brain_wall_straight_a2_4x1": {
+    "x": 4400,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_brain_wall_straight_a1_4x1": {
+    "x": 5200,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_brain_wall_straight_a2_4x1": {
+    "x": 6000,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_brain_wall_straight_a1_4x1": {
+    "x": 6800,
+    "y": 3200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_brain_wall_straight_a2_4x1": {
+    "x": 0,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_brain_wall_straight_a1_4x1": {
+    "x": 800,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_brain_wall_straight_a2_4x1": {
+    "x": 1600,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_a1_4x1": {
+    "x": 2400,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_a2_4x1": {
+    "x": 3200,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_a1_4x1": {
+    "x": 4000,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_a2_4x1": {
+    "x": 4800,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_a1_4x1": {
+    "x": 5600,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_a2_4x1": {
+    "x": 6400,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_a1_4x1": {
+    "x": 7200,
+    "y": 3600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_a2_4x1": {
+    "x": 0,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_a1_4x1": {
+    "x": 800,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_a2_4x1": {
+    "x": 1600,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_a1_4x1": {
+    "x": 2400,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_a2_4x1": {
+    "x": 3200,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_b1_4x1": {
+    "x": 4000,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_b2_4x1": {
+    "x": 4800,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_b1_4x1": {
+    "x": 5600,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_b2_4x1": {
+    "x": 6400,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_b1_4x1": {
+    "x": 7200,
+    "y": 3800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_b2_4x1": {
+    "x": 0,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_b1_4x1": {
+    "x": 800,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_b2_4x1": {
+    "x": 1600,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_b1_4x1": {
+    "x": 2400,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_b2_4x1": {
+    "x": 3200,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_b1_4x1": {
+    "x": 4000,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_b2_4x1": {
+    "x": 4800,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_c1_4x1": {
+    "x": 5600,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_c2_4x1": {
+    "x": 6400,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_c1_4x1": {
+    "x": 7200,
+    "y": 4000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_c2_4x1": {
+    "x": 0,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_c1_4x1": {
+    "x": 800,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_c2_4x1": {
+    "x": 1600,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_c1_4x1": {
+    "x": 2400,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_c2_4x1": {
+    "x": 3200,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_c1_4x1": {
+    "x": 4000,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_c2_4x1": {
+    "x": 4800,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_c1_4x1": {
+    "x": 5600,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_c2_4x1": {
+    "x": 6400,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_d1_4x1": {
+    "x": 7200,
+    "y": 4200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_d2_4x1": {
+    "x": 0,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_d1_4x1": {
+    "x": 800,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_d2_4x1": {
+    "x": 1600,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_d1_4x1": {
+    "x": 2400,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_d2_4x1": {
+    "x": 3200,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_d1_4x1": {
+    "x": 4000,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_d2_4x1": {
+    "x": 4800,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_d1_4x1": {
+    "x": 5600,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_d2_4x1": {
+    "x": 6400,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_d1_4x1": {
+    "x": 7200,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_d2_4x1": {
+    "x": 0,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_e1_4x1": {
+    "x": 800,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_e2_4x1": {
+    "x": 1600,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_e1_4x1": {
+    "x": 2400,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_e2_4x1": {
+    "x": 3200,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_e1_4x1": {
+    "x": 4000,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_e2_4x1": {
+    "x": 4800,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_e1_4x1": {
+    "x": 5600,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_e2_4x1": {
+    "x": 6400,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_e1_4x1": {
+    "x": 7200,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_e2_4x1": {
+    "x": 0,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_e1_4x1": {
+    "x": 800,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_e2_4x1": {
+    "x": 1600,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_f1_4x1": {
+    "x": 2400,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_f2_4x1": {
+    "x": 3200,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_f1_4x1": {
+    "x": 4000,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_f2_4x1": {
+    "x": 4800,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_f1_4x1": {
+    "x": 5600,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_f2_4x1": {
+    "x": 6400,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_f1_4x1": {
+    "x": 7200,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_f2_4x1": {
+    "x": 0,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_f1_4x1": {
+    "x": 800,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_f2_4x1": {
+    "x": 1600,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_f1_4x1": {
+    "x": 2400,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_f2_4x1": {
+    "x": 3200,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_g1_4x1": {
+    "x": 4000,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_g2_4x1": {
+    "x": 4800,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_g1_4x1": {
+    "x": 5600,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_g2_4x1": {
+    "x": 6400,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_g1_4x1": {
+    "x": 7200,
+    "y": 5000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_g2_4x1": {
+    "x": 0,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_g1_4x1": {
+    "x": 800,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_g2_4x1": {
+    "x": 1600,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_g1_4x1": {
+    "x": 2400,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_g2_4x1": {
+    "x": 3200,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_g1_4x1": {
+    "x": 4000,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_g2_4x1": {
+    "x": 4800,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_h1_4x1": {
+    "x": 5600,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_h2_4x1": {
+    "x": 6400,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_h1_4x1": {
+    "x": 7200,
+    "y": 5200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_h2_4x1": {
+    "x": 0,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_h1_4x1": {
+    "x": 800,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_h2_4x1": {
+    "x": 1600,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_h1_4x1": {
+    "x": 2400,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_h2_4x1": {
+    "x": 3200,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_h1_4x1": {
+    "x": 4000,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_h2_4x1": {
+    "x": 4800,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_h1_4x1": {
+    "x": 5600,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_h2_4x1": {
+    "x": 6400,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_i1_4x1": {
+    "x": 7200,
+    "y": 5400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_i2_4x1": {
+    "x": 0,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_i1_4x1": {
+    "x": 800,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_i2_4x1": {
+    "x": 1600,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_i1_4x1": {
+    "x": 2400,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_i2_4x1": {
+    "x": 3200,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_i1_4x1": {
+    "x": 4000,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_i2_4x1": {
+    "x": 4800,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_i1_4x1": {
+    "x": 5600,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_i2_4x1": {
+    "x": 6400,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_i1_4x1": {
+    "x": 7200,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_i2_4x1": {
+    "x": 0,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_j1_4x1": {
+    "x": 800,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_j2_4x1": {
+    "x": 1600,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_j1_4x1": {
+    "x": 2400,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_j2_4x1": {
+    "x": 3200,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_j1_4x1": {
+    "x": 4000,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_j2_4x1": {
+    "x": 4800,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_j1_4x1": {
+    "x": 5600,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_j2_4x1": {
+    "x": 6400,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_j1_4x1": {
+    "x": 7200,
+    "y": 5800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_j2_4x1": {
+    "x": 0,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_j1_4x1": {
+    "x": 800,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_j2_4x1": {
+    "x": 1600,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_k1_4x1": {
+    "x": 2400,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_k2_4x1": {
+    "x": 3200,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_k1_4x1": {
+    "x": 4000,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_k2_4x1": {
+    "x": 4800,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_k1_4x1": {
+    "x": 5600,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_k2_4x1": {
+    "x": 6400,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_k1_4x1": {
+    "x": 7200,
+    "y": 6000,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_k2_4x1": {
+    "x": 0,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_k1_4x1": {
+    "x": 800,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_k2_4x1": {
+    "x": 1600,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_k1_4x1": {
+    "x": 2400,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_k2_4x1": {
+    "x": 3200,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_l1_4x1": {
+    "x": 4000,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_l2_4x1": {
+    "x": 4800,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_l1_4x1": {
+    "x": 5600,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_l2_4x1": {
+    "x": 6400,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_l1_4x1": {
+    "x": 7200,
+    "y": 6200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_l2_4x1": {
+    "x": 0,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_l1_4x1": {
+    "x": 800,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_l2_4x1": {
+    "x": 1600,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_l1_4x1": {
+    "x": 2400,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_l2_4x1": {
+    "x": 3200,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_l1_4x1": {
+    "x": 4000,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_l2_4x1": {
+    "x": 4800,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_m1_4x1": {
+    "x": 5600,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_black_wall_straight_m2_4x1": {
+    "x": 6400,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_m1_4x1": {
+    "x": 7200,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_green_wall_straight_m2_4x1": {
+    "x": 0,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_m1_4x1": {
+    "x": 800,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_pale_wall_straight_m2_4x1": {
+    "x": 1600,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_m1_4x1": {
+    "x": 2400,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_peachy_wall_straight_m2_4x1": {
+    "x": 3200,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_m1_4x1": {
+    "x": 4000,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_purple_wall_straight_m2_4x1": {
+    "x": 4800,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_m1_4x1": {
+    "x": 5600,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-walls:flesh_rotten_wall_straight_m2_4x1": {
+    "x": 6400,
+    "y": 6600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
     "gh": 1
   }
 }

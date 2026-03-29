@@ -8,7 +8,7 @@
 
 ## Next Playtest Priority Queue
 
-- [ ] Full tree assets — current atlas only has `fir_tree_stump` (stumps). Need full canopy tree art for forests/villages to look immersive.
+- [x] Full tree assets — imported 112 tree tiles (fir small/medium/large, palm, multicolor, ashen branches) from FA Core Mapmaking packs. Scatter system updated for all biomes.
 - [ ] NPC schedule movement visible — NPCs walk between POIs on time schedule but need visual token movement
 - [ ] More POI chunk types — inn, workshop, market, fountain, ruins, etc. for richer generated areas
 - [ ] Click-to-move pathfinding during combat — show valid path preview before confirming

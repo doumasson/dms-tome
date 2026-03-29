@@ -54,11 +54,17 @@ export function renderV2Layer(container, layer, width, height, tileSize, tileAtl
       continue
     }
 
+    // Multi-tile support: use gw/gh from atlas info for tile dimensions
+    const gw = info.gw || 1
+    const gh = info.gh || 1
+
     if (sprite) {
       // Update texture if palette index changed
       if (sprite._paletteIdx !== paletteIdx) {
         sprite.texture = tex
         sprite._paletteIdx = paletteIdx
+        sprite.width = tileSize * gw
+        sprite.height = tileSize * gh
       }
     } else {
       // Create new sprite
@@ -66,8 +72,8 @@ export function renderV2Layer(container, layer, width, height, tileSize, tileAtl
       sprite.roundPixels = true
       sprite.x = x * tileSize
       sprite.y = y * tileSize
-      sprite.width = tileSize
-      sprite.height = tileSize
+      sprite.width = tileSize * gw
+      sprite.height = tileSize * gh
       sprite._paletteIdx = paletteIdx
       container.addChild(sprite)
     }

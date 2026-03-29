@@ -22,7 +22,7 @@ import { startTargeting, updateTargeting, confirmTargeting, cancelTargeting, isT
 const ATLAS_NAMES = [
   'atlas-floors', 'atlas-structures', 'atlas-props-furniture',
   'atlas-props-decor', 'atlas-props-craft', 'atlas-terrain',
-  'atlas-effects', 'atlas-walls',
+  'atlas-effects', 'atlas-walls', 'atlas-tokens',
 ]
 
 export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, onNpcClick, inCombat, camera, roofManager }, ref) {

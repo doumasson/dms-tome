@@ -160,160 +160,160 @@
     "gh": 1
   },
   "atlas-structures:brick_earthy_a1_1x1": {
-    "x": 0,
-    "y": 200,
+    "x": 4000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_blue_brine_pool_c1_empty_1x1": {
-    "x": 200,
-    "y": 200,
+    "x": 4200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:arch_broken_stone_earthy_a1_1x1": {
-    "x": 400,
-    "y": 200,
+    "x": 4400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:pillar_broken_headstone_marble_black_a10_1x1": {
-    "x": 600,
-    "y": 200,
+    "x": 4600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:wall_brick_earthy_broken_ending_a1_1x1": {
-    "x": 800,
-    "y": 200,
+    "x": 4800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:floor_cell_metal_black_a1_1x1": {
-    "x": 1000,
-    "y": 200,
+    "x": 5000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_wall_blue_connector_a1_1x1": {
-    "x": 1200,
-    "y": 200,
+    "x": 5200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_wall_blue_connector_b1_1x1": {
-    "x": 1400,
-    "y": 200,
+    "x": 5400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_wall_blue_connector_c2_1x1": {
-    "x": 1600,
-    "y": 200,
+    "x": 5600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_wall_blue_connector_d1_1x1": {
-    "x": 1800,
-    "y": 200,
+    "x": 5800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_wall_blue_connector_e1_1x1": {
-    "x": 2000,
-    "y": 200,
+    "x": 6000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_wall_blue_connector_f1_1x1": {
-    "x": 2200,
-    "y": 200,
+    "x": 6200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_wall_blue_connector_g1_1x1": {
-    "x": 2400,
-    "y": 200,
+    "x": 6400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:chimney_stone_earthy_a_1x1": {
-    "x": 2600,
-    "y": 200,
+    "x": 6600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:clock_metal_brass_hand_small_b2_1x1": {
-    "x": 2800,
-    "y": 200,
+    "x": 6800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:basin_coal_fire_blue_small_circle_a1_1x1": {
-    "x": 3000,
-    "y": 200,
+    "x": 7000,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:cog_metal_brass_inner_small_a1_1x1": {
-    "x": 3200,
-    "y": 200,
+    "x": 7200,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ceremorph_floor_plate_blue_circle_corner_a1_1x1": {
-    "x": 3400,
-    "y": 200,
+    "x": 7400,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:connector_metal_gray_a1_1x1": {
-    "x": 3600,
-    "y": 200,
+    "x": 7600,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:aesthetic_path_corner_metal_black_a1_1x1": {
-    "x": 3800,
-    "y": 200,
+    "x": 7800,
+    "y": 0,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -321,7 +321,7 @@
   },
   "atlas-structures:crank_metal_brass_a1_1x1": {
     "x": 0,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -329,7 +329,7 @@
   },
   "atlas-structures:drow_floor_decoration_overlay_crystal_blue_a_1x1": {
     "x": 200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -337,7 +337,7 @@
   },
   "atlas-structures:curb_stone_earthy_a_connector_a_1x1": {
     "x": 400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -345,7 +345,7 @@
   },
   "atlas-structures:curb_stone_earthy_b_connector_a_1x1": {
     "x": 600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -353,7 +353,7 @@
   },
   "atlas-structures:decoration_marble_black_clam_a1_1x1": {
     "x": 800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -361,7 +361,7 @@
   },
   "atlas-structures:door_metal_gray_a_1x1": {
     "x": 1000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -369,7 +369,7 @@
   },
   "atlas-structures:water_drain_metal_bronze_a1_1x1": {
     "x": 1200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -377,7 +377,7 @@
   },
   "atlas-structures:drinking_fountain_marble_black_b1_1x1": {
     "x": 1400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -385,7 +385,7 @@
   },
   "atlas-structures:drow_floor_path_metal_black_connector_diag_a3_1x1": {
     "x": 1600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -393,7 +393,7 @@
   },
   "atlas-structures:drow_floor_path_metal_black_ending_b1_1x1": {
     "x": 1800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -401,7 +401,7 @@
   },
   "atlas-structures:drow_floor_path_metal_black_connector_diag_c1_1x1": {
     "x": 2000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -409,7 +409,7 @@
   },
   "atlas-structures:drow_floor_path_metal_black_connector_diag_d1_1x1": {
     "x": 2200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -417,7 +417,7 @@
   },
   "atlas-structures:drow_floor_path_stone_earthy_connector_diag_e1_1x1": {
     "x": 2400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -425,7 +425,7 @@
   },
   "atlas-structures:drow_floor_path_metal_black_connector_diag_f1_1x1": {
     "x": 2600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -433,7 +433,7 @@
   },
   "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_a1_1x1": {
     "x": 2800,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -441,7 +441,7 @@
   },
   "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_b_1x1": {
     "x": 3000,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -449,7 +449,7 @@
   },
   "atlas-structures:drow_wall_stone_earthy_connector_c1_1x1": {
     "x": 3200,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -457,7 +457,7 @@
   },
   "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_d_1x1": {
     "x": 3400,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -465,7 +465,7 @@
   },
   "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_e_1x1": {
     "x": 3600,
-    "y": 400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
@@ -473,165 +473,645 @@
   },
   "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_f1_1x1": {
     "x": 3800,
-    "y": 400,
+    "y": 200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:blood_pool_fresh": {
+    "x": 4000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_floor_path_stone_earthy_connector_a1_1x1": {
-    "x": 0,
-    "y": 600,
+    "x": 4200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_floor_path_stone_earthy_connector_b1_1x1": {
-    "x": 200,
-    "y": 600,
+    "x": 4400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_floor_path_stone_earthy_connector_c1_1x1": {
-    "x": 400,
-    "y": 600,
+    "x": 4600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_floor_path_stone_earthy_connector_d1_1x1": {
-    "x": 600,
-    "y": 600,
+    "x": 4800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_decoration_face_small_stone_earthy_a1_1x1": {
-    "x": 800,
-    "y": 600,
+    "x": 5000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_wall_stone_earthy_connector_a1_1x1": {
-    "x": 1000,
-    "y": 600,
+    "x": 5200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_wall_stone_earthy_connector_b1_1x1": {
-    "x": 1200,
-    "y": 600,
+    "x": 5400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_wall_stone_earthy_connector_c1_1x1": {
-    "x": 1400,
-    "y": 600,
+    "x": 5600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_wall_stone_earthy_connector_d1_1x1": {
-    "x": 1600,
-    "y": 600,
+    "x": 5800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_wall_stone_earthy_connector_e1_1x1": {
-    "x": 1800,
-    "y": 600,
+    "x": 6000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:dwarven_wall_stone_earthy_connector_f1_1x1": {
-    "x": 2000,
-    "y": 600,
+    "x": 6200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:glass_edge_blue_a3_1x1": {
-    "x": 2200,
-    "y": 600,
+    "x": 6400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:fence_wood_ashen_b_beam_broken_b1_1x1": {
-    "x": 2400,
-    "y": 600,
+    "x": 6600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:basin_wall_marble_black_fancy_step_down_a1_1x1": {
-    "x": 2600,
-    "y": 600,
+    "x": 6800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:fence_corner_metal_black_a1_1x1": {
-    "x": 2800,
-    "y": 600,
+    "x": 7000,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:fence_stone_earthy_a_connector_a_1x1": {
-    "x": 3000,
-    "y": 600,
+    "x": 7200,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:fence_stone_earthy_b_connector_a_1x1": {
-    "x": 3200,
-    "y": 600,
+    "x": 7400,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:fence_wood_ashen_a_connector_a_1x1": {
-    "x": 3400,
-    "y": 600,
+    "x": 7600,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:fence_wood_ashen_b_beam_b1_1x1": {
-    "x": 3600,
-    "y": 600,
+    "x": 7800,
+    "y": 200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:fence_wood_ashen_c_picket_end_a1_1x1": {
+    "x": 0,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:coal_box_wood_ashen_metal_rusty_a1_1x1": {
+    "x": 200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_inlay_glowing_blue_double_corner_a1_1x1": {
+    "x": 400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fountain_water_fall_a1_1x1": {
+    "x": 600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:window_frame_metal_gray_a_1x1": {
+    "x": 800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_tentacle_blue_from_above_a1_1x1": {
+    "x": 1000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:glass_shard_blue_a10_1x1": {
+    "x": 1200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:grate_metal_brass_a_path": {
+    "x": 1400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:path_floor_grate_line_end_metal_black_b1_1x1": {
+    "x": 1600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:bag_closed": {
+    "x": 1800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_inlay_glowing_blue_icon_e1_1x1": {
+    "x": 2000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ladder_ashen_a_1x1": {
+    "x": 2200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:lever_gray_a_1x1": {
+    "x": 2400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:library_rolling_ladder_wood_ashen_metal_brass_a1_1x1": {
+    "x": 2600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:manhole_cover_metal_gray_a2_closed_1x1": {
+    "x": 2800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:blank_doors_1b_1x1": {
+    "x": 3000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pillar_marble_black_a1_1x1": {
+    "x": 3200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:cog_linear_metal_brass_b_path": {
+    "x": 3400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pillar_metal_gray_a1_1x1": {
+    "x": 3600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_wall_metal_brass_frame_small_circle_a1_1x1": {
+    "x": 3800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ladder_metal_gray_wall_a1_1x1": {
+    "x": 4000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_overlay_pillar_metal_black_a_1x1": {
+    "x": 4200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:connector_metal_brass_a1_1x1": {
+    "x": 4400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pillar_brickwood_earthy_ashen_a1_1x1": {
+    "x": 4600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:bolt_metal_brass_a1_1x1": {
+    "x": 4800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_oil_black_small_circle_a1_1x1": {
+    "x": 5000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_floor_plate_blue_a14_1x1": {
+    "x": 5200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:beam_overlay_dirty_rope_a2_1x1": {
+    "x": 5400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_overlay_crystal_blue_connector_diag_a3_1x1": {
+    "x": 5600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:palisade_pillar_spike_wood_ashen_a1_1x1": {
+    "x": 5800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_plinth_decoration_metal_black_a1_1x1": {
+    "x": 6000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aesthetic_path_metal_black_a_path": {
+    "x": 6200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_support_column_blue_c1_1x1": {
+    "x": 6400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:plank_ashen_small_a1_1x1": {
+    "x": 6600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_floor_glowing_blue_plaque_d2_1x1": {
+    "x": 6800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_dias_stone_earthy_metal_gray_a1_1x1": {
+    "x": 7000,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_plinth_stone_earthy_b1_1x1": {
+    "x": 7200,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_blue_chamber_cage_c1_1x1": {
+    "x": 7400,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pipe_inside_metal_polished_corner_medium_a1_1x1": {
+    "x": 7600,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_wood_ashen_b_post_a1_1x1": {
+    "x": 7800,
+    "y": 400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:propeller_nose_metal_black_large_a1_1x1": {
+    "x": 0,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:anchor": {
+    "x": 200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_rod_clamp_metal_brass_a1_1x1": {
+    "x": 400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_rod_end_metal_brass_a10_1x1": {
+    "x": 600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:railing_rope_ashen_a1_1x1": {
+    "x": 800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:rope_ladder_wood_ashen_wall_a1_1x1": {
+    "x": 1000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_wall_stone_earthy_rough_step_down_a1_1x1": {
+    "x": 1200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_statue_debris_blue_a10_1x1": {
+    "x": 1400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:rustic_tavern_1": {
+    "x": 1600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pipe_inside_metal_rusty_corner_medium_a1_1x1": {
+    "x": 1800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:svcic_half_burried_cargo_1_1x1": {
+    "x": 2000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:scrap_metal_brass_a10_1x1": {
+    "x": 2200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:vtsm_pictorial_instuctions": {
+    "x": 2400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wood_ashen_damage_overlay_a10_1x1": {
+    "x": 2600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:side_cell_metal_black_a1_1x1": {
+    "x": 2800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_aqueduct_grate_metal_black_crystal_yellow_connector_a1_1x1": {
+    "x": 3000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_decoration_metal_black_crystal_yellow_a_1x1": {
+    "x": 3200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:stained_window_small_metal_gray_a_1x1": {
+    "x": 3400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:window_small_metal_gray_a_1x1": {
+    "x": 3600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wired_window_small_metal_gray_a_1x1": {
     "x": 3800,
     "y": 600,
     "w": 200,
@@ -639,479 +1119,959 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:coal_box_wood_ashen_metal_rusty_a1_1x1": {
-    "x": 0,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_inlay_glowing_blue_double_corner_a1_1x1": {
-    "x": 200,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:fountain_water_fall_a1_1x1": {
-    "x": 400,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:window_frame_metal_gray_a_1x1": {
-    "x": 600,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_tentacle_blue_from_above_a1_1x1": {
-    "x": 800,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:glass_shard_blue_a10_1x1": {
-    "x": 1000,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:grate_metal_brass_a_path": {
-    "x": 1200,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:path_floor_grate_line_end_metal_black_b1_1x1": {
-    "x": 1400,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_inlay_glowing_blue_icon_e1_1x1": {
-    "x": 1600,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ladder_ashen_a_1x1": {
-    "x": 1800,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:lever_gray_a_1x1": {
-    "x": 2000,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:library_rolling_ladder_wood_ashen_metal_brass_a1_1x1": {
-    "x": 2200,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:manhole_cover_metal_gray_a2_closed_1x1": {
-    "x": 2400,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:pillar_marble_black_a1_1x1": {
-    "x": 2600,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:cog_linear_metal_brass_b_path": {
-    "x": 2800,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:pillar_metal_gray_a1_1x1": {
-    "x": 3000,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:basin_wall_metal_brass_frame_small_circle_a1_1x1": {
-    "x": 3200,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ladder_metal_gray_wall_a1_1x1": {
-    "x": 3400,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_overlay_pillar_metal_black_a_1x1": {
-    "x": 3600,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:connector_metal_brass_a1_1x1": {
-    "x": 3800,
-    "y": 800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:pillar_brickwood_earthy_ashen_a1_1x1": {
-    "x": 0,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:bolt_metal_brass_a1_1x1": {
-    "x": 200,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:basin_oil_black_small_circle_a1_1x1": {
-    "x": 400,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_floor_plate_blue_a14_1x1": {
-    "x": 600,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:beam_overlay_dirty_rope_a2_1x1": {
-    "x": 800,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_floor_path_overlay_crystal_blue_connector_diag_a3_1x1": {
-    "x": 1000,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:palisade_pillar_spike_wood_ashen_a1_1x1": {
-    "x": 1200,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_plinth_decoration_metal_black_a1_1x1": {
-    "x": 1400,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:aesthetic_path_metal_black_a_path": {
-    "x": 1600,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_support_column_blue_c1_1x1": {
-    "x": 1800,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:plank_ashen_small_a1_1x1": {
-    "x": 2000,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_floor_glowing_blue_plaque_d2_1x1": {
-    "x": 2200,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_dias_stone_earthy_metal_gray_a1_1x1": {
-    "x": 2400,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_plinth_stone_earthy_b1_1x1": {
-    "x": 2600,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_blue_chamber_cage_c1_1x1": {
-    "x": 2800,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:pipe_inside_metal_polished_corner_medium_a1_1x1": {
-    "x": 3000,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:fence_wood_ashen_b_post_a1_1x1": {
-    "x": 3200,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:propeller_nose_metal_black_large_a1_1x1": {
-    "x": 3400,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_rod_clamp_metal_brass_a1_1x1": {
-    "x": 3600,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_rod_end_metal_brass_a10_1x1": {
-    "x": 3800,
-    "y": 1000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:railing_rope_ashen_a1_1x1": {
-    "x": 0,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:rope_ladder_wood_ashen_wall_a1_1x1": {
-    "x": 200,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:basin_wall_stone_earthy_rough_step_down_a1_1x1": {
-    "x": 400,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_statue_debris_blue_a10_1x1": {
-    "x": 600,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:pipe_inside_metal_rusty_corner_medium_a1_1x1": {
-    "x": 800,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:scrap_metal_brass_a10_1x1": {
-    "x": 1000,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wood_ashen_damage_overlay_a10_1x1": {
-    "x": 1200,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:side_cell_metal_black_a1_1x1": {
-    "x": 1400,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_aqueduct_grate_metal_black_crystal_yellow_connector_a1_1x1": {
-    "x": 1600,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_floor_decoration_metal_black_crystal_yellow_a_1x1": {
-    "x": 1800,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:stained_window_small_metal_gray_a_1x1": {
-    "x": 2000,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:window_small_metal_gray_a_1x1": {
-    "x": 2200,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wired_window_small_metal_gray_a_1x1": {
-    "x": 2400,
-    "y": 1200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
   "atlas-structures:fountain_spill_marble_black_tall_a1_1x1": {
-    "x": 2600,
-    "y": 1200,
+    "x": 4000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:spring_metal_brass_large_a2_1x1": {
-    "x": 2800,
-    "y": 1200,
+    "x": 4200,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:planks_stack_ashen_a1_1x1": {
-    "x": 3000,
-    "y": 1200,
+    "x": 4400,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:stained_window_metal_gray_a_1x1": {
-    "x": 3200,
-    "y": 1200,
+    "x": 4600,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:stairs_metal_gray_corner_in_a_1x1": {
-    "x": 3400,
-    "y": 1200,
+    "x": 4800,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:stairs_corner_in_overlay_a_1x1": {
-    "x": 3600,
-    "y": 1200,
+    "x": 5000,
+    "y": 600,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:stairs_stone_earthy_corner_in_a_1x1": {
+    "x": 5200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:stairs_wood_ashen_corner_in_a_1x1": {
+    "x": 5400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_stairs_stone_earthy_connector_a1_1x1": {
+    "x": 5600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_blue_statue_brain_a2_1x1": {
+    "x": 5800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:step_ladder_wood_ashen_b1_1x1": {
+    "x": 6000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:floor_break_stone_earthy_a_path": {
+    "x": 6200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:sundial_metal_brass_stone_sandstone_a1_1x1": {
+    "x": 6400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fountain_wall_support_marble_black_arched_a1_1x1": {
+    "x": 6600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_fastening_metal_brass_ring_a1_1x1": {
+    "x": 6800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_fastening_cloth_beige_a10_1x1": {
+    "x": 7000,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_peg_metal_brass_a1_1x1": {
+    "x": 7200,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_rod_horizontal_metal_brass_a1_1x1": {
+    "x": 7400,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tent_roll_cloth_olive_a_1x1": {
+    "x": 7600,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tent_stake_leather_1x1": {
+    "x": 7800,
+    "y": 600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tent_cloth_blue_entrance_rolled_a1_1x1": {
+    "x": 0,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:deatheye": {
+    "x": 200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:objectthreebarrels": {
+    "x": 400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_wall_marble_black_thin_small_circle_a1_1x1": {
+    "x": 600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_d_sandstone_a1_path": {
+    "x": 800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_e_sandstone_a1_path": {
+    "x": 1000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_f_sandstone_a1_path": {
+    "x": 1200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_g_sandstone_a1_path": {
+    "x": 1400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_h_sandstone_a1_path": {
+    "x": 1600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_i_sandstone_a1_path": {
+    "x": 1800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aesthetic_metal_black_a1_1x1": {
+    "x": 2000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:trapdoor_metal_gray_a1_closed_1x1": {
+    "x": 2200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:plank_uneven_wood_ashen_e1_1x1": {
+    "x": 2400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:vault_door_hinge_metal_gray_a1_1x1": {
+    "x": 2600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:plank_vertical_ashen_a1_1x1": {
+    "x": 2800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:bush_1": {
+    "x": 3000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:vtp_city_road_transistion_short_west": {
+    "x": 3200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:vtpgc1_city_map_section_1_basement_furnished_20x20_": {
+    "x": 3400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:city_block_0_east_west_road_empty": {
+    "x": 3600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brickwood_earthy_ashen_a_connector_a_1x1": {
+    "x": 3800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brickwood_earthy_ashen_b_connector_a_1x1": {
+    "x": 4000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brickwood_earthy_ashen_c_connector_a_1x1": {
+    "x": 4200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_a_connector_a_1x1": {
+    "x": 4400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_b_connector_a_1x1": {
+    "x": 4600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_c_connector_a_1x1": {
+    "x": 4800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_plaster_earthy_c1_connector_a_1x1": {
+    "x": 5000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_plaster_earthy_c2_connector_a_1x1": {
+    "x": 5200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_c_broken_connector_a_1x1": {
+    "x": 5400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_black_small_a1_1x1": {
+    "x": 5600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_black_a1_1x1": {
+    "x": 5800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_a_connector_a_1x1": {
+    "x": 6000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_b_connector_a_1x1": {
+    "x": 6200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_c_connector_a_1x1": {
+    "x": 6400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_d1_connector_a_1x1": {
+    "x": 6600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_e1_connector_a_1x1": {
+    "x": 6800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_f_connector_a_1x1": {
+    "x": 7000,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_decoration_side_metal_black_a2_1x1": {
+    "x": 7200,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:mosaic_wall_a_blue_a1_path": {
+    "x": 7400,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:mosaic_wall_b_blue_a1_path": {
+    "x": 7600,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:mosaic_wall_broken_piece_blue_a10_1x1": {
+    "x": 7800,
+    "y": 800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_a_path": {
+    "x": 0,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plasterwood_ashen_a1_connector_a_1x1": {
+    "x": 200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plasterwood_ashen_b_connector_a_1x1": {
+    "x": 400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plasterwood_ashen_c1_connector_a_1x1": {
+    "x": 600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plasterwood_ashen_d_connector_a_1x1": {
+    "x": 800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plaster_white_a_connector_a_1x1": {
+    "x": 1000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonemetal_earthy_gray_a1_connector_a_1x1": {
+    "x": 1200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonewood_earthy_ashen_a_connector_a_1x1": {
+    "x": 1400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonewood_earthy_ashen_b_connector_a_1x1": {
+    "x": 1600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonewood_earthy_ashen_c_connector_a_1x1": {
+    "x": 1800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonewood_earthy_ashen_d_connector_a_1x1": {
+    "x": 2000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_a_connector_a_1x1": {
+    "x": 2200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_b1_connector_a_1x1": {
+    "x": 2400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_c_connector_a_1x1": {
+    "x": 2600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_d_connector_a_1x1": {
+    "x": 2800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_e_connector_a_1x1": {
+    "x": 3000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_f_connector_a_1x1": {
+    "x": 3200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_g_connector_a_1x1": {
+    "x": 3400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_h_connector_a_1x1": {
+    "x": 3600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_i1_connector_a_1x1": {
+    "x": 3800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_j1_connector_a_1x1": {
+    "x": 4000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_k1_connector_a_1x1": {
+    "x": 4200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_corner_stone_earthy_l1_1x1": {
+    "x": 4400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_corner_stone_earthy_m1_1x1": {
+    "x": 4600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_corner_stone_earthy_metal_gray_n1_1x1": {
+    "x": 4800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_corner_stone_earthy_o1_1x1": {
+    "x": 5000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_tile_a_patterna_a1_path": {
+    "x": 5200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_tile_b_patterna_a1_path": {
+    "x": 5400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_tile_c_patterna_a1_path": {
+    "x": 5600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_tile_broken_piece_patterna_a10_1x1": {
+    "x": 5800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_a_connector_a_1x1": {
+    "x": 6000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_b_connector_a_1x1": {
+    "x": 6200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_c_connector_a_1x1": {
+    "x": 6400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_d_connector_a_1x1": {
+    "x": 6600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_e_connector_a_1x1": {
+    "x": 6800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_f_connector_a_1x1": {
+    "x": 7000,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_g_connector_a_1x1": {
+    "x": 7200,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_overlay_metal_black_universal_endpiece_a1_1x1": {
+    "x": 7400,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_water_blue_small_circle_a1_1x1": {
+    "x": 7600,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:water_wheel_metal_black_support_b1_1x1": {
+    "x": 7800,
+    "y": 1000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:well_cover_handle_wood_ashen_a_1x1": {
+    "x": 0,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:winch_handle_metal_brass_a1_1x1": {
+    "x": 200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:shack_window_shutters_wood_ashen_a1_1x1": {
+    "x": 400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:window_sill_small_stone_earthy_a1_1x1": {
+    "x": 600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:window_metal_gray_a_1x1": {
+    "x": 800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wired_window_metal_gray_a_1x1": {
+    "x": 1000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_blue_tube_capped_a1_1x1": {
+    "x": 1200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:cable_metal_brass_a11_1x1": {
+    "x": 1400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:floor_break_wood_ashen_a_path": {
+    "x": 1600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:walkway_wood_ashen_a_connector_top_small_a1_1x1": {
+    "x": 1800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:bar_brackets_big_metal_gray_b_1x1": {
+    "x": 2000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_decoration_blue_f1_1x1": {
+    "x": 2200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aframe_ladder_wood_ashen_c1_1x1": {
+    "x": 2400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aqueduct_fill_acid_connector_a2_1x1": {
+    "x": 2600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_aqueduct_grate_metal_black_connector_a2_1x1": {
+    "x": 2800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_aqueduct_grate_metal_black_connector_b2_1x1": {
+    "x": 3000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_aqueduct_grate_metal_black_connector_c2_1x1": {
+    "x": 3200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aqueduct_stone_earthy_connector_a2_1x1": {
+    "x": 3400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:arch_cross_capstone_stone_redrock_a1_1x1": {
+    "x": 3600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:arrowslit_stone_earthy_a1_ashen_1x1": {
     "x": 3800,
     "y": 1200,
     "w": 200,
@@ -1119,799 +2079,1599 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:stairs_wood_ashen_corner_in_a_1x1": {
-    "x": 0,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_stairs_stone_earthy_connector_a1_1x1": {
-    "x": 200,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_blue_statue_brain_a2_1x1": {
-    "x": 400,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:step_ladder_wood_ashen_b1_1x1": {
-    "x": 600,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:floor_break_stone_earthy_a_path": {
-    "x": 800,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:sundial_metal_brass_stone_sandstone_a1_1x1": {
-    "x": 1000,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:fountain_wall_support_marble_black_arched_a1_1x1": {
-    "x": 1200,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_fastening_metal_brass_ring_a1_1x1": {
-    "x": 1400,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_fastening_cloth_beige_a10_1x1": {
-    "x": 1600,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_peg_metal_brass_a1_1x1": {
-    "x": 1800,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_rod_horizontal_metal_brass_a1_1x1": {
-    "x": 2000,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tent_roll_cloth_olive_a_1x1": {
-    "x": 2200,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tent_stake_leather_1x1": {
-    "x": 2400,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tent_cloth_blue_entrance_rolled_a1_1x1": {
-    "x": 2600,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:basin_wall_marble_black_thin_small_circle_a1_1x1": {
-    "x": 2800,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:aesthetic_metal_black_a1_1x1": {
-    "x": 3000,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:trapdoor_metal_gray_a1_closed_1x1": {
-    "x": 3200,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:plank_uneven_wood_ashen_e1_1x1": {
-    "x": 3400,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:vault_door_hinge_metal_gray_a1_1x1": {
-    "x": 3600,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:plank_vertical_ashen_a1_1x1": {
-    "x": 3800,
-    "y": 1400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brickwood_earthy_ashen_a_connector_a_1x1": {
-    "x": 0,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brickwood_earthy_ashen_b_connector_a_1x1": {
-    "x": 200,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brickwood_earthy_ashen_c_connector_a_1x1": {
-    "x": 400,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_earthy_a_connector_a_1x1": {
-    "x": 600,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_earthy_b_connector_a_1x1": {
-    "x": 800,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_earthy_c_connector_a_1x1": {
-    "x": 1000,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_plaster_earthy_c1_connector_a_1x1": {
-    "x": 1200,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_plaster_earthy_c2_connector_a_1x1": {
-    "x": 1400,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_earthy_c_broken_connector_a_1x1": {
-    "x": 1600,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_decoration_marble_black_small_a1_1x1": {
-    "x": 1800,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_head_marble_black_a1_1x1": {
-    "x": 2000,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_a_connector_a_1x1": {
-    "x": 2200,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_b_connector_a_1x1": {
-    "x": 2400,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_c_connector_a_1x1": {
-    "x": 2600,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_d1_connector_a_1x1": {
-    "x": 2800,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_e1_connector_a_1x1": {
-    "x": 3000,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_f_connector_a_1x1": {
-    "x": 3200,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_decoration_side_metal_black_a2_1x1": {
-    "x": 3400,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_wall_blue_a_path": {
-    "x": 3600,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_plasterwood_ashen_a1_connector_a_1x1": {
-    "x": 3800,
-    "y": 1600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_plasterwood_ashen_b_connector_a_1x1": {
-    "x": 0,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_plasterwood_ashen_c1_connector_a_1x1": {
-    "x": 200,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_plasterwood_ashen_d_connector_a_1x1": {
-    "x": 400,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_plaster_white_a_connector_a_1x1": {
-    "x": 600,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stonemetal_earthy_gray_a1_connector_a_1x1": {
-    "x": 800,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stonewood_earthy_ashen_a_connector_a_1x1": {
-    "x": 1000,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stonewood_earthy_ashen_b_connector_a_1x1": {
-    "x": 1200,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stonewood_earthy_ashen_c_connector_a_1x1": {
-    "x": 1400,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stonewood_earthy_ashen_d_connector_a_1x1": {
-    "x": 1600,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_a_connector_a_1x1": {
-    "x": 1800,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_b1_connector_a_1x1": {
-    "x": 2000,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_c_connector_a_1x1": {
-    "x": 2200,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_d_connector_a_1x1": {
-    "x": 2400,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_e_connector_a_1x1": {
-    "x": 2600,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_f_connector_a_1x1": {
-    "x": 2800,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_g_connector_a_1x1": {
-    "x": 3000,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_h_connector_a_1x1": {
-    "x": 3200,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_i1_connector_a_1x1": {
-    "x": 3400,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_j1_connector_a_1x1": {
-    "x": 3600,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_stone_earthy_k1_connector_a_1x1": {
-    "x": 3800,
-    "y": 1800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_corner_stone_earthy_l1_1x1": {
-    "x": 0,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_corner_stone_earthy_m1_1x1": {
-    "x": 200,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_corner_stone_earthy_metal_gray_n1_1x1": {
-    "x": 400,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_corner_stone_earthy_o1_1x1": {
-    "x": 600,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_wood_ashen_a_connector_a_1x1": {
-    "x": 800,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_wood_ashen_b_connector_a_1x1": {
-    "x": 1000,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_wood_ashen_c_connector_a_1x1": {
-    "x": 1200,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_wood_ashen_d_connector_a_1x1": {
-    "x": 1400,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_wood_ashen_e_connector_a_1x1": {
-    "x": 1600,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_wood_ashen_f_connector_a_1x1": {
-    "x": 1800,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_wood_ashen_g_connector_a_1x1": {
-    "x": 2000,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_wall_overlay_metal_black_universal_endpiece_a1_1x1": {
-    "x": 2200,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:basin_water_blue_small_circle_a1_1x1": {
-    "x": 2400,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:water_wheel_metal_black_support_b1_1x1": {
-    "x": 2600,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:well_cover_handle_wood_ashen_a_1x1": {
-    "x": 2800,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:winch_handle_metal_brass_a1_1x1": {
-    "x": 3000,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:shack_window_shutters_wood_ashen_a1_1x1": {
-    "x": 3200,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:window_sill_small_stone_earthy_a1_1x1": {
-    "x": 3400,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:window_metal_gray_a_1x1": {
-    "x": 3600,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wired_window_metal_gray_a_1x1": {
-    "x": 3800,
-    "y": 2000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_blue_tube_capped_a1_1x1": {
-    "x": 0,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:cable_metal_brass_a11_1x1": {
-    "x": 200,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:floor_break_wood_ashen_a_path": {
-    "x": 400,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:walkway_wood_ashen_a_connector_top_small_a1_1x1": {
-    "x": 600,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:bar_brackets_big_metal_gray_b_1x1": {
-    "x": 800,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_decoration_blue_f1_1x1": {
-    "x": 1000,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:aframe_ladder_wood_ashen_c1_1x1": {
-    "x": 1200,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:aqueduct_fill_acid_connector_a2_1x1": {
-    "x": 1400,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_aqueduct_grate_metal_black_connector_a2_1x1": {
-    "x": 1600,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_aqueduct_grate_metal_black_connector_b2_1x1": {
-    "x": 1800,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_aqueduct_grate_metal_black_connector_c2_1x1": {
-    "x": 2000,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:aqueduct_stone_earthy_connector_a2_1x1": {
-    "x": 2200,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:arch_cross_capstone_stone_redrock_a1_1x1": {
-    "x": 2400,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:arrowslit_stone_earthy_a1_ashen_1x1": {
-    "x": 2600,
-    "y": 2200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
   "atlas-structures:basin_base_marble_black_small_decagon_a1_1x1": {
-    "x": 2800,
-    "y": 2200,
+    "x": 4000,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:basin_depth_marble_black_cut_small_decagon_a1_1x1": {
-    "x": 3000,
-    "y": 2200,
+    "x": 4200,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:basin_wall_marble_white_cut_step_down_a1_1x1": {
-    "x": 3200,
-    "y": 2200,
+    "x": 4400,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:ibeam_metal_gray_a2_1x1": {
-    "x": 3400,
-    "y": 2200,
+    "x": 4600,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:bell_metal_brass_b1_1x1": {
-    "x": 3600,
-    "y": 2200,
+    "x": 4800,
+    "y": 1200,
     "w": 200,
     "h": 200,
     "gw": 1,
     "gh": 1
   },
   "atlas-structures:birdbath_stone_earthy_b1_1x1": {
+    "x": 5000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_blood_red_small_decagon_a1_1x1": {
+    "x": 5200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_brace_metal_brass_c2_1x1": {
+    "x": 5400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pipe_inside_metal_brass_corner_medium_a2_1x1": {
+    "x": 5600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:rubble_brick_stone_earthy_a11_1x1": {
+    "x": 5800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:brick_earthy_broken_a1_1x1": {
+    "x": 6000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_blue_brine_pool_c1_full_1x1": {
+    "x": 6200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:arch_broken_stone_earthy_a2_1x1": {
+    "x": 6400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pillar_broken_headstone_marble_black_a11_1x1": {
+    "x": 6600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_broken_ending_a2_1x1": {
+    "x": 6800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:floor_cell_metal_black_a4_1x1": {
+    "x": 7000,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_connector_a2_1x1": {
+    "x": 7200,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_connector_b2_1x1": {
+    "x": 7400,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_corner_c1_1x1": {
+    "x": 7600,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_corner_d1_1x1": {
+    "x": 7800,
+    "y": 1200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_corner_e1_1x1": {
+    "x": 0,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_connector_f2_1x1": {
+    "x": 200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_connector_g2_1x1": {
+    "x": 400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:chimney_stone_earthy_b_1x1": {
+    "x": 600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:clock_metal_brass_hand_small_c2_1x1": {
+    "x": 800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_coal_fire_blue_small_decagon_a1_1x1": {
+    "x": 1000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:cog_metal_brass_inner_small_b1_1x1": {
+    "x": 1200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_floor_plate_blue_circle_corner_b1_1x1": {
+    "x": 1400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:connector_metal_gray_a2_1x1": {
+    "x": 1600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aesthetic_path_corner_metal_black_b1_1x1": {
+    "x": 1800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:crank_metal_brass_a2_1x1": {
+    "x": 2000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_decoration_overlay_crystal_blue_b_1x1": {
+    "x": 2200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:curb_stone_earthy_a_connector_b_1x1": {
+    "x": 2400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:curb_stone_earthy_b_connector_b_1x1": {
+    "x": 2600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:decoration_marble_black_clam_a2_1x1": {
+    "x": 2800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:door_metal_gray_b_1x1": {
+    "x": 3000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:water_drain_metal_bronze_a2_1x1": {
+    "x": 3200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drinking_fountain_marble_black_c1_1x1": {
+    "x": 3400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_connector_diag_a4_1x1": {
+    "x": 3600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_ending_b2_1x1": {
+    "x": 3800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_connector_diag_c2_1x1": {
+    "x": 4000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_corner_d1_1x1": {
+    "x": 4200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_stone_earthy_connector_e1_1x1": {
+    "x": 4400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_connector_diag_f2_1x1": {
+    "x": 4600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_a2_1x1": {
+    "x": 4800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_b1_1x1": {
+    "x": 5000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_c2_1x1": {
+    "x": 5200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_d1_1x1": {
+    "x": 5400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_e1_1x1": {
+    "x": 5600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_f2_1x1": {
+    "x": 5800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:chair_wood_green_1x1": {
+    "x": 6000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_floor_path_stone_earthy_corner_a1_1x1": {
+    "x": 6200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_floor_path_stone_earthy_corner_b1_1x1": {
+    "x": 6400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_floor_path_stone_earthy_corner_c1_1x1": {
+    "x": 6600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_floor_path_stone_earthy_corner_d1_1x1": {
+    "x": 6800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_decoration_face_small_stone_earthy_a2_1x1": {
+    "x": 7000,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_wall_stone_earthy_corner_a1_1x1": {
+    "x": 7200,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_wall_stone_earthy_connector_b2_1x1": {
+    "x": 7400,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_wall_stone_earthy_corner_c1_1x1": {
+    "x": 7600,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_wall_stone_earthy_corner_d2_1x1": {
+    "x": 7800,
+    "y": 1400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_wall_stone_earthy_corner_e1_1x1": {
+    "x": 0,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_wall_stone_earthy_connector_f1_ruined_1x1": {
+    "x": 200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:glass_edge_blue_a4_1x1": {
+    "x": 400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_wood_ashen_b_beam_broken_b2_1x1": {
+    "x": 600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_wall_marble_white_fancy_step_down_a1_1x1": {
+    "x": 800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_corner_metal_black_a2_1x1": {
+    "x": 1000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_stone_earthy_a_connector_b_1x1": {
+    "x": 1200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_stone_earthy_b_connector_b_1x1": {
+    "x": 1400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_wood_ashen_a_connector_b_1x1": {
+    "x": 1600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_wood_ashen_b_beam_b2_1x1": {
+    "x": 1800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_wood_ashen_c_picket_gate_a1_1x1": {
+    "x": 2000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:coal_box_wood_ashen_metal_rusty_a2_1x1": {
+    "x": 2200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_inlay_glowing_blue_double_corner_b1_1x1": {
+    "x": 2400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fountain_water_fall_b1_1x1": {
+    "x": 2600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:window_frame_metal_rusty_a_1x1": {
+    "x": 2800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_tentacle_blue_from_above_b1_1x1": {
+    "x": 3000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:glass_shard_blue_a11_1x1": {
+    "x": 3200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:grate_metal_brass_b_path": {
+    "x": 3400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:path_floor_grate_line_end_metal_gray_b1_1x1": {
+    "x": 3600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:bag_open": {
+    "x": 3800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_inlay_glowing_blue_icon_f1_1x1": {
+    "x": 4000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ladder_ashen_b_1x1": {
+    "x": 4200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:lever_gray_b_1x1": {
+    "x": 4400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:library_rolling_ladder_wood_ashen_metal_gray_a1_1x1": {
+    "x": 4600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:manhole_cover_metal_gray_b_1x1": {
+    "x": 4800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:blank_doors_2b_1x1": {
+    "x": 5000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pillar_marble_black_a2_1x1": {
+    "x": 5200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:cog_linear_metal_brass_c_path": {
+    "x": 5400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pillar_metal_gray_b1_1x1": {
+    "x": 5600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_wall_metal_brass_frame_small_decagon_a1_1x1": {
+    "x": 5800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ladder_metal_gray_wall_a2_1x1": {
+    "x": 6000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_overlay_pillar_metal_black_b_1x1": {
+    "x": 6200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:connector_metal_brass_a2_1x1": {
+    "x": 6400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pillar_brickwood_earthy_ashen_a2_1x1": {
+    "x": 6600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:bolt_metal_brass_b1_1x1": {
+    "x": 6800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_oil_black_small_decagon_a1_1x1": {
+    "x": 7000,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_floor_plate_blue_a18_1x1": {
+    "x": 7200,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:beam_overlay_dirty_rope_b1_1x1": {
+    "x": 7400,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_overlay_crystal_blue_connector_diag_a4_1x1": {
+    "x": 7600,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:palisade_pillar_spike_wood_ashen_a2_1x1": {
+    "x": 7800,
+    "y": 1600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_plinth_decoration_metal_black_b2_1x1": {
+    "x": 0,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aesthetic_path_metal_black_b_path": {
+    "x": 200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_support_column_blue_c1_lit_1x1": {
+    "x": 400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:plank_ashen_small_a2_1x1": {
+    "x": 600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_floor_glowing_blue_plaque_d3_1x1": {
+    "x": 800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_dias_stone_earthy_metal_gray_a2_1x1": {
+    "x": 1000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_plinth_stone_earthy_b2_1x1": {
+    "x": 1200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_blue_chamber_cage_c2_1x1": {
+    "x": 1400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pipe_inside_metal_polished_corner_medium_a2_1x1": {
+    "x": 1600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fence_wood_ashen_b_post_a2_1x1": {
+    "x": 1800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:propeller_nose_metal_black_large_b1_1x1": {
+    "x": 2000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:barrel_2": {
+    "x": 2200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_rod_clamp_metal_brass_a2_1x1": {
+    "x": 2400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_rod_end_metal_brass_a11_1x1": {
+    "x": 2600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:railing_rope_ashen_a2_1x1": {
+    "x": 2800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:rope_ladder_wood_ashen_wall_b1_1x1": {
+    "x": 3000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_wall_stone_redrock_rough_step_down_a1_1x1": {
+    "x": 3200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_statue_debris_blue_a11_1x1": {
+    "x": 3400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:rustic_tavern_2": {
+    "x": 3600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pipe_inside_metal_rusty_corner_medium_a2_1x1": {
+    "x": 3800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:svcic_half_burried_cargo_10_1x1": {
+    "x": 4000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:scrap_metal_brass_a11_1x1": {
+    "x": 4200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:vtsm_sewer_grate_dry_1_1x1": {
+    "x": 4400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wood_ashen_damage_overlay_a11_1x1": {
+    "x": 4600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:side_cell_metal_black_a2_1x1": {
+    "x": 4800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_aqueduct_grate_metal_black_crystal_yellow_connector_ab_a1_1x1": {
+    "x": 5000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_decoration_metal_black_crystal_yellow_b_1x1": {
+    "x": 5200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:stained_window_small_metal_gray_b_1x1": {
+    "x": 5400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:window_small_metal_gray_b_1x1": {
+    "x": 5600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wired_window_small_metal_gray_b_1x1": {
+    "x": 5800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fountain_spill_marble_black_tall_a2_1x1": {
+    "x": 6000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:spring_metal_brass_large_b1_1x1": {
+    "x": 6200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:planks_stack_ashen_a2_1x1": {
+    "x": 6400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:stained_window_metal_gray_b_1x1": {
+    "x": 6600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:stairs_metal_gray_corner_in_b_1x1": {
+    "x": 6800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:stairs_corner_in_overlay_b_1x1": {
+    "x": 7000,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:stairs_stone_earthy_corner_in_b_1x1": {
+    "x": 7200,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:stairs_wood_ashen_corner_in_b_1x1": {
+    "x": 7400,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_stairs_stone_earthy_corner_a1_1x1": {
+    "x": 7600,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_blue_statue_brain_b1_1x1": {
+    "x": 7800,
+    "y": 1800,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:step_ladder_wood_ashen_c1_1x1": {
+    "x": 0,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:floor_break_stone_earthy_b_path": {
+    "x": 200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:sundial_metal_brass_stone_sandstone_b1_1x1": {
+    "x": 400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:fountain_wall_support_marble_black_arched_a2_1x1": {
+    "x": 600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_fastening_metal_brass_ring_b1_1x1": {
+    "x": 800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_fastening_cloth_beige_a11_1x1": {
+    "x": 1000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_peg_metal_brass_a2_1x1": {
+    "x": 1200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tarp_rod_horizontal_metal_bronze_a1_1x1": {
+    "x": 1400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tent_roll_cloth_tan_a_1x1": {
+    "x": 1600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:objectsmallbookshelf": {
+    "x": 1800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_wall_marble_black_thin_small_decagon_a1_1x1": {
+    "x": 2000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_d_sandstone_center_a1_1x1": {
+    "x": 2200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_e_sandstone_center_a1_1x1": {
+    "x": 2400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_f_sandstone_center_a1_1x1": {
+    "x": 2600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_g_sandstone_center_a1_1x1": {
+    "x": 2800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_h_sandstone_center_a1_1x1": {
+    "x": 3000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:tile_floor_edge_i_sandstone_center_a1_1x1": {
+    "x": 3200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aesthetic_metal_black_b1_1x1": {
+    "x": 3400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:trapdoor_metal_gray_a2_open_1x1": {
+    "x": 3600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:plank_uneven_wood_ashen_e2_1x1": {
+    "x": 3800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:vault_door_hinge_metal_rusty_a1_1x1": {
+    "x": 4000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:plank_vertical_ashen_a2_1x1": {
+    "x": 4200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:bush_2": {
+    "x": 4400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:vtp_city_road_transistion_short_west_2": {
+    "x": 4600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:vtpgc1_city_map_section_1_basement_unfurnished_20x20_": {
+    "x": 4800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:city_overview_block_0_ns_road": {
+    "x": 5000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brickwood_earthy_ashen_a_connector_b_1x1": {
+    "x": 5200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brickwood_earthy_ashen_b_connector_b_1x1": {
+    "x": 5400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brickwood_earthy_ashen_c_connector_b_1x1": {
+    "x": 5600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_a_connector_b_1x1": {
+    "x": 5800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_b_connector_b_1x1": {
+    "x": 6000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_c_connector_b_1x1": {
+    "x": 6200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_plaster_earthy_c1_connector_b_1x1": {
+    "x": 6400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_plaster_earthy_c2_connector_b_1x1": {
+    "x": 6600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_brick_earthy_c_broken_connector_b_1x1": {
+    "x": 6800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_black_small_b1_1x1": {
+    "x": 7000,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_black_b1_1x1": {
+    "x": 7200,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_a_connector_b_1x1": {
+    "x": 7400,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_b_connector_b_1x1": {
+    "x": 7600,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_c_connector_b_1x1": {
+    "x": 7800,
+    "y": 2000,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_d1_connector_b_1x1": {
+    "x": 0,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_e1_connector_b_1x1": {
+    "x": 200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_metal_brass_f_connector_b_1x1": {
+    "x": 400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_decoration_side_metal_black_a3_1x1": {
+    "x": 600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:mosaic_wall_a_blue_broken_end_a1_1x1": {
+    "x": 800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:mosaic_wall_b_blue_broken_end_a1_1x1": {
+    "x": 1000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:mosaic_wall_broken_piece_blue_a11_1x1": {
+    "x": 1200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_wall_blue_b_path": {
+    "x": 1400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plasterwood_ashen_a1_connector_b_1x1": {
+    "x": 1600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plasterwood_ashen_b_connector_b_1x1": {
+    "x": 1800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plasterwood_ashen_c1_connector_b_1x1": {
+    "x": 2000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plasterwood_ashen_d_connector_b_1x1": {
+    "x": 2200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_plaster_white_a_connector_b_1x1": {
+    "x": 2400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonemetal_earthy_gray_a1_connector_b_1x1": {
+    "x": 2600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonewood_earthy_ashen_a_connector_b_1x1": {
+    "x": 2800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonewood_earthy_ashen_b_connector_b_1x1": {
+    "x": 3000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonewood_earthy_ashen_c_connector_b_1x1": {
+    "x": 3200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stonewood_earthy_ashen_d_connector_b_1x1": {
+    "x": 3400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_a_connector_b_1x1": {
+    "x": 3600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_b1_connector_b1_1x1": {
     "x": 3800,
     "y": 2200,
     "w": 200,
@@ -1919,7 +3679,167 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:basin_blood_red_small_decagon_a1_1x1": {
+  "atlas-structures:wall_stone_earthy_c_connector_b_1x1": {
+    "x": 4000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_d_connector_b_1x1": {
+    "x": 4200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_e_connector_b_1x1": {
+    "x": 4400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_f_connector_b_1x1": {
+    "x": 4600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_g_connector_b_1x1": {
+    "x": 4800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_h_connector_b_1x1": {
+    "x": 5000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_i1_connector_b_1x1": {
+    "x": 5200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_j1_connector_b_1x1": {
+    "x": 5400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_stone_earthy_k1_connector_b_1x1": {
+    "x": 5600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_corner_stone_earthy_l2_1x1": {
+    "x": 5800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_corner_stone_earthy_m2_1x1": {
+    "x": 6000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_corner_stone_earthy_metal_gray_n2_1x1": {
+    "x": 6200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_corner_stone_earthy_o2_1x1": {
+    "x": 6400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_tile_a_patterna_connector_a1_1x1": {
+    "x": 6600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_tile_b_patterna_connector_a1_1x1": {
+    "x": 6800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_tile_c_patterna_connector_a1_1x1": {
+    "x": 7000,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_tile_broken_piece_patterna_a11_1x1": {
+    "x": 7200,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_a_connector_b_1x1": {
+    "x": 7400,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_b_connector_b_1x1": {
+    "x": 7600,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_c_connector_b_1x1": {
+    "x": 7800,
+    "y": 2200,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:wall_wood_ashen_d_connector_b_1x1": {
     "x": 0,
     "y": 2400,
     "w": 200,
@@ -1927,7 +3847,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:dwarven_brace_metal_brass_c2_1x1": {
+  "atlas-structures:wall_wood_ashen_e_connector_b_1x1": {
     "x": 200,
     "y": 2400,
     "w": 200,
@@ -1935,7 +3855,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:pipe_inside_metal_brass_corner_medium_a2_1x1": {
+  "atlas-structures:wall_wood_ashen_f_connector_b_1x1": {
     "x": 400,
     "y": 2400,
     "w": 200,
@@ -1943,7 +3863,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:rubble_brick_stone_earthy_a11_1x1": {
+  "atlas-structures:wall_wood_ashen_g_connector_b_1x1": {
     "x": 600,
     "y": 2400,
     "w": 200,
@@ -1951,7 +3871,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:brick_earthy_broken_a1_1x1": {
+  "atlas-structures:drow_wall_overlay_metal_black_universal_endpiece_a2_1x1": {
     "x": 800,
     "y": 2400,
     "w": 200,
@@ -1959,7 +3879,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_blue_brine_pool_c1_full_1x1": {
+  "atlas-structures:basin_water_blue_small_decagon_a1_1x1": {
     "x": 1000,
     "y": 2400,
     "w": 200,
@@ -1967,7 +3887,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:arch_broken_stone_earthy_a2_1x1": {
+  "atlas-structures:water_wheel_metal_gray_support_b1_1x1": {
     "x": 1200,
     "y": 2400,
     "w": 200,
@@ -1975,7 +3895,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:pillar_broken_headstone_marble_black_a11_1x1": {
+  "atlas-structures:well_cover_handle_wood_ashen_rusty_a_1x1": {
     "x": 1400,
     "y": 2400,
     "w": 200,
@@ -1983,7 +3903,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:wall_brick_earthy_broken_ending_a2_1x1": {
+  "atlas-structures:winch_handle_metal_brass_b1_1x1": {
     "x": 1600,
     "y": 2400,
     "w": 200,
@@ -1991,7 +3911,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:floor_cell_metal_black_a4_1x1": {
+  "atlas-structures:shack_window_shutters_wood_dark_a1_1x1": {
     "x": 1800,
     "y": 2400,
     "w": 200,
@@ -1999,7 +3919,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_wall_blue_connector_a2_1x1": {
+  "atlas-structures:window_sill_small_stone_earthy_a2_1x1": {
     "x": 2000,
     "y": 2400,
     "w": 200,
@@ -2007,7 +3927,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_wall_blue_connector_b2_1x1": {
+  "atlas-structures:window_metal_gray_b_1x1": {
     "x": 2200,
     "y": 2400,
     "w": 200,
@@ -2015,7 +3935,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_wall_blue_corner_c1_1x1": {
+  "atlas-structures:wired_window_metal_gray_b_1x1": {
     "x": 2400,
     "y": 2400,
     "w": 200,
@@ -2023,7 +3943,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_wall_blue_corner_d1_1x1": {
+  "atlas-structures:ceremorph_blue_tube_capped_b1_1x1": {
     "x": 2600,
     "y": 2400,
     "w": 200,
@@ -2031,7 +3951,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_wall_blue_corner_e1_1x1": {
+  "atlas-structures:cable_metal_brass_a13_1x1": {
     "x": 2800,
     "y": 2400,
     "w": 200,
@@ -2039,7 +3959,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_wall_blue_connector_f2_1x1": {
+  "atlas-structures:floor_break_wood_ashen_b1_path": {
     "x": 3000,
     "y": 2400,
     "w": 200,
@@ -2047,7 +3967,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_wall_blue_connector_g2_1x1": {
+  "atlas-structures:walkway_wood_ashen_a_connector_top_small_a2_1x1": {
     "x": 3200,
     "y": 2400,
     "w": 200,
@@ -2055,7 +3975,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:chimney_stone_earthy_b_1x1": {
+  "atlas-structures:bar_brackets_big_metal_rusty_a_1x1": {
     "x": 3400,
     "y": 2400,
     "w": 200,
@@ -2063,7 +3983,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:clock_metal_brass_hand_small_c2_1x1": {
+  "atlas-structures:ceremorph_decoration_blue_f1_glow_1x1": {
     "x": 3600,
     "y": 2400,
     "w": 200,
@@ -2071,7 +3991,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:basin_coal_fire_blue_small_decagon_a1_1x1": {
+  "atlas-structures:aframe_ladder_wood_dark_b1_1x1": {
     "x": 3800,
     "y": 2400,
     "w": 200,
@@ -2079,7 +3999,167 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:cog_metal_brass_inner_small_b1_1x1": {
+  "atlas-structures:aqueduct_fill_acid_connector_ab_a1_1x1": {
+    "x": 4000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_aqueduct_grate_metal_black_connector_ab_a1_1x1": {
+    "x": 4200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_aqueduct_grate_metal_black_connector_b3_1x1": {
+    "x": 4400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_aqueduct_grate_metal_black_straight_c1_1x1": {
+    "x": 4600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aqueduct_stone_earthy_connector_ab_a1_1x1": {
+    "x": 4800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:arch_cross_capstone_stone_sandstone_a1_1x1": {
+    "x": 5000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:arrowslit_stone_earthy_a1_dark_1x1": {
+    "x": 5200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_base_marble_black_small_hexadecagon_a1_1x1": {
+    "x": 5400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_depth_marble_black_cut_small_hexadecagon_a1_1x1": {
+    "x": 5600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_wall_stone_earthy_cut_step_down_a1_1x1": {
+    "x": 5800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ibeam_metal_gray_b1_1x1": {
+    "x": 6000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:bell_metal_brass_broken_a1_1x1": {
+    "x": 6200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:birdbath_stone_earthy_filled_a1_1x1": {
+    "x": 6400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:basin_blood_red_small_hexadecagon_a1_1x1": {
+    "x": 6600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_brace_metal_gray_c2_1x1": {
+    "x": 6800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pipe_inside_metal_brass_medium_to_small_a1_1x1": {
+    "x": 7000,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:rubble_brick_stone_earthy_a12_1x1": {
+    "x": 7200,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:brick_earthy_broken_a2_1x1": {
+    "x": 7400,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:ceremorph_gray_brine_pool_c1_empty_1x1": {
+    "x": 7600,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:arch_broken_stone_earthy_a3_1x1": {
+    "x": 7800,
+    "y": 2400,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:pillar_broken_headstone_marble_black_a12_1x1": {
     "x": 0,
     "y": 2600,
     "w": 200,
@@ -2087,7 +4167,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:ceremorph_floor_plate_blue_circle_corner_b1_1x1": {
+  "atlas-structures:wall_brick_earthy_broken_ending_b1_1x1": {
     "x": 200,
     "y": 2600,
     "w": 200,
@@ -2095,7 +4175,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:connector_metal_gray_a2_1x1": {
+  "atlas-structures:floor_cell_metal_black_b4_1x1": {
     "x": 400,
     "y": 2600,
     "w": 200,
@@ -2103,7 +4183,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:aesthetic_path_corner_metal_black_b1_1x1": {
+  "atlas-structures:ceremorph_wall_blue_corner_a1_1x1": {
     "x": 600,
     "y": 2600,
     "w": 200,
@@ -2111,7 +4191,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:crank_metal_brass_a2_1x1": {
+  "atlas-structures:ceremorph_wall_blue_corner_b1_1x1": {
     "x": 800,
     "y": 2600,
     "w": 200,
@@ -2119,7 +4199,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_floor_decoration_overlay_crystal_blue_b_1x1": {
+  "atlas-structures:ceremorph_wall_blue_corner_c2_1x1": {
     "x": 1000,
     "y": 2600,
     "w": 200,
@@ -2127,7 +4207,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:curb_stone_earthy_a_connector_b_1x1": {
+  "atlas-structures:ceremorph_wall_blue_diagonal_d2_1x1": {
     "x": 1200,
     "y": 2600,
     "w": 200,
@@ -2135,7 +4215,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:curb_stone_earthy_b_connector_b_1x1": {
+  "atlas-structures:ceremorph_wall_blue_diagonal_e1_1x1": {
     "x": 1400,
     "y": 2600,
     "w": 200,
@@ -2143,7 +4223,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:decoration_marble_black_clam_a2_1x1": {
+  "atlas-structures:ceremorph_wall_blue_corner_f1_1x1": {
     "x": 1600,
     "y": 2600,
     "w": 200,
@@ -2151,7 +4231,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:door_metal_gray_b_1x1": {
+  "atlas-structures:ceremorph_wall_blue_corner_g1_1x1": {
     "x": 1800,
     "y": 2600,
     "w": 200,
@@ -2159,7 +4239,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:water_drain_metal_bronze_a2_1x1": {
+  "atlas-structures:chimney_stone_earthy_c_1x1": {
     "x": 2000,
     "y": 2600,
     "w": 200,
@@ -2167,7 +4247,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drinking_fountain_marble_black_c1_1x1": {
+  "atlas-structures:clock_metal_brass_hand_small_d1_1x1": {
     "x": 2200,
     "y": 2600,
     "w": 200,
@@ -2175,7 +4255,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_floor_path_metal_black_connector_diag_a4_1x1": {
+  "atlas-structures:basin_coal_fire_blue_small_hexadecagon_a1_1x1": {
     "x": 2400,
     "y": 2600,
     "w": 200,
@@ -2183,7 +4263,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_floor_path_metal_black_ending_b2_1x1": {
+  "atlas-structures:cog_metal_brass_inner_small_c1_1x1": {
     "x": 2600,
     "y": 2600,
     "w": 200,
@@ -2191,7 +4271,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_floor_path_metal_black_connector_diag_c2_1x1": {
+  "atlas-structures:ceremorph_floor_plate_blue_circle_d1_1x1": {
     "x": 2800,
     "y": 2600,
     "w": 200,
@@ -2199,7 +4279,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_floor_path_metal_black_corner_d1_1x1": {
+  "atlas-structures:connector_metal_gray_a3_1x1": {
     "x": 3000,
     "y": 2600,
     "w": 200,
@@ -2207,7 +4287,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_floor_path_stone_earthy_connector_e1_1x1": {
+  "atlas-structures:aesthetic_path_corner_metal_black_b2_1x1": {
     "x": 3200,
     "y": 2600,
     "w": 200,
@@ -2215,7 +4295,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_floor_path_metal_black_connector_diag_f2_1x1": {
+  "atlas-structures:crank_metal_brass_b1_1x1": {
     "x": 3400,
     "y": 2600,
     "w": 200,
@@ -2223,7 +4303,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_a2_1x1": {
+  "atlas-structures:drow_floor_decoration_overlay_crystal_blue_c_1x1": {
     "x": 3600,
     "y": 2600,
     "w": 200,
@@ -2231,7 +4311,7 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_b1_1x1": {
+  "atlas-structures:curb_stone_earthy_a_connector_diag_a_1x1": {
     "x": 3800,
     "y": 2600,
     "w": 200,
@@ -2239,964 +4319,1948 @@
     "gw": 1,
     "gh": 1
   },
-  "atlas-structures:drow_wall_stone_earthy_connector_c2_1x1": {
+  "atlas-structures:curb_stone_earthy_b_connector_diag_in_a_1x1": {
+    "x": 4000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:decoration_marble_black_corner_a1_1x1": {
+    "x": 4200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:door_metal_gray_c_1x1": {
+    "x": 4400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:water_drain_metal_bronze_a3_1x1": {
+    "x": 4600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drinking_fountain_marble_black_d1_1x1": {
+    "x": 4800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_corner_a1_1x1": {
+    "x": 5000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_straight_b1_1x1": {
+    "x": 5200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_corner_c1_1x1": {
+    "x": 5400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_ending_d1_1x1": {
+    "x": 5600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_stone_earthy_corner_e1_1x1": {
+    "x": 5800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_floor_path_metal_black_corner_f1_1x1": {
+    "x": 6000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_a_1x1": {
+    "x": 6200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_b2_1x1": {
+    "x": 6400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_diag_c_1x1": {
+    "x": 6600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_d2_1x1": {
+    "x": 6800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_e2_1x1": {
+    "x": 7000,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_f1_1x1": {
+    "x": 7200,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:chest_large_wood_1x1": {
+    "x": 7400,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_floor_path_stone_earthy_diagonal_a1_1x1": {
+    "x": 7600,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:dwarven_floor_path_stone_earthy_corner_b2_1x1": {
+    "x": 7800,
+    "y": 2600,
+    "w": 200,
+    "h": 200,
+    "gw": 1,
+    "gh": 1
+  },
+  "atlas-structures:aesthetic_spikes_metal_black_a1_2x1": {
     "x": 0,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_d1_1x1": {
-    "x": 200,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_wall_stone_earthy_connector_metal_gray_e1_1x1": {
+  "atlas-structures:aesthetic_spikes_metal_black_a2_2x1": {
     "x": 400,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:drow_wall_stone_earthy_connector_diag_metal_gray_f2_1x1": {
-    "x": 600,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_floor_path_stone_earthy_corner_a1_1x1": {
+  "atlas-structures:aesthetic_spikes_metal_gray_a1_2x1": {
     "x": 800,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_floor_path_stone_earthy_corner_b1_1x1": {
-    "x": 1000,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_floor_path_stone_earthy_corner_c1_1x1": {
+  "atlas-structures:aesthetic_spikes_metal_gray_a1_bloody_2x1": {
     "x": 1200,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_floor_path_stone_earthy_corner_d1_1x1": {
-    "x": 1400,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_decoration_face_small_stone_earthy_a2_1x1": {
+  "atlas-structures:aesthetic_spikes_metal_gray_a2_2x1": {
     "x": 1600,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_wall_stone_earthy_corner_a1_1x1": {
-    "x": 1800,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_wall_stone_earthy_connector_b2_1x1": {
+  "atlas-structures:aesthetic_spikes_metal_gray_a2_bloody_2x1": {
     "x": 2000,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_wall_stone_earthy_corner_c1_1x1": {
-    "x": 2200,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_wall_stone_earthy_corner_d2_1x1": {
+  "atlas-structures:aesthetic_spikes_metal_rusty_a1_2x1": {
     "x": 2400,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_wall_stone_earthy_corner_e1_1x1": {
-    "x": 2600,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_wall_stone_earthy_connector_f1_ruined_1x1": {
+  "atlas-structures:aesthetic_spikes_metal_rusty_a2_2x1": {
     "x": 2800,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:glass_edge_blue_a4_1x1": {
-    "x": 3000,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:fence_wood_ashen_b_beam_broken_b2_1x1": {
+  "atlas-structures:feature_wall_marble_black_small_a1_2x1": {
     "x": 3200,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:basin_wall_marble_white_fancy_step_down_a1_1x1": {
-    "x": 3400,
-    "y": 2800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:fence_corner_metal_black_a2_1x1": {
+  "atlas-structures:feature_wall_marble_black_small_b1_2x1": {
     "x": 3600,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:fence_stone_earthy_a_connector_b_1x1": {
-    "x": 3800,
+  "atlas-structures:feature_wall_marble_black_small_c1_2x1": {
+    "x": 4000,
     "y": 2800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:fence_stone_earthy_b_connector_b_1x1": {
+  "atlas-structures:feature_wall_marble_white_small_a1_2x1": {
+    "x": 4400,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_white_small_b1_2x1": {
+    "x": 4800,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_white_small_c1_2x1": {
+    "x": 5200,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_earthy_small_a1_2x1": {
+    "x": 5600,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_earthy_small_b1_2x1": {
+    "x": 6000,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_earthy_small_c1_2x1": {
+    "x": 6400,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_redrock_small_a1_2x1": {
+    "x": 6800,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_redrock_small_b1_2x1": {
+    "x": 7200,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_redrock_small_c1_2x1": {
+    "x": 7600,
+    "y": 2800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_sandstone_small_a1_2x1": {
     "x": 0,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:fence_wood_ashen_a_connector_b_1x1": {
-    "x": 200,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:fence_wood_ashen_b_beam_b2_1x1": {
+  "atlas-structures:feature_wall_stone_sandstone_small_b1_2x1": {
     "x": 400,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:fence_wood_ashen_c_picket_gate_a1_1x1": {
-    "x": 600,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:coal_box_wood_ashen_metal_rusty_a2_1x1": {
+  "atlas-structures:feature_wall_stone_sandstone_small_c1_2x1": {
     "x": 800,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_inlay_glowing_blue_double_corner_b1_1x1": {
-    "x": 1000,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:fountain_water_fall_b1_1x1": {
+  "atlas-structures:feature_wall_stone_slate_small_a1_2x1": {
     "x": 1200,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:window_frame_metal_rusty_a_1x1": {
-    "x": 1400,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_tentacle_blue_from_above_b1_1x1": {
+  "atlas-structures:feature_wall_stone_slate_small_b1_2x1": {
     "x": 1600,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:glass_shard_blue_a11_1x1": {
-    "x": 1800,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:grate_metal_brass_b_path": {
+  "atlas-structures:feature_wall_stone_slate_small_c1_2x1": {
     "x": 2000,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:path_floor_grate_line_end_metal_gray_b1_1x1": {
-    "x": 2200,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_inlay_glowing_blue_icon_f1_1x1": {
+  "atlas-structures:wall_decoration_marble_black_large_a1_2x1": {
     "x": 2400,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:ladder_ashen_b_1x1": {
-    "x": 2600,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:lever_gray_b_1x1": {
+  "atlas-structures:wall_decoration_marble_black_large_b1_2x1": {
     "x": 2800,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:library_rolling_ladder_wood_ashen_metal_gray_a1_1x1": {
-    "x": 3000,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:manhole_cover_metal_gray_b_1x1": {
+  "atlas-structures:wall_decoration_marble_black_large_c1_2x1": {
     "x": 3200,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:pillar_marble_black_a2_1x1": {
-    "x": 3400,
-    "y": 3000,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:cog_linear_metal_brass_c_path": {
+  "atlas-structures:wall_decoration_marble_black_large_d1_2x1": {
     "x": 3600,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:pillar_metal_gray_b1_1x1": {
-    "x": 3800,
+  "atlas-structures:wall_decoration_marble_black_large_e1_2x1": {
+    "x": 4000,
     "y": 3000,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:basin_wall_metal_brass_frame_small_decagon_a1_1x1": {
+  "atlas-structures:wall_decoration_marble_black_large_f1_2x1": {
+    "x": 4400,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_black_large_g1_2x1": {
+    "x": 4800,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_black_large_h1_2x1": {
+    "x": 5200,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_black_large_i1_2x1": {
+    "x": 5600,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_black_large_j1_2x1": {
+    "x": 6000,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_white_large_a1_2x1": {
+    "x": 6400,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_white_large_b1_2x1": {
+    "x": 6800,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_white_large_c1_2x1": {
+    "x": 7200,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_white_large_d1_2x1": {
+    "x": 7600,
+    "y": 3000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_marble_white_large_e1_2x1": {
     "x": 0,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:ladder_metal_gray_wall_a2_1x1": {
-    "x": 200,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_overlay_pillar_metal_black_b_1x1": {
+  "atlas-structures:wall_decoration_marble_white_large_f1_2x1": {
     "x": 400,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:connector_metal_brass_a2_1x1": {
-    "x": 600,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:pillar_brickwood_earthy_ashen_a2_1x1": {
+  "atlas-structures:wall_decoration_marble_white_large_g1_2x1": {
     "x": 800,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:bolt_metal_brass_b1_1x1": {
-    "x": 1000,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:basin_oil_black_small_decagon_a1_1x1": {
+  "atlas-structures:wall_decoration_marble_white_large_h1_2x1": {
     "x": 1200,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:ceremorph_floor_plate_blue_a18_1x1": {
-    "x": 1400,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:beam_overlay_dirty_rope_b1_1x1": {
+  "atlas-structures:wall_decoration_marble_white_large_i1_2x1": {
     "x": 1600,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:drow_floor_path_overlay_crystal_blue_connector_diag_a4_1x1": {
-    "x": 1800,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:palisade_pillar_spike_wood_ashen_a2_1x1": {
+  "atlas-structures:wall_decoration_marble_white_large_j1_2x1": {
     "x": 2000,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_plinth_decoration_metal_black_b2_1x1": {
-    "x": 2200,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:aesthetic_path_metal_black_b_path": {
+  "atlas-structures:wall_decoration_metal_bronze_large_a1_2x1": {
     "x": 2400,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:ceremorph_support_column_blue_c1_lit_1x1": {
-    "x": 2600,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:plank_ashen_small_a2_1x1": {
+  "atlas-structures:wall_decoration_metal_bronze_large_b1_2x1": {
     "x": 2800,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_floor_glowing_blue_plaque_d3_1x1": {
-    "x": 3000,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_dias_stone_earthy_metal_gray_a2_1x1": {
+  "atlas-structures:wall_decoration_metal_bronze_large_c1_2x1": {
     "x": 3200,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_plinth_stone_earthy_b2_1x1": {
-    "x": 3400,
-    "y": 3200,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_blue_chamber_cage_c2_1x1": {
+  "atlas-structures:wall_decoration_metal_bronze_large_d1_2x1": {
     "x": 3600,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:pipe_inside_metal_polished_corner_medium_a2_1x1": {
-    "x": 3800,
+  "atlas-structures:wall_decoration_metal_bronze_large_e1_2x1": {
+    "x": 4000,
     "y": 3200,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:fence_wood_ashen_b_post_a2_1x1": {
+  "atlas-structures:wall_decoration_metal_bronze_large_f1_2x1": {
+    "x": 4400,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_bronze_large_g1_2x1": {
+    "x": 4800,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_bronze_large_h1_2x1": {
+    "x": 5200,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_bronze_large_i1_2x1": {
+    "x": 5600,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_bronze_large_j1_2x1": {
+    "x": 6000,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gold_large_a1_2x1": {
+    "x": 6400,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gold_large_b1_2x1": {
+    "x": 6800,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gold_large_c1_2x1": {
+    "x": 7200,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gold_large_d1_2x1": {
+    "x": 7600,
+    "y": 3200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gold_large_e1_2x1": {
     "x": 0,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:propeller_nose_metal_black_large_b1_1x1": {
-    "x": 200,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_rod_clamp_metal_brass_a2_1x1": {
+  "atlas-structures:wall_decoration_metal_gold_large_f1_2x1": {
     "x": 400,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:tarp_rod_end_metal_brass_a11_1x1": {
-    "x": 600,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:railing_rope_ashen_a2_1x1": {
+  "atlas-structures:wall_decoration_metal_gold_large_g1_2x1": {
     "x": 800,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:rope_ladder_wood_ashen_wall_b1_1x1": {
-    "x": 1000,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:basin_wall_stone_redrock_rough_step_down_a1_1x1": {
+  "atlas-structures:wall_decoration_metal_gold_large_h1_2x1": {
     "x": 1200,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:ceremorph_statue_debris_blue_a11_1x1": {
-    "x": 1400,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:pipe_inside_metal_rusty_corner_medium_a2_1x1": {
+  "atlas-structures:wall_decoration_metal_gold_large_i1_2x1": {
     "x": 1600,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:scrap_metal_brass_a11_1x1": {
-    "x": 1800,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wood_ashen_damage_overlay_a11_1x1": {
+  "atlas-structures:wall_decoration_metal_gold_large_j1_2x1": {
     "x": 2000,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:side_cell_metal_black_a2_1x1": {
-    "x": 2200,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:drow_aqueduct_grate_metal_black_crystal_yellow_connector_ab_a1_1x1": {
+  "atlas-structures:wall_decoration_metal_gray_large_a1_2x1": {
     "x": 2400,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:drow_floor_decoration_metal_black_crystal_yellow_b_1x1": {
-    "x": 2600,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:stained_window_small_metal_gray_b_1x1": {
+  "atlas-structures:wall_decoration_metal_gray_large_b1_2x1": {
     "x": 2800,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:window_small_metal_gray_b_1x1": {
-    "x": 3000,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wired_window_small_metal_gray_b_1x1": {
+  "atlas-structures:wall_decoration_metal_gray_large_c1_2x1": {
     "x": 3200,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:fountain_spill_marble_black_tall_a2_1x1": {
-    "x": 3400,
-    "y": 3400,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:spring_metal_brass_large_b1_1x1": {
+  "atlas-structures:wall_decoration_metal_gray_large_d1_2x1": {
     "x": 3600,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:planks_stack_ashen_a2_1x1": {
-    "x": 3800,
+  "atlas-structures:wall_decoration_metal_gray_large_e1_2x1": {
+    "x": 4000,
     "y": 3400,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:stained_window_metal_gray_b_1x1": {
+  "atlas-structures:wall_decoration_metal_gray_large_f1_2x1": {
+    "x": 4400,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gray_large_g1_2x1": {
+    "x": 4800,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gray_large_h1_2x1": {
+    "x": 5200,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gray_large_i1_2x1": {
+    "x": 5600,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_gray_large_j1_2x1": {
+    "x": 6000,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_rusty_large_a1_2x1": {
+    "x": 6400,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_rusty_large_b1_2x1": {
+    "x": 6800,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_rusty_large_c1_2x1": {
+    "x": 7200,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_rusty_large_d1_2x1": {
+    "x": 7600,
+    "y": 3400,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_rusty_large_e1_2x1": {
     "x": 0,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:stairs_metal_gray_corner_in_b_1x1": {
-    "x": 200,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:stairs_corner_in_overlay_b_1x1": {
+  "atlas-structures:wall_decoration_metal_rusty_large_f1_2x1": {
     "x": 400,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:stairs_stone_earthy_corner_in_b_1x1": {
-    "x": 600,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:stairs_wood_ashen_corner_in_b_1x1": {
+  "atlas-structures:wall_decoration_metal_rusty_large_g1_2x1": {
     "x": 800,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:dwarven_stairs_stone_earthy_corner_a1_1x1": {
-    "x": 1000,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:ceremorph_blue_statue_brain_b1_1x1": {
+  "atlas-structures:wall_decoration_metal_rusty_large_h1_2x1": {
     "x": 1200,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:step_ladder_wood_ashen_c1_1x1": {
-    "x": 1400,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:floor_break_stone_earthy_b_path": {
+  "atlas-structures:wall_decoration_metal_rusty_large_i1_2x1": {
     "x": 1600,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:sundial_metal_brass_stone_sandstone_b1_1x1": {
-    "x": 1800,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:fountain_wall_support_marble_black_arched_a2_1x1": {
+  "atlas-structures:wall_decoration_metal_rusty_large_j1_2x1": {
     "x": 2000,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:tarp_fastening_metal_brass_ring_b1_1x1": {
-    "x": 2200,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_fastening_cloth_beige_a11_1x1": {
+  "atlas-structures:wall_decoration_metal_silver_large_a1_2x1": {
     "x": 2400,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:tarp_peg_metal_brass_a2_1x1": {
-    "x": 2600,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:tarp_rod_horizontal_metal_bronze_a1_1x1": {
+  "atlas-structures:wall_decoration_metal_silver_large_b1_2x1": {
     "x": 2800,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:tent_roll_cloth_tan_a_1x1": {
-    "x": 3000,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:aesthetic_metal_black_b1_1x1": {
+  "atlas-structures:wall_decoration_metal_silver_large_c1_2x1": {
     "x": 3200,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:trapdoor_metal_gray_a2_open_1x1": {
-    "x": 3400,
-    "y": 3600,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:plank_uneven_wood_ashen_e2_1x1": {
+  "atlas-structures:wall_decoration_metal_silver_large_d1_2x1": {
     "x": 3600,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:vault_door_hinge_metal_rusty_a1_1x1": {
-    "x": 3800,
+  "atlas-structures:wall_decoration_metal_silver_large_e1_2x1": {
+    "x": 4000,
     "y": 3600,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:plank_vertical_ashen_a2_1x1": {
+  "atlas-structures:wall_decoration_metal_silver_large_f1_2x1": {
+    "x": 4400,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_silver_large_g1_2x1": {
+    "x": 4800,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_silver_large_h1_2x1": {
+    "x": 5200,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_silver_large_i1_2x1": {
+    "x": 5600,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_metal_silver_large_j1_2x1": {
+    "x": 6000,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_earthy_large_a1_2x1": {
+    "x": 6400,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_earthy_large_b1_2x1": {
+    "x": 6800,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_earthy_large_c1_2x1": {
+    "x": 7200,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_earthy_large_d1_2x1": {
+    "x": 7600,
+    "y": 3600,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_earthy_large_e1_2x1": {
     "x": 0,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_brickwood_earthy_ashen_a_connector_b_1x1": {
-    "x": 200,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brickwood_earthy_ashen_b_connector_b_1x1": {
+  "atlas-structures:wall_decoration_stone_earthy_large_f1_2x1": {
     "x": 400,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_brickwood_earthy_ashen_c_connector_b_1x1": {
-    "x": 600,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_earthy_a_connector_b_1x1": {
+  "atlas-structures:wall_decoration_stone_earthy_large_g1_2x1": {
     "x": 800,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_brick_earthy_b_connector_b_1x1": {
-    "x": 1000,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_earthy_c_connector_b_1x1": {
+  "atlas-structures:wall_decoration_stone_earthy_large_h1_2x1": {
     "x": 1200,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_brick_plaster_earthy_c1_connector_b_1x1": {
-    "x": 1400,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_brick_plaster_earthy_c2_connector_b_1x1": {
+  "atlas-structures:wall_decoration_stone_earthy_large_i1_2x1": {
     "x": 1600,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_brick_earthy_c_broken_connector_b_1x1": {
-    "x": 1800,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_decoration_marble_black_small_b1_1x1": {
+  "atlas-structures:wall_decoration_stone_earthy_large_j1_2x1": {
     "x": 2000,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_head_marble_black_b1_1x1": {
-    "x": 2200,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_a_connector_b_1x1": {
+  "atlas-structures:wall_decoration_stone_redrock_large_a1_2x1": {
     "x": 2400,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_metal_brass_b_connector_b_1x1": {
-    "x": 2600,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_c_connector_b_1x1": {
+  "atlas-structures:wall_decoration_stone_redrock_large_b1_2x1": {
     "x": 2800,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_metal_brass_d1_connector_b_1x1": {
-    "x": 3000,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:wall_metal_brass_e1_connector_b_1x1": {
+  "atlas-structures:wall_decoration_stone_redrock_large_c1_2x1": {
     "x": 3200,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:wall_metal_brass_f_connector_b_1x1": {
-    "x": 3400,
-    "y": 3800,
-    "w": 200,
-    "h": 200,
-    "gw": 1,
-    "gh": 1
-  },
-  "atlas-structures:dwarven_decoration_side_metal_black_a3_1x1": {
+  "atlas-structures:wall_decoration_stone_redrock_large_d1_2x1": {
     "x": 3600,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
-    "gw": 1,
+    "gw": 2,
     "gh": 1
   },
-  "atlas-structures:ceremorph_wall_blue_b_path": {
-    "x": 3800,
+  "atlas-structures:wall_decoration_stone_redrock_large_e1_2x1": {
+    "x": 4000,
     "y": 3800,
-    "w": 200,
+    "w": 400,
     "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_redrock_large_f1_2x1": {
+    "x": 4400,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_redrock_large_g1_2x1": {
+    "x": 4800,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_redrock_large_h1_2x1": {
+    "x": 5200,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_redrock_large_i1_2x1": {
+    "x": 5600,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_redrock_large_j1_2x1": {
+    "x": 6000,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_a1_2x1": {
+    "x": 6400,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_b1_2x1": {
+    "x": 6800,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_c1_2x1": {
+    "x": 7200,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_d1_2x1": {
+    "x": 7600,
+    "y": 3800,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_e1_2x1": {
+    "x": 0,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_f1_2x1": {
+    "x": 400,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_g1_2x1": {
+    "x": 800,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_h1_2x1": {
+    "x": 1200,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_i1_2x1": {
+    "x": 1600,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_sandstone_large_j1_2x1": {
+    "x": 2000,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_a1_2x1": {
+    "x": 2400,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_b1_2x1": {
+    "x": 2800,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_c1_2x1": {
+    "x": 3200,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_d1_2x1": {
+    "x": 3600,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_e1_2x1": {
+    "x": 4000,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_f1_2x1": {
+    "x": 4400,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_g1_2x1": {
+    "x": 4800,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_h1_2x1": {
+    "x": 5200,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_i1_2x1": {
+    "x": 5600,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_decoration_stone_slate_large_j1_2x1": {
+    "x": 6000,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_black_aboleth_a1_2x1": {
+    "x": 6400,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_black_devil_a1_2x1": {
+    "x": 6800,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_black_dragon_a1_2x1": {
+    "x": 7200,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_black_dragon_a2_2x1": {
+    "x": 7600,
+    "y": 4000,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_black_eye_monster_a1_2x1": {
+    "x": 0,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_black_snake_a1_2x1": {
+    "x": 400,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_white_aboleth_a1_2x1": {
+    "x": 800,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_white_devil_a1_2x1": {
+    "x": 1200,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_white_dragon_a1_2x1": {
+    "x": 1600,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_white_dragon_a2_2x1": {
+    "x": 2000,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_white_eye_monster_a1_2x1": {
+    "x": 2400,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_marble_white_snake_a1_2x1": {
+    "x": 2800,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_bronze_aboleth_a1_2x1": {
+    "x": 3200,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_bronze_devil_a1_2x1": {
+    "x": 3600,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_bronze_dragon_a1_2x1": {
+    "x": 4000,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_bronze_dragon_a2_2x1": {
+    "x": 4400,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_bronze_eye_monster_a1_2x1": {
+    "x": 4800,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_bronze_snake_a1_2x1": {
+    "x": 5200,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_gold_aboleth_a1_2x1": {
+    "x": 5600,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_gold_devil_a1_2x1": {
+    "x": 6000,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_gold_dragon_a1_2x1": {
+    "x": 6400,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_gold_dragon_a2_2x1": {
+    "x": 6800,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_gold_eye_monster_a1_2x1": {
+    "x": 7200,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:wall_head_metal_gold_snake_a1_2x1": {
+    "x": 7600,
+    "y": 4200,
+    "w": 400,
+    "h": 200,
+    "gw": 2,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_black_large_a1_4x1": {
+    "x": 0,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_black_large_b1_4x1": {
+    "x": 800,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_black_large_c1_4x1": {
+    "x": 1600,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_black_large_d1_4x1": {
+    "x": 2400,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_white_large_a1_4x1": {
+    "x": 3200,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_white_large_b1_4x1": {
+    "x": 4000,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_white_large_c1_4x1": {
+    "x": 4800,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_marble_white_large_d1_4x1": {
+    "x": 5600,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_earthy_large_a1_4x1": {
+    "x": 6400,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_earthy_large_b1_4x1": {
+    "x": 7200,
+    "y": 4400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_earthy_large_c1_4x1": {
+    "x": 0,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_earthy_large_d1_4x1": {
+    "x": 800,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_redrock_large_a1_4x1": {
+    "x": 1600,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_redrock_large_b1_4x1": {
+    "x": 2400,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_redrock_large_c1_4x1": {
+    "x": 3200,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_redrock_large_d1_4x1": {
+    "x": 4000,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_sandstone_large_a1_4x1": {
+    "x": 4800,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_sandstone_large_b1_4x1": {
+    "x": 5600,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_sandstone_large_c1_4x1": {
+    "x": 6400,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_sandstone_large_d1_4x1": {
+    "x": 7200,
+    "y": 4600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_slate_large_a1_4x1": {
+    "x": 0,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_slate_large_b1_4x1": {
+    "x": 800,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_slate_large_c1_4x1": {
+    "x": 1600,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:feature_wall_stone_slate_large_d1_4x1": {
+    "x": 2400,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_ashen_broken_a_4x1": {
+    "x": 3200,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_ashen_broken_b_4x1": {
+    "x": 4000,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_ashen_broken_c_4x1": {
+    "x": 4800,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_ashen_broken_d_4x1": {
+    "x": 5600,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_ashen_broken_e_4x1": {
+    "x": 6400,
+    "y": 4800,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_ashen_metal_gray_e1_1x4": {
+    "x": 7200,
+    "y": 4800,
+    "w": 200,
+    "h": 800,
     "gw": 1,
+    "gh": 4
+  },
+  "atlas-structures:beam_wood_ashen_metal_gray_e1_bloody_1x4": {
+    "x": 7400,
+    "y": 4800,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-structures:beam_wood_ashen_metal_rusty_e1_1x4": {
+    "x": 7600,
+    "y": 4800,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-structures:beam_wood_dark_broken_a_4x1": {
+    "x": 0,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_dark_broken_b_4x1": {
+    "x": 800,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_dark_broken_c_4x1": {
+    "x": 1600,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_dark_broken_d_4x1": {
+    "x": 2400,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_dark_broken_e_4x1": {
+    "x": 3200,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_dark_metal_gray_e1_1x4": {
+    "x": 4000,
+    "y": 5600,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-structures:beam_wood_light_broken_a_4x1": {
+    "x": 4200,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_light_broken_b_4x1": {
+    "x": 5000,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_light_broken_c_4x1": {
+    "x": 5800,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_light_broken_d_4x1": {
+    "x": 6600,
+    "y": 5600,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_light_broken_e_4x1": {
+    "x": 0,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_light_metal_gray_e1_1x4": {
+    "x": 800,
+    "y": 6400,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-structures:beam_wood_red_broken_a_4x1": {
+    "x": 1000,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_red_broken_b_4x1": {
+    "x": 1800,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_red_broken_c_4x1": {
+    "x": 2600,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_red_broken_d_4x1": {
+    "x": 3400,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_red_broken_e_4x1": {
+    "x": 4200,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_red_metal_gray_e1_1x4": {
+    "x": 5000,
+    "y": 6400,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-structures:beam_wood_walnut_broken_a_4x1": {
+    "x": 5200,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_walnut_broken_b_4x1": {
+    "x": 6000,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_walnut_broken_c_4x1": {
+    "x": 6800,
+    "y": 6400,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_walnut_broken_d_4x1": {
+    "x": 0,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_walnut_broken_e_4x1": {
+    "x": 800,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:beam_wood_walnut_metal_black_e1_1x4": {
+    "x": 1600,
+    "y": 7200,
+    "w": 200,
+    "h": 800,
+    "gw": 1,
+    "gh": 4
+  },
+  "atlas-structures:retaining_wall_wood_ashen_c1_4x1": {
+    "x": 1800,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:retaining_wall_wood_ashen_c2_4x1": {
+    "x": 2600,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:retaining_wall_wood_ashen_c3_4x1": {
+    "x": 3400,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:retaining_wall_wood_ashen_c4_4x1": {
+    "x": 4200,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:retaining_wall_wood_dark_c1_4x1": {
+    "x": 5000,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:retaining_wall_wood_dark_c2_4x1": {
+    "x": 5800,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
+    "gh": 1
+  },
+  "atlas-structures:retaining_wall_wood_dark_c3_4x1": {
+    "x": 6600,
+    "y": 7200,
+    "w": 800,
+    "h": 200,
+    "gw": 4,
     "gh": 1
   }
 }

@@ -35,6 +35,7 @@ repomix-output.xml
 public/tilesets/*.png
 public/tilesets/*.webp
 assets/manifest.json
+assets/manifest-all.json
 .claude/worktrees/
 
 # Test artifacts (agent-generated, not needed)
