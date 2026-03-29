@@ -130,3 +130,38 @@ useEffect(() => { ... }, [inCombat]); // safe
 **Pattern:** Wall connector sprites are oriented horizontally by default. For east/west edges they need rotation. But applying the same rotation to both east and west (or no flip on south) makes walls look uniform/wrong.
 
 **Rule:** Apply direction-specific transforms: north = no rotation, south = flip Y, east = rotate +90 degrees, west = rotate -90 degrees. This ensures wall textures face inward on all four edges.
+
+## broadcastEncounterAction Payload Type Collision
+**Pattern:** `broadcastEncounterAction({ type: 'rest-proposal', ...proposal })` where `proposal = { type: 'short', proposedBy: '...' }`. The spread overwrites `type: 'rest-proposal'` with `type: 'short'`. The receiver's switch never matches.
+
+**Rule:** Never spread an object with a `type` field into a broadcast payload that also has `type`. Use a different field name (e.g., `restType`, `actionKind`).
+
+## inCombat Must Check Combatants List, Not Just Phase
+**Pattern:** `const inCombat = encounter.phase === 'combat'` — this makes ALL players show combat UI when combat is happening, even players outside the combat radius who aren't combatants.
+
+**Rule:** `inCombat` must check both `encounter.phase === 'combat'` AND that the local player's character is in `encounter.combatants`. Players outside combat radius should stay in exploration mode.
+
+## Area Generation Must Use Deterministic Seeds
+**Pattern:** `buildAreaFromBrief(brief)` defaults to `seed = Date.now()`. Two players building the same area at different times get completely different layouts.
+
+**Rule:** Always pass a deterministic seed derived from the area/brief ID: `hashString(brief.id)`. Every call to `buildAreaFromBrief` must have an explicit seed — never rely on `Date.now()`.
+
+## advanceGameTime Must Not Broadcast Every Tick
+**Pattern:** Real-time clock called `advanceGameTime(1/60)` every 2 seconds. That function broadcast `time-advance` and rolled weather EVERY call, flooding the Supabase channel (30 broadcasts/minute) and crashing the tab.
+
+**Rule:** Only broadcast and roll weather when a full game hour changes (`Math.floor(newHour) !== Math.floor(oldHour)`). The clock can tick locally without broadcasting.
+
+## buildAreaFromBrief Width/Height Must Use calculateAreaSize
+**Pattern:** `const width = brief.width || areaSize.width` — if the AI brief specifies `width: 100`, it bypasses the size cap entirely. Areas generate at 100x75 instead of the intended 55x42.
+
+**Rule:** Always use `calculateAreaSize(brief)` output. Never fall back to `brief.width` directly. The cap function handles explicit sizes by clamping to category max.
+
+## Spell Damage Format Varies — Handle Both
+**Pattern:** COMBAT_SPELLS defines damage as string `'1d10'` but spell data uses object `{dice:'1d10'}`. The spell-confirm handler only checked `spell.damage?.dice` which returns undefined for strings, falling back to 1d6.
+
+**Rule:** `typeof spell.damage === 'string' ? spell.damage : (spell.damage?.dice || '1d6')` — always handle both formats.
+
+## ALWAYS Push Before Playtesting
+**Pattern:** Made 20+ fixes across multiple files but never committed/pushed. User playtested the OLD deployed code and reported all the same bugs as unfixed. Wasted an entire playtest session.
+
+**Rule:** ALWAYS `git add && git commit && git push origin agent-dev && merge to main` BEFORE telling the user to playtest. If code isn't deployed, it doesn't exist.

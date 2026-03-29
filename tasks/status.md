@@ -516,6 +516,70 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - 9 commits, build passing.
 - Spec: `docs/superpowers/specs/2026-03-26-campaign-creation-overhaul-design.md`
 
+### Playtest 5-8 Bug Fixes ✅ COMPLETE (44 fixes across 4 sessions)
+
+**Combat system:**
+- [x] Spell damage uses applyEncounterDamage (victory detection was bypassed)
+- [x] Death saves: 3 successes revives at 1 HP (both rollDeathSave + applyDeathSaveResult)
+- [x] Combat turn loop skips unconscious/0HP combatants, ends if all incapacitated
+- [x] Sleep spell: HP pool mechanic (5d8), applies Unconscious condition, no damage
+- [x] Control spells (Tasha's etc.): apply conditions with saves, not damage
+- [x] Healing spells (Cure Wounds, Healing Word): use applyEncounterHeal, not damage
+- [x] TPK ends combat directly in runEnemyTurn (was infinite loop via nextEncounterTurn)
+- [x] Combat radius: only players within 10 tiles join; far players stay exploring
+- [x] Mid-combat join: players entering radius roll initiative, get inserted
+- [x] Stealth through combat radius: enemies roll perception vs stealth DC
+- [x] inCombat checks player is in combatants list (not just phase === 'combat')
+- [x] Cancelled spell targeting clears leveledSpellCastThisTurn flag
+- [x] Respawn position cleared on combat end (no teleport to spawn after next fight)
+- [x] Respawn 3-second cooldown prevents immediate encounter zone re-trigger
+- [x] Second player null position falls back to playerStart
+
+**Multiplayer sync:**
+- [x] broadcastPlayerJoined event when player creates/selects character
+- [x] Periodic party member refresh every 15s from Supabase
+- [x] PartyPortraits checks position by name (matches useGameTokens)
+- [x] Rest vote broadcast: fixed type field collision (was overwriting 'rest-proposal')
+- [x] Loot rewards broadcast: claimCombatRewards shares XP/gold to all players
+- [x] syncEncounterDown preserves local player's combat position
+- [x] combat-start broadcast: remote player overrides own position with local data
+- [x] Deterministic area seeds from brief ID hash (all players get identical layout)
+
+**Spell system:**
+- [x] Single-target spell targeting (Magic Missile) in SpellTargetingOverlay
+- [x] Spell panel only shows known spells + cantrips
+- [x] Spell damage handles both string ('1d10') and object ({dice:'1d10'}) formats
+- [x] Spell slots restored on long rest (rebuilds from class/level if missing)
+- [x] Enemy AI handles string attacks from random encounters
+- [x] 12 PixiJS spell animations (Magic Missile darts, fire, sleep sparkles, etc.)
+- [x] Spell targeting overlay visible (explicit zIndex ordering)
+
+**Map generation:**
+- [x] Area size cap enforced (was bypassing calculateAreaSize)
+- [x] Setting-to-theme mapping in campaign prompt (underdark→cave, not forest)
+- [x] Scatter decoration system: trees, rocks, stalagmites per biome at 4-14% density
+- [x] Scatter props block movement (trees, rocks, barrels, gravestones)
+- [x] Biome-filtered hazards (no lava in forests)
+
+**UI/UX:**
+- [x] TTS skip button in bottom bar + NarratorFloat stays visible while speaking
+- [x] XP bar visible (5px gold gradient with tooltip)
+- [x] Party members visible on minimap (cyan dots)
+- [x] Enemy info panel below minimap
+- [x] I key inventory overlay removed
+- [x] Bottom HUD bounds movement (2 tile reserve)
+- [x] Character creator header compacted
+- [x] Channel Divinity tooltip with description
+- [x] Real-time game clock (host-only, 5s intervals, broadcasts hourly)
+- [x] Night brightness increased (0.55), fog uses game clock for darkvision
+- [x] Lighting: 16 gradient rings with exponential falloff (was 6 stepped circles)
+- [x] NPC gender voices (explicit gender field in campaign prompt + TTS)
+- [x] Stealth halves movement speed (300ms cooldown per 5e PHB p.182)
+- [x] Rest/random encounter narration cleaned up (System speaker, no "Initiative?")
+
+**Known asset limitation:**
+- Tree stumps (`fir_tree_stump`) are the only tree tiles in current atlas — no full canopy trees available. Need new art assets.
+
 ### Branding Refactor ✅ COMPLETE
 - [x] Updated product name to "DungeonMind"
 - [x] Changed all user-facing AI references from "Dungeon Master" to "The Narrator"
