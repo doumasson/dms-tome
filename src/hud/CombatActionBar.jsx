@@ -188,7 +188,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
                 key={action.name}
                 className={`medallion-btn large${isSpell ? ' cast' : ''}${disabled ? ' disabled' : ''}`}
                 disabled={disabled}
-                title={action.name}
+                title={action.description ? `${action.name} — ${action.description}` : action.name}
                 onClick={() => isSpell
                   ? handleAction('spell-pick')
                   : handleAction('class-ability', {

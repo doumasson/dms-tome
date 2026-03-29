@@ -40,18 +40,20 @@ export function renderLighting(container, lightSources, tileSize, bounds, isNigh
     const totalRadius = brightR + dimR
     const baseAlpha = Math.min(config.alpha * nightBoost, 0.5)
 
-    // Draw concentric circles from outside in (dim → bright)
+    // Draw smooth gradient with many rings (outer dim → inner bright)
     const g = new PIXI.Graphics()
 
-    const rings = 6
+    const rings = 16 // smooth gradient (was 6 = visible stepped circles)
     for (let i = rings; i >= 1; i--) {
-      const r = totalRadius * (i / rings)
-      const a = baseAlpha * (1 - i / (rings + 1))
+      const t = i / rings // 1 (outer) → 0 (inner)
+      const r = totalRadius * t
+      // Exponential falloff for more natural light
+      const a = baseAlpha * Math.pow(1 - t, 1.5)
       g.circle(px, py, r).fill({ color: config.color, alpha: a })
     }
 
-    // Inner bright core
-    g.circle(px, py, brightR * 0.5).fill({ color: config.color, alpha: Math.min(baseAlpha * 1.2, 0.6) })
+    // Soft bright core
+    g.circle(px, py, brightR * 0.4).fill({ color: config.color, alpha: Math.min(baseAlpha * 0.8, 0.35) })
 
     container.addChild(g)
   }

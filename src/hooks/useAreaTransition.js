@@ -36,7 +36,8 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
       if (!brief) continue
 
       console.log(`[pre-gen] Building area "${exit.targetArea}" (player ${dist} tiles from exit)`)
-      const builtArea = buildAreaFromBrief(brief)
+      const preSeed = exit.targetArea.split('').reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)
+      const builtArea = buildAreaFromBrief(brief, Math.abs(preSeed) || 42)
       buildAndLoadArea(exit.targetArea, builtArea)
       if (campaign?.id) {
         saveArea(campaign.id, builtArea).catch(err =>
@@ -73,7 +74,9 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
         console.error(`[transition] No area or brief for "${targetId}"`)
         return
       }
-      const builtArea = buildAreaFromBrief(brief)
+      // Use deterministic seed from area ID so all players get identical layout
+      const seed = targetId.split('').reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)
+      const builtArea = buildAreaFromBrief(brief, Math.abs(seed) || 42)
       buildAndLoadArea(targetId, builtArea)
       if (campaign?.id) {
         saveArea(campaign.id, builtArea).catch(err =>

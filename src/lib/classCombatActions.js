@@ -63,7 +63,7 @@ export function getClassCombatActions(className, level) {
       break
 
     case 'Cleric':
-      actions.push({ name: 'Channel Divinity', icon: '⚡', actionType: 'action', resourceName: 'Channel Divinity', resourceCost: 1 })
+      actions.push({ name: 'Channel Divinity', icon: '⚡', actionType: 'action', resourceName: 'Channel Divinity', resourceCost: 1, description: 'Turn Undead — 30ft AoE, undead make WIS save or flee for 1 minute' })
       break
 
     case 'Bard':

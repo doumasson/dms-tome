@@ -121,7 +121,7 @@ export default function NpcConversation({
       setMessages(prev => [...prev, npcMsg])
 
       // TTS: narrate the NPC response with their unique voice
-      const voiceCfg = getNpcVoice(npc.name, npc.disposition || npc.personality)
+      const voiceCfg = getNpcVoice(npc.name, npc.disposition || npc.personality, npc.gender)
       speak(dialogue, null, { npcName: npc.name, voice: voiceCfg })
 
       // Broadcast NPC response to all players — shows in their NPC dialog viewer

@@ -89,10 +89,11 @@ function isVoiceFemale(v) {
 /**
  * Returns { voiceIndex, pitch, rate } based on NPC name hash.
  * Pass disposition/personality to adjust voice and detect gender.
+ * Explicit gender ('male'/'female') overrides text detection.
  */
-export function getNpcVoice(npcName, disposition) {
+export function getNpcVoice(npcName, disposition, explicitGender) {
   const h = hashName(npcName);
-  const gender = detectGender(npcName, disposition);
+  const gender = explicitGender || detectGender(npcName, disposition);
 
   // Try to match voice gender
   let voiceIndex;

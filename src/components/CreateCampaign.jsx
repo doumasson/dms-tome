@@ -85,7 +85,7 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
         { "from": "Market Square", "to": "Elder's House" }
       ],
       "npcs": [
-        { "name": "Barkeep Hilda", "position": "The Rusty Flagon", "personality": "Gruff but kind tavern owner, knows local rumors", "faction": "town-guard", "questRelevant": true }
+        { "name": "Barkeep Hilda", "position": "The Rusty Flagon", "personality": "Gruff but kind tavern owner, knows local rumors", "gender": "female", "faction": "town-guard", "questRelevant": true }
       ],
       "encounterZones": [
         {
@@ -115,7 +115,7 @@ Generate a JSON object with this EXACT structure (no extra text before or after,
         { "from": "Clearing", "to": "Hermit's Hut" }
       ],
       "npcs": [
-        { "name": "Old Marren", "position": "Hermit's Hut", "personality": "Paranoid hermit who knows about the curse", "faction": "shadow-guild" }
+        { "name": "Old Marren", "position": "Hermit's Hut", "personality": "Paranoid hermit who knows about the curse", "gender": "male", "faction": "shadow-guild" }
       ],
       "encounterZones": [
         {
