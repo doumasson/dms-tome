@@ -36,25 +36,11 @@ const PREPARED_CASTERS = new Set(['Cleric', 'Druid', 'Paladin'])
 
 /**
  * Get all spells available to a character.
- * Known casters (Wizard, Sorcerer, etc.) get only spells in char.spells[].
- * Prepared casters (Cleric, Druid, Paladin) get their full class list up to max spell level.
+ * ALL casters (including prepared casters) only see spells in char.spells[].
+ * Players select their prepared spells at character creation and level-up.
  */
 export function getAvailableSpells(char) {
   if (!isCaster(char.class)) return []
-  const level = char.level || 1
-  const maxSpellLevel = maxSpellLevelForClass(char.class, level)
-
-  if (PREPARED_CASTERS.has(char.class)) {
-    // Prepared casters: all class spells up to max level + all known cantrips
-    const knownCantrips = new Set((char.spells || []).map(s => typeof s === 'string' ? s : s.name))
-    return SPELLS.filter(s => {
-      if (!s.classes?.includes(char.class)) return false
-      if (s.level === 0) return knownCantrips.has(s.name) // cantrips must be selected
-      return s.level <= maxSpellLevel
-    }).sort((a, b) => a.level - b.level || a.name.localeCompare(b.name))
-  }
-
-  // Known casters: only spells in char.spells[]
   const knownNames = new Set((char.spells || []).map(s => typeof s === 'string' ? s : s.name))
   if (knownNames.size === 0) return []
   return SPELLS.filter(s => knownNames.has(s.name))

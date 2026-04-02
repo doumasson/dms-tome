@@ -8,7 +8,9 @@ const NUM_SLOTS = 6
 export default function QuickslotBar({ onUseSlot }) {
   const myCharacter = useStore(s => s.myCharacter)
   const encounter = useStore(s => s.encounter)
-  const inCombat = encounter?.phase === 'combat'
+  const inCombat = encounter?.phase === 'combat' && encounter.combatants?.some(c =>
+    c.id === myCharacter?.id || c.name === myCharacter?.name
+  )
 
   // Quickslots stored per character in localStorage
   const [slots, setSlots] = useState(() => {

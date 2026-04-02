@@ -37,7 +37,10 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
   const campaign = useStore(s => s.campaign);
 
   // Must be declared before useEffects that depend on it (avoid TDZ in production bundle)
-  const inCombat = encounter.phase !== 'idle';
+  // Check BOTH phase AND that this player is actually in the combatants list
+  const inCombat = encounter.phase !== 'idle' && encounter.combatants?.some(c =>
+    c.id === myCharacter?.id || c.name === myCharacter?.name
+  );
 
   // ── Ambient audio: switch between scene/combat soundscapes ───────────────
   useEffect(() => {
@@ -84,6 +87,8 @@ export default function GameLayout({ liveConnected, onLeave, onManage, onSetting
   ));
 
   function proposeRest(type) {
+    // Block resting during active combat (any combat happening, even if this player isn't in it)
+    if (encounter.phase !== 'idle') return
     setRestProposal({ type, proposedBy: myCharacter?.name || user?.email || 'Someone' });
   }
 

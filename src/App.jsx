@@ -165,21 +165,23 @@ export default function App() {
 
     // AI-triggered combat start (host → players via NarratorPanel)
     ch.on('broadcast', { event: 'combat-start' }, ({ payload }) => {
-      if (!useStore.getState().isDM) {
-        // Override own character's position with LOCAL position (DM may have stale data)
-        const myChar = useStore.getState().myCharacter
-        const party = (payload.party || []).map(p => {
-          if (myChar && (p.id === myChar.id || p.name === myChar.name)) {
-            // Use our own known position from areaTokenPositions
-            const areaId = useStore.getState().currentAreaId
-            const areaPos = useStore.getState().areaTokenPositions?.[areaId]
-            const localPos = areaPos?.[user?.id] || areaPos?.[myChar.id] || areaPos?.[myChar.name]
-            return { ...p, ...myChar, position: localPos || p.position }
-          }
-          return p
-        })
-        useStore.getState().startEncounter(payload.enemies || [], party, payload.autoRoll ?? true);
-      }
+      const store = useStore.getState()
+      const myChar = store.myCharacter
+      // If host already has combat with enemies, don't double-start (host called startEncounter locally)
+      const hasEnemies = store.encounter.combatants?.some(c => c.isEnemy || c.type === 'enemy')
+      if (store.isDM && hasEnemies) return
+      // Override own character's position with LOCAL position (broadcaster may have stale data)
+      const party = (payload.party || []).map(p => {
+        if (myChar && (p.id === myChar.id || p.name === myChar.name)) {
+          const areaId = store.currentAreaId
+          const areaPos = store.areaTokenPositions?.[areaId]
+          const localPos = areaPos?.[user?.id] || areaPos?.[myChar.id] || areaPos?.[myChar.name]
+          return { ...p, ...myChar, position: localPos || p.position }
+        }
+        return p
+      })
+      // ALL clients process combat-start. Host needs enemies for AI even if not a combatant.
+      store.startEncounter(payload.enemies || [], party, payload.autoRoll ?? true);
     });
 
     // Player token movement (player → all others for immediate visual feedback, DM authoritative)
@@ -231,6 +233,7 @@ export default function App() {
         case 'set-concentration':   store.setConcentration(payload.id, payload.spell); break;
         case 'clear-concentration': store.clearConcentration(payload.id); break;
         case 'use-spell-slot':      store.useSpellSlot(payload.combatantId, payload.slotLevel); break;
+        case 'use-action':          store.useAction(payload.combatantId); break;
         case 'add-effect':          store.applyEncounterEffect(payload.effect); break;
         case 'remove-effect':       store.applyRemoveEffect(payload.effectId); break;
         case 'move':                store.moveToken(payload.id, payload.x, payload.y, payload.cost || 0); break;

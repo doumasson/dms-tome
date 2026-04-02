@@ -34,7 +34,9 @@ function ordinal(n) {
 export default function PlayerStatusBar() {
   const myCharacter = useStore(s => s.myCharacter);
   const encounter   = useStore(s => s.encounter);
-  const inCombat    = encounter.phase !== 'idle';
+  const inCombat    = encounter.phase !== 'idle' && encounter.combatants?.some(c =>
+    c.id === myCharacter?.id || c.name === myCharacter?.name
+  );
 
   if (!myCharacter) return null;
 

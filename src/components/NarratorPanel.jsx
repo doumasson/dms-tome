@@ -41,7 +41,9 @@ export default function NarratorPanel() {
   const clearPendingDmTrigger = useStore(s => s.clearPendingDmTrigger);
   const encounter         = useStore(s => s.encounter);
 
-  const inCombat = encounter.phase !== 'idle';
+  const inCombat = encounter.phase !== 'idle' && encounter.combatants?.some(c =>
+    c.id === myCharacter?.id || c.name === myCharacter?.name
+  );
   const currentSceneName = campaign?.scenes?.[campaign?.currentSceneIndex]?.title ?? null;
   const activeEnemyName = inCombat
     ? encounter.combatants?.[encounter.currentTurn]?.name

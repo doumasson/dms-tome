@@ -929,8 +929,9 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         broadcastEncounterAction({ type: 'use-spell-slot', combatantId: active.id, slotLevel: spell.castLevel })
       }
 
-      // Consume action
+      // Consume action and broadcast so other clients disable the spell button
       consumeAction(active.id)
+      broadcastEncounterAction({ type: 'use-action', combatantId: active.id, userId: useStore.getState().user?.id })
 
       // Play spell cast animation on the tilemap
       const targetPos = payload.position || (selectedTargets.length > 0
