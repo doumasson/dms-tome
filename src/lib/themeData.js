@@ -11,12 +11,14 @@ export const DUNGEON_THEMES = new Set(['dungeon', 'cave', 'crypt', 'sewer', 'und
 /* ── Terrain floor tiles per theme ──────────────────────────── */
 // Each theme gets 6-12 variants for noise-based blending
 
+// Each theme uses visually compatible tiles from the same atlas family.
+// Primary tiles cover ~80%, secondary ~20% (accent edges/patches).
+// No cross-family mixing within a single noise region.
 export const THEME_TERRAIN = {
   village: [
     'atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01',
     'atlas-floors:grass_overlay_medium_c_01', 'atlas-floors:grass_overlay_long_a_01',
     'atlas-floors:grass_overlay_long_b_01',   'atlas-floors:grass_overlay_long_c_01',
-    'atlas-floors:flat_stones_overlay_a1',     'atlas-floors:flat_stones_overlay_a2',
   ],
   forest: [
     'atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01',
@@ -28,12 +30,8 @@ export const THEME_TERRAIN = {
   dungeon: [
     'atlas-floors:brick_floor_03_d1', 'atlas-floors:brick_floor_03_d2',
     'atlas-floors:brick_floor_03_d3', 'atlas-floors:brick_floor_03_d4',
-    'atlas-floors:brick_floor_04_d1', 'atlas-floors:brick_floor_04_d2',
-    'atlas-floors:brick_floor_04_d3', 'atlas-floors:brick_floor_04_d4',
   ],
   cave: [
-    'atlas-floors:brick_floor_03_d3', 'atlas-floors:brick_floor_03_d4',
-    'atlas-floors:brick_floor_04_d3', 'atlas-floors:brick_floor_04_d4',
     'atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2',
     'atlas-floors:flat_stones_overlay_a3',
   ],
@@ -41,32 +39,26 @@ export const THEME_TERRAIN = {
     'atlas-floors:brick_floor_01_d1', 'atlas-floors:brick_floor_01_d2',
     'atlas-floors:brick_floor_01_d3', 'atlas-floors:brick_floor_01_d4',
     'atlas-floors:brick_floor_02_d1', 'atlas-floors:brick_floor_02_d2',
-    'atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2',
   ],
   crypt: [
     'atlas-floors:brick_floor_03_d1', 'atlas-floors:brick_floor_03_d2',
-    'atlas-floors:brick_floor_03_d3', 'atlas-floors:brick_floor_04_d1',
-    'atlas-floors:brick_floor_04_d2', 'atlas-floors:flat_stones_overlay_a3',
+    'atlas-floors:brick_floor_03_d3', 'atlas-floors:brick_floor_03_d4',
   ],
   sewer: [
     'atlas-floors:brick_floor_04_d1', 'atlas-floors:brick_floor_04_d2',
     'atlas-floors:brick_floor_04_d3', 'atlas-floors:brick_floor_04_d4',
-    'atlas-floors:grate_metal_a_01',  'atlas-floors:grate_metal_a_02',
   ],
   mountain: [
     'atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2',
-    'atlas-floors:flat_stones_overlay_a3', 'atlas-floors:grass_overlay_medium_a_01',
-    'atlas-floors:grass_overlay_medium_b_01', 'atlas-floors:grass_overlay_medium_c_01',
+    'atlas-floors:flat_stones_overlay_a3',
   ],
   desert: [
     'atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2',
-    'atlas-floors:flat_stones_overlay_a3', 'atlas-floors:brick_floor_01_d3',
-    'atlas-floors:brick_floor_01_d4',
+    'atlas-floors:flat_stones_overlay_a3',
   ],
   coastal: [
     'atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01',
-    'atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2',
-    'atlas-floors:brick_floor_01_d1', 'atlas-floors:brick_floor_02_d1',
+    'atlas-floors:grass_overlay_medium_c_01',
   ],
   swamp: [
     'atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01',
@@ -75,33 +67,26 @@ export const THEME_TERRAIN = {
     'atlas-floors:mycelial_overlay_b_01',
   ],
   graveyard: [
+    'atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01',
     'atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2',
-    'atlas-floors:flat_stones_overlay_a3', 'atlas-floors:grass_overlay_medium_a_01',
-    'atlas-floors:grass_overlay_medium_b_01', 'atlas-floors:brick_floor_03_d1',
-    'atlas-floors:brick_floor_03_d2',
   ],
   // --- New themes ---
   underdark: [
     'atlas-floors:mycelial_overlay_a_01', 'atlas-floors:mycelial_overlay_a_02',
     'atlas-floors:mycelial_overlay_a_03', 'atlas-floors:mycelial_overlay_b_01',
     'atlas-floors:mycelial_overlay_b_02', 'atlas-floors:mycelial_overlay_b_03',
-    'atlas-floors:brick_floor_04_d3',     'atlas-floors:brick_floor_04_d4',
   ],
   drow: [
     'atlas-floors:drow_overlay_crystal_01_a1', 'atlas-floors:drow_overlay_crystal_01_a2',
     'atlas-floors:drow_overlay_crystal_01_a3', 'atlas-floors:drow_overlay_crystal_01_a4',
     'atlas-floors:drow_overlay_crystal_02_a1', 'atlas-floors:drow_overlay_crystal_02_a2',
-    'atlas-floors:brick_floor_04_d3',          'atlas-floors:brick_floor_04_d4',
   ],
   farm: [
     'atlas-floors:grass_overlay_medium_a_01', 'atlas-floors:grass_overlay_medium_b_01',
     'atlas-floors:grass_overlay_medium_c_01', 'atlas-floors:grass_overlay_long_a_01',
-    'atlas-floors:grass_overlay_long_b_01',   'atlas-floors:flat_stones_overlay_a1',
-    'atlas-floors:flat_stones_overlay_a2',
+    'atlas-floors:grass_overlay_long_b_01',
   ],
   ruins: [
-    'atlas-floors:brick_floor_01_d1', 'atlas-floors:brick_floor_01_d2',
-    'atlas-floors:brick_floor_03_d3', 'atlas-floors:brick_floor_03_d4',
     'atlas-floors:flat_stones_overlay_a1', 'atlas-floors:flat_stones_overlay_a2',
     'atlas-floors:flat_stones_overlay_a3', 'atlas-floors:grass_overlay_medium_a_01',
     'atlas-floors:grass_overlay_medium_b_01',

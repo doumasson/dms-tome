@@ -12,13 +12,13 @@
 - [x] More POI chunk types — 24 new chunks (60 total)
 - [x] Map gen overhaul — noise terrain, clustered scatter, meandering roads, 16 themes
 - [x] Playtest 4 fixes (20 bugs) — spells, HP sync, combat, quests, encounters, voices, UI
-- [ ] Wall visibility desync — P1 and P2 sometimes see different walls in buildings
-- [ ] P2 visibility after rejoin — can't see each other until movement after crash+rejoin
-- [ ] Map texture polish — tiles more diverse but can look chaotic with mixed styles
-- [ ] NPC schedule movement visible — NPCs walk between POIs on time schedule
-- [ ] Click-to-move pathfinding during combat — show valid path preview before confirming
-- [ ] Spell upcast UI — pick spell slot level when casting higher than minimum
-- [ ] Opportunity attack prompt for moving enemies — currently only for players
+- [x] Wall visibility desync — P2 loads area from Supabase instead of rebuilding independently
+- [x] P2 visibility after rejoin — request-positions broadcast on subscribe, re-broadcast on mount
+- [x] Map texture polish — removed cross-atlas tile mixing, single visual family per theme
+- [x] NPC schedule movement visible — poiPositions exported from areaBuilder, auto-generated schedules
+- [x] Click-to-move pathfinding during combat — white path preview line on hover over reachable tiles
+- [x] Spell upcast UI — castLevel wired through both CombatPhase and useCombatActions damage paths
+- [x] Opportunity attacks for moving enemies — OA triggers when enemies leave player adjacency
 
 ## Playtest 5-8 Fixes — ALL COMPLETE (44 fixes)
 

@@ -4,7 +4,7 @@ import { rollDamage } from '../lib/dice'
 import { findOATriggers, resolveOA } from '../lib/opportunityAttack.js'
 import { calculateCover, COVER_BONUS, buildPropCoverSet } from '../lib/cover.js'
 import { getTilesInSphere, getTilesInCone, getTilesInLine, getTilesInCube, renderAoEPreview, clearAoEPreview } from '../engine/AoEOverlay'
-import { renderMovementRange, clearMovementRange } from '../engine/MovementRange'
+import { renderMovementRange, clearMovementRange, renderPathPreview, clearPathPreview } from '../engine/MovementRange'
 import { findPathEdge, getReachableTilesEdge } from '../lib/pathfinding'
 import { animateTokenAlongPath, isAnimating } from '../engine/TokenLayer'
 import { broadcastEncounterAction } from '../lib/liveChannel'
@@ -13,6 +13,7 @@ import { resolveContestedCheck } from '../lib/contestedCheck.js'
 import { getExtraAttacks, CLASSES } from '../data/classes.js'
 import { checkReadiedTrigger as checkTrigger, resolveReadiedAttack as resolveReady } from '../lib/readiedAction.js'
 import { handleClassAbility } from '../lib/classAbilityHandlers.js'
+import { getUpcastDamage } from '../lib/spellCasting.js'
 
 /**
  * Encapsulates all combat-specific logic: attack targeting, spell AoE,
@@ -1003,7 +1004,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         for (const targetId of selectedTargets) {
           const target = encounter.combatants?.find(c => c.id === targetId)
           if (!target) continue
-          const healDice = typeof spell.damage === 'string' ? spell.damage : (spell.damage?.dice || '1d8')
+          const rawHealDice = typeof spell.damage === 'string' ? spell.damage : (spell.damage?.dice || '1d8')
+          const healDice = (spell.castLevel && spell.castLevel > (spell.level || 0))
+            ? (getUpcastDamage(spell, spell.castLevel) || rawHealDice)
+            : rawHealDice
           const healResult = rollDamage(healDice)
           const healing = healResult.total ?? healResult
           if (healing > 0) applyEncounterHeal(targetId, healing)
@@ -1024,7 +1028,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
           if (!target) continue
 
           // Handle both string damage ('1d10') and object damage ({dice:'1d10'})
-          const damageDice = typeof spell.damage === 'string' ? spell.damage : (spell.damage?.dice || '1d6')
+          const rawDamageDice = typeof spell.damage === 'string' ? spell.damage : (spell.damage?.dice || '1d6')
+          const damageDice = (spell.castLevel && spell.castLevel > (spell.level || 0))
+            ? (getUpcastDamage(spell, spell.castLevel) || rawDamageDice)
+            : rawDamageDice
           const dmgResult = rollDamage(damageDice)
           const damage = dmgResult.total ?? dmgResult
 
@@ -1310,12 +1317,53 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
     setReadyTriggerPrompt(null)
   }, [])
 
+  // Path preview on hover during combat movement
+  const lastHoverTileRef = useRef(null)
+  const handleCombatTileHover = useCallback(({ x, y }) => {
+    const mrLayer = pixiRef.current?.getMovementRangeLayer?.()
+    if (!mrLayer) return
+
+    if (!inCombat || !zone?.wallEdges) {
+      clearPathPreview(mrLayer)
+      lastHoverTileRef.current = null
+      return
+    }
+
+    const key = `${x},${y}`
+    if (lastHoverTileRef.current === key) return
+    lastHoverTileRef.current = key
+
+    if (!reachableTilesRef.current.has(key)) {
+      clearPathPreview(mrLayer)
+      return
+    }
+
+    const active = encounter.combatants?.[encounter.currentTurn]
+    if (!active || active.isEnemy || !active.position) {
+      clearPathPreview(mrLayer)
+      return
+    }
+
+    const collisionData = {
+      wallEdges: zone.wallEdges,
+      cellBlocked: zone.cellBlocked || new Uint8Array(zone.width * zone.height),
+    }
+    const path = findPathEdge(collisionData, zone.width, zone.height, active.position, { x, y })
+    if (!path || path.length < 2) {
+      clearPathPreview(mrLayer)
+      return
+    }
+
+    renderPathPreview(mrLayer, path, zone.tileSize || 200)
+  }, [zone, inCombat, encounter.combatants, encounter.currentTurn])
+
   return {
     targetingMode,
     setTargetingMode,
     pendingOA,
     setPendingOA,
     handleCombatTileClick,
+    handleCombatTileHover,
     handleCombatAction,
     executeMoveWithOA,
     reachableTilesRef,

@@ -47,7 +47,7 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
   }, [playerPos, area?.exits, areas, areaBriefs])
 
   // Area transition via exit click
-  const handleAreaTransition = useCallback((exit) => {
+  const handleAreaTransition = useCallback(async (exit) => {
     if (transitioning || inCombat) return
 
     // Proximity gate: player must be within 1 tile of the exit zone
@@ -79,8 +79,8 @@ export function useAreaTransition({ area, areas, areaBriefs, inCombat, campaign,
       const builtArea = buildAreaFromBrief(brief, Math.abs(seed) || 42)
       buildAndLoadArea(targetId, builtArea)
       if (campaign?.id) {
-        saveArea(campaign.id, builtArea).catch(err =>
-          console.warn('[transition] Failed to save area:', err))
+        try { await saveArea(campaign.id, builtArea) }
+        catch (err) { console.warn('[transition] Failed to save area:', err) }
       }
     }
 

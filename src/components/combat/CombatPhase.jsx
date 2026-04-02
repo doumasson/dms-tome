@@ -5,7 +5,7 @@ import { rollDamage } from '../../lib/dice';
 import { crToXp } from '../../lib/xpTable';
 import { broadcastPlayerMove, broadcastNarratorMessage, broadcastEncounterAction } from '../../lib/liveChannel';
 import { COMBAT_SPELLS } from '../../lib/combatSpells';
-import { getSpellSaveDC } from '../../lib/spellCasting';
+import { getSpellSaveDC, getUpcastDamage } from '../../lib/spellCasting';
 import { playHitSound, playMissSound, playDeathSound, playSpellSound, playHealSound, playCombatStartSound } from '../../lib/soundEffects';
 import PartyPanel from '../PartyPanel';
 import CharDetailPanel from '../CharDetailPanel';
@@ -557,11 +557,12 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
     if (!def) { setPanel(null); return; }
 
     // Consume spell slot for leveled spells (cantrips are level 0)
-    const spellLevel = def.level || 0;
-    if (spellLevel > 0 && activeCombatant) {
+    // Use castLevel (upcast selection) when available, otherwise fall back to base level
+    const slotLevel = def.castLevel || def.level || 0;
+    if (slotLevel > 0 && activeCombatant) {
       const { useSpellSlot } = useStore.getState();
-      useSpellSlot(activeCombatant.id, spellLevel);
-      broadcastEncounterAction({ type: 'use-spell-slot', combatantId: activeCombatant.id, slotLevel: spellLevel, userId: currentUser?.id || 'system' });
+      useSpellSlot(activeCombatant.id, slotLevel);
+      broadcastEncounterAction({ type: 'use-spell-slot', combatantId: activeCombatant.id, slotLevel, userId: currentUser?.id || 'system' });
     }
     // Consume the action (spells use an action just like attacks)
     if (activeCombatant) {
@@ -578,7 +579,11 @@ export default function CombatPhase({ encounter, dmMode, myCharacter, characters
       onLog(`✨ ${activeCombatant?.name} casts ${def.name} → ${names}${def.save ? ` (${def.save.toUpperCase()} save DC ${saveDC})` : ''}`);
       if (def.concentration) onSetConcentration(activeCombatant.id, def.name);
     } else {
-      const rolled = rollDamage(def.damage);
+      // Use upcast damage if casting at higher level
+      const effectiveDamage = (slotLevel > (def.level || 0) && def.damage)
+        ? (getUpcastDamage(def, slotLevel) || def.damage)
+        : def.damage;
+      const rolled = rollDamage(effectiveDamage);
       if (isHealing) {
         hitCombatants.forEach(c => { onHeal(c.id, rolled.total); });
         const names = hitCombatants.map(c => c.name).join(', ') || 'no targets';

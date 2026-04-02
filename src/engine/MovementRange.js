@@ -78,3 +78,39 @@ export function renderMovementRange(container, reachable, color = 0x4499dd, alph
 export function clearMovementRange(container) {
   container.removeChildren()
 }
+
+// Separate Graphics child for path preview so it doesn't clear the range highlight
+const PATH_PREVIEW_NAME = '__pathPreview'
+
+export function renderPathPreview(container, path, tileSizeOverride) {
+  // Remove previous path preview
+  clearPathPreview(container)
+  if (!path || path.length < 2) return
+
+  const tileSize = tileSizeOverride || getTileSize()
+  const g = new PIXI.Graphics()
+  g.label = PATH_PREVIEW_NAME
+
+  const half = tileSize / 2
+  // Draw path line
+  g.moveTo(path[0].x * tileSize + half, path[0].y * tileSize + half)
+  for (let i = 1; i < path.length; i++) {
+    g.lineTo(path[i].x * tileSize + half, path[i].y * tileSize + half)
+  }
+  g.stroke({ width: 4, color: 0xffffff, alpha: 0.5 })
+
+  // Draw endpoint marker
+  const end = path[path.length - 1]
+  g.circle(end.x * tileSize + half, end.y * tileSize + half, tileSize * 0.2)
+  g.fill({ color: 0xffffff, alpha: 0.4 })
+
+  container.addChild(g)
+}
+
+export function clearPathPreview(container) {
+  for (let i = container.children.length - 1; i >= 0; i--) {
+    if (container.children[i].label === PATH_PREVIEW_NAME) {
+      container.removeChildAt(i)
+    }
+  }
+}

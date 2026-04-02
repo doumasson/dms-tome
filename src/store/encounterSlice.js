@@ -5,6 +5,7 @@ import { getSaveProficiencies, profBonus as getProfBonus } from '../lib/derivedS
 import { checkPhaseTransition } from '../lib/bossPhases.js';
 import { executeAbility, spawnMinions, isLegendaryAbility } from '../lib/abilityResolver.js';
 import { checkEncounterDifficulty } from '../lib/encounterScaling.js';
+import { findOATriggers, resolveOA } from '../lib/opportunityAttack.js';
 
 // Generate a deterministic Pollinations portrait URL for a character.
 // Same name/race/class always produces the same portrait.
@@ -1321,6 +1322,36 @@ export function createEncounterSlice(set, get) {
           if (!occupied) {
             const from = active.position;
             const cost = result.moveCost ?? (from ? Math.max(Math.abs(x - from.x), Math.abs(y - from.y)) : 1);
+
+            // Check for opportunity attacks from players when enemy moves away
+            const movePath = result.movePath || (from ? [from, { x, y }] : null);
+            if (movePath && !active.disengaged) {
+              const alivePlayers = encounter.combatants.filter(c =>
+                c.type === 'player' && (c.currentHp ?? 0) > 0 && c.position && !c.reactionUsed
+              );
+              const oaTriggers = findOATriggers(movePath, alivePlayers, false);
+              for (const { enemy: player } of oaTriggers) {
+                const oaResult = resolveOA(player, active);
+                if (oaResult.hit && oaResult.damage > 0) {
+                  get().applyEncounterDamage(active.id, oaResult.damage);
+                }
+                // Mark player's reaction as used
+                set(state => ({
+                  encounter: {
+                    ...state.encounter,
+                    combatants: state.encounter.combatants.map(c =>
+                      c.id === player.id ? { ...c, reactionUsed: true } : c
+                    ),
+                  },
+                }));
+                const oaText = oaResult.hit
+                  ? `⚔ ${player.name} takes an opportunity attack against ${active.name} with ${oaResult.weaponName} — ${oaResult.damage} damage${oaResult.isCrit ? ' (CRITICAL!)' : ''}!`
+                  : `⚔ ${player.name} takes an opportunity attack against ${active.name} but misses!`;
+                get().addEncounterLog(oaText);
+                broadcastNarratorMessage({ role: 'dm', speaker: 'Combat', text: oaText, id: uuidv4(), timestamp: Date.now() });
+              }
+            }
+
             get().moveToken(active.id, x, y, cost);
             broadcastEncounterAction({
               type: 'move',

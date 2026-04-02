@@ -25,7 +25,7 @@ const ATLAS_NAMES = [
   'atlas-effects', 'atlas-walls', 'atlas-tokens',
 ]
 
-export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitClick, onNpcClick, inCombat, camera, roofManager }, ref) {
+export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onTileHover, onExitClick, onNpcClick, inCombat, camera, roofManager }, ref) {
   const containerRef = useRef(null)
   const appRef = useRef(null)
   const tweenEngineRef = useRef(null)
@@ -33,6 +33,8 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
   const worldRef = useRef(null)
   const onTileClickRef = useRef(onTileClick)
   onTileClickRef.current = onTileClick
+  const onTileHoverRef = useRef(onTileHover)
+  onTileHoverRef.current = onTileHover
   const onExitClickRef = useRef(onExitClick)
   onExitClickRef.current = onExitClick
   const onNpcClickRef = useRef(onNpcClick)
@@ -183,14 +185,24 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onExitCl
         }
       })
 
-      // Mousemove handler for spell targeting preview
+      // Mousemove handler for spell targeting preview + combat path preview
       app.stage.on('pointermove', (e) => {
-        if (!isTargeting() || !worldRef.current) return
+        if (!worldRef.current) return
         const pos = e.global
         const w = worldRef.current
         const wx = (pos.x - w.x) / w.scale.x
         const wy = (pos.y - w.y) / w.scale.y
-        updateTargeting(wx, wy)
+        if (isTargeting()) {
+          updateTargeting(wx, wy)
+          return
+        }
+        // Dispatch tile hover for combat path preview
+        if (onTileHoverRef.current) {
+          const tileSize = zone?.tileSize || 200
+          const tx = Math.floor(wx / tileSize)
+          const ty = Math.floor(wy / tileSize)
+          onTileHoverRef.current({ x: tx, y: ty })
+        }
       })
 
       setReady(true)

@@ -290,7 +290,21 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     if (blockingSet.has(tileId) || V2_BLOCKING_TILES.has(tileId)) cellBlocked[i] = 1
   }
 
+  // 9b. Compute POI center positions for NPC scheduling
+  const poiPositions = {}
+  for (const poi of matchedPois) {
+    const label = poi.label || poi.id
+    const pos = positions[label]
+    if (pos) {
+      poiPositions[label] = {
+        x: pos.x + Math.floor((poi.chunk.width || 6) / 2),
+        y: pos.y + Math.floor((poi.chunk.height || 6) / 2),
+      }
+    }
+  }
+
   // 10. Place NPCs
+  const poiLabels = Object.keys(poiPositions)
   const placedNpcs = []
   for (const npc of npcs) {
     const poiLabel = npc.position // POI label where NPC should be placed
@@ -312,12 +326,22 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     // Place at center of chunk interior (offset from walls)
     const npcX = pos.x + Math.floor(chunkW / 2)
     const npcY = pos.y + Math.floor(chunkH / 2)
+    // Auto-generate schedule if NPC has a position reference but no schedule
+    const schedule = npc.schedule || (poiLabels.length >= 2
+      ? [
+          { time: 'dawn', position: poiLabel },
+          { time: 'day', position: poiLabel },
+          { time: 'dusk', position: poiLabels.find(l => l !== poiLabel) || poiLabel },
+          { time: 'night', position: poiLabel },
+        ]
+      : null)
     placedNpcs.push({
       id: npc.name.toLowerCase().replace(/\s+/g, '_'),
       name: npc.name,
       personality: npc.personality || '',
       position: { x: npcX, y: npcY },
       questRelevant: npc.questRelevant || false,
+      ...(schedule ? { schedule } : {}),
     })
   }
 
@@ -449,6 +473,7 @@ export function buildAreaFromBrief(brief, seed = Date.now()) {
     lightSources: allLightSources,
     exits: placedExits,
     interactables,
+    poiPositions,
     theme,
     generated: true,
   }

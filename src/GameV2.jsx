@@ -226,12 +226,18 @@ export default function GameV2({ onLeave }) {
     if (!user?.id || !playerPos || !currentAreaId) return
     // Always store locally
     useStore.getState().setAreaTokenPosition(currentAreaId, user.id, playerPos)
-    // Broadcast on area change or initial load
+    // Broadcast on area change, initial load, or mount (crash recovery)
     if (lastBroadcastAreaRef.current !== currentAreaId) {
       lastBroadcastAreaRef.current = currentAreaId
       broadcastTokenMove(user.id, playerPos)
     }
   }, [user?.id, playerPos, zone, currentAreaId])
+
+  // Always broadcast position on mount (handles rejoin after crash)
+  useEffect(() => {
+    if (!user?.id || !playerPos || !currentAreaId) return
+    broadcastTokenMove(user.id, playerPos)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Consume pending area entry point from broadcast-triggered area transitions (P2 follows host)
   const pendingAreaEntryPoint = useStore(s => s.pendingAreaEntryPoint)
@@ -287,7 +293,7 @@ export default function GameV2({ onLeave }) {
 
   const {
     targetingMode, pendingOA, setPendingOA,
-    handleCombatTileClick, handleCombatAction, executeMoveWithOA,
+    handleCombatTileClick, handleCombatTileHover, handleCombatAction, executeMoveWithOA,
     showWeaponPicker, setShowWeaponPicker,
     showSpellPicker, setShowSpellPicker,
     showConsumablePicker, setShowConsumablePicker,
@@ -592,7 +598,7 @@ export default function GameV2({ onLeave }) {
   return (
     <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#08060c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c' }}>Loading...</div>}>
       <GameLayout targeting={!!targetingMode}>
-        <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
+        <PixiApp ref={pixiRef} zone={zone} tokens={tokens} onTileClick={handleTileClick} onTileHover={handleCombatTileHover} onExitClick={handleAreaTransition} onNpcClick={handleNpcClick} inCombat={inCombat} camera={cameraRef.current} roofManager={roofManagerRef.current} />
         <WeatherOverlay />
         <DayNightOverlay />
         {/* Character stats HUD removed — cluttered the map, info visible on portraits */}

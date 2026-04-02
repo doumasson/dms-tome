@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { supabase } from './lib/supabase';
-import { setLiveChannel, setLocalUserId, broadcastApiKeySync, broadcastPlayerJoined } from './lib/liveChannel';
+import { setLiveChannel, setLocalUserId, broadcastApiKeySync, broadcastPlayerJoined, broadcastTokenMove, broadcastRequestPositions } from './lib/liveChannel';
 import { decryptApiKey } from './lib/apiKeyVault';
 import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
 import { buildAreaFromBrief } from './lib/areaBuilder.js';
+import { loadArea } from './lib/areaStorage.js';
 // TTS is handled inside addNarratorMessage (uiSlice) — no direct speak() calls needed here
 import { receiveEmote } from './components/game/EmoteSystem';
 import { receivePing } from './components/game/PingSystem';
@@ -678,7 +679,7 @@ export default function App() {
     });
 
     // Area transition — when host transitions, other players follow
-    ch.on('broadcast', { event: 'area-transition' }, ({ payload }) => {
+    ch.on('broadcast', { event: 'area-transition' }, async ({ payload }) => {
       const { areaId, entryPoint, isHost } = payload || {}
       if (!areaId) return
       // Only follow host transitions (not echoes from other players)
@@ -686,13 +687,33 @@ export default function App() {
       const store = useStore.getState()
       // Skip if already in that area
       if (store.currentAreaId === areaId) return
-      // Build the area from brief if P2 doesn't have it yet
+      // Load the area from Supabase (host already saved it) to guarantee identical maps
       if (!store.areas[areaId]) {
-        const brief = store.areaBriefs[areaId]
-        if (brief) {
-          const seed = areaId.split('').reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)
-          const builtArea = buildAreaFromBrief(brief, Math.abs(seed) || 42)
-          store.buildAndLoadArea(areaId, builtArea)
+        const campaignId = store.activeCampaign?.id
+        let loaded = false
+        if (campaignId) {
+          // Try loading from Supabase with retry (host save may still be in flight)
+          for (let attempt = 0; attempt < 3 && !loaded; attempt++) {
+            if (attempt > 0) await new Promise(r => setTimeout(r, 500))
+            try {
+              const area = await loadArea(campaignId, areaId)
+              if (area) {
+                store.buildAndLoadArea(areaId, area)
+                loaded = true
+              }
+            } catch (err) {
+              console.warn(`[area-transition] Supabase load attempt ${attempt + 1} failed:`, err)
+            }
+          }
+        }
+        // Fallback: build from brief if Supabase load failed
+        if (!loaded) {
+          const brief = store.areaBriefs[areaId]
+          if (brief) {
+            const seed = areaId.split('').reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)
+            const builtArea = buildAreaFromBrief(brief, Math.abs(seed) || 42)
+            store.buildAndLoadArea(areaId, builtArea)
+          }
         }
       }
       store.activateArea(areaId)
@@ -721,6 +742,16 @@ export default function App() {
       } catch (err) {
         console.error('[player-joined] Failed to refresh:', err)
       }
+    })
+
+    // Request-positions — another player asks everyone to re-broadcast their current position
+    ch.on('broadcast', { event: 'request-positions' }, () => {
+      const store = useStore.getState()
+      const myId = store.user?.id
+      const areaId = store.currentAreaId
+      if (!myId || !areaId) return
+      const myPos = store.areaTokenPositions?.[areaId]?.[myId]
+      if (myPos) broadcastTokenMove(myId, myPos)
     })
 
     // Token move sync (any player → all others for V2 area map)
@@ -822,7 +853,13 @@ export default function App() {
       useStore.getState().addJournalEntry(payload)
     })
 
-    ch.subscribe(status => setLiveConnected(status === 'SUBSCRIBED'));
+    ch.subscribe(status => {
+      setLiveConnected(status === 'SUBSCRIBED')
+      // On subscribe/reconnect, ask all players to re-broadcast their positions
+      if (status === 'SUBSCRIBED') {
+        setTimeout(() => broadcastRequestPositions(), 300)
+      }
+    });
 
     setLiveChannel(ch);
     setLocalUserId(user?.id || null);

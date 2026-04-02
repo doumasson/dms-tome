@@ -118,12 +118,17 @@ export function broadcastJournalEntry(entry) {
 
 /* ── Area broadcasts ──────────────────────────────────────────── */
 
-export function broadcastAreaTransition(areaId, entryPoint, isHost = false) {
+export function broadcastAreaTransition(areaId, entryPoint, isHost = false, areaData = null) {
   _channel?.send({
     type: 'broadcast',
     event: 'area-transition',
-    payload: { areaId, entryPoint, isHost },
+    payload: { areaId, entryPoint, isHost, areaData },
   })
+}
+
+// Request all players to re-broadcast their current position
+export function broadcastRequestPositions() {
+  _channel?.send({ type: 'broadcast', event: 'request-positions', payload: {} })
 }
 
 // Notify all players that a new player joined the campaign
