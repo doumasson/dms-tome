@@ -172,11 +172,32 @@ function buildRoleHints(role = '', personality = '') {
   return hints.length > 0 ? '\n' + hints.join('\n') : ''
 }
 
-export function buildNpcSystemPrompt(npc, campaign, storyFlags, promptCount, isCritical, factionReputation = {}) {
+export function buildNpcSystemPrompt(npc, campaign, storyFlags, promptCount, isCritical, factionReputation = {}, quests = []) {
   const flagsList = storyFlags.size > 0 ? Array.from(storyFlags).join(', ') : 'none'
   const steerHint = isCritical && promptCount >= 5
     ? '\nThe conversation has gone on long enough. Start wrapping up — hint that you have nothing more to say.'
     : ''
+
+  // NPC memory: has the player talked to this NPC before?
+  const npcKey = npc.name.replace(/\s+/g, '_')
+  const hasTalkedBefore = storyFlags.has(`talked_to_${npcKey}`)
+
+  // Quest context: quests this NPC gave or is relevant to
+  const npcQuests = quests.filter(q => q.npcName === npc.name && q.status === 'active')
+  const completedNpcQuests = quests.filter(q => q.npcName === npc.name && q.status === 'completed')
+  let questBlock = ''
+  if (npcQuests.length > 0) {
+    const questLines = npcQuests.map(q => {
+      const done = q.objectives.filter(o => o.completed).map(o => o.text).join(', ')
+      const todo = q.objectives.filter(o => !o.completed).map(o => o.text).join(', ')
+      const allDone = q.objectives.every(o => o.completed)
+      return `- "${q.title}": ${allDone ? 'ALL OBJECTIVES COMPLETE — ready for turn-in!' : `Done: ${done || 'none'}. Remaining: ${todo}`}`
+    }).join('\n')
+    questBlock = `\nQuests YOU gave to this party (you remember giving these):\n${questLines}`
+  }
+  if (completedNpcQuests.length > 0) {
+    questBlock += `\nQuests previously completed for you: ${completedNpcQuests.map(q => q.title).join(', ')}`
+  }
 
   // Faction context
   let factionBlock = ''
@@ -209,7 +230,9 @@ export function buildNpcSystemPrompt(npc, campaign, storyFlags, promptCount, isC
   return `You are ${npc.name}, a ${npc.role}. You are an NPC in a D&D 5e campaign called "${campaign?.title || 'an unnamed campaign'}".
 
 Personality: ${npc.personality}${factionBlock}
-${npc.sideQuest ? `Side quest you can offer: ${npc.sideQuest}` : ''}
+${hasTalkedBefore ? `The party has spoken with you before. You recognize them — greet them accordingly, don't re-introduce yourself.` : ''}${questBlock}
+${npc.sideQuest && !npcQuests.length ? `Side quest you can offer: ${npc.sideQuest}` : ''}
+${npcQuests.some(q => q.objectives.every(o => o.completed)) ? `The party has completed your quest objectives! Thank them warmly and offer a reward (gold, information, or an item). Mark the quest as done in your dialogue.` : ''}
 ${isCritical && npc.criticalInfo ? `Critical information to deliver: ${npc.criticalInfo}` : ''}
 ${roleHints}
 

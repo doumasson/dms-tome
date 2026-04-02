@@ -121,6 +121,7 @@ export function createCharacterSlice(set, get) {
             ),
           },
         }));
+        broadcastEncounterAction({ type: 'ac-update', id: myCharacter.id, name: myCharacter.name, ac: derivedEquip.ac, userId: get().user?.id });
       }
     },
 
@@ -151,6 +152,7 @@ export function createCharacterSlice(set, get) {
             ),
           },
         }));
+        broadcastEncounterAction({ type: 'ac-update', id: myCharacter.id, name: myCharacter.name, ac: derivedUnequip.ac, userId: get().user?.id });
       }
     },
 

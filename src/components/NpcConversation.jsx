@@ -31,6 +31,8 @@ export default function NpcConversation({
   const adjustFactionReputation = useStore(s => s.adjustFactionReputation)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
   const addQuest = useStore(s => s.addQuest)
+  const addStoryFlag = useStore(s => s.addStoryFlag)
+  const quests = useStore(s => s.quests)
 
   const [messages, setMessages] = useState(() => {
     if (initialMessage) {
@@ -77,6 +79,16 @@ export default function NpcConversation({
   const [hardLimited, setHardLimited] = useState(false)
   const scrollRef = useRef(null)
 
+  // Set story flag when NPC conversation ends (for NPC memory)
+  useEffect(() => {
+    return () => {
+      if (promptCount > 0 && npc?.name) {
+        const flag = `talked_to_${npc.name.replace(/\s+/g, '_')}`
+        useStore.getState().addStoryFlag(flag)
+      }
+    }
+  }, [npc?.name, promptCount])
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -104,7 +116,7 @@ export default function NpcConversation({
 
     setLoading(true)
     try {
-      const systemPrompt = buildNpcSystemPrompt(npc, campaign, storyFlags, newCount, isCritical, factionReputation)
+      const systemPrompt = buildNpcSystemPrompt(npc, campaign, storyFlags, newCount, isCritical, factionReputation, quests)
       const history = allMessages.map(m => ({
         role: m.role === 'npc' ? 'assistant' : 'user',
         content: m.text,
@@ -328,6 +340,8 @@ export default function NpcConversation({
 
     // Add to store
     addQuest(quest)
+    addStoryFlag(`quest_from_${npc.name.replace(/\s+/g, '_')}`)
+    addStoryFlag(`quest_active_${quest.id}`)
 
     // Broadcast to all other players so quests sync in multiplayer
     broadcastEncounterAction({

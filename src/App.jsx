@@ -215,6 +215,18 @@ export default function App() {
         case 'end-encounter-defeat': store.endEncounterWithDefeat(); break;
         case 'add-condition':    store.addEncounterCondition(payload.id, payload.condition); break;
         case 'remove-condition': store.removeEncounterCondition(payload.id, payload.condition); break;
+        case 'ac-update': {
+          // Equipment change updated a combatant's AC
+          useStore.setState(s => ({
+            encounter: {
+              ...s.encounter,
+              combatants: (s.encounter.combatants || []).map(c =>
+                (c.id === payload.id || c.name === payload.name) ? { ...c, ac: payload.ac } : c
+              ),
+            },
+          }));
+          break;
+        }
         case 'long-rest':           store.longRest(); break;
         case 'set-concentration':   store.setConcentration(payload.id, payload.spell); break;
         case 'clear-concentration': store.clearConcentration(payload.id); break;
