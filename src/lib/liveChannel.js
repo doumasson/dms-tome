@@ -68,8 +68,8 @@ export function broadcastAppendScenes(scenes, nextSceneIndex) {
 }
 
 // NPC dialog lock
-export function broadcastNpcDialogStart(npcName, playerId, playerName) {
-  _channel?.send({ type: 'broadcast', event: 'npc-dialog-start', payload: { npcName, playerId, playerName } })
+export function broadcastNpcDialogStart(npcName, playerId, playerName, npcGender) {
+  _channel?.send({ type: 'broadcast', event: 'npc-dialog-start', payload: { npcName, playerId, playerName, npcGender } })
 }
 
 export function broadcastNpcDialogEnd(npcName) {

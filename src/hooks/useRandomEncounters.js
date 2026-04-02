@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import useStore from '../store/useStore'
-import { rollRandomEncounter, generateRandomEncounter, calculateRandomEncounterLoot } from '../lib/randomEncounters'
+import { rollRandomEncounter, generateRandomEncounter, calculateRandomEncounterLoot, isNearCivilization } from '../lib/randomEncounters'
 import { broadcastEncounterAction, broadcastNarratorMessage } from '../lib/liveChannel'
 
-// Minimum time (ms) between encounter checks — prevents spam during movement
-const ENCOUNTER_COOLDOWN_MS = 60_000 // 60 seconds
+// Minimum time (ms) after an encounter ends before another can trigger
+const ENCOUNTER_COOLDOWN_MS = 240_000 // 4 minutes real time
+// Minimum tiles of movement after an encounter before another can trigger
+const ENCOUNTER_MOVEMENT_THRESHOLD = 35
 // Only check once per N-tile region (grid cells grouped into regions)
 const REGION_SIZE = 6
 
@@ -22,6 +24,8 @@ export function useRandomEncounters({
 }) {
   const lastRegionRef = useRef(null)
   const lastEncounterTimeRef = useRef(Date.now()) // Start with current time to prevent spawn-trigger
+  const tilesSinceEncounterRef = useRef(0) // Track tiles moved since last encounter
+  const lastPosRef = useRef(null) // Previous position for distance tracking
   const spawnGuardRef = useRef(true) // Skip the very first movement after spawn
 
   useEffect(() => {
@@ -41,23 +45,39 @@ export function useRandomEncounters({
     // Skip the first few movements after spawn to prevent instant encounters
     if (spawnGuardRef.current) {
       spawnGuardRef.current = false
+      lastPosRef.current = { ...playerPos }
       return
     }
+
+    // Track cumulative movement distance (Manhattan) for movement-based cooldown
+    if (lastPosRef.current) {
+      const dx = Math.abs(playerPos.x - lastPosRef.current.x)
+      const dy = Math.abs(playerPos.y - lastPosRef.current.y)
+      tilesSinceEncounterRef.current += dx + dy
+    }
+    lastPosRef.current = { ...playerPos }
 
     // Region-based dedup: only check once per 6x6 tile region
     const regionKey = `${Math.floor(playerPos.x / REGION_SIZE)},${Math.floor(playerPos.y / REGION_SIZE)}`
     if (lastRegionRef.current === regionKey) return
     lastRegionRef.current = regionKey
 
-    // Cooldown: don't check if an encounter happened recently
+    // Cooldown: don't check if an encounter happened recently (time-based)
     const now = Date.now()
     if (now - lastEncounterTimeRef.current < ENCOUNTER_COOLDOWN_MS) return
 
-    // Roll for encounter (low chance — 5% dungeon, 3% wilderness)
+    // Movement-based cooldown: must move 35+ tiles before next encounter
+    if (tilesSinceEncounterRef.current < ENCOUNTER_MOVEMENT_THRESHOLD) return
+
+    // Never trigger near NPCs or buildings (8-tile safe radius)
+    if (isNearCivilization(playerPos, zone)) return
+
+    // Roll for encounter (low chance — 2% dungeon, 1.5% wilderness)
     if (!rollRandomEncounter(areaType)) return
 
-    // Mark encounter time to start cooldown
+    // Mark encounter time and reset movement counter to start cooldowns
     lastEncounterTimeRef.current = now
+    tilesSinceEncounterRef.current = 0
 
     // Get party info
     const { partyMembers, addNarratorMessage } = useStore.getState()

@@ -367,11 +367,15 @@ export function flipChunkH(chunk) {
 
 /**
  * Apply a random transform (rotation/flip) to a chunk for variety.
+ * Only applies to terrain/landmark chunks — building and room walls
+ * are directional and break when rotated.
  * @param {object} chunk - chunk object
  * @param {Function} rand - seeded RNG
  * @returns {object} transformed chunk
  */
 export function randomTransform(chunk, rand) {
+  // Buildings and rooms have directional walls/doors — never rotate
+  if (chunk.type === 'building' || chunk.type === 'room') return chunk
   if (chunk.rotatable === false) return chunk
   const roll = Math.floor(rand() * 4)
   let c = chunk

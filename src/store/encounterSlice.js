@@ -39,12 +39,27 @@ export function createEncounterSlice(set, get) {
       hazards: [],         // Environmental hazards affecting the battlefield
     },
     lastCombatPosition: null,   // Saved player position when combat ends
+    preCombatPositions: {},     // { [playerId]: {x,y} } — exploration positions saved when combat starts
     defeatedEnemies: {},        // { [areaId]: [enemyName, ...] } — prevents respawn in exploration
     showDeathOptions: false,    // Show respawn choice dialog after TPK
 
     startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false, hazards = [], combatCenter = null, combatRadius = 10 } = {}) => {
+      // Save pre-combat exploration positions for all party members so we can restore after combat
+      const savedPositions = {};
+      const areaId = get().currentAreaId;
+      const areaPositions = get().areaTokenPositions?.[areaId] || {};
+      partyMembers?.forEach(char => {
+        const id = char.id || 'player';
+        // Prefer areaTokenPositions (most accurate exploration position), fall back to char.position
+        const pos = areaPositions[id] || char.position;
+        if (pos) {
+          savedPositions[id] = { x: pos.x, y: pos.y };
+        }
+      });
+      console.log('[startEncounter] Saved pre-combat positions:', savedPositions);
+
       // Clear stealth when combat starts
-      set({ stealthMode: null });
+      set({ stealthMode: null, preCombatPositions: savedPositions });
       const combatants = [];
 
       // Determine combat center from enemies or first party member
@@ -539,19 +554,17 @@ export function createEncounterSlice(set, get) {
       const { combatants, currentTurn, round } = state.encounter;
       if (combatants.length === 0) return;
 
-      // Check for total party kill — only if ALL players in combat are dead AND no allies outside combat
-      const livingPlayers = combatants.filter(c =>
-        c.type !== 'enemy' && (c.currentHp > 0 || c.deathSaves?.stable)
-      );
+      // Check for party defeat — if NO player can take actions (all at 0 HP, whether dying or stable)
+      const playersInCombat = combatants.filter(c => c.type !== 'enemy');
+      const playersWhoCanAct = playersInCombat.filter(c => c.currentHp > 0);
       // Check if there are party members outside combat who could rescue
       const allParty = get().partyMembers || [];
-      const playersInCombat = combatants.filter(c => c.type !== 'enemy');
       const playersOutsideCombat = allParty.filter(p =>
         !playersInCombat.some(c => c.id === p.id || c.name === p.name)
       );
       const hasRescuers = playersOutsideCombat.length > 0;
-      if (livingPlayers.length === 0 && !hasRescuers) {
-        // True TPK — no one alive anywhere
+      if (playersWhoCanAct.length === 0 && !hasRescuers) {
+        // All players down (dying or stable) — no one can act, combat is over
         get().addEncounterLog('\u2620 The party has fallen...');
         const msg = {
           role: 'dm', speaker: 'The Narrator',
@@ -956,6 +969,8 @@ export function createEncounterSlice(set, get) {
 
     // End encounter after TPK — show death options dialog
     endEncounterWithDefeat: () => {
+      const wasInCombat = get().encounter.phase !== 'idle';
+      console.log('[endEncounterWithDefeat] Ending combat with defeat — clearing all combat state, wasInCombat:', wasInCombat);
       // End combat phase but don't auto-revive — let the player choose
       set({
         encounter: {
@@ -966,8 +981,15 @@ export function createEncounterSlice(set, get) {
           log: [],
           activeEffects: [],
         },
+        preCombatPositions: {},  // Clear saved positions
         showDeathOptions: true,
       });
+      // Only broadcast if we were actually in combat (prevents infinite broadcast loop)
+      if (wasInCombat) {
+        broadcastEncounterAction({ type: 'end-encounter-defeat', userId: get().user?.id || 'system' });
+      }
+      // Persist idle state immediately so refresh doesn't restore old combat
+      setTimeout(() => get().saveSessionStateToSupabase(), 0);
     },
 
     // Mercy revive — player chose to continue after TPK
@@ -1023,14 +1045,22 @@ export function createEncounterSlice(set, get) {
       const state = get()
       const { combatants } = state.encounter
 
-      // Save player's final combat position so exploration doesn't revert
-      let lastCombatPosition = null
+      // Restore pre-combat exploration position (NOT combat grid position)
+      const preCombatPositions = state.preCombatPositions || {};
+      let lastCombatPosition = null;
       if (combatants?.length && state.myCharacter) {
+        const playerId = state.myCharacter.id || 'player';
+        // Use saved pre-combat position if available, otherwise fall back to combat position
+        const preCombatPos = preCombatPositions[playerId];
         const myCombatant = combatants.find(c =>
           c.type === 'player' && (c.id === state.myCharacter.id || c.name === state.myCharacter.name)
-        )
-        if (myCombatant?.position) {
-          lastCombatPosition = { ...myCombatant.position }
+        );
+        if (preCombatPos) {
+          lastCombatPosition = { ...preCombatPos };
+          console.log('[endEncounter] Restoring pre-combat position for', state.myCharacter.name, preCombatPos);
+        } else if (myCombatant?.position) {
+          lastCombatPosition = { ...myCombatant.position };
+          console.log('[endEncounter] No pre-combat position saved, using combat position for', state.myCharacter.name);
         }
 
         // Sync combatant HP/conditions back to myCharacter before clearing
@@ -1092,18 +1122,26 @@ export function createEncounterSlice(set, get) {
         }
       }
 
-      // Update area token position directly so exploration mode uses combat-end position
-      // instead of reverting to the pre-combat playerPos
-      const posUpdate = {}
-      if (lastCombatPosition && areaId) {
-        const playerId = state.myCharacter?.id || 'player'
+      // Update area token positions: restore ALL players to their pre-combat exploration positions
+      const posUpdate = {};
+      // areaId already declared above from state.currentAreaId
+      if (areaId) {
+        const updatedAreaPositions = { ...(state.areaTokenPositions?.[areaId] || {}) };
+        // Restore pre-combat positions for all players (not just local player)
+        for (const [pid, pos] of Object.entries(preCombatPositions)) {
+          if (pos) {
+            updatedAreaPositions[pid] = { ...pos };
+          }
+        }
+        // Also ensure local player position is set
+        if (lastCombatPosition) {
+          const playerId = state.myCharacter?.id || 'player';
+          updatedAreaPositions[playerId] = lastCombatPosition;
+        }
         posUpdate.areaTokenPositions = {
           ...state.areaTokenPositions,
-          [areaId]: {
-            ...(state.areaTokenPositions?.[areaId] || {}),
-            [playerId]: lastCombatPosition,
-          },
-        }
+          [areaId]: updatedAreaPositions,
+        };
       }
 
       set({
@@ -1116,6 +1154,7 @@ export function createEncounterSlice(set, get) {
           activeEffects: [],
         },
         lastCombatPosition,
+        preCombatPositions: {},  // Clear saved positions
         respawnPosition: null,  // Clear respawn so it doesn't teleport after next combat
         ...defeatedUpdate,
         ...posUpdate,
@@ -1201,11 +1240,11 @@ export function createEncounterSlice(set, get) {
       const active = encounter.combatants[encounter.currentTurn];
       console.log('[runEnemyTurn] Start:', active?.name, 'type:', active?.type, 'hp:', active?.currentHp, 'turn:', encounter.currentTurn)
 
-      // Check if all players IN COMBAT are dead/dying — end combat immediately
-      const livingPlayers = encounter.combatants.filter(c =>
-        c.type !== 'enemy' && (c.currentHp > 0 || c.deathSaves?.stable)
+      // Check if all players IN COMBAT are unable to act (0 HP — dying or stable) — end combat immediately
+      const playersWhoCanAct = encounter.combatants.filter(c =>
+        c.type !== 'enemy' && c.currentHp > 0
       );
-      if (livingPlayers.length === 0) {
+      if (playersWhoCanAct.length === 0) {
         console.log('[runEnemyTurn] All players in combat are down — ending combat with defeat')
         get().addEncounterLog('\u2620 All combatants have fallen...');
         const msg = {

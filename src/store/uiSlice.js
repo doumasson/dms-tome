@@ -24,7 +24,7 @@ export function createUiSlice(set, get) {
         const isMechanical = /\(Investigation DC|\(Sleight of Hand|\(Athletics DC|\(Stealth|\(Perception|searches but finds|picks the lock|forces the lock|finds nothing/i.test(txt)
         // Only TTS: NPC dialogue, scene descriptions, story narration
         if (!isMechanical && (isNpc || !(inCombat && isGenericDm))) {
-          const voiceCfg = isNpc ? getNpcVoice(msg.speaker) : undefined
+          const voiceCfg = isNpc ? (msg.npcVoice || getNpcVoice(msg.speaker, msg.disposition, msg.npcGender)) : undefined
           speak(msg.text, null, isNpc ? { npcName: msg.speaker, voice: voiceCfg } : {})
         }
       }

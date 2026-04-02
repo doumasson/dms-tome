@@ -31,12 +31,46 @@ export function getSpellAttackBonus(char) {
   return profBonus(char.level || 1) + mod
 }
 
+// Prepared casters get access to their entire class spell list (they pick daily)
+const PREPARED_CASTERS = new Set(['Cleric', 'Druid', 'Paladin'])
+
+/**
+ * Get all spells available to a character.
+ * Known casters (Wizard, Sorcerer, etc.) get only spells in char.spells[].
+ * Prepared casters (Cleric, Druid, Paladin) get their full class list up to max spell level.
+ */
 export function getAvailableSpells(char) {
   if (!isCaster(char.class)) return []
+  const level = char.level || 1
+  const maxSpellLevel = maxSpellLevelForClass(char.class, level)
+
+  if (PREPARED_CASTERS.has(char.class)) {
+    // Prepared casters: all class spells up to max level + all known cantrips
+    const knownCantrips = new Set((char.spells || []).map(s => typeof s === 'string' ? s : s.name))
+    return SPELLS.filter(s => {
+      if (!s.classes?.includes(char.class)) return false
+      if (s.level === 0) return knownCantrips.has(s.name) // cantrips must be selected
+      return s.level <= maxSpellLevel
+    }).sort((a, b) => a.level - b.level || a.name.localeCompare(b.name))
+  }
+
+  // Known casters: only spells in char.spells[]
   const knownNames = new Set((char.spells || []).map(s => typeof s === 'string' ? s : s.name))
   if (knownNames.size === 0) return []
   return SPELLS.filter(s => knownNames.has(s.name))
     .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name))
+}
+
+function maxSpellLevelForClass(cls, charLevel) {
+  // Full casters: spell level = ceil(charLevel / 2), max 9
+  const fullCasters = ['Bard', 'Cleric', 'Druid', 'Sorcerer', 'Wizard']
+  if (fullCasters.includes(cls)) return Math.min(9, Math.ceil(charLevel / 2))
+  // Half casters: spell level = ceil((charLevel - 1) / 4), max 5
+  const halfCasters = ['Paladin', 'Ranger']
+  if (halfCasters.includes(cls)) return Math.min(5, Math.max(0, Math.ceil((charLevel - 1) / 4)))
+  // Third casters
+  if (cls === 'Eldritch Knight' || cls === 'Arcane Trickster') return Math.min(4, Math.max(0, Math.ceil((charLevel - 2) / 6)))
+  return 0
 }
 
 export function canCastSpell(spell, spellSlots) {

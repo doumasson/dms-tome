@@ -198,6 +198,7 @@ export default function App() {
         case 'death-save':       store.applyDeathSaveResult(payload.id, payload.roll); break;
         case 'stabilize':        store.stabilizeCombatant(payload.id); break;
         case 'end-encounter':    store.endEncounter(); break;
+        case 'end-encounter-defeat': store.endEncounterWithDefeat(); break;
         case 'add-condition':    store.addEncounterCondition(payload.id, payload.condition); break;
         case 'remove-condition': store.removeEncounterCondition(payload.id, payload.condition); break;
         case 'long-rest':           store.longRest(); break;
@@ -728,7 +729,7 @@ export default function App() {
       store.setNpcBusy(payload)
       // Open read-only NPC dialog viewer for non-initiator players
       if (payload.playerId !== store.user?.id) {
-        store.openNpcDialogViewer(payload.npcName)
+        store.openNpcDialogViewer(payload.npcName, payload.npcGender)
       }
     })
     ch.on('broadcast', { event: 'npc-dialog-end' }, () => {

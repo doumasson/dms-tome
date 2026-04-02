@@ -294,7 +294,11 @@ export default function NarratorPanel() {
     const npcMatch = text.match(/^You (?:approach|near) (.+?)[\.,]/i);
     if (npcMatch) {
       const npcName = npcMatch[1].trim();
-      activeNpcRef.current = { name: npcName, voice: getNpcVoice(npcName) };
+      // Look up NPC gender from scene data for correct voice
+      const sceneNpcs = currentScene?.npcs || [];
+      const npcData = sceneNpcs.find(n => n.name === npcName || npcName.includes(n.name) || n.name.includes(npcName));
+      const npcGender = npcData?.gender || null;
+      activeNpcRef.current = { name: npcName, voice: getNpcVoice(npcName, npcData?.personality, npcGender) };
     }
     // Small delay so any in-progress state settles first
     const t = setTimeout(() => handleSend(text, true), 150);

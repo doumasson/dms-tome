@@ -12,6 +12,8 @@ let _voices = [];
 let _voicesReady = false;
 let _narratorVoice = null;
 let _englishVoices = [];
+let _maleVoices = [];
+let _femaleVoices = [];
 
 const BAD_PATTERNS = ['espeak', 'novice', 'festival', 'mbrola', 'flite'];
 
@@ -27,6 +29,15 @@ function discoverVoices() {
 
   _voices = raw;
   _englishVoices = raw.filter(v => v.lang?.startsWith('en') && !isBadVoice(v));
+  // Sort: US English voices first, then others
+  _englishVoices.sort((a, b) => {
+    const aUs = isUsEnglish(a) ? 0 : 1;
+    const bUs = isUsEnglish(b) ? 0 : 1;
+    return aUs - bUs;
+  });
+  // Build gender-specific voice pools (US-preferred since _englishVoices is sorted)
+  _maleVoices = _englishVoices.filter(v => isVoiceMale(v));
+  _femaleVoices = _englishVoices.filter(v => isVoiceFemale(v));
 
   // Narrator: pick best deep male voice by browser
   // Prefer cloud/neural voices — partial name matching for robustness
@@ -78,12 +89,16 @@ function detectGender(npcName, disposition) {
 
 function isVoiceMale(v) {
   const n = (v.name || '').toLowerCase();
-  return /\b(guy|david|george|andrew|mark|james|daniel|male|man)\b/.test(n);
+  return /\b(guy|david|george|andrew|mark|james|daniel|male|man|roger|ryan|christopher|eric|sean|brian|richard|steffan|ravi|thomas)\b/.test(n);
 }
 
 function isVoiceFemale(v) {
   const n = (v.name || '').toLowerCase();
-  return /\b(zira|aria|jenny|linda|susan|female|woman|nova|shimmer|fable|alloy)\b/.test(n);
+  return /\b(zira|aria|jenny|linda|susan|female|woman|nova|shimmer|fable|alloy|jenny|sara|michelle|ana|emma|catherine|heera|hazel|libby|sonia|clara|emily|natasha|ava|stacy)\b/.test(n);
+}
+
+function isUsEnglish(v) {
+  return /en.US/i.test(v.lang) || /\b(US|American)\b/i.test(v.name);
 }
 
 /**
@@ -95,16 +110,26 @@ export function getNpcVoice(npcName, disposition, explicitGender) {
   const h = hashName(npcName);
   const gender = explicitGender || detectGender(npcName, disposition);
 
-  // Try to match voice gender
+  // Pick a voice matching the character's gender, preferring US English
   let voiceIndex;
   if (gender && _englishVoices.length > 0) {
-    const genderVoices = _englishVoices
-      .map((v, i) => ({ v, i }))
-      .filter(({ v }) => gender === 'male' ? !isVoiceFemale(v) : !isVoiceMale(v));
-    if (genderVoices.length > 0) {
-      voiceIndex = genderVoices[h % genderVoices.length].i;
+    // Use pre-built gender pools (already US-sorted)
+    const pool = gender === 'male' ? _maleVoices : _femaleVoices;
+    if (pool.length > 0) {
+      // Pick deterministically from the gendered pool, map back to _englishVoices index
+      const picked = pool[h % pool.length];
+      voiceIndex = _englishVoices.indexOf(picked);
+      if (voiceIndex < 0) voiceIndex = h % Math.max(_englishVoices.length, 1);
     } else {
-      voiceIndex = h % Math.max(_englishVoices.length, 1);
+      // No explicitly gendered voices found — exclude opposite gender at least
+      const filtered = _englishVoices
+        .map((v, i) => ({ v, i }))
+        .filter(({ v }) => gender === 'male' ? !isVoiceFemale(v) : !isVoiceMale(v));
+      if (filtered.length > 0) {
+        voiceIndex = filtered[h % filtered.length].i;
+      } else {
+        voiceIndex = h % Math.max(_englishVoices.length, 1);
+      }
     }
   } else {
     voiceIndex = h % Math.max(_englishVoices.length, 1);

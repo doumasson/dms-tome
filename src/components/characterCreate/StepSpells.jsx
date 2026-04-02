@@ -8,8 +8,8 @@ const SPELL_CONFIG = {
   Sorcerer: { cantripCount: 4, spellCount: 2, note: 'Choose 4 cantrips and 2 spells known.' },
   Warlock:  { cantripCount: 2, spellCount: 2, note: 'Choose 2 cantrips and 2 spells known.' },
   Bard:     { cantripCount: 2, spellCount: 4, note: 'Choose 2 cantrips and 4 spells known.' },
-  Cleric:   { cantripCount: 3, spellCount: 0, note: 'Choose 3 cantrips. As a Cleric you prepare spells from the full Cleric list each day — pick starting spells to begin with.' },
-  Druid:    { cantripCount: 2, spellCount: 0, note: 'Choose 2 cantrips. As a Druid you prepare spells from the full Druid list.' },
+  Cleric:   { cantripCount: 3, spellCount: 4, note: 'Choose 3 cantrips and 4 prepared spells. As a Cleric you can change prepared spells on long rest.' },
+  Druid:    { cantripCount: 2, spellCount: 4, note: 'Choose 2 cantrips and 4 prepared spells. As a Druid you can change prepared spells on long rest.' },
   Paladin:  { cantripCount: 0, spellCount: 0, note: 'Paladins prepare spells as they level; no spell selection at creation.' },
   Ranger:   { cantripCount: 0, spellCount: 2, note: 'Rangers know 2 spells at level 1.' },
 };

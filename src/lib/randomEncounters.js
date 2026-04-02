@@ -76,8 +76,45 @@ const MONSTER_STATS = {
  */
 export function rollRandomEncounter(areaType = 'dungeon') {
   const roll = Math.random() * 100;
-  const threshold = areaType === 'dungeon' ? 5 : areaType === 'wilderness' ? 3 : 0;
+  // Reduced probability: was 5/3, now 2/1.5 — combined with longer cooldowns
+  // and movement threshold this makes encounters feel rare and meaningful
+  const threshold = areaType === 'dungeon' ? 2 : areaType === 'wilderness' ? 1.5 : 0;
   return roll <= threshold;
+}
+
+/**
+ * Check if a position is too close to any NPC or building.
+ * Used to suppress random encounters near civilized areas.
+ * @param {{ x: number, y: number }} pos — player position
+ * @param {object} zone — current zone data (has .npcs, .buildings)
+ * @param {number} safeRadius — minimum tile distance (default 8)
+ * @returns {boolean} true if near an NPC or building
+ */
+export function isNearCivilization(pos, zone, safeRadius = 8) {
+  if (!pos || !zone) return false;
+  // Check NPC proximity
+  if (zone.npcs) {
+    for (const npc of zone.npcs) {
+      if (!npc.position) continue;
+      const dx = pos.x - npc.position.x;
+      const dy = pos.y - npc.position.y;
+      if (Math.sqrt(dx * dx + dy * dy) <= safeRadius) return true;
+    }
+  }
+  // Check building proximity (use center of building)
+  if (zone.buildings) {
+    for (const b of zone.buildings) {
+      const bx = (b.x ?? b.position?.x ?? null);
+      const by = (b.y ?? b.position?.y ?? null);
+      if (bx == null || by == null) continue;
+      const cx = bx + Math.floor((b.width || 1) / 2);
+      const cy = by + Math.floor((b.height || 1) / 2);
+      const dx = pos.x - cx;
+      const dy = pos.y - cy;
+      if (Math.sqrt(dx * dx + dy * dy) <= safeRadius) return true;
+    }
+  }
+  return false;
 }
 
 /**

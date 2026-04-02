@@ -30,8 +30,8 @@ export function createStorySlice(set, get) {
     clearNpcBusy: () => set({ npcBusy: null }),
 
     // NPC dialog viewer — read-only view for non-initiator players
-    npcDialogViewer: null, // { npcName, messages: [] }
-    openNpcDialogViewer: (npcName) => set({ npcDialogViewer: { npcName, messages: [] } }),
+    npcDialogViewer: null, // { npcName, npcGender, messages: [] }
+    openNpcDialogViewer: (npcName, npcGender) => set({ npcDialogViewer: { npcName, npcGender: npcGender || null, messages: [] } }),
     appendNpcDialogMessage: (npcName, msg) => set(s => {
       if (!s.npcDialogViewer || s.npcDialogViewer.npcName !== npcName) return {}
       return { npcDialogViewer: { ...s.npcDialogViewer, messages: [...s.npcDialogViewer.messages, msg] } }

@@ -23,7 +23,7 @@ export default function NpcDialogViewer() {
       const newMsgs = msgs.slice(lastMsgCountRef.current)
       for (const msg of newMsgs) {
         if (msg.role === 'npc' && msg.text) {
-          const voiceCfg = getNpcVoice(msg.speaker || viewer?.npcName)
+          const voiceCfg = getNpcVoice(msg.speaker || viewer?.npcName, msg.disposition, viewer?.npcGender)
           speak(msg.text, null, { npcName: msg.speaker || viewer?.npcName, voice: voiceCfg })
         }
       }

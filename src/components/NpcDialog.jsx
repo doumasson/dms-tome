@@ -13,7 +13,7 @@ export default function NpcDialog({ npc, onClose }) {
 
   useEffect(() => {
     const playerName = myCharacter?.name || user?.email || 'Someone'
-    broadcastNpcDialogStart(npc.name, user?.id, playerName)
+    broadcastNpcDialogStart(npc.name, user?.id, playerName, npc.gender)
     useStore.getState().setNpcBusy({ npcName: npc.name, playerId: user?.id, playerName })
     return () => {
       broadcastNpcDialogEnd(npc.name)
