@@ -31,9 +31,8 @@ dist-ssr
 repomix-output.xml
 .superpowers/
 
-# Generated assets (large binary files — build locally via scripts/assets/build.js)
+# Generated assets (source PNGs are large — only track the optimized WebP files)
 public/tilesets/*.png
-public/tilesets/*.webp
 assets/manifest.json
 assets/manifest-all.json
 .claude/worktrees/
