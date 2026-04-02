@@ -31,8 +31,9 @@ dist-ssr
 repomix-output.xml
 .superpowers/
 
-# Generated assets (source PNGs are large — only track the optimized WebP files)
+# Generated assets (large binary files — served from Supabase Storage CDN)
 public/tilesets/*.png
+public/tilesets/*.webp
 assets/manifest.json
 assets/manifest-all.json
 .claude/worktrees/
