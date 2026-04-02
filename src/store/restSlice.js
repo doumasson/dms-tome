@@ -190,9 +190,10 @@ export function createRestSlice(set, get) {
         const key = c.id || c.name
         if (seenIds.has(key)) continue
         seenIds.add(key)
+        const hp = c.maxHp || c.hp || c.currentHp || 10
         allChars.push({
           id: c.id, name: c.name, userId: c.userId,
-          currentHp: c.maxHp, maxHp: c.maxHp,
+          currentHp: hp, maxHp: hp,
           hitDiceRemaining: c.hitDiceRemaining, conditions: [],
           spellSlots: c.spellSlots ? Object.fromEntries(Object.entries(c.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])) : c.spellSlots,
         })
