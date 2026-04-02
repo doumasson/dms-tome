@@ -169,4 +169,29 @@ useEffect(() => { ... }, [inCombat]); // safe
 ## ALWAYS Push Before Playtesting
 **Pattern:** Made 20+ fixes across multiple files but never committed/pushed. User playtested the OLD deployed code and reported all the same bugs as unfixed. Wasted an entire playtest session.
 
-**Rule:** ALWAYS `git add && git commit && git push origin agent-dev && merge to main` BEFORE telling the user to playtest. If code isn't deployed, it doesn't exist.
+**Rule:** ALWAYS `git add && git commit && git push origin agent-dev && merge to main` BEFORE telling the user to playtest. If code isn't deployed, it doesn't exist. Also commit+push after EVERY work session — never leave uncommitted changes.
+
+## useSpellSlot Must ALWAYS Broadcast
+**Pattern:** `useCombatActions.js` called `useSpellSlot()` to decrement slots locally but never broadcast `use-spell-slot`. P2 could cast 4-5 spells before the system caught up.
+
+**Rule:** Every `useSpellSlot()` call MUST be followed by `broadcastEncounterAction({ type: 'use-spell-slot', combatantId, slotLevel })`. The handler in App.jsx already exists — just need to trigger it.
+
+## Prepared Casters Get Full Class Spell List
+**Pattern:** `getAvailableSpells()` only returned spells in `char.spells[]`. Clerics/Druids had `spellCount: 0` at creation, so they got zero level-1 spells even though they're prepared casters who should access their entire class list.
+
+**Rule:** Prepared casters (Cleric, Druid, Paladin) get ALL class spells up to their max spell level. Known casters (Wizard, Sorcerer, etc.) get only `char.spells[]`. Cantrips must always be selected at creation for both types.
+
+## Area Transition Broadcasts Must Do Real Work
+**Pattern:** `area-transition` broadcast handler in App.jsx was a no-op comment. P2 never loaded the new area, causing crashes and desyncs.
+
+**Rule:** Area transition handler must: build the area from brief (using deterministic seed), call `activateArea()`, set entry point position. Same as what the host does locally.
+
+## Never Rotate Building/Room Chunks
+**Pattern:** `randomTransform()` rotated buildings, which moved directional wall tiles to wrong positions. Doors rendered as circles, walls showed wrong textures, purple tile chaos in playtest 4.
+
+**Rule:** `randomTransform()` must skip `type === 'building'` and `type === 'room'`. Only terrain and landmark chunks can rotate safely.
+
+## Quest State Must Persist to Supabase
+**Pattern:** Quests stored only in Zustand memory. Hard refresh = all quests gone. Players lost story progression constantly.
+
+**Rule:** Quests follow the same persistence pattern as `fogBitfields`, `defeatedEnemies` — saved to campaign settings in Supabase, restored on load. Auto-save after any quest mutation.
