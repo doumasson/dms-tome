@@ -923,6 +923,13 @@ export default function App() {
     return () => clearTimeout(sessionPersistDebounce.current);
   }, [campaign.currentSceneIndex, encounter, isDM, activeCampaign?.id]);
 
+  // Periodic session state save (captures position, fog, area changes)
+  useEffect(() => {
+    if (!isDM || !activeCampaign?.id) return;
+    const id = setInterval(() => saveSessionState(), 30000);
+    return () => clearInterval(id);
+  }, [isDM, activeCampaign?.id]);
+
   // DM heartbeat: broadcast full encounter state every 5s when in combat so late-joining
   // players sync within seconds of refreshing (can't rely on Supabase save timing)
   useEffect(() => {

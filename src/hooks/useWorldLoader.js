@@ -100,8 +100,10 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
       // Validate and repair exit connectivity (bidirectional exits, missing targets)
       validateAndRepairExits(briefs, areas)
 
-      // If startArea is undefined, pick the first available brief or area
-      let startId = campaignData.startArea
+      // Use saved area from last session if available, otherwise use campaign startArea
+      const savedAreaId = useStore.getState()._savedAreaId
+      const savedHostPos = useStore.getState()._savedHostPosition
+      let startId = savedAreaId || campaignData.startArea
       if (!startId) {
         startId = Object.keys(briefs)[0] || Object.keys(areas)[0]
         console.log('[GameV2] startArea was undefined, using:', startId)
@@ -131,9 +133,12 @@ export function useWorldLoader({ campaign, setPlayerPos }) {
           questObjectives: campaignData.questObjectives || [],
         })
         activateArea(startId)
-        // Set player position from built area
+        // Restore saved position from last session, or use area's playerStart
         const builtArea = areas[startId]
-        if (builtArea.playerStart) {
+        if (savedHostPos && savedAreaId === startId) {
+          setPlayerPos(savedHostPos)
+          console.log('[GameV2] Restored saved position:', savedHostPos)
+        } else if (builtArea.playerStart) {
           const safePos = safeguardSpawn(builtArea.playerStart, builtArea.enemies || [], builtArea)
           setPlayerPos(safePos)
         }

@@ -41,8 +41,8 @@ const SIZE_RANGES = {
   small:  { minW: 8,  maxW: 16, minH: 6,  maxH: 12 },
   medium: { minW: 14, maxW: 28, minH: 12, maxH: 22 },
   large:  { minW: 24, maxW: 40, minH: 20, maxH: 32 },
-  hub:    { minW: 32, maxW: 55, minH: 26, maxH: 42 },
-  open:   { minW: 35, maxW: 60, minH: 30, maxH: 48 },
+  hub:    { minW: 32, maxW: 50, minH: 26, maxH: 38 },
+  open:   { minW: 30, maxW: 50, minH: 25, maxH: 38 },
 }
 
 function detectSizeCategory(name, theme) {
@@ -55,6 +55,10 @@ function detectSizeCategory(name, theme) {
   return 'large'
 }
 
+// Hard maximum — no area should ever exceed this regardless of brief or category
+const HARD_MAX_W = 55
+const HARD_MAX_H = 42
+
 export function calculateAreaSize(brief) {
   const poiCount = brief.pois?.length || 3
   const category = detectSizeCategory(brief.name, brief.theme)
@@ -63,9 +67,9 @@ export function calculateAreaSize(brief) {
   const poiFactor = Math.min(1, (poiCount - 1) / 5) // 0 to 1
   const calcW = Math.round(range.minW + (range.maxW - range.minW) * poiFactor)
   const calcH = Math.round(range.minH + (range.maxH - range.minH) * poiFactor)
-  // If brief specifies size, cap to our max (AI often generates oversized maps)
-  const width = brief.width ? Math.min(brief.width, range.maxW) : calcW
-  const height = brief.height ? Math.min(brief.height, range.maxH) : calcH
+  // If brief specifies size, cap to category max; always enforce hard cap
+  const width = Math.min(brief.width ? Math.min(brief.width, range.maxW) : calcW, HARD_MAX_W)
+  const height = Math.min(brief.height ? Math.min(brief.height, range.maxH) : calcH, HARD_MAX_H)
   return { width, height }
 }
 

@@ -108,6 +108,9 @@ export function createCampaignSlice(set, get) {
           gameTime: settings?.gameTime || state.gameTime,
           storyFlags: settings?.storyFlags || state.storyFlags,
           factionReputation: settings?.factionReputation || state.factionReputation,
+          // Restore area and position so player doesn't reset to start on refresh
+          ...(settings?.currentAreaId ? { _savedAreaId: settings.currentAreaId } : {}),
+          ...(settings?.hostPosition ? { _savedHostPosition: settings.hostPosition } : {}),
         };
       }),
     unloadCampaign: () =>
@@ -299,8 +302,10 @@ export function createCampaignSlice(set, get) {
     },
 
     saveSessionStateToSupabase: async () => {
-      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates, defeatedEnemies, quests, gameTime, storyFlags, factionReputation } = get();
+      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates, defeatedEnemies, quests, gameTime, storyFlags, factionReputation, currentAreaId, areaTokenPositions, user } = get();
       if (!activeCampaign?.id || !isDM) return;
+      // Save host's current position so it restores on refresh
+      const myPos = areaTokenPositions?.[currentAreaId]?.[user?.id] || null
       try {
         const { data: cur } = await supabase
           .from('campaigns').select('settings').eq('id', activeCampaign.id).maybeSingle();
@@ -318,6 +323,8 @@ export function createCampaignSlice(set, get) {
               gameTime: gameTime || { hour: 8, day: 1 },
               storyFlags: storyFlags || [],
               factionReputation: factionReputation || {},
+              currentAreaId: currentAreaId || null,
+              hostPosition: myPos,
             },
           })
           .eq('id', activeCampaign.id);
