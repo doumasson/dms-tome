@@ -176,10 +176,10 @@ useEffect(() => { ... }, [inCombat]); // safe
 
 **Rule:** Every `useSpellSlot()` call MUST be followed by `broadcastEncounterAction({ type: 'use-spell-slot', combatantId, slotLevel })`. The handler in App.jsx already exists — just need to trigger it.
 
-## Prepared Casters Get Full Class Spell List
-**Pattern:** `getAvailableSpells()` only returned spells in `char.spells[]`. Clerics/Druids had `spellCount: 0` at creation, so they got zero level-1 spells even though they're prepared casters who should access their entire class list.
+## ALL Casters Only See Selected Spells
+**Pattern:** `getAvailableSpells()` gave prepared casters (Cleric, Druid, Paladin) their entire class spell list — 60+ spells instead of the 3-4 the player actually picked.
 
-**Rule:** Prepared casters (Cleric, Druid, Paladin) get ALL class spells up to their max spell level. Known casters (Wizard, Sorcerer, etc.) get only `char.spells[]`. Cantrips must always be selected at creation for both types.
+**Rule:** ALL casters only see spells in `char.spells[]`. Players select their prepared spells at character creation and level-up. No class gets the full spell list at runtime.
 
 ## Area Transition Broadcasts Must Do Real Work
 **Pattern:** `area-transition` broadcast handler in App.jsx was a no-op comment. P2 never loaded the new area, causing crashes and desyncs.
