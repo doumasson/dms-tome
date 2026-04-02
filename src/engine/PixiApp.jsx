@@ -267,7 +267,11 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onTileHo
             await atlas.loadAtlasImage(name, supabaseUrl, PIXI)
           } catch (imgErr) {
             console.warn(`[PixiApp] Supabase CDN failed for ${name}, falling back to local:`, imgErr.message)
-            await atlas.loadAtlasImage(name, `/tilesets/${name}.webp`, PIXI)
+            try {
+              await atlas.loadAtlasImage(name, `/tilesets/${name}.webp`, PIXI)
+            } catch (localErr) {
+              console.warn(`[PixiApp] Local fallback also failed for ${name}:`, localErr.message)
+            }
           }
         } catch (e) {
           console.warn(`[PixiApp] Failed to load atlas ${name}:`, e.message)

@@ -567,12 +567,21 @@ export default function App() {
             // Update partyMembers with new HP and spell slots
             useStore.setState(s => ({
               partyMembers: s.partyMembers.map(p => {
-                const upd = chars.find(c => c.id === p.id || c.name === p.name)
+                const upd = chars.find(c => c.id === p.id || c.name === p.name || (c.userId && c.userId === p.userId))
                 if (!upd) return p
                 const updated = { ...p, currentHp: upd.currentHp, maxHp: upd.maxHp, hp: upd.currentHp, conditions: [] }
                 if (upd.spellSlots) updated.spellSlots = upd.spellSlots
                 return updated
               }),
+              // Also update campaign.characters for persistence
+              campaign: {
+                ...s.campaign,
+                characters: (s.campaign?.characters || []).map(c => {
+                  const upd = chars.find(ch => ch.id === c.id || ch.name === c.name)
+                  if (!upd) return c
+                  return { ...c, currentHp: upd.currentHp, maxHp: upd.maxHp, hp: upd.currentHp, conditions: [] }
+                }),
+              },
             }))
           }
           break

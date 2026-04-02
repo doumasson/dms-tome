@@ -1077,7 +1077,25 @@ export function createEncounterSlice(set, get) {
             myCharacter: { ...prev.myCharacter, ...hpChanges },
           }))
           // Persist to Supabase so HP survives refresh
-          setTimeout(() => get().updateMyCharacter(hpChanges), 0)
+          setTimeout(() => {
+            get().updateMyCharacter(hpChanges)
+            // Also sync campaign.characters so saveCampaignToSupabase doesn't overwrite with stale HP
+            const state = get()
+            const myChar = state.myCharacter
+            if (myChar && state.campaign?.characters) {
+              set(prev => ({
+                campaign: {
+                  ...prev.campaign,
+                  characters: prev.campaign.characters.map(c =>
+                    (c.id === myChar.id || c.name === myChar.name)
+                      ? { ...c, currentHp: myChar.currentHp, hp: myChar.currentHp, conditions: myChar.conditions, spellSlots: myChar.spellSlots }
+                      : c
+                  ),
+                },
+              }))
+              get().saveCampaignToSupabase()
+            }
+          }, 0)
         }
       }
 

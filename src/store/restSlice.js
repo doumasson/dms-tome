@@ -181,12 +181,23 @@ export function createRestSlice(set, get) {
       const msg = { role: 'dm', speaker: 'System', text: `${charName} completes a long rest. Full HP, spell slots, and resources restored.`, id: crypto.randomUUID?.() || Date.now().toString(), timestamp: Date.now() }
       get().addNarratorMessage?.(msg)
       // Broadcast rest completion so all players restore HP
-      const updatedChars = get().campaign.characters.map(c => ({
-        id: c.id, name: c.name, currentHp: c.maxHp, maxHp: c.maxHp,
-        hitDiceRemaining: c.hitDiceRemaining, conditions: [],
-        spellSlots: c.spellSlots,
-      }));
-      broadcastEncounterAction({ type: 'rest-complete', restType: 'long', characters: updatedChars });
+      // Include both campaign.characters AND partyMembers to cover all multiplayer players
+      const campChars = get().campaign.characters || []
+      const party = get().partyMembers || []
+      const seenIds = new Set()
+      const allChars = []
+      for (const c of [...campChars, ...party]) {
+        const key = c.id || c.name
+        if (seenIds.has(key)) continue
+        seenIds.add(key)
+        allChars.push({
+          id: c.id, name: c.name, userId: c.userId,
+          currentHp: c.maxHp, maxHp: c.maxHp,
+          hitDiceRemaining: c.hitDiceRemaining, conditions: [],
+          spellSlots: c.spellSlots ? Object.fromEntries(Object.entries(c.spellSlots).map(([lvl, s]) => [lvl, { ...s, used: 0 }])) : c.spellSlots,
+        })
+      }
+      broadcastEncounterAction({ type: 'rest-complete', restType: 'long', characters: allChars });
       get().saveCampaignToSupabase();
       get().saveSettingsToSupabase();
     },

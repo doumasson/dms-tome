@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 import useStore from '../store/useStore'
-import { broadcastNarratorMessage } from '../lib/liveChannel'
+import { broadcastNarratorMessage, broadcastStartCombat } from '../lib/liveChannel'
 import { buildSystemPrompt, callNarrator } from '../lib/narratorApi'
 
 /**
@@ -62,7 +62,9 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
             ...e, isEnemy: true, type: 'enemy',
             position: e.position || { x: Math.floor(Math.random() * (zone?.width || 10)), y: Math.floor(Math.random() * (zone?.height || 8)) },
           }))
-          se(enemies)
+          const party = useStore.getState().partyMembers || []
+          se(enemies, party, true)
+          broadcastStartCombat({ enemies, party, autoRoll: true })
         }
       }
       // Note: pendingEncounterData is NOT cleared on normal DM responses.
@@ -123,7 +125,9 @@ export function useNarratorChat({ sessionApiKey, myCharacter, user, campaign, pa
             ...e, isEnemy: true, type: 'enemy',
             position: e.position || { x: Math.floor(Math.random() * (zone?.width || 10)), y: Math.floor(Math.random() * (zone?.height || 8)) },
           }))
-          se(enemies)
+          const party = useStore.getState().partyMembers || []
+          se(enemies, party, true)
+          broadcastStartCombat({ enemies, party, autoRoll: true })
         }
       }
 

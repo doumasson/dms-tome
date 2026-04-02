@@ -219,25 +219,20 @@ export default function GameV2({ onLeave }) {
 
   useRandomEncounters({ playerPos, inCombat, isDM, zone })
 
-  // Broadcast initial position so other players can see our token on spawn
-  const lastBroadcastAreaRef = useRef(null)
-  // Broadcast position on area entry and whenever position changes
+  // Broadcast position so other players can see our token
+  // Broadcasts on: area change, position change, initial load, and rejoin
+  const lastBroadcastRef = useRef(null)
   useEffect(() => {
     if (!user?.id || !playerPos || !currentAreaId) return
     // Always store locally
     useStore.getState().setAreaTokenPosition(currentAreaId, user.id, playerPos)
-    // Broadcast on area change, initial load, or mount (crash recovery)
-    if (lastBroadcastAreaRef.current !== currentAreaId) {
-      lastBroadcastAreaRef.current = currentAreaId
+    // Broadcast on any position or area change
+    const key = `${currentAreaId}:${playerPos.x},${playerPos.y}`
+    if (lastBroadcastRef.current !== key) {
+      lastBroadcastRef.current = key
       broadcastTokenMove(user.id, playerPos)
     }
-  }, [user?.id, playerPos, zone, currentAreaId])
-
-  // Always broadcast position on mount (handles rejoin after crash)
-  useEffect(() => {
-    if (!user?.id || !playerPos || !currentAreaId) return
-    broadcastTokenMove(user.id, playerPos)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user?.id, playerPos, currentAreaId])
 
   // Consume pending area entry point from broadcast-triggered area transitions (P2 follows host)
   const pendingAreaEntryPoint = useStore(s => s.pendingAreaEntryPoint)

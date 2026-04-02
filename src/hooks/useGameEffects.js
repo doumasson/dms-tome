@@ -6,7 +6,7 @@ import { findPathEdge } from '../lib/pathfinding'
 import { animateTokenAlongPath } from '../engine/TokenLayer'
 import { checkEncounterProximity, buildEncounterPrompt } from '../lib/encounterZones'
 import { resolveEncounterTemplates, isTemplateFormat } from '../lib/encounterTemplateResolver'
-import { broadcastEncounterAction } from '../lib/liveChannel'
+import { broadcastEncounterAction, broadcastStartCombat } from '../lib/liveChannel'
 import { loadApiKeyFromSupabase } from '../lib/apiKeyVault'
 import { loadDefaultApiKey } from '../lib/defaultApiKey'
 import { getClaudeApiKey } from '../lib/claudeApi'
@@ -278,6 +278,7 @@ export function useGameEffects({
           combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
         }
         startEncounter(combatEnemies, combatParty, true)
+        broadcastStartCombat({ enemies: combatEnemies, party: combatParty, autoRoll: true })
       }
     }
 
