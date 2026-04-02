@@ -435,15 +435,16 @@ export default function NpcConversation({
         </div>
       )}
 
-      {/* Quest offer panel — positioned as overlay so chat stays visible */}
+      {/* Quest offer panel — centered modal overlay */}
       {pendingQuestOffer && !rollResult && (
         <div style={{
-          position: 'absolute', bottom: 60, left: 12, right: 12,
+          position: 'fixed', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
           padding: '16px 20px', textAlign: 'left', fontFamily: 'Cinzel, serif',
           background: 'rgba(20,16,12,0.98)', border: '2px solid #d4af37',
-          borderRadius: 10, color: '#e8dcc8', zIndex: 20,
-          boxShadow: '0 -4px 24px rgba(0,0,0,0.6)',
-          maxHeight: '60%', overflowY: 'auto',
+          borderRadius: 10, color: '#e8dcc8', zIndex: 100,
+          boxShadow: '0 4px 32px rgba(0,0,0,0.8)',
+          maxWidth: 500, width: '90%', maxHeight: '60vh', overflowY: 'auto',
         }}>
           <div style={{ fontSize: 14, color: '#d4af37', marginBottom: 8, textAlign: 'center', letterSpacing: 2 }}>
             QUEST OFFERED

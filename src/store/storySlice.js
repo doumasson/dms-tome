@@ -86,10 +86,19 @@ export function createStorySlice(set, get) {
     }),
 
     quests: [],
-    addQuest: (quest) => set(s => ({ quests: [...s.quests, quest] })),
-    updateQuest: (questId, updates) => set(s => ({
-      quests: s.quests.map(q => q.id === questId ? { ...q, ...updates } : q)
-    })),
+    loadQuests: (questsArray) => set({ quests: questsArray || [] }),
+    addQuest: (quest) => {
+      set(s => ({ quests: [...s.quests, quest] }))
+      // Persist to Supabase
+      setTimeout(() => get().saveSessionStateToSupabase?.(), 0)
+    },
+    updateQuest: (questId, updates) => {
+      set(s => ({
+        quests: s.quests.map(q => q.id === questId ? { ...q, ...updates } : q)
+      }))
+      // Persist to Supabase
+      setTimeout(() => get().saveSessionStateToSupabase?.(), 0)
+    },
     completeQuestObjective: (questId, objId) => {
       set(s => {
         const updatedQuests = s.quests.map(q => {
@@ -110,6 +119,8 @@ export function createStorySlice(set, get) {
         return { quests: updatedQuests }
       })
 
+      // Persist to Supabase
+      setTimeout(() => get().saveSessionStateToSupabase?.(), 0)
       // Check chapter milestone: complete_quest
       get().checkChapterMilestone?.('complete_quest', questId)
     },

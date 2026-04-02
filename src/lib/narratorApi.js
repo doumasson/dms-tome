@@ -101,7 +101,7 @@ export function buildSystemPrompt(campaignData, partyMembers, currentScene, exch
     .map(n => `  - ${n.name}: ${n.personality || 'a local inhabitant'}`)
     .join('\n');
   const npcBlock = npcList
-    ? `\nNPCs present in this scene:\n${npcList}\n(Voice each NPC in first person when they speak; keep their personality consistent.)`
+    ? `\nNPCs present in this scene:\n${npcList}\n(Narrate NPC actions in third person. When an NPC speaks dialogue, use quotation marks. Example: Bartender polishes a glass, looking concerned. "What brings you here?" he asks.)`
     : '';
   // V2 zone path takes priority; fall back to V1 scene text
   const sceneText = sceneBlock

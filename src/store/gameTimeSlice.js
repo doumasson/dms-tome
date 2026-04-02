@@ -144,6 +144,13 @@ export function createGameTimeSlice(set, get) {
     fogBitfields: {},             // { areaId: base64 string }
     roofStates: {},               // { buildingId: boolean }
     areaTokenPositions: {},       // { areaId: { playerId: {x,y} } }
+    pendingAreaEntryPoint: null,  // { x, y } — set by broadcast handler, consumed by GameV2
+    setPendingAreaEntryPoint: (pt) => set({ pendingAreaEntryPoint: pt }),
+    consumePendingAreaEntryPoint: () => {
+      const pt = get().pendingAreaEntryPoint
+      set({ pendingAreaEntryPoint: null })
+      return pt
+    },
 
     setCurrentArea: (areaId) => set(state => ({
       currentAreaId: areaId,

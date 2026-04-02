@@ -60,6 +60,8 @@ export default function GameModalsRenderer({
   activeCutscene,
   showWeaponPicker, setShowWeaponPicker,
   showSpellPicker, setShowSpellPicker,
+  showExplorationSpellPicker, setShowExplorationSpellPicker,
+  handleExplorationSpellSelected,
   showConsumablePicker, setShowConsumablePicker,
   showReadyModal, setShowReadyModal,
   readyTriggerPrompt,
@@ -216,6 +218,14 @@ export default function GameModalsRenderer({
           onSelect={handleSpellSelected}
           onClose={() => setShowSpellPicker(false)}
           cantripsOnly={!!encounter.combatants[encounter.currentTurn].leveledSpellCastThisTurn}
+        />
+      )}
+      {showExplorationSpellPicker && !inCombat && myCharacter && (
+        <SpellPickerModal
+          character={myCharacter}
+          spellSlots={myCharacter.spellSlots || {}}
+          onSelect={handleExplorationSpellSelected}
+          onClose={() => setShowExplorationSpellPicker(false)}
         />
       )}
       {showConsumablePicker && inCombat && encounter.combatants?.[encounter.currentTurn] && (

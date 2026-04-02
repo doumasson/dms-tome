@@ -5,9 +5,9 @@ const TOOLS = [
   { label: 'DICE', key: 'dice', icon: '\u{1F3B2}' },
   { label: 'CHAR', key: 'character', icon: 'C' },
   { label: 'PACK', key: 'inventory', icon: 'I' },
+  { label: 'CAST', key: 'cast', icon: '\u2728' },
   { label: 'JOURNAL', key: 'journal', icon: 'J' },
   { label: 'REST', key: 'rest', icon: 'R' },
-  { label: 'FACTION', key: 'faction', icon: 'F' },
 ]
 
 export default function ActionArea({ onTool, areaTheme }) {

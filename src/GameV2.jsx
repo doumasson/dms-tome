@@ -74,6 +74,7 @@ export default function GameV2({ onLeave }) {
   const areaLayers = useStore(s => s.areaLayers)
   const activateArea = useStore(s => s.activateArea)
   const myCharacter = useStore(s => s.myCharacter)
+  const updateMyCharacter = useStore(s => s.updateMyCharacter)
   const addNarratorMessage = useStore(s => s.addNarratorMessage)
   const user = useStore(s => s.user)
   const encounter = useStore(s => s.encounter)
@@ -132,6 +133,7 @@ export default function GameV2({ onLeave }) {
   const [showSpellTargeting, setShowSpellTargeting] = useState(false)
   const [pendingSpell, setPendingSpell] = useState(null)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
+  const [showExplorationSpellPicker, setShowExplorationSpellPicker] = useState(false)
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -230,6 +232,17 @@ export default function GameV2({ onLeave }) {
       broadcastTokenMove(user.id, playerPos)
     }
   }, [user?.id, playerPos, zone, currentAreaId])
+
+  // Consume pending area entry point from broadcast-triggered area transitions (P2 follows host)
+  const pendingAreaEntryPoint = useStore(s => s.pendingAreaEntryPoint)
+  useEffect(() => {
+    if (!pendingAreaEntryPoint) return
+    const pt = useStore.getState().consumePendingAreaEntryPoint()
+    if (pt) {
+      setPlayerPos(pt)
+      if (playerPosRef) playerPosRef.current = pt
+    }
+  }, [pendingAreaEntryPoint])
 
   // Periodic party member refresh — catches missed join broadcasts (every 15s)
   useEffect(() => {
@@ -474,7 +487,44 @@ export default function GameV2({ onLeave }) {
     else if (tool === 'craft') setShowCrafting(true)
     else if (tool === 'worldmap') setShowAreaMap(true)
     else if (tool === 'bestiary') setShowBestiary(true)
+    else if (tool === 'cast') setShowExplorationSpellPicker(true)
   }, [myCharacter])
+
+  // Exploration spell casting — apply self/party effects outside combat
+  const handleExplorationSpellSelected = useCallback((spell, castLevel) => {
+    setShowExplorationSpellPicker(false)
+    if (!myCharacter) return
+    // Decrement spell slot if leveled spell
+    if (castLevel > 0) {
+      const slots = { ...(myCharacter.spellSlots || {}) }
+      for (let lvl = castLevel; lvl <= 9; lvl++) {
+        if (slots[lvl] && slots[lvl].used < slots[lvl].total) {
+          slots[lvl] = { ...slots[lvl], used: slots[lvl].used + 1 }
+          break
+        }
+      }
+      updateMyCharacter({ spellSlots: slots })
+    }
+    // Apply healing spells to self
+    const isHealing = spell.school === 'Evocation' || spell.school === 'Necromancy' || /heal|cure|restor/i.test(spell.name)
+    if (isHealing && spell.damage) {
+      // Parse healing dice (e.g. "1d8+3")
+      const match = spell.damage.match(/(\d+)d(\d+)([+-]\d+)?/)
+      if (match) {
+        const [, count, die, mod] = match
+        let total = 0
+        for (let i = 0; i < parseInt(count); i++) total += Math.floor(Math.random() * parseInt(die)) + 1
+        if (mod) total += parseInt(mod)
+        const maxHp = myCharacter.hp || myCharacter.maxHp || 20
+        const currentHp = myCharacter.currentHp ?? maxHp
+        const newHp = Math.min(maxHp, currentHp + total)
+        updateMyCharacter({ currentHp: newHp })
+        addNarratorMessage({ role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name} and heals for ${total} HP. (${currentHp} → ${newHp})` })
+        return
+      }
+    }
+    addNarratorMessage({ role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name}.` })
+  }, [myCharacter, addNarratorMessage])
 
   const handleModeSelect = useCallback((mode) => {
     // Toggle off if already active
@@ -605,6 +655,8 @@ export default function GameV2({ onLeave }) {
           activeCutscene={activeCutscene}
           showWeaponPicker={showWeaponPicker} setShowWeaponPicker={setShowWeaponPicker}
           showSpellPicker={showSpellPicker} setShowSpellPicker={setShowSpellPicker}
+          showExplorationSpellPicker={showExplorationSpellPicker} setShowExplorationSpellPicker={setShowExplorationSpellPicker}
+          handleExplorationSpellSelected={handleExplorationSpellSelected}
           showConsumablePicker={showConsumablePicker} setShowConsumablePicker={setShowConsumablePicker}
           showReadyModal={showReadyModal} setShowReadyModal={setShowReadyModal}
           readyTriggerPrompt={readyTriggerPrompt}

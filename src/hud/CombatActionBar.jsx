@@ -203,14 +203,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
               </button>
             )
           })}
-          <button
-            className={`medallion-btn large move${(!canMove || moveLeft <= 0) ? ' disabled' : ''}`}
-            disabled={!canMove || moveLeft <= 0}
-            onClick={() => handleAction('move')}
-          >
-            <span style={{ fontSize: 16 }}>🏃</span>
-            <span className="medallion-label">MOVE</span>
-          </button>
+          {/* Move button removed — click-to-move handles movement in combat */}
         </div>
         {/* Secondary actions — small medallions + economy */}
         <div style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center', marginTop: 4 }}>

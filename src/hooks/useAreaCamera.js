@@ -54,7 +54,7 @@ export function useAreaCamera({ zone, playerPosRef }) {
       if (keyMap[e.key]) { cam.startPan(keyMap[e.key]); e.preventDefault() }
       if (e.key === ' ') {
         const myPos = playerPosRef.current
-        if (myPos) cam.centerOn(myPos.x, myPos.y, zone?.tileSize || 200)
+        if (myPos) cam.centerOnImmediate(myPos.x, myPos.y, zone?.tileSize || 200)
         e.preventDefault()
       }
     }

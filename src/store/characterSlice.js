@@ -60,6 +60,11 @@ export function createCharacterSlice(set, get) {
     setMyCharacter: (char) => set({ myCharacter: char }),
     partyMembers: [],    // All real players' characters (from campaign_members.character_data)
     setPartyMembers: (members) => set({ partyMembers: members }),
+    updatePartyMemberHp: (id, hp) => set(state => ({
+      partyMembers: state.partyMembers.map(m =>
+        m.id === id ? { ...m, currentHp: hp, hp } : m
+      )
+    })),
 
     // Save myCharacter changes to store + Supabase campaign_members
     updateMyCharacter: async (changes) => {

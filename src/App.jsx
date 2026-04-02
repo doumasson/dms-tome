@@ -5,6 +5,7 @@ import { decryptApiKey } from './lib/apiKeyVault';
 import { loadDefaultApiKey } from './lib/defaultApiKey';
 import useStore from './store/useStore';
 import { animateTokenAlongPath } from './engine/TokenLayer';
+import { buildAreaFromBrief } from './lib/areaBuilder.js';
 // TTS is handled inside addNarratorMessage (uiSlice) — no direct speak() calls needed here
 import { receiveEmote } from './components/game/EmoteSystem';
 import { receivePing } from './components/game/PingSystem';
@@ -192,8 +193,20 @@ export default function App() {
       const store = useStore.getState();
       switch (payload.type) {
         case 'next-turn':        store.nextEncounterTurn(); break;
-        case 'damage':           store.applyEncounterDamage(payload.targetId, payload.amount); break;
-        case 'heal':             store.applyEncounterHeal(payload.targetId, payload.amount); break;
+        case 'damage': {
+          store.applyEncounterDamage(payload.targetId, payload.amount)
+          const { encounter: encD } = useStore.getState()
+          const damagedC = encD?.combatants?.find(c => c.id === payload.targetId)
+          if (damagedC) store.updatePartyMemberHp(damagedC.id, damagedC.currentHp)
+          break
+        }
+        case 'heal': {
+          store.applyEncounterHeal(payload.targetId, payload.amount)
+          const { encounter: encH } = useStore.getState()
+          const healedC = encH?.combatants?.find(c => c.id === payload.targetId)
+          if (healedC) store.updatePartyMemberHp(healedC.id, healedC.currentHp)
+          break
+        }
         case 'log':              store.addEncounterLog(payload.entry); break;
         case 'death-save':       store.applyDeathSaveResult(payload.id, payload.roll); break;
         case 'stabilize':        store.stabilizeCombatant(payload.id); break;
@@ -214,6 +227,9 @@ export default function App() {
           store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })
           if (payload.hit && payload.damage > 0) {
             store.applyEncounterDamage(payload.targetId, payload.damage)
+            const { encounter: encAR } = useStore.getState()
+            const arTarget = encAR?.combatants?.find(c => c.id === payload.targetId)
+            if (arTarget) store.updatePartyMemberHp(arTarget.id, arTarget.currentHp)
           }
           // Sync action economy so all clients enforce turn rules
           if (payload.attackerId && (payload.actionsUsed != null || payload.bonusActionsUsed != null)) {
@@ -235,6 +251,16 @@ export default function App() {
           store.addNarratorMessage({ role: 'dm', speaker: 'Combat', text: payload.log })
           for (const r of payload.results || []) {
             if (r.damage > 0) store.applyEncounterDamage(r.targetId, r.damage)
+          }
+          // Sync party HP after AoE damage
+          {
+            const { encounter: encAoe } = useStore.getState()
+            for (const r of payload.results || []) {
+              if (r.damage > 0) {
+                const aoeTarget = encAoe?.combatants?.find(c => c.id === r.targetId)
+                if (aoeTarget) store.updatePartyMemberHp(aoeTarget.id, aoeTarget.currentHp)
+              }
+            }
           }
           break
         case 'disengage':
@@ -533,15 +559,18 @@ export default function App() {
             const myChar = state.myCharacter
             const match = chars.find(c => c.id === myChar?.id || c.name === myChar?.name)
             if (match && myChar) {
-              useStore.setState({
-                myCharacter: { ...myChar, currentHp: match.currentHp, maxHp: match.maxHp, conditions: [], hitDiceRemaining: match.hitDiceRemaining },
-              })
+              const myCharUpdate = { ...myChar, currentHp: match.currentHp, maxHp: match.maxHp, conditions: [], hitDiceRemaining: match.hitDiceRemaining }
+              if (match.spellSlots) myCharUpdate.spellSlots = match.spellSlots
+              useStore.setState({ myCharacter: myCharUpdate })
             }
-            // Update partyMembers with new HP
+            // Update partyMembers with new HP and spell slots
             useStore.setState(s => ({
               partyMembers: s.partyMembers.map(p => {
                 const upd = chars.find(c => c.id === p.id || c.name === p.name)
-                return upd ? { ...p, currentHp: upd.currentHp, maxHp: upd.maxHp, hp: upd.currentHp, conditions: [] } : p
+                if (!upd) return p
+                const updated = { ...p, currentHp: upd.currentHp, maxHp: upd.maxHp, hp: upd.currentHp, conditions: [] }
+                if (upd.spellSlots) updated.spellSlots = upd.spellSlots
+                return updated
               }),
             }))
           }
@@ -648,10 +677,28 @@ export default function App() {
       useStore.getState().addNarratorMessage(payload);
     });
 
-    // Area transition — each player is independent, never pull anyone
-    // This broadcast is informational only (e.g. for party tracking UI)
-    ch.on('broadcast', { event: 'area-transition' }, () => {
-      // No-op: players transition zones independently via their own exit clicks
+    // Area transition — when host transitions, other players follow
+    ch.on('broadcast', { event: 'area-transition' }, ({ payload }) => {
+      const { areaId, entryPoint, isHost } = payload || {}
+      if (!areaId) return
+      // Only follow host transitions (not echoes from other players)
+      if (!isHost) return
+      const store = useStore.getState()
+      // Skip if already in that area
+      if (store.currentAreaId === areaId) return
+      // Build the area from brief if P2 doesn't have it yet
+      if (!store.areas[areaId]) {
+        const brief = store.areaBriefs[areaId]
+        if (brief) {
+          const seed = areaId.split('').reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)
+          const builtArea = buildAreaFromBrief(brief, Math.abs(seed) || 42)
+          store.buildAndLoadArea(areaId, builtArea)
+        }
+      }
+      store.activateArea(areaId)
+      if (entryPoint) {
+        store.setPendingAreaEntryPoint(entryPoint)
+      }
     });
 
     // Player joined — refresh partyMembers from Supabase so host sees new player

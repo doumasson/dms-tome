@@ -184,6 +184,7 @@ export function createRestSlice(set, get) {
       const updatedChars = get().campaign.characters.map(c => ({
         id: c.id, name: c.name, currentHp: c.maxHp, maxHp: c.maxHp,
         hitDiceRemaining: c.hitDiceRemaining, conditions: [],
+        spellSlots: c.spellSlots,
       }));
       broadcastEncounterAction({ type: 'rest-complete', restType: 'long', characters: updatedChars });
       get().saveCampaignToSupabase();

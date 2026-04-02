@@ -299,6 +299,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
         if (selectedWeapon.castLevel > 0) {
           const { useSpellSlot } = useStore.getState()
           useSpellSlot(active.id, selectedWeapon.castLevel)
+          broadcastEncounterAction({ type: 'use-spell-slot', combatantId: active.id, slotLevel: selectedWeapon.castLevel })
         }
 
         const entry = saved
@@ -394,7 +395,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
               },
             }))
             const { useSpellSlot } = useStore.getState()
-            if (useSpellSlot) useSpellSlot(active.id, 1) // consume lowest slot
+            if (useSpellSlot) {
+              useSpellSlot(active.id, 1) // consume lowest slot
+              broadcastEncounterAction({ type: 'use-spell-slot', combatantId: active.id, slotLevel: 1 })
+            }
           }
 
           // Hunter's Mark extra damage (Ranger, 1d6 per hit on marked target)
@@ -921,6 +925,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       // Consume spell slot
       if (spell.castLevel > 0) {
         useSpellSlot(active.id, spell.castLevel)
+        broadcastEncounterAction({ type: 'use-spell-slot', combatantId: active.id, slotLevel: spell.castLevel })
       }
 
       // Consume action
@@ -1186,6 +1191,7 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       if (castLevel > 0) {
         const { useSpellSlot } = useStore.getState()
         useSpellSlot(active.id, castLevel)
+        broadcastEncounterAction({ type: 'use-spell-slot', combatantId: active.id, slotLevel: castLevel })
       }
       addNarratorMessage({ role: 'dm', speaker: 'Combat', text: `${active.name} casts ${spell.name}!` })
     }

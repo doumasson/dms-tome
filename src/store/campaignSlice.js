@@ -104,6 +104,7 @@ export function createCampaignSlice(set, get) {
           fogBitfields: settings?.fogBitfields || state.fogBitfields,
           roofStates: settings?.roofStates || state.roofStates,
           defeatedEnemies: settings?.defeatedEnemies || state.defeatedEnemies,
+          quests: settings?.quests || state.quests,
         };
       }),
     unloadCampaign: () =>
@@ -295,7 +296,7 @@ export function createCampaignSlice(set, get) {
     },
 
     saveSessionStateToSupabase: async () => {
-      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates, defeatedEnemies } = get();
+      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates, defeatedEnemies, quests } = get();
       if (!activeCampaign?.id || !isDM) return;
       try {
         const { data: cur } = await supabase
@@ -310,6 +311,7 @@ export function createCampaignSlice(set, get) {
               fogBitfields,
               roofStates,
               defeatedEnemies: defeatedEnemies || {},
+              quests: quests || [],
             },
           })
           .eq('id', activeCampaign.id);
