@@ -32,30 +32,30 @@ export class ChunkLibrary {
 
   /**
    * Find best matching chunk by type and tag overlap.
-   * Prefers curated over generated. Higher tag overlap = better match.
+   * Picks randomly from top-tier candidates for variety.
+   * @param {string} type - chunk type
+   * @param {string[]} tags - desired tags
+   * @param {Function} [rand] - seeded RNG (0-1), defaults to Math.random
+   * @param {Set} [avoid] - chunk IDs to penalize (prevents duplicate buildings on same map)
    */
-  findBest(type, tags = []) {
+  findBest(type, tags = [], rand = Math.random, avoid = new Set()) {
     const candidates = this.listByType(type)
     if (!candidates.length) return null
 
-    let best = null
-    let bestScore = -1
-
-    for (const chunk of candidates) {
+    const scored = candidates.map(chunk => {
       let score = 0
       for (const tag of tags) {
         if (chunk.tags.includes(tag)) score += 1
       }
-      // Prefer curated chunks
       if (chunk.source !== 'generated') score += 0.5
+      if (avoid.has(chunk.id)) score -= 1
+      return { chunk, score }
+    })
 
-      if (score > bestScore) {
-        bestScore = score
-        best = chunk
-      }
-    }
-
-    return best
+    scored.sort((a, b) => b.score - a.score)
+    const threshold = scored[0].score - 0.5
+    const topTier = scored.filter(s => s.score >= threshold)
+    return topTier[Math.floor(rand() * topTier.length)].chunk
   }
 
   /** Load all chunks from an array (e.g., from bundled JSON or Supabase) */

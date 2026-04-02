@@ -592,6 +592,24 @@ Full frontend rebuild: PixiJS tilemap renderer + ornate dark fantasy HUD. Spec: 
 - [x] Full manifest saved: `assets/manifest-all.json` (154,102 entries)
 - Incompatible assets (FA Objects A/B, Textures A/B — dungeondraft_pack format) deferred for future extraction
 
+### Map Generation Overhaul ✅ COMPLETE
+- [x] Theme data extracted to `src/lib/themeData.js` — THEME_TERRAIN expanded to 6-12 variants per theme (was 1-3)
+- [x] 4 new biome themes: underdark, drow, farm, ruins
+- [x] Noise-based terrain fill (`fillTerrainNoise`) — 2D value noise with 2 octaves for smooth natural gradients
+- [x] Clustered scatter system (`src/lib/scatterCluster.js`) — weighted items, group clustering, multi-tile awareness
+- [x] Structured scatter config with weight/group/size per item (15-25 items per theme, was 5-10 flat)
+- [x] Meandering roads (`connectWithMeanderingRoad`) — sine-wave displacement, variable width, rough edges
+- [x] Theme-aware road widths (forest=1, village=2, etc.)
+- [x] Chunk rotation/flip (`rotateChunk90`, `flipChunkH`, `randomTransform`) — 4 transforms per chunk
+- [x] Randomized chunk matching — picks from top-tier candidates, avoids duplicates on same map
+- [x] Improved positioning — jitter increased to ±40% (was ±15%)
+- [x] 24 new chunks authored (60 total, was 36):
+  - Buildings (10): tavern_b, house_b, house_c, bakery, herbalist, barn, farmhouse, watchtower, shrine, ruin_wall
+  - Terrain (6): pond, farm_field, rock_outcrop, mushroom_grove, lava_pool, herb_garden
+  - Rooms (6): dungeon_room_b, torture_chamber, alchemy_lab, underdark_chamber, crypt_room_b, flooded_room
+  - Landmarks (2): statue_plaza, crossroads
+- [x] Blocking tile set (`V2_BLOCKING_TILES`) expanded for new tree sizes (4x4 large, 3x4 palm)
+
 ### Branding Refactor ✅ COMPLETE
 - [x] Updated product name to "DungeonMind"
 - [x] Changed all user-facing AI references from "Dungeon Master" to "The Narrator"
@@ -615,6 +633,7 @@ _(Empty — add items as they come up)_
 
 ## Recently Changed
 
+- **2026-03-31:** Map generation overhaul — Noise-based terrain fill, clustered scatter with weighted groups, meandering roads, chunk rotation/flip, randomized matching, 24 new chunks (60 total). 4 new themes (underdark, drow, farm, ruins). Theme palettes expanded from 1-3 to 6-12 terrain variants per theme, scatter items from 5-10 to 15-25 with weights/groups/sizes. New files: themeData.js, scatterCluster.js. Build passing 666ms.
 - **2026-03-28:** Full asset import — Scanned 154,102 assets from FA Core Mapmaking packs 1-3 + 90 loose D&D asset folders. Rebuilt 9 atlas sheets with 6,040 tiles (was ~3,200). Added 112 tree tiles (fir, palm, multicolor, ashen), 560 character tokens, and hundreds of new props/effects/structures. Multi-tile rendering support added to TilemapRendererV2. Scatter system updated for all biomes with full canopy trees replacing stumps. New reusable import pipeline: `scripts/assets/import-all.js`. Build passing 706ms.
 - **2026-03-23:** Floating damage/heal numbers for combat feedback — FloatingDamageNumber component displays damage (red), healing (green), and misses (gray) as numbers that float upward and fade out over 1 second. Triggers on attacks, AoE spells, and manual HP changes. Provides immediate visual feedback during combat. Build passing 947ms. Commit 92fa135.
 - **2026-03-23:** Typewriter effect for narrator messages — NarratorFloat now streams text character-by-character at 25ms intervals instead of displaying all at once. Enhances narrative immersion and game feel. Build passing 924ms. Commit 6b60fa1.

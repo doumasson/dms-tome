@@ -10,7 +10,7 @@
 
 - [x] Full tree assets — imported 112 tree tiles (fir small/medium/large, palm, multicolor, ashen branches) from FA Core Mapmaking packs. Scatter system updated for all biomes.
 - [ ] NPC schedule movement visible — NPCs walk between POIs on time schedule but need visual token movement
-- [ ] More POI chunk types — inn, workshop, market, fountain, ruins, etc. for richer generated areas
+- [x] More POI chunk types — 24 new chunks (60 total): bakery, herbalist, barn, farmhouse, watchtower, shrine, ruins, pond, farm field, mushroom grove, lava pool, herb garden, statue plaza, crossroads, plus 6 new dungeon room variants
 - [ ] Click-to-move pathfinding during combat — show valid path preview before confirming
 - [ ] Spell upcast UI — pick spell slot level when casting higher than minimum
 - [ ] Opportunity attack prompt for moving enemies — currently only for players

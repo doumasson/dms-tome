@@ -77,6 +77,17 @@ A living world you explore — not a chatbot you type at.
 - Pollinations.ai (free scene + token image gen, no API key)
 - Web Speech API (TTS narration + push-to-talk)
 - Bundled SRD JSON (~2-3MB, all 5e free content — classes, races, spells, monsters, equipment)
+- PixiJS v8 (WebGL tilemap renderer, 200px tiles, camera/zoom/fog)
+- 9 sprite atlases (6,040 tiles) from FA Core Mapmaking assets
+
+## Procedural Map Generation
+- `src/lib/areaBuilder.js` — pipeline orchestrator: brief → chunk matching → stamp → roads → terrain → scatter → collision
+- `src/lib/themeData.js` — theme constants (16 themes × terrain/road/scatter config), blocking tiles
+- `src/lib/scatterCluster.js` — cluster-based prop scatter with weighted groups + multi-tile awareness
+- `src/lib/mapGenerator.js` — noise terrain fill, meandering roads, chunk rotation/flip, positioning
+- `src/lib/chunkLibrary.js` — chunk registry + tag-based matching with randomization
+- `src/data/chunks/` — 60 curated chunks (buildings, terrain, rooms, landmarks)
+- `src/lib/dungeonBuilder.js` — BSP-based dungeon generation (separate pipeline for dungeon themes)
 
 ## Database (Supabase)
 - `profiles` — id, email, name, avatar_url

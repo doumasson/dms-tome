@@ -51,8 +51,8 @@ export function resolvePositions(pois, areaWidth, areaHeight, seed = Date.now())
 
     const chunkW = poi.width || 10
     const chunkH = poi.height || 10
-    const jitterX = Math.floor((rand() - 0.5) * cellW * 0.3)
-    const jitterY = Math.floor((rand() - 0.5) * cellH * 0.3)
+    const jitterX = Math.floor((rand() - 0.5) * cellW * 0.8)
+    const jitterY = Math.floor((rand() - 0.5) * cellH * 0.8)
 
     const x = Math.max(1, Math.min(areaWidth - chunkW - 1,
       baseX + Math.floor((cellW - chunkW) / 2) + jitterX))
@@ -123,6 +123,60 @@ export function fillTerrain(terrainLayer, variantIndices, width, height, seed = 
     if (terrainLayer[i] === 0) {
       terrainLayer[i] = variantIndices[Math.floor(rand() * variantIndices.length)]
     }
+  }
+}
+
+/**
+ * Generate a 2D value noise grid using bilinear interpolation.
+ * @param {number} w - grid width
+ * @param {number} h - grid height
+ * @param {number} scale - spacing between random sample points
+ * @param {Function} rand - seeded random function returning 0-1
+ * @returns {Float32Array} noise values 0-1 for each cell
+ */
+function makeNoiseGrid(w, h, scale, rand) {
+  const cw = Math.ceil(w / scale) + 2
+  const ch = Math.ceil(h / scale) + 2
+  const coarse = new Float32Array(cw * ch)
+  for (let i = 0; i < coarse.length; i++) coarse[i] = rand()
+
+  const out = new Float32Array(w * h)
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const fx = x / scale
+      const fy = y / scale
+      const ix = Math.floor(fx)
+      const iy = Math.floor(fy)
+      const tx = fx - ix
+      const ty = fy - iy
+      // Bilinear interpolation of 4 corners
+      const tl = coarse[iy * cw + ix]
+      const tr = coarse[iy * cw + ix + 1]
+      const bl = coarse[(iy + 1) * cw + ix]
+      const br = coarse[(iy + 1) * cw + ix + 1]
+      const top = tl + (tr - tl) * tx
+      const bot = bl + (br - bl) * tx
+      out[y * w + x] = top + (bot - top) * ty
+    }
+  }
+  return out
+}
+
+/**
+ * Fill empty terrain cells using 2D value noise for natural-looking gradients.
+ * Two octaves blended 70/30 for smooth terrain with local variety.
+ */
+export function fillTerrainNoise(terrainLayer, variantIndices, width, height, seed = 42) {
+  if (!variantIndices.length) return
+  const rand = seededRandom(seed)
+  const noiseA = makeNoiseGrid(width, height, 8, rand)
+  const noiseB = makeNoiseGrid(width, height, 4, rand)
+  const count = variantIndices.length
+  for (let i = 0; i < width * height; i++) {
+    if (terrainLayer[i] !== 0) continue
+    const v = noiseA[i] * 0.7 + noiseB[i] * 0.3
+    const idx = Math.min(count - 1, Math.floor(v * count))
+    terrainLayer[i] = variantIndices[idx]
   }
 }
 
@@ -222,4 +276,107 @@ export function remapChunk(chunk, tileToIndex) {
     })
   }
   return remapped
+}
+
+/**
+ * Paint a meandering road between two points using sine-wave displacement.
+ * Creates organic-looking paths instead of rigid L-shapes.
+ */
+export function connectWithMeanderingRoad(terrainLayer, roadTileIdx, from, to, roadWidth, areaWidth, areaHeight, seed = 0) {
+  let rng = (seed + 13) | 1
+  const next = () => { rng = (rng * 16807) % 2147483647; return (rng - 1) / 2147483646 }
+
+  const dx = to.x - from.x
+  const dy = to.y - from.y
+  const dist = Math.sqrt(dx * dx + dy * dy)
+  if (dist < 1) return
+
+  const steps = Math.ceil(dist * 1.5)
+  const amplitude = 1 + next() * 1.5 // 1-2.5 tile displacement
+  const freq = (0.3 + next() * 0.3) // wave frequency
+
+  for (let s = 0; s <= steps; s++) {
+    const t = s / steps
+    // Base position: linear interpolation
+    let px = from.x + dx * t
+    let py = from.y + dy * t
+    // Perpendicular displacement via sine wave
+    const perpX = -dy / dist
+    const perpY = dx / dist
+    const wave = Math.sin(t * Math.PI * 2 * freq * (dist / 15)) * amplitude
+    px += perpX * wave
+    py += perpY * wave
+
+    const ix = Math.round(px)
+    const iy = Math.round(py)
+    // Paint road width
+    for (let w = 0; w < roadWidth; w++) {
+      for (let ww = 0; ww < roadWidth; ww++) {
+        const rx = ix + w - Math.floor(roadWidth / 2)
+        const ry = iy + ww - Math.floor(roadWidth / 2)
+        if (rx >= 0 && ry >= 0 && rx < areaWidth && ry < areaHeight) {
+          // Center always painted, edges 70% probability for rough look
+          const isEdge = w === 0 || w === roadWidth - 1 || ww === 0 || ww === roadWidth - 1
+          if (!isEdge || next() < 0.7) {
+            terrainLayer[ry * areaWidth + rx] = roadTileIdx
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Rotate a chunk 90 degrees clockwise. Returns a new chunk object.
+ */
+export function rotateChunk90(chunk) {
+  const { width: oldW, height: oldH, layers, palette } = chunk
+  const newW = oldH
+  const newH = oldW
+  const newLayers = {}
+  for (const [name, data] of Object.entries(layers)) {
+    const rotated = new Array(newW * newH).fill(0)
+    for (let y = 0; y < oldH; y++) {
+      for (let x = 0; x < oldW; x++) {
+        // 90 CW: new(x,y) = old(y, oldW-1-x)
+        rotated[x * newW + (newW - 1 - y)] = data[y * oldW + x]
+      }
+    }
+    newLayers[name] = rotated
+  }
+  return { ...chunk, width: newW, height: newH, layers: newLayers }
+}
+
+/**
+ * Flip a chunk horizontally. Returns a new chunk object.
+ */
+export function flipChunkH(chunk) {
+  const { width, height, layers } = chunk
+  const newLayers = {}
+  for (const [name, data] of Object.entries(layers)) {
+    const flipped = new Array(width * height).fill(0)
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        flipped[y * width + (width - 1 - x)] = data[y * width + x]
+      }
+    }
+    newLayers[name] = flipped
+  }
+  return { ...chunk, layers: newLayers }
+}
+
+/**
+ * Apply a random transform (rotation/flip) to a chunk for variety.
+ * @param {object} chunk - chunk object
+ * @param {Function} rand - seeded RNG
+ * @returns {object} transformed chunk
+ */
+export function randomTransform(chunk, rand) {
+  if (chunk.rotatable === false) return chunk
+  const roll = Math.floor(rand() * 4)
+  let c = chunk
+  if (roll === 1) c = rotateChunk90(c)
+  else if (roll === 2) { c = rotateChunk90(c); c = rotateChunk90(c) }
+  else if (roll === 3) c = flipChunkH(c)
+  return c
 }

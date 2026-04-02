@@ -123,7 +123,12 @@ useEffect(() => { ... }, [inCombat]); // safe
 ## Maps Need Scatter Decoration — Empty Terrain Feels Dead
 **Pattern:** `scatterProps()` existed in mapGenerator.js but was never called. 85%+ of outdoor maps were pure flat terrain with zero decoration — no bushes, no rocks, no debris.
 
-**Rule:** Always call `scatterProps()` after terrain fill with theme-appropriate tiles. Density: 5-14% depending on biome (forests highest, dungeons lowest). Skip road tiles and wall cells.
+**Rule:** Always call `clusterScatter()` (in scatterCluster.js) after terrain fill. Theme config lives in `themeData.js` — each theme has structured scatter items with weights, groups, and sizes. Density: 4-14% depending on biome. Scatter uses clusters (trees form groves, rocks form outcroppings) plus ambient fill.
+
+## Theme/Tile Constants Belong in themeData.js, Not Inline
+**Pattern:** THEME_TERRAIN, THEME_SCATTER etc. were inline in areaBuilder.js (180+ lines of tile IDs), making the file bloated and hard to expand.
+
+**Rule:** All theme tile constants live in `src/lib/themeData.js`. When adding new themes or tiles, edit that file. Import from there — never duplicate tile ID lists across files.
 
 ## Wall Sprites Need Per-Direction Rotation/Flip
 
