@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import useStore from '../store/useStore'
 import { rollRandomEncounter, generateRandomEncounter, calculateRandomEncounterLoot, isNearCivilization } from '../lib/randomEncounters'
-import { broadcastEncounterAction, broadcastNarratorMessage } from '../lib/liveChannel'
+import { broadcastEncounterAction, broadcastNarratorMessage, broadcastStartCombat } from '../lib/liveChannel'
 
 // Minimum time (ms) after an encounter ends before another can trigger
 const ENCOUNTER_COOLDOWN_MS = 240_000 // 4 minutes real time
@@ -136,11 +136,7 @@ export function useRandomEncounters({
           partyWithPositions.push({ ...mc, position: { ...playerPos } })
         }
         startEncounter(enemiesWithPositions, partyWithPositions, true, { hazards })
-        broadcastEncounterAction({
-          type: 'start-encounter',
-          enemies: enemiesWithPositions,
-          hazards,
-        })
+        broadcastStartCombat({ enemies: enemiesWithPositions, party: partyWithPositions, autoRoll: true })
       }
     }
 

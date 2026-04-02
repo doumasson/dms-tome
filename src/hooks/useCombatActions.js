@@ -1010,7 +1010,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
             : rawHealDice
           const healResult = rollDamage(healDice)
           const healing = healResult.total ?? healResult
-          if (healing > 0) applyEncounterHeal(targetId, healing)
+          if (healing > 0) {
+            applyEncounterHeal(targetId, healing)
+            broadcastEncounterAction({ type: 'heal', targetId, amount: healing, userId: useStore.getState().user?.id })
+          }
           healRolls.push(`${target.name}: +${healing} HP`)
         }
         const resultText = healRolls.length > 0

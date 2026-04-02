@@ -105,6 +105,9 @@ export function createCampaignSlice(set, get) {
           roofStates: settings?.roofStates || state.roofStates,
           defeatedEnemies: settings?.defeatedEnemies || state.defeatedEnemies,
           quests: settings?.quests || state.quests,
+          gameTime: settings?.gameTime || state.gameTime,
+          storyFlags: settings?.storyFlags || state.storyFlags,
+          factionReputation: settings?.factionReputation || state.factionReputation,
         };
       }),
     unloadCampaign: () =>
@@ -296,7 +299,7 @@ export function createCampaignSlice(set, get) {
     },
 
     saveSessionStateToSupabase: async () => {
-      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates, defeatedEnemies, quests } = get();
+      const { activeCampaign, campaign, encounter, isDM, fogBitfields, roofStates, defeatedEnemies, quests, gameTime, storyFlags, factionReputation } = get();
       if (!activeCampaign?.id || !isDM) return;
       try {
         const { data: cur } = await supabase
@@ -312,6 +315,9 @@ export function createCampaignSlice(set, get) {
               roofStates,
               defeatedEnemies: defeatedEnemies || {},
               quests: quests || [],
+              gameTime: gameTime || { hour: 8, day: 1 },
+              storyFlags: storyFlags || [],
+              factionReputation: factionReputation || {},
             },
           })
           .eq('id', activeCampaign.id);

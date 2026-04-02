@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import useStore from '../store/useStore'
-import { broadcastEncounterAction } from '../lib/liveChannel'
+import { broadcastEncounterAction, broadcastStartCombat } from '../lib/liveChannel'
 
 /**
  * Manages stealth approach gameplay:
@@ -40,6 +40,7 @@ export function useStealthMode({ playerPos, playerPosRef, partyMembers, zone }) 
       combatParty.push({ ...myChar, position: { ...pos } })
     }
     startEncounter(enemies, combatParty, true, { surprise: true })
+    broadcastStartCombat({ enemies, party: combatParty, autoRoll: true })
   }, [partyMembers, playerPosRef])
 
   // --- Stealth check result watcher ---

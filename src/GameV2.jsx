@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
-import { broadcastEncounterAction, broadcastTokenMove } from './lib/liveChannel'
+import { broadcastEncounterAction, broadcastTokenMove, broadcastStartCombat } from './lib/liveChannel'
 import { supabase } from './lib/supabase'
 import ApiKeyGate from './components/ApiKeyGate'
 import { getAvailableInteractions } from './lib/interactionController'
@@ -409,9 +409,9 @@ export default function GameV2({ onLeave }) {
           attacks: [{ name: 'Sword', bonus: '+3', damage: '1d8+1' }],
           startPosition: npc.position,
         }
-        state.startEncounter([enemyDef], `${npc.name} recognizes you as an enemy of the ${npc.faction}! Combat initiated!`)
-        state.setEncounterActive(true)
-        broadcastEncounterAction({ type: 'start-encounter', enemies: [enemyDef] })
+        const party = state.partyMembers || []
+        state.startEncounter([enemyDef], party, true)
+        broadcastStartCombat({ enemies: [enemyDef], party, autoRoll: true })
         addNarratorMessage({ role: 'dm', speaker: 'System', text: `${npc.name} recognizes your hostility toward the ${npc.faction} and attacks!` })
         return
       }
@@ -581,6 +581,7 @@ export default function GameV2({ onLeave }) {
       combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
     }
     startEncounter(combatEnemies, combatParty, true)
+    broadcastStartCombat({ enemies: combatEnemies, party: combatParty, autoRoll: true })
   }, [currentAreaId])
 
   // --- Early returns ---

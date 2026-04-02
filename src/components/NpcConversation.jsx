@@ -4,7 +4,7 @@ const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogni
 const SPEECH_SUPPORTED = !!SpeechRecognition
 import { callNarrator, buildNpcSystemPrompt } from '../lib/narratorApi'
 import { createQuest } from '../lib/questSystem'
-import { broadcastEncounterAction, broadcastNarratorMessage, broadcastNpcDialogMessage } from '../lib/liveChannel'
+import { broadcastEncounterAction, broadcastNarratorMessage, broadcastNpcDialogMessage, broadcastStartCombat } from '../lib/liveChannel'
 import { getSkillBonus } from '../lib/derivedStats'
 import { speak, stopSpeaking, getNpcVoice } from '../lib/tts'
 import useStore from '../store/useStore'
@@ -179,7 +179,7 @@ export default function NpcConversation({
           const party = [{ ...mc, position: { ...mc.position } }]
           ;(pm || []).forEach(p => { if (p.name !== mc.name) party.push(p) })
           startEncounter(enemies, party, true)
-          broadcastEncounterAction({ type: 'start-encounter', enemies })
+          broadcastStartCombat({ enemies, party, autoRoll: true })
         }
       }
 

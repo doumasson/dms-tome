@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import useStore from '../store/useStore'
+import { broadcastEncounterAction } from '../lib/liveChannel'
 import { getClassCombatActions } from '../lib/classCombatActions'
 import { getClassResources } from '../lib/classResources'
 import ClassResourceBar from './ClassResourceBar'
@@ -118,6 +119,7 @@ export default function CombatActionBar({ onEndTurn, onAction }) {
     if (type === 'dodge') {
       useAction(active.id)
       useStore.getState().addEncounterCondition(active.id, 'Dodging')
+      broadcastEncounterAction({ type: 'add-condition', id: active.id, condition: 'Dodging', userId: useStore.getState().user?.id })
       useStore.getState().addEncounterLog(`${active.name} takes the Dodge action.`)
       return
     }
