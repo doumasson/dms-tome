@@ -8,17 +8,19 @@
 
 ## Next Playtest Priority Queue
 
-- [x] Full tree assets — imported 112 tree tiles
-- [x] More POI chunk types — 24 new chunks (60 total)
-- [x] Map gen overhaul — noise terrain, clustered scatter, meandering roads, 16 themes
 - [x] Playtest 4 fixes (20 bugs) — spells, HP sync, combat, quests, encounters, voices, UI
-- [x] Wall visibility desync — P2 loads area from Supabase instead of rebuilding independently
-- [x] P2 visibility after rejoin — request-positions broadcast on subscribe, re-broadcast on mount
-- [x] Map texture polish — removed cross-atlas tile mixing, single visual family per theme
-- [x] NPC schedule movement visible — poiPositions exported from areaBuilder, auto-generated schedules
-- [x] Click-to-move pathfinding during combat — white path preview line on hover over reachable tiles
-- [x] Spell upcast UI — castLevel wired through both CombatPhase and useCombatActions damage paths
-- [x] Opportunity attacks for moving enemies — OA triggers when enemies leave player adjacency
+- [x] Playtest 5 fixes — combat desync, HP persistence, rest sync, token visibility, crash recovery
+- [x] North Star audit — 8 missing broadcasts, healing propagation, persistence gaps
+- [x] Playtest 6 fixes — cleric spells, combat lockup, action economy, rest guards
+- [x] NPC memory + quest turn-in awareness
+- [x] Equipment AC broadcast
+- [x] Position/fog persistence across refresh
+- [x] Map size hard cap (55x42)
+- [ ] Map generation quality — user wants to rebuild separately, do NOT touch without asking
+- [ ] P2 token visibility still occasionally flaky — needs investigation
+- [ ] Dual enemy AI trigger race condition (CombatPhase + useCombatActions)
+- [ ] Journal/bestiary/weather persistence (lower priority)
+- [ ] Inventory/shop/crafting real-time broadcast (persisted but not real-time)
 
 ## Playtest 5-8 Fixes — ALL COMPLETE (44 fixes)
 
