@@ -7,21 +7,6 @@ import { executeAbility, spawnMinions, isLegendaryAbility } from '../lib/ability
 import { checkEncounterDifficulty } from '../lib/encounterScaling.js';
 import { findOATriggers, resolveOA } from '../lib/opportunityAttack.js';
 
-// Generate a deterministic Pollinations portrait URL for a character.
-// Same name/race/class always produces the same portrait.
-// Falls back to initials-based seed so even partial data gives a unique image.
-function makePortraitUrl(name, race, cls) {
-  const n = (name || 'adventurer').trim().toLowerCase();
-  const r = (race || 'human').toLowerCase();
-  const c = (cls  || 'fighter').toLowerCase();
-  // Numeric seed from character name for determinism
-  const seed = [...n].reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % 99999;
-  const prompt = encodeURIComponent(
-    `portrait of a ${r} ${c} named ${n}, fantasy D&D 5e character art, dramatic lighting, ` +
-    `detailed face, dark background, heroic, no text, no border`
-  );
-  return `https://image.pollinations.ai/prompt/${prompt}?width=256&height=256&nologo=true&model=turbo&seed=${seed}`;
-}
 
 /**
  * Encounter slice — unified scene + combat state, action economy, enemy AI.
@@ -123,7 +108,7 @@ export function createEncounterSlice(set, get) {
               : null,
             deathSaves: { successes: 0, failures: 0, stable: false },
             readiedAction: null,
-            portrait: makePortraitUrl(label, group.race || 'monster', group.type || group.name),
+            portrait: null,
           });
         }
       });
@@ -285,7 +270,7 @@ export function createEncounterSlice(set, get) {
           position: char.position || null,
           deathSaves: { successes: 0, failures: 0, stable: false },
           readiedAction: null,
-          portrait: makePortraitUrl(char.name, char.race, char.class),
+          portrait: char.portrait || null,
         });
       });
 
@@ -404,7 +389,7 @@ export function createEncounterSlice(set, get) {
         position: charData.position || null,
         deathSaves: { successes: 0, failures: 0, stable: false },
         readiedAction: null,
-        portrait: charData.portrait || makePortraitUrl(charData.name, charData.race, charData.class),
+        portrait: charData.portrait || null,
       };
 
       // Insert into initiative order at the right spot

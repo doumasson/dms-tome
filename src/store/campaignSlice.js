@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabase';
 import { getClassResources } from '../lib/classResources';
 import { computeAcFromEquipped } from '../data/equipment';
-import { buildPollinationsUrl } from '../lib/dalleApi';
 import { notifySaveStart, notifySaveComplete, notifySaveError } from '../components/game/AutoSaveIndicator';
 import { normalizeCampaignData } from '../lib/campaignSchema';
 
@@ -366,26 +365,7 @@ export function createCampaignSlice(set, get) {
     setNpcPortrait: (key, url) =>
       set((state) => ({ npcPortraits: { ...state.npcPortraits, [key]: url } })),
 
-    // Pre-populate scene image URLs at import time so they're ready immediately.
-    preGenerateSceneImages: async (campaignId, scenes) => {
-      // buildPollinationsUrl is statically imported at top of file
-      const urlMap = {};
-      (scenes || []).forEach((scene, idx) => {
-        const key = `${campaignId || 'local'}:${idx}`;
-        const url = buildPollinationsUrl(scene.title);
-        get().setSceneImage(key, url);
-        urlMap[String(idx)] = url;
-      });
-      // Persist to Supabase so URLs survive page refresh
-      const activeCampaign = get().activeCampaign;
-      if (activeCampaign?.id) {
-        try {
-          const { data: cur } = await supabase.from('campaigns').select('settings').eq('id', activeCampaign.id).single();
-          await supabase.from('campaigns').update({
-            settings: { ...(cur?.settings || {}), sceneImageUrls: urlMap },
-          }).eq('id', activeCampaign.id);
-        } catch { /* non-critical */ }
-      }
-    },
+    // Scene image generation removed — V2 uses PixiJS tilemap, not scene images.
+    preGenerateSceneImages: async (_campaignId, _scenes) => {},
   };
 }

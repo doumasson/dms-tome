@@ -21,7 +21,6 @@ const CharacterSelect  = lazy(() => import('./components/CharacterSelect'));
 const CharacterProfile = lazy(() => import('./components/CharacterProfile'));
 const CampaignEndModal = lazy(() => import('./components/CampaignEndModal'));
 const CampaignManager  = lazy(() => import('./components/CampaignManager'));
-const GameLayout       = lazy(() => import('./components/game/GameLayout'));
 
 function D20Icon() {
   return (
@@ -39,8 +38,6 @@ function D20Icon() {
 export default function App() {
   const [appView, setAppView] = useState('loading');
   const [draftCampaign, setDraftCampaign] = useState(null);
-  const [showSettings, setShowSettings] = useState(false);
-  const [showManager, setShowManager] = useState(false);
   const [liveConnected, setLiveConnected] = useState(false);
   const pendingInviteRef = useRef(null);
   const channelRef = useRef(null);
@@ -1334,53 +1331,7 @@ export default function App() {
 
   // ── Main Game UI ─────────────────────────────────────────────────────────────
 
-  // V2: fullscreen game — no header, no V1 wrapper
-  // Always use V2 — V1 rendering path has been removed
   return <GameV2 onLeave={handleLeaveCampaign} />;
-
-  return (
-    <div style={styles.app}>
-      <header style={styles.header}>
-        <div style={styles.headerLeft}>
-          <D20Icon />
-          <h1 style={styles.appTitle}>DungeonMind</h1>
-          {activeCampaign && (
-            <span style={styles.campaignBadge}>{activeCampaign.name || campaign.title}</span>
-          )}
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <button
-            onClick={() => setAppView('character-profile')}
-            title="My Characters"
-            style={styles.headerCharBtn}
-          >
-            ⚔ Characters
-          </button>
-          {user?.avatar_url && (
-            <img src={user.avatar_url} alt="" style={styles.headerAvatar} referrerPolicy="no-referrer" />
-          )}
-        </div>
-      </header>
-
-      <div style={styles.headerRule} />
-
-      <GameLayout
-        liveConnected={liveConnected}
-        onLeave={handleLeaveCampaign}
-        onManage={() => setShowManager(true)}
-        onSettings={() => setShowSettings(true)}
-        onRemakeCharacter={() => setAppView('character-select')}
-      />
-
-      {showManager && <CampaignManager onClose={() => setShowManager(false)} />}
-      {showSettings && <ApiKeySettings userId={user?.id} onClose={() => setShowSettings(false)} />}
-      {campaignComplete && (
-        <CampaignEndModal
-          onWrapUp={() => { setCampaignComplete(false); handleLeaveCampaign(); }}
-        />
-      )}
-    </div>
-  );
 }
 
 const styles = {
