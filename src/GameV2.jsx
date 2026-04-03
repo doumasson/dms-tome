@@ -500,8 +500,9 @@ export default function GameV2({ onLeave }) {
     setShowExplorationSpellPicker(false)
     if (!myCharacter) return
 
-    // Consume spell slot first
-    if (castLevel > 0) {
+    // Helper: consume slot only when the cast is confirmed (not on cancel)
+    const consumeSlot = () => {
+      if (castLevel <= 0) return
       const slots = { ...(myCharacter.spellSlots || {}) }
       for (let lvl = castLevel; lvl <= 9; lvl++) {
         if (slots[lvl] && slots[lvl].used < slots[lvl].total) {
@@ -516,7 +517,7 @@ export default function GameV2({ onLeave }) {
     const isHealing = /heal|cure|restor|word of/i.test(spell.name) || spell.school === 'Necromancy' && /heal/i.test(spell.name)
     const isBuff = /bless|aid|shield of faith|heroism|haste|blur|mirror image|protection|sanctuary|mage armor|barkskin|stoneskin|resistance/i.test(spell.name)
 
-    // Roll healing if applicable
+    // Roll healing dice
     const rollHealing = (healDice) => {
       const match = (healDice || '').match(/(\d+)d(\d+)([+-]\d+)?/)
       if (!match) return 0
@@ -527,64 +528,47 @@ export default function GameV2({ onLeave }) {
       return Math.max(1, total)
     }
 
-    // Apply HP to a target (self or party member), persist + broadcast
-    const applyHeal = (target, amount) => {
-      const maxHp = target.maxHp || target.hp || 20
-      const currentHp = target.currentHp ?? maxHp
-      const newHp = Math.min(maxHp, currentHp + amount)
-      const isMe = target.id === myCharacter.id || target.name === myCharacter.name
-      if (isMe) {
-        updateMyCharacter({ currentHp: newHp })
-      } else {
-        // Update partyMembers for display; the target's client will get the broadcast
-        useStore.setState(s => ({
-          partyMembers: s.partyMembers.map(p =>
-            (p.id === target.id || p.name === target.name) ? { ...p, currentHp: newHp } : p
-          ),
-        }))
-      }
-      // Broadcast HP change so all clients see updated portraits
-      broadcastEncounterAction({ type: 'rest-hp-update', charId: target.id, charName: target.name, currentHp: newHp, maxHp })
-      return { currentHp, newHp }
-    }
-
     if (isHealing && (spell.damage || spell.heal)) {
       const healDice = spell.heal || spell.damage
       const healAmount = rollHealing(healDice)
       const allTargets = [myCharacter, ...(partyMembers || []).filter(p => p.id !== myCharacter.id && p.name !== myCharacter.name)]
 
       if (allTargets.length <= 1) {
-        // Only self — apply immediately
-        const { currentHp, newHp } = applyHeal(myCharacter, healAmount)
+        // Only self — consume slot and apply immediately (no cancel possible)
+        consumeSlot()
+        const { currentHp, newHp } = applyHealRef.current(myCharacter, healAmount)
         const msg = { role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name} and heals for ${healAmount} HP. (${currentHp} → ${newHp})` }
         addNarratorMessage(msg)
         broadcastNarratorMessage(msg)
       } else {
-        // Show target picker — store pending heal data
-        setExplorationHealPending({ spell, castLevel, healAmount, healDice, allTargets })
+        // Show target picker — do NOT consume slot yet (cancel = free)
+        setExplorationHealPending({ spell, castLevel, consumeSlot, healAmount, allTargets })
       }
       return
     }
 
     if (isBuff) {
+      consumeSlot()
       const msg = { role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name}. The effect takes hold.` }
       addNarratorMessage(msg)
       broadcastNarratorMessage(msg)
       return
     }
 
-    // Default: narrate the cast
+    // Default: consume slot and narrate
+    consumeSlot()
     const msg = { role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name}.` }
     addNarratorMessage(msg)
     broadcastNarratorMessage(msg)
   }, [myCharacter, partyMembers, addNarratorMessage, updateMyCharacter])
 
-  // Resolve a pending exploration heal after target is chosen
+  // Resolve a pending exploration heal after target is chosen — consume slot here
   const handleExplorationHealTarget = useCallback((target) => {
     if (!explorationHealPending) return
-    const { spell, healAmount, allTargets } = explorationHealPending
+    const { spell, consumeSlot, healAmount } = explorationHealPending
     setExplorationHealPending(null)
 
+    consumeSlot() // slot consumed only on confirm, not on cancel
     const { currentHp, newHp } = applyHealRef.current(target, healAmount)
     const msg = { role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name} on ${target.name} for ${healAmount} HP. (${currentHp} → ${newHp})` }
     addNarratorMessage(msg)
