@@ -1,12 +1,5 @@
-import { buildPollinationsUrl } from '../lib/dalleApi';
-
 // "Whispers in the Dark" — a self-contained 4-hour D&D 5e one-shot
 // Designed for 3-5 players, levels 1-2. No prep required.
-// Scene images use deterministic Pollinations URLs (same title = same image, CDN-cached).
-
-function sceneImage(title) {
-  return buildPollinationsUrl(title);
-}
 
 export const DEMO_CAMPAIGN = {
   title: 'Whispers in the Dark',
@@ -18,7 +11,7 @@ export const DEMO_CAMPAIGN = {
       dmNotes: 'Intro scene. NPC Mira offers 50gp per person found alive. The missing: a farmer (Aldric), a young woman (Sera), and a child (Pip). Clues: claw marks on the eastern fence post, a torn strip of green cloth (Sera\'s), and a strange symbol carved into a tree trunk — a circle with an X, mark of the Hollow Cult. DC 12 History check reveals the Hollow Cult was a death cult that operated in the Thornwood decades ago. DC 10 Perception near the fence notices the muddy trail heads northeast.',
       fogOfWar: false,
       isEncounter: false,
-      imageUrl: sceneImage('Ashwick Village medieval fantasy village autumn market square'),
+      imageUrl: null,
     },
     {
       title: 'The Thornwood Trail',
@@ -26,7 +19,7 @@ export const DEMO_CAMPAIGN = {
       dmNotes: 'Skill challenge / exploration. Left fork leads to Sera, bound to a tree and terrified (she escaped a cultist who fled when she screamed). Right fork leads toward the crypt. Sera can describe her captor: robed, masked, carrying a lantern. DC 14 Survival to track. DC 12 Perception hears soft chanting ahead on the right fork. If players reunite Sera with the village before proceeding, give them a short rest.',
       fogOfWar: true,
       isEncounter: false,
-      imageUrl: sceneImage('dark fantasy thornwood forest gnarled trees fog glowing fungi'),
+      imageUrl: null, // sceneImage('dark fantasy thornwood forest gnarled trees fog glowing fungi'),
     },
     {
       title: 'Cultist Ambush',
@@ -66,7 +59,7 @@ export const DEMO_CAMPAIGN = {
           startPosition: { x: 5, y: 5 },
         },
       ],
-      imageUrl: sceneImage('dark fantasy forest clearing cultists ritual lantern robed figures'),
+      imageUrl: null, // sceneImage('dark fantasy forest clearing cultists ritual lantern robed figures'),
     },
     {
       title: 'The Crypt Entrance',
@@ -74,7 +67,7 @@ export const DEMO_CAMPAIGN = {
       dmNotes: 'Transition / tension scene. No combat yet. Iron key from cultists fits the door lock (it\'s already open — someone is expecting them). DC 12 Perception: faint orange firelight below. DC 14 History: inscription above the door reads "Those who serve the Hollow pass freely; all others feed the dark." Party should feel the stakes — Pip is down there. Give them a moment to prepare: spells, torches, plans. If they don\'t have torches, a burned-down torch stub is just inside the door.',
       fogOfWar: true,
       isEncounter: false,
-      imageUrl: sceneImage('dark fantasy ancient stone crypt entrance hillside overgrown roots dungeon'),
+      imageUrl: null, // sceneImage('dark fantasy ancient stone crypt entrance hillside overgrown roots dungeon'),
     },
     {
       title: 'The Hollow Vault',
@@ -112,7 +105,7 @@ export const DEMO_CAMPAIGN = {
           startPosition: { x: 7, y: 2 },
         },
       ],
-      imageUrl: sceneImage('dark fantasy crypt vault underground boss chamber green fire brazier stone dais'),
+      imageUrl: null, // sceneImage('dark fantasy crypt vault underground boss chamber green fire brazier stone dais'),
     },
     {
       title: 'Return to Ashwick',
@@ -120,7 +113,7 @@ export const DEMO_CAMPAIGN = {
       dmNotes: 'Epilogue. Award XP: 300 per cultist × 3 = 900, Skull Fanatic 450, The Warden 3800, Hollow Shades 100 × 2 = 200. Total: ~5350 XP split by party. Most level 1 parties will hit level 2. Mira pays the 50gp per rescued villager (Aldric, Sera, Pip = 150gp total). If the party returns the obsidian amulet to the village temple, they receive a *Bless* scroll as a bonus. Hook for future sessions: one cultist escaped — and he carries a copy of the Warden\'s ritual notes.',
       fogOfWar: false,
       isEncounter: false,
-      imageUrl: sceneImage('Ashwick medieval village dawn sunrise celebration returning heroes warm light'),
+      imageUrl: null, // sceneImage('Ashwick medieval village dawn sunrise celebration returning heroes warm light'),
     },
   ],
 };

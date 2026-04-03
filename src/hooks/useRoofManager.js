@@ -72,8 +72,9 @@ export function useRoofManager({ zone, playerPos, playerPosRef, currentAreaId, i
       for (const { buildingId, revealed } of changes) {
         setRoofState(currentAreaId, buildingId, revealed)
       }
-      // Only host persists and broadcasts (for initial state sync on join)
-      if (isDM) {
+      // Only AI runner persists and broadcasts (for initial state sync on join, host-independent)
+      const { isAIRunner, isDM: storeDM } = useStore.getState()
+      if (isAIRunner ?? storeDM) {
         const { saveSessionStateToSupabase } = useStore.getState()
         for (const { buildingId, revealed } of changes) {
           broadcastRoofReveal(currentAreaId, buildingId, revealed)
@@ -83,10 +84,11 @@ export function useRoofManager({ zone, playerPos, playerPosRef, currentAreaId, i
     }
   }, [playerPos, currentAreaId, zone])
 
-  // Apply incoming roof reveal broadcasts (non-DM clients) — only for INITIAL state sync
+  // Apply incoming roof reveal broadcasts (non-runner clients) — only for INITIAL state sync
   // After that, local position-based detection takes over
   useEffect(() => {
-    if (!roofStates || isDM) return
+    const { isAIRunner, isDM: storeDM } = useStore.getState()
+    if (!roofStates || (isAIRunner ?? storeDM)) return
     const rm = roofManagerRef.current
     const areaRoofStates = roofStates[currentAreaId] || {}
     for (const [buildingId, revealed] of Object.entries(areaRoofStates)) {

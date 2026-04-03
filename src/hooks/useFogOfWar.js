@@ -65,7 +65,8 @@ export function useFogOfWar({ zone, playerPos, playerPosRef, currentAreaId, myCh
     const visionResult = computeVision(partyVisions, zone.width, zone.height, zone.layers?.floor)
     const newlyExplored = updateExplored(exploredRef.current, visionResult.active)
 
-    if (isDM && currentAreaId && newlyExplored.length > 0) {
+    const { isAIRunner, isDM: storeDM } = useStore.getState()
+    if ((isAIRunner ?? storeDM) && currentAreaId && newlyExplored.length > 0) {
       clearTimeout(fogBroadcastTimer.current)
       fogBroadcastTimer.current = setTimeout(() => {
         const bitfield = encodeExploredBitfield(exploredRef.current, zone.width, zone.height)

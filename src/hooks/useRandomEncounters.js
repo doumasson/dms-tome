@@ -29,8 +29,9 @@ export function useRandomEncounters({
   const spawnGuardRef = useRef(true) // Skip the very first movement after spawn
 
   useEffect(() => {
-    // Only run on host/DM client
-    if (!isDM) return
+    // Only run on the elected AI runner (host-independent)
+    const { isAIRunner, isDM: storeDM } = useStore.getState()
+    if (!(isAIRunner ?? storeDM)) return
     // Don't check during combat or when there's already a pending encounter
     if (inCombat) return
     const { pendingEncounterData } = useStore.getState()
