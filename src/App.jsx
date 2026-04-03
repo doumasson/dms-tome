@@ -161,13 +161,14 @@ export default function App() {
       }
     });
 
-    // AI-triggered combat start (host → players via NarratorPanel)
+    // Any player can start combat — all other clients sync to the first broadcast received.
+    // If this client already started combat locally (triggered the zone first), skip.
     ch.on('broadcast', { event: 'combat-start' }, ({ payload }) => {
       const store = useStore.getState()
       const myChar = store.myCharacter
-      // If host already has combat with enemies, don't double-start (host called startEncounter locally)
+      // Skip if we already have an active encounter — we started it locally
       const hasEnemies = store.encounter.combatants?.some(c => c.isEnemy || c.type === 'enemy')
-      if (store.isDM && hasEnemies) return
+      if (hasEnemies) return
       // Override own character's position with LOCAL position (broadcaster may have stale data)
       const party = (payload.party || []).map(p => {
         if (myChar && (p.id === myChar.id || p.name === myChar.name)) {

@@ -234,11 +234,8 @@ export function useGameEffects({
     }
 
     triggeredZonesRef.current.add(triggered.id)
-
-    // ONLY THE HOST starts encounters and broadcasts them to other players.
-    // Non-host clients receive combat via the 'combat-start' broadcast in App.jsx.
-    if (!(isDM || !activeCampaign)) return
-
+    // Any player who reaches this zone first starts the encounter and broadcasts it.
+    // Other clients receive 'combat-start' and skip if they're already in combat.
     broadcastEncounterAction({ type: 'encounter-zone-triggered', zoneId: triggered.id })
 
     const prompt = buildEncounterPrompt(
