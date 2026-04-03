@@ -17,10 +17,13 @@
 - [x] Position/fog persistence across refresh
 - [x] Map size hard cap (55x42)
 - [ ] Map generation quality — user wants to rebuild separately, do NOT touch without asking
-- [ ] P2 token visibility still occasionally flaky — needs investigation
-- [ ] Dual enemy AI trigger race condition (CombatPhase + useCombatActions)
+- [x] P2 token visibility — areaTokenPositions missing from useMemo deps in useGameTokens
+- [x] Dual enemy AI trigger race condition — removed duplicate trigger from CombatPhase.jsx
+- [x] Inventory/shop broadcast — AC equip/unequip always, consumable HP, shop gold-update
+- [x] Exploration spell casting — target picker, healing applies, slot only on confirm, broadcast
+- [x] demoCampaign Pollinations crash — removed buildPollinationsUrl import
+- [x] isDM gates → isAIRunner (random encounters, fog, roofs)
 - [ ] Journal/bestiary/weather persistence (lower priority)
-- [ ] Inventory/shop/crafting real-time broadcast (persisted but not real-time)
 
 ## Playtest 5-8 Fixes — ALL COMPLETE (44 fixes)
 
