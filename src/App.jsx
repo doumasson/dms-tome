@@ -780,13 +780,14 @@ export default function App() {
 
     // Token move sync (any player → all others for V2 area map)
     ch.on('broadcast', { event: 'token-move' }, ({ payload }) => {
-      const { playerId, position, path } = payload;
-      const currentAreaId = useStore.getState().currentAreaId;
-      if (currentAreaId) {
-        useStore.getState().setAreaTokenPosition(currentAreaId, playerId, position);
+      const { playerId, position, path, areaId } = payload;
+      // Use the broadcaster's areaId if provided, else fall back to our own (same-area assumption)
+      const targetAreaId = areaId || useStore.getState().currentAreaId;
+      if (targetAreaId) {
+        useStore.getState().setAreaTokenPosition(targetAreaId, playerId, position);
         // If path provided, animate the token movement instead of teleporting
         if (path && path.length > 1) {
-          const area = useStore.getState().areas?.[currentAreaId];
+          const area = useStore.getState().areas?.[targetAreaId];
           const tileSize = area?.tileSize || 200;
           animateTokenAlongPath(playerId, path, null, null, tileSize);
         }

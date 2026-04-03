@@ -140,11 +140,11 @@ export function broadcastPlayerJoined(userId, character) {
   })
 }
 
-export function broadcastTokenMove(playerId, position, path = null) {
+export function broadcastTokenMove(playerId, position, path = null, areaId = null) {
   _channel?.send({
     type: 'broadcast',
     event: 'token-move',
-    payload: { playerId, position, path },
+    payload: { playerId, position, path, areaId },
   })
 }
 

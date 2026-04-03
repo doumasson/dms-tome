@@ -24,7 +24,7 @@ export default function Minimap({ playerPos, tokens, cameraRef }) {
   const zone = useStore(s => s.areas[s.currentAreaId])
   const currentAreaId = useStore(s => s.currentAreaId)
   const fogBitfields = useStore(s => s.fogBitfields)
-  const inCombat = useStore(s => s.encounter.phase === 'combat')
+  const inCombat = useStore(s => s.encounter.phase === 'combat' && s.encounter.combatants?.some(c => c.id === s.myCharacter?.id || c.name === s.myCharacter?.name))
 
   // Decode explored set from bitfield
   const exploredSetRef = useRef(new Set())

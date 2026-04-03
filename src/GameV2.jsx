@@ -230,7 +230,7 @@ export default function GameV2({ onLeave }) {
     const key = `${currentAreaId}:${playerPos.x},${playerPos.y}`
     if (lastBroadcastRef.current !== key) {
       lastBroadcastRef.current = key
-      broadcastTokenMove(user.id, playerPos)
+      broadcastTokenMove(user.id, playerPos, null, currentAreaId)
     }
   }, [user?.id, playerPos, currentAreaId])
 
@@ -264,7 +264,9 @@ export default function GameV2({ onLeave }) {
         if (players.length !== current.length) {
           useStore.getState().setPartyMembers(players)
         }
-      } catch {}
+      } catch (err) {
+        console.error('[GameV2] Party refresh failed:', err)
+      }
     }
     const interval = setInterval(refresh, 15000)
     return () => clearInterval(interval)

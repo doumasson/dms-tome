@@ -16,7 +16,9 @@ export function createUiSlice(set, get) {
       // TTS: only speak narrative/story/NPC messages
       // Skip: combat actions, search results, skill checks, system messages
       if (msg.role === 'dm' && msg.text && msg.speaker !== 'System' && msg.speaker !== 'Combat') {
-        const inCombat = get().encounter?.phase === 'combat'
+        const enc = get().encounter
+        const myChar = get().myCharacter
+        const inCombat = enc?.phase === 'combat' && enc?.combatants?.some(c => c.id === myChar?.id || c.name === myChar?.name)
         const isNpc = msg.speaker && msg.speaker !== 'DM' && msg.speaker !== 'The Narrator' && msg.speaker !== 'System' && msg.speaker !== 'Combat'
         const isGenericDm = !msg.speaker || msg.speaker === 'DM' || msg.speaker === 'The Narrator'
         // Skip mechanical messages: searches, skill checks, trap results, pickpocket, etc.

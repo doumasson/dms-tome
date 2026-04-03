@@ -24,7 +24,7 @@ export default function CombatDebugOverlay() {
   const area = areas?.[currentAreaId]
   const { phase, combatants, currentTurn, round } = encounter
   const active = combatants?.[currentTurn]
-  const inCombat = phase === 'combat'
+  const inCombat = phase === 'combat' && combatants?.some(c => c.id === myCharacter?.id || c.name === myCharacter?.name)
   const shouldRunAI = isDM || !activeCampaign
 
   const btnStyle = {
