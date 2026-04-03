@@ -298,8 +298,9 @@ export default function ShopPanel({ npc, shopType, onClose }) {
     addGold(-item.price)
     playCoinSound()
     showToast(`Purchased ${item.name} for ${item.price} gp`)
-    const { myCharacter, user } = useStore.getState()
-    broadcastEncounterAction({ type: 'gold-update', charId: myCharacter?.id, charName: myCharacter?.name, gold: (myCharacter?.gold || 0) - item.price, userId: user?.id })
+    // Read gold AFTER addGold() updates the store synchronously
+    const { myCharacter: mc1, user: u1 } = useStore.getState()
+    broadcastEncounterAction({ type: 'gold-update', charId: mc1?.id, charName: mc1?.name, gold: mc1?.gold, userId: u1?.id })
   }
 
   function handleSell(invItem) {
@@ -308,8 +309,8 @@ export default function ShopPanel({ npc, shopType, onClose }) {
     removeItemFromInventory(invItem.instanceId)
     addGold(result.goldGained)
     showToast(`Sold ${invItem.name} for ${result.goldGained} gp`)
-    const { myCharacter, user } = useStore.getState()
-    broadcastEncounterAction({ type: 'gold-update', charId: myCharacter?.id, charName: myCharacter?.name, gold: (myCharacter?.gold || 0) + result.goldGained, userId: user?.id })
+    const { myCharacter: mc2, user: u2 } = useStore.getState()
+    broadcastEncounterAction({ type: 'gold-update', charId: mc2?.id, charName: mc2?.name, gold: mc2?.gold, userId: u2?.id })
   }
 
   const sellableItems = inventory.filter(i => i.price && i.price > 0)

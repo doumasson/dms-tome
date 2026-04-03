@@ -104,6 +104,8 @@ export default function InteractionMenu({
           })
           if (result.loot.gold) {
             addGold?.(result.loot.gold)
+            const { myCharacter: mc, user: u } = useStore.getState()
+            broadcastEncounterAction({ type: 'gold-update', charId: mc?.id, charName: mc?.name, gold: mc?.gold, userId: u?.id })
           } else {
             addItemToInventory?.(result.loot)
           }
@@ -188,9 +190,14 @@ export default function InteractionMenu({
             role: 'dm', speaker: 'DM',
             text: `${charName} searches carefully and finds: ${findTexts.join(', ')}! (Investigation DC ${dc}: ${searchResult.roll.total})`,
           })
+          let foundGold = false
           for (const find of searchResult.finds) {
-            if (find.gold) addGold?.(find.gold)
+            if (find.gold) { addGold?.(find.gold); foundGold = true }
             else addItemToInventory?.(find)
+          }
+          if (foundGold) {
+            const { myCharacter: mc, user: u } = useStore.getState()
+            broadcastEncounterAction({ type: 'gold-update', charId: mc?.id, charName: mc?.name, gold: mc?.gold, userId: u?.id })
           }
           if (target.id) target.opened = true
           broadcastEncounterAction({ type: 'search', id: target.id, success: true, finds: findTexts })
@@ -280,6 +287,10 @@ function showChestLoot(charName, chest, loot, addNarratorMessage, addGold, addIt
     role: 'dm', speaker: 'DM',
     text: `${charName} opens the ${chest.label || 'chest'} and finds: ${parts.join(', ')}.`,
   })
+  if (loot.gold > 0) {
+    const { myCharacter, user } = useStore.getState()
+    broadcastEncounterAction({ type: 'gold-update', charId: myCharacter?.id, charName: myCharacter?.name, gold: myCharacter?.gold, userId: user?.id })
+  }
 }
 
 const styles = {

@@ -169,6 +169,7 @@ export function createCharacterSlice(set, get) {
       const updated = { ...myCharacter, attunedItems: newAttuned };
       const derived = computeDerivedStats(updated);
       get().updateMyCharacter({ attunedItems: newAttuned, ac: derived.ac, derivedStats: derived });
+      broadcastEncounterAction({ type: 'ac-update', id: myCharacter.id, name: myCharacter.name, ac: derived.ac, userId: get().user?.id });
     },
 
     // Remove attunement from a magic item (blocked if cursed)
@@ -181,6 +182,7 @@ export function createCharacterSlice(set, get) {
       const updated = { ...myCharacter, attunedItems: newAttuned };
       const derived = computeDerivedStats(updated);
       get().updateMyCharacter({ attunedItems: newAttuned, ac: derived.ac, derivedStats: derived });
+      broadcastEncounterAction({ type: 'ac-update', id: myCharacter.id, name: myCharacter.name, ac: derived.ac, userId: get().user?.id });
     },
 
     // Add an item to myCharacter's inventory
