@@ -191,6 +191,11 @@ useEffect(() => { ... }, [inCombat]); // safe
 
 **Rule:** `randomTransform()` must skip `type === 'building'` and `type === 'room'`. Only terrain and landmark chunks can rotate safely.
 
+## Spell Slot Consumed on Confirm, Not on Open
+**Pattern:** `handleExplorationSpellSelected` consumed the slot at the top of the function, before showing the target picker. Cancelling the target picker still cost the player the slot.
+
+**Rule:** For any two-step cast flow (spell select → target select), only consume the resource when the player confirms. Pass a `consumeSlot()` closure into the pending state and call it inside the confirm handler, not the select handler. Cancel is always free.
+
 ## Quest State Must Persist to Supabase
 **Pattern:** Quests stored only in Zustand memory. Hard refresh = all quests gone. Players lost story progression constantly.
 
