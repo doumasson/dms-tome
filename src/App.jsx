@@ -875,10 +875,34 @@ export default function App() {
       useStore.getState().addJournalEntry(payload)
     })
 
-    ch.subscribe(status => {
+    // Elect which client runs enemy AI — DM by default, falls back to oldest connected client
+    function electAIRunner() {
+      const state = ch.presenceState()
+      const online = Object.values(state).flat()
+      if (!online.length) {
+        useStore.setState({ isAIRunner: useStore.getState().isDM })
+        return
+      }
+      const dmOnline = online.find(p => p.isDM)
+      if (dmOnline) {
+        useStore.setState({ isAIRunner: useStore.getState().isDM })
+      } else {
+        // DM disconnected — client with lowest joinTime takes over
+        const sorted = [...online].sort((a, b) => (a.joinTime || 0) - (b.joinTime || 0))
+        useStore.setState({ isAIRunner: sorted[0]?.userId === user?.id })
+      }
+    }
+
+    ch.on('presence', { event: 'sync' }, electAIRunner)
+    ch.on('presence', { event: 'join' }, electAIRunner)
+    ch.on('presence', { event: 'leave' }, electAIRunner)
+
+    ch.subscribe(async (status) => {
       setLiveConnected(status === 'SUBSCRIBED')
-      // On subscribe/reconnect, ask all players to re-broadcast their positions
       if (status === 'SUBSCRIBED') {
+        // Track self in presence so others know we're online
+        await ch.track({ userId: user?.id, isDM: useStore.getState().isDM, joinTime: Date.now() })
+        electAIRunner()
         setTimeout(() => broadcastRequestPositions(), 300)
       }
     });

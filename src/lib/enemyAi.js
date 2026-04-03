@@ -1,9 +1,9 @@
 import { findPathEdge } from './pathfinding.js'
 import { rollDamage } from './dice.js'
 import { getMinionsActionPriority, shouldMinionRetreat, calculateFlankingBonus } from './minionAi.js'
+import { callClaude } from './aiProxy.js'
 
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
-const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
 // Manhattan distance on the grid
 function gridDist(a, b) {
@@ -346,8 +346,7 @@ export function computeMinionAction(minion, encounter) {
   };
 }
 
-export async function triggerEnemyTurn(enemy, encounter, apiKey) {
-  if (!apiKey) throw new Error('No API key available');
+export async function triggerEnemyTurn(enemy, encounter, _apiKey) {
 
   // Fast path: if no players alive, return do-nothing
   const alivePlayers = encounter.combatants.filter(c => c.type === 'player' && c.currentHp > 0);
@@ -364,27 +363,16 @@ export async function triggerEnemyTurn(enemy, encounter, apiKey) {
   // Ask the AI for the enemy's turn decision
   const prompt = buildEnemyTurnPrompt(enemy, encounter);
 
-  const response = await fetch(CLAUDE_API_URL, {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
+  let data;
+  try {
+    data = await callClaude({
       model: NARRATOR_MODEL,
-      max_tokens: 512,
+      maxTokens: 512,
       messages: [{ role: 'user', content: prompt }],
-    }),
-  });
-
-  if (!response.ok) {
-    // Fallback: do a local attack roll without AI
+    });
+  } catch {
     return localEnemyTurn(enemy, encounter, closestPlayer, canReach, canMoveAndReach, moveSquares);
   }
-
-  const data = await response.json();
   const raw = data.content[0].text.trim();
 
   // Parse the JSON response

@@ -1,10 +1,9 @@
 import { useState, useRef } from 'react';
 import useStore from '../store/useStore';
 import { getClaudeApiKey } from '../lib/claudeApi';
+import { callClaude } from '../lib/aiProxy';
 
-const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
-
-async function generateCampaignJson({ title, tone, numScenes, apiKey }) {
+async function generateCampaignJson({ title, tone, numScenes }) {
   const prompt = `Generate a D&D 5e campaign JSON with the following parameters:
 - Title: "${title}"
 - Tone/Theme: ${tone}
@@ -41,22 +40,11 @@ Rules:
 - dmNotes must include encounter triggers, hidden info, and DM guidance
 Return only the JSON object.`;
 
-  const res = await fetch(CLAUDE_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 4096,
-      messages: [{ role: 'user', content: prompt }],
-    }),
+  const data = await callClaude({
+    model: 'claude-haiku-4-5-20251001',
+    maxTokens: 4096,
+    messages: [{ role: 'user', content: prompt }],
   });
-  if (!res.ok) throw new Error(`API error ${res.status}`);
-  const data = await res.json();
   return data.content?.[0]?.text || '';
 }
 
@@ -178,11 +166,6 @@ export default function CampaignImporter({ onSuccess }) {
   const [genError, setGenError] = useState(null);
 
   async function handleGenerate() {
-    const apiKey = (user?.id ? getClaudeApiKey(user.id) : null) || sessionApiKey;
-    if (!apiKey) {
-      setGenError('No Claude API key found. Add one in ⚙ Settings first.');
-      return;
-    }
     if (!genTitle.trim()) {
       setGenError('Enter a campaign title.');
       return;
@@ -194,7 +177,6 @@ export default function CampaignImporter({ onSuccess }) {
         title: genTitle.trim(),
         tone: genTone.trim() || 'classic high fantasy adventure',
         numScenes: genScenes,
-        apiKey,
       });
       // Clean and parse
       let text = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');

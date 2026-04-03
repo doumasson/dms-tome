@@ -24,9 +24,10 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
   const nextEncounterTurn = useStore(s => s.nextEncounterTurn)
   const runEnemyTurn = useStore(s => s.runEnemyTurn)
   const activeCampaign = useStore(s => s.activeCampaign)
-  // In solo/demo mode (no Supabase campaign), this client runs enemy AI.
-  // In multiplayer, only the DM/host runs it.
-  const shouldRunEnemyAI = isDM || !activeCampaign
+  // isAIRunner: set by presence election in App.jsx — DM by default, oldest client if DM drops.
+  // Falls back to isDM if presence hasn't resolved yet, or no campaign (solo/demo mode).
+  const isAIRunner = useStore(s => s.isAIRunner ?? s.isDM)
+  const shouldRunEnemyAI = isAIRunner || !activeCampaign
 
   const [targetingMode, setTargetingMode] = useState(null)
   const [pendingOA, setPendingOA] = useState(null)

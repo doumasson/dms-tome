@@ -1,8 +1,8 @@
 import { sanitizeInput, sanitizeOutput } from './sanitize'
 import { formatTime, getTimeOfDay } from './gameTime'
+import { callClaude } from './aiProxy'
 
 const NARRATOR_MODEL = 'claude-haiku-4-5-20251001';
-const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
 // ── Rules Assistant ──────────────────────────────────────────────────────────
 
@@ -14,28 +14,12 @@ export async function askRulesQuestion(question, srdContext, apiKey) {
 - Never invent rules — if it's not in the SRD, say so
 ${srdContext ? `\n## Relevant SRD Reference\n${srdContext}` : ''}`;
 
-  const response = await fetch(CLAUDE_API_URL, {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: NARRATOR_MODEL,
-      max_tokens: 512,
-      system,
-      messages: [{ role: 'user', content: question }],
-    }),
+  const data = await callClaude({
+    model: NARRATOR_MODEL,
+    maxTokens: 512,
+    system,
+    messages: [{ role: 'user', content: question }],
   });
-
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.error?.message || `API error ${response.status}`);
-  }
-
-  const data = await response.json();
   return data.content[0].text.trim();
 }
 
@@ -329,23 +313,11 @@ Rules:
 - Each scene text: 3-4 vivid sentences of DM narration, present tense
 - Keep the same tone and world as the original campaign`;
 
-  const response = await fetch(CLAUDE_API_URL, {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: NARRATOR_MODEL,
-      max_tokens: 2048,
-      messages: [{ role: 'user', content: prompt }],
-    }),
+  const data = await callClaude({
+    model: NARRATOR_MODEL,
+    maxTokens: 2048,
+    messages: [{ role: 'user', content: prompt }],
   });
-
-  if (!response.ok) throw new Error(`API error ${response.status}`);
-  const data = await response.json();
   let text = data.content[0].text.trim()
     .replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
   const start = text.indexOf('[');
@@ -361,28 +333,12 @@ export async function callNarrator({ messages, systemPrompt, apiKey }) {
     content: m.role === 'user' ? sanitizeInput(m.content) : m.content,
   }))
 
-  const response = await fetch(CLAUDE_API_URL, {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: NARRATOR_MODEL,
-      max_tokens: 2048,
-      system: systemPrompt,
-      messages: sanitizedMessages,
-    }),
+  const data = await callClaude({
+    model: NARRATOR_MODEL,
+    maxTokens: 2048,
+    system: systemPrompt,
+    messages: sanitizedMessages,
   });
-
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.error?.message || `API error ${response.status}`);
-  }
-
-  const data = await response.json();
   const raw  = data.content[0].text.trim();
 
   // Step 1: strip opening/closing code fences (handles truncated responses too)
