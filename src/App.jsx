@@ -38,6 +38,7 @@ function D20Icon() {
 export default function App() {
   const [appView, setAppView] = useState('loading');
   const [draftCampaign, setDraftCampaign] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
   const [liveConnected, setLiveConnected] = useState(false);
   const pendingInviteRef = useRef(null);
   const channelRef = useRef(null);
