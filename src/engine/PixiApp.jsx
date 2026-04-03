@@ -262,7 +262,8 @@ export default forwardRef(function PixiApp({ zone, tokens, onTileClick, onTileHo
           atlas.registerAtlas(name, cleaned)
 
           // Load the WebP sprite sheet image — try Supabase CDN first, fall back to local
-          const supabaseUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/tilesets/${name}.webp`
+          const baseUrl = (import.meta.env.VITE_SUPABASE_URL || '').replace(/\/$/, '')
+          const supabaseUrl = `${baseUrl}/storage/v1/object/public/tilesets/${name}.webp`
           try {
             await atlas.loadAtlasImage(name, supabaseUrl, PIXI)
           } catch (imgErr) {

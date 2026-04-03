@@ -8,9 +8,11 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: CORS })
   }
 
-  // Require auth — supabase.functions.invoke sends the user's JWT automatically
+  // Require either a user JWT or the Supabase anon key (both are sent by supabase.functions.invoke).
+  // The anon key check handles the brief window on page load before the session JWT is ready.
   const authHeader = req.headers.get('Authorization')
-  if (!authHeader?.startsWith('Bearer ')) {
+  const apiKeyHeader = req.headers.get('apikey')
+  if (!authHeader?.startsWith('Bearer ') && !apiKeyHeader) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { ...CORS, 'content-type': 'application/json' },

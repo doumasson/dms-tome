@@ -234,9 +234,12 @@ export function useGameEffects({
     }
 
     triggeredZonesRef.current.add(triggered.id)
-    if (isDM || !activeCampaign) {
-      broadcastEncounterAction({ type: 'encounter-zone-triggered', zoneId: triggered.id })
-    }
+
+    // ONLY THE HOST starts encounters and broadcasts them to other players.
+    // Non-host clients receive combat via the 'combat-start' broadcast in App.jsx.
+    if (!(isDM || !activeCampaign)) return
+
+    broadcastEncounterAction({ type: 'encounter-zone-triggered', zoneId: triggered.id })
 
     const prompt = buildEncounterPrompt(
       { ...triggered, dmPrompt: triggered.narratorPrompt || triggered.dmPrompt },
@@ -260,24 +263,30 @@ export function useGameEffects({
         const currentArea = useStore.getState().currentAreaId
         const areaPositions = useStore.getState().areaTokenPositions?.[currentArea] || {}
         const myPos = playerPosRef.current || { x: 5, y: 5 }
+        const combatCenter = combatEnemies[0]?.position || myPos
         const areaData = useStore.getState().areas?.[currentArea]
         const fallbackPos = areaData?.playerStart || myPos
+
+        // Build party with live positions — count how many are near combat for scaling
         const combatParty = freshParty.map(p => {
           const isLocal = myChar && (p.id === myChar.id || p.name === myChar.name)
-          // Use live position from areaTokenPositions or local playerPos, fall back to playerStart
           const livePos = isLocal
             ? { ...myPos }
             : (areaPositions[p.userId] || areaPositions[p.id] || { x: fallbackPos.x + 1, y: fallbackPos.y })
-          return {
-            ...p,
-            ...(isLocal ? myChar : {}),
-            position: livePos,
-          }
+          return { ...p, ...(isLocal ? myChar : {}), position: livePos }
         })
         if (myChar && !combatParty.some(p => p.id === myChar.id || p.name === myChar.name)) {
-          combatParty.push({ ...myChar, position: { ...playerPosRef.current } })
+          combatParty.push({ ...myChar, position: { ...myPos } })
         }
-        startEncounter(combatEnemies, combatParty, true)
+
+        // Scale enemies to nearby players only (not full partyMembers count)
+        const nearbyCount = combatParty.filter(p => {
+          const dx = (p.position?.x ?? 0) - combatCenter.x
+          const dy = (p.position?.y ?? 0) - combatCenter.y
+          return Math.sqrt(dx * dx + dy * dy) <= 10
+        }).length || 1
+
+        startEncounter(combatEnemies, combatParty, true, { nearbyPlayerCount: nearbyCount })
         broadcastStartCombat({ enemies: combatEnemies, party: combatParty, autoRoll: true })
       }
     }

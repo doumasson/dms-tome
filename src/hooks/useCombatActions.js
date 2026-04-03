@@ -106,6 +106,14 @@ export function useCombatActions({ zone, encounter, pixiRef, cameraRef, sessionA
       reachableTilesRef.current = new Set()
       return
     }
+    // Only show movement range for the local player's own turn
+    const myChar = useStore.getState().myCharacter
+    const isMyTurn = myChar && (active.id === myChar.id || active.name === myChar.name)
+    if (!isMyTurn) {
+      clearMovementRange(mrLayer)
+      reachableTilesRef.current = new Set()
+      return
+    }
 
     const enemyTiles = new Set(
       encounter.combatants

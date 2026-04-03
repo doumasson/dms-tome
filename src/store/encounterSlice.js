@@ -29,7 +29,7 @@ export function createEncounterSlice(set, get) {
     defeatedEnemies: {},        // { [areaId]: [enemyName, ...] } — prevents respawn in exploration
     showDeathOptions: false,    // Show respawn choice dialog after TPK
 
-    startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false, hazards = [], combatCenter = null, combatRadius = 10 } = {}) => {
+    startEncounter: (enemies, partyMembers, autoRollInitiative = false, { surprise = false, hazards = [], combatCenter = null, combatRadius = 10, nearbyPlayerCount = null } = {}) => {
       // Save pre-combat exploration positions for all party members so we can restore after combat
       const savedPositions = {};
       const areaId = get().currentAreaId;
@@ -54,8 +54,9 @@ export function createEncounterSlice(set, get) {
         || partyMembers?.[0]?.position
         || { x: 10, y: 10 };
 
-      // Scale enemy count to party size (skip for template-resolved enemies which have role field)
-      const playerCount = Math.max(1, (partyMembers || []).length);
+      // Scale enemy count to nearby players only — use nearbyPlayerCount if provided (from zone trigger)
+      // so a solo player doesn't face enemies scaled for a full party
+      const playerCount = Math.max(1, nearbyPlayerCount ?? (partyMembers || []).length);
       let scaledEnemies = [...(enemies || [])];
       const isTemplateResolved = scaledEnemies.some(e => e.role);
       if (!isTemplateResolved) {
@@ -957,6 +958,21 @@ export function createEncounterSlice(set, get) {
     endEncounterWithDefeat: () => {
       const wasInCombat = get().encounter.phase !== 'idle';
       console.log('[endEncounterWithDefeat] Ending combat with defeat — clearing all combat state, wasInCombat:', wasInCombat);
+
+      // Mark enemies as "defeated" for this area so encounter zones don't re-trigger on respawn
+      // (Narratively: enemies dispersed after beating the party)
+      const { encounter, currentAreaId, defeatedEnemies } = get();
+      if (wasInCombat && currentAreaId) {
+        const enemyNames = encounter.combatants
+          .filter(c => c.isEnemy || c.type === 'enemy')
+          .map(c => c.name.replace(/ \d+$/, '')) // strip suffix: "Zombie 2" → "Zombie"
+        const existing = defeatedEnemies?.[currentAreaId] || []
+        const merged = [...new Set([...existing, ...enemyNames])]
+        if (merged.length > existing.length) {
+          set({ defeatedEnemies: { ...(defeatedEnemies || {}), [currentAreaId]: merged } })
+        }
+      }
+
       // End combat phase but don't auto-revive — let the player choose
       set({
         encounter: {

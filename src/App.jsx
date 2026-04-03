@@ -773,7 +773,7 @@ export default function App() {
       const areaId = store.currentAreaId
       if (!myId || !areaId) return
       const myPos = store.areaTokenPositions?.[areaId]?.[myId]
-      if (myPos) broadcastTokenMove(myId, myPos)
+      if (myPos) broadcastTokenMove(myId, myPos, null, areaId)
     })
 
     // Token move sync (any player → all others for V2 area map)
