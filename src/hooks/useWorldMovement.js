@@ -62,6 +62,8 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
   const stepCountRef = useRef(0)
   // Stealth movement cooldown — half speed per 5e rules
   const stealthCooldownRef = useRef(false)
+  // WASD move throttle — prevents queuing moves faster than the animation plays
+  const lastWasdMoveRef = useRef(0)
   // Trap check helper — called after each movement completes
   // Uses party formation: back-line members get advantage on trap saves
   const checkTrapsAtPosition = useCallback((newPos) => {
@@ -192,7 +194,10 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
 
       // Stealth = half speed (5e PHB p.182): enforce movement cooldown
       if (stealth?.active && stealthCooldownRef.current) return
-      if (isAnimating()) return
+      // Time-based throttle: match click-to-move animation speed (~100ms/tile)
+      const now = Date.now()
+      if (now - lastWasdMoveRef.current < 95) return
+      lastWasdMoveRef.current = now
       const wd = walkDataRef.current
       const pos = playerPosRef.current
       const nx = pos.x + dir.x
@@ -239,7 +244,8 @@ export function useWorldMovement({ zone, isV2Zone, playerPos, setPlayerPos, play
         if (cameraRef.current) cameraRef.current.centerOn(nx, ny, tileSize)
         checkTrapsAtPosition({ x: nx, y: ny })
       }, isV2Zone ? tileSize : undefined)
-      broadcastTokenMove(useStore.getState().user?.id, { x: nx, y: ny }, path)
+      const { user: usr, currentAreaId: areaId } = useStore.getState()
+      broadcastTokenMove(usr?.id, { x: nx, y: ny }, path, areaId)
     }
 
     window.addEventListener('keydown', handleKeyDown)

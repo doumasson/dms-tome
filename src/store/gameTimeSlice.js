@@ -209,6 +209,17 @@ export function createGameTimeSlice(set, get) {
       const newAreas = { ...state.areas, [areaId]: builtArea };
       const newBriefs = { ...state.areaBriefs };
       delete newBriefs[areaId];
+
+      // Evict oldest non-current area when cache exceeds limit — prevents OOM on low-RAM devices
+      const MAX_CACHED_AREAS = 4;
+      const currentId = state.currentAreaId;
+      const ids = Object.keys(newAreas);
+      if (ids.length > MAX_CACHED_AREAS) {
+        // Evict the first area that is neither current nor the one just loaded
+        const toEvict = ids.find(id => id !== currentId && id !== areaId);
+        if (toEvict) delete newAreas[toEvict];
+      }
+
       return { areas: newAreas, areaBriefs: newBriefs };
     }),
 

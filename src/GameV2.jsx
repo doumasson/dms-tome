@@ -202,6 +202,7 @@ export default function GameV2({ onLeave }) {
           setShowApiSettings(false)
           setShowFormation(false)
           setToolPanel(null)
+          setShowExplorationSpellPicker(false)
           break
       }
     }

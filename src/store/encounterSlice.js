@@ -973,6 +973,26 @@ export function createEncounterSlice(set, get) {
         }
       }
 
+      // Sync HP, conditions, and spell slots from combat back to myCharacter before clearing
+      if (wasInCombat) {
+        const { encounter: enc, myCharacter: myChar } = get();
+        if (myChar) {
+          const myCombatant = enc.combatants.find(c =>
+            c.type === 'player' && (c.id === myChar.id || c.name === myChar.name)
+          );
+          if (myCombatant) {
+            const syncChanges = {
+              currentHp: myCombatant.currentHp,
+              hp: myCombatant.currentHp,
+              conditions: myCombatant.conditions?.filter(c => c !== 'Surprised') || [],
+              ...(myCombatant.spellSlots ? { spellSlots: myCombatant.spellSlots } : {}),
+            };
+            set(prev => ({ myCharacter: { ...prev.myCharacter, ...syncChanges } }));
+            setTimeout(() => get().updateMyCharacter(syncChanges), 0);
+          }
+        }
+      }
+
       // End combat phase but don't auto-revive — let the player choose
       set({
         encounter: {
