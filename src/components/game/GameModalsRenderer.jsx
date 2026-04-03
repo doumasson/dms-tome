@@ -62,6 +62,8 @@ export default function GameModalsRenderer({
   showSpellPicker, setShowSpellPicker,
   showExplorationSpellPicker, setShowExplorationSpellPicker,
   handleExplorationSpellSelected,
+  explorationHealPending, setExplorationHealPending,
+  handleExplorationHealTarget,
   showConsumablePicker, setShowConsumablePicker,
   showReadyModal, setShowReadyModal,
   readyTriggerPrompt,
@@ -227,6 +229,32 @@ export default function GameModalsRenderer({
           onSelect={handleExplorationSpellSelected}
           onClose={() => setShowExplorationSpellPicker(false)}
         />
+      )}
+      {explorationHealPending && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200 }}>
+          <div style={{ background: '#1a1008', border: '2px solid #d4af37', borderRadius: 8, padding: 24, minWidth: 280, maxWidth: 360 }}>
+            <div style={{ color: '#d4af37', fontFamily: 'Cinzel, serif', fontSize: 16, marginBottom: 8 }}>
+              {explorationHealPending.spell.name} — Choose Target
+            </div>
+            <div style={{ color: '#c0a060', fontSize: 13, marginBottom: 16 }}>
+              Healing: {explorationHealPending.healAmount} HP
+            </div>
+            {explorationHealPending.allTargets.map(t => (
+              <button key={t.id || t.name} onClick={() => handleExplorationHealTarget(t)} style={{
+                display: 'block', width: '100%', marginBottom: 8, padding: '10px 16px',
+                background: '#2a1a08', border: '1px solid #d4af37', borderRadius: 4,
+                color: '#f0e0a0', fontFamily: 'Cinzel, serif', cursor: 'pointer', textAlign: 'left', fontSize: 14,
+              }}>
+                {t.name} — {t.currentHp ?? t.hp ?? '?'} / {t.maxHp || t.hp || '?'} HP
+              </button>
+            ))}
+            <button onClick={() => setExplorationHealPending(null)} style={{
+              display: 'block', width: '100%', marginTop: 4, padding: '8px 16px',
+              background: 'transparent', border: '1px solid #555', borderRadius: 4,
+              color: '#888', cursor: 'pointer', fontSize: 13,
+            }}>Cancel</button>
+          </div>
+        </div>
       )}
       {showConsumablePicker && inCombat && encounter.combatants?.[encounter.currentTurn] && (
         <ConsumablePickerModal

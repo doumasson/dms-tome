@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import useStore from './store/useStore'
 import PixiApp from './engine/PixiApp'
 import GameHUD from './hud/GameHUD'
-import { broadcastEncounterAction, broadcastTokenMove, broadcastStartCombat } from './lib/liveChannel'
+import { broadcastEncounterAction, broadcastTokenMove, broadcastStartCombat, broadcastNarratorMessage } from './lib/liveChannel'
 import { supabase } from './lib/supabase'
 import ApiKeyGate from './components/ApiKeyGate'
 import { getAvailableInteractions } from './lib/interactionController'
@@ -134,6 +134,7 @@ export default function GameV2({ onLeave }) {
   const [pendingSpell, setPendingSpell] = useState(null)
   const [selectedEnemy, setSelectedEnemy] = useState(null)
   const [showExplorationSpellPicker, setShowExplorationSpellPicker] = useState(false)
+  const [explorationHealPending, setExplorationHealPending] = useState(null) // { spell, castLevel, rollFn }
   const dismissedLevelRef = useRef(null)
   const dialogOpenRef = useRef(false)
   const handleInteractRef = useRef(null)
@@ -498,7 +499,8 @@ export default function GameV2({ onLeave }) {
   const handleExplorationSpellSelected = useCallback((spell, castLevel) => {
     setShowExplorationSpellPicker(false)
     if (!myCharacter) return
-    // Decrement spell slot if leveled spell
+
+    // Consume spell slot first
     if (castLevel > 0) {
       const slots = { ...(myCharacter.spellSlots || {}) }
       for (let lvl = castLevel; lvl <= 9; lvl++) {
@@ -509,26 +511,105 @@ export default function GameV2({ onLeave }) {
       }
       updateMyCharacter({ spellSlots: slots })
     }
-    // Apply healing spells to self
-    const isHealing = spell.school === 'Evocation' || spell.school === 'Necromancy' || /heal|cure|restor/i.test(spell.name)
-    if (isHealing && spell.damage) {
-      // Parse healing dice (e.g. "1d8+3")
-      const match = spell.damage.match(/(\d+)d(\d+)([+-]\d+)?/)
-      if (match) {
-        const [, count, die, mod] = match
-        let total = 0
-        for (let i = 0; i < parseInt(count); i++) total += Math.floor(Math.random() * parseInt(die)) + 1
-        if (mod) total += parseInt(mod)
-        const maxHp = myCharacter.hp || myCharacter.maxHp || 20
-        const currentHp = myCharacter.currentHp ?? maxHp
-        const newHp = Math.min(maxHp, currentHp + total)
-        updateMyCharacter({ currentHp: newHp })
-        addNarratorMessage({ role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name} and heals for ${total} HP. (${currentHp} → ${newHp})` })
-        return
-      }
+
+    // Determine spell category
+    const isHealing = /heal|cure|restor|word of/i.test(spell.name) || spell.school === 'Necromancy' && /heal/i.test(spell.name)
+    const isBuff = /bless|aid|shield of faith|heroism|haste|blur|mirror image|protection|sanctuary|mage armor|barkskin|stoneskin|resistance/i.test(spell.name)
+
+    // Roll healing if applicable
+    const rollHealing = (healDice) => {
+      const match = (healDice || '').match(/(\d+)d(\d+)([+-]\d+)?/)
+      if (!match) return 0
+      const [, count, die, mod] = match
+      let total = 0
+      for (let i = 0; i < parseInt(count); i++) total += Math.floor(Math.random() * parseInt(die)) + 1
+      if (mod) total += parseInt(mod)
+      return Math.max(1, total)
     }
-    addNarratorMessage({ role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name}.` })
-  }, [myCharacter, addNarratorMessage])
+
+    // Apply HP to a target (self or party member), persist + broadcast
+    const applyHeal = (target, amount) => {
+      const maxHp = target.maxHp || target.hp || 20
+      const currentHp = target.currentHp ?? maxHp
+      const newHp = Math.min(maxHp, currentHp + amount)
+      const isMe = target.id === myCharacter.id || target.name === myCharacter.name
+      if (isMe) {
+        updateMyCharacter({ currentHp: newHp })
+      } else {
+        // Update partyMembers for display; the target's client will get the broadcast
+        useStore.setState(s => ({
+          partyMembers: s.partyMembers.map(p =>
+            (p.id === target.id || p.name === target.name) ? { ...p, currentHp: newHp } : p
+          ),
+        }))
+      }
+      // Broadcast HP change so all clients see updated portraits
+      broadcastEncounterAction({ type: 'rest-hp-update', charId: target.id, charName: target.name, currentHp: newHp, maxHp })
+      return { currentHp, newHp }
+    }
+
+    if (isHealing && (spell.damage || spell.heal)) {
+      const healDice = spell.heal || spell.damage
+      const healAmount = rollHealing(healDice)
+      const allTargets = [myCharacter, ...(partyMembers || []).filter(p => p.id !== myCharacter.id && p.name !== myCharacter.name)]
+
+      if (allTargets.length <= 1) {
+        // Only self — apply immediately
+        const { currentHp, newHp } = applyHeal(myCharacter, healAmount)
+        const msg = { role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name} and heals for ${healAmount} HP. (${currentHp} → ${newHp})` }
+        addNarratorMessage(msg)
+        broadcastNarratorMessage(msg)
+      } else {
+        // Show target picker — store pending heal data
+        setExplorationHealPending({ spell, castLevel, healAmount, healDice, allTargets })
+      }
+      return
+    }
+
+    if (isBuff) {
+      const msg = { role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name}. The effect takes hold.` }
+      addNarratorMessage(msg)
+      broadcastNarratorMessage(msg)
+      return
+    }
+
+    // Default: narrate the cast
+    const msg = { role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name}.` }
+    addNarratorMessage(msg)
+    broadcastNarratorMessage(msg)
+  }, [myCharacter, partyMembers, addNarratorMessage, updateMyCharacter])
+
+  // Resolve a pending exploration heal after target is chosen
+  const handleExplorationHealTarget = useCallback((target) => {
+    if (!explorationHealPending) return
+    const { spell, healAmount, allTargets } = explorationHealPending
+    setExplorationHealPending(null)
+
+    const { currentHp, newHp } = applyHealRef.current(target, healAmount)
+    const msg = { role: 'dm', speaker: 'System', text: `${myCharacter.name} casts ${spell.name} on ${target.name} for ${healAmount} HP. (${currentHp} → ${newHp})` }
+    addNarratorMessage(msg)
+    broadcastNarratorMessage(msg)
+  }, [explorationHealPending, myCharacter, addNarratorMessage])
+
+  // Stable ref so handleExplorationHealTarget can call applyHeal
+  const applyHealRef = useRef(null)
+  applyHealRef.current = (target, amount) => {
+    const maxHp = target.maxHp || target.hp || 20
+    const currentHp = target.currentHp ?? maxHp
+    const newHp = Math.min(maxHp, currentHp + amount)
+    const isMe = target.id === myCharacter.id || target.name === myCharacter.name
+    if (isMe) {
+      updateMyCharacter({ currentHp: newHp })
+    } else {
+      useStore.setState(s => ({
+        partyMembers: s.partyMembers.map(p =>
+          (p.id === target.id || p.name === target.name) ? { ...p, currentHp: newHp } : p
+        ),
+      }))
+    }
+    broadcastEncounterAction({ type: 'rest-hp-update', charId: target.id, charName: target.name, currentHp: newHp, maxHp })
+    return { currentHp, newHp }
+  }
 
   const handleModeSelect = useCallback((mode) => {
     // Toggle off if already active
@@ -662,6 +743,8 @@ export default function GameV2({ onLeave }) {
           showSpellPicker={showSpellPicker} setShowSpellPicker={setShowSpellPicker}
           showExplorationSpellPicker={showExplorationSpellPicker} setShowExplorationSpellPicker={setShowExplorationSpellPicker}
           handleExplorationSpellSelected={handleExplorationSpellSelected}
+          explorationHealPending={explorationHealPending} setExplorationHealPending={setExplorationHealPending}
+          handleExplorationHealTarget={handleExplorationHealTarget}
           showConsumablePicker={showConsumablePicker} setShowConsumablePicker={setShowConsumablePicker}
           showReadyModal={showReadyModal} setShowReadyModal={setShowReadyModal}
           readyTriggerPrompt={readyTriggerPrompt}
