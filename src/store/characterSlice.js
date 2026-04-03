@@ -108,7 +108,8 @@ export function createCharacterSlice(set, get) {
       const derivedEquip = computeDerivedStats(updatedCharacterEquip);
       const updates = { equippedItems, inventory, ac: derivedEquip.ac, derivedStats: derivedEquip };
       get().updateMyCharacter(updates);
-      // Sync AC to combat combatant if in combat
+      // Always broadcast AC change (in and out of combat)
+      broadcastEncounterAction({ type: 'ac-update', id: myCharacter.id, name: myCharacter.name, ac: derivedEquip.ac, userId: get().user?.id });
       const { encounter } = get();
       if (encounter.phase !== 'idle') {
         set(state => ({
@@ -121,7 +122,6 @@ export function createCharacterSlice(set, get) {
             ),
           },
         }));
-        broadcastEncounterAction({ type: 'ac-update', id: myCharacter.id, name: myCharacter.name, ac: derivedEquip.ac, userId: get().user?.id });
       }
     },
 
@@ -139,7 +139,8 @@ export function createCharacterSlice(set, get) {
       const derivedUnequip = computeDerivedStats(updatedCharacterUnequip);
       const updates = { equippedItems, inventory, ac: derivedUnequip.ac, derivedStats: derivedUnequip };
       get().updateMyCharacter(updates);
-      // Sync AC to combat combatant if in combat
+      // Always broadcast AC change (in and out of combat)
+      broadcastEncounterAction({ type: 'ac-update', id: myCharacter.id, name: myCharacter.name, ac: derivedUnequip.ac, userId: get().user?.id });
       const { encounter } = get();
       if (encounter.phase !== 'idle') {
         set(state => ({
@@ -152,7 +153,6 @@ export function createCharacterSlice(set, get) {
             ),
           },
         }));
-        broadcastEncounterAction({ type: 'ac-update', id: myCharacter.id, name: myCharacter.name, ac: derivedUnequip.ac, userId: get().user?.id });
       }
     },
 
@@ -244,6 +244,9 @@ export function createCharacterSlice(set, get) {
             get().applyEncounterHeal(combatantId, healed);
             broadcastEncounterAction({ type: 'heal', targetId: combatantId, amount: healed, userId: get().user?.id || 'system' });
           }
+        } else {
+          // Out of combat — broadcast HP change so party portraits update
+          broadcastEncounterAction({ type: 'rest-hp-update', charId: myCharacter.id, charName: myCharacter.name, currentHp: newHp, maxHp: myCharacter.maxHp || 0 });
         }
       }
 

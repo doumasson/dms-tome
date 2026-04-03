@@ -8,6 +8,7 @@ import { buyItem, sellItem, canBuy, calculateSellPrice } from '../lib/shopSystem
 import shopInventories from '../data/shopInventories.json'
 import { getDisposition } from '../lib/factionSystem'
 import { playCoinSound } from '../lib/ambientSounds'
+import { broadcastEncounterAction } from '../lib/liveChannel'
 
 // Categorize items by type
 function categorizeItems(items) {
@@ -297,6 +298,8 @@ export default function ShopPanel({ npc, shopType, onClose }) {
     addGold(-item.price)
     playCoinSound()
     showToast(`Purchased ${item.name} for ${item.price} gp`)
+    const { myCharacter, user } = useStore.getState()
+    broadcastEncounterAction({ type: 'gold-update', charId: myCharacter?.id, charName: myCharacter?.name, gold: (myCharacter?.gold || 0) - item.price, userId: user?.id })
   }
 
   function handleSell(invItem) {
@@ -305,6 +308,8 @@ export default function ShopPanel({ npc, shopType, onClose }) {
     removeItemFromInventory(invItem.instanceId)
     addGold(result.goldGained)
     showToast(`Sold ${invItem.name} for ${result.goldGained} gp`)
+    const { myCharacter, user } = useStore.getState()
+    broadcastEncounterAction({ type: 'gold-update', charId: myCharacter?.id, charName: myCharacter?.name, gold: (myCharacter?.gold || 0) + result.goldGained, userId: user?.id })
   }
 
   const sellableItems = inventory.filter(i => i.price && i.price > 0)

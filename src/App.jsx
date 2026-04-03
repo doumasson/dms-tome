@@ -615,6 +615,16 @@ export default function App() {
           }
           break
         }
+        case 'gold-update': {
+          // Another player's gold changed (shop buy/sell) — update partyMembers for portrait display
+          const { charId, charName, gold } = payload
+          useStore.setState(s => ({
+            partyMembers: s.partyMembers.map(p =>
+              (p.id === charId || p.name === charName) ? { ...p, gold } : p
+            ),
+          }))
+          break
+        }
         case 'mid-combat-join': {
           // Another player joined combat mid-fight — insert into local combatant list
           const newCombatant = payload.combatant
