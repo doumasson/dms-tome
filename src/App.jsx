@@ -1082,10 +1082,13 @@ export default function App() {
       setCurrentScene(savedSceneIndex);
     }
 
-    // Restore active encounter state (combat/initiative in progress)
-    const savedEncounter = campaignRecord.settings?.encounterState;
-    if (savedEncounter?.phase && savedEncounter.phase !== 'idle') {
-      syncEncounterDown(savedEncounter);
+    // Do NOT restore encounter state — stale combat from a previous session would
+    // leave the player stuck in combat UI with no way out. Combat must be re-entered
+    // manually each session. Clear any persisted combat state from Supabase immediately.
+    if (campaignRecord.settings?.encounterState) {
+      supabase.from('campaigns').update({
+        settings: { ...(campaignRecord.settings || {}), encounterState: null },
+      }).eq('id', campaignRecord.id).then(() => {});
     }
 
     // Use getState() to avoid stale closure — setUser() above hasn't re-rendered yet
