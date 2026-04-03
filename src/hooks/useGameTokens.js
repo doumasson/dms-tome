@@ -122,7 +122,7 @@ export function useGameTokens({
       })
     }
     return t
-  }, [playerPos, zone, myCharacter, inCombat, encounter.combatants, encounter.currentTurn, defeatedEnemies, currentAreaId, partyMembers])
+  }, [playerPos, zone, myCharacter, inCombat, encounter.combatants, encounter.currentTurn, defeatedEnemies, currentAreaId, partyMembers, areaTokenPositions])
 
   const nearbyNpcs = useMemo(() => {
     if (!zone?.npcs || inCombat || activeNpc) return []
